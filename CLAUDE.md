@@ -59,3 +59,15 @@ New tools follow this sequence:
 - No horizontal scroll on any page — table columns must wrap headers before adding scroll
 - All calculation logic lives in inline `<script>` tags in the tool's `index.html`
 - Tool-specific styles go in a `<style>` block inside the tool's HTML; shared styles go in `assets/style.css`
+
+---
+
+## Known VS Code pitfalls
+
+**⚠ Do not use VS Code Live Preview to open HTML files in this project.**
+
+Live Preview rewrites relative paths (`../../assets/style.css`, `../../index.html`) to internal `vscode-cdn.net` URLs and saves them back to disk, breaking the real site. It also strips inline `<script>` blocks on save.
+
+`.vscode/settings.json` disables format-on-save for HTML project-wide to mitigate this, but Live Preview path rewriting can still occur if files are opened through its interface.
+
+**Use `serve.bat` instead** — run it from the VS Code terminal (`.\serve.bat`) to get a clean local server at `http://localhost:7331` that doesn't touch the files.
