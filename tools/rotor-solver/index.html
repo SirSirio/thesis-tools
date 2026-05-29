@@ -282,16 +282,17 @@
   </div>
 
   <nav class="tool-nav">
-    <a href="../../index.html">&larr; All tools</a>
-    <span>DTU Thesis Tools &middot; Sirio Vittorio Feltrin</span>
+    <a href="../../index.html" data-i18n="nav-back">&larr; All tools</a>
+    <span data-i18n="nav-site">DTU Thesis Tools &middot; Sirio Vittorio Feltrin</span>
+    <button id="lang-toggle" class="lang-toggle">IT</button>
   </nav>
 
   <main class="tool-main">
 
     <header class="tool-header animate-in" style="--delay:0s">
-      <span class="site-label">Design Tool &middot; Peristaltic Pump</span>
-      <h1>Rotor Geometry Solver</h1>
-      <p>
+      <span class="site-label" data-i18n="tool-label">Design Tool &middot; Peristaltic Pump</span>
+      <h1 data-i18n="tool-h1">Rotor Geometry Solver</h1>
+      <p data-i18n="tool-desc">
         Solves rotor radius analytically so each roller pass delivers your target stroke volume.
         Occlusion loss is compensated by extending the required arc. Assumes 180&deg; contact.
         Feasibility is checked against three independent constraints: roller collision, hub clearance, and available tube length.
@@ -300,11 +301,11 @@
 
     <!-- Controls -->
     <div class="glass-panel animate-in" style="--delay:0.12s">
-      <p class="panel-title">Parameters</p>
+      <p class="panel-title" data-i18n="panel-params">Parameters</p>
       <div class="ctrl">
 
         <div class="cg">
-          <label>Delivered / stroke</label>
+          <label data-i18n="label-vol">Delivered / stroke</label>
           <div class="input-row">
             <input type="number" id="volN" min="1" max="25" step="0.5" value="5" />
             <span class="unit">&micro;L</span>
@@ -312,7 +313,7 @@
         </div>
 
         <div class="cg">
-          <label>Tube ID</label>
+          <label data-i18n="label-id">Tube ID</label>
           <select id="idSel">
             <option value="0.25">0.25 mm</option>
             <option value="0.51" selected>0.51 mm</option>
@@ -323,7 +324,7 @@
         </div>
 
         <div class="cg">
-          <label>Roller bearing</label>
+          <label data-i18n="label-bearing">Roller bearing</label>
           <select id="bSel">
             <option value="16" selected>625-2RS &mdash; 16 mm OD</option>
             <option value="10">MR105ZZ &mdash; 10 mm OD</option>
@@ -331,7 +332,7 @@
         </div>
 
         <div class="cg">
-          <label>Occlusion efficiency</label>
+          <label data-i18n="label-occ">Occlusion efficiency</label>
           <div class="input-row">
             <input type="range" id="occS" min="0.6" max="1" step="0.01" value="0.85" />
             <span class="v" id="occV">0.85</span>
@@ -339,7 +340,7 @@
         </div>
 
         <div class="cg">
-          <label>Shaft boss &empty;</label>
+          <label data-i18n="label-boss">Shaft boss &empty;</label>
           <div class="input-row">
             <input type="range" id="bossS" min="8" max="24" step="0.5" value="14" />
             <span class="v" id="bossV">14 mm</span>
@@ -347,7 +348,7 @@
         </div>
 
         <div class="cg">
-          <label>Step rate</label>
+          <label data-i18n="label-sp">Step rate</label>
           <div class="input-row">
             <input type="range" id="spS" min="200" max="6000" step="100" value="2000" />
             <span class="v" id="spV">2000</span>
@@ -362,20 +363,20 @@
 
     <!-- Results table -->
     <div class="glass-panel animate-in" style="--delay:0.32s">
-      <p class="panel-title">Geometry results — rollers 3 to 12</p>
+      <p class="panel-title" data-i18n="panel-results">Geometry results — rollers 3 to 12</p>
       <div class="table-wrap">
         <table class="tbl">
           <thead><tr>
-            <th>Rollers</th>
-            <th>Rotor R<br>(mm)</th>
-            <th>Rotor OD<br>(mm)</th>
-            <th>Tube arc<br>(mm)</th>
-            <th>Arc gap<br>(mm)</th>
-            <th>Hub clr<br>(mm)</th>
-            <th>Geom &sup1;<br>(&micro;L)</th>
-            <th>Strokes<br>&rarr;1000</th>
-            <th>Time &sup2;<br>(s)</th>
-            <th>Feasible</th>
+            <th data-i18n="th-rollers">Rollers</th>
+            <th data-i18n="th-rotor-r">Rotor R<br>(mm)</th>
+            <th data-i18n="th-rotor-od">Rotor OD<br>(mm)</th>
+            <th data-i18n="th-tube-arc">Tube arc<br>(mm)</th>
+            <th data-i18n="th-arc-gap">Arc gap<br>(mm)</th>
+            <th data-i18n="th-hub-clr">Hub clr<br>(mm)</th>
+            <th data-i18n="th-geom">Geom &sup1;<br>(&micro;L)</th>
+            <th data-i18n="th-strokes">Strokes<br>&rarr;1000</th>
+            <th data-i18n="th-time">Time &sup2;<br>(s)</th>
+            <th data-i18n="th-feasible">Feasible</th>
           </tr></thead>
           <tbody id="tb"></tbody>
         </table>
@@ -383,7 +384,7 @@
     </div>
 
     <!-- Notes -->
-    <p class="note animate-in" style="--delay:0.42s">
+    <p class="note animate-in" style="--delay:0.42s" data-i18n="note">
       <b>&sup1; Geometric swept volume</b> per stroke = delivered &divide; occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br>
       <b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, 1&frasl;32 microstepping, 6400 steps/rev, excludes accel/decel.<br>
       <b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br>
@@ -395,11 +396,103 @@
   </main>
 
   <footer class="site-footer">
-    <p>Technical University of Denmark &middot; Department of Health Technology</p>
+    <p data-i18n="footer-university">Technical University of Denmark &middot; Department of Health Technology</p>
     <p>Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
   </footer>
 
   <script>
+    // ── i18n ────────────────────────────────────────────────────
+    const LANG = {
+      en: {
+        'nav-back':       '← All tools',
+        'nav-site':       'DTU Thesis Tools · Sirio Vittorio Feltrin',
+        'tool-label':     'Design Tool · Peristaltic Pump',
+        'tool-h1':        'Rotor Geometry Solver',
+        'tool-desc':      'Solves rotor radius analytically so each roller pass delivers your target stroke volume. Occlusion loss is compensated by extending the required arc. Assumes 180° contact. Feasibility is checked against three independent constraints: roller collision, hub clearance, and available tube length.',
+        'panel-params':   'Parameters',
+        'label-vol':      'Delivered / stroke',
+        'label-id':       'Tube ID',
+        'label-bearing':  'Roller bearing',
+        'label-occ':      'Occlusion efficiency',
+        'label-boss':     'Shaft boss ∅',
+        'label-sp':       'Step rate',
+        'panel-results':  'Geometry results — rollers 3 to 12',
+        'th-rollers':     'Rollers',
+        'th-rotor-r':     'Rotor R<br>(mm)',
+        'th-rotor-od':    'Rotor OD<br>(mm)',
+        'th-tube-arc':    'Tube arc<br>(mm)',
+        'th-arc-gap':     'Arc gap<br>(mm)',
+        'th-hub-clr':     'Hub clr<br>(mm)',
+        'th-geom':        'Geom ¹<br>(μL)',
+        'th-strokes':     'Strokes<br>→1000',
+        'th-time':        'Time ²<br>(s)',
+        'th-feasible':    'Feasible',
+        'sum-target':     'Delivered target',
+        'sum-geom':       'Geom. swept vol.',
+        'sum-arc':        'Arc between rollers',
+        'sum-feasible':   'Feasible configs',
+        'sum-minr':       'Smallest feasible R',
+        'feas-yes':       '✓ yes',
+        'feas-overlap':   'rollers overlap',
+        'feas-boss':      'hits boss',
+        'feas-tube':      'tube too short',
+        'note':           '<b>¹ Geometric swept volume</b> per stroke = delivered ÷ occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>² Dispense time</b> for 1000 μL at the set step rate, 1⁄32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers − bearing OD; must be > 0 (rollers must not touch).<br><b>Hub clr</b> = (R − roller radius) − boss radius; must be > 0 (roller must clear the motor boss).<br><b>Tube arc</b> = πR; must be ≤ 123 mm (153 mm stop-to-stop − 2×15 mm straight runs), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.',
+        'footer-university': 'Technical University of Denmark · Department of Health Technology',
+      },
+      it: {
+        'nav-back':       '← Tutti gli strumenti',
+        'nav-site':       'Strumenti Tesi DTU · Sirio Vittorio Feltrin',
+        'tool-label':     'Strumento di Design · Pompa Peristaltica',
+        'tool-h1':        'Risolutore Geometrico del Rotore',
+        'tool-desc':      'Calcola analiticamente il raggio del rotore affinché ogni passaggio del rullo eroghi il volume target per ciclo. La perdita di occlusione è compensata estendendo l\'arco richiesto. Si assume contatto di 180°. La fattibilità è verificata rispetto a tre vincoli indipendenti: collisione dei rulli, gioco del mozzo e lunghezza disponibile del tubo.',
+        'panel-params':   'Parametri',
+        'label-vol':      'Erogato / ciclo',
+        'label-id':       'DI Tubo',
+        'label-bearing':  'Cuscinetto rullo',
+        'label-occ':      'Efficienza occlusione',
+        'label-boss':     'Boss albero ∅',
+        'label-sp':       'Frequenza step',
+        'panel-results':  'Risultati geometria — rulli da 3 a 12',
+        'th-rollers':     'Rulli',
+        'th-rotor-r':     'Raggio R<br>(mm)',
+        'th-rotor-od':    'OD rotore<br>(mm)',
+        'th-tube-arc':    'Arco tubo<br>(mm)',
+        'th-arc-gap':     'Gap arco<br>(mm)',
+        'th-hub-clr':     'Clr. mozzo<br>(mm)',
+        'th-geom':        'Geom. ¹<br>(μL)',
+        'th-strokes':     'Cicli<br>→1000',
+        'th-time':        'Tempo ²<br>(s)',
+        'th-feasible':    'Fattibile',
+        'sum-target':     'Volume target erogato',
+        'sum-geom':       'Vol. geom. spazzato',
+        'sum-arc':        'Arco tra i rulli',
+        'sum-feasible':   'Configurazioni fattibili',
+        'sum-minr':       'R minimo fattibile',
+        'feas-yes':       '✓ sì',
+        'feas-overlap':   'rulli sovrapposti',
+        'feas-boss':      'colpisce boss',
+        'feas-tube':      'tubo troppo corto',
+        'note':           '<b>¹ Volume geometrico spazzato</b> per ciclo = erogato ÷ efficienza occlusione. Questo è il volume lordo del lume che l\'arco deve spazzare; dopo la perdita di occlusione eroga il volume target.<br><b>² Tempo di erogazione</b> per 1000 μL alla frequenza step impostata, microstepping 1/32, 6400 step/giro, esclude accel/decel.<br><b>Gap arco</b> = arco tra i rulli − OD cuscinetto; deve essere > 0 (i rulli non devono toccarsi).<br><b>Clr. mozzo</b> = (R − raggio rullo) − raggio boss; deve essere > 0 (il rullo deve avere gioco sul boss motore).<br><b>Arco tubo</b> = πR; deve essere ≤ 123 mm (153 mm stop-to-stop − 2×15 mm rettilinei), altrimenti <b>tubo troppo corto</b>.<br>R arrotondato a 0,1 mm (risoluzione Bambu P1S); PLA per le prime prove di stampa.',
+        'footer-university': 'Politecnico di Danimarca · Dipartimento di Tecnologia della Salute',
+      }
+    };
+
+    let currentLang = 'en';
+    try { currentLang = localStorage.getItem('lang') || 'en'; } catch(e) {}
+
+    function applyLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (LANG[lang][key] !== undefined) el.innerHTML = LANG[lang][key];
+      });
+      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'IT' : 'ENG';
+      document.documentElement.lang = lang === 'en' ? 'en' : 'it';
+      try { localStorage.setItem('lang', lang); } catch(e) {}
+      upd();
+    }
+
+    // ── Calculator ───────────────────────────────────────────────
     const ROWS = [3, 4, 5, 6, 8, 10, 12];
     const TUBE_AVAIL = 123;
 
@@ -409,6 +502,8 @@
     }
 
     function upd() {
+      const L = LANG[currentLang];
+
       let vol = parseFloat(document.getElementById('volN').value);
       if (isNaN(vol)) vol = 5;
       vol = Math.max(1, Math.min(25, vol));
@@ -425,18 +520,18 @@
 
       ['occS', 'bossS', 'spS'].forEach(id => setRangeFill(document.getElementById(id)));
 
-      const A        = Math.PI * Math.pow(ID / 2, 2);
-      const geomVol  = vol / occ;
+      const A         = Math.PI * Math.pow(ID / 2, 2);
+      const geomVol   = vol / occ;
       const arcNeeded = geomVol / A;
-      const rollerR  = bOD / 2;
-      const bossR    = boss / 2;
+      const rollerR   = bOD / 2;
+      const bossR     = boss / 2;
 
       let feasCount = 0, minR = null;
 
       const html = ROWS.map(N => {
-        const Rexact = (N * arcNeeded) / (2 * Math.PI);
-        const R      = Math.round(Rexact * 10) / 10;
-        const OD     = 2 * R;
+        const Rexact  = (N * arcNeeded) / (2 * Math.PI);
+        const R       = Math.round(Rexact * 10) / 10;
+        const OD      = 2 * R;
         const tubeLen = Math.PI * R;
         const arcGap  = arcNeeded - bOD;
         const hubClr  = (R - rollerR) - bossR;
@@ -450,13 +545,13 @@
         const time       = totalSteps / SP;
         const cls = feasible ? '' : 'infeasible';
 
-        let why = '<span class="ok">&#10003; yes</span>';
+        let why = `<span class="ok">${L['feas-yes']}</span>`;
         if (!feasible) {
           const r = [];
-          if (arcGap  <= 0) r.push('rollers overlap');
-          if (hubClr  <= 0) r.push('hits boss');
-          if (!tubeOK)      r.push('tube too short');
-          why = `<span class="no">&#10007; ${r.join(', ')}</span>`;
+          if (arcGap  <= 0) r.push(L['feas-overlap']);
+          if (hubClr  <= 0) r.push(L['feas-boss']);
+          if (!tubeOK)      r.push(L['feas-tube']);
+          why = `<span class="no">✗ ${r.join(', ')}</span>`;
         }
 
         return `<tr class="${cls}">
@@ -476,11 +571,11 @@
       document.getElementById('tb').innerHTML = html;
 
       document.getElementById('summary').innerHTML = `
-        <div class="mc"><div class="l">Delivered target</div><div class="n">${vol.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">&micro;L</small></div></div>
-        <div class="mc"><div class="l">Geom. swept vol.</div><div class="n">${geomVol.toFixed(2)} <small style="font-size:0.95rem;font-weight:500">&micro;L</small></div></div>
-        <div class="mc"><div class="l">Arc between rollers</div><div class="n">${arcNeeded.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">mm</small></div></div>
-        <div class="mc"><div class="l">Feasible configs</div><div class="n">${feasCount} <small style="font-size:0.95rem;font-weight:500">of ${ROWS.length}</small></div></div>
-        <div class="mc"><div class="l">Smallest feasible R</div><div class="n">${minR !== null ? minR.toFixed(1) + ' <small style="font-size:0.95rem;font-weight:500">mm</small>' : '&mdash;'}</div></div>`;
+        <div class="mc"><div class="l">${L['sum-target']}</div><div class="n">${vol.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">μL</small></div></div>
+        <div class="mc"><div class="l">${L['sum-geom']}</div><div class="n">${geomVol.toFixed(2)} <small style="font-size:0.95rem;font-weight:500">μL</small></div></div>
+        <div class="mc"><div class="l">${L['sum-arc']}</div><div class="n">${arcNeeded.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">mm</small></div></div>
+        <div class="mc"><div class="l">${L['sum-feasible']}</div><div class="n">${feasCount} <small style="font-size:0.95rem;font-weight:500">of ${ROWS.length}</small></div></div>
+        <div class="mc"><div class="l">${L['sum-minr']}</div><div class="n">${minR !== null ? minR.toFixed(1) + ' <small style="font-size:0.95rem;font-weight:500">mm</small>' : '—'}</div></div>`;
     }
 
     ['occS', 'bossS', 'spS'].forEach(id =>
@@ -489,7 +584,11 @@
       document.getElementById(id).addEventListener('change', upd));
     document.getElementById('volN').addEventListener('input', upd);
 
-    upd();
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      applyLang(currentLang === 'en' ? 'it' : 'en');
+    });
+
+    applyLang(currentLang);
   </script>
 
 </body>

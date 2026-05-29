@@ -17,20 +17,20 @@
 
   <main>
     <header class="site-header animate-in" style="--delay: 0s">
-      <span class="site-label">DTU Master's Thesis &middot; 2025&ndash;2026</span>
-      <h1 class="site-title">
+      <span class="site-label" data-i18n="site-label">DTU Master's Thesis &middot; 2025&ndash;2026</span>
+      <h1 class="site-title" data-i18n="site-title">
         Modular Automated Liquid Dispensing<br>
         for Point-of-Care Use
       </h1>
       <p class="site-author">Sirio Vittorio Feltrin</p>
-      <p class="site-subtitle">
+      <p class="site-subtitle" data-i18n="site-subtitle">
         Interactive computational tools developed alongside the thesis research.
         Each tool can be used directly in the browser or offline from a USB drive.
       </p>
     </header>
 
     <section aria-label="Available tools">
-      <p class="section-label animate-in" style="--delay: 0.15s">Tools</p>
+      <p class="section-label animate-in" style="--delay: 0.15s" data-i18n="section-label">Tools</p>
       <div class="tools-grid">
 
         <a href="tools/rotor-solver/index.html"
@@ -38,12 +38,12 @@
            style="--delay: 0.25s">
           <div class="card-icon">&#9881;</div>
           <div class="card-body">
-            <h2 class="card-title">Peristaltic Rotor Geometry Solver</h2>
-            <p class="card-desc">
+            <h2 class="card-title" data-i18n="card-title-rotor">Peristaltic Rotor Geometry Solver</h2>
+            <p class="card-desc" data-i18n="card-desc-rotor">
               Tool description coming soon.
             </p>
           </div>
-          <span class="card-link">Open tool &rarr;</span>
+          <span class="card-link" data-i18n="card-link">Open tool &rarr;</span>
         </a>
 
         <!-- Future tools — duplicate the block above and update href, title, desc -->
@@ -53,9 +53,56 @@
   </main>
 
   <footer class="site-footer">
-    <p>Technical University of Denmark &middot; Department of Health Technology</p>
+    <p data-i18n="footer-university">Technical University of Denmark &middot; Department of Health Technology</p>
     <p>Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
   </footer>
+
+  <button id="lang-toggle" class="lang-toggle" style="position:fixed;top:20px;right:28px;z-index:100">IT</button>
+
+  <script>
+    const LANG = {
+      en: {
+        'site-label':        'DTU Master’s Thesis · 2025–2026',
+        'site-title':        'Modular Automated Liquid Dispensing<br>for Point-of-Care Use',
+        'site-subtitle':     'Interactive computational tools developed alongside the thesis research. Each tool can be used directly in the browser or offline from a USB drive.',
+        'section-label':     'Tools',
+        'card-title-rotor':  'Peristaltic Rotor Geometry Solver',
+        'card-desc-rotor':   'Tool description coming soon.',
+        'card-link':         'Open tool →',
+        'footer-university': 'Technical University of Denmark · Department of Health Technology',
+      },
+      it: {
+        'site-label':        'Tesi Magistrale DTU · 2025–2026',
+        'site-title':        'Distribuzione Automatizzata Modulare di Liquidi<br>per Diagnostica Point-of-Care',
+        'site-subtitle':     'Strumenti computazionali interattivi sviluppati parallelamente alla ricerca di tesi. Ogni strumento può essere utilizzato direttamente nel browser o offline da una chiavetta USB.',
+        'section-label':     'Strumenti',
+        'card-title-rotor':  'Risolutore Geometrico del Rotore Peristaltico',
+        'card-desc-rotor':   'Descrizione dello strumento in arrivo.',
+        'card-link':         'Apri strumento →',
+        'footer-university': 'Politecnico di Danimarca · Dipartimento di Tecnologia della Salute',
+      }
+    };
+
+    let currentLang = 'en';
+    try { currentLang = localStorage.getItem('lang') || 'en'; } catch(e) {}
+
+    function applyLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (LANG[lang][key] !== undefined) el.innerHTML = LANG[lang][key];
+      });
+      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'IT' : 'ENG';
+      document.documentElement.lang = lang === 'en' ? 'en' : 'it';
+      try { localStorage.setItem('lang', lang); } catch(e) {}
+    }
+
+    applyLang(currentLang);
+
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      applyLang(currentLang === 'en' ? 'it' : 'en');
+    });
+  </script>
 
 </body>
 </html>

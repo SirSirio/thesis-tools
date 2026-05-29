@@ -4,7 +4,7 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 
 **Thesis:** Modular automated liquid dispensing for point-of-care use  
 **Author:** Sirio Vittorio Feltrin · 2025–2026  
-**Live URL:** *(update after GitHub Pages deploy)*
+**Live URL:** https://sirsirio.github.io/thesis-tools/
 
 ---
 
