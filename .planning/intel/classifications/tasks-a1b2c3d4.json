@@ -1,0 +1,17 @@
+{
+  "source_path": "D:/03. DTU - Offline/03. MASTER THESIS/02. GitHub Thesis Tools Page/openspec/changes/language-switcher-eng-it/tasks.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Language Switcher (ENG/IT) — Implementation Tasks",
+  "summary": "Checklist of implementation tasks for adding an English/Italian language toggle to the landing page and rotor solver tool.",
+  "scope": ["language-switcher", "index.html", "rotor-solver", "assets/style.css", "localStorage", "data-i18n"],
+  "cross_refs": [
+    "assets/style.css",
+    "index.html",
+    "tools/rotor-solver/index.html"
+  ],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

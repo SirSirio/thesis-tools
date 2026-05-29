@@ -1,0 +1,25 @@
+{
+  "source_path": "D:/03. DTU - Offline/03. MASTER THESIS/02. GitHub Thesis Tools Page/openspec/changes/language-switcher-eng-it/design.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Language Switcher (ENG/IT) Design",
+  "summary": "Architecture decisions for a client-side ENG/IT language toggle using data-i18n attributes, inline JS dictionaries, and localStorage persistence.",
+  "scope": [
+    "language-switcher",
+    "i18n",
+    "index.html",
+    "tools/rotor-solver/index.html",
+    "assets/style.css",
+    "localStorage",
+    "nav bar"
+  ],
+  "cross_refs": [
+    "index.html",
+    "tools/rotor-solver/index.html",
+    "assets/style.css"
+  ],
+  "locked": false,
+  "precedence": null,
+  "notes": "No explicit 'Status:' frontmatter field present; document contains numbered decisions (D1-D4) with alternatives considered and rejected — strong ADR content signal. Classified as ADR with high confidence. locked=false because no Accepted status is declared."
+}

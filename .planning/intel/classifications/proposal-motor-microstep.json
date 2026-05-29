@@ -1,0 +1,21 @@
+{
+  "source_path": "D:/03. DTU - Offline/03. MASTER THESIS/02. GitHub Thesis Tools Page/openspec/changes/motor-microstepping-panel/proposal.md",
+  "type": "PRD",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Motor & Microstepping Panel — Proposal",
+  "summary": "Adds a motor and microstepping panel to the rotor solver to compute torque, steps per stroke, volume per step, and speed ceiling for the Wantai 42BYGHW811/DRV8825 combination.",
+  "scope": [
+    "rotor-solver",
+    "motor-microstepping-panel",
+    "tools/rotor-solver/index.html",
+    "Wantai 42BYGHW811",
+    "DRV8825"
+  ],
+  "cross_refs": [
+    "tools/rotor-solver/index.html"
+  ],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

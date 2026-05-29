@@ -1,0 +1,29 @@
+{
+  "source_path": "D:/03. DTU - Offline/03. MASTER THESIS/02. GitHub Thesis Tools Page/CLAUDE.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Project orientation",
+  "summary": "Project-wide orientation guide covering folder structure, design system, OpenSpec workflow, key constraints, and VS Code pitfalls for a static thesis tools site.",
+  "scope": [
+    "project structure",
+    "design system",
+    "OpenSpec workflow",
+    "development constraints",
+    "VS Code configuration",
+    "static site",
+    "GitHub Pages"
+  ],
+  "cross_refs": [
+    "index.html",
+    "assets/style.css",
+    "tools/rotor-solver/index.html",
+    "openspec/",
+    "README.md",
+    "ROADMAP.md",
+    ".vscode/settings.json"
+  ],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

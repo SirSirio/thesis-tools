@@ -1,0 +1,23 @@
+{
+  "source_path": "D:/03. DTU - Offline/03. MASTER THESIS/02. GitHub Thesis Tools Page/openspec/changes/language-switcher-eng-it/specs/language-switcher/spec.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Language Switcher Specification",
+  "summary": "Defines technical requirements and acceptance scenarios for a client-side ENG/IT language toggle with localStorage persistence and graceful fallback.",
+  "scope": [
+    "language-switcher",
+    "data-i18n",
+    "localStorage",
+    "nav bar",
+    "index.html",
+    "tools/rotor-solver/index.html"
+  ],
+  "cross_refs": [
+    "tools/rotor-solver/index.html",
+    "index.html"
+  ],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

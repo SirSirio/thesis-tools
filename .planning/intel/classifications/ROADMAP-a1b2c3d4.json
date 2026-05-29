@@ -1,0 +1,13 @@
+{
+  "source_path": "D:/03. DTU - Offline/03. MASTER THESIS/02. GitHub Thesis Tools Page/ROADMAP.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Roadmap",
+  "summary": "Tracks shipped, planned, and backlog tools for the thesis tools site with brief descriptions and priorities.",
+  "scope": ["tools", "thesis tools site", "Peristaltic Rotor Geometry Solver", "flow sensor calibration", "dispense protocol calculator", "tube occlusion estimator", "bill of materials"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}
