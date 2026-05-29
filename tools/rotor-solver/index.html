@@ -337,7 +337,7 @@
 </div>
 </div>
 <!-- Notes -->
-<p class="note animate-in" style="--delay: 0.42s;" data-i18n="note"><b>&sup1; Geometric swept volume</b> per stroke = delivered &divide; occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, 1&frasl;32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br><b>Hub clr</b> = (R &minus; roller radius) &minus; boss radius; must be &gt; 0 (roller must clear the motor boss).<br><b>Tube arc</b> = &pi;R; must be &le; 123 mm (153 mm stop-to-stop &minus; 2&times;15 mm straight runs), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.</p>
+<p class="note animate-in" style="--delay: 0.42s;" data-i18n="note"><b>&sup1; Geometric swept volume</b> per stroke = delivered &divide; occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, 1&frasl;32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br><b>Hub clr</b> = (R &minus; roller radius) &minus; boss radius; must be &gt; 0 (roller must clear the motor boss).<br><b>Tube arc</b> = &pi;R; must be &le; 200 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.</p>
 </main><footer class="site-footer">
 <p data-i18n="footer-university">Technical University of Denmark &middot; Department of Health Technology</p>
 <p>Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
@@ -379,7 +379,7 @@
         'feas-overlap':   'rollers overlap',
         'feas-boss':      'hits boss',
         'feas-tube':      'tube too short',
-        'note':           '<b>¹ Geometric swept volume</b> per stroke = delivered ÷ occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>² Dispense time</b> for 1000 μL at the set step rate, 1⁄32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers − bearing OD; must be > 0 (rollers must not touch).<br><b>Hub clr</b> = (R − roller radius) − boss radius; must be > 0 (roller must clear the motor boss).<br><b>Tube arc</b> = πR; must be ≤ 123 mm (153 mm stop-to-stop − 2×15 mm straight runs), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.',
+        'note':           '<b>¹ Geometric swept volume</b> per stroke = delivered ÷ occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>² Dispense time</b> for 1000 μL at the set step rate, 1⁄32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers − bearing OD; must be > 0 (rollers must not touch).<br><b>Hub clr</b> = (R − roller radius) − boss radius; must be > 0 (roller must clear the motor boss).<br><b>Tube arc</b> = πR; must be ≤ 300 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.',
         'footer-university': 'Technical University of Denmark · Department of Health Technology',
       },
       it: {
@@ -415,7 +415,7 @@
         'feas-overlap':   'rulli sovrapposti',
         'feas-boss':      'colpisce boss',
         'feas-tube':      'tubo troppo corto',
-        'note':           '<b>¹ Volume geometrico spazzato</b> per ciclo = erogato ÷ efficienza occlusione. Questo è il volume lordo del lume che l\'arco deve spazzare; dopo la perdita di occlusione eroga il volume target.<br><b>² Tempo di erogazione</b> per 1000 μL alla frequenza step impostata, microstepping 1/32, 6400 step/giro, esclude accel/decel.<br><b>Gap arco</b> = arco tra i rulli − OD cuscinetto; deve essere > 0 (i rulli non devono toccarsi).<br><b>Clr. mozzo</b> = (R − raggio rullo) − raggio boss; deve essere > 0 (il rullo deve avere gioco sul boss motore).<br><b>Arco tubo</b> = πR; deve essere ≤ 123 mm (153 mm stop-to-stop − 2×15 mm rettilinei), altrimenti <b>tubo troppo corto</b>.<br>R arrotondato a 0,1 mm (risoluzione Bambu P1S); PLA per le prime prove di stampa.',
+        'note':           '<b>¹ Volume geometrico spazzato</b> per ciclo = erogato ÷ efficienza occlusione. Questo è il volume lordo del lume che l\'arco deve spazzare; dopo la perdita di occlusione eroga il volume target.<br><b>² Tempo di erogazione</b> per 1000 μL alla frequenza step impostata, microstepping 1/32, 6400 step/giro, esclude accel/decel.<br><b>Gap arco</b> = arco tra i rulli − OD cuscinetto; deve essere > 0 (i rulli non devono toccarsi).<br><b>Clr. mozzo</b> = (R − raggio rullo) − raggio boss; deve essere > 0 (il rullo deve avere gioco sul boss motore).<br><b>Arco tubo</b> = πR; deve essere ≤ 300 mm (fermi regolabili), altrimenti <b>tubo troppo corto</b>.<br>R arrotondato a 0,1 mm (risoluzione Bambu P1S); PLA per le prime prove di stampa.',
         'footer-university': 'Politecnico di Danimarca · Dipartimento di Tecnologia della Salute',
       }
     };
@@ -437,7 +437,7 @@
 
     // ── Calculator ───────────────────────────────────────────────
     const ROWS = [3, 4, 5, 6, 8, 10, 12];
-    const TUBE_AVAIL = 123;
+    const TUBE_AVAIL = 300;
 
     function setRangeFill(el) {
       const pct = ((+el.value - +el.min) / (+el.max - +el.min)) * 100;

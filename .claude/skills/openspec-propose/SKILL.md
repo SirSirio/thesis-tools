@@ -39,6 +39,18 @@ When ready to implement, run /opsx:apply
    ```
    This creates a scaffolded change at `openspec/changes/<name>/` with `.openspec.yaml`.
 
+2b. **Create and switch to a feature branch**
+
+   Run:
+   ```bash
+   git checkout -b feature/<name>
+   ```
+   If the branch already exists (e.g. continuing prior work), switch to it instead:
+   ```bash
+   git checkout feature/<name>
+   ```
+   Show the user: "Created branch: `feature/<name>`"
+
 3. **Get the artifact build order**
    ```bash
    openspec status --change "<name>" --json

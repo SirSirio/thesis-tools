@@ -44,12 +44,15 @@ Each tool page links back to `../../index.html` via a `← All tools` nav bar an
 
 New tools follow this sequence:
 
-1. `/opsx:propose "Tool name and idea"` — generates proposal, specs, design, tasks under `openspec/changes/`
+1. `/opsx:propose "Tool name and idea"` — generates proposal, specs, design, tasks under `openspec/changes/` **and creates a `feature/<name>` git branch automatically**
 2. Discuss and refine the spec before touching any code
-3. `/opsx:apply` — implement from the spec
+3. `/opsx:apply` — switches to `feature/<name>` and implements from the spec
 4. Add a row to `README.md` tool table and `ROADMAP.md`
 5. `/opsx:archive` — move spec to `openspec/changes/archive/`
-6. Update `CLAUDE.md` folder structure if new files were added
+6. Merge `feature/<name>` into `master` and delete the branch
+7. Update `CLAUDE.md` folder structure if new files were added
+
+**Branch convention:** `feature/<change-name>` (kebab-case, matches the OpenSpec change name)
 
 ---
 

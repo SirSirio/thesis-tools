@@ -24,6 +24,18 @@ Implement tasks from an OpenSpec change.
 
    Always announce: "Using change: <name>" and how to override (e.g., `/opsx:apply <other>`).
 
+1b. **Switch to the feature branch**
+
+   Run:
+   ```bash
+   git checkout feature/<name>
+   ```
+   If the branch doesn't exist yet (e.g. skipped propose), create it:
+   ```bash
+   git checkout -b feature/<name>
+   ```
+   Show the user: "On branch: `feature/<name>`"
+
 2. **Check status to understand the schema**
    ```bash
    openspec status --change "<name>" --json
