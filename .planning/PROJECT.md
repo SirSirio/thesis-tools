@@ -4,9 +4,11 @@
 
 A growing collection of self-contained interactive design tools built alongside a DTU master's thesis on modular automated liquid dispensing for point-of-care use. Each tool is a static HTML/JS page that runs offline from a USB drive and is cited in the written thesis via QR codes. The site is a one-person project authored by Sirio Vittorio Feltrin (2025–2026).
 
+**Site structure:** A landing page (`index.html`) links to all available tools. Each tool lives at its own path (e.g. `tools/rotor-solver/index.html`) and is fully self-contained — its own HTML, inline `<style>`, and inline `<script>`. Tools are independent; they share only the design system (`assets/style.css`) and the nav bar back-link. A new tool is just a new card on the landing page.
+
 ## Core Value
 
-Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes.
+A thesis companion site where each tool is developed on demand — when a design decision needs computational support, a new tool is built, documented, and linked. Tools share a common visual style but are developed and maintained independently. The collection grows with the thesis, is always usable offline, and is cited in the written work via QR codes.
 
 ## Requirements
 
@@ -17,7 +19,6 @@ Self-contained interactive design tools that support hardware decisions for Prot
 ### Active
 
 - [ ] Motor & Microstepping Panel added to rotor solver (Phase 1)
-- [ ] Language switcher ENG/IT on all pages (Phase 2)
 
 ### Out of Scope
 
@@ -35,7 +36,7 @@ Self-contained interactive design tools that support hardware decisions for Prot
 - Live URL: https://sirsirio.github.io/thesis-tools/
 - Hardware under development: peristaltic pump with NEMA17 stepper (Wantai 42BYGHW811), DRV8825 driver, Sensirion flow sensor, rotating peristaltic head, modular fluidic interface
 - Design system: dark glassmorphic theme; tokens defined in `assets/style.css`; each tool page brings its own `<style>` block
-- Development workflow: OpenSpec spec-driven — `/opsx:propose` → `/opsx:apply` → `/opsx:archive`; feature branches named `feature/<change-name>`
+- Development workflow: GSD (`/gsd:discuss-phase` → `/gsd:plan-phase` → `/gsd:execute-phase`); one phase per tool or tool enhancement. OpenSpec change files in `openspec/` are preserved as historical reference.
 - Do NOT use VS Code Live Preview (rewrites relative paths and strips inline scripts); use `serve.bat` → `http://localhost:7331` instead
 - Site grows as the thesis progresses; each new tool is triggered by a new design decision needing computational support
 - Backlog tools (no spec yet): flow sensor calibration curve viewer, dispense protocol calculator, tube occlusion efficiency estimator, BOM/component selector

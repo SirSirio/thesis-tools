@@ -1,7 +1,7 @@
 # Requirements: Thesis Tools — Modular Automated Liquid Dispensing for Point-of-Care Use
 
 **Defined:** 2026-05-29
-**Core Value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
+**Core Value:** Each tool is built on demand when a thesis design decision needs computational support — independent, self-contained, same visual style, always offline-capable
 
 ## v1 Requirements
 
