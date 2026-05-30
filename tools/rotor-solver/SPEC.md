@@ -90,12 +90,13 @@ Torque fractions are approximate values for the DRV8825 sinusoidal current profi
 
 ### Per-row motor calculations
 ```
-rollers_contact = floor(N / 2)                        — simultaneous rollers in 180° arc
-steps_stroke    = (200 × M_factor) / N                — steps per stroke
-uL_per_step     = vol × N / (200 × M_factor)          — volume resolution (µL/step)
-torque_rim      = 4800 × torque_fraction / R_mm × 10  — available torque at rim (g)
-FoS             = torque_rim / (200 × rollers_contact) — factor of safety vs worst-case load
-max_step_rate   = f(V_supply, L, R, I)                — theoretical ceiling (steps/s), see note
+rollers_contact = floor(N / 2)                                                   — simultaneous rollers in 180° arc
+steps_stroke    = (200 × M_factor) / N                                           — steps per stroke
+uL_per_step     = vol × N / (200 × M_factor)                                     — volume resolution (µL/step)
+max_step_rate   = V_supply / (2 × L × I_rated)                                   — inductive ceiling (steps/s); 12 V → 1333, 24 V → 2667
+speed_derating  = min(1, max_step_rate / step_rate)                              — < 1 when operating above inductive ceiling; voltage- and speed-dependent
+torque_rim      = 4800 × torque_fraction × speed_derating / R_mm × 10            — effective torque at rim (g); reduced at high speed or low voltage
+FoS             = torque_rim / (200 × rollers_contact)                            — factor of safety vs worst-case compression load
 ```
 
 **FoS colour thresholds:**
@@ -110,12 +111,12 @@ Both the numeric FoS value and the colour are shown. Red rows are not hidden —
 - Worst-case per row: 200 g × rollers_contact
 - Typical per row: ~100 g × rollers_contact
 
-**Max step rate — speed ceiling:**
-- Back-EMF and inductance limit reliable operation at high step rates
-- At 12 V, 1/32: practical ceiling ~3000–5000 steps/s
-- At 24 V, 1/32: ceiling roughly doubles
-- Ceiling rises significantly at lower microstepping modes
-- Exact formula: derived from DRV8825 chopper current regulation and L/R time constant
+**Max step rate and speed derating:**
+- Inductive ceiling: f_max = V_supply / (2 × L × I_rated) → 1333 steps/s @ 12 V; 2667 steps/s @ 24 V
+- Above this ceiling, current cannot reach rated value in one step period → effective torque reduced
+- speed_derating = min(1, f_max / step_rate) is applied to torque_rim and propagates into FoS
+- Higher voltage raises the ceiling, increasing effective torque at the same operating step rate
+- Example: at SP = 2000 steps/s → derating = 0.67 @ 12 V, 1.00 @ 24 V
 
 ### Summary card (not per-row)
 ```
@@ -126,16 +127,20 @@ RPM = step_rate / (200 × M_factor) × 60
 
 ## Known values at Proto 1 design point (10 rollers, R ≈ 39 mm)
 
-| Quantity | Value |
-|----------|-------|
-| Rotor radius | ~39 mm |
-| Rollers in contact | 5 |
-| Vol / full step | ~0.25 µL/step — sufficient for ±10% at 5 µL min dispense |
-| Torque at rim (full step) | ~1230 g |
-| Torque at rim (1/8 step) | ~430 g |
-| FoS (full step, worst case) | ~1.23 — amber |
-| FoS (1/8 step, worst case) | ~0.43 — red |
-| Time @ 1/8 step, 1500 steps/s | ~21 s for 1000 µL — within 60 s target |
+| Quantity | Value | Condition |
+|----------|-------|-----------|
+| Rotor radius | ~39 mm | — |
+| Rollers in contact | 5 | — |
+| Vol / full step | ~0.25 µL/step | sufficient for ±10% at 5 µL min dispense |
+| Torque at rim (full step) | ~1231 g | 24 V, SP ≤ 2667 (derating = 1.0) |
+| Torque at rim (full step) | ~821 g | 12 V, SP = 2000 (derating = 0.67) |
+| Torque at rim (1/8 step) | ~431 g | 24 V, SP ≤ 2667 (derating = 1.0) |
+| Torque at rim (1/8 step) | ~287 g | 12 V, SP = 2000 (derating = 0.67) |
+| FoS (full step) | ~1.23 — amber | 24 V, SP ≤ 2667 |
+| FoS (full step) | ~0.82 — red | 12 V, SP = 2000 |
+| FoS (1/8 step) | ~0.43 — red | 24 V, SP ≤ 2667 |
+| FoS (1/8 step) | ~0.29 — red | 12 V, SP = 2000 |
+| Time @ 1/8 step, 1500 steps/s | ~21 s for 1000 µL | within 60 s target |
 
 ---
 

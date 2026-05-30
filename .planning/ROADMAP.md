@@ -14,6 +14,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 ## Active Phases
 
 - [x] **Phase 1: Motor & Microstepping Panel** - Extend the rotor solver with motor operating-point calculations so Proto 1 hardware decisions can be made from calculated data (completed 2026-05-30)
+- [ ] **Phase 2: GSD Workflow Visualizer** - Build a standalone tool that renders the GSD spec-driven development workflow as an interactive visual diagram
 
 ## Phase Details
 
@@ -45,8 +46,21 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **UI hint**: yes
 
+### Phase 2: GSD Workflow Visualizer
+
+**Goal**: Build a new standalone tool page that renders the GSD spec-driven development workflow as an interactive visual diagram, demonstrating the discuss → plan → execute loop with optional steps
+**Depends on**: Nothing (Phase 1 complete)
+**Requirements**: TBD in discuss-phase
+**Success Criteria** (what must be TRUE):
+
+  1. A new tool page at `tools/gsd-workflow/index.html` exists and is linked from the landing page
+  2. The page displays a visual diagram of the GSD workflow showing the core loop and optional steps
+  3. The tool follows the same dark glassmorphic theme and nav-bar pattern as existing tools
+  4. No new shared files — all logic and styles are inline
+
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Motor & Microstepping Panel | 3/3 | Complete   | 2026-05-30 |
+| 1. Motor & Microstepping Panel | 3/3 | Complete    | 2026-05-30 |
+| 2. GSD Workflow Visualizer | 0/? | Discussing | — |

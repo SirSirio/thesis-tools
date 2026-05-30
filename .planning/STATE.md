@@ -3,7 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-05-30T09:38:07.819Z"
+stopped_at: Phase 1 Plan 02 complete
+last_updated: "2026-05-30T21:10:03.675Z"
 last_activity: 2026-05-30
 progress:
   total_phases: 1
@@ -17,15 +18,15 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-29)
+See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 1 — Motor & Microstepping Panel
+**Current focus:** Milestone v1.0 complete — ready to plan next tool (Phase 2)
 
 ## Current Position
 
-Phase: 1 of 1 active (Motor & Microstepping Panel)
-Plan: 3 of 3 in current phase (01-02 complete)
+Phase: 01 of 1 (Motor & Microstepping Panel)
+Plan: Not started
 Status: Ready to execute
 Last activity: 2026-05-30
 
@@ -35,7 +36,7 @@ Progress: [██████████] 100%
 
 **Velocity:**
 
-- Total plans completed: 2
+- Total plans completed: 5
 - Average duration: 20m
 - Total execution time: 0.67 hours
 
@@ -44,6 +45,7 @@ Progress: [██████████] 100%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-motor-microstepping-panel | 2 | 40m | 20m |
+| 01 | 3 | - | - |
 
 **Recent Trend:**
 
@@ -66,6 +68,7 @@ Recent decisions affecting current work:
 - 01-02: torqueRim = MOTOR.holdingTorque * Tf / R * 10 (×10 converts g·cm/mm to g-force at rim)
 - 01-02: maxStepRate is microstepping-independent (V / 2×L×I inductive ceiling); computed once in upd()
 - 01-02: motorCols gated on feasible flag — infeasible rows always show — (T-02-02 mitigation)
+- Post-Phase 1: speedDerating = min(1, maxStepRate/SP) added to torqueRim — voltage now affects FoS via inductive ceiling
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-30T09:38:07.806Z
-Stopped at: Phase 1 Plan 02 complete
+Last session: 2026-05-30T21:10:00Z
+Stopped at: Phase 1 complete — UAT passed (10/10), milestone v1.0 done. Speed derating added post-execution.
 Resume file: None

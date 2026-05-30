@@ -15,10 +15,11 @@ A thesis companion site where each tool is developed on demand — when a design
 ### Validated
 
 - ✓ Peristaltic Rotor Geometry Solver — solves rotor radius for target stroke volume, checks 3 feasibility constraints across roller counts 3–12. (Phase 0 / shipped)
+- ✓ Motor & Microstepping Panel — 6 per-row motor columns (contact rollers, steps/stroke, µL/step, torque rim, FoS with traffic light, max step rate), voltage-dependent speed derating, dynamic Time column, RPM card, full EN/IT documentation. (Phase 1 / shipped)
 
 ### Active
 
-- [ ] Motor & Microstepping Panel added to rotor solver (Phase 1)
+*(none — ready to plan next tool)*
 
 ### Out of Scope
 
@@ -62,8 +63,9 @@ A thesis companion site where each tool is developed on demand — when a design
 | localStorage key "lang", default "en" | Simple, predictable, wrapped in try/catch for private-browsing resilience | — Pending |
 | Toggle button in existing nav bar, no new CSS variables | Reuses existing glass/border tokens; minimal visual disruption | — Pending |
 | No auto browser-language detection | User must choose explicitly; RTL and additional languages out of scope | — Pending |
-| Hard-code Wantai 42BYGHW811 / DRV8825 motor params | Proto 1 scope; generality not needed yet | — Pending |
-| Motor panel changes only tools/rotor-solver/index.html | Keeps feature self-contained; consistent with project convention | — Pending |
+| Hard-code Wantai 42BYGHW811 / DRV8825 motor params | Proto 1 scope; generality not needed yet | ✓ Shipped Phase 1 |
+| Motor panel changes only tools/rotor-solver/index.html | Keeps feature self-contained; consistent with project convention | ✓ Shipped Phase 1 |
+| Voltage-dependent speed derating on torque/FoS (min(1, f_max/SP)) | DRV8825 chopper can't reach rated current above inductive ceiling; derating makes FoS physically accurate | ✓ Added post-Phase 1 |
 
 ---
-*Last updated: 2026-05-29 after initial .planning/ setup*
+*Last updated: 2026-05-30 after Phase 1 — Motor & Microstepping Panel*
