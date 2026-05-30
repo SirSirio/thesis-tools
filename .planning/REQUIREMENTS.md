@@ -7,8 +7,8 @@
 
 ### Motor & Microstepping Panel
 
-- [ ] **MOTOR-01**: Rotor solver displays a Motor & Microstepping panel below the geometry results table, with a voltage selector (12 V / 24 V), a microstepping mode dropdown (full / 1/2 / 1/4 / 1/8 / 1/16 / 1/32), and a step rate input field
-- [ ] **MOTOR-02**: Panel computes and displays seven derived outputs wired to rotor geometry results: steps per stroke, volume per step (µL), available torque at rotor rim, estimated cumulative compression load range, torque margin indicator, approximate reliable max step rate, and RPM at user-supplied step rate
+- [x] **MOTOR-01**: Rotor solver displays a Motor & Microstepping panel below the geometry results table, with a voltage selector (12 V / 24 V), a microstepping mode dropdown (full / 1/2 / 1/4 / 1/8 / 1/16 / 1/32), and a step rate input field
+- [x] **MOTOR-02**: Panel computes and displays seven derived outputs wired to rotor geometry results: steps per stroke, volume per step (µL), available torque at rotor rim, estimated cumulative compression load range, torque margin indicator, approximate reliable max step rate, and RPM at user-supplied step rate
 - [ ] **MOTOR-03**: All motor parameters are hard-coded for the Wantai 42BYGHW811 / DRV8825 combination; no editable motor spec fields are exposed
 - [ ] **MOTOR-04**: All motor panel logic lives in the existing inline script block of tools/rotor-solver/index.html; no new files, no assets/style.css changes, no CDN dependencies
 
@@ -45,8 +45,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MOTOR-01 | Phase 1 | Pending |
-| MOTOR-02 | Phase 1 | Pending |
+| MOTOR-01 | Phase 1 | Complete |
+| MOTOR-02 | Phase 1 | Complete |
 | MOTOR-03 | Phase 1 | Pending |
 | MOTOR-04 | Phase 1 | Pending |
 | LANG-01 | Shipped | ✅ Complete |

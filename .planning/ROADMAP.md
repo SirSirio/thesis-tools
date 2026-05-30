@@ -37,7 +37,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — Motor calculations in upd(), six table columns, dynamic Time column, RPM summary card
+- [x] 01-02-PLAN.md — Motor calculations in upd(), six table columns, dynamic Time column, RPM summary card
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -49,4 +49,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Motor & Microstepping Panel | 1/3 | In progress | - |
+| 1. Motor & Microstepping Panel | 2/3 | In Progress|  |

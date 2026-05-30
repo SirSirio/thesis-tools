@@ -3,15 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 context gathered
-last_updated: "2026-05-30T09:45:00.000Z"
-last_activity: 2026-05-30 -- Phase 1 Plan 01 complete
+last_updated: "2026-05-30T09:34:07.135Z"
+last_activity: 2026-05-30
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 0
 ---
 
 # Project State
@@ -26,29 +25,29 @@ See: .planning/PROJECT.md (updated 2026-05-29)
 ## Current Position
 
 Phase: 1 of 1 active (Motor & Microstepping Panel)
-Plan: 1 of 3 in current phase (01-01 complete)
+Plan: 2 of 3 in current phase (01-02 complete)
 Status: Executing
-Last activity: 2026-05-30 -- Phase 1 Plan 01 complete
+Last activity: 2026-05-30 -- Phase 1 Plan 02 complete
 
-Progress: [███░░░░░░░] 33%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1
-- Average duration: 15m
-- Total execution time: 0.25 hours
+- Total plans completed: 2
+- Average duration: 20m
+- Total execution time: 0.67 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-motor-microstepping-panel | 1 | 15m | 15m |
+| 01-motor-microstepping-panel | 2 | 40m | 20m |
 
 **Recent Trend:**
 
-- Last 5 plans: 01-01 (15m)
+- Last 5 plans: 01-01 (15m), 01-02 (25m)
 - Trend: —
 
 *Updated after each plan completion*
@@ -64,6 +63,9 @@ Recent decisions affecting current work:
 - Language Switcher (shipped pre-GSD): data-i18n attribute toggle, localStorage key "lang", per-page inline dictionaries, no new CSS variables
 - 01-01: msSel option values match MS_FACTOR/TORQUE_FRAC keys exactly to prevent silent undefined
 - 01-01: MOTOR/MS_FACTOR/TORQUE_FRAC at script scope (not inside upd()) to avoid per-event reallocation
+- 01-02: torqueRim = MOTOR.holdingTorque * Tf / R * 10 (×10 converts g·cm/mm to g-force at rim)
+- 01-02: maxStepRate is microstepping-independent (V / 2×L×I inductive ceiling); computed once in upd()
+- 01-02: motorCols gated on feasible flag — infeasible rows always show — (T-02-02 mitigation)
 
 ### Pending Todos
 
@@ -85,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-30T09:45:00.000Z
-Stopped at: Phase 1 Plan 01 complete
-Resume file: .planning/phases/01-motor-microstepping-panel/01-02-PLAN.md
+Last session: 2026-05-30T10:25:00.000Z
+Stopped at: Phase 1 Plan 02 complete
+Resume file: .planning/phases/01-motor-microstepping-panel/01-03-PLAN.md
