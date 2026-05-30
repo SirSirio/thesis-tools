@@ -343,6 +343,12 @@
 <th data-i18n="th-strokes">Strokes<br>&rarr;1000</th>
 <th data-i18n="th-time">Time &sup2;<br>(s)</th>
 <th data-i18n="th-feasible">Feasible</th>
+<th data-i18n="th-contact">Rollers<br>contact</th>
+<th data-i18n="th-steps-stroke">Steps /<br>stroke</th>
+<th data-i18n="th-ul-step">&micro;L /<br>step</th>
+<th data-i18n="th-torque-rim">Torque rim<br>(g)</th>
+<th data-i18n="th-fos">FoS &sup3;</th>
+<th data-i18n="th-max-step">Max step rate &sup4;<br>(steps/s)</th>
 </tr>
 </thead>
 <tbody id="tb"></tbody>
@@ -390,6 +396,13 @@
         'sum-arc':        'Arc between rollers',
         'sum-feasible':   'Feasible configs',
         'sum-minr':       'Smallest feasible R',
+        'sum-rpm':        'Rotor speed',
+        'th-contact':     'Rollers<br>contact',
+        'th-steps-stroke':'Steps /<br>stroke',
+        'th-ul-step':     'μL /<br>step',
+        'th-torque-rim':  'Torque rim<br>(g)',
+        'th-fos':         'FoS ³',
+        'th-max-step':    'Max step rate ⁴<br>(steps/s)',
         'feas-yes':       '✓ yes',
         'feas-overlap':   'rollers overlap',
         'feas-boss':      'hits boss',
@@ -431,6 +444,13 @@
         'sum-arc':        'Arco tra i rulli',
         'sum-feasible':   'Configurazioni fattibili',
         'sum-minr':       'R minimo fattibile',
+        'sum-rpm':        'Velocità rotore',
+        'th-contact':     'Rulli<br>contatto',
+        'th-steps-stroke':'Step /<br>ciclo',
+        'th-ul-step':     'μL /<br>step',
+        'th-torque-rim':  'Coppia rim<br>(g)',
+        'th-fos':         'FoS ³',
+        'th-max-step':    'Step rate max ⁴<br>(steps/s)',
         'feas-yes':       '✓ sì',
         'feas-overlap':   'rulli sovrapposti',
         'feas-boss':      'colpisce boss',
@@ -577,17 +597,21 @@
           <td>${Math.round(strokes)}</td>
           <td>${time.toFixed(1)}</td>
           <td>${why}</td>
+          ${motorCols}
         </tr>`;
       }).join('');
 
       document.getElementById('tb').innerHTML = html;
+
+      const RPM = (SP / stepsRev) * 60;
 
       document.getElementById('summary').innerHTML = `
         <div class="mc"><div class="l">${L['sum-target']}</div><div class="n">${vol.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">μL</small></div></div>
         <div class="mc"><div class="l">${L['sum-geom']}</div><div class="n">${geomVol.toFixed(2)} <small style="font-size:0.95rem;font-weight:500">μL</small></div></div>
         <div class="mc"><div class="l">${L['sum-arc']}</div><div class="n">${arcNeeded.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">mm</small></div></div>
         <div class="mc"><div class="l">${L['sum-feasible']}</div><div class="n">${feasCount} <small style="font-size:0.95rem;font-weight:500">of ${ROWS.length}</small></div></div>
-        <div class="mc"><div class="l">${L['sum-minr']}</div><div class="n">${minR !== null ? minR.toFixed(1) + ' <small style="font-size:0.95rem;font-weight:500">mm</small>' : '—'}</div></div>`;
+        <div class="mc"><div class="l">${L['sum-minr']}</div><div class="n">${minR !== null ? minR.toFixed(1) + ' <small style="font-size:0.95rem;font-weight:500">mm</small>' : '—'}</div></div>
+        <div class="mc"><div class="l">${L['sum-rpm']}</div><div class="n">${RPM.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">RPM</small></div></div>`;
     }
 
     ['occS', 'bossS', 'spS'].forEach(id =>
