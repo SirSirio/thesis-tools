@@ -13,7 +13,7 @@ Interactive computational tools developed alongside master's thesis research on 
 | Tool | Description | Status |
 |------|-------------|--------|
 | [Peristaltic Rotor Geometry Solver](tools/rotor-solver/index.html) | Solves rotor radius analytically for a target stroke volume. Checks roller collision, hub clearance, and tube length feasibility across roller counts 3–12. Motor & microstepping panel screens each configuration against Wantai 42BYGHW811 / DRV8825 torque margin (FoS), steps/stroke, µL/step resolution, and max step rate — voltage-dependent via inductive ceiling. Full EN/IT interface. | ✅ Live |
-| [GSD Workflow Guide](tools/gsd-workflow-guide/index.html) | Interactive diagram of the GSD spec-driven development workflow (discuss → plan → execute loop, optional steps, utility commands). Click any node to expand details. | Phase 2 |
+| [GSD Workflow Guide](tools/gsd-workflow-guide/index.html) | Interactive reference for the GSD spec-driven development workflow. Visual diagram of the discuss → plan → execute loop with optional quality gates and utility commands. Expandable intro to spec-driven development and getting-started guide for new and existing projects. | ✅ Live |
 
 ---
 

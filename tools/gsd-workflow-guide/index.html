@@ -223,6 +223,81 @@
       margin: 0 0 8px;
     }
 
+    /* ── SDD mini diagram ────────────────────────── */
+    .sdd-diagram {
+      display: flex; align-items: flex-start; gap: 8px;
+      margin: 16px 0 4px;
+    }
+    @media (max-width: 600px) {
+      .sdd-diagram { flex-direction: column; }
+      .sdd-arrow { transform: rotate(90deg); align-self: center; margin: 2px 0; }
+    }
+    .sdd-arrow {
+      flex-shrink: 0; padding-top: 16px;
+      color: rgba(255,107,43,0.45);
+      font-size: 1rem; line-height: 1;
+    }
+    .sdd-phase {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,107,43,0.2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .sdd-phase:hover {
+      border-color: rgba(255,107,43,0.4);
+      background: rgba(255,255,255,0.05);
+    }
+    .sdd-phase-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 5px;
+    }
+    .sdd-num {
+      width: 20px; height: 20px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,107,43,0.15);
+      border-radius: 50%;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--accent, #ff6b2b);
+    }
+    .sdd-name {
+      font-size: 0.83rem; font-weight: 600;
+      color: #d0cbc5;
+      flex: 1;
+    }
+    .sdd-toggle {
+      color: var(--text-muted, #7a7068);
+      font-size: 0.7rem;
+      transition: transform 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .sdd-phase.open .sdd-toggle { transform: rotate(90deg); color: var(--accent, #ff6b2b); }
+    .sdd-brief {
+      font-size: 0.78rem; color: var(--text-muted, #7a7068);
+      line-height: 1.4; margin: 0;
+    }
+    .sdd-detail {
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.2s ease;
+      margin-top: 0;
+    }
+    .sdd-phase.open .sdd-detail {
+      max-height: 300px; opacity: 1; margin-top: 10px;
+    }
+    .sdd-detail p {
+      font-size: 0.8rem; color: #c0b8b0;
+      line-height: 1.55; margin: 0;
+    }
+    .sdd-detail code {
+      font-family: monospace; font-size: 0.82em;
+      color: var(--accent, #ff6b2b);
+      background: rgba(255,107,43,0.08);
+      border-radius: 3px; padding: 1px 4px;
+    }
+
     /* ── Sidebar ──────────────────────────────────── */
     .sidebar-column {
       display: flex; flex-direction: column; gap: 8px;
@@ -267,7 +342,49 @@
       <p>Spec-driven development means <strong>locking decisions before writing plans, and locking plans before writing code</strong>. The core insight is that when implementation preferences aren&rsquo;t documented upfront, AI agents make conflicting assumptions downstream &mdash; inconsistent patterns, differing architectural choices, rework. GSD forces these conversations first.</p>
       <p>Each phase starts with <code>/gsd:discuss-phase</code>, which captures decisions in a <code>CONTEXT.md</code> file &mdash; tech choices, file locations, error handling, layout direction &mdash; as numbered entries (D-01, D-02&hellip;). These decisions are <strong>binding</strong>: the planner won&rsquo;t approve plans that contradict them, and the verifier flags code that misses them.</p>
       <p>Plans are then small enough to execute in a fresh 200k-token context, committed atomically. The result is work that is reviewable at every step &mdash; not one giant diff at the end.</p>
-      <p><strong>The three pillars:</strong> (1) Context-first planning &mdash; discuss before plan. (2) Decisions as first-class artifacts &mdash; <code>CONTEXT.md</code> is a contract, not notes. (3) Validation before execution &mdash; plans must pass a goal-backward check before any code is written.</p>
+      <div class="sdd-diagram">
+
+        <div class="sdd-phase" data-sdd="discuss">
+          <div class="sdd-phase-header">
+            <span class="sdd-num">1</span>
+            <span class="sdd-name">Discuss</span>
+            <span class="sdd-toggle" aria-hidden="true">&#9656;</span>
+          </div>
+          <p class="sdd-brief">Lock decisions before planning</p>
+          <div class="sdd-detail">
+            <p>Produces <code>CONTEXT.md</code> with numbered decisions (D-01, D-02&hellip;). These are binding contracts &mdash; the planner rejects plans that contradict them, and the verifier flags code that misses them. Decisions capture the <em>how</em> before any task is written.</p>
+          </div>
+        </div>
+
+        <span class="sdd-arrow" aria-hidden="true">&#8594;</span>
+
+        <div class="sdd-phase" data-sdd="plan">
+          <div class="sdd-phase-header">
+            <span class="sdd-num">2</span>
+            <span class="sdd-name">Plan</span>
+            <span class="sdd-toggle" aria-hidden="true">&#9656;</span>
+          </div>
+          <p class="sdd-brief">Research first, then atomic tasks</p>
+          <div class="sdd-detail">
+            <p>Spawns research agents, then generates small task plans each executable in a fresh 200k-token context. A goal-backward verifier must approve all plans before any code is written. Produces <code>PLAN.md</code> files.</p>
+          </div>
+        </div>
+
+        <span class="sdd-arrow" aria-hidden="true">&#8594;</span>
+
+        <div class="sdd-phase" data-sdd="execute">
+          <div class="sdd-phase-header">
+            <span class="sdd-num">3</span>
+            <span class="sdd-name">Execute</span>
+            <span class="sdd-toggle" aria-hidden="true">&#9656;</span>
+          </div>
+          <p class="sdd-brief">Parallel waves, atomic commits</p>
+          <div class="sdd-detail">
+            <p>Each plan runs in an isolated context with its own fresh token budget. Every task commits atomically. Work is reviewable at every step &mdash; not one giant diff at the end.</p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
@@ -487,6 +604,10 @@
     node.addEventListener('click', () => {
       node.classList.toggle('open');
     });
+  });
+
+  document.querySelectorAll('.sdd-phase').forEach(phase => {
+    phase.addEventListener('click', () => phase.classList.toggle('open'));
   });
 
   document.querySelectorAll('.collapsible-section .section-toggle').forEach(btn => {
