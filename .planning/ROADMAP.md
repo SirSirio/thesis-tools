@@ -18,20 +18,31 @@ The site grows incrementally as the thesis generates new design decisions needin
 ## Phase Details
 
 ### Phase 1: Motor & Microstepping Panel
+
 **Goal**: Add motor and microstepping analysis to the peristaltic rotor solver so Proto 1 operating-point decisions (torque margin, steps per stroke, max reliable step rate) can be made from calculated data rather than guesswork
 **Depends on**: Nothing (first GSD phase)
 **Requirements**: MOTOR-01, MOTOR-02, MOTOR-03, MOTOR-04
 **Success Criteria** (what must be TRUE):
+
   1. User opens the rotor solver and sees a Motor & Microstepping panel below the geometry results table with voltage selector, microstepping dropdown, and step rate input
   2. After solving geometry and setting motor inputs, all seven derived outputs are displayed (steps per stroke, volume per step, torque at rim, compression load range, torque margin indicator, max reliable step rate, RPM)
   3. Changing any motor input updates all outputs instantly without a page reload
   4. No motor spec input fields are present; the panel uses fixed Wantai 42BYGHW811 / DRV8825 constants silently
   5. No new source files exist and assets/style.css is unchanged after the feature merges
-**Plans**: 3 plans
-Plans:
+
+**Plans**: 3 plansPlans:
+**Wave 1**
+
 - [ ] 01-01-PLAN.md — Foundation: voltage + microstepping selects, motor constants block, .warn CSS, event listeners
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 01-02-PLAN.md — Motor calculations in upd(), six table columns, dynamic Time column, RPM summary card
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 01-03-PLAN.md — Notes documentation: FoS + max step rate footnotes, motor constants, compression load range (EN + IT)
+
 **UI hint**: yes
 
 ## Progress
