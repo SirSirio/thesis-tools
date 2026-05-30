@@ -13,7 +13,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 ## Active Phases
 
-- [ ] **Phase 1: Motor & Microstepping Panel** - Extend the rotor solver with motor operating-point calculations so Proto 1 hardware decisions can be made from calculated data
+- [x] **Phase 1: Motor & Microstepping Panel** - Extend the rotor solver with motor operating-point calculations so Proto 1 hardware decisions can be made from calculated data (completed 2026-05-30)
 
 ## Phase Details
 
@@ -41,7 +41,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-03-PLAN.md — Notes documentation: FoS + max step rate footnotes, motor constants, compression load range (EN + IT)
+- [x] 01-03-PLAN.md — Notes documentation: FoS + max step rate footnotes, motor constants, compression load range (EN + IT)
 
 **UI hint**: yes
 
@@ -49,4 +49,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Motor & Microstepping Panel | 2/3 | In Progress|  |
+| 1. Motor & Microstepping Panel | 3/3 | Complete   | 2026-05-30 |
