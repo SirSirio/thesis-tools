@@ -33,7 +33,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 **Plans**: 3 plansPlans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Foundation: voltage + microstepping selects, motor constants block, .warn CSS, event listeners
+- [x] 01-01-PLAN.md — Foundation: voltage + microstepping selects, motor constants block, .warn CSS, event listeners
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -49,4 +49,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Motor & Microstepping Panel | 0/3 | Not started | - |
+| 1. Motor & Microstepping Panel | 1/3 | In progress | - |
