@@ -144,6 +144,85 @@
       border-radius: 3px; padding: 1px 5px;
     }
 
+    /* ── Collapsible sections ────────────────────── */
+    .collapsible-section {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius, 12px);
+      overflow: hidden;
+    }
+    .section-toggle {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 16px 20px;
+      background: none; border: none; cursor: pointer;
+      text-align: left;
+      transition: background 0.2s ease;
+    }
+    .section-toggle:hover { background: rgba(255,255,255,0.03); }
+    .section-title {
+      font-size: 0.88rem; font-weight: 600;
+      color: #d0cbc5; letter-spacing: 0.01em;
+      flex: 1;
+    }
+    .section-chevron {
+      color: var(--text-muted, #7a7068);
+      font-size: 0.75rem;
+      transition: transform 0.25s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .collapsible-section.open .section-chevron {
+      transform: rotate(90deg);
+      color: var(--accent, #ff6b2b);
+    }
+    .section-body {
+      max-height: 0; overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.3s ease;
+      padding: 0 20px;
+    }
+    .collapsible-section.open .section-body {
+      max-height: 800px; opacity: 1;
+      padding: 0 20px 20px;
+    }
+    .section-body p {
+      font-size: 0.88rem; color: #b8b0a8;
+      line-height: 1.65; margin: 0 0 10px;
+    }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body strong { color: #d8d0c8; font-weight: 600; }
+    .section-body code {
+      font-family: monospace; font-size: 0.82em;
+      color: var(--accent, #ff6b2b);
+      background: rgba(255,107,43,0.08);
+      border-radius: 3px; padding: 1px 5px;
+    }
+    .section-body pre {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 10px 0;
+      overflow-x: auto;
+    }
+    .section-body pre code {
+      background: none; padding: 0;
+      font-size: 0.83rem; color: #e0d8d0;
+      display: block; line-height: 1.6;
+    }
+    .start-case {
+      margin: 12px 0;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.02);
+      border-left: 2px solid rgba(255,107,43,0.35);
+      border-radius: 0 6px 6px 0;
+    }
+    .start-case-title {
+      font-size: 0.8rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--accent, #ff6b2b);
+      margin: 0 0 8px;
+    }
+
     /* ── Sidebar ──────────────────────────────────── */
     .sidebar-column {
       display: flex; flex-direction: column; gap: 8px;
@@ -177,6 +256,54 @@
     <p>Spec-driven development workflow used to build this thesis tools site. Each tool on this site was built using the discuss &rarr; plan &rarr; execute loop below &mdash; locking decisions before planning, planning before building, to keep AI context lean and work reviewable at every step.</p>
     <p>Click any command node to see what it does and the exact slash command to type.</p>
   </header>
+
+  <!-- Expandable: About spec-driven development -->
+  <section class="collapsible-section animate-in" style="--delay: 0.15s;">
+    <button class="section-toggle" aria-expanded="false">
+      <span class="section-title">What is spec-driven development?</span>
+      <span class="section-chevron" aria-hidden="true">&#9656;</span>
+    </button>
+    <div class="section-body">
+      <p>Spec-driven development means <strong>locking decisions before writing plans, and locking plans before writing code</strong>. The core insight is that when implementation preferences aren&rsquo;t documented upfront, AI agents make conflicting assumptions downstream &mdash; inconsistent patterns, differing architectural choices, rework. GSD forces these conversations first.</p>
+      <p>Each phase starts with <code>/gsd:discuss-phase</code>, which captures decisions in a <code>CONTEXT.md</code> file &mdash; tech choices, file locations, error handling, layout direction &mdash; as numbered entries (D-01, D-02&hellip;). These decisions are <strong>binding</strong>: the planner won&rsquo;t approve plans that contradict them, and the verifier flags code that misses them.</p>
+      <p>Plans are then small enough to execute in a fresh 200k-token context, committed atomically. The result is work that is reviewable at every step &mdash; not one giant diff at the end.</p>
+      <p><strong>The three pillars:</strong> (1) Context-first planning &mdash; discuss before plan. (2) Decisions as first-class artifacts &mdash; <code>CONTEXT.md</code> is a contract, not notes. (3) Validation before execution &mdash; plans must pass a goal-backward check before any code is written.</p>
+    </div>
+  </section>
+
+  <!-- Expandable: Getting started -->
+  <section class="collapsible-section animate-in" style="--delay: 0.2s;">
+    <button class="section-toggle" aria-expanded="false">
+      <span class="section-title">Getting started with GSD</span>
+      <span class="section-chevron" aria-hidden="true">&#9656;</span>
+    </button>
+    <div class="section-body">
+      <div class="start-case">
+        <p class="start-case-title">New project from scratch</p>
+        <p>Run <code>/gsd:new-project</code> first. It asks structured questions about your idea, spawns parallel research agents, extracts requirements, and produces an approval-gated roadmap &mdash; no code is written until you approve.</p>
+        <pre><code>/gsd:new-project
+# or, if you already have a PRD:
+/gsd:new-project --auto @prd.md</code></pre>
+        <p>This creates <code>.planning/</code> with <code>PROJECT.md</code> (vision), <code>REQUIREMENTS.md</code> (scoped req IDs), and <code>ROADMAP.md</code> (phase breakdown). Then run the phase loop for each phase:</p>
+        <pre><code>/gsd:discuss-phase 1     # lock implementation decisions → CONTEXT.md
+/gsd:plan-phase 1        # research + atomic plans + verify → PLAN.md files
+/gsd:execute-phase 1     # parallel waves, atomic commits</code></pre>
+      </div>
+      <div class="start-case">
+        <p class="start-case-title">Adding GSD to an existing project</p>
+        <p>Map the codebase first so GSD understands what already exists. Without this, <code>new-project</code> questions will overlap with decisions already made in code.</p>
+        <pre><code>/gsd:map-codebase        # full analysis: stack, architecture, conventions
+# or faster:
+/gsd:map-codebase --fast # quick tech + architecture scan only</code></pre>
+        <p>Then run <code>/gsd:new-project</code> as normal &mdash; but now the questions focus on what you&rsquo;re <em>adding</em>, not what already exists. Alternatively, if you have existing ADRs or specs, ingest them directly:</p>
+        <pre><code>/gsd:new-project
+# or ingest existing docs into .planning/:
+/gsd:ingest-docs</code></pre>
+        <p>After setup, the phase loop is identical to a new project: discuss &rarr; plan &rarr; execute per feature.</p>
+      </div>
+      <p>Use <code>/gsd:progress</code> at any point to see where you are and what command to run next.</p>
+    </div>
+  </section>
 
   <div class="diagram-layout animate-in" style="--delay: 0.1s;">
 
@@ -359,6 +486,14 @@
   document.querySelectorAll('.flow-node, .util-node').forEach(node => {
     node.addEventListener('click', () => {
       node.classList.toggle('open');
+    });
+  });
+
+  document.querySelectorAll('.collapsible-section .section-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.collapsible-section');
+      const isOpen = section.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
     });
   });
 </script>
