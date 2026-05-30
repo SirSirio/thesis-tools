@@ -350,7 +350,7 @@
 </div>
 </div>
 <!-- Notes -->
-<p class="note animate-in" style="--delay: 0.42s;" data-i18n="note"><b>&sup1; Geometric swept volume</b> per stroke = delivered &divide; occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, 1&frasl;32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br><b>Hub clr</b> = (R &minus; roller radius) &minus; boss radius; must be &gt; 0 (roller must clear the motor boss).<br><b>Tube arc</b> = &pi;R; must be &le; 200 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.</p>
+<p class="note animate-in" style="--delay: 0.42s;" data-i18n="note"><b>&sup1; Geometric swept volume</b> per stroke = delivered &divide; occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, at the selected microstepping mode, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br><b>Hub clr</b> = (R &minus; roller radius) &minus; boss radius; must be &gt; 0 (roller must clear the motor boss).<br><b>Tube arc</b> = &pi;R; must be &le; 300 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.<br><b>&sup3; Factor of Safety (FoS)</b> = torque at rim &divide; (200 g &times; rollers in contact). Green &ge; 2.0 &middot; amber 1.0&ndash;2.0 &middot; red &lt; 1.0. Torque at rim (g) = 4800 &times; torque_fraction &divide; R_mm &times; 10.<br><b>&sup4; Max step rate (inductive ceiling, theoretical lower bound)</b> = V_supply &divide; (2 &times; L &times; I_rated). At 12 V &rarr; 1333 steps/s; at 24 V &rarr; 2667 steps/s. DRV8825 chopper regulation enables higher practical rates.<br><b>Motor:</b> Wantai 42BYGHW811 &mdash; 200 steps/rev (1.8&deg;), 4800 g&middot;cm holding torque, 2.5 A/phase, 1.25 &Omega;, 1.8 mH. Driver: DRV8825. Torque fractions: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.</p>
 </main><footer class="site-footer">
 <p data-i18n="footer-university">Technical University of Denmark &middot; Department of Health Technology</p>
 <p>Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
@@ -394,7 +394,10 @@
         'feas-overlap':   'rollers overlap',
         'feas-boss':      'hits boss',
         'feas-tube':      'tube too short',
-        'note':           '<b>¹ Geometric swept volume</b> per stroke = delivered ÷ occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>² Dispense time</b> for 1000 μL at the set step rate, 1⁄32 microstepping, 6400 steps/rev, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers − bearing OD; must be > 0 (rollers must not touch).<br><b>Hub clr</b> = (R − roller radius) − boss radius; must be > 0 (roller must clear the motor boss).<br><b>Tube arc</b> = πR; must be ≤ 300 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.',
+        'note':           '<b>¹ Geometric swept volume</b> per stroke = delivered ÷ occlusion efficiency. This is the raw lumen volume the arc must sweep; after occlusion loss it delivers your target.<br><b>² Dispense time</b> for 1000 μL at the set step rate, at the selected microstepping mode, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers − bearing OD; must be > 0 (rollers must not touch).<br><b>Hub clr</b> = (R − roller radius) − boss radius; must be > 0 (roller must clear the motor boss).<br><b>Tube arc</b> = πR; must be ≤ 300 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.' +
+          '<br><b>³ Factor of Safety (FoS)</b> = torque at rim ÷ (200 g × rollers in contact). Green ≥ 2.0 · amber 1.0–2.0 · red &lt; 1.0. Torque at rim (g) = 4800 × torque_fraction ÷ R_mm × 10.' +
+          '<br><b>⁴ Max step rate (inductive ceiling, theoretical lower bound)</b> = V_supply ÷ (2 × L × I_rated). At 12 V → 1333 steps/s; at 24 V → 2667 steps/s. DRV8825 chopper regulation enables higher practical rates.' +
+          '<br><b>Motor:</b> Wantai 42BYGHW811 — 200 steps/rev (1.8°), 4800 g·cm holding torque, 2.5 A/phase, 1.25 Ω, 1.8 mH. Driver: DRV8825. Torque fractions: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.',
         'footer-university': 'Technical University of Denmark · Department of Health Technology',
       },
       it: {
@@ -432,7 +435,10 @@
         'feas-overlap':   'rulli sovrapposti',
         'feas-boss':      'colpisce boss',
         'feas-tube':      'tubo troppo corto',
-        'note':           '<b>¹ Volume geometrico spazzato</b> per ciclo = erogato ÷ efficienza occlusione. Questo è il volume lordo del lume che l\'arco deve spazzare; dopo la perdita di occlusione eroga il volume target.<br><b>² Tempo di erogazione</b> per 1000 μL alla frequenza step impostata, microstepping 1/32, 6400 step/giro, esclude accel/decel.<br><b>Gap arco</b> = arco tra i rulli − OD cuscinetto; deve essere > 0 (i rulli non devono toccarsi).<br><b>Clr. mozzo</b> = (R − raggio rullo) − raggio boss; deve essere > 0 (il rullo deve avere gioco sul boss motore).<br><b>Arco tubo</b> = πR; deve essere ≤ 300 mm (fermi regolabili), altrimenti <b>tubo troppo corto</b>.<br>R arrotondato a 0,1 mm (risoluzione Bambu P1S); PLA per le prime prove di stampa.',
+        'note':           '<b>¹ Volume geometrico spazzato</b> per ciclo = erogato ÷ efficienza occlusione. Questo è il volume lordo del lume che l\'arco deve spazzare; dopo la perdita di occlusione eroga il volume target.<br><b>² Tempo di erogazione</b> per 1000 μL alla frequenza step impostata, nella modalità microstepping selezionata, esclude accel/decel.<br><b>Gap arco</b> = arco tra i rulli − OD cuscinetto; deve essere > 0 (i rulli non devono toccarsi).<br><b>Clr. mozzo</b> = (R − raggio rullo) − raggio boss; deve essere > 0 (il rullo deve avere gioco sul boss motore).<br><b>Arco tubo</b> = πR; deve essere ≤ 300 mm (fermi regolabili), altrimenti <b>tubo troppo corto</b>.<br>R arrotondato a 0,1 mm (risoluzione Bambu P1S); PLA per le prime prove di stampa.' +
+          '<br><b>³ Fattore di Sicurezza (FoS)</b> = coppia al cerchio ÷ (200 g × rulli in contatto). Verde ≥ 2.0 · ambra 1.0–2.0 · rosso &lt; 1.0. Coppia al cerchio (g) = 4800 × frazione_coppia ÷ R_mm × 10.' +
+          '<br><b>⁴ Step rate massimo (limite induttivo, limite inferiore teorico)</b> = V_alimentazione ÷ (2 × L × I_nominale). A 12 V → 1333 step/s; a 24 V → 2667 step/s. La regolazione chopper del DRV8825 consente velocità pratiche più elevate.' +
+          '<br><b>Motore:</b> Wantai 42BYGHW811 — 200 step/giro (1.8°), 4800 g·cm coppia di stallo, 2.5 A/fase, 1.25 Ω, 1.8 mH. Driver: DRV8825. Frazioni coppia: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.',
         'footer-university': 'Politecnico di Danimarca · Dipartimento di Tecnologia della Salute',
       }
     };
@@ -488,6 +494,14 @@
       const occ  = +document.getElementById('occS').value;
       const boss = +document.getElementById('bossS').value;
       const SP   = +document.getElementById('spS').value;
+      const VOLT = +document.getElementById('voltSel').value;  // 12 or 24
+      const MS   =  document.getElementById('msSel').value;   // 'full','1/2',...,'1/32'
+      const Mf   = MS_FACTOR[MS];
+      const Tf   = TORQUE_FRAC[MS];
+      const stepsRev    = MOTOR.stepsFullRev * Mf;            // steps per full revolution
+      const maxStepRate = Math.round(VOLT / (2 * MOTOR.inductance * MOTOR.ratedCurrent));
+      // f_max = V / (2 × L × I_rated) — inductive ceiling (theoretical lower bound)
+      // At 12V → 1333 steps/s; at 24V → 2667 steps/s
 
       document.getElementById('occV').textContent  = occ.toFixed(2);
       document.getElementById('bossV').textContent = boss.toFixed(1) + ' mm';
@@ -516,7 +530,8 @@
         if (feasible) { feasCount++; if (minR === null) minR = R; }
 
         const strokes    = 1000 / vol;
-        const totalSteps = strokes * (6400 / N);
+        const totalSteps = strokes * (stepsRev / N);
+        // stepsRev = MOTOR.stepsFullRev * Mf — now dynamic per selected microstepping mode
         const time       = totalSteps / SP;
         const cls = feasible ? '' : 'infeasible';
 
@@ -528,6 +543,28 @@
           if (!tubeOK)      r.push(L['feas-tube']);
           why = `<span class="no">✗ ${r.join(', ')}</span>`;
         }
+
+        // Motor columns (D-04 through D-09)
+        const rollersContact = Math.floor(N / 2);
+        const stepsPerStroke = stepsRev / N;
+        const uLperStep      = vol * N / stepsRev;
+        const torqueRim      = feasible
+          ? MOTOR.holdingTorque * Tf / R * 10   // g·cm × fraction / R_mm × 10 → g-force at rim
+          : null;
+        const FoS            = feasible ? (torqueRim / (200 * rollersContact)) : null;
+        const FoSClass       = FoS === null ? ''
+                             : FoS >= 2.0 ? 'ok'
+                             : FoS >= 1.0 ? 'warn'
+                             : 'no';
+
+        const motorCols = feasible
+          ? `<td>${rollersContact}</td>
+             <td>${stepsPerStroke.toFixed(1)}</td>
+             <td>${uLperStep.toFixed(3)}</td>
+             <td>${torqueRim.toFixed(0)}</td>
+             <td><span class="${FoSClass}">${FoS.toFixed(2)}</span></td>
+             <td>${maxStepRate}</td>`
+          : `<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>`;
 
         return `<tr class="${cls}">
           <td>${N}</td>
