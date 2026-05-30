@@ -71,7 +71,7 @@ All motor parameters are fixed for the Wantai 42BYGHW811 / DRV8825 combination. 
 ### Planning documents
 - `.planning/REQUIREMENTS.md` §Motor & Microstepping Panel — MOTOR-01 through MOTOR-04
 - `.planning/ROADMAP.md` §Phase 1 — success criteria and scope anchor
-- `openspec/changes/motor-microstepping-panel/proposal.md` — original proposal with full physics rationale
+- `tools/rotor-solver/SPEC.md` — canonical spec supersedes the original OpenSpec proposal; contains all physics, formulas, and constants
 
 ### Motor datasheet
 - Motor: Wantai 42BYGHW811 — https://bitbyg.dk/shop/steppermotor-nema17-d-aksel-42byghw811/

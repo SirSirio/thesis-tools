@@ -32,13 +32,9 @@ Static HTML, CSS, and vanilla JavaScript. No frameworks, no build tools, no exte
 
 ## Development workflow
 
-New tools are built using [OpenSpec](https://github.com/Fission-AI/OpenSpec) (spec-driven development) with Claude Code. The OpenSpec skills have been customised for this project:
+New tools are built with [GSD](https://github.com/open-gsd/get-shit-done-redux) and Claude Code. Each tool has a `SPEC.md` alongside its `index.html` documenting inputs, outputs, formulas, and assumptions.
 
-- **`/opsx:propose "tool idea"`** — creates a full spec (proposal, design, tasks) under `openspec/changes/` and automatically creates a `feature/<name>` git branch
-- **`/opsx:apply`** — switches to the correct feature branch and implements the spec tasks
-- **`/opsx:archive`** — archives the spec once the tool ships; branch is then merged into `master` and deleted
-
-Each tool lives on its own branch during development so work-in-progress tools never affect the live site on `master`. See `CLAUDE.md` for the full project orientation and `ROADMAP.md` for planned tools.
+See `CLAUDE.md` for the full project orientation and `ROADMAP.md` for planned tools.
 
 ---
 

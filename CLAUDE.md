@@ -27,7 +27,7 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │       └── 01-motor-microstepping-panel/
 │           ├── 01-CONTEXT.md        Phase implementation decisions
 │           └── 01-DISCUSSION-LOG.md Audit trail
-├── openspec/               Historical OpenSpec artifacts (reference only)
+├── openspec/               Empty — historical OpenSpec folder, kept for git history
 ├── CLAUDE.md               This file — keep it updated
 ├── README.md               GitHub-facing project description and tool table
 └── ROADMAP.md              Shipped / planned / backlog tools (repo-level)
@@ -63,7 +63,7 @@ New tools and enhancements follow this sequence:
 
 **One phase = one tool (or one meaningful enhancement).** New phases are added to `.planning/ROADMAP.md` on demand — not pre-committed.
 
-The `openspec/` folder contains historical artifacts from the previous workflow and is kept as reference only.
+The `openspec/` folder is now empty — historical artifacts were ingested into `.planning/` and removed. Folder retained for git history.
 
 ---
 
