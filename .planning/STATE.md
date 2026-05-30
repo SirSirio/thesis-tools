@@ -2,11 +2,14 @@
 gsd_state_version: '1.0'
 status: planning
 progress:
-  total_phases: 6
+  total_phases: 1
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
   percent: 0
+shipped_pre_gsd:
+  - Peristaltic Rotor Geometry Solver
+  - Language Switcher (ENG/IT)
 ---
 
 # Project State
@@ -20,7 +23,7 @@ See: .planning/PROJECT.md (updated 2026-05-29)
 
 ## Current Position
 
-Phase: 1 of 6 (Motor & Microstepping Panel)
+Phase: 1 of 1 active (Motor & Microstepping Panel)
 Plan: 0 of ? in current phase
 Status: Ready to plan
 Last activity: 2026-05-29 — Initial .planning/ setup; roadmap and requirements written
@@ -54,7 +57,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - Phase 1: Hard-code Wantai 42BYGHW811 / DRV8825 motor params; motor panel contained entirely in tools/rotor-solver/index.html
-- Phase 2: data-i18n attribute toggle approach; localStorage key "lang"; per-page inline dictionaries; no new CSS variables
+- Language Switcher (shipped pre-GSD): data-i18n attribute toggle, localStorage key "lang", per-page inline dictionaries, no new CSS variables
 
 ### Pending Todos
 
@@ -69,10 +72,10 @@ None yet.
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| v2 tools | Flow sensor calibration viewer | Phase 3 (planned) | 2026-05-29 |
-| v2 tools | Dispense protocol calculator | Phase 4 (planned) | 2026-05-29 |
-| v2 tools | Tube occlusion efficiency estimator | Phase 5 (planned) | 2026-05-29 |
-| v2 tools | BOM / component selector | Phase 6 (planned) | 2026-05-29 |
+| v2 tools | Flow sensor calibration viewer | Backlog (no phase yet) | 2026-05-29 |
+| v2 tools | Dispense protocol calculator | Backlog (no phase yet) | 2026-05-29 |
+| v2 tools | Tube occlusion efficiency estimator | Backlog (no phase yet) | 2026-05-29 |
+| v2 tools | BOM / component selector | Backlog (no phase yet) | 2026-05-29 |
 
 ## Session Continuity
 

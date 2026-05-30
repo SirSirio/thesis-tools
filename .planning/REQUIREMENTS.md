@@ -12,13 +12,13 @@
 - [ ] **MOTOR-03**: All motor parameters are hard-coded for the Wantai 42BYGHW811 / DRV8825 combination; no editable motor spec fields are exposed
 - [ ] **MOTOR-04**: All motor panel logic lives in the existing inline script block of tools/rotor-solver/index.html; no new files, no assets/style.css changes, no CDN dependencies
 
-### Language Switcher (ENG/IT)
+### Language Switcher (ENG/IT) — ✅ Shipped
 
-- [ ] **LANG-01**: Every page displays a language toggle button in the nav bar area; button label shows the other available language ("IT" when English is active, "ENG" when Italian is active)
-- [ ] **LANG-02**: Clicking the toggle immediately re-renders all data-i18n-tagged elements in the selected language without a page reload; dynamically computed values, units, and numbers are not translated
-- [ ] **LANG-03**: Selected language is saved to localStorage under the key "lang" and applied on every page load before first paint; first visit defaults to English
-- [ ] **LANG-04**: All localStorage access is wrapped in try/catch; if unavailable, page loads in English and toggle still functions for the current session without throwing an error
-- [ ] **LANG-05**: No horizontal scroll is introduced on any page at 1280px or 375px viewport width
+- [x] **LANG-01**: Every page displays a language toggle button in the nav bar area; button label shows the other available language ("IT" when English is active, "ENG" when Italian is active)
+- [x] **LANG-02**: Clicking the toggle immediately re-renders all data-i18n-tagged elements in the selected language without a page reload; dynamically computed values, units, and numbers are not translated
+- [x] **LANG-03**: Selected language is saved to localStorage under the key "lang" and applied on every page load before first paint; first visit defaults to English
+- [x] **LANG-04**: All localStorage access is wrapped in try/catch; if unavailable, page loads in English and toggle still functions for the current session without throwing an error
+- [x] **LANG-05**: No horizontal scroll is introduced on any page at 1280px or 375px viewport width
 
 ## v2 Requirements
 
@@ -49,15 +49,16 @@
 | MOTOR-02 | Phase 1 | Pending |
 | MOTOR-03 | Phase 1 | Pending |
 | MOTOR-04 | Phase 1 | Pending |
-| LANG-01 | Phase 2 | Pending |
-| LANG-02 | Phase 2 | Pending |
-| LANG-03 | Phase 2 | Pending |
-| LANG-04 | Phase 2 | Pending |
-| LANG-05 | Phase 2 | Pending |
+| LANG-01 | Shipped | ✅ Complete |
+| LANG-02 | Shipped | ✅ Complete |
+| LANG-03 | Shipped | ✅ Complete |
+| LANG-04 | Shipped | ✅ Complete |
+| LANG-05 | Shipped | ✅ Complete |
 
 **Coverage:**
 - v1 requirements: 9 total
-- Mapped to phases: 9
+- Shipped: 5 (LANG-01–05)
+- Active: 4 (MOTOR-01–04, Phase 1)
 - Unmapped: 0
 
 ---
