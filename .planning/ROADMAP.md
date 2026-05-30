@@ -50,17 +50,26 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Goal**: Build a new standalone tool page that renders the GSD spec-driven development workflow as an interactive visual diagram, demonstrating the discuss → plan → execute loop with optional steps
 **Depends on**: Nothing (Phase 1 complete)
-**Requirements**: TBD in discuss-phase
+**Requirements**: GSD-01–GSD-04 (see REQUIREMENTS.md)
 **Success Criteria** (what must be TRUE):
 
-  1. A new tool page at `tools/gsd-workflow/index.html` exists and is linked from the landing page
-  2. The page displays a visual diagram of the GSD workflow showing the core loop and optional steps
+  1. A new tool page at `tools/gsd-workflow-guide/index.html` exists and is linked from the landing page
+  2. The page displays a visual diagram of the GSD workflow showing the core loop (discuss → plan → execute) and optional steps (spec-phase, verify-work, code-review, ship)
   3. The tool follows the same dark glassmorphic theme and nav-bar pattern as existing tools
   4. No new shared files — all logic and styles are inline
+
+**Plans**: 2 plans
+**Wave 1**
+
+- [x] 02-01-PLAN.md — Tool page: HTML structure, CSS diagram layout, expand/collapse JS, all 12 nodes
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [x] 02-02-PLAN.md — Integration: SPEC.md, landing page card, README row, CLAUDE.md update
 
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Motor & Microstepping Panel | 3/3 | Complete    | 2026-05-30 |
-| 2. GSD Workflow Visualizer | 0/? | Discussing | — |
+| 2. GSD Workflow Visualizer | 2/2 | Complete | 2026-05-30 |
