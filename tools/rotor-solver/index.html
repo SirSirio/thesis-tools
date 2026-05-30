@@ -249,6 +249,7 @@
     /* Feasibility badges */
     .ok { color: #4cba88; font-weight: 600; }
     .no { color: #e05555; font-weight: 500; font-size: 0.82rem; }
+    .warn { color: #e8a020; font-weight: 600; }
 
     /* ── Notes ──────────────────────────────────────────────── */
     .note {
@@ -454,6 +455,21 @@
     // ── Calculator ───────────────────────────────────────────────
     const ROWS = [3, 4, 5, 6, 8, 10, 12];
     const TUBE_AVAIL = 300;
+    // ── Motor constants — Wantai 42BYGHW811 / DRV8825 ──────────────
+    // Source: tools/rotor-solver/SPEC.md
+    const MOTOR = {
+      stepsFullRev:  200,     // full steps/rev (1.8°/step)
+      holdingTorque: 4800,    // g·cm — static, both phases energised, full current
+      ratedCurrent:  2.5,     // A/phase
+      resistance:    1.25,    // Ω/phase
+      inductance:    0.0018   // H/phase (1.8 mH)
+    };
+    const MS_FACTOR = {
+      'full':1, '1/2':2, '1/4':4, '1/8':8, '1/16':16, '1/32':32
+    };
+    const TORQUE_FRAC = {
+      'full':1.00, '1/2':0.70, '1/4':0.50, '1/8':0.35, '1/16':0.20, '1/32':0.10
+    };
 
     function setRangeFill(el) {
       const pct = ((+el.value - +el.min) / (+el.max - +el.min)) * 100;
@@ -539,7 +555,7 @@
 
     ['occS', 'bossS', 'spS'].forEach(id =>
       document.getElementById(id).addEventListener('input', upd));
-    ['idSel', 'bSel'].forEach(id =>
+    ['idSel', 'bSel', 'voltSel', 'msSel'].forEach(id =>
       document.getElementById(id).addEventListener('change', upd));
     document.getElementById('volN').addEventListener('input', upd);
 
