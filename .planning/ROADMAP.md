@@ -27,11 +27,15 @@ The site grows incrementally as the thesis generates new design decisions needin
   3. Changing any motor input updates all outputs instantly without a page reload
   4. No motor spec input fields are present; the panel uses fixed Wantai 42BYGHW811 / DRV8825 constants silently
   5. No new source files exist and assets/style.css is unchanged after the feature merges
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 01-01-PLAN.md — Foundation: voltage + microstepping selects, motor constants block, .warn CSS, event listeners
+- [ ] 01-02-PLAN.md — Motor calculations in upd(), six table columns, dynamic Time column, RPM summary card
+- [ ] 01-03-PLAN.md — Notes documentation: FoS + max step rate footnotes, motor constants, compression load range (EN + IT)
 **UI hint**: yes
 
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Motor & Microstepping Panel | 0/? | Not started | - |
+| 1. Motor & Microstepping Panel | 0/3 | Not started | - |
