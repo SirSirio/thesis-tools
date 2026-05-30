@@ -37,6 +37,7 @@ A thesis companion site where each tool is developed on demand — when a design
 - Hardware under development: peristaltic pump with NEMA17 stepper (Wantai 42BYGHW811), DRV8825 driver, Sensirion flow sensor, rotating peristaltic head, modular fluidic interface
 - Design system: dark glassmorphic theme; tokens defined in `assets/style.css`; each tool page brings its own `<style>` block
 - Development workflow: GSD (`/gsd:discuss-phase` → `/gsd:plan-phase` → `/gsd:execute-phase`); one phase per tool or tool enhancement. OpenSpec change files in `openspec/` are preserved as historical reference.
+- Tool spec standard: every tool has a `SPEC.md` co-located with its `index.html` (`tools/<name>/SPEC.md`). This is the canonical reference for that tool's purpose, inputs, outputs, formulas, hardware constants, and assumptions. Only `assets/style.css` is shared between tools — everything else is tool-local.
 - Do NOT use VS Code Live Preview (rewrites relative paths and strips inline scripts); use `serve.bat` → `http://localhost:7331` instead
 - Site grows as the thesis progresses; each new tool is triggered by a new design decision needing computational support
 - Backlog tools (no spec yet): flow sensor calibration curve viewer, dispense protocol calculator, tube occlusion efficiency estimator, BOM/component selector

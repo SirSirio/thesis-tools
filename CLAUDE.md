@@ -16,11 +16,21 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 ├── assets/style.css        Shared stylesheet — imported by every page
 ├── tools/
 │   └── rotor-solver/
-│       └── index.html      Peristaltic Rotor Geometry Solver
-├── openspec/               OpenSpec specs (one subfolder per tool)
+│       ├── index.html      Peristaltic Rotor Geometry Solver
+│       └── SPEC.md         Tool spec — inputs, outputs, formulas, constants, assumptions
+├── .planning/              GSD planning workspace (workflow artifacts)
+│   ├── PROJECT.md          Project context and core value
+│   ├── REQUIREMENTS.md     Active requirements with IDs
+│   ├── ROADMAP.md          Active phases
+│   ├── STATE.md            Current progress and session continuity
+│   └── phases/
+│       └── 01-motor-microstepping-panel/
+│           ├── 01-CONTEXT.md        Phase implementation decisions
+│           └── 01-DISCUSSION-LOG.md Audit trail
+├── openspec/               Historical OpenSpec artifacts (reference only)
 ├── CLAUDE.md               This file — keep it updated
 ├── README.md               GitHub-facing project description and tool table
-└── ROADMAP.md              Shipped / planned / backlog tools
+└── ROADMAP.md              Shipped / planned / backlog tools (repo-level)
 ```
 
 ---
@@ -40,19 +50,46 @@ Each tool page links back to `../../index.html` via a `← All tools` nav bar an
 
 ---
 
-## Spec-driven workflow (OpenSpec)
+## Development workflow (GSD)
 
-New tools follow this sequence:
+New tools and enhancements follow this sequence:
 
-1. `/opsx:propose "Tool name and idea"` — generates proposal, specs, design, tasks under `openspec/changes/` **and creates a `feature/<name>` git branch automatically**
-2. Discuss and refine the spec before touching any code
-3. `/opsx:apply` — switches to `feature/<name>` and implements from the spec
-4. Add a row to `README.md` tool table and `ROADMAP.md`
-5. `/opsx:archive` — move spec to `openspec/changes/archive/`
-6. Merge `feature/<name>` into `master` and delete the branch
-7. Update `CLAUDE.md` folder structure if new files were added
+1. `/gsd:discuss-phase N` — gather implementation decisions; produces `CONTEXT.md`
+2. `/gsd:plan-phase N` — create execution plan from context
+3. `/gsd:execute-phase N` — implement from the plan
+4. Add/update the tool's `SPEC.md` in its folder
+5. Add a row to `README.md` tool table and `ROADMAP.md` (repo root)
+6. Update `CLAUDE.md` folder structure if new files were added
 
-**Branch convention:** `feature/<change-name>` (kebab-case, matches the OpenSpec change name)
+**One phase = one tool (or one meaningful enhancement).** New phases are added to `.planning/ROADMAP.md` on demand — not pre-committed.
+
+The `openspec/` folder contains historical artifacts from the previous workflow and is kept as reference only.
+
+---
+
+## Tool spec standard
+
+Every tool has a `SPEC.md` file co-located with its `index.html`:
+
+```
+tools/<tool-name>/
+  index.html   — the tool itself
+  SPEC.md      — permanent spec: purpose, inputs, outputs, formulas, constants, assumptions
+```
+
+**What goes in SPEC.md:**
+- Purpose and scope
+- All inputs with types, ranges, and defaults
+- All outputs with formulas written out explicitly
+- Hardware constants or lookup tables the tool relies on (e.g., motor specs)
+- Assumptions (e.g., 180° contact arc, tube availability)
+- Known values at the current design point
+
+**Rules:**
+- Tool-specific constants and formulas live in `SPEC.md` and inline in the tool's `<script>` — **not** in shared files
+- The only shared resource between tools is `assets/style.css`
+- `SPEC.md` is the canonical reference; `.planning/phases/` context files point to it
+- Keep `SPEC.md` in sync when formulas or constants change
 
 ---
 

@@ -62,6 +62,9 @@ All motor parameters are fixed for the Wantai 42BYGHW811 / DRV8825 combination. 
 
 **Downstream agents MUST read these before planning or implementing.**
 
+### Tool spec (primary reference — read first)
+- `tools/rotor-solver/SPEC.md` — canonical spec for this tool: all inputs, outputs, geometry formulas, motor constants, microstepping factors, FoS thresholds, and assumptions. **Read this before anything else.**
+
 ### Source file to modify
 - `tools/rotor-solver/index.html` — the only file that changes; contains the full page, inline `<style>`, and inline `<script>`. Read the entire file before planning.
 
