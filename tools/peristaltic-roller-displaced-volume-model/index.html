@@ -284,6 +284,39 @@
       background: rgba(255,185,43,0.07); border-color: #ffb92b; color: #ffdd80;
     }
 
+    /* ── Expandable theory sub-sections ────────────────────── */
+    .theory-section h3.ts-toggle {
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      user-select: none; gap: 10px;
+      margin-bottom: 0;
+      transition: opacity 0.18s;
+    }
+    .theory-section h3.ts-toggle:hover { opacity: 0.72; }
+    .ts-arrow {
+      font-size: 0.68rem; color: var(--text-muted);
+      transition: transform 0.26s ease, color 0.2s;
+      flex-shrink: 0; line-height: 1;
+    }
+    .theory-section h3.ts-toggle.ts-open .ts-arrow {
+      transform: rotate(90deg); color: var(--accent);
+    }
+    .ts-body {
+      overflow: hidden; max-height: 0; opacity: 0;
+      padding-top: 14px; /* clipped when closed, visible when open */
+      transition: max-height 0.30s ease-out, opacity 0.22s ease;
+    }
+    .ts-body.ts-open {
+      max-height: 5000px; opacity: 1;
+      transition: max-height 0.30s ease-in, opacity 0.22s ease;
+    }
+
+    /* Part summary blurbs */
+    .part-summary {
+      font-size: 0.91rem; color: var(--text-muted);
+      line-height: 1.72; max-width: 840px;
+    }
+
     /* ── KaTeX dark-mode tint fix ───────────────────────────── */
     .katex, .katex-display { color: var(--text) !important; }
 
@@ -334,6 +367,13 @@
     <span class="num">Part 1</span>
     <h2>Tube Cross-Section — The Stadium Model</h2>
   </div>
+  <p class="part-summary animate-in" style="--delay:0.095s">
+    Under a roller the tube lumen flattens into a <em>stadium</em> shape — two straight
+    segments joined by semicircular caps. A single physical assumption (conservation of
+    the inner-wall perimeter) yields a closed-form expression for the residual lumen area
+    $A(h)$ at any squeeze depth: a geometry-based replacement for the ill-posed
+    "occlusion percentage". Expand each sub-section below to read the derivation.
+  </p>
 
   <!-- Theory card -->
   <div class="theory-card animate-in" style="--delay:0.11s">
@@ -627,6 +667,13 @@
     <span class="num">Part 2</span>
     <h2>Displaced Volume &amp; Axial Contact Length</h2>
   </div>
+  <p class="part-summary animate-in" style="--delay:0.195s">
+    A roller displaces fluid over a finite axial <em>contact length</em> $L_c$,
+    not at a single line. The contact length follows from the Hertz-style chord geometry of a
+    cylinder indenting a flat-backed layer. The key result: the tube arc added to compensate
+    one roller's displacement equals $L_c$ exactly — the lumen area cancels and the
+    correction is independent of bore size. Expand each sub-section below for the full derivation.
+  </p>
 
   <!-- Theory card -->
   <div class="theory-card animate-in" style="--delay:0.21s">
@@ -1154,6 +1201,43 @@ function p2calc() {
 /* Initial draw */
 p1draw();
 p2calc();
+
+/* ── Expandable theory sub-sections ──────────────────────────
+   Transforms each .theory-section into a click-to-expand unit.
+   Runs after all DOM content is present; KaTeX renders async but
+   overflow:hidden keeps collapsed sections invisible regardless.
+─────────────────────────────────────────────────────────────── */
+(function initExpandable() {
+  document.querySelectorAll('.theory-section').forEach(function(sec) {
+    var h3 = sec.querySelector('h3');
+    if (!h3) return;
+
+    /* Move all siblings after h3 into a collapsible wrapper */
+    var body = document.createElement('div');
+    body.className = 'ts-body';
+    var node = h3.nextSibling;
+    while (node) {
+      var next = node.nextSibling;
+      body.appendChild(node);
+      node = next;
+    }
+    sec.appendChild(body);
+
+    /* Arrow indicator appended inside h3 */
+    var arrow = document.createElement('span');
+    arrow.className = 'ts-arrow';
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = '▶';
+    h3.appendChild(arrow);
+    h3.classList.add('ts-toggle');
+
+    /* Toggle on click */
+    h3.addEventListener('click', function() {
+      var open = body.classList.toggle('ts-open');
+      h3.classList.toggle('ts-open', open);
+    });
+  });
+})();
 </script>
 
 </body>
