@@ -162,7 +162,7 @@
     /* ── Controls (shared by both tool panels) ──────────────── */
     .ctrl {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px 28px;
     }
     .cg { display: flex; flex-direction: column; gap: 8px; }
@@ -252,7 +252,7 @@
     /* ── Part 2 metric grid ─────────────────────────────────── */
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px; margin-top: 26px;
     }
     .metric {
@@ -893,23 +893,8 @@
       </div>
     </div>
 
-    <!-- Results -->
+    <!-- Results — row 1: primary outputs; row 2: derived/secondary -->
     <div class="metrics-grid">
-      <div class="metric">
-        <span class="m-label">Printed gap G = 2w − δ</span>
-        <span class="m-val" id="s2-G">—</span>
-        <span class="m-unit">mm</span>
-      </div>
-      <div class="metric">
-        <span class="m-label">Contact length L<sub>c</sub></span>
-        <span class="m-val" id="s2-Lc">—</span>
-        <span class="m-unit">mm / roller</span>
-      </div>
-      <div class="metric">
-        <span class="m-label">Open lumen area A<sub>ℓ</sub></span>
-        <span class="m-val" id="s2-Al">—</span>
-        <span class="m-unit">mm²</span>
-      </div>
       <div class="metric highlight">
         <span class="m-label">Volume per roller V<sub>roller</sub></span>
         <span class="m-val" id="s2-Vr">—</span>
@@ -924,6 +909,21 @@
         <span class="m-label">Arc compensation ΔArc<sub>total</sub></span>
         <span class="m-val" id="s2-arc">—</span>
         <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Printed gap G = 2w − δ</span>
+        <span class="m-val" id="s2-G">—</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Contact length L<sub>c</sub></span>
+        <span class="m-val" id="s2-Lc">—</span>
+        <span class="m-unit">mm / roller</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Open lumen area A<sub>ℓ</sub></span>
+        <span class="m-val" id="s2-Al">—</span>
+        <span class="m-unit">mm²</span>
       </div>
     </div>
 
