@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--
+================================================================================
+  PERISTALTIC PUMP — ROLLER OCCLUSION & DISPLACED-VOLUME MODEL
+  Export for further development in Claude Code / VS Code.
+  Unstyled by design — logic and documentation only. Style as you wish.
+================================================================================
+
+  PURPOSE
+  -------
+  Estimate, for a single roller pass on a rigid-backed peristaltic pump:
+    (a) the axial CONTACT LENGTH the roller flattens (L_c),
+    (b) the VOLUME of fluid that one roller displaces (V_roller),
+    (c) the EXTRA TUBE ARC you must add to compensate (ΔArc),
+    (d) the flattened-lumen cross-section geometry (stadium model).
+
+  It replaces the earlier "occlusion %" approach, which was dimensionally
+  meaningless (a % of the whole tube length tells you nothing — occlusion is
+  a LOCAL contact phenomenon, independent of tube length).
+
+================================================================================
+  COORDINATE / DIMENSION CONVENTIONS
+================================================================================
+
+  d        = tube inner diameter (ID)            [mm]
+  wall     = tube wall thickness                 [mm]
+  OD       = outer diameter = d + 2*wall         [mm]
+  R_r      = roller radius = bearing_OD / 2      [mm]
+  delta(δ) = radial interference                 [mm]
+  G        = printed roller-to-backing gap       [mm]
+  h        = residual inner-wall separation under roller [mm]
+  L_c      = axial contact (flattened) length    [mm]
+  A_lumen  = open lumen cross-sectional area = π d²/4 [mm²]
+
+================================================================================
+  THE GAP EQUATION  (how hard to squeeze)
+================================================================================
+
+  Setting the squeeze is NOT "ID plus something". At full occlusion the bore
+  is pinched shut, so the ID drops out entirely. The gap you print is governed
+  by the WALL stack:
+
+      No contact (tube untouched):      G = OD       = d + 2*wall
+      Walls kiss (zero lumen):          G = 2*wall              <-- occlusion onset
+      Compression fit (target):         G = 2*wall − δ
+
+  δ (interference) is the depth of rubber crushed PAST the wall-kiss point.
+  Its ONLY job is to guarantee full occlusion despite wall-thickness tolerance
+  and 3D-print tolerance. Recommended starting band (soft PVC):
+
+      δ = (0.10 … 0.20) × (2*wall)            ~ 0.17–0.34 mm for wall≈0.85
+      practical start:  δ ≈ 0.25–0.30 mm  →  G ≈ 1.43 mm  (wall=0.85)
+
+  CAUTION: δ > ~2*wall means you are crushing wall material, not just closing
+  the lumen → accelerated fatigue + silent ID drift. Flag in firmware/test plan.
+
+================================================================================
+  CONTACT LENGTH  L_c   (Hertz-style cylinder-on-flat footprint)
+================================================================================
+
+  A cylinder of radius R_r pressed into a compliant layer over a rigid backing,
+  driven past first contact by interference δ, flattens a finite axial length.
+  Using the geometric chord of a circle indented by depth δ:
+
+      L_c ≈ k · 2 · sqrt( 2 · R_r · δ )
+
+  where:
+      k   = empirical inflation factor (1.0–1.5), see ASSUMPTIONS below.
+      R_r = roller radius
+      δ   = effective radial interference (use the same δ as the gap eqn)
+
+  This is a first-order geometric estimate, NOT a full elasticity solution.
+  It deliberately omits the elastic modulus of the tube because (i) the backing
+  is rigid (printed PETG/ASA), (ii) at full occlusion the limiting geometry is
+  the wall stack, not the contact mechanics, and (iii) the empirical factor k
+  absorbs the second-order effects, to be fixed by Proto 1 measurement.
+
+================================================================================
+  DISPLACED VOLUME & EXTRA ARC
+================================================================================
+
+  Volume one roller displaces (the slug it pinches off / pushes ahead):
+
+      V_roller = A_lumen · L_c = (π d² / 4) · L_c        [mm³ = µL]
+
+  With N_contact rollers simultaneously engaged on the contact arc:
+
+      V_total = N_contact · V_roller
+
+  Extra tube arc to add so delivered volume stays on target. Because the lost
+  volume per roller equals A_lumen·L_c and the arc holds A_lumen per unit
+  length, the compensating arc per roller is simply L_c:
+
+      ΔArc = V_roller / A_lumen = L_c       (per engaged roller)
+      ΔArc_total = N_contact · L_c
+
+  => Elegant result: the extra arc per roller is just its contact length.
+
+================================================================================
+  STADIUM CROSS-SECTION  (the flattened lumen shape — for the diagram)
+================================================================================
+
+  Constant-perimeter (incompressible-wall) assumption: the inner wall does not
+  change length as it flattens, it only changes shape. An undeformed circular
+  lumen of inner circumference P = π d flattens into a "stadium" = a rectangle
+  of width L_w capped by two semicircles of diameter h (the residual gap):
+
+      Perimeter conserved:   P = 2·L_w + π·h     =>   L_w = (P − π·h) / 2
+      Lumen area:            A = L_w·h + π·(h/2)²
+
+  At h → 0 (full occlusion) the area → 0 and L_w → P/2. This A(h) is the honest
+  replacement for "occlusion %": report residual lumen AREA, not a fraction of
+  tube length.
+
+================================================================================
+  PARAMETERS — VALUES, RANGES, SOURCES
+================================================================================
+
+  d (tube ID)
+      Your selection: 0.51 mm (Masterflex Ismatec Puri-Clear LL, 2-stop microbore).
+      Available IDs in this range: 0.25, 0.51, 0.76, 1.02, 1.14 mm.
+      Source: Ismatec/Masterflex Pump Tubing Selection Guide (Cole-Parmer 14-035 Rev C);
+              Darwin Microfluidics 2-Stop Puri-Clear LL product page.
+
+  wall (tube wall thickness)
+      Default 0.85 mm. 2-STOP MICROBORE WALL IS ~CONSTANT (≈0.85–0.91 mm) ACROSS
+      SMALL IDs because the wall, not the bore, is sized to fit the Ismatec
+      cartridge gap. Confirmed value: platinum-cured silicone 2-stop, 0.89 mm ID
+      / 2.59 mm OD → wall = (2.59−0.89)/2 = 0.85 mm (Cole-Parmer MFLX06421-26).
+      Design-rule source: Ismatec brochure — "ensure the wall thickness of the
+      tubing you select matches the requirements for the pump you are using."
+      ACTION: caliper the actual Puri-Clear LL OD in Proto 0; published OD for
+      the PVC 2-stop line is not stated by the manufacturer. Do not cite a
+      specific wall in the thesis without your own measurement.
+
+  R_r (roller radius) = bearing_OD / 2
+      Two candidates carried through the design:
+        bearing_OD = 10 mm  → R_r = 5 mm   (e.g. MR105ZZ)
+        bearing_OD = 16 mm  → R_r = 8 mm   (e.g. 625-2RS)
+      Larger roller → longer L_c → more displaced volume & more arc, but lower
+      contact stress (gentler on tube). Smaller roller → opposite.
+
+  delta (δ, radial interference)
+      Default 0.20–0.30 mm. Range modelled 0.02–0.60 mm.
+      Band derived from industry occlusion practice: peristaltic pumps run
+      "10 to 20% occlusion, higher for softer tube material" — interpreted here
+      as compression past wall-contact as a fraction of the 2*wall stack.
+      Source: Pump Industry Magazine, "Peristaltic pumps" (2014).
+      The occlusion design constraint (gap < 2×wall for occlusion to occur):
+      Boxer Pumps, "Peristaltic Pumps for Liquid".
+
+  N_contact (rollers engaged on the arc)
+      Default 2. For a 180° contact arc this is roughly (roller_count / 2).
+      Tie to your rotor geometry from the rotor-radius solver.
+
+  k (empirical inflation factor)
+      Default 1.15, range 1.0–1.5. Captures wall thinning + axial bulge that the
+      idealised constant-perimeter / rigid-Hertz model omits. Published roller-
+      volume-displacement work notes that perfect-compliance assumptions yield
+      SMALLER-than-actual volumes (Riemann-sum RVD method), i.e. real displaced
+      volume is higher — hence k ≥ 1. Source: Klespitz & Kovács / "Methodologies
+      towards approximating the volume displacement by a roller in a roller-type
+      peristaltic pump", Sensors & Actuators A (2022). CALIBRATE k from Proto 1
+      gravimetry: k = measured_displaced_volume / model_displaced_volume.
+
+================================================================================
+  KEY ASSUMPTIONS (state these in the thesis methods section)
+================================================================================
+  1. Rigid backing: the printed channel plate does not deflect. Valid for
+     PETG/ASA at these loads; would NOT hold for a compliant shoe.
+  2. Constant-perimeter wall: inner wall conserves length, redistributes shape.
+     Lower-bound on displaced volume; k corrects upward.
+  3. Symmetric bottoming: roller flattens the tube evenly against the backing.
+  4. Quasi-static: ignores tube RE-RECOVERY dynamics behind the roller, which
+     is where low-volume PULSATION originates. That is a flow-trace question
+     (Proto 1), NOT captured here. Do not over-claim this model on pulsation.
+  5. Newtonian, low-pressure flow; no backpressure term.
+
+================================================================================
+  PROTO-0 / PROTO-1 CALIBRATION HOOKS
+================================================================================
+  - Measure tube OD with calipers → set `wall`.
+  - Measure printed gap, subtract 2*wall → confirm `delta`.
+  - Ink-and-press the flattened footprint, measure length → compare to L_c,
+    set k = measured / modelled.
+  - 20-replicate gravimetry at 5/50/500 µL → validate V and refine k.
+================================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Peristaltic occlusion model</title>
+</head>
+<body>
+
+<h1>Peristaltic roller occlusion &amp; displaced-volume model</h1>
+
+<!-- ============================ INPUTS ============================ -->
+<fieldset>
+  <legend>Inputs</legend>
+
+  <label>Bearing OD (mm):
+    <select id="bearingOD" onchange="recompute()">
+      <option value="10">10</option>
+      <option value="16" selected>16</option>
+    </select>
+  </label><br>
+
+  <label>Tube ID d (mm):
+    <select id="id" onchange="recompute()">
+      <option value="0.25">0.25</option>
+      <option value="0.51" selected>0.51</option>
+      <option value="0.76">0.76</option>
+      <option value="1.02">1.02</option>
+      <option value="1.14">1.14</option>
+    </select>
+  </label><br>
+
+  <label>Wall thickness (mm):
+    <input type="range" id="wall" min="0.4" max="1.6" step="0.05" value="0.85" oninput="recompute()">
+    <output id="wall-out">0.85</output>
+  </label><br>
+
+  <label>Radial interference δ (mm):
+    <input type="range" id="delta" min="0.02" max="0.60" step="0.02" value="0.20" oninput="recompute()">
+    <output id="delta-out">0.20</output>
+  </label><br>
+
+  <label>Rollers engaged N_contact:
+    <input type="range" id="nc" min="1" max="4" step="1" value="2" oninput="recompute()">
+    <output id="nc-out">2</output>
+  </label><br>
+
+  <label>Empirical inflation k:
+    <input type="range" id="k" min="1.0" max="1.5" step="0.05" value="1.15" oninput="recompute()">
+    <output id="k-out">1.15</output>
+  </label>
+</fieldset>
+
+<!-- ============================ OUTPUTS ============================ -->
+<fieldset>
+  <legend>Outputs</legend>
+  <p>Printed gap G = 2·wall − δ = <output id="gap">—</output> mm</p>
+  <p>Contact length L_c = <output id="lc">—</output> mm (per roller)</p>
+  <p>Volume displaced / roller V_roller = <output id="vr">—</output> µL</p>
+  <p>Total displaced (N_contact rollers) = <output id="vt">—</output> µL</p>
+  <p>Extra arc to add ΔArc_total = <output id="arc">—</output> mm</p>
+  <p>Open lumen area A_lumen = <output id="alu">—</output> mm²</p>
+  <p id="warn" style="font-weight:bold;"></p>
+</fieldset>
+
+<script>
+/* ----------------------------------------------------------------------------
+   CORE MODEL — all formulas documented in the header block above.
+   Pure functions so they can be unit-tested / reused outside the DOM.
+---------------------------------------------------------------------------- */
+
+// Contact (flattened) length of a roller indenting a rigid-backed tube.
+// L_c = k * 2 * sqrt(2 * R_r * delta)
+function contactLength(R_r, delta, k) {
+  return k * 2 * Math.sqrt(2 * R_r * delta);
+}
+
+// Open lumen cross-sectional area: A = pi * d^2 / 4
+function lumenArea(d) {
+  return Math.PI * d * d / 4;
+}
+
+// Volume one roller displaces over its contact length: A_lumen * L_c  [mm^3 = uL]
+function rollerVolume(d, L_c) {
+  return lumenArea(d) * L_c;
+}
+
+// Printed roller-to-backing gap: G = 2*wall - delta
+function printedGap(wall, delta) {
+  return 2 * wall - delta;
+}
+
+// Stadium cross-section under the roller (constant-perimeter model).
+// Given residual inner-wall separation h and ID d:
+//   P    = pi * d                      (conserved inner perimeter)
+//   L_w  = (P - pi*h) / 2              (flat width)
+//   area = L_w*h + pi*(h/2)^2          (rectangle + 2 semicircle caps)
+function stadium(d, h) {
+  const P = Math.PI * d;
+  const L_w = Math.max(0, (P - Math.PI * h) / 2);
+  const area = L_w * h + Math.PI * (h / 2) * (h / 2);
+  return { L_w, area };
+}
+
+/* ----------------------------------------------------------------------------
+   DOM glue
+---------------------------------------------------------------------------- */
+function recompute() {
+  const bearingOD = parseFloat(document.getElementById('bearingOD').value);
+  const d        = parseFloat(document.getElementById('id').value);
+  const wall     = parseFloat(document.getElementById('wall').value);
+  const delta    = parseFloat(document.getElementById('delta').value);
+  const nc       = parseInt(document.getElementById('nc').value, 10);
+  const k        = parseFloat(document.getElementById('k').value);
+
+  document.getElementById('wall-out').value  = wall.toFixed(2);
+  document.getElementById('delta-out').value = delta.toFixed(2);
+  document.getElementById('nc-out').value    = nc;
+  document.getElementById('k-out').value     = k.toFixed(2);
+
+  const R_r  = bearingOD / 2;
+  const L_c  = contactLength(R_r, delta, k);
+  const A    = lumenArea(d);
+  const V_r  = rollerVolume(d, L_c);
+  const V_t  = V_r * nc;
+  const arc  = L_c * nc;              // extra arc = L_c per engaged roller
+  const G    = printedGap(wall, delta);
+
+  document.getElementById('gap').value = G.toFixed(2);
+  document.getElementById('lc').value  = L_c.toFixed(2);
+  document.getElementById('vr').value  = V_r.toFixed(3);
+  document.getElementById('vt').value  = V_t.toFixed(3);
+  document.getElementById('arc').value = arc.toFixed(2);
+  document.getElementById('alu').value = A.toFixed(3);
+
+  const w = document.getElementById('warn');
+  if (delta > 2 * wall) {
+    w.textContent = 'WARNING: δ exceeds 2×wall (' + (2*wall).toFixed(2) +
+      ' mm) — crushing wall material, not just occluding. Fatigue / ID-drift risk.';
+  } else if (delta < 0.3 * wall) {
+    w.textContent = 'WARNING: δ small vs wall — occlusion may be incomplete; backflow / pulsation likely.';
+  } else {
+    w.textContent = '';
+  }
+}
+
+recompute();
+</script>
+
+</body>
+</html>

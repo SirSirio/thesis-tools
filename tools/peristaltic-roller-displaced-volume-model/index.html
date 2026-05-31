@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peristaltic Occlusion &amp; Displaced-Volume Model — Thesis Tools</title>
+
+  <!-- KaTeX: CDN primary, local copy as offline fallback -->
+  <link id="katex-css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+        onerror="this.onerror=null;this.href='katex/katex.min.css';">
+
+  <link rel="stylesheet" href="../../assets/style.css" />
+
+  <style>
+    /* ── Tool nav ──────────────────────────────────────────── */
+    .tool-nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.82rem;
+    }
+    .tool-nav a {
+      color: var(--accent); font-weight: 500; letter-spacing: 0.02em;
+      transition: letter-spacing 0.2s ease, color 0.2s ease;
+    }
+    .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
+    .tool-nav span { color: var(--text-muted); }
+
+    /* ── Page layout ────────────────────────────────────────── */
+    .tool-main {
+      position: relative; z-index: 1;
+      max-width: 1060px; margin: 0 auto;
+      padding: 60px 32px 90px;
+      display: flex; flex-direction: column; gap: 24px;
+    }
+
+    /* ── Tool header ────────────────────────────────────────── */
+    .tool-header { margin-bottom: 4px; }
+    .tool-header h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+      margin: 14px 0 14px;
+      background: linear-gradient(130deg, #ffffff 35%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tool-header p {
+      font-size: 0.95rem; color: var(--text-muted);
+      line-height: 1.70; max-width: 800px;
+    }
+
+    /* ── Part divider label ─────────────────────────────────── */
+    .part-label {
+      display: flex; align-items: center; gap: 14px;
+      margin-top: 16px;
+    }
+    .part-label .num {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255,107,43,0.10);
+      border: 1px solid rgba(255,107,43,0.28);
+      padding: 4px 13px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .part-label h2 {
+      font-size: 1.30rem; font-weight: 600; letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    /* ── Glass panel (tool cards) ───────────────────────────── */
+    .glass-panel {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,107,43,0.15);
+      border-radius: var(--radius);
+      padding: 30px 34px;
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    }
+    .panel-title {
+      font-size: 0.72rem; letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 24px;
+    }
+
+    /* ── Theory / documentation cards ──────────────────────── */
+    .theory-card {
+      background: rgba(255,255,255,0.022);
+      border: 1px solid rgba(255,107,43,0.10);
+      border-left: 3px solid rgba(255,107,43,0.42);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      display: flex; flex-direction: column; gap: 32px;
+    }
+
+    .theory-section {}
+    .theory-section h3 {
+      font-size: 0.80rem; font-weight: 700; letter-spacing: 0.11em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .theory-section p {
+      font-size: 0.93rem; color: var(--text); line-height: 1.78;
+      margin-bottom: 10px;
+    }
+    .theory-section p:last-child { margin-bottom: 0; }
+    .theory-section em { color: var(--text); font-style: italic; }
+    .theory-section strong { color: var(--text); font-weight: 600; }
+
+    /* Symbol / parameter tables */
+    .sym-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.88rem; margin-top: 4px;
+    }
+    .sym-table th {
+      font-size: 0.70rem; letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--text-muted); font-weight: 600;
+      padding: 7px 12px; border-bottom: 1px solid rgba(255,255,255,0.10);
+      text-align: left;
+    }
+    .sym-table td {
+      padding: 7px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text); vertical-align: top; line-height: 1.6;
+    }
+    .sym-table td:first-child {
+      color: var(--accent); font-weight: 600;
+      white-space: nowrap; min-width: 120px;
+    }
+    .sym-table td:last-child { color: var(--text-muted); font-size: 0.82rem; }
+
+    /* Display formula blocks */
+    .math-block {
+      text-align: center; margin: 1.3em 0;
+      overflow-x: auto; overflow-y: hidden;
+      padding: 4px 0;
+    }
+
+    /* Numbered assumption / source lists */
+    .theory-list {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .theory-list li {
+      font-size: 0.91rem; color: var(--text); line-height: 1.70;
+      padding-left: 26px; position: relative;
+    }
+    .theory-list li::before {
+      content: attr(data-n);
+      position: absolute; left: 0;
+      color: var(--accent); font-weight: 700; font-size: 0.80rem;
+      top: 2px;
+    }
+
+    /* Inline reference tag */
+    .ref {
+      font-size: 0.77rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px; padding: 1px 7px;
+      display: inline-block; margin-left: 3px;
+    }
+
+    /* ── Controls (shared by both tool panels) ──────────────── */
+    .ctrl {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 20px 28px;
+    }
+    .cg { display: flex; flex-direction: column; gap: 8px; }
+    .cg > label {
+      font-size: 0.77rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .input-row { display: flex; align-items: center; gap: 10px; }
+    .v {
+      font-size: 0.90rem; font-weight: 700; color: var(--accent);
+      min-width: 48px; text-align: right;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px; outline: none; cursor: pointer; flex: 1;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px;
+      border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 8px rgba(255,107,43,0.5); cursor: pointer;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 16px; height: 16px; border: none; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+    }
+
+    select {
+      font-size: 0.92rem; font-weight: 600; padding: 8px 11px;
+      border-radius: 8px; border: 1px solid rgba(255,107,43,0.25);
+      background: rgba(255,255,255,0.05); color: var(--text);
+      outline: none; cursor: pointer; width: 100%;
+      transition: border-color 0.2s;
+    }
+    select:focus { border-color: var(--accent); }
+    select option { background: #1a1814; color: var(--text); }
+
+    /* ── Part 1 — compression state buttons ─────────────────── */
+    .state-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+    .state-btn {
+      font-family: var(--font); font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.03em; padding: 8px 20px; border-radius: 100px;
+      border: 1px solid rgba(255,107,43,0.28);
+      background: rgba(255,107,43,0.06); color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.22s, border-color 0.22s, color 0.22s;
+    }
+    .state-btn:hover {
+      border-color: rgba(255,107,43,0.55); color: var(--text);
+      background: rgba(255,107,43,0.13);
+    }
+    .state-btn.active {
+      border-color: var(--accent); color: var(--accent);
+      background: rgba(255,107,43,0.18);
+    }
+
+    /* ── SVG figure wrapper ─────────────────────────────────── */
+    .fig-wrap {
+      width: 100%; overflow-x: auto;
+      margin: 24px 0 6px; border-radius: 10px;
+      background: rgba(255,255,255,0.015);
+      padding: 10px 0;
+    }
+    .fig-wrap svg {
+      display: block; width: 100%; max-width: 700px;
+      margin: 0 auto; height: auto;
+    }
+
+    /* ── Part 1 outputs ─────────────────────────────────────── */
+    .output-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px 20px; margin-top: 20px;
+    }
+    .out-item { display: flex; flex-direction: column; gap: 3px; }
+    .out-label {
+      font-size: 0.70rem; letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .out-val {
+      font-size: 1.05rem; font-weight: 700; color: var(--accent);
+    }
+    .out-unit { font-size: 0.78rem; color: var(--text-muted); margin-left: 3px; }
+
+    /* ── Part 2 metric grid ─────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 14px; margin-top: 26px;
+    }
+    .metric {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .metric.highlight { border-color: rgba(255,107,43,0.30); }
+    .m-label {
+      font-size: 0.70rem; letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--text-muted); line-height: 1.4;
+    }
+    .m-val { font-size: 1.20rem; font-weight: 700; color: var(--accent); }
+    .m-unit { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* Warning / caution strips */
+    .warn-strip {
+      display: none; margin-top: 18px; padding: 13px 18px;
+      border-radius: 10px; font-size: 0.88rem; line-height: 1.60;
+      border-left: 3px solid;
+    }
+    .warn-strip.danger  {
+      display: block;
+      background: rgba(232,53,53,0.09); border-color: #e83535; color: #ffaaaa;
+    }
+    .warn-strip.caution {
+      display: block;
+      background: rgba(255,185,43,0.07); border-color: #ffb92b; color: #ffdd80;
+    }
+
+    /* ── KaTeX dark-mode tint fix ───────────────────────────── */
+    .katex, .katex-display { color: var(--text) !important; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .tool-main  { padding: 36px 18px 60px; }
+      .glass-panel, .theory-card { padding: 22px 18px; }
+      .ctrl { grid-template-columns: 1fr; }
+      .part-label h2 { font-size: 1.10rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background blobs -->
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- Tool nav -->
+<nav class="tool-nav animate-in" style="--delay:0s">
+  <a href="../../index.html">← All tools</a>
+  <span>Peristaltic Occlusion Model</span>
+</nav>
+
+<main class="tool-main">
+
+  <!-- ── Tool header ─────────────────────────────────────── -->
+  <header class="tool-header animate-in" style="--delay:0.05s">
+    <div class="section-label">Thesis Tool — Modular Liquid Dispensing · Proto 1</div>
+    <h1>Peristaltic Roller Occlusion<br>&amp; Displaced-Volume Model</h1>
+    <p>
+      A two-part geometric reference for the tube-deformation mechanics of a rigid-backed
+      peristaltic pump. Part 1 models the tube cross-section under a roller using the
+      constant-perimeter stadium assumption. Part 2 derives the axial contact length,
+      the volume displaced per roller pass, and the extra arc required for accurate
+      stroke compensation. Each section contains a full derivation, parameter table,
+      and interactive calculator.
+    </p>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 1 — TUBE CROSS-SECTION: THE STADIUM MODEL
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.08s">
+    <span class="num">Part 1</span>
+    <h2>Tube Cross-Section — The Stadium Model</h2>
+  </div>
+
+  <!-- Theory card -->
+  <div class="theory-card animate-in" style="--delay:0.11s">
+
+    <div class="theory-section">
+      <h3>Purpose &amp; Motivation</h3>
+      <p>
+        When a peristaltic roller presses a flexible tube against a rigid backing, the circular bore
+        does not simply shrink in diameter — it changes shape, flattening into an elongated form
+        before closing entirely. Quantifying that shape matters for two reasons in this design.
+      </p>
+      <p>
+        First, the volume of fluid a roller displaces depends on the cross-sectional area of the
+        lumen along the contact region, not on any single diameter. Second, the common shorthand of
+        describing occlusion as a <em>percentage</em> is dimensionally ill-posed for a precision
+        dispensing application: occlusion is a local contact phenomenon at the roller, and a
+        percentage implicitly invites the reader to relate it to the whole tube length, which
+        carries no physical meaning. A defensible model must instead report the residual lumen
+        <em>area</em> as a function of how far the roller has closed.
+      </p>
+      <p>
+        The stadium model provides that. It describes the flattened lumen as a <strong>stadium</strong>
+        (a rectangle capped by two semicircles, also called a discorectangle) and derives its area
+        from a single physical assumption about the tube wall. The result is a smooth, monotonic
+        area-versus-closure relationship bounded by the open circle at one extreme and complete
+        occlusion at the other.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Symbols</h3>
+      <table class="sym-table">
+        <thead>
+          <tr><th>Symbol</th><th>Meaning</th><th>Unit</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>$d$</td><td>Tube inner diameter (ID)</td><td>mm</td></tr>
+          <tr><td>$r_0 = d/2$</td><td>Undeformed lumen radius</td><td>mm</td></tr>
+          <tr><td>$w$</td><td>Tube wall thickness</td><td>mm</td></tr>
+          <tr><td>$\mathrm{OD} = d + 2w$</td><td>Outer diameter</td><td>mm</td></tr>
+          <tr><td>$\delta$</td><td>Radial interference — crush depth past wall-contact</td><td>mm</td></tr>
+          <tr><td>$G$</td><td>Printed roller-to-backing gap</td><td>mm</td></tr>
+          <tr><td>$h$</td><td>Residual inner-wall separation under roller</td><td>mm</td></tr>
+          <tr><td>$L_w$</td><td>Flat (straight) width of the stadium lumen</td><td>mm</td></tr>
+          <tr><td>$P = \pi d$</td><td>Inner-wall perimeter (conserved quantity)</td><td>mm</td></tr>
+          <tr><td>$A_0 = \pi r_0^2$</td><td>Undeformed (open) lumen area</td><td>mm²</td></tr>
+          <tr><td>$A(h)$</td><td>Deformed lumen area as a function of residual gap</td><td>mm²</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="theory-section">
+      <h3>Physical Assumption — Perimeter Conservation</h3>
+      <p>
+        Elastomeric tube walls (soft PVC in this design) are very nearly incompressible in bulk.
+        Squeezing the tube redistributes wall material rather than compressing its volume.
+        Viewed in cross-section, the inner wall contour retains, to first order, the same arc
+        length as it deforms: the circle of circumference $P = \pi d$ is effectively unrolled
+        into a flatter closed curve of the <em>same</em> total length.
+      </p>
+      <p>
+        The minimum-bending shape that a fixed-length closed loop naturally adopts when pressed
+        between two parallel flats separated by distance $h$ is a <strong>stadium</strong>: two
+        straight segments of length $L_w$ joined by two semicircular caps of diameter $h$. The
+        straight runs lie against the roller face and the backing plate; the caps turn the corners
+        with the smallest possible curvature change. This is the entire physical content of the model.
+        Everything that follows is geometry.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Geometry Derivation</h3>
+
+      <p>
+        <strong>Flat width from conserved perimeter.</strong>
+        The perimeter of a stadium — two straight segments plus two semicircular caps (which together
+        form one full circle of diameter $h$) — must equal the conserved circular perimeter:
+      </p>
+      <div class="math-block">$$P = 2\,L_w + \pi h = \pi d$$</div>
+      <p>Solving for the flat width:</p>
+      <div class="math-block">$$L_w = \dfrac{P - \pi h}{2} = \dfrac{\pi(d - h)}{2}$$</div>
+      <p>
+        The behaviour at the two limits confirms the model. When $h = d$, then $L_w = 0$: the
+        stadium degenerates back into the original circle. When $h \to 0$, then
+        $L_w \to P/2 = \pi d/2$: the lumen collapses to a flat slit of zero area.
+      </p>
+
+      <p style="margin-top:18px">
+        <strong>Lumen area.</strong>
+        A stadium of straight-width $L_w$ and cap-diameter $h$ has area equal to a central
+        rectangle plus two semicircular caps, which together form one full circle of radius $h/2$:
+      </p>
+      <div class="math-block">$$A = L_w \cdot h \;+\; \pi\!\left(\frac{h}{2}\right)^{\!2}$$</div>
+      <p>Substituting $L_w = \dfrac{\pi(d-h)}{2}$ and expanding:</p>
+      <div class="math-block">
+        $$\boxed{A(h) \;=\; \dfrac{\pi}{2}\,d\,h \;-\; \dfrac{\pi}{4}\,h^2}$$
+      </div>
+      <p>
+        This compact form is the key result. Verification at the two limits:
+        $A(d) = \tfrac{\pi}{2}d^2 - \tfrac{\pi}{4}d^2 = \tfrac{\pi}{4}d^2 = A_0$ (open circle
+        recovered); $A(0) = 0$ (full occlusion). The function is smooth and strictly decreasing
+        in $h$ over $[0,\, d]$, so the residual lumen area is well-defined at every degree of
+        closure. This $A(h)$ is the geometry-based replacement for an occlusion percentage.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>The Gap Equation — Squeeze to Residual Area</h3>
+      <p>
+        The printed hardware dimension links directly to the residual lumen via the gap between
+        the roller and the backing wall. A key physical insight: <strong>the squeeze is governed
+        by the wall stack, not the bore</strong>. Going from untouched to fully occluded:
+      </p>
+      <div class="math-block">
+        $$G_{\text{no contact}} \;=\; \mathrm{OD} \;=\; d + 2w$$
+        $$G_{\text{walls kiss}} \;=\; 2w \qquad \leftarrow \text{inner diameter drops out at occlusion onset}$$
+        $$G_{\text{compression fit}} \;=\; 2w - \delta$$
+      </div>
+      <p>
+        At the moment of occlusion the bore has pinched shut, so the inner diameter no longer
+        contributes to the gap — only the two stacked wall thicknesses remain. The interference
+        $\delta$ is the depth of rubber crushed <em>beyond</em> that wall-kiss point. Its sole
+        purpose is to guarantee complete occlusion despite manufacturing and print-tolerance
+        variation. For soft PVC the recommended starting band is:
+      </p>
+      <div class="math-block">$$\delta \;=\; (0.10 \;\text{to}\; 0.20) \times 2w$$</div>
+      <p>
+        Driving $\delta$ beyond approximately $2w$ means crushing wall material rather than merely
+        closing the lumen — accelerating fatigue and risking silent bore drift.
+      </p>
+      <p>
+        For the interactive figure below, each compression state maps to a residual gap $h$ via a
+        monotonic presentation mapping (not a stress-strain constitutive law):
+      </p>
+      <div class="math-block">
+        $$h \;=\; \begin{cases}
+          d & G \geq \mathrm{OD} \\[6pt]
+          \displaystyle d\;\dfrac{G - 2w}{\,\mathrm{OD} - 2w\,} & 2w < G < \mathrm{OD} \\[10pt]
+          0 & G \leq 2w
+        \end{cases}$$
+      </div>
+    </div>
+
+    <div class="theory-section">
+      <h3>Assumptions &amp; Limits of Validity</h3>
+      <ol class="theory-list">
+        <li data-n="1.">
+          <strong>Bulk-incompressible wall.</strong>
+          The inner wall conserves arc length as it deforms. Holds well for thin-walled soft
+          elastomers at moderate compression — the foundation of the stadium shape.
+        </li>
+        <li data-n="2.">
+          <strong>Rigid backing.</strong>
+          The printed channel plate does not deflect under the roller. Valid for PETG/ASA at
+          these loads; a compliant backing shoe would invalidate the fixed-flats premise.
+        </li>
+        <li data-n="3.">
+          <strong>Idealised stadium.</strong>
+          Real flattened PVC develops slight wall thinning and the caps deviate from perfect
+          semicircles under load. Treat $A(h)$ as a clean first-order reference geometry.
+          The empirical correction factor $k$ in Part 2 absorbs this deviation.
+        </li>
+        <li data-n="4.">
+          <strong>Quasi-static, single cross-section.</strong>
+          The model describes one axial slice at the roller contact. It does not address tube
+          re-recovery dynamics behind the roller, which is the physical origin of flow pulsation —
+          a separate question requiring flow-trace measurement at Proto 1.
+        </li>
+      </ol>
+    </div>
+
+    <div class="theory-section">
+      <h3>Parameters, Values &amp; Sources</h3>
+      <table class="sym-table">
+        <thead><tr><th>Parameter</th><th>Selected value / range</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>$d$ — tube ID</td>
+            <td>0.51 mm selected; range 0.25–1.14 mm available</td>
+            <td>Ismatec/Masterflex Pump Tubing Selection Guide (Cole-Parmer 14-035 Rev C); Darwin Microfluidics Puri-Clear LL listing</td>
+          </tr>
+          <tr>
+            <td>$w$ — wall thickness</td>
+            <td>0.85 mm default; measure actual Puri-Clear LL OD in Proto 0</td>
+            <td>Platinum-cured silicone 2-stop: 0.89 mm ID / 2.59 mm OD → $w = 0.85$ mm (Cole-Parmer MFLX06421-26). PVC 2-stop OD not published by Ismatec.</td>
+          </tr>
+          <tr>
+            <td>$\delta$ — interference</td>
+            <td>$(0.10\text{–}0.20)\times 2w \approx 0.17\text{–}0.34$ mm for $w = 0.85$</td>
+            <td>10–20% compression past wall-kiss, higher for softer tube — Pump Industry Magazine (2014). Occlusion onset constraint ($G < 2w$) — Boxer Pumps, "Peristaltic Pumps for Liquid".</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /theory-card part 1 -->
+
+  <!-- Interactive figure card -->
+  <div class="glass-panel animate-in" style="--delay:0.14s">
+    <div class="panel-title">Interactive Figure — Cross-Section Under a Roller</div>
+
+    <!-- State buttons -->
+    <div class="state-btns">
+      <button class="state-btn" id="s1-btn0" onclick="p1setState(0)">No contact</button>
+      <button class="state-btn" id="s1-btn1" onclick="p1setState(1)">Walls kiss (occlusion onset)</button>
+      <button class="state-btn active" id="s1-btn2" onclick="p1setState(2)">Compression fit</button>
+    </div>
+
+    <!-- Controls -->
+    <div class="ctrl">
+      <div class="cg">
+        <label>Wall <em>w</em> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="s1-w" min="0.4" max="1.2" step="0.05" value="0.85" oninput="p1draw()">
+          <span class="v" id="s1-w-v">0.85</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Inner diameter <em>d</em> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="s1-d" min="0.25" max="1.14" step="0.01" value="0.51" oninput="p1draw()">
+          <span class="v" id="s1-d-v">0.51</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Interference <em>δ</em> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="s1-delta" min="0" max="0.60" step="0.01" value="0.27" oninput="p1draw()">
+          <span class="v" id="s1-delta-v">0.27</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG figure -->
+    <div class="fig-wrap">
+      <svg id="p1-fig" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg">
+        <text x="170" y="26" text-anchor="middle" font-size="13"
+              fill="#7a7068" font-family="system-ui,sans-serif">Undeformed</text>
+        <text x="510" y="26" text-anchor="middle" font-size="13"
+              fill="#7a7068" font-family="system-ui,sans-serif">Under roller</text>
+
+        <!-- Left panel — undeformed tube (sizes updated by JS) -->
+        <circle id="p1-u-outer" cx="170" cy="168" r="72"
+          fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+        <circle id="p1-u-lumen" cx="170" cy="168" r="31"
+          fill="rgba(255,107,43,0.18)" stroke="#ff6b2b" stroke-width="1.5"/>
+        <line id="p1-u-dl" x1="170" y1="137" x2="170" y2="199"
+          stroke="rgba(255,107,43,0.55)" stroke-width="1" stroke-dasharray="3,3"/>
+        <text id="p1-u-dt" x="182" y="172" font-size="13"
+              fill="rgba(255,107,43,0.8)" font-family="system-ui,sans-serif" font-style="italic">d</text>
+        <line x1="170" y1="96" x2="170" y2="137"
+          stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="182" y="120" font-size="12"
+              fill="rgba(255,255,255,0.35)" font-family="system-ui,sans-serif" font-style="italic">w</text>
+
+        <!-- Right panel — deformed, fully drawn by JS -->
+        <g id="p1-flat"></g>
+      </svg>
+    </div>
+
+    <!-- Output readouts -->
+    <div class="output-row">
+      <div class="out-item">
+        <span class="out-label">Printed gap G = 2w − δ</span>
+        <span class="out-val" id="s1-gap">—<span class="out-unit">mm</span></span>
+      </div>
+      <div class="out-item">
+        <span class="out-label">Residual gap h</span>
+        <span class="out-val" id="s1-h">—<span class="out-unit">mm</span></span>
+      </div>
+      <div class="out-item">
+        <span class="out-label">Flat width L<sub>w</sub></span>
+        <span class="out-val" id="s1-lw">—<span class="out-unit">mm</span></span>
+      </div>
+      <div class="out-item">
+        <span class="out-label">Lumen area A(h)</span>
+        <span class="out-val" id="s1-area">—<span class="out-unit">mm²</span></span>
+      </div>
+      <div class="out-item">
+        <span class="out-label">Area / A₀</span>
+        <span class="out-val" id="s1-pct">—<span class="out-unit">%</span></span>
+      </div>
+    </div>
+  </div><!-- /glass-panel part 1 -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 2 — DISPLACED VOLUME & CONTACT LENGTH MODEL
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.18s">
+    <span class="num">Part 2</span>
+    <h2>Displaced Volume &amp; Axial Contact Length</h2>
+  </div>
+
+  <!-- Theory card -->
+  <div class="theory-card animate-in" style="--delay:0.21s">
+
+    <div class="theory-section">
+      <h3>Purpose</h3>
+      <p>
+        A single roller pass on a rigid-backed peristaltic pump displaces a finite slug of fluid —
+        not at the single contact line but over the <em>axial contact length</em> $L_c$, the length
+        of tube the roller squashes flat as it rolls. This section derives $L_c$, the displaced
+        volume $V_{\text{roller}}$ per pass, and the extra tube arc $\Delta\mathrm{Arc}$ required
+        to compensate for that displacement in a precision dispensing stroke.
+      </p>
+      <p>
+        The gap equation and stadium cross-section geometry from Part 1 are taken as inputs.
+        In the operating regime $\delta > 0$, occlusion is always complete — the residual lumen
+        area under the roller is zero — so the displacement is entirely determined by the axial
+        contact footprint, not the cross-sectional area at the contact point.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Symbols</h3>
+      <table class="sym-table">
+        <thead><tr><th>Symbol</th><th>Meaning</th><th>Unit</th></tr></thead>
+        <tbody>
+          <tr><td>$R_r$</td><td>Roller radius $= \mathrm{bearing\_OD}/2$</td><td>mm</td></tr>
+          <tr><td>$\delta$</td><td>Radial interference (same as Part 1)</td><td>mm</td></tr>
+          <tr><td>$k$</td><td>Empirical inflation factor — calibrated from Proto 1 gravimetry</td><td>—</td></tr>
+          <tr><td>$L_c$</td><td>Axial contact (flattened) length per roller</td><td>mm</td></tr>
+          <tr><td>$A_\ell = \pi d^2/4$</td><td>Open lumen cross-sectional area</td><td>mm²</td></tr>
+          <tr><td>$V_{\text{roller}}$</td><td>Volume displaced by one roller per pass</td><td>mm³ = µL</td></tr>
+          <tr><td>$N_c$</td><td>Rollers simultaneously engaged on the arc</td><td>—</td></tr>
+          <tr><td>$V_{\text{total}}$</td><td>Total displaced volume for $N_c$ rollers</td><td>µL</td></tr>
+          <tr><td>$\Delta\mathrm{Arc}$</td><td>Extra tube arc needed for stroke compensation</td><td>mm</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="theory-section">
+      <h3>Axial Contact Length $L_c$</h3>
+      <p>
+        A cylinder of radius $R_r$ pressed into a compliant layer over a rigid flat, driven past
+        first contact by radial interference $\delta$, flattens a finite axial length. From the
+        geometry of a circle of radius $R_r$ indented by depth $\delta$, the half-contact
+        half-length is $\ell_{1/2} \approx \sqrt{2\,R_r\,\delta}$, giving the full contact
+        length:
+      </p>
+      <div class="math-block">
+        $$\boxed{L_c \;\approx\; k \cdot 2\sqrt{2\,R_r\,\delta}}$$
+      </div>
+      <p>
+        The factor $k \geq 1$ is an empirical inflation coefficient that absorbs wall thinning
+        and axial bulge omitted by the idealised rigid-Hertz geometry. Published roller-displacement
+        work confirms that perfect-compliance models yield <em>smaller</em>-than-actual displaced
+        volumes <span class="ref">Klespitz &amp; Kovács, Sensors &amp; Actuators A, 2022</span>,
+        so $k = 1$ is a strict lower bound. The default $k = 1.15$ is a conservative starting
+        estimate; calibrate from Proto 1 by ink-pressing the flattened footprint and measuring
+        the actual axial length.
+      </p>
+      <p>
+        A key design consequence follows immediately: a larger roller (16 mm OD,
+        $R_r = 8$ mm) flattens a longer axial section per pass than a smaller roller
+        (10 mm OD, $R_r = 5$ mm), displacing more volume and requiring more arc
+        compensation — but at proportionally lower contact stress and gentler tube wear.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Displaced Volume &amp; Extra Arc</h3>
+      <p>
+        The slug of fluid one roller pinches off over its contact length equals the open lumen
+        area times the contact length (since the lumen is fully closed throughout $L_c$):
+      </p>
+      <div class="math-block">
+        $$V_{\text{roller}} \;=\; A_\ell \cdot L_c \;=\; \frac{\pi d^2}{4}\cdot L_c$$
+      </div>
+      <p>With $N_c$ rollers simultaneously engaged on the contact arc:</p>
+      <div class="math-block">$$V_{\text{total}} \;=\; N_c \cdot V_{\text{roller}}$$</div>
+      <p>
+        To recover that lost volume the stroke must sweep an extra length of tube. Because the
+        tube holds $A_\ell$ of fluid per unit length, the compensating arc per roller is:
+      </p>
+      <div class="math-block">
+        $$\Delta\mathrm{Arc} \;=\; \frac{V_{\text{roller}}}{A_\ell} \;=\; L_c
+        \qquad \text{(per engaged roller)}$$
+        $$\Delta\mathrm{Arc}_{\text{total}} \;=\; N_c \cdot L_c$$
+      </div>
+      <p>
+        The elegant result is that <strong>the compensating arc per roller equals its axial
+        contact length exactly</strong>. The lumen area $A_\ell$ cancels in the ratio — the
+        correction is purely geometric and independent of the tube bore. For example: with
+        $R_r = 8$ mm, $\delta = 0.25$ mm, $k = 1.15$, and $N_c = 2$ engaged rollers,
+        $L_c \approx 1.83$ mm and $\Delta\mathrm{Arc}_{\text{total}} \approx 3.66$ mm
+        must be added to the nominal stroke arc.
+      </p>
+      <p>
+        <strong>Important caveat.</strong>
+        The constant-perimeter assumption makes $\Delta\mathrm{Arc}$ a <em>lower bound</em>.
+        Real PVC wall thinning and axial bulge increase the actual displaced volume beyond the
+        model prediction. The factor $k$ accounts for this; calibrate $k$ from
+        20-replicate gravimetry at representative dispense volumes once Proto 1 is assembled:
+        $k = V_{\text{measured}} / V_{\text{model}}$.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Key Assumptions</h3>
+      <ol class="theory-list">
+        <li data-n="1.">
+          <strong>Rigid backing.</strong>
+          The channel plate does not deflect under roller load. Valid for PETG/ASA at these forces.
+        </li>
+        <li data-n="2.">
+          <strong>Constant-perimeter wall.</strong>
+          The inner wall conserves arc length and redistributes shape. Provides a lower bound
+          on displaced volume; $k$ corrects upward.
+        </li>
+        <li data-n="3.">
+          <strong>Symmetric bottoming.</strong>
+          The roller flattens the tube evenly against the backing with no tilting or rocking.
+        </li>
+        <li data-n="4.">
+          <strong>Quasi-static, no backpressure.</strong>
+          Newtonian low-pressure flow assumed. Backpressure modifies the effective interference
+          and should be assessed separately at Proto 1 under representative head conditions.
+        </li>
+        <li data-n="5.">
+          <strong>No tube re-recovery modelling.</strong>
+          The model captures displacement <em>by</em> the roller, not the tube's elastic recovery
+          <em>behind</em> it. Pulsation (arising from recovery dynamics) is outside the scope
+          of this geometric model; it requires flow-trace measurement.
+        </li>
+      </ol>
+    </div>
+
+    <div class="theory-section">
+      <h3>Parameters, Values &amp; Calibration Hooks</h3>
+      <table class="sym-table">
+        <thead><tr><th>Parameter</th><th>Value / range</th><th>Note &amp; source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>$R_r$ — roller radius</td>
+            <td>5 mm (10 mm OD) or 8 mm (16 mm OD)</td>
+            <td>Two candidate bearings: MR105ZZ ($R_r = 5$ mm) and 625-2RS ($R_r = 8$ mm)</td>
+          </tr>
+          <tr>
+            <td>$\delta$ — interference</td>
+            <td>0.02–0.60 mm; $(0.10\text{–}0.20)\times 2w$ recommended</td>
+            <td>Measure printed gap, subtract $2w$ to confirm actual $\delta$. <span class="ref">Pump Industry Mag. 2014</span></td>
+          </tr>
+          <tr>
+            <td>$N_c$ — engaged rollers</td>
+            <td>Default 2; approx. roller count / 2 for 180° arc</td>
+            <td>Cross-reference with the Rotor Geometry Solver for the specific roller count</td>
+          </tr>
+          <tr>
+            <td>$k$ — inflation factor</td>
+            <td>Default 1.15; range 1.0–1.5</td>
+            <td>Proto 1 calibration: ink-press footprint → measure $L_c$; 20-replicate gravimetry → $k = V_{\text{meas}}/V_{\text{model}}$. <span class="ref">Klespitz &amp; Kovács, S&amp;A-A, 2022</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /theory-card part 2 -->
+
+  <!-- Interactive calculator card -->
+  <div class="glass-panel animate-in" style="--delay:0.24s">
+    <div class="panel-title">Interactive Calculator — Displaced Volume &amp; Arc Compensation</div>
+
+    <div class="ctrl">
+      <div class="cg">
+        <label>Bearing OD</label>
+        <select id="s2-bod" onchange="p2calc()">
+          <option value="10">10 mm — MR105ZZ &nbsp;(R<sub>r</sub> = 5 mm)</option>
+          <option value="16" selected>16 mm — 625-2RS &nbsp;(R<sub>r</sub> = 8 mm)</option>
+        </select>
+      </div>
+      <div class="cg">
+        <label>Tube ID <em>d</em></label>
+        <select id="s2-d" onchange="p2calc()">
+          <option value="0.25">0.25 mm</option>
+          <option value="0.51" selected>0.51 mm — Puri-Clear LL</option>
+          <option value="0.76">0.76 mm</option>
+          <option value="1.02">1.02 mm</option>
+          <option value="1.14">1.14 mm</option>
+        </select>
+      </div>
+      <div class="cg">
+        <label>Wall <em>w</em> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="s2-w" min="0.4" max="1.6" step="0.05" value="0.85" oninput="p2calc()">
+          <span class="v" id="s2-w-v">0.85</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Interference <em>δ</em> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="s2-delta" min="0.02" max="0.60" step="0.02" value="0.20" oninput="p2calc()">
+          <span class="v" id="s2-delta-v">0.20</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Rollers engaged <em>N<sub>c</sub></em></label>
+        <div class="input-row">
+          <input type="range" id="s2-nc" min="1" max="4" step="1" value="2" oninput="p2calc()">
+          <span class="v" id="s2-nc-v">2</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Inflation factor <em>k</em></label>
+        <div class="input-row">
+          <input type="range" id="s2-k" min="1.0" max="1.5" step="0.05" value="1.15" oninput="p2calc()">
+          <span class="v" id="s2-k-v">1.15</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="metrics-grid">
+      <div class="metric">
+        <span class="m-label">Printed gap G = 2w − δ</span>
+        <span class="m-val" id="s2-G">—</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Contact length L<sub>c</sub></span>
+        <span class="m-val" id="s2-Lc">—</span>
+        <span class="m-unit">mm / roller</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Open lumen area A<sub>ℓ</sub></span>
+        <span class="m-val" id="s2-Al">—</span>
+        <span class="m-unit">mm²</span>
+      </div>
+      <div class="metric highlight">
+        <span class="m-label">Volume per roller V<sub>roller</sub></span>
+        <span class="m-val" id="s2-Vr">—</span>
+        <span class="m-unit">µL</span>
+      </div>
+      <div class="metric highlight">
+        <span class="m-label">Total displaced V<sub>total</sub></span>
+        <span class="m-val" id="s2-Vt">—</span>
+        <span class="m-unit">µL</span>
+      </div>
+      <div class="metric highlight">
+        <span class="m-label">Arc compensation ΔArc<sub>total</sub></span>
+        <span class="m-val" id="s2-arc">—</span>
+        <span class="m-unit">mm</span>
+      </div>
+    </div>
+
+    <!-- Warning strip -->
+    <div class="warn-strip" id="s2-warn"></div>
+  </div><!-- /glass-panel part 2 -->
+
+</main>
+
+<footer class="site-footer">
+  Sirio Vittorio Feltrin · DTU Master's Thesis 2025–2026 ·
+  Modular automated liquid dispensing for point-of-care use
+</footer>
+
+<!-- ══════════════════════════════════════════════════════
+     KaTeX — CDN primary, local copy as offline fallback
+     ══════════════════════════════════════════════════════ -->
+<script>
+  function _loadScript(src, onload) {
+    var s = document.createElement('script');
+    s.src = src;
+    if (onload) s.onload = onload;
+    document.head.appendChild(s);
+  }
+  function _startRender() {
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true  },
+          { left: '$',  right: '$',  display: false }
+        ],
+        throwOnError: false,
+        errorColor: '#e83535'
+      });
+    }
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+        onerror="_loadScript('katex/katex.min.js')"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+        onerror="_loadScript('katex/auto-render.min.js', _startRender)"
+        onload="_startRender()"></script>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   PART 1 — STADIUM CROSS-SECTION
+   Pure geometry functions; see theory card for derivations.
+════════════════════════════════════════════════════════ */
+const _NS   = 'http://www.w3.org/2000/svg';
+const PXMM  = 55;   // mm → SVG-viewport-px for the deformed right panel
+const SCALEL = 60;  // mm → SVG-viewport-px for the undeformed left circle
+let p1state = 2;
+
+function flatWidth(d, h) {
+  return Math.max(0, (Math.PI * d - Math.PI * h) / 2);
+}
+function stadiumArea(d, h) {
+  const Lw = flatWidth(d, h);
+  return Lw * h + Math.PI * (h / 2) * (h / 2);
+}
+function residualH(state, d, w, delta) {
+  if (state === 0) return d;
+  if (state === 1) return 0;
+  const OD = d + 2 * w;
+  const G  = 2 * w - delta;
+  if (G >= OD)    return d;
+  if (G <= 2 * w) return 0;
+  return d * (G - 2 * w) / (OD - 2 * w);
+}
+
+function stadiumPath(cx, yc, hw, hh) {
+  /* SVG path for a horizontal stadium centred at (cx, yc),
+     half-width hw, half-height hh. Degenerates to a line when hh ≤ 0.5. */
+  const x1 = cx - hw, x2 = cx + hw;
+  const yT = yc - hh, yB = yc + hh;
+  if (hh <= 0.5) return 'M' + x1 + ' ' + yc + ' L' + x2 + ' ' + yc;
+  return 'M' + x1 + ' ' + yT +
+         ' L' + x2 + ' ' + yT +
+         ' A' + hh + ' ' + hh + ' 0 0 1 ' + x2 + ' ' + yB +
+         ' L' + x1 + ' ' + yB +
+         ' A' + hh + ' ' + hh + ' 0 0 1 ' + x1 + ' ' + yT + ' Z';
+}
+
+function p1setState(s) {
+  p1state = s;
+  [0, 1, 2].forEach(function(i) {
+    document.getElementById('s1-btn' + i).classList.toggle('active', i === s);
+  });
+  if (s < 2) document.getElementById('s1-delta').value = 0;
+  else if (parseFloat(document.getElementById('s1-delta').value) === 0)
+    document.getElementById('s1-delta').value = 0.27;
+  p1draw();
+}
+
+function p1draw() {
+  const w     = parseFloat(document.getElementById('s1-w').value);
+  const d     = parseFloat(document.getElementById('s1-d').value);
+  let   delta = parseFloat(document.getElementById('s1-delta').value);
+  if (p1state < 2) delta = 0;
+
+  document.getElementById('s1-w-v').textContent     = w.toFixed(2);
+  document.getElementById('s1-d-v').textContent     = d.toFixed(2);
+  document.getElementById('s1-delta-v').textContent = delta.toFixed(2);
+
+  const r0   = d / 2;
+  const A0   = Math.PI * r0 * r0;
+  const G    = 2 * w - delta;
+  const h    = residualH(p1state, d, w, delta);
+  const Lw   = flatWidth(d, h);
+  const area = p1state === 0 ? A0 : stadiumArea(d, h);
+
+  /* Format outputs — strip trailing unit spans then re-append */
+  function setOut(id, val) {
+    const el = document.getElementById(id);
+    const unit = el.querySelector('.out-unit');
+    el.textContent = val;
+    if (unit) el.appendChild(unit);
+  }
+  setOut('s1-gap',  G.toFixed(2));
+  setOut('s1-h',    h.toFixed(3));
+  setOut('s1-lw',   Lw.toFixed(3));
+  setOut('s1-area', area.toFixed(4));
+  setOut('s1-pct',  (area / A0 * 100).toFixed(1));
+
+  /* ── Left panel: update circle sizes ── */
+  const rOuter = Math.max(10, (r0 + w) * SCALEL);
+  const rLumen = Math.max(4,  r0 * SCALEL);
+  const cx0 = 170, cy0 = 168;
+  document.getElementById('p1-u-outer').setAttribute('r', rOuter);
+  document.getElementById('p1-u-lumen').setAttribute('r', rLumen);
+  document.getElementById('p1-u-dl').setAttribute('y1', cy0 - rLumen);
+  document.getElementById('p1-u-dl').setAttribute('y2', cy0 + rLumen);
+
+  /* ── Right panel: draw deformed tube ── */
+  const g   = document.getElementById('p1-flat');
+  g.innerHTML = '';
+  const cx = 510, cy = 168;
+  const capR    = (h  * PXMM) / 2;
+  const halfLum = (Lw * PXMM) / 2;
+  const wpx     = w * PXMM;
+
+  /* Outer stadium (lumen + wall) */
+  const outer = document.createElementNS(_NS, 'path');
+  outer.setAttribute('d', stadiumPath(cx, cy, halfLum + wpx, capR + wpx));
+  outer.setAttribute('fill', 'rgba(255,255,255,0.055)');
+  outer.setAttribute('stroke', 'rgba(255,255,255,0.22)');
+  outer.setAttribute('stroke-width', '1.5');
+  g.appendChild(outer);
+
+  /* Inner lumen (stadium or flat slit at full occlusion) */
+  if (h > 0.001) {
+    const inner = document.createElementNS(_NS, 'path');
+    inner.setAttribute('d', stadiumPath(cx, cy, halfLum, capR));
+    inner.setAttribute('fill', 'rgba(255,107,43,0.20)');
+    inner.setAttribute('stroke', '#ff6b2b');
+    inner.setAttribute('stroke-width', '1.5');
+    g.appendChild(inner);
+  } else {
+    const slit = document.createElementNS(_NS, 'line');
+    const sw = halfLum + wpx;
+    slit.setAttribute('x1', cx - sw); slit.setAttribute('y1', cy);
+    slit.setAttribute('x2', cx + sw); slit.setAttribute('y2', cy);
+    slit.setAttribute('stroke', '#ff6b2b'); slit.setAttribute('stroke-width', '2');
+    g.appendChild(slit);
+  }
+
+  /* Roller tangent to outer top */
+  const rollerR  = 66;
+  const rollerCy = cy - (capR + wpx) - rollerR +
+    (p1state === 2 ? Math.min(wpx * 0.8, delta * PXMM) : 0);
+  const rl = document.createElementNS(_NS, 'circle');
+  rl.setAttribute('cx', cx); rl.setAttribute('cy', rollerCy); rl.setAttribute('r', rollerR);
+  rl.setAttribute('fill', 'rgba(148,194,255,0.09)');
+  rl.setAttribute('stroke', 'rgba(148,194,255,0.40)');
+  rl.setAttribute('stroke-width', '1.5');
+  g.appendChild(rl);
+  const rlt = document.createElementNS(_NS, 'text');
+  rlt.setAttribute('x', cx); rlt.setAttribute('y', rollerCy);
+  rlt.setAttribute('text-anchor', 'middle');
+  rlt.setAttribute('dominant-baseline', 'central');
+  rlt.setAttribute('font-size', '12');
+  rlt.setAttribute('fill', 'rgba(148,194,255,0.60)');
+  rlt.setAttribute('font-family', 'system-ui,sans-serif');
+  rlt.textContent = 'roller';
+  g.appendChild(rlt);
+
+  /* Backing wall line */
+  const backY = cy + capR + wpx + 10;
+  const bw = document.createElementNS(_NS, 'line');
+  bw.setAttribute('x1', cx - 140); bw.setAttribute('y1', backY);
+  bw.setAttribute('x2', cx + 140); bw.setAttribute('y2', backY);
+  bw.setAttribute('stroke', '#7a7068'); bw.setAttribute('stroke-width', '5');
+  bw.setAttribute('stroke-linecap', 'round');
+  g.appendChild(bw);
+  const bwt = document.createElementNS(_NS, 'text');
+  bwt.setAttribute('x', cx); bwt.setAttribute('y', backY + 18);
+  bwt.setAttribute('text-anchor', 'middle'); bwt.setAttribute('font-size', '11');
+  bwt.setAttribute('fill', '#7a7068'); bwt.setAttribute('font-family', 'system-ui,sans-serif');
+  bwt.textContent = 'backing wall';
+  g.appendChild(bwt);
+
+  /* Residual-gap dimension marker */
+  if (h > 0.02) {
+    const mx = cx + halfLum + wpx + 28;
+    const dm = document.createElementNS(_NS, 'line');
+    dm.setAttribute('x1', mx); dm.setAttribute('y1', cy - capR);
+    dm.setAttribute('x2', mx); dm.setAttribute('y2', cy + capR);
+    dm.setAttribute('stroke', '#ff6b2b'); dm.setAttribute('stroke-width', '1');
+    g.appendChild(dm);
+    [cy - capR, cy + capR].forEach(function(yy) {
+      const t = document.createElementNS(_NS, 'line');
+      t.setAttribute('x1', mx - 5); t.setAttribute('y1', yy);
+      t.setAttribute('x2', mx + 5); t.setAttribute('y2', yy);
+      t.setAttribute('stroke', '#ff6b2b'); t.setAttribute('stroke-width', '1');
+      g.appendChild(t);
+    });
+    const ht = document.createElementNS(_NS, 'text');
+    ht.setAttribute('x', mx + 10); ht.setAttribute('y', cy + 4);
+    ht.setAttribute('font-size', '14'); ht.setAttribute('fill', '#ff6b2b');
+    ht.setAttribute('font-family', 'system-ui,sans-serif');
+    ht.setAttribute('font-style', 'italic');
+    ht.textContent = 'h';
+    g.appendChild(ht);
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   PART 2 — OCCLUSION & DISPLACED-VOLUME CALCULATOR
+════════════════════════════════════════════════════════ */
+function p2calc() {
+  const bod   = parseFloat(document.getElementById('s2-bod').value);
+  const d     = parseFloat(document.getElementById('s2-d').value);
+  const w     = parseFloat(document.getElementById('s2-w').value);
+  const delta = parseFloat(document.getElementById('s2-delta').value);
+  const nc    = parseInt(document.getElementById('s2-nc').value, 10);
+  const k     = parseFloat(document.getElementById('s2-k').value);
+
+  document.getElementById('s2-w-v').textContent     = w.toFixed(2);
+  document.getElementById('s2-delta-v').textContent = delta.toFixed(2);
+  document.getElementById('s2-nc-v').textContent    = nc;
+  document.getElementById('s2-k-v').textContent     = k.toFixed(2);
+
+  const Rr  = bod / 2;
+  const Lc  = k * 2 * Math.sqrt(2 * Rr * delta);
+  const Al  = Math.PI * d * d / 4;
+  const Vr  = Al * Lc;
+  const Vt  = Vr * nc;
+  const arc = Lc * nc;
+  const G   = 2 * w - delta;
+
+  document.getElementById('s2-G').textContent   = G.toFixed(3);
+  document.getElementById('s2-Lc').textContent  = Lc.toFixed(3);
+  document.getElementById('s2-Al').textContent  = Al.toFixed(5);
+  document.getElementById('s2-Vr').textContent  = Vr.toFixed(5);
+  document.getElementById('s2-Vt').textContent  = Vt.toFixed(5);
+  document.getElementById('s2-arc').textContent = arc.toFixed(3);
+
+  const warn = document.getElementById('s2-warn');
+  if (delta > 2 * w) {
+    warn.textContent = '⚠️  δ exceeds 2w (' + (2 * w).toFixed(2) +
+      ' mm) — you are crushing wall material, not closing the lumen. ' +
+      'Risk of accelerated tube fatigue and silent bore-diameter drift.';
+    warn.className = 'warn-strip danger';
+  } else if (delta < 0.10 * 2 * w) {
+    warn.textContent = '⚠️  δ is below the recommended minimum ' +
+      '(' + (0.10 * 2 * w).toFixed(3) + ' mm = 10 % × 2w). ' +
+      'Occlusion may be incomplete — expect backflow and dispensing error.';
+    warn.className = 'warn-strip caution';
+  } else {
+    warn.textContent = '';
+    warn.className = 'warn-strip';
+  }
+}
+
+/* Initial draw */
+p1draw();
+p2calc();
+</script>
+
+</body>
+</html>

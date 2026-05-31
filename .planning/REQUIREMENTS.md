@@ -27,6 +27,13 @@
 - [ ] **GSD-03**: Optional nodes (spec-phase, verify-work, code-review, ship) are visually distinct from core nodes via dashed border and "optional" badge; clicking any node expands/collapses its full description and slash command
 - [ ] **GSD-04**: All styles and logic are inline (`<style>` and `<script>` blocks); no new shared files; `assets/style.css` is unchanged; no CDN-only dependencies
 
+### Peristaltic Occlusion & Displaced-Volume Model
+
+- [x] **OCCL-01**: Tool page exists at `tools/peristaltic-roller-displaced-volume-model/index.html`; linked from landing page
+- [x] **OCCL-02**: Page has two clearly separated sections: (1) stadium cross-section model with theory (derivations, symbol table, gap equation, assumptions, sources) and interactive SVG figure with 3 compression state buttons; (2) displaced-volume model with theory and interactive calculator
+- [x] **OCCL-03**: All formulas rendered in LaTeX via KaTeX (CDN primary, local `katex/` folder as offline fallback); KaTeX CSS and JS files present locally
+- [x] **OCCL-04**: No EN/IT language toggle; English only; all logic and styles inline; no changes to `assets/style.css`
+
 ## v2 Requirements
 
 ### Backlog Tools (no spec yet)

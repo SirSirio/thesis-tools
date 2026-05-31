@@ -67,9 +67,26 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 - [x] 02-02-PLAN.md — Integration: SPEC.md, landing page card, README row, CLAUDE.md update
 
+### Phase 3: Peristaltic Roller Occlusion & Displaced-Volume Model
+
+**Goal**: Build a single combined tool page (two-part) documenting and implementing the tube cross-section stadium model (Part 1) and the axial contact length / displaced-volume model (Part 2). Thesis-level documentation with LaTeX formulas in each part, followed by an interactive calculator.
+**Depends on**: Nothing (Phase 2 complete)
+**Requirements**: OCCL-01–OCCL-04
+**Success Criteria** (what must be TRUE):
+
+  1. Page exists at `tools/peristaltic-roller-displaced-volume-model/index.html` and is linked from landing page
+  2. Part 1 contains: stadium theory with KaTeX formulas, symbol table, gap equation derivation, and interactive SVG cross-section figure with 3 compression states
+  3. Part 2 contains: contact length and displaced-volume theory with KaTeX formulas, and interactive calculator with 6 inputs and 6 outputs including warning logic
+  4. All formulas rendered via KaTeX (CDN primary, local `katex/` folder as fallback); no EN/IT toggle; all logic and styles inline
+
+**Plans**: 1 plan (single-file, executed directly from CONTEXT.md)
+
+- [x] Phase 3 — implemented directly (no PLAN.md — single file scope)
+
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Motor & Microstepping Panel | 3/3 | Complete    | 2026-05-30 |
 | 2. GSD Workflow Visualizer | 2/2 | Complete | 2026-05-30 |
+| 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |

@@ -18,9 +18,17 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   ├── rotor-solver/
 │   │   ├── index.html      Peristaltic Rotor Geometry Solver
 │   │   └── SPEC.md         Tool spec — inputs, outputs, formulas, constants, assumptions
-│   └── gsd-workflow-guide/
-│       ├── index.html      GSD Workflow Guide — interactive diagram
-│       └── SPEC.md         Tool spec — content, interaction model, layout constants
+│   ├── gsd-workflow-guide/
+│   │   ├── index.html      GSD Workflow Guide — interactive diagram
+│   │   └── SPEC.md         Tool spec — content, interaction model, layout constants
+│   └── peristaltic-roller-displaced-volume-model/
+│       ├── index.html      Peristaltic Occlusion & Displaced-Volume Model (two-part)
+│       ├── SPEC.md         Tool spec — inputs, formulas, assumptions, sources
+│       ├── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js)
+│       ├── stadium_cross_section.html         Source prototype (unstyled) — do not serve
+│       ├── peristaltic_occlusion_model.html   Source prototype (unstyled) — do not serve
+│       ├── stadium_model_documentation.md     Source documentation
+│       └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
 ├── .planning/              GSD planning workspace (workflow artifacts)
 │   ├── PROJECT.md          Project context and core value
 │   ├── REQUIREMENTS.md     Active requirements with IDs
