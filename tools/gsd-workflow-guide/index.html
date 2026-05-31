@@ -130,7 +130,7 @@
     }
     .flow-node.open .node-detail,
     .util-node.open .node-detail {
-      max-height: 400px; opacity: 1; margin-top: 12px;
+      max-height: 600px; opacity: 1; margin-top: 12px;
     }
     .node-detail p {
       font-size: 0.85rem; color: #c8c0b8;
@@ -143,6 +143,21 @@
       background: rgba(255,107,43,0.08);
       border-radius: 3px; padding: 1px 5px;
     }
+
+    /* ── Flags section inside node-detail ────────── */
+    .node-flags {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .flags-label {
+      display: block;
+      font-size: 0.7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--text-muted, #7a7068);
+      margin: 0 0 5px;
+    }
+    .node-flags p { margin: 0 0 3px; }
 
     /* ── Collapsible sections ────────────────────── */
     .collapsible-section {
@@ -451,6 +466,14 @@
         <p class="node-brief">Lock in implementation decisions before planning</p>
         <div class="node-detail">
           <p>Asks open-ended questions about how to build the phase. Surfaces design details &mdash; layouts, API structures, error handling &mdash; to eliminate ambiguity before planning begins. Produces <code>CONTEXT.md</code>.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--auto</code> &mdash; Skip interactive questions; auto-extract decisions from context.</p>
+            <p><code>--analyze</code> &mdash; Analyze codebase assumptions before the discussion starts.</p>
+            <p><code>--power</code> &mdash; Deep-dive extended discussion with more probing questions.</p>
+            <p><code>--chain</code> &mdash; Auto-advance into plan-phase after discussion completes.</p>
+            <p><code>--batch</code> &mdash; Process multiple discussion topics in a single pass.</p>
+          </div>
         </div>
       </div>
 
@@ -465,6 +488,10 @@
         <p class="node-brief">Research ecosystem, generate atomic task plans, verify</p>
         <div class="node-detail">
           <p>Spawns research agents, generates small task plans each executable in a fresh context, and verifies each plan achieves the phase goal. Produces <code>PLAN.md</code> files.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--force</code> &mdash; Force replan even if the phase is already marked Complete.</p>
+          </div>
         </div>
       </div>
 
@@ -479,6 +506,13 @@
         <p class="node-brief">Run plans in parallel waves with atomic commits</p>
         <div class="node-detail">
           <p>Runs task plans in dependency-ordered waves, each in a 200k-token context. Commits atomically per task. Keeps the main context at 30&ndash;40% capacity.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--wave N</code> &mdash; Execute only a specific wave number.</p>
+            <p><code>--gaps-only</code> &mdash; Execute only gap tasks flagged by verify-work.</p>
+            <p><code>--cross-ai</code> &mdash; Force all plans through cross-AI execution.</p>
+            <p><code>--no-cross-ai</code> &mdash; Disable cross-AI execution for this run.</p>
+          </div>
         </div>
       </div>
 
@@ -508,7 +542,14 @@
         </div>
         <p class="node-brief">Structured review of phase-changed files</p>
         <div class="node-detail">
-          <p>Flags critical, warning, and info findings scoped to the phase diff. Use <code>--fix</code> to auto-apply fixes, <code>--depth=deep</code> for cross-file analysis.</p>
+          <p>Flags critical, warning, and info findings scoped to the phase diff.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--fix</code> &mdash; Auto-apply fixes after review completes.</p>
+            <p><code>--all</code> &mdash; Apply all findings, not only critical ones.</p>
+            <p><code>--files=f1,f2</code> &mdash; Review specific files instead of the phase diff.</p>
+            <p><code>--depth=quick|deep</code> &mdash; Control review depth (quick scan vs. cross-file analysis).</p>
+          </div>
         </div>
       </div>
 
@@ -523,7 +564,11 @@
         </div>
         <p class="node-brief">Create PR with auto-generated body</p>
         <div class="node-detail">
-          <p>Converts verified phase work into a pull request with summary, changes, requirements addressed, and verification status. Use <code>--draft</code> for draft PRs.</p>
+          <p>Converts verified phase work into a pull request with summary, changes, requirements addressed, and verification status.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--draft</code> &mdash; Create as a draft PR.</p>
+          </div>
         </div>
       </div>
 
@@ -541,7 +586,11 @@
         </div>
         <p class="node-brief">See current status and what step comes next</p>
         <div class="node-detail">
-          <p>Auto-detects the next recommended command. Use <code>--next</code> to run it immediately. Central hub for situational awareness between phases.</p>
+          <p>Auto-detects the next recommended command. Central hub for situational awareness between phases.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--next</code> &mdash; Immediately run the recommended next command.</p>
+          </div>
         </div>
       </div>
 
@@ -553,7 +602,14 @@
         </div>
         <p class="node-brief">Execute a focused task without full phase ceremony</p>
         <div class="node-detail">
-          <p>For small, well-scoped changes that don&rsquo;t warrant a full discuss&rarr;plan&rarr;execute cycle. Add <code>--research</code> for a research agent or <code>--validate</code> for plan-check.</p>
+          <p>For small, well-scoped changes that don&rsquo;t warrant a full discuss&rarr;plan&rarr;execute cycle.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--discuss</code> &mdash; Add a lightweight discussion phase before planning.</p>
+            <p><code>--research</code> &mdash; Spawn a research agent before planning.</p>
+            <p><code>--validate</code> &mdash; Enable plan-checking and post-execution verification.</p>
+            <p><code>--full</code> &mdash; Enable the complete quality pipeline (discuss + research + validate).</p>
+          </div>
         </div>
       </div>
 
@@ -577,7 +633,11 @@
         </div>
         <p class="node-brief">Diagnose and fix a specific problem</p>
         <div class="node-detail">
-          <p>Runs multi-cycle debugging with persistent state across context resets. Use <code>--diagnose</code> for analysis only, no fixes applied.</p>
+          <p>Runs multi-cycle debugging with persistent state across context resets.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--diagnose</code> &mdash; Analysis only; no fixes applied.</p>
+          </div>
         </div>
       </div>
 
@@ -589,7 +649,11 @@
         </div>
         <p class="node-brief">Capture ideas into notes, todos, seeds, or new phases</p>
         <div class="node-detail">
-          <p>Routes ideas to the right destination without interrupting current work. Use <code>--backlog</code> to park outside the active sequence.</p>
+          <p>Routes ideas to the right destination without interrupting current work.</p>
+          <div class="node-flags">
+            <span class="flags-label">Flags</span>
+            <p><code>--backlog</code> &mdash; Park idea outside the active sequence.</p>
+          </div>
         </div>
       </div>
 
