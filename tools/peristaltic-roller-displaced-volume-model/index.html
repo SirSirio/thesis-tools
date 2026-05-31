@@ -569,24 +569,24 @@
 
     <!-- SVG figure -->
     <div class="fig-wrap">
-      <svg id="p1-fig" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg">
+      <svg id="p1-fig" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
         <text x="170" y="26" text-anchor="middle" font-size="13"
               fill="#7a7068" font-family="system-ui,sans-serif">Undeformed</text>
         <text x="510" y="26" text-anchor="middle" font-size="13"
               fill="#7a7068" font-family="system-ui,sans-serif">Under roller</text>
 
         <!-- Left panel — undeformed tube (sizes updated by JS) -->
-        <circle id="p1-u-outer" cx="170" cy="168" r="72"
+        <circle id="p1-u-outer" cx="170" cy="235" r="72"
           fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-        <circle id="p1-u-lumen" cx="170" cy="168" r="31"
+        <circle id="p1-u-lumen" cx="170" cy="235" r="31"
           fill="rgba(255,107,43,0.18)" stroke="#ff6b2b" stroke-width="1.5"/>
-        <line id="p1-u-dl" x1="170" y1="137" x2="170" y2="199"
+        <line id="p1-u-dl" x1="170" y1="204" x2="170" y2="266"
           stroke="rgba(255,107,43,0.55)" stroke-width="1" stroke-dasharray="3,3"/>
-        <text id="p1-u-dt" x="182" y="172" font-size="13"
+        <text id="p1-u-dt" x="182" y="239" font-size="13"
               fill="rgba(255,107,43,0.8)" font-family="system-ui,sans-serif" font-style="italic">d</text>
-        <line x1="170" y1="96" x2="170" y2="137"
+        <line x1="170" y1="163" x2="170" y2="204"
           stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
-        <text x="182" y="120" font-size="12"
+        <text x="182" y="186" font-size="12"
               fill="rgba(255,255,255,0.35)" font-family="system-ui,sans-serif" font-style="italic">w</text>
 
         <!-- Right panel — deformed, fully drawn by JS -->
@@ -810,7 +810,7 @@
         <label>Tube ID <em>d</em></label>
         <select id="s2-d" onchange="p2calc()">
           <option value="0.25">0.25 mm</option>
-          <option value="0.51" selected>0.51 mm — Puri-Clear LL</option>
+          <option value="0.51" selected>0.51 mm</option>
           <option value="0.76">0.76 mm</option>
           <option value="1.02">1.02 mm</option>
           <option value="1.14">1.14 mm</option>
@@ -1004,7 +1004,7 @@ function p1draw() {
   /* ── Left panel: update circle sizes ── */
   const rOuter = Math.max(10, (r0 + w) * SCALEL);
   const rLumen = Math.max(4,  r0 * SCALEL);
-  const cx0 = 170, cy0 = 168;
+  const cx0 = 170, cy0 = 235;
   document.getElementById('p1-u-outer').setAttribute('r', rOuter);
   document.getElementById('p1-u-lumen').setAttribute('r', rLumen);
   document.getElementById('p1-u-dl').setAttribute('y1', cy0 - rLumen);
@@ -1013,7 +1013,7 @@ function p1draw() {
   /* ── Right panel: draw deformed tube ── */
   const g   = document.getElementById('p1-flat');
   g.innerHTML = '';
-  const cx = 510, cy = 168;
+  const cx = 510, cy = 235;
   const capR    = (h  * PXMM) / 2;
   const halfLum = (Lw * PXMM) / 2;
   const wpx     = w * PXMM;

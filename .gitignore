@@ -4,3 +4,9 @@ desktop.ini
 .claude/settings.local.json
 .playwright-mcp/
 serve.bat
+
+# Source/prototype files — reference only, not part of the served site
+tools/peristaltic-roller-displaced-volume-model/stadium_cross_section.html
+tools/peristaltic-roller-displaced-volume-model/peristaltic_occlusion_model.html
+tools/peristaltic-roller-displaced-volume-model/stadium_model_documentation.md
+tools/peristaltic-roller-displaced-volume-model/Peristaltic roller occlusion & displaced-volume model - Description.md
