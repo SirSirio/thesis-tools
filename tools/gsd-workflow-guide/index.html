@@ -416,6 +416,7 @@
         <pre><code>/gsd:new-project
 # or, if you already have a PRD:
 /gsd:new-project --auto @prd.md</code></pre>
+        <p><code>--auto @doc.md</code> &mdash; Skip interactive questions; extract requirements from a provided document or PRD.</p>
         <p>This creates <code>.planning/</code> with <code>PROJECT.md</code> (vision), <code>REQUIREMENTS.md</code> (scoped req IDs), and <code>ROADMAP.md</code> (phase breakdown). Then run the phase loop for each phase:</p>
         <pre><code>/gsd:discuss-phase 1     # lock implementation decisions → CONTEXT.md
 /gsd:plan-phase 1        # research + atomic plans + verify → PLAN.md files
@@ -490,6 +491,10 @@
           <p>Spawns research agents, generates small task plans each executable in a fresh context, and verifies each plan achieves the phase goal. Produces <code>PLAN.md</code> files.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
+            <p><code>--skip-research</code> &mdash; Skip the research agent step; go straight to planning.</p>
+            <p><code>--research</code> &mdash; Force re-run research even if RESEARCH.md already exists.</p>
+            <p><code>--gaps</code> &mdash; Plan only for gap tasks flagged by verify-work.</p>
+            <p><code>--prd &lt;filepath&gt;</code> &mdash; Use a PRD file as context, skipping the discussion step.</p>
             <p><code>--force</code> &mdash; Force replan even if the phase is already marked Complete.</p>
           </div>
         </div>
