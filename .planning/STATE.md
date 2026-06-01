@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 3 complete
-last_updated: "2026-05-31T00:00:00.000Z"
-last_activity: 2026-05-31
+last_updated: "2026-06-01T00:00:00.000Z"
+last_activity: 2026-06-01
 progress:
   total_phases: 3
   completed_phases: 3
@@ -87,6 +87,13 @@ None yet.
 | v2 tools | Dispense protocol calculator | Backlog (no phase yet) | 2026-05-29 |
 | v2 tools | Tube occlusion efficiency estimator | Backlog (no phase yet) | 2026-05-29 |
 | v2 tools | BOM / component selector | Backlog (no phase yet) | 2026-05-29 |
+
+## Quick Tasks Completed
+
+| Date | Task | Files |
+|------|------|-------|
+| 2026-06-01 | rotor-solver: replace occlusion-efficiency slider with manual arc-compensation (ΔArc_total) input; link to displaced-volume model `#calculator` anchor | `tools/rotor-solver/index.html`, `tools/peristaltic-roller-displaced-volume-model/index.html`, `tools/rotor-solver/SPEC.md` |
+| 2026-06-01 | rotor-solver: add live top-down geometry diagram below results table (roller-count selector, all geometric dimensions labelled, ENG/IT) | `tools/rotor-solver/index.html`, `tools/rotor-solver/SPEC.md` |
 
 ## Session Continuity
 

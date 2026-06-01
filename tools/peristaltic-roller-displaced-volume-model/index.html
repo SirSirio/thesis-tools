@@ -269,6 +269,21 @@
     .m-val { font-size: 1.20rem; font-weight: 700; color: var(--accent); }
     .m-unit { font-size: 0.78rem; color: var(--text-muted); }
 
+    .metric.hero {
+      grid-column: 1 / -1;
+      background: rgba(255,107,43,0.09);
+      border-color: rgba(255,107,43,0.55);
+      box-shadow: 0 0 40px rgba(255,107,43,0.10) inset,
+                  0 2px 16px rgba(255,107,43,0.08);
+      padding: 22px 28px;
+      flex-direction: row; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .metric.hero .m-label {
+      font-size: 0.75rem; color: var(--text); letter-spacing: 0.10em; flex: 1;
+    }
+    .metric.hero .m-val { font-size: 2.40rem; line-height: 1; }
+    .metric.hero .m-unit { font-size: 0.92rem; color: rgba(255,107,43,0.70); align-self: flex-end; margin-bottom: 4px; }
+
     /* Warning / caution strips */
     .warn-strip {
       display: none; margin-top: 18px; padding: 13px 18px;
@@ -599,7 +614,7 @@
         </div>
       </div>
       <div class="cg">
-        <label>Interference <em>δ</em> (mm)</label>
+        <label>Interference <span style="text-transform:none">δ</span> (mm)</label>
         <div class="input-row">
           <input type="range" id="s1-delta" min="0" max="0.60" step="0.01" value="0.27" oninput="p1draw()">
           <span class="v" id="s1-delta-v">0.27</span>
@@ -743,6 +758,90 @@
     </div>
 
     <div class="theory-section">
+      <h3>The Inflation Factor $k$ — Why the Geometry Alone Is Not Enough</h3>
+      <p>
+        The base formula $2\sqrt{2\,R_r\,\delta}$ comes from a classic contact-mechanics
+        result: how long a chord is cut when a circle of radius $R_r$ sinks a depth $\delta$
+        into a flat surface. It is exact for that idealised geometry, but a real peristaltic
+        tube departs from it in three ways, all of which make the physical contact patch
+        <em>longer</em> than the formula predicts.
+      </p>
+      <ol class="theory-list">
+        <li data-n="1.">
+          <strong>Axial wall bulge.</strong>
+          Rubber is nearly incompressible (Poisson's ratio $\nu \approx 0.5$). When the
+          roller squeezes the wall radially, the displaced material has nowhere to go except
+          sideways — it flows axially outward, beyond the edge of the geometric contact zone.
+          The result is a contact pressure footprint that extends past the chord the formula
+          would draw, even if the wall thickness were constant.
+        </li>
+        <li data-n="2.">
+          <strong>Wall thinning under compression.</strong>
+          At the centreline of the contact zone the wall is crushed to a thinner section.
+          The thinned material is pushed toward the perimeter, which again extends the
+          flattened footprint axially. This effect grows with interference $\delta$:
+          the deeper the crush, the further the displaced rubber migrates.
+        </li>
+        <li data-n="3.">
+          <strong>Tube curvature and backing geometry.</strong>
+          The idealised model assumes a flat elastic layer over a rigid flat plate. In
+          reality the tube sits in a curved rotor channel, and the cylindrical tube wall
+          meets the roller at a non-zero angle. The combined curvature slightly lengthens
+          the zone over which the wall progressively closes, compared to the flat-plate
+          prediction.
+        </li>
+      </ol>
+      <p>
+        The factor $k$ collapses all three effects into a single scalar: measured contact
+        length divided by idealized contact length. Because $k$ multiplies $L_c$ directly,
+        and $L_c$ then multiplies both $V_{\text{roller}}$ and $\Delta\mathrm{Arc}$, an
+        error in $k$ propagates <em>linearly</em> and without attenuation into every
+        downstream result. A 10 % under-estimate of $k$ produces a 10 % error in
+        dispensed volume — so calibrating it accurately matters as much as knowing
+        $\delta$ accurately.
+      </p>
+      <p>
+        Typical values for soft PVC tubing (shore A 55–65) fall in the range
+        $k \approx 1.10$–$1.25$. Stiffer materials (medical-grade silicone, Tygon) sit
+        closer to $1.0$–$1.10$ because their higher elastic modulus reduces axial bulge.
+        The default $k = 1.15$ is a reasonable first estimate for the 0.51 mm ID
+        soft-PVC tubes in this design; it should be replaced with a measured value
+        before committing to a rotor-arc length.
+      </p>
+      <p>
+        <strong>How to calibrate $k$ on Proto 1.</strong>
+        Two methods can be used and should agree within a few percent:
+      </p>
+      <ol class="theory-list">
+        <li data-n="A.">
+          <strong>Ink-press footprint.</strong>
+          Coat the roller with a thin layer of ink or dye, press it against a flat card
+          under the same interference $\delta$ used in operation, then lift and measure
+          the axial length of the impression $L_{\text{meas}}$. Solve:
+          $k = L_{\text{meas}} / \bigl(2\sqrt{2\,R_r\,\delta}\bigr)$.
+          This isolates the geometry directly without any flow assumption.
+        </li>
+        <li data-n="B.">
+          <strong>Gravimetric calibration.</strong>
+          Dispense $N \geq 20$ identical single-step strokes of water (or the actual
+          working fluid), weigh the total on a $\pm\,0.1$ mg balance, and compute the
+          mean volume per stroke $V_{\text{meas}}$. Then:
+          $k = V_{\text{meas}} / V_{\text{model,\,}k=1}$.
+          This is the most direct calibration because it includes every real-world
+          deviation — geometry, compliance, and any residual backflow at the pinch line.
+          Run it at the representative dispense volume (not just at maximum stroke) to
+          capture any stroke-length dependence.
+        </li>
+      </ol>
+      <p>
+        If the two methods give significantly different $k$ values (more than ~5 %),
+        the most likely cause is either backflow past an incompletely occluded tube
+        (check that $\delta$ is inside the recommended $0.10$–$0.20 \times 2w$ band)
+        or a non-rigid backing plate deflecting under roller load.
+      </p>
+    </div>
+
+    <div class="theory-section">
       <h3>Displaced Volume &amp; Extra Arc</h3>
       <p>
         The slug of fluid one roller pinches off over its contact length equals the open lumen
@@ -842,7 +941,7 @@
   </div><!-- /theory-card part 2 -->
 
   <!-- Interactive calculator card -->
-  <div class="glass-panel animate-in" style="--delay:0.24s">
+  <div class="glass-panel animate-in" id="calculator" style="--delay:0.24s">
     <div class="panel-title">Interactive Calculator — Displaced Volume &amp; Arc Compensation</div>
 
     <div class="ctrl">
@@ -871,7 +970,7 @@
         </div>
       </div>
       <div class="cg">
-        <label>Interference <em>δ</em> (mm)</label>
+        <label>Interference <span style="text-transform:none">δ</span> (mm)</label>
         <div class="input-row">
           <input type="range" id="s2-delta" min="0.02" max="0.60" step="0.02" value="0.20" oninput="p2calc()">
           <span class="v" id="s2-delta-v">0.20</span>
@@ -893,8 +992,13 @@
       </div>
     </div>
 
-    <!-- Results — row 1: primary outputs; row 2: derived/secondary -->
+    <!-- Results — hero: primary design output; row 2: volume breakdown; row 3: derived -->
     <div class="metrics-grid">
+      <div class="metric hero">
+        <span class="m-label">Arc compensation ΔArc<sub>total</sub></span>
+        <span class="m-val" id="s2-arc">—</span>
+        <span class="m-unit">mm</span>
+      </div>
       <div class="metric highlight">
         <span class="m-label">Volume per roller V<sub>roller</sub></span>
         <span class="m-val" id="s2-Vr">—</span>
@@ -904,11 +1008,6 @@
         <span class="m-label">Total displaced V<sub>total</sub></span>
         <span class="m-val" id="s2-Vt">—</span>
         <span class="m-unit">µL</span>
-      </div>
-      <div class="metric highlight">
-        <span class="m-label">Arc compensation ΔArc<sub>total</sub></span>
-        <span class="m-val" id="s2-arc">—</span>
-        <span class="m-unit">mm</span>
       </div>
       <div class="metric">
         <span class="m-label">Printed gap G = 2w − δ</span>

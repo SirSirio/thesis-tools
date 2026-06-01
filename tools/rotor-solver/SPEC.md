@@ -19,11 +19,14 @@ Solves rotor radius analytically for a target stroke volume. Checks roller colli
 | Delivered volume / stroke | `volN` | number | 1–25 µL | 5 µL |
 | Tube inner diameter | `idSel` | select | 0.25 / 0.51 / 0.76 / 1.02 / 1.14 mm | 0.51 mm |
 | Roller bearing OD | `bSel` | select | 625-2RS = 16 mm, MR105ZZ = 10 mm | 16 mm |
-| Occlusion efficiency | `occS` | range | 0.60–1.00 | 0.85 |
+| Arc compensation ΔArc_total | `arcCompN` | number | 0–50 mm | 0 mm |
 | Shaft boss diameter | `bossS` | range | 8–24 mm | 14 mm |
 | Step rate | `spS` | range | 200–6000 steps/s | 2000 steps/s |
 | Supply voltage *(motor panel)* | `voltSel` | select | 12 V / 24 V | 12 V |
 | Microstepping mode *(motor panel)* | `msSel` | select | full / 1/2 / 1/4 / 1/8 / 1/16 / 1/32 | 1/8 |
+| Rollers shown *(geometry diagram)* | `figN` | select | 3 / 4 / 5 / 6 / 8 / 10 / 12 | smallest feasible R |
+
+`ΔArc_total` is the extra tube arc each roller must sweep to compensate its displaced volume. It is computed in the **Peristaltic Occlusion & Displaced-Volume Model** (`tools/peristaltic-roller-displaced-volume-model/`, interactive calculator at `#calculator`) and pasted in here. Replaces the former occlusion-efficiency divisor.
 
 ---
 
@@ -32,8 +35,8 @@ Solves rotor radius analytically for a target stroke volume. Checks roller colli
 ### Derived constants
 ```
 A         = π × (ID/2)²             — tube cross-section area (mm²)
-geomVol   = vol / occ               — geometric swept volume per stroke (µL)
-arcNeeded = geomVol / A             — arc length each roller must sweep (mm)
+arcNeeded = vol / A + ΔArc_total    — arc length each roller must sweep (mm); pure geometric arc + compensation
+geomVol   = arcNeeded × A           — geometric swept volume per stroke (µL)
 rollerR   = bearingOD / 2           — roller radius (mm)
 bossR     = bossD / 2               — shaft boss radius (mm)
 ```
@@ -59,6 +62,19 @@ time      = totalSteps / SP         — dispense time for 1000 µL (s)
 | Tube length | tubeArc ≤ 300 mm | "tube too short" |
 
 Note: 300 mm tube limit based on movable stoppers (Marius confirmed).
+
+---
+
+## Geometry Diagram (top-down plan view)
+
+Live SVG schematic rendered below the results table, redrawn on every input change. Shows one roller-count configuration selected via `figN` (defaults to the smallest feasible R; sticks to the user's pick once changed).
+
+Represented elements and labelled dimensions:
+- Rotor pitch circle (radius R), shaft boss, N rollers spaced evenly around 360°, tube wrap over the bottom 180° contact arc
+- `R`, `OD = 2R`, `boss ∅`, `bearing OD`, `hub clr`, `arc gap`, `tube arc = πR`, and tube `ID`
+- Status line reporting the selected config's feasibility (reuses the table's `feas-*` labels); `hub clr` and `arc gap` turn red when ≤ 0
+
+Rendering notes: drawn in `buildFigure()`; outer roller-edge radius is fixed at 165 px so the figure always fits regardless of inputs (overlapping rollers visibly signal an infeasible, too-tight config). All labels are `data-i18n`-driven (ENG/IT).
 
 ---
 
@@ -150,7 +166,7 @@ RPM = step_rate / (200 × M_factor) × 60
 - Rollers equally spaced around 360°
 - Rotor radius rounded to 0.1 mm (limited by Bambu P1S print resolution, PLA material for first test prints)
 - Tube available length = 300 mm (movable stoppers, confirmed by Marius)
-- Occlusion efficiency is uniform across the arc
+- Arc compensation ΔArc_total is supplied externally (from the displaced-volume model) and added uniformly to every roller's swept arc
 - Motor torque fractions are approximate (sinusoidal current profile, DRV8825)
 - Compression load estimate (50–200 g/roller) is for 0.51 mm soft PVC microbore tube; may differ for other tube materials or IDs
 
