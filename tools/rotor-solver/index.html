@@ -259,6 +259,8 @@
       line-height: 1.35;
     }
     .tbl th:first-child { text-align: left; }
+    /* keep micro-unit lowercase: CSS uppercase turns μ into Μ (looks like M) */
+    .tbl th .u { text-transform: none; }
     .tbl td {
       padding: 10px 10px;
       border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -366,13 +368,13 @@
 <th data-i18n="th-tube-arc">Tube arc<br>(mm)</th>
 <th data-i18n="th-arc-gap">Arc gap<br>(mm)</th>
 <th data-i18n="th-hub-clr">Hub clr<br>(mm)</th>
-<th data-i18n="th-geom">Geom &sup1;<br>(&micro;L)</th>
+<th data-i18n="th-geom">Geom &sup1;<br>(<span class="u">&micro;L</span>)</th>
 <th data-i18n="th-strokes">Strokes<br>&rarr;1000</th>
 <th data-i18n="th-time">Time &sup2;<br>(s)</th>
 <th data-i18n="th-feasible">Feasible</th>
 <th data-i18n="th-contact">Rollers<br>contact</th>
 <th data-i18n="th-steps-stroke">Steps /<br>stroke</th>
-<th data-i18n="th-ul-step">&micro;L /<br>step</th>
+<th data-i18n="th-ul-step"><span class="u">&micro;L</span> /<br>step</th>
 <th data-i18n="th-torque-rim">Torque rim<br>(g)</th>
 <th data-i18n="th-fos">FoS &sup3;</th>
 <th data-i18n="th-max-step">Max step rate &sup4;<br>(steps/s)</th>
@@ -430,7 +432,7 @@
         'th-tube-arc':    'Tube arc<br>(mm)',
         'th-arc-gap':     'Arc gap<br>(mm)',
         'th-hub-clr':     'Hub clr<br>(mm)',
-        'th-geom':        'Geom ¹<br>(μL)',
+        'th-geom':        'Geom ¹<br>(<span class="u">µL</span>)',
         'th-strokes':     'Strokes<br>→1000',
         'th-time':        'Time ²<br>(s)',
         'th-feasible':    'Feasible',
@@ -442,7 +444,7 @@
         'sum-rpm':        'Rotor speed',
         'th-contact':     'Rollers<br>contact',
         'th-steps-stroke':'Steps /<br>stroke',
-        'th-ul-step':     'μL /<br>step',
+        'th-ul-step':     '<span class="u">µL</span> /<br>step',
         'th-torque-rim':  'Torque rim<br>(g)',
         'th-fos':         'FoS ³',
         'th-max-step':    'Max step rate ⁴<br>(steps/s)',
@@ -490,7 +492,7 @@
         'th-tube-arc':    'Arco tubo<br>(mm)',
         'th-arc-gap':     'Gap arco<br>(mm)',
         'th-hub-clr':     'Clr. mozzo<br>(mm)',
-        'th-geom':        'Geom. ¹<br>(μL)',
+        'th-geom':        'Geom. ¹<br>(<span class="u">µL</span>)',
         'th-strokes':     'Cicli<br>→1000',
         'th-time':        'Tempo ²<br>(s)',
         'th-feasible':    'Fattibile',
@@ -502,7 +504,7 @@
         'sum-rpm':        'Velocità rotore',
         'th-contact':     'Rulli<br>contatto',
         'th-steps-stroke':'Step /<br>ciclo',
-        'th-ul-step':     'μL /<br>step',
+        'th-ul-step':     '<span class="u">µL</span> /<br>step',
         'th-torque-rim':  'Coppia rim<br>(g)',
         'th-fos':         'FoS ³',
         'th-max-step':    'Step rate max ⁴<br>(steps/s)',
@@ -577,7 +579,8 @@
       const rrPx  = g.rollerR * scale;
       const bossPx= g.bossR * scale;
       const acc = '#ff6b2b', txt = '#f0ece8', mut = '#8a807a', tube = '#4cba88', bad = '#e05555';
-      const f1 = v => v.toFixed(1);
+      const f1 = v => v.toFixed(1);   // SVG coordinates
+      const f2 = v => v.toFixed(2);   // mm measurement labels
       const fontFam = 'system-ui,sans-serif';
 
       // roller centres on the pitch circle; first roller at top (-90°)
@@ -608,14 +611,14 @@
 
       // R — centre to top roller
       s += `<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${f1(cy - Rpx)}" stroke="${mut}" stroke-width="1" marker-end="url(#ar)"/>`;
-      s += T(cx + 7, f1(cy - Rpx * 0.5), `${L['fig-R']} = ${f1(g.R)} mm`, 'start', txt, 12.5);
+      s += T(cx + 7, f1(cy - Rpx * 0.5), `${L['fig-R']} = ${f2(g.R)} mm`, 'start', txt, 12.5);
 
       // OD = 2R — horizontal dim above the rotor
       const yod = cy - OUTER - 30;
       s += `<line x1="${f1(cx - Rpx)}" y1="${cy}" x2="${f1(cx - Rpx)}" y2="${yod}" stroke="${mut}" stroke-width="0.7" stroke-dasharray="2 3"/>`;
       s += `<line x1="${f1(cx + Rpx)}" y1="${cy}" x2="${f1(cx + Rpx)}" y2="${yod}" stroke="${mut}" stroke-width="0.7" stroke-dasharray="2 3"/>`;
       s += `<line x1="${f1(cx - Rpx)}" y1="${yod}" x2="${f1(cx + Rpx)}" y2="${yod}" stroke="${mut}" stroke-width="1" marker-start="url(#ar)" marker-end="url(#ar)"/>`;
-      s += T(cx, yod - 7, `${L['fig-od']} = ${f1(g.OD)} mm`, 'middle', txt, 12.5);
+      s += T(cx, yod - 7, `${L['fig-od']} = ${f2(g.OD)} mm`, 'middle', txt, 12.5);
 
       // boss ∅ — dimension line across the hub centre; label sits in the bottom caption (below) to stay clear of rollers/tube
       s += `<line x1="${f1(cx - bossPx)}" y1="${cy}" x2="${f1(cx + bossPx)}" y2="${cy}" stroke="${mut}" stroke-width="1" marker-start="url(#ar)" marker-end="url(#ar)"/>`;
@@ -624,12 +627,12 @@
       const hx1 = cx - bossPx, hx2 = cx - (Rpx - rrPx);
       const hcCol = g.hubClr > 0 ? mut : bad, hcTxt = g.hubClr > 0 ? txt : bad;
       s += `<line x1="${f1(hx1)}" y1="${cy}" x2="${f1(hx2)}" y2="${cy}" stroke="${hcCol}" stroke-width="1" marker-start="url(#ar)" marker-end="url(#ar)"/>`;
-      s += T(f1((hx1 + hx2) / 2), cy - 7, `${L['fig-hubclr']} = ${f1(g.hubClr)}`, 'middle', hcTxt, 11.5);
+      s += T(f1((hx1 + hx2) / 2), cy - 7, `${L['fig-hubclr']} = ${f2(g.hubClr)}`, 'middle', hcTxt, 11.5);
 
       // bearing OD — across the right-most roller, label above it
       const rr = pos[rightIdx];
       s += `<line x1="${f1(rr.x - rrPx)}" y1="${f1(rr.y)}" x2="${f1(rr.x + rrPx)}" y2="${f1(rr.y)}" stroke="${mut}" stroke-width="1" marker-start="url(#ar)" marker-end="url(#ar)"/>`;
-      s += T(f1(rr.x), f1(rr.y - rrPx - 6), `${L['fig-bearing']} = ${f1(g.bOD)} mm`, 'middle', txt, 11.5);
+      s += T(f1(rr.x), f1(rr.y - rrPx - 6), `${L['fig-bearing']} = ${f2(g.bOD)} mm`, 'middle', txt, 11.5);
 
       // arc gap — between roller 0 and roller 1, leader pointing outward
       if (g.N >= 2) {
@@ -638,16 +641,16 @@
         const lx = cx + (Rpx + rrPx + 30) * cosd(mid), ly = cy + (Rpx + rrPx + 30) * sind(mid);
         const agCol = g.arcGap > 0 ? mut : bad, agTxt = g.arcGap > 0 ? txt : bad;
         s += `<line x1="${f1(gx)}" y1="${f1(gy)}" x2="${f1(lx)}" y2="${f1(ly)}" stroke="${agCol}" stroke-width="0.8"/>`;
-        s += T(f1(lx), f1(ly + (sind(mid) < 0 ? -4 : 12)), `${L['fig-arcgap']} = ${f1(g.arcGap)} mm`,
+        s += T(f1(lx), f1(ly + (sind(mid) < 0 ? -4 : 12)), `${L['fig-arcgap']} = ${f2(g.arcGap)} mm`,
                cosd(mid) < 0 ? 'end' : 'start', agTxt, 11.5);
       }
 
       // tube arc label — below, with leader to the bottom of the wrap
       const tly = cy + OUTER + 22;
       s += `<line x1="${cx}" y1="${f1(cy + Rpx)}" x2="${cx}" y2="${f1(tly - 12)}" stroke="${tube}" stroke-opacity="0.5" stroke-width="0.8" stroke-dasharray="2 3"/>`;
-      s += T(cx, f1(tly), `${L['fig-tube']} = ${f1(g.tubeLen)} mm · ${L['fig-id']} = ${f1(g.ID)} mm`, 'middle', tube, 12);
+      s += T(cx, f1(tly), `${L['fig-tube']} = ${f2(g.tubeLen)} mm · ${L['fig-id']} = ${f2(g.ID)} mm`, 'middle', tube, 12);
       // boss ∅ caption (paired with the centre dimension line above)
-      s += T(cx, f1(tly + 19), `${L['fig-boss']} = ${f1(2 * g.bossR)} mm`, 'middle', txt, 11.5);
+      s += T(cx, f1(tly + 19), `${L['fig-boss']} = ${f2(2 * g.bossR)} mm`, 'middle', txt, 11.5);
 
       // status line — top-left
       let stxt, scol;
@@ -757,11 +760,11 @@
 
         return `<tr class="${cls}">
           <td>${N}</td>
-          <td>${R.toFixed(1)}</td>
-          <td>${OD.toFixed(1)}</td>
-          <td>${tubeLen.toFixed(1)}</td>
-          <td>${arcGap.toFixed(1)}</td>
-          <td>${hubClr.toFixed(1)}</td>
+          <td>${R.toFixed(2)}</td>
+          <td>${OD.toFixed(2)}</td>
+          <td>${tubeLen.toFixed(2)}</td>
+          <td>${arcGap.toFixed(2)}</td>
+          <td>${hubClr.toFixed(2)}</td>
           <td>${geomVol.toFixed(2)}</td>
           <td>${Math.round(strokes)}</td>
           <td>${time.toFixed(1)}</td>
@@ -777,9 +780,9 @@
       document.getElementById('summary').innerHTML = `
         <div class="mc"><div class="l">${L['sum-target']}</div><div class="n">${vol.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">μL</small></div></div>
         <div class="mc"><div class="l">${L['sum-geom']}</div><div class="n">${geomVol.toFixed(2)} <small style="font-size:0.95rem;font-weight:500">μL</small></div></div>
-        <div class="mc"><div class="l">${L['sum-arc']}</div><div class="n">${arcNeeded.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">mm</small></div></div>
+        <div class="mc"><div class="l">${L['sum-arc']}</div><div class="n">${arcNeeded.toFixed(2)} <small style="font-size:0.95rem;font-weight:500">mm</small></div></div>
         <div class="mc"><div class="l">${L['sum-feasible']}</div><div class="n">${feasCount} <small style="font-size:0.95rem;font-weight:500">of ${ROWS.length}</small></div></div>
-        <div class="mc"><div class="l">${L['sum-minr']}</div><div class="n">${minR !== null ? minR.toFixed(1) + ' <small style="font-size:0.95rem;font-weight:500">mm</small>' : '—'}</div></div>
+        <div class="mc"><div class="l">${L['sum-minr']}</div><div class="n">${minR !== null ? minR.toFixed(2) + ' <small style="font-size:0.95rem;font-weight:500">mm</small>' : '—'}</div></div>
         <div class="mc"><div class="l">${L['sum-rpm']}</div><div class="n">${RPM.toFixed(1)} <small style="font-size:0.95rem;font-weight:500">RPM</small></div></div>`;
 
       // ── Geometry figure ───────────────────────────────────────
