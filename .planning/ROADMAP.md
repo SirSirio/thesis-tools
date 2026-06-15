@@ -15,7 +15,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 - [x] **Phase 1: Motor & Microstepping Panel** - Extend the rotor solver with motor operating-point calculations so Proto 1 hardware decisions can be made from calculated data (completed 2026-05-30)
 - [ ] **Phase 2: GSD Workflow Visualizer** - Build a standalone tool that renders the GSD spec-driven development workflow as an interactive visual diagram
-- [ ] **Phase 4: Prototype Design Space** - A visual, animated prototype-journey page where the AI helps design prototypes and the author reviews past ones to improve the process; HTML is the content source of truth
+- [x] **Phase 4: Prototype Design Space** - A visual, animated prototype-journey page where the AI helps design prototypes and the author reviews past ones to improve the process; HTML is the content source of truth (completed 2026-06-15)
 
 ## Phase Details
 
@@ -98,7 +98,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 04-02-PLAN.md — Integration: SPEC.md, landing page card, README row, CLAUDE.md update
+- [x] 04-02-PLAN.md — Integration: SPEC.md, landing page card, README row, CLAUDE.md update
 
 ## Progress
 
@@ -107,4 +107,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 1. Motor & Microstepping Panel | 3/3 | Complete    | 2026-05-30 |
 | 2. GSD Workflow Visualizer | 2/2 | Complete | 2026-05-30 |
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
-| 4. Prototype Design Space | 1/2 | In Progress|  |
+| 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
