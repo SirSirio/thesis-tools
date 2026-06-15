@@ -29,6 +29,12 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │       ├── peristaltic_occlusion_model.html   Source prototype (unstyled) — do not serve
 │       ├── stadium_model_documentation.md     Source documentation
 │       └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
+├── prototypes/
+│   ├── index.html              Prototype Design Space — animated journey page
+│   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
+│   ├── PROTOTYPES.md           Shallow prototype registry (scan before opening deep PROTOTYPE.md)
+│   └── proto-01-5ul-4roller/
+│       └── PROTOTYPE.md        Proto-01 deep detail — design params, test forward-links, version log
 ├── .planning/              GSD planning workspace (workflow artifacts)
 │   ├── PROJECT.md          Project context and core value
 │   ├── REQUIREMENTS.md     Active requirements with IDs
