@@ -72,7 +72,9 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+- Prototype tracker established (2026-06-15). Entry point:
+  `.planning/notes/2026-06-15-prototype-tracker-architecture.md`. Back-fill
+  proto-01 design params in `prototypes/proto-01/PROTOTYPE.md`.
 
 ### Blockers/Concerns
 
