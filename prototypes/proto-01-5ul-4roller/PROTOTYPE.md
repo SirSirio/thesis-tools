@@ -56,7 +56,8 @@ full report: `03. CODING/manual-dispense-check/REPORT.md`.
 
 ## Test data (forward links → 03. CODING)
 
-- Calibration / manual check: `../../../03. CODING Thesis Out of Drive/manual-dispense-check/`
+- Calibration / manual check: `../../../03. CODING Thesis Out of Drive/manual-dispense-check/proto-01-5ul-4roller/`
+  (report: `.../proto-01-5ul-4roller/REPORT.md`; the harness is reusable per-prototype)
 - Lab sessions: `../../../03. CODING Thesis Out of Drive/lab-data/` (link the
   specific `phase-*/SESSION.md` once a session is run against this prototype)
 
