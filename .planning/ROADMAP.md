@@ -91,7 +91,14 @@ The site grows incrementally as the thesis generates new design decisions needin
 **Requirements**: See `04-SPEC.md` (6 requirements locked)
 **Success Criteria**: See `04-SPEC.md` acceptance criteria
 
-**Plans**: TBD (run /gsd:discuss-phase 4 next)
+**Plans**: 2 plans
+**Wave 1**
+
+- [x] 04-01-PLAN.md — Main page: SVG winding path, animated prototype journey, swap-to-detail interaction, proto-01 all four sections with real data
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 04-02-PLAN.md — Integration: SPEC.md, landing page card, README row, CLAUDE.md update
 
 ## Progress
 
@@ -100,3 +107,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 1. Motor & Microstepping Panel | 3/3 | Complete    | 2026-05-30 |
 | 2. GSD Workflow Visualizer | 2/2 | Complete | 2026-05-30 |
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
+| 4. Prototype Design Space | 1/2 | In Progress|  |
