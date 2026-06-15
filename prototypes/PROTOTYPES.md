@@ -27,7 +27,7 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 
 | ID | Slug | Status | µL/stroke (target → measured) | Test data | Notes |
 |----|------|--------|-------------------------------|-----------|-------|
-| 01 | proto-01-5ul-4roller | Built, redesign pending | 5.0 → ≈3.5 | `03. CODING` (see PROTOTYPE-INDEX.md) | Under-dispenses ~29%; manual redesign data collected |
+| 01 | proto-01-5ul-4roller | Built, redesign pending | 5.0 → ≈3.4 (grav) | `03. CODING` (see PROTOTYPE-INDEX.md) | Under-dispenses ~32%; flow + gravimetric, see REPORT.md |
 
 <!-- Add a row per prototype. Keep newest at the bottom. -->
 

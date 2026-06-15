@@ -27,10 +27,19 @@ displacement is well below target.
 
 ## What we know so far
 
-- **Measured ≈ 3.5 µL/stroke** vs assumed 5.0 → volumes under-dispense ~29%.
-- This gap is the **motivation to redesign** (proto-02).
-- Manual redesign data was collected — see `03. CODING/manual-dispense-check/`
-  (`analyze_dispense.py`).
+Manual 1 mL open-loop calibration (2026-06-15), **two measurement methods** —
+full report: `03. CODING/manual-dispense-check/REPORT.md`.
+
+| Method | n | Mean delivered (1 mL cmd) | CV | Implied µL/stroke |
+|--------|---|---------------------------|-----|-------------------|
+| Gravimetric (reference) | 3 | **678 µL** (−32.2 %) | 4.5 % | **3.39** |
+| Flow sensor (integrated) | 5 | 600 µL (−40.0 %) | 17.6 % | 3.00 |
+
+- **Assumed 5.0 µL/stroke is wrong** — true rate is **≈3.4 µL/stroke**
+  (gravimetric, the absolute reference). The build under-dispenses ~32 %.
+- Flow integration reads ~11.5 % below gravimetric — trust gravimetric for the
+  absolute number, flow for dynamics (priming, ripple).
+- This gap is the **motivation to redesign** (proto-02): more volume per stroke.
 
 ## Test plan & acceptance (design-side contract)
 
@@ -55,7 +64,7 @@ displacement is well below target.
 
 ## Version log
 
-- **v1 (this build)** — 5 µL/stroke target, measured ≈3.5. Redesign decided.
+- **v1 (this build)** — 5 µL/stroke target, measured ≈3.4 (gravimetric). Redesign decided.
 - **v2 (planned)** — to be designed; capture new solver inputs here when started.
 
 ## Open decisions
