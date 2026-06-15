@@ -28,7 +28,9 @@ Seven command nodes rendered in order:
 
 ### Utility Commands Sidebar
 
-Six utility command nodes in a sticky sidebar column:
+Utility command nodes in a sticky sidebar column, split into two labelled groups.
+
+**Utility Commands**
 
 | Command | Slash |
 |---------|-------|
@@ -38,6 +40,13 @@ Six utility command nodes in a sticky sidebar column:
 | debug | `/gsd:debug [description]` |
 | explore | `/gsd:explore [idea]` |
 | capture | `/gsd:capture [topic]` |
+
+**Knowledge & Continuity**
+
+| Command | Slash |
+|---------|-------|
+| thread | `/gsd:thread [name]` |
+| extract-learnings | `/gsd:extract-learnings N` |
 
 ## Interaction Model
 
