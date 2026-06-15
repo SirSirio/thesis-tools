@@ -15,6 +15,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 - [x] **Phase 1: Motor & Microstepping Panel** - Extend the rotor solver with motor operating-point calculations so Proto 1 hardware decisions can be made from calculated data (completed 2026-05-30)
 - [ ] **Phase 2: GSD Workflow Visualizer** - Build a standalone tool that renders the GSD spec-driven development workflow as an interactive visual diagram
+- [ ] **Phase 4: Prototype Design Space** - A visual, animated prototype-journey page where the AI helps design prototypes and the author reviews past ones to improve the process; HTML is the content source of truth
 
 ## Phase Details
 
@@ -82,6 +83,15 @@ The site grows incrementally as the thesis generates new design decisions needin
 **Plans**: 1 plan (single-file, executed directly from CONTEXT.md)
 
 - [x] Phase 3 — implemented directly (no PLAN.md — single file scope)
+
+### Phase 4: Prototype Design Space
+
+**Goal**: Build a styled, animated "prototype design space" page on the tools site — a vertical journey of prototype cards that expand into full per-prototype detail (purpose, parameters with tool links, per-prototype results/KPIs, design reasoning), plus a de-emphasized expandable section showcasing the author's functional AI reasoning skills. The HTML page is the content source of truth, maintained via chat; proto-01 is authored end-to-end as the seed. Primary purpose: a space where the AI helps design prototypes and the author reviews past ones to improve the process.
+**Depends on**: Prototype tracker handover (`.planning/notes/2026-06-15-prototype-tracker-architecture.md`, `2026-06-15-prototype-test-schema-decision.md`), `prototypes/PROTOTYPES.md`, `prototypes/proto-01-5ul-4roller/PROTOTYPE.md`, sibling `03. CODING` report (`manual-dispense-check/proto-01-5ul-4roller/REPORT.md`)
+**Requirements**: See `04-SPEC.md` (6 requirements locked)
+**Success Criteria**: See `04-SPEC.md` acceptance criteria
+
+**Plans**: TBD (run /gsd:discuss-phase 4 next)
 
 ## Progress
 
