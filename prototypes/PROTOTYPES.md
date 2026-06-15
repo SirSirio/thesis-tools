@@ -8,6 +8,8 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 
 ## How this is organised
 
+- **Naming:** number + descriptive slug — `proto-NN-<descriptor>` (e.g.
+  `proto-01-5ul-4roller`).
 - **One folder per prototype:** `prototypes/proto-NN-<slug>/PROTOTYPE.md`
 - **Design lives here** (this `02. Tools` repo) because prototypes are *born*
   here — designed with the **peristaltic roller displaced-volume solver** and
@@ -25,6 +27,19 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 
 | ID | Slug | Status | µL/stroke (target → measured) | Test data | Notes |
 |----|------|--------|-------------------------------|-----------|-------|
-| 01 | proto-01 | Built, redesign pending | 5.0 → ≈3.5 | [03. CODING lab-data] | Under-dispenses ~29%; manual redesign data collected |
+| 01 | proto-01-5ul-4roller | Built, redesign pending | 5.0 → ≈3.5 | `03. CODING` (see PROTOTYPE-INDEX.md) | Under-dispenses ~29%; manual redesign data collected |
 
 <!-- Add a row per prototype. Keep newest at the bottom. -->
+
+## Test results contract (cross-repo)
+
+Each prototype is judged by a **per-prototype test plan** declared in its
+`PROTOTYPE.md` (setpoint grid + pass targets). The schema for that plan is being
+designed — see `.planning/notes/2026-06-15-prototype-test-schema-decision.md`
+(candidate for its own phase).
+
+Flow: **design declares targets (here) → run + analyze (`03. CODING`) → emit
+structured report (`03. CODING`) → distilled snapshot copied back into the
+prototype folder here.** The `03. CODING` side has a contact point at its
+`PROTOTYPE-INDEX.md` and is **waiting on the schema decision** before emitting
+reports.

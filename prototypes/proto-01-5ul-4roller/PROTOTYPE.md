@@ -1,12 +1,12 @@
 ---
 id: proto-01
-slug: proto-01
-title: Prototype 1 — peristaltic pump (baseline)
+slug: proto-01-5ul-4roller
+title: Prototype 1 — 5 µL 4-roller peristaltic (baseline)
 status: built-redesign-pending
 created: 2026-06-15
 ---
 
-# Prototype 1 — Peristaltic Pump (baseline)
+# Prototype 1 — 5 µL 4-roller peristaltic (baseline)
 
 The first physical build. Data collected; **redesign pending** because measured
 displacement is well below target.
@@ -31,6 +31,19 @@ displacement is well below target.
 - This gap is the **motivation to redesign** (proto-02).
 - Manual redesign data was collected — see `03. CODING/manual-dispense-check/`
   (`analyze_dispense.py`).
+
+## Test plan & acceptance (design-side contract)
+
+> **PENDING** — the standard per-prototype test-plan schema is being designed.
+> See `.planning/notes/2026-06-15-prototype-test-schema-decision.md`. Until then
+> this is a placeholder.
+
+- **Setpoint grid (volume × flow):** TODO — which (µL, µL/min) points to test.
+- **Pass targets per KPI:** TODO per this prototype. Candidate KPIs (from the app):
+  `accuracy_pct`, `precision.cv_pct`, `pulsation.ripple_pct`,
+  `transient.rise_time_s`, `drift.drift_slope`, 0–100 `score`.
+- The matching **test report** is emitted in `03. CODING` and a distilled snapshot
+  is copied back into this folder once the schema is agreed.
 
 ## Test data (forward links → 03. CODING)
 

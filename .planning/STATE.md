@@ -74,7 +74,10 @@ Recent decisions affecting current work:
 
 - Prototype tracker established (2026-06-15). Entry point:
   `.planning/notes/2026-06-15-prototype-tracker-architecture.md`. Back-fill
-  proto-01 design params in `prototypes/proto-01/PROTOTYPE.md`.
+  proto-01 design params in `prototypes/proto-01-5ul-4roller/PROTOTYPE.md`.
+- **OPEN DECISION (candidate phase):** per-prototype test-plan & pass-criteria
+  schema — `.planning/notes/2026-06-15-prototype-test-schema-decision.md`.
+  `03. CODING` is blocked on this before emitting test reports.
 
 ### Blockers/Concerns
 
