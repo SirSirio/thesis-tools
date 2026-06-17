@@ -530,7 +530,7 @@
           <div class="formula">\[ L_c = k\cdot 2\sqrt{2R_r\delta} = 1.15\cdot 2\sqrt{2\cdot 5\cdot 0.20} = 3.253\ \text{mm} \]</div>
           <p class="block-note">with <em>R<sub>r</sub></em> = 5 mm (roller radius), <em>δ</em> = 0.20 mm (design interference), <em>k</em> = 1.15.</p>
 
-          <p style="margin-top:18px"><strong>3. Arc compensation <em>ΔArc</em>.</strong> Each engaged roller traps a slug of liquid in the deformed tube that is carried with the roller rather than delivered. The stroke must sweep extra arc to make this up. With <em>N<sub>c</sub></em> rollers engaged at once, the total compensation is their combined contact lengths:</p>
+          <p style="margin-top:18px"><strong>3. Arc compensation <em>ΔArc</em>.</strong> Along the contact length <em>L<sub>c</sub></em> the roller pinches the tube <em>shut</em>, so that segment of lumen holds no liquid and delivers nothing. The pure delivery arc (<em>vol</em>/<em>A</em>) assumes every mm of swept tube is full, so it over-counts by exactly this occluded length — the stroke must sweep an extra <em>L<sub>c</sub></em> per engaged roller to make up the shortfall. With <em>N<sub>c</sub></em> rollers engaged at once, the total compensation is their combined contact lengths:</p>
           <div class="formula">\[ \Delta\text{Arc} = N_c\cdot L_c = 1\cdot 3.253 = 3.253\ \text{mm} \]</div>
           <div class="callout callout-warn"><span class="callout-label">First error.</span> <em>N<sub>c</sub></em> was entered as <strong>1</strong>, but a 180° contact arc with 4 evenly-spaced rollers always has <strong>2</strong> engaged. This under-counts the compensation and feeds an undersized rotor into the next steps.</div>
 
@@ -540,7 +540,7 @@
 
           <p style="margin-top:18px"><strong>5. Gross swept volume <em>geomVol</em>.</strong> Multiplying the swept arc by the lumen area gives the gross geometric volume displaced per stroke:</p>
           <div class="formula">\[ \text{geomVol} = \text{arc}\cdot A = 27.73\cdot 0.2043 = 5.66\ \mu\text{L} \]</div>
-          <div class="callout callout-note"><span class="callout-label">Is 5.66 µL out of place?</span> No — it is the <em>gross</em> sweep. The extra 0.66 µL is exactly the volume the model expects to lose to tube deformation; gross − compensation = 5.0 µL net. A valid reference, because that loss is real.</div>
+          <div class="callout callout-note"><span class="callout-label">Is 5.66 µL out of place?</span> No — it is the <em>gross</em> sweep. The extra 0.66 µL is the delivery lost over the pinched-shut contact length (occluded tube delivers nothing); gross − compensation = 5.0 µL net. A valid reference, because that occlusion loss is real.</div>
 
           <p style="margin-top:18px"><strong>6. Rotor radius <em>R</em>.</strong> The rotor is sized so its <em>N</em> evenly-spaced rollers each sweep this arc over the 180° contact zone. Setting the pitch-circle so the per-roller arc is delivered:</p>
           <div class="formula">\[ R = \frac{N\cdot \text{arc}}{2\pi} = \frac{4\cdot 27.73}{2\pi} = 17.70\ \text{mm} \]</div>

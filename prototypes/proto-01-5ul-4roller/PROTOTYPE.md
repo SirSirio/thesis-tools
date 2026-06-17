@@ -52,7 +52,7 @@ pass acceptance.
 | `N_c` | Number of rollers **simultaneously occluding** the tube at any instant | should be **2** | — |
 | `N` | Total **roller count** on the rotor | 4 | — |
 | `L_c` | **Axial contact length** of one roller's squeeze footprint along the tube `= k · 2√(2 R_r δ)` | see §4 | mm |
-| `ΔArc_total` | **Arc compensation** — extra tube arc each stroke must sweep to make up for volume trapped in tube deformation `= N_c · L_c` | see §4 | mm |
+| `ΔArc_total` | **Arc compensation** — extra tube arc each stroke must sweep to make up for the lumen length the rollers pinch shut (occluded, so it delivers nothing) `= N_c · L_c` | see §4 | mm |
 | `vol` | **Target** delivered volume per stroke | 5.0 | µL |
 | `arcNeeded` | Tube arc one roller must sweep per stroke `= vol/A + ΔArc_total` | see §4 | mm |
 | `geomVol` | **Gross** geometric swept volume `= arcNeeded · A` | see §4 | µL |
@@ -146,8 +146,11 @@ L_c = 1.15 · 2 · √(2 · 5.0 · 0.20)
 ```
 
 **Step 3 — arc compensation** `ΔArc_total = N_c · L_c`.
-Each engaged roller traps a slug of liquid in the deformed tube; the stroke must
-sweep extra arc to push that slug through. With **`N_c` entered as 1**:
+Along the contact length `L_c` the roller pinches the tube **shut**, so that segment
+of lumen holds no liquid and delivers nothing. The pure delivery arc (`vol/A`)
+assumes every mm of swept tube is full, so it over-counts by exactly this occluded
+length — the stroke must sweep an extra `L_c` per engaged roller to make up the
+shortfall. With **`N_c` entered as 1**:
 ```
 ΔArc_total = 1 · 3.253 = 3.253 mm        ← THIS IS THE FIRST ERROR (should be N_c = 2)
 ```
@@ -167,9 +170,10 @@ arcNeeded = 5.0 / 0.2043 + 3.253
 geomVol = 27.73 · 0.2043 = 5.66 µL
 ```
 > **Is 5.66 µL "out of place"?** No. It is the **gross** sweep, deliberately larger
-> than 5.0. The extra `ΔArc_total · A = 0.66 µL` is the volume the model expects to
-> lose to tube deformation. `geomVol − ΔArc_total·A = 5.0 µL` net. It is a valid
-> reference because the deformation loss is real — keep it.
+> than 5.0. The extra `ΔArc_total · A = 0.66 µL` is the delivery lost over the
+> pinched-shut contact length (occluded tube delivers nothing).
+> `geomVol − ΔArc_total·A = 5.0 µL` net. It is a valid reference because that
+> occlusion loss is real — keep it.
 
 **Step 6 — rotor radius** `R = N · arcNeeded / (2π)`.
 The rotor is sized so that 4 rollers spaced evenly each sweep `arcNeeded` over the
