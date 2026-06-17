@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Thesis Tools — Sirio Vittorio Feltrin</title>
   <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .section-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: -16px;
+      margin-bottom: 28px;
+      max-width: 560px;
+    }
+    .resources-sections section + section {
+      margin-top: 60px;
+    }
+  </style>
 </head>
 <body>
 <!-- Ambient background blobs for glassmorphism depth -->
@@ -16,39 +29,54 @@
 <main><header class="site-header animate-in" style="--delay: 0s;"><span class="site-label" data-i18n="site-label">DTU Master's Thesis &middot; 2026</span>
 <h1 class="site-title" data-i18n="site-title">Modular Automated Liquid Dispensing<br>for Point-of-Care Use</h1>
 <p class="site-author">Sirio Vittorio Feltrin</p>
-<p class="site-subtitle" data-i18n="site-subtitle">Interactive computational tools developed alongside the thesis research. Each tool can be used directly in the browser or offline from a USB drive.</p>
+<p class="site-subtitle" data-i18n="site-subtitle">Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.</p>
 </header>
-<section aria-label="Available tools">
-<p class="section-label animate-in" style="--delay: 0.15s;" data-i18n="section-label">Tools</p>
-<div class="tools-grid"><a href="tools/rotor-solver/index.html" class="tool-card animate-in" style="--delay: 0.25s;">
+<div class="resources-sections">
+
+<section aria-label="Calculators and solvers">
+<p class="section-label animate-in" style="--delay: 0.15s;" data-i18n="section-label-tools">Calculators</p>
+<p class="section-desc animate-in" style="--delay: 0.2s;" data-i18n="section-desc-tools">Computational solvers built for the thesis design process — enter your parameters and get answers.</p>
+<div class="tools-grid"><a href="tools/rotor-solver/index.html" class="tool-card animate-in" style="--delay: 0.28s;">
 <div class="card-icon">⚙</div>
 <div class="card-body">
 <h2 class="card-title" data-i18n="card-title-rotor">Peristaltic Rotor Geometry Solver</h2>
 <p class="card-desc" data-i18n="card-desc-rotor">Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.</p>
 </div>
-<span class="card-link" data-i18n="card-link">Open tool &rarr;</span></a>
-<a href="tools/gsd-workflow-guide/index.html" class="tool-card animate-in" style="--delay: 0.35s;">
-<div class="card-icon">⬡</div>
-<div class="card-body">
-<h2 class="card-title">GSD Workflow Guide</h2>
-<p class="card-desc">Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.</p>
-</div>
-<span class="card-link">Open tool &rarr;</span></a>
-<a href="tools/peristaltic-roller-displaced-volume-model/index.html" class="tool-card animate-in" style="--delay: 0.45s;">
+<span class="card-link" data-i18n="card-link-tool">Open tool &rarr;</span></a>
+<a href="tools/peristaltic-roller-displaced-volume-model/index.html" class="tool-card animate-in" style="--delay: 0.38s;">
 <div class="card-icon">🧫</div>
 <div class="card-body">
 <h2 class="card-title">Peristaltic Occlusion &amp; Displaced-Volume Model</h2>
 <p class="card-desc">Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.</p>
 </div>
-<span class="card-link">Open tool &rarr;</span></a>
-<a href="prototypes/index.html" class="tool-card animate-in" style="--delay: 0.55s;">
+<span class="card-link">Open tool &rarr;</span></a></div>
+</section>
+
+<section aria-label="Guides and references">
+<p class="section-label animate-in" style="--delay: 0.5s;" data-i18n="section-label-guides">Guides</p>
+<p class="section-desc animate-in" style="--delay: 0.55s;" data-i18n="section-desc-guides">Reference documentation and workflow diagrams.</p>
+<div class="tools-grid"><a href="tools/gsd-workflow-guide/index.html" class="tool-card animate-in" style="--delay: 0.63s;">
+<div class="card-icon">⬡</div>
+<div class="card-body">
+<h2 class="card-title">GSD Workflow Guide</h2>
+<p class="card-desc">Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.</p>
+</div>
+<span class="card-link">Open guide &rarr;</span></a></div>
+</section>
+
+<section aria-label="Hardware prototypes">
+<p class="section-label animate-in" style="--delay: 0.75s;" data-i18n="section-label-prototypes">Prototypes</p>
+<p class="section-desc animate-in" style="--delay: 0.80s;" data-i18n="section-desc-prototypes">Hardware iterations logged with design parameters, test data, and design reasoning.</p>
+<div class="tools-grid"><a href="prototypes/index.html" class="tool-card animate-in" style="--delay: 0.88s;">
 <div class="card-icon">🧪</div>
 <div class="card-body">
 <h2 class="card-title">Prototype Design Space</h2>
 <p class="card-desc">A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.</p>
 </div>
-<span class="card-link">Open tool &rarr;</span></a><!-- Future tools — duplicate the block above and update href, title, desc --></div>
+<span class="card-link">Explore &rarr;</span></a><!-- Future prototypes — duplicate the block above and update href, title, desc --></div>
 </section>
+
+</div>
 </main><footer class="site-footer">
 <p data-i18n="footer-university">Technical University of Denmark &middot; Department of Bioengineering - Nano Bio Integrated System group</p>
 <p>Sirio Vittorio Feltrin &middot; 2026</p>
@@ -58,24 +86,34 @@
   <script>
     const LANG = {
       en: {
-        'site-label':        'DTU Master’s Thesis · 2026',
-        'site-title':        'Modular Automated Liquid Dispensing<br>for Point-of-Care Use',
-        'site-subtitle':     'Interactive computational tools developed alongside the thesis research. Each tool can be used directly in the browser or offline from a USB drive.',
-        'section-label':     'Tools',
-        'card-title-rotor':  'Peristaltic Rotor Geometry Solver',
-        'card-desc-rotor':   'Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.',
-        'card-link':         'Open tool →',
-        'footer-university': 'Technical University of Denmark · Department of Bioengineering - Nano Bio Integrated System group',
+        'site-label':               'DTU Master’s Thesis · 2026',
+        'site-title':               'Modular Automated Liquid Dispensing<br>for Point-of-Care Use',
+        'site-subtitle':            'Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.',
+        'section-label-tools':      'Calculators',
+        'section-desc-tools':       'Computational solvers built for the thesis design process — enter your parameters and get answers.',
+        'section-label-guides':     'Guides',
+        'section-desc-guides':      'Reference documentation and workflow diagrams.',
+        'section-label-prototypes': 'Prototypes',
+        'section-desc-prototypes':  'Hardware iterations logged with design parameters, test data, and design reasoning.',
+        'card-title-rotor':         'Peristaltic Rotor Geometry Solver',
+        'card-desc-rotor':          'Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.',
+        'card-link-tool':           'Open tool →',
+        'footer-university':        'Technical University of Denmark · Department of Bioengineering - Nano Bio Integrated System group',
       },
       it: {
-        'site-label':        'Tesi Magistrale DTU · 2026',
-        'site-title':        'Distribuzione Automatizzata Modulare di Liquidi<br>per Diagnostica Point-of-Care',
-        'site-subtitle':     'Strumenti computazionali interattivi sviluppati parallelamente alla ricerca di tesi. Ogni strumento può essere utilizzato direttamente nel browser o offline da una chiavetta USB.',
-        'section-label':     'Strumenti',
-        'card-title-rotor':  'Risolutore Geometrico del Rotore Peristaltico',
-        'card-desc-rotor':   'Calcola analiticamente il raggio del rotore per pompe peristaltiche. Imposta il volume target per ciclo, il diametro interno del tubo, il cuscinetto e l\'efficienza di occlusione — ottieni una tabella geometrica completa per 3–12 rulli con verifica di fattibilità.',
-        'card-link':         'Apri strumento →',
-        'footer-university': 'Politecnico di Danimarca · Dipartimento di Bioingegneria - Gruppo Nano Bio Integrated System',
+        'site-label':               'Tesi Magistrale DTU · 2026',
+        'site-title':               'Distribuzione Automatizzata Modulare di Liquidi<br>per Diagnostica Point-of-Care',
+        'site-subtitle':            'Strumenti computazionali, guide di riferimento e documentazione dei prototipi sviluppati parallelamente alla tesi. Tutto funziona nel browser o offline da una chiavetta USB.',
+        'section-label-tools':      'Calcolatori',
+        'section-desc-tools':       'Risolutori computazionali sviluppati per il processo di progettazione — inserisci i parametri e ottieni le risposte.',
+        'section-label-guides':     'Guide',
+        'section-desc-guides':      'Documentazione di riferimento e diagrammi del flusso di lavoro.',
+        'section-label-prototypes': 'Prototipi',
+        'section-desc-prototypes':  'Iterazioni hardware documentate con parametri di progettazione, dati di test e ragionamento progettuale.',
+        'card-title-rotor':         'Risolutore Geometrico del Rotore Peristaltico',
+        'card-desc-rotor':          'Calcola analiticamente il raggio del rotore per pompe peristaltiche. Imposta il volume target per ciclo, il diametro interno del tubo, il cuscinetto e l\'efficienza di occlusione — ottieni una tabella geometrica completa per 3–12 rulli con verifica di fattibilità.',
+        'card-link-tool':           'Apri strumento →',
+        'footer-university':        'Politecnico di Danimarca · Dipartimento di Bioingegneria - Gruppo Nano Bio Integrated System',
       }
     };
 
