@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prototype Design Space — Thesis Tools</title>
   <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="katex/katex.min.css" />
   <style>
     /* ── Nav bar ──────────────────────────────────────────────── */
     .tool-nav {
@@ -242,18 +243,19 @@
     }
 
     /* ── Detail figures ───────────────────────────────────────── */
-    .detail-figure { margin: 20px 0 8px; }
+    .detail-figure { margin: 20px 0 32px; }
     .detail-figure img {
       width: 100%;
       border-radius: var(--radius);
       border: 1px solid var(--glass-border);
       display: block;
+      cursor: zoom-in;
     }
     .detail-figure figcaption,
     .figure-grid figcaption {
       font-size: 0.78rem;
       color: var(--text-muted);
-      margin-top: 8px;
+      margin-top: 10px;
       text-align: center;
       line-height: 1.4;
     }
@@ -261,35 +263,68 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      margin: 20px 0 8px;
+      margin: 20px 0 32px;
+      align-items: start;
     }
     .figure-grid figure { margin: 0; }
     .figure-grid img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;              /* show whole image, no side-cropping */
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.02);
       border-radius: var(--radius);
       border: 1px solid var(--glass-border);
       display: block;
+      cursor: zoom-in;
     }
 
-    /* ── Worked-calculation block ─────────────────────────────── */
-    .calc-block {
+    /* ── Lightbox (click image to enlarge) ────────────────────── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      background: rgba(5, 5, 7, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: zoom-out;
+    }
+    .lightbox[hidden] { display: none; }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 92vh;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .lightbox-close:hover { opacity: 1; }
+
+    /* ── KaTeX formula rows ───────────────────────────────────── */
+    .formula {
+      margin: 14px 0 18px;
+      padding: 14px 18px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--glass-border);
       border-left: 3px solid var(--accent);
       border-radius: 8px;
-      padding: 14px 18px;
-      margin: 16px 0;
-      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: var(--text);
       overflow-x: auto;
-      white-space: pre;
     }
-    .calc-block .c-comment { color: var(--text-muted); }
-    .calc-block .c-result { color: var(--accent); font-weight: 600; }
+    .formula .katex { font-size: 1.05em; }
 
     /* ── Callouts ─────────────────────────────────────────────── */
     .callout {
@@ -349,7 +384,7 @@
       .param-table th, .param-table td { padding: 8px 8px; }
       .figure-grid { grid-template-columns: 1fr; }
       .proto-card-thumb { width: 64px; height: 64px; }
-      .calc-block { font-size: 0.74rem; }
+      .formula .katex { font-size: 0.95em; }
       .next-brief { padding: 18px 18px; }
     }
   </style>
@@ -363,7 +398,7 @@
 </div>
 
 <nav class="tool-nav">
-  <a class="nav-back" href="../index.html">← All tools</a>
+  <a class="nav-back" href="../index.html">← Resources</a>
   <span class="nav-title">Prototype Design Space</span>
 </nav>
 
@@ -415,6 +450,17 @@
           <h2 class="detail-title">5 µL 4-roller peristaltic — baseline</h2>
         </div>
 
+        <section class="detail-block">
+          <h3 class="block-heading">Purpose</h3>
+          <p class="block-note">The first physical build — its job was never to hit spec, but to learn. A minimum viable prototype with three goals:</p>
+          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
+            <li><strong>Prove the concept</strong> — can a peristaltic pump be built in this modular, 3D-printed, point-of-care form, and does it actually move liquid?</li>
+            <li><strong>Validate the model</strong> — is the geometry model I built correct, and does how I modelled the system match reality?</li>
+            <li><strong>Learn before committing</strong> — get a physical object in hand to extract as much information as possible before the next design cycle.</li>
+          </ul>
+          <p style="margin-top:14px">On all three it delivered: it pumps, the model predicts the messy reality to ~11 %, and it exposed three concrete, fixable design errors.</p>
+        </section>
+
         <figure class="detail-figure">
           <div class="figure-grid">
             <figure>
@@ -429,12 +475,7 @@
         </figure>
 
         <section class="detail-block">
-          <h3 class="block-heading">Purpose</h3>
-          <p>The first physical build — and its job was never to hit spec. It was a minimum viable prototype with three goals: <strong>prove the concept</strong> (can a peristaltic pump be built in this modular, 3D-printed, point-of-care form and actually move liquid?), <strong>validate the model</strong> (is the geometry model I built correct?), and <strong>learn before committing</strong> to the next design cycle. On all three it delivered: it pumps, the model predicts the messy reality to ~11 %, and it exposed three concrete, fixable design errors.</p>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Parameters (as built)</h3>
+          <h3 class="block-heading">Parameters (as built) &amp; why each was chosen</h3>
           <p class="block-note">Designed using the
             <a class="tool-link" href="../tools/rotor-solver/index.html">Rotor Geometry Solver</a>
             and the
@@ -442,22 +483,29 @@
             The second tool outputs the arc compensation that is pasted into the first — so its inputs propagate into the physical rotor size.
           </p>
           <table class="param-table">
-            <thead><tr><th>Parameter</th><th>Value</th><th>Note</th></tr></thead>
+            <thead><tr><th>Parameter</th><th>Value</th><th>Why this value</th></tr></thead>
             <tbody>
-              <tr><td>Target volume / stroke</td><td>5.0 µL</td><td>Design intent</td></tr>
-              <tr><td>Roller count <em>N</em></td><td>4</td><td>Rotor solver</td></tr>
-              <tr><td>Rollers engaged <em>N<sub>c</sub></em> (entered)</td><td>1&nbsp;⚠</td><td>Should have been 2</td></tr>
-              <tr><td>Tube inner diameter <em>d</em></td><td>0.51 mm</td><td>Ismatec 2-stop microbore</td></tr>
-              <tr><td>Tube wall <em>w</em></td><td>0.85 mm (est.)</td><td>Hard to measure — see below</td></tr>
-              <tr><td>Roller bearing</td><td>MR105ZZ, 10 mm OD (<em>R<sub>r</sub></em> = 5 mm)</td><td>—</td></tr>
-              <tr><td>Interference <em>δ</em> (design)</td><td>0.20 mm</td><td>Displaced-volume model</td></tr>
-              <tr><td>Inflation factor <em>k</em></td><td>1.15</td><td>Klespitz &amp; Kovács (2022)</td></tr>
-              <tr><td>Rotor radius <em>R</em> (built)</td><td>17.70 mm</td><td>With <em>N<sub>c</sub></em>=1</td></tr>
-              <tr><td>Printed gap <em>G</em> (built)</td><td>1.75 mm&nbsp;⚠</td><td>Should have been ≈1.50 mm</td></tr>
-              <tr><td>Loose-fit tolerance</td><td>0.25 mm&nbsp;⚠</td><td>Head wobble</td></tr>
+              <tr><td>Target volume / stroke</td><td>5.0 µL</td><td>Smallest aliquot the dispensing application targets</td></tr>
+              <tr><td>Roller count <em>N</em></td><td>4</td><td>Fewest hand-offs for discrete dosing (see below)</td></tr>
+              <tr><td>Rollers engaged <em>N<sub>c</sub></em> (entered)</td><td>1&nbsp;⚠</td><td>Mistake — a 180° arc with 4 rollers always has 2 engaged</td></tr>
+              <tr><td>Tube inner diameter <em>d</em></td><td>0.51 mm</td><td>Smallest 2-stop microbore that gives a workable rotor size</td></tr>
+              <tr><td>Tube wall <em>w</em></td><td>0.85 mm (est.)</td><td>From a similar tube (online) + caliper check — see below</td></tr>
+              <tr><td>Roller bearing</td><td>MR105ZZ, 10 mm OD (<em>R<sub>r</sub></em> = 5 mm)</td><td>Small standard shielded bearing → compact rotor</td></tr>
+              <tr><td>Interference <em>δ</em> (design)</td><td>0.20 mm</td><td>Mid of the 10–20 % × 2<em>w</em> occlusion band</td></tr>
+              <tr><td>Inflation factor <em>k</em></td><td>1.15</td><td>Compliant-tube correction (Klespitz &amp; Kovács 2022)</td></tr>
+              <tr><td>Rotor radius <em>R</em> (built)</td><td>17.70 mm</td><td>Solver output (carries the <em>N<sub>c</sub></em>=1 error)</td></tr>
+              <tr><td>Printed gap <em>G</em> (built)</td><td>1.75 mm&nbsp;⚠</td><td>Should have been ≈1.50 mm — see below</td></tr>
+              <tr><td>Loose-fit tolerance</td><td>0.25 mm&nbsp;⚠</td><td>Too loose → head wobble</td></tr>
               <tr><td>Steps / stroke (firmware)</td><td>50</td><td>200 steps/rev ÷ 4 rollers</td></tr>
             </tbody>
           </table>
+
+          <p class="block-note" style="margin-top:8px">The tube is a <a class="tool-link" href="https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12" target="_blank" rel="noopener">Darwin Microfluidics 2-stop Puri-Clear LL</a> (0.51 mm ID), platinum-cured silicone microbore.</p>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Key decision — why 4 rollers</h4>
+          <p>Selected over higher counts despite continuous-flow practice (Cole-Parmer, Ismatec) recommending 8–10 rollers for low-flow accuracy below 5 mL/min. The distinction is <strong>operational mode</strong>: those recommendations target continuous metering, where more rollers reduce <em>pulsation</em>. This system does <strong>discrete stop-start aliquot dosing</strong>, where each roller hand-off (one releasing as the next engages) is an <em>error event</em> at the stop. Fewer rollers → fewer hand-offs per dispense → fewer stop-event errors — the opposite of the continuous-flow heuristic. A 4-roller pump completes ~one hand-off where an 8-roller pump completes ~two.</p>
+          <div class="callout callout-warn"><span class="callout-label">Honest caveat.</span> Proto-01's data can't yet <em>demonstrate</em> this — the −32 % systematic occlusion error swamps the hand-off signature. Proto-02 is the first build where the roller-count rationale becomes testable.</div>
+
           <div class="figure-grid">
             <figure>
               <img src="proto-01-5ul-4roller/Prototype1_Displaced_Volume_Tool.png" alt="Displaced-volume model inputs" />
@@ -472,39 +520,37 @@
 
         <section class="detail-block">
           <h3 class="block-heading">The design calculation, worked</h3>
-          <p class="block-note">The chain the two tools ran, shown end-to-end. (<em>A</em> = lumen area; <em>L<sub>c</sub></em> = one roller's axial squeeze length; <em>ΔArc</em> = extra arc swept to compensate tube deformation.)</p>
-          <div class="calc-block"><span class="c-comment">A   = π(d/2)²           = π(0.51/2)²          = 0.2043 mm²</span>
-L_c = k·2√(2·R_r·δ)     = 1.15·2√(2·5·0.20)  = 3.253 mm
-ΔArc= N_c·L_c           = 1·3.253             = 3.253 mm   <span class="c-comment">← N_c=1 (error: should be 2)</span>
-arc = vol/A + ΔArc      = 5.0/0.2043 + 3.253  = 27.73 mm
-gVol= arc·A             = 27.73·0.2043        = <span class="c-result">5.66 µL</span>  <span class="c-comment">(gross sweep)</span>
-R   = N·arc/(2π)        = 4·27.73/(2π)        = <span class="c-result">17.70 mm</span> <span class="c-comment">(rotor, as built)</span></div>
-          <div class="callout callout-note"><span class="callout-label">Is 5.66 µL out of place?</span> No — it is the <em>gross</em> sweep. The extra 0.66 µL is the volume the model expects to lose to tube deformation; net = 5.0 µL. It is a valid reference because that loss is real.</div>
+          <p>The two tools run a six-step chain from tube mechanics to rotor size. Each step is described, then computed at the proto-01 design point.</p>
+
+          <p style="margin-top:18px"><strong>1. Lumen area <em>A</em>.</strong> The lumen is the open channel inside the tube that carries the liquid — a circle of diameter <em>d</em>. Its cross-sectional area sets how much volume a given length of swept tube holds:</p>
+          <div class="formula">\[ A = \pi\left(\tfrac{d}{2}\right)^2 = \pi\left(\tfrac{0.51}{2}\right)^2 = 0.2043\ \text{mm}^2 \]</div>
+          <p class="block-note">with <em>d</em> = 0.51 mm (tube inner diameter).</p>
+
+          <p style="margin-top:18px"><strong>2. Roller contact length <em>L<sub>c</sub></em>.</strong> When a roller of radius <em>R<sub>r</sub></em> presses a depth <em>δ</em> into the tube, it flattens a finite length along the flow axis. From the chord geometry of a cylinder pressed into a surface, the half-contact-width is \(\sqrt{2R_r\delta}\); doubling gives the full footprint, and the empirical factor <em>k</em> &gt; 1 lengthens it because a real compliant tube contacts over a longer span than rigid geometry predicts:</p>
+          <div class="formula">\[ L_c = k\cdot 2\sqrt{2R_r\delta} = 1.15\cdot 2\sqrt{2\cdot 5\cdot 0.20} = 3.253\ \text{mm} \]</div>
+          <p class="block-note">with <em>R<sub>r</sub></em> = 5 mm (roller radius), <em>δ</em> = 0.20 mm (design interference), <em>k</em> = 1.15.</p>
+
+          <p style="margin-top:18px"><strong>3. Arc compensation <em>ΔArc</em>.</strong> Each engaged roller traps a slug of liquid in the deformed tube that is carried with the roller rather than delivered. The stroke must sweep extra arc to make this up. With <em>N<sub>c</sub></em> rollers engaged at once, the total compensation is their combined contact lengths:</p>
+          <div class="formula">\[ \Delta\text{Arc} = N_c\cdot L_c = 1\cdot 3.253 = 3.253\ \text{mm} \]</div>
+          <div class="callout callout-warn"><span class="callout-label">First error.</span> <em>N<sub>c</sub></em> was entered as <strong>1</strong>, but a 180° contact arc with 4 evenly-spaced rollers always has <strong>2</strong> engaged. This under-counts the compensation and feeds an undersized rotor into the next steps.</div>
+
+          <p style="margin-top:18px"><strong>4. Arc swept per roller <em>arc</em>.</strong> The arc each roller drags the tube through per stroke is the <em>useful</em> delivery arc (target volume ÷ lumen area) plus the compensation arc:</p>
+          <div class="formula">\[ \text{arc} = \frac{vol}{A} + \Delta\text{Arc} = \frac{5.0}{0.2043} + 3.253 = 27.73\ \text{mm} \]</div>
+          <p class="block-note">with <em>vol</em> = 5.0 µL (target volume per stroke).</p>
+
+          <p style="margin-top:18px"><strong>5. Gross swept volume <em>geomVol</em>.</strong> Multiplying the swept arc by the lumen area gives the gross geometric volume displaced per stroke:</p>
+          <div class="formula">\[ \text{geomVol} = \text{arc}\cdot A = 27.73\cdot 0.2043 = 5.66\ \mu\text{L} \]</div>
+          <div class="callout callout-note"><span class="callout-label">Is 5.66 µL out of place?</span> No — it is the <em>gross</em> sweep. The extra 0.66 µL is exactly the volume the model expects to lose to tube deformation; gross − compensation = 5.0 µL net. A valid reference, because that loss is real.</div>
+
+          <p style="margin-top:18px"><strong>6. Rotor radius <em>R</em>.</strong> The rotor is sized so its <em>N</em> evenly-spaced rollers each sweep this arc over the 180° contact zone. Setting the pitch-circle so the per-roller arc is delivered:</p>
+          <div class="formula">\[ R = \frac{N\cdot \text{arc}}{2\pi} = \frac{4\cdot 27.73}{2\pi} = 17.70\ \text{mm} \]</div>
+          <p class="block-note">with <em>N</em> = 4 rollers, rounded to 0.1 mm (Bambu P1S print resolution). This <em>R</em> = 17.70 mm is the rotor that was printed — so the <em>N<sub>c</sub></em>=1 error is now baked into the physical part.</p>
         </section>
 
         <section class="detail-block">
-          <h3 class="block-heading">What actually happened — and why it under-delivered</h3>
-          <p><strong>The gap was wrong.</strong> The tool prescribes the gap as <em>G</em> = 2<em>w</em> − <em>δ</em> = 1.50 mm. The part was built at <strong>1.75 mm</strong>. But the tube fully closes only once the gap drops below "walls-kiss" = 2<em>w</em> = 1.70 mm. At 1.75 mm > 1.70 mm, <strong>the rollers never occluded the tube at all</strong> — so it could not pump.</p>
-          <p style="margin-top:12px"><strong>The paper-shim fix.</strong> To make it run, paper was folded into the groove so the tube sat proud. Caliper on the folded paper: ≈0.78 mm (very hard) up to ≈1.1 mm (light) — turning the effective gap into roughly 0.9–1.1 mm, i.e. an <em>effective</em> interference <em>δ<sub>eff</sub></em> ≈ 0.6–0.8 mm (a heavy over-squeeze).</p>
-
-          <div class="calc-block"><span class="c-comment">Firm shim → δ_eff = 0.80 mm, with the TRUE N_c = 2:</span>
-L_c(0.80) = 1.15·2√(2·5·0.80)       = 6.505 mm
-ΔArc      = 2·6.505                  = 13.01 mm
-net       = (arc_built − ΔArc)·A
-          = (27.73 − 13.01)·0.2043   = <span class="c-result">3.01 µL</span></div>
-
-          <div class="callout callout-good"><span class="callout-label">Model validated.</span> Predicted <strong>3.01 µL</strong> (firm shim); measured <strong>3.39 µL</strong> (gravimetric). Back-solving from 3.39 gives an effective gap of <strong>1.11 mm</strong> — exactly the light-shim band that was measured. The first-order model brackets a hand-folded paper-shim experiment to <strong>~11 %</strong>: how the system was modelled is correct.</div>
-
-          <p class="block-note"><strong>Error budget (from the 5.0 µL intent):</strong></p>
-          <table class="param-table">
-            <thead><tr><th>Mechanism</th><th>Contribution</th><th>Confidence</th></tr></thead>
-            <tbody>
-              <tr><td>Gap 1.75 &gt; 1.70 mm → zero natural occlusion (needed the shim)</td><td>enabling failure</td><td>Certain</td></tr>
-              <tr><td>Shim over-compressed (δ<sub>eff</sub>≈0.6–0.8 vs 0.20) → arc wasted to deformation</td><td>−1.6 to −2.0 µL</td><td>Likely</td></tr>
-              <tr><td><em>N<sub>c</sub></em>=1 not 2 → rotor under-sized (R 17.7 vs 19.7 mm)</td><td>≈−0.67 µL</td><td>Certain</td></tr>
-              <tr><td>Paper thickness varies 0.78–1.1 mm across sections</td><td>drives the CV</td><td>Certain</td></tr>
-            </tbody>
-          </table>
+          <h3 class="block-heading">What actually happened in the hardware</h3>
+          <p><strong>The gap was wrong — the tube was never occluded.</strong> The displaced-volume tool prescribes the gap as <em>G</em> = 2<em>w</em> − <em>δ</em> = 1.50 mm. The part was instead built at <strong>1.75 mm</strong>. The tube only fully closes once the gap drops below the "walls-kiss" point, <em>G</em> = 2<em>w</em> = 1.70 mm. Since 1.75 mm &gt; 1.70 mm, <strong>the rollers never squeezed the tube shut at all</strong> — by design — so the pump could not move liquid. This is independent of the <em>N<sub>c</sub></em> error: the tool's gap output simply was not carried into the CAD.</p>
+          <p style="margin-top:12px"><strong>The paper-shim fix.</strong> To make it run, paper was folded into the groove so the tube sat proud and the rollers could reach it. Measuring the folded paper with a caliper (itself hard — it compresses): ≈1.0–1.1 mm light, ≈0.85 mm firm, ≈0.78 mm very hard. That raised the tube by ~0.8–1.1 mm, turning the effective gap into roughly 0.9–1.1 mm — an <em>effective</em> interference <em>δ<sub>eff</sub></em> ≈ 0.6–0.8 mm, a heavy over-squeeze. The actual delivery is measured next; the model is then checked against it.</p>
         </section>
 
         <section class="detail-block">
@@ -555,11 +601,39 @@ net       = (arc_built − ΔArc)·A
             </tbody>
           </table>
           <p class="block-note" style="margin-top:12px">Flow reads ≈ 11.5 % below gravimetric (low-flow tails cut by zero threshold + sensor bias). Trust gravimetric for the absolute number; use flow for dynamics (ripple, priming).</p>
+
+          <figure class="detail-figure">
+            <img src="proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Full circuit test setup" />
+            <figcaption>Full electronics / circuit test setup used for the calibration runs (motor, DRV8825, flow sensor)</figcaption>
+          </figure>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Discussion — does the model predict the result?</h3>
+          <p>Feeding the <em>actual</em> occlusion back through the model closes the loop. The built rotor sweeps <em>arc</em> = 27.73 mm; the net delivered volume is the gross sweep minus the <em>real</em> arc compensation, now using the firm-shim over-squeeze (<em>δ<sub>eff</sub></em> = 0.80 mm) and the <em>true</em> <em>N<sub>c</sub></em> = 2:</p>
+          <div class="formula">\[ L_c(0.80) = 1.15\cdot 2\sqrt{2\cdot 5\cdot 0.80} = 6.505\ \text{mm} \]</div>
+          <div class="formula">\[ \Delta\text{Arc} = N_c\cdot L_c = 2\cdot 6.505 = 13.01\ \text{mm} \]</div>
+          <div class="formula">\[ \text{net} = (\text{arc} - \Delta\text{Arc})\cdot A = (27.73 - 13.01)\cdot 0.2043 = 3.01\ \mu\text{L} \]</div>
+
+          <div class="callout callout-good"><span class="callout-label">Model validated.</span> Predicted <strong>3.01 µL</strong> (firm shim) vs measured <strong>3.39 µL</strong> (gravimetric). Back-solving the model from 3.39 gives an effective gap of <strong>1.11 mm</strong> — exactly the light-shim band that was measured. The first-order model brackets a hand-folded paper-shim experiment to <strong>~11 %</strong>: how the system was modelled is correct.</div>
+
+          <p class="block-note"><strong>Error budget (from the 5.0 µL intent):</strong></p>
+          <table class="param-table">
+            <thead><tr><th>Mechanism</th><th>Contribution</th><th>Confidence</th></tr></thead>
+            <tbody>
+              <tr><td>Gap 1.75 &gt; 1.70 mm → zero natural occlusion (needed the shim)</td><td>enabling failure</td><td>Certain</td></tr>
+              <tr><td>Shim over-compressed (δ<sub>eff</sub>≈0.6–0.8 vs 0.20) → arc wasted to deformation</td><td>−1.6 to −2.0 µL</td><td>Likely</td></tr>
+              <tr><td><em>N<sub>c</sub></em>=1 not 2 → rotor under-sized (R 17.7 vs 19.7 mm)</td><td>≈−0.67 µL</td><td>Certain</td></tr>
+              <tr><td>Paper thickness varies 0.78–1.1 mm across sections</td><td>drives the CV</td><td>Very likely</td></tr>
+            </tbody>
+          </table>
+          <p class="block-note" style="margin-top:12px">A <strong>systematic</strong> under-delivery (consistent, CV 4.5 %), not random noise — exactly what a fixed-geometry error looks like.</p>
         </section>
 
         <section class="detail-block">
           <h3 class="block-heading">Wall thickness — a real measurement problem</h3>
-          <p><em>w</em> is the highest-leverage input (it sets the gap via <em>G</em> = 2<em>w</em> − <em>δ</em>) and the hardest to pin down: the exact tube's datasheet doesn't cleanly state it, and a caliper is unreliable because the soft tube compresses under the jaws. We used <em>w</em> ≈ 0.85 mm as a best estimate. That the pump delivered anything before reliable shimming hints <em>w</em> may be slightly above 0.85 mm. <strong>Proto-02 must measure <em>w</em> properly</strong> (microscope cross-section, or micrometer OD then <em>w</em> = (OD − <em>d</em>)/2). This is a documented model limitation.</p>
+          <p><em>w</em> is the highest-leverage input (it sets the gap via <em>G</em> = 2<em>w</em> − <em>δ</em>) and the hardest to pin down. The exact tube's datasheet doesn't cleanly state the wall, so the 0.85 mm value comes from an <strong>online check of a similar tube model</strong> (the precise dimensions of this one weren't published), then <strong>verified with a caliper</strong> — which roughly confirmed it, though the soft tube compresses under the jaws so the reading is unreliable. That the pump delivered anything before reliable shimming hints <em>w</em> may be slightly above 0.85 mm.</p>
+          <div class="callout callout-note"><span class="callout-label">Proto-02 action.</span> Measure <em>w</em> properly — <strong>preferred: cut a cross-section and image it under the microscope</strong> (a micrometer on the OD, then <em>w</em> = (OD − <em>d</em>)/2, is the fallback if one is available). A documented model limitation: a critical input that is both uncertain and hard to measure at sub-millimetre scale.</div>
         </section>
 
         <section class="detail-block">
@@ -580,10 +654,6 @@ net       = (arc_built − ΔArc)·A
             </div>
           </div>
           <p class="block-note" style="margin-top:12px">Bench-tested best noise-vs-torque compromise on the existing DRV8825 — quiet and smooth enough while keeping torque margin (1/4-step's torque penalty is small, so step-skip risk under the 2-roller load stays low). A silent TMC2209/2226 driver is the fallback if more silence is later needed, but it costs torque on this torque-hungry, open-loop pump. <strong>Finding: full step is the noise source; 1/4 step at ~180 RPM is the recommended operating point — free, no new parts.</strong></p>
-          <figure class="detail-figure">
-            <img src="proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Full circuit test setup" />
-            <figcaption>Full electronics / circuit test setup (motor, DRV8825, flow sensor)</figcaption>
-          </figure>
         </section>
 
         <section class="detail-block">
@@ -624,15 +694,9 @@ net       = (arc_built − ΔArc)·A
             <h4>Firmware &amp; calibration</h4>
             <ul>
               <li>Adopt <strong>1/4 microstep @ ~2400 steps/s (180 RPM)</strong>; recalibrate steps/stroke.</li>
-              <li><strong>Don't change <em>k</em> yet</strong> — proto-01 mixes two error sources; back-calculate <em>k</em> from a clean proto-02 measurement. Measure <em>w</em> first.</li>
+              <li><strong>Measure <em>w</em> first</strong> (microscope cross-section), then <strong>don't change <em>k</em> yet</strong> — proto-01 mixes two error sources; back-calculate <em>k</em> from a clean proto-02 measurement.</li>
             </ul>
           </div>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Why 4 rollers</h3>
-          <p>Selected over higher counts despite continuous-flow practice recommending 8–10 rollers for low-flow accuracy. The distinction is <strong>operational mode</strong>: those recommendations target continuous metering, where more rollers reduce <em>pulsation</em>. This system does <strong>discrete stop-start dosing</strong>, where each roller hand-off (one releasing as the next engages) is an <em>error event</em> at the stop. Fewer rollers → fewer hand-offs per dispense → fewer stop-event errors — the opposite of the continuous-flow heuristic.</p>
-          <div class="callout callout-warn"><span class="callout-label">Honest caveat.</span> Proto-01's data can't yet demonstrate this — the −32 % systematic occlusion error swamps the hand-off signature. Proto-02 is the first build where the roller-count rationale becomes testable.</div>
         </section>
       </div>
 
@@ -640,7 +704,43 @@ net       = (arc_built − ΔArc)·A
   </section>
 </main>
 
+<!-- Lightbox overlay (click any figure to enlarge) -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">×</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script defer src="katex/katex.min.js"></script>
+<script defer src="katex/auto-render.min.js"></script>
 <script>
+  // Render LaTeX once KaTeX + auto-render have loaded
+  window.addEventListener('load', () => {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    }
+  });
+
+  // Lightbox — open on any detail figure image, close on overlay/✕/Esc
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  function openLightbox(src, alt) {
+    lightboxImg.src = src; lightboxImg.alt = alt || '';
+    lightbox.hidden = false;
+  }
+  function closeLightbox() { lightbox.hidden = true; lightboxImg.src = ''; }
+  document.querySelectorAll('.detail-figure img, .figure-grid img').forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  });
+  lightbox.addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lightbox.hidden) closeLightbox(); });
+
   // View swap — show detail for a given proto ID, hide journey
   function showDetail(protoId) {
     document.getElementById('journey-view').hidden = true;

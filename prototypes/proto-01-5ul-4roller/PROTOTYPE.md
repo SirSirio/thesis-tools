@@ -68,22 +68,48 @@ pass acceptance.
 
 ---
 
-## 3. As-built design parameters
+## 3. As-built design parameters — and why each was chosen
 
-| Parameter | Value | Source / tool |
-|-----------|-------|---------------|
-| Target volume per stroke | 5.0 µL | Design intent |
-| Roller count `N` | 4 | Rotor solver |
-| Rollers engaged `N_c` **(as entered)** | **1** ← *should have been 2* | Displaced-volume model |
-| Tube inner diameter `d` | 0.51 mm | Ismatec 2-stop microbore |
-| Tube wall `w` | 0.85 mm *(estimated — see §6)* | Cole-Parmer datasheet + caliper |
-| Roller bearing | MR105ZZ, 10 mm OD (`R_r` = 5 mm) | Design selection |
-| Interference `δ` (design) | 0.20 mm | Displaced-volume model |
-| Inflation factor `k` | 1.15 | Klespitz & Kovács (2022) |
-| Rotor radius `R` (as built) | 17.70 mm | Rotor solver (with `N_c`=1) |
-| Printed gap `G` (as built) | **1.75 mm** ← *should have been ≈1.50 mm* | CAD design |
-| Loose-fit tolerance (pump-head slot) | 0.25 mm | CAD design |
+| Parameter | Value | Why this value |
+|-----------|-------|----------------|
+| Target volume per stroke | 5.0 µL | Smallest aliquot the dispensing application targets |
+| Roller count `N` | 4 | Fewest hand-offs for discrete dosing (see §3a) |
+| Rollers engaged `N_c` **(as entered)** | **1** ← *should have been 2* | Mistake — a 180° arc with 4 rollers always has 2 engaged |
+| Tube inner diameter `d` | 0.51 mm | Smallest 2-stop microbore giving a workable rotor size |
+| Tube wall `w` | 0.85 mm *(estimated — see §8)* | From a **similar** tube (online) + caliper check; exact model wall not published |
+| Roller bearing | MR105ZZ, 10 mm OD (`R_r` = 5 mm) | Small standard shielded bearing → compact rotor |
+| Interference `δ` (design) | 0.20 mm | Mid of the 10–20 % × 2w occlusion band |
+| Inflation factor `k` | 1.15 | Compliant-tube correction (Klespitz & Kovács 2022) |
+| Rotor radius `R` (as built) | 17.70 mm | Rotor solver output (carries the `N_c`=1 error) |
+| Printed gap `G` (as built) | **1.75 mm** ← *should have been ≈1.50 mm* | CAD design — tool's gap not carried into CAD (see §5) |
+| Loose-fit tolerance (pump-head slot) | 0.25 mm | Too loose → head wobble |
 | Steps per stroke (firmware) | 50 (200 steps/rev ÷ 4 rollers) | `manual_dispense.cpp` |
+
+> **Tube:** [Darwin Microfluidics 2-stop Puri-Clear LL](https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12)
+> (0.51 mm ID), platinum-cured silicone microbore.
+
+### 3a. Key design decision — why 4 rollers
+
+4 rollers was selected over higher counts even though continuous-flow practice
+(Cole-Parmer, Ismatec) recommends 8–10 rollers for low-flow accuracy below
+5 mL/min. **The distinction is operational mode:**
+
+- Those recommendations target **continuous metering**, where more rollers reduce
+  *pulsation*.
+- This system does **discrete stop-start aliquot dosing**, where each **roller
+  hand-off** (one roller releasing as the next engages) is an **error event** at
+  the stop. Fewer rollers → fewer hand-offs per dispense → fewer stop-event error
+  opportunities. A 4-roller pump completes ~one hand-off where an 8-roller pump
+  completes ~two.
+
+So for discrete dosing, fewer rollers is an *advantage* for stop precision that
+higher counts don't offer — the opposite of the continuous-flow heuristic.
+
+> **Honest caveat (for the report):** proto-01's data cannot yet *demonstrate* this
+> advantage, because the −32 % systematic occlusion error swamps the hand-off
+> signature. The rationale is based on the expected error model for discrete dosing;
+> **proto-02 is the first build where it becomes testable** (once occlusion is
+> correct, the hand-off contribution should be visible in the CV).
 
 Design screenshots of the two tools at the proto-01 operating point:
 
@@ -159,7 +185,7 @@ now baked into the physical part.**
 
 ---
 
-## 5. What actually happened in the hardware — and why it under-delivered
+## 5. What actually happened in the hardware
 
 ### 5a. The printed gap was wrong: the tube was never occluded
 
@@ -184,7 +210,7 @@ not follow the tool's gap prescription.
 > which is itself a finding: the design loop needs the tool value carried through
 > to CAD explicitly, not re-estimated.
 
-### 5b. The paper-shim fix — and what it tells us quantitatively
+### 5b. The paper-shim fix
 
 Because the tube was not being squeezed, the pump did not pump. To make it work I
 **folded paper into the groove** so the tube sat proud and the rollers could reach
@@ -205,71 +231,11 @@ firm shim:   δ_eff = 1.70 − 0.90 = 0.80 mm   (heavy over-squeeze)
 light shim:  δ_eff = 1.70 − 1.10 = 0.60 mm
 ```
 
-### 5c. Does the model predict the measured output? (validation)
-
-The rotor was built at `arcNeeded` = 27.73 mm. The **net** delivered volume is the
-gross sweep minus the *actual* arc compensation eaten by the real occlusion:
-```
-net = (arcNeeded − ΔArc_actual) · A
-ΔArc_actual = N_c · L_c(δ_eff),  with the TRUE N_c = 2
-```
-
-**Firm-shim case (δ_eff = 0.80 mm):**
-```
-L_c(0.80)   = 1.15 · 2 · √(2·5·0.80) = 1.15 · 2 · √8 = 6.505 mm
-ΔArc_actual = 2 · 6.505 = 13.01 mm
-net         = (27.73 − 13.01) · 0.2043
-            = 14.72 · 0.2043
-            = 3.01 µL
-```
-
-**Measured (gravimetric, the reference): 3.39 µL/stroke.**
-
-The model predicts **3.01 µL** for a firm shim and, back-solving from the measured
-3.39 µL, an effective gap of **1.11 mm** — which lands exactly in the *light-shim*
-band I measured ("≈1 mm minimum in some sections"). **The model brackets the real
-result and predicts the messy shim experiment to within ~11 %.** For a first-order
-geometric model fed a hand-folded paper shim of uncontrolled thickness, that is
-strong validation that *how I modelled the system is correct*.
-
-### 5d. Error budget — accounting for the 5.0 → 3.4 gap
-
-Starting from the **design intent** of 5.0 µL net:
-
-| Mechanism | Contribution | Confidence |
-|-----------|-------------:|------------|
-| Gap 1.75 mm > walls-kiss 1.70 mm → **zero natural occlusion** (needed the shim to function at all) | the enabling failure | `[Certain]` |
-| Shim **over-compressed** the tube (δ_eff ≈ 0.6–0.8 vs design 0.20) → far more arc wasted to deformation | −1.6 to −2.0 µL | `[Likely]` (model-supported) |
-| `N_c` = 1 instead of 2 → rotor under-sized by ~2 mm (`R` 17.7 vs 19.7), so even a *correctly occluded* build would have fallen short | ~−0.67 µL | `[Certain]` (derivable) |
-| Paper thickness varies 0.78–1.1 mm across sections → stroke-to-stroke inconsistency | drives the CV | `[Certain]` (measured) |
-
-The deficit is fully explained by geometry + the shim. It is a **systematic**
-under-delivery (consistent, CV 4.5 %), not random noise — which is exactly what a
-fixed-geometry error looks like.
+The actual delivery is measured next (§6); the model is then checked against it (§7).
 
 ---
 
-## 6. The wall-thickness measurement problem (a real finding)
-
-`w` is the single most leverage-heavy input — it sets the gap via `G = 2w − δ` —
-and it is **the hardest to pin down**:
-
-- **Datasheets** for the exact 2-stop microbore tube don't cleanly state the wall;
-  we searched and could not find an authoritative value.
-- **A caliper is unreliable**: the soft tube compresses under the jaws, so the
-  reading depends on how hard you press. We used `w` ≈ 0.85 mm as a best estimate.
-
-That the pump delivered *anything* before reliable shimming hints `w` may be
-slightly **above** 0.85 mm (if `w` ≈ 0.90, then `2w` = 1.80 > 1.75 gap → marginal
-occlusion existed). **For proto-02, measure `w` properly** (cut a cross-section and
-image it under the microscope, or measure OD with a micrometer and back out
-`w = (OD − d)/2`). This wall-thickness uncertainty belongs in the report as a
-**known model limitation**: a critical input that is both uncertain and difficult
-to measure at the sub-millimetre scale.
-
----
-
-## 7. Measured performance (the data)
+## 6. Measured performance (the data)
 
 Manual 1 mL open-loop calibration (2026-06-15), **two measurement methods** —
 full report: `03. CODING/manual-dispense-check/proto-01-5ul-4roller/REPORT.md`.
@@ -285,9 +251,75 @@ full report: `03. CODING/manual-dispense-check/proto-01-5ul-4roller/REPORT.md`.
   threshold + sensor bias). **Trust gravimetric for the absolute number; use flow
   for dynamics** (priming, ripple).
 
+![Full circuit test setup](Prototype1_FullCircuit_BWColoredRelevant.jpg)
+
 ---
 
-## 8. Noise & vibration test (firmware-side, tested on this build)
+## 7. Discussion — does the model predict the result?
+
+Feeding the *actual* occlusion back through the model closes the loop. The rotor was
+built at `arcNeeded` = 27.73 mm. The **net** delivered volume is the gross sweep
+minus the *actual* arc compensation eaten by the real occlusion:
+```
+net = (arcNeeded − ΔArc_actual) · A
+ΔArc_actual = N_c · L_c(δ_eff),  with the TRUE N_c = 2
+```
+
+**Firm-shim case (δ_eff = 0.80 mm):**
+```
+L_c(0.80)   = 1.15 · 2 · √(2·5·0.80) = 1.15 · 2 · √8 = 6.505 mm
+ΔArc_actual = 2 · 6.505 = 13.01 mm
+net         = (27.73 − 13.01) · 0.2043
+            = 14.72 · 0.2043
+            = 3.01 µL
+```
+
+**Predicted 3.01 µL vs measured 3.39 µL (gravimetric).** Back-solving the model from
+the measured 3.39 µL gives an effective gap of **1.11 mm** — which lands exactly in
+the *light-shim* band I measured ("≈1 mm minimum in some sections"). **The model
+brackets the real result and predicts the messy shim experiment to within ~11 %.**
+For a first-order geometric model fed a hand-folded paper shim of uncontrolled
+thickness, that is strong validation that *how I modelled the system is correct*.
+
+### Error budget — accounting for the 5.0 → 3.4 gap
+
+Starting from the **design intent** of 5.0 µL net:
+
+| Mechanism | Contribution | Confidence |
+|-----------|-------------:|------------|
+| Gap 1.75 mm > walls-kiss 1.70 mm → **zero natural occlusion** (needed the shim to function at all) | the enabling failure | `[Certain]` |
+| Shim **over-compressed** the tube (δ_eff ≈ 0.6–0.8 vs design 0.20) → far more arc wasted to deformation | −1.6 to −2.0 µL | `[Likely]` (model-supported) |
+| `N_c` = 1 instead of 2 → rotor under-sized by ~2 mm (`R` 17.7 vs 19.7), so even a *correctly occluded* build would have fallen short | ~−0.67 µL | `[Certain]` (derivable) |
+| Paper thickness varies 0.78–1.1 mm across sections → stroke-to-stroke inconsistency | drives the CV | `[Very likely]` (measured) |
+
+The deficit is fully explained by geometry + the shim. It is a **systematic**
+under-delivery (consistent, CV 4.5 %), not random noise — which is exactly what a
+fixed-geometry error looks like.
+
+---
+
+## 8. The wall-thickness measurement problem (a real finding)
+
+`w` is the single most leverage-heavy input — it sets the gap via `G = 2w − δ` —
+and it is **the hardest to pin down**:
+
+- The exact 2-stop microbore tube's datasheet **does not cleanly state the wall**.
+  The 0.85 mm value comes from an **online check of a similar tube model** (AI
+  search; the precise dimensions of this exact one weren't published).
+- That estimate was then **checked with a caliper**, which roughly confirmed it —
+  though the reading is unreliable because the soft tube compresses under the jaws.
+
+That the pump delivered *anything* before reliable shimming hints `w` may be
+slightly **above** 0.85 mm (if `w` ≈ 0.90, then `2w` = 1.80 > 1.75 gap → marginal
+occlusion existed). **For proto-02, measure `w` properly** — *preferred: cut a
+cross-section and image it under the microscope* (a micrometer on the OD, then
+`w = (OD − d)/2`, is the fallback if one is available). This wall-thickness
+uncertainty belongs in the report as a **known model limitation**: a critical input
+that is both uncertain and difficult to measure at the sub-millimetre scale.
+
+---
+
+## 9. Noise & vibration test (firmware-side, tested on this build)
 
 Proto-01 was **very noisy** with strong vibration — running the DRV8825 driver in
 **full step**. I tested whether this could be cut in firmware without a hardware
@@ -326,20 +358,20 @@ analysis. **Finding:** full-step is the noise source; **1/4 microstepping at
 
 ---
 
-## 9. Issues observed (the physical reality)
+## 10. Issues observed (the physical reality)
 
 1. **Tube not squeezed enough** — gap too wide (§5a); needed a paper shim in the
    groove to function at all. *The headline mechanical failure.*
-2. **Under-delivery** — ≈3.4 µL vs 5.0 µL target, −32 % (§7).
+2. **Under-delivery** — ≈3.4 µL vs 5.0 µL target, −32 % (§6).
 3. **Pump head not fixed** — I had to **hold the head down by hand** during
    delivery; there was no mechanism to lock it in place.
 4. **Wobble** — the 0.25 mm loose-fit tolerance on the head slot let the head move;
    since the head position *is* the gap, wobble directly modulates occlusion.
-5. **Noisy / strong vibration** — full-step DRV8825 (addressed in §8).
+5. **Noisy / strong vibration** — full-step DRV8825 (addressed in §9).
 
 ---
 
-## 10. Improvements → inputs for proto-02
+## 11. Improvements → inputs for proto-02
 
 These are the concrete, agreed changes the next prototype must carry. **This
 section is the design brief for proto-02.**
@@ -372,55 +404,31 @@ section is the design brief for proto-02.**
 
 ### Firmware
 - Adopt **1/4 microstepping @ ~2400 steps/s (180 RPM)** as the default operating
-  point (port the §8 setting into the production firmware) to cut noise/vibration.
+  point (port the §9 setting into the production firmware) to cut noise/vibration.
 - Recalibrate steps/stroke against the new geometry.
 
 ### Model / calibration (do *after* the hardware is fixed, not before)
+- **Measure `w` properly first** — *preferred: microscope cross-section* (micrometer
+  OD then `w = (OD − d)/2` is the fallback if one is available) — before re-running
+  the tools.
 - **Do not change `k` yet.** Proto-01's shortfall mixes two causes (the `N_c` error
   and the over-squeezed shim), so it cannot isolate the true `k`. Once proto-02
   occludes correctly and is measured clean, **back-calculate the effective `k`**
   from the residual error — only then is 1.15 confirmed or corrected for this tube.
-- **Measure `w` properly** (microscope cross-section or micrometer OD) before
-  re-running the tools.
 
 ---
 
-## 11. Open questions for future prototypes
+## 12. Open questions for future prototypes
 
 - **Other tube IDs?** Worth exploring once the gap/occlusion loop is closed — a
   larger ID raises volume/stroke and could relax the geometry, but changes the
   compression load and torque demand.
-- **Keep 4 rollers?** Current reasoning: yes (see §12). Proto-02 will be the first
-  build that can actually *test* the roller-count rationale, because proto-01's
+- **Keep 4 rollers?** Current reasoning: yes (rationale in §3a). Proto-02 will be the
+  first build that can actually *test* the roller-count rationale, because proto-01's
   systematic occlusion error masks the handoff contribution entirely.
-- **Pump-head clearance as a tunable:** the multi-head gap sweep (§10) is itself a
+- **Pump-head clearance as a tunable:** the multi-head gap sweep (§11) is itself a
   small experiment — "how much space should there be between rollers and head?" —
   enabled by the head-lock. Natural hand-off to `plan-the-test`.
-
----
-
-## 12. Why 4 rollers (design rationale)
-
-4 rollers was selected over higher counts even though continuous-flow practice
-(Cole-Parmer, Ismatec) recommends 8–10 rollers for low-flow accuracy below
-5 mL/min. **The distinction is operational mode:**
-
-- Those recommendations target **continuous metering**, where more rollers reduce
-  *pulsation*.
-- This system does **discrete stop-start aliquot dosing**, where each **roller
-  hand-off** (one roller releasing as the next engages) is an **error event** at
-  the stop. Fewer rollers → fewer hand-offs per dispense → fewer stop-event error
-  opportunities. A 4-roller pump completes ~one hand-off where an 8-roller pump
-  completes ~two.
-
-So for discrete dosing, fewer rollers is an *advantage* for stop precision that
-higher counts don't offer — the opposite of the continuous-flow heuristic.
-
-> **Honest caveat (for the report):** proto-01's data cannot yet *demonstrate* this
-> advantage, because the −32 % systematic occlusion error swamps the hand-off
-> signature. The rationale is based on the expected error model for discrete dosing;
-> **proto-02 is the first build where it becomes testable** (once occlusion is
-> correct, the hand-off contribution should be visible in the CV).
 
 ---
 
@@ -459,4 +467,4 @@ higher counts don't offer — the opposite of the continuous-flow heuristic.
   errors found: `N_c`=1 (should be 2), gap 1.75 mm (should be ≈1.50, no occlusion),
   loose 0.25 mm tolerance + no head lock. Redesign decided.
 - **v2 (planned, proto-02)** — `N_c`=2, gap sweep around `2w − δ`, head lock,
-  0.10 mm tolerance, tube-retention fixes, 1/4-step firmware. Brief in §10.
+  0.10 mm tolerance, tube-retention fixes, 1/4-step firmware. Brief in §11.

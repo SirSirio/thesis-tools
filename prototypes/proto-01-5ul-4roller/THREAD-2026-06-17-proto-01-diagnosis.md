@@ -67,7 +67,7 @@ back-calc δ from measured 3.39 µL → δ≈0.59, gap≈1.11 mm  (light-shim ba
 `N_c`=2 → rotor ~19.7 mm; print a gap sweep (≈1.35/1.50/1.65 mm) around `2w−δ`;
 positive head lock (screw or cam/lever); 0.10 mm tolerance; tube-retention (holder
 position + tighter holes + anti-fall shield); 1/4-step firmware; recalibrate
-steps/stroke; measure `w`. Full brief in `PROTOTYPE.md` §10.
+steps/stroke; measure `w`. Full brief in `PROTOTYPE.md` §11.
 
 ## Artifacts produced
 
@@ -76,3 +76,25 @@ steps/stroke; measure `w`. Full brief in `PROTOTYPE.md` §10.
   performance, vibration test, issues, proto-02 brief, 4-roller rationale.
 - `prototypes/index.html` — detail view restructured + images wired in (see commit).
 - Screenshots/renders/photos saved in this folder.
+
+## Revision 2 (same day) — Sirio review pass
+
+Changes requested and applied after first draft:
+
+- **Page flow reordered** so *Results* come before the model-validation *Discussion*
+  (the gap/shim is described as setup before, the comparison after). Render pair
+  moved to sit after Purpose. Caption→next-section overlap fixed (figure margins).
+- **Purpose** turned into a bullet list. **4-roller rationale merged into the
+  Parameters section** (§3a) — it's a parameter-choice decision — and the standalone
+  section removed. Parameter table gained a **"why each value"** column.
+- **Formulas rewritten report-style**: a prose description of what each computes and
+  where every number comes from, then the equation. Rendered with **KaTeX**
+  (`prototypes/katex/`, 20 woff2 fonts bundled locally for offline + GitHub Pages).
+- **Click-to-enlarge lightbox** added for all figures; wide tool screenshots no
+  longer side-cropped (`object-fit: contain`). FullCircuit image moved to Results.
+- Content fixes: tube linked to **Darwin Microfluidics** product; wall-thickness
+  wording = *similar-tube online estimate + caliper check*; **microscope
+  cross-section** set as the preferred proto-02 `w` measurement (no micrometer);
+  error-budget CV-driver confidence **Certain → Very likely**.
+- `PROTOTYPE.md` re-sectioned to mirror the page (§5 setup → §6 results →
+  §7 discussion → §8 wall thickness); all cross-refs updated.
