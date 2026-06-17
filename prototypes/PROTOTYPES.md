@@ -28,6 +28,7 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 | ID | Slug | Status | µL/stroke (target → measured) | Test data | Notes |
 |----|------|--------|-------------------------------|-----------|-------|
 | 01 | proto-01-5ul-4roller | Built, redesign pending | 5.0 → ≈3.4 (grav) | `03. CODING` (see PROTOTYPE-INDEX.md) | Under-dispenses ~32%; flow + gravimetric, see REPORT.md |
+| 02 | proto-02-5ul-4roller-v2 | Design in progress | 5.0 → TBD | (pending build) | Fixes proto-01: N_c=2 (R≈19.7), 4-head gap sweep, screw-clamp lock, 0.10mm fit; targets CV≤5% |
 
 <!-- Add a row per prototype. Keep newest at the bottom. -->
 

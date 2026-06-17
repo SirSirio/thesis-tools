@@ -55,7 +55,7 @@
 
     /* ── Journey stage (SVG + nodes) ──────────────────────────── */
     .journey-stage { position: relative; width: 100%; }
-    .stage-inner { position: relative; width: 100%; min-height: 820px; }
+    .stage-inner { position: relative; width: 100%; min-height: 2500px; }
     .journey-path-svg {
       position: absolute;
       top: 0;
@@ -65,16 +65,21 @@
       pointer-events: none;
       overflow: visible;
     }
-    .nodes-layer { position: relative; z-index: 1; width: 100%; min-height: 820px; }
+    .nodes-layer { position: relative; z-index: 1; width: 100%; min-height: 2500px; }
 
     /* Node positioning (desktop) */
     .proto-node {
       position: absolute;
-      top: 38%;
       left: 50%;
       transform: translateX(-50%);
       width: clamp(260px, 55vw, 380px);
     }
+    /* Staggered down the winding path (one lobe per pair) */
+    #node-proto-01 { top: 1%; }
+    #node-proto-02 { top: 21%; }
+    #node-proto-03 { top: 41%; }
+    #node-proto-04 { top: 61%; }
+    #node-proto-05 { top: 81%; }
 
     /* Default: visible (covers reduced-motion and no-JS cases) */
     .proto-node { opacity: 1; }
@@ -241,6 +246,48 @@
       float: right;
       margin: 0 0 12px 16px;
     }
+    /* Placeholder thumb — no photo yet (in-design prototype) */
+    .proto-card-thumb-ph {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      float: right;
+      margin: 0 0 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      background: repeating-linear-gradient(
+        45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px,
+        rgba(255,255,255,0.02) 6px, rgba(255,255,255,0.02) 12px);
+      border: 2px dashed var(--accent);
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    /* ── Ghost cards (planned, not yet started) ───────────────── */
+    .proto-card-ghost {
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--glass-border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      color: var(--text);
+      opacity: 0.42;
+      filter: grayscale(1);
+      cursor: default;
+    }
+    .proto-card-ghost .proto-card-thumb-ph {
+      border-style: dashed;
+      border-color: var(--text-muted);
+      box-shadow: none;
+    }
+    .proto-card-ghost .proto-card-tag { color: var(--text-muted); }
+    .proto-card-ghost .proto-card-cta { color: var(--text-muted); }
 
     /* ── Detail figures ───────────────────────────────────────── */
     .detail-figure { margin: 20px 0 32px; }
@@ -412,7 +459,7 @@
 
     <div class="journey-stage">
       <div class="stage-inner">
-        <svg class="journey-path-svg" viewBox="0 0 600 900" aria-hidden="true">
+        <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
           <path class="journey-path"
             d="M 300 40 C 520 140, 80 300, 300 440 C 520 580, 80 740, 300 880"
             pathLength="1"
@@ -433,6 +480,51 @@
               </div>
               <span class="proto-card-cta">Explore →</span>
             </button>
+          </div>
+
+          <div class="proto-node" id="node-proto-02">
+            <button class="proto-card" data-proto="proto-02">
+              <div class="proto-card-thumb-ph" aria-hidden="true">design</div>
+              <div class="proto-card-tag">Proto 02 · 2026</div>
+              <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
+              <p class="proto-card-purpose">The first build meant to work to spec. Fixes the three proto-01 errors and turns the gap into a measured, locked, repeatable quantity via a 4-head gap sweep.</p>
+              <div class="proto-card-kpi">
+                <span class="kpi-pill">N<sub>c</sub> = 2 · R ≈ 19.7 mm</span>
+                <span class="kpi-pill">target CV ≤ 5 %</span>
+                <span class="kpi-pill">in design</span>
+              </div>
+              <span class="proto-card-cta">Explore →</span>
+            </button>
+          </div>
+
+          <div class="proto-node" id="node-proto-03">
+            <div class="proto-card-ghost" aria-disabled="true">
+              <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+              <div class="proto-card-tag">Proto 03 · planned</div>
+              <h3 class="proto-card-title">Precision &amp; calibration validation</h3>
+              <p class="proto-card-purpose">Stable CV, reliable step-count calibration, model validated across the volume range. Nothing built yet.</p>
+              <span class="proto-card-cta">Not started</span>
+            </div>
+          </div>
+
+          <div class="proto-node" id="node-proto-04">
+            <div class="proto-card-ghost" aria-disabled="true">
+              <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+              <div class="proto-card-tag">Proto 04 · planned</div>
+              <h3 class="proto-card-title">Multi-liquid mechanism</h3>
+              <p class="proto-card-purpose">One motor, 5 liquids, a separate tube per liquid — without 5 motors (size/portability). Mechanism still open. Nothing built yet.</p>
+              <span class="proto-card-cta">Not started</span>
+            </div>
+          </div>
+
+          <div class="proto-node" id="node-proto-05">
+            <div class="proto-card-ghost" aria-disabled="true">
+              <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+              <div class="proto-card-tag">Proto 05 · planned</div>
+              <h3 class="proto-card-title">System integration</h3>
+              <p class="proto-card-purpose">Pump + multi-liquid mechanism + electronics in one dispensing-module enclosure. Nothing built yet.</p>
+              <span class="proto-card-cta">Not started</span>
+            </div>
           </div>
         </div>
       </div>
@@ -700,6 +792,115 @@
         </section>
       </div>
 
+      <div id="detail-proto-02" class="detail-section" hidden>
+        <div class="detail-header">
+          <div class="detail-tag">Proto 02 · In design 2026</div>
+          <h2 class="detail-title">5 µL 4-roller peristaltic — corrected geometry + gap sweep</h2>
+        </div>
+
+        <div class="callout callout-note"><span class="callout-label">Status: in design.</span> Not yet built or tested. This page holds the agreed purpose, design parameters, and planned experiments; results sections will be filled once the build is measured.</div>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Purpose</h3>
+          <p class="block-note">The first build meant to <strong>actually work to spec</strong>. Proto-01 proved the concept and validated the model but carried three known, fixable errors and never occluded the tube without a paper shim. Proto-02:</p>
+          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
+            <li><strong>Hit a known, acceptable volume</strong> — ideally 5.0 µL/stroke, but a <em>consistent, known</em> volume is equally acceptable: the device spec is ±10 % / not more than ±10 µL over an accumulated dispense, so the binding requirement is <strong>low stroke-to-stroke CV</strong>, calibrated by step count — not a perfect mean.</li>
+            <li><strong>Fix the three proto-01 errors</strong> — N<sub>c</sub>, gap, head lock.</li>
+            <li><strong>Make the gap measurable</strong> — caliper-access slots read the real installed gap, not the nominal CAD value.</li>
+            <li><strong>Pin down <em>w</em> and <em>k</em></strong> — measure the tube wall before testing; back-calculate the inflation factor from clean post-fix data (proto-01 confounded two error sources).</li>
+            <li><strong>Understand gravimetric vs flow</strong> — with a solid build, investigate <em>why</em> the weighed mass reads higher than the integrated flow sensor.</li>
+          </ul>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Targets &amp; pass criteria</h3>
+          <table class="param-table">
+            <thead><tr><th>Quantity</th><th>Target</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>Mean volume / stroke</td><td>~5.0 µL (≥ ~4.5 ok)</td><td>Knowing it matters more than hitting exactly 5.0</td></tr>
+              <tr><td><strong>Stroke-to-stroke CV</strong></td><td><strong>≤ 5 %</strong> (stretch ≤ 3 %)</td><td>At CV 5 %, ±7 µL over 200 strokes (95 %) → inside the ±10 µL cap. <strong>The real pass gate.</strong></td></tr>
+              <tr><td>Mean known to</td><td>~±2 %</td><td>So step-count calibration lands inside ±10 % / ±10 µL</td></tr>
+              <tr><td>Head-lock gap repeatability</td><td>drift &lt; 0.10 mm / 10 reinstalls</td><td>More drift → the lock is the error source, not the gap</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-note"><span class="callout-label">Benchmark.</span> The device replaces a person pipetting by hand, so a <strong>pipette</strong> is the fair comparator: ISO 8655 holds CV ≈ 1.5–3 % at 5 µL. Proto-01 was already CV 4.5 % despite its errors.</div>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Parameters — as designed</h3>
+          <p class="block-note">Recomputed with the
+            <a class="tool-link" href="../tools/rotor-solver/index.html">Rotor Geometry Solver</a>
+            and the
+            <a class="tool-link" href="../tools/peristaltic-roller-displaced-volume-model/index.html">Displaced-Volume Model</a>,
+            now with the corrected <em>N<sub>c</sub></em> = 2.</p>
+          <table class="param-table">
+            <thead><tr><th>Parameter</th><th>Value</th><th>Change from proto-01</th></tr></thead>
+            <tbody>
+              <tr><td>Rollers engaged <em>N<sub>c</sub></em></td><td>2</td><td><strong>Fixed</strong> (was 1)</td></tr>
+              <tr><td>Rotor radius <em>R</em></td><td>≈ 19.7 mm</td><td><strong>Recomputed</strong> (was 17.70)</td></tr>
+              <tr><td>Gap <em>G</em> — head sweep</td><td>1.25 / 1.45 / 1.65 / 1.85 mm</td><td><strong>New</strong> — 4 interchangeable heads, 0.20 mm steps</td></tr>
+              <tr><td>Head lock</td><td>screw clamp (provisional)</td><td><strong>New</strong> — easiest to test; final pick deferred</td></tr>
+              <tr><td>Loose-fit tolerance</td><td>0.10 mm</td><td>Tightened (was 0.25), paired with the lock</td></tr>
+              <tr><td>Tube wall <em>w</em></td><td>measure first (~0.85 est.)</td><td>Microscope cross-section before testing</td></tr>
+              <tr><td>Interference <em>δ</em> (nominal)</td><td>0.20 mm</td><td>Unchanged</td></tr>
+              <tr><td>Inflation factor <em>k</em></td><td>1.15 (provisional)</td><td><strong>Hold</strong> — back-calculate from clean data</td></tr>
+              <tr><td>Roller count <em>N</em></td><td>4</td><td>Unchanged — discrete-dosing rationale now testable</td></tr>
+              <tr><td>Microstepping / speed</td><td>1/4 step @ 2400 st/s (180 RPM)</td><td>Ported from proto-01 noise test</td></tr>
+              <tr><td>Steps / stroke</td><td>recalibrate to new <em>R</em></td><td>Re-derive for the larger rotor</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Corrected geometry</h4>
+          <div class="formula">\[ L_c = k\cdot 2\sqrt{2R_r\delta} = 3.253\ \text{mm} \quad\Rightarrow\quad \Delta\text{Arc} = N_c\cdot L_c = 2\cdot 3.253 = 6.51\ \text{mm} \]</div>
+          <div class="formula">\[ \text{arc} = \frac{vol}{A} + \Delta\text{Arc} = 24.48 + 6.51 = 30.98\ \text{mm} \quad\Rightarrow\quad R = \frac{N\cdot\text{arc}}{2\pi} = 19.7\ \text{mm} \]</div>
+          <p class="block-note">The <em>N<sub>c</sub></em> = 2 correction grows the rotor 17.7 → 19.7 mm. This time the tool's gap prescription <em>G</em> = 2<em>w</em> − <em>δ</em> is carried into CAD (the proto-01 workflow failure was re-estimating it instead).</p>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">The gap sweep — the key experiment</h3>
+          <p><em>w</em> is uncertain and sets the gap via <em>G</em> = 2<em>w</em> − <em>δ</em>. Rather than bet on one gap, print <strong>4 interchangeable heads</strong> spanning the plausible <em>w</em> range. 0.20 mm steps (not 0.15) because the Bambu P1S prints slot gaps to ~±0.05–0.10 mm — at 0.15 mm two heads can print indistinguishably; at 0.20 mm the model predicts a clear ~0.5 µL separation per step.</p>
+          <table class="param-table">
+            <thead><tr><th>Head</th><th>Nominal <em>G</em></th><th>Intent (at <em>w</em> ≈ 0.85)</th></tr></thead>
+            <tbody>
+              <tr><td>H1</td><td>1.25 mm</td><td>Over-squeeze — high-occlusion sanity point</td></tr>
+              <tr><td>H2</td><td>1.45 mm</td><td>Near design</td></tr>
+              <tr><td>H3</td><td>1.65 mm</td><td>Light squeeze — near walls-kiss</td></tr>
+              <tr><td>H4</td><td>1.85 mm</td><td>At/just past walls-kiss — occlusion → ~0 (model floor check)</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-warn"><span class="callout-label">Measure the real gap.</span> Each head gets <strong>3 caliper-access slots at the tube midline, spaced across the 180° arc</strong> (the two arc ends = "sides" + the apex = "top"). This reveals the true installed gap <em>and</em> whether the backing wall <strong>bows</strong> under clamp load. Results are recorded as "measured gap → delivered volume", never as the nominal dimension.</div>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Planned experiments</h3>
+          <p class="block-note">Run order <strong>randomized</strong>; tube wear controlled (interleave heads or fresh tube section per head) — silicone hysteresis drifts <em>w<sub>eff</sub></em> with compression cycles and would otherwise confound the sweep. <strong>n = 10</strong> per condition (ISO 8655 minimum; n = 5 leaves the CV estimate ~±40 % uncertain).</p>
+          <table class="param-table">
+            <thead><tr><th>#</th><th>Experiment</th><th>n</th><th>Output</th></tr></thead>
+            <tbody>
+              <tr><td>E1</td><td>Wall thickness <em>w</em> — microscope cross-section (fallback micrometer OD)</td><td>≥3</td><td>True <em>w</em> + spread</td></tr>
+              <tr><td>E2</td><td>Gap sweep → volume (gravimetric, record measured gap)</td><td>10 / head</td><td>µL/stroke vs gap; best head</td></tr>
+              <tr><td>E3</td><td>Precision (CV)</td><td>10 / head</td><td>CV per head — the pass gate</td></tr>
+              <tr><td>E4</td><td>Head-lock repeatability (caliper the 3 slots per reinstall)</td><td>10 reinstalls</td><td>Gap drift; arc bowing/asymmetry</td></tr>
+              <tr><td>E5</td><td>Back-calculate <em>k</em> (invert model from E1+E2)</td><td>—</td><td>Effective <em>k</em> for this tube</td></tr>
+              <tr><td>E6</td><td>Gravimetric vs flow (log flow during E2)</td><td>subset</td><td>Why flow under-reads — method finding</td></tr>
+              <tr><td>E7</td><td>Step-skip check at 1/4 step / 180 RPM under 2-roller load</td><td>—</td><td>Open-loop reliability</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Open questions / risks</h3>
+          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
+            <li><strong>True <em>w</em></strong> — the dominant model unknown (E1 resolves it).</li>
+            <li><strong>Effective <em>k</em></strong> for this tube — provisional 1.15, confirmed only by E5.</li>
+            <li><strong>Tube wear / hysteresis</strong> confounding the sweep if order isn't controlled.</li>
+            <li><strong>Backing-wall bowing</strong> under clamp load → non-uniform gap around the arc (E4 detects).</li>
+            <li><strong>System effects deferred</strong> — downstream backpressure + tubing dead volume will shift calibration in the assembled device; not tested at pump-only stage.</li>
+            <li><strong>Ambition note</strong> — at 5 µL, ±10 % = ±0.5 µL, which a single stroke won't hit open-loop; small commanded volumes rely on stroke-count averaging. State explicitly in the thesis.</li>
+          </ul>
+        </section>
+      </div>
+
     </div>
   </section>
 </main>
@@ -759,7 +960,7 @@
 
   document.getElementById('back-btn').addEventListener('click', showJourney);
 
-  document.querySelectorAll('.proto-card').forEach(btn => {
+  document.querySelectorAll('.proto-card[data-proto]').forEach(btn => {
     btn.addEventListener('click', () => showDetail(btn.dataset.proto));
   });
 
