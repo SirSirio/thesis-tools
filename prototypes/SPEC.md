@@ -24,13 +24,22 @@ None — static content only. All content authored directly into the HTML file.
 
 ### Detail View
 
-Per-prototype sections in order:
-1. **Purpose** — why built and what it tests
-2. **Parameters** — dimensions/materials table with links out to the design-tool pages
-3. **Results** — hero stat-cards (1–3 headline metrics) + CSS bar chart + method-comparison table
-4. **Design reasoning** — what the data revealed and what drives the next prototype
+Per-prototype sections in order (proto-01 as the reference layout):
+1. **Hero figure** — CAD render pair (closed / open)
+2. **Purpose** — why built and what it tests
+3. **Parameters (as built)** — dimensions/materials table (errors flagged ⚠) + tool screenshots
+4. **The design calculation, worked** — `.calc-block` monospace formula chain + insight callout
+5. **What actually happened** — gap/occlusion failure, paper-shim quantification, model-validation callout, error-budget table
+6. **Results** — hero stat-cards + CSS bar chart + method-comparison table
+7. **Wall thickness** — measurement-limitation note
+8. **Noise & vibration test** — firmware stat-cards + chosen operating point + circuit photo
+9. **Issues observed** — bullet list + real-build photo
+10. **→ Inputs for Proto-02** — `.next-brief` design-brief block (the forward pointer that seeds the next prototype page)
+11. **Why 4 rollers** — design rationale + honest-caveat callout
 
 ← Back to journey control returns to the path view.
+
+**Reusable components added in this build:** `.proto-card-thumb` (circular real-photo node on the journey card), `.detail-figure` / `.figure-grid` (single + 2-up images), `.calc-block` (worked formulas), `.callout` (good/warn/note), `.next-brief` (forward design brief). Images live in each prototype folder as `PrototypeN_*.{png,jpg}` and are referenced by relative path.
 
 ## Animation Technique
 
@@ -49,7 +58,7 @@ Per-prototype sections in order:
 
 | ID | Title | Status | Key result |
 |----|-------|--------|------------|
-| proto-01 | 5 µL 4-roller peristaltic | Built — redesign pending | −32.2 % under-dispense; ≈3.39 µL/stroke (grav) |
+| proto-01 | 5 µL 4-roller peristaltic | Built — redesign pending | −32.2 % under-dispense; ≈3.39 µL/stroke (grav); model validated to ~11 %; 3 design errors found (N_c, gap, head lock) |
 
 ## Constraints
 
