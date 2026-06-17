@@ -80,6 +80,10 @@ Recent decisions affecting current work:
   schema — `.planning/notes/2026-06-15-prototype-test-schema-decision.md`.
   `03. CODING` is blocked on this before emitting test reports.
 
+- **[ui]** Open tool links in new tab from prototype detail view — `prototypes/index.html`: add `target="_blank" rel="noopener"` to Parameters table tool links.
+
+- **[ui]** Redesign and restructure landing page for many tools — `index.html`: flat card grid needs rethinking now that 4+ tools + prototype space exist.
+
 ### Blockers/Concerns
 
 - ADR cross-reference cycle between README.md and CLAUDE.md flagged by ingest (INGEST-CONFLICTS.md — informational only; no synthesis correctness impact, can be dismissed)
