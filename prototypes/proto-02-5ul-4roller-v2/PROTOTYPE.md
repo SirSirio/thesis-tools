@@ -68,14 +68,15 @@ now with **N_c = 2**.
 | Roller count `N` | 4 | Unchanged — discrete-dosing rationale (proto-01 §3a); proto-02 is the first build that can *test* it |
 | **Rollers engaged `N_c`** | **2** | **FIXED** — 180° arc with 4 rollers always has 2 engaged (was wrongly 1) |
 | Tube inner diameter `d` | 0.51 mm | Unchanged (Darwin 2-stop Puri-Clear LL) |
-| Tube wall `w` | **measure first** (~0.85 mm prior est.) | Highest-leverage unknown — microscope cross-section before testing |
+| Tube wall `w` | **0.91 mm** (measured) | Microscope + caliper-OD + ISO/Ismatec standard all converge, 2026-06-22 — confirms proto-01's w≈0.90 inference. See `../Tube OD Thikness/tube-wall-thickness-analysis.md` |
+| Walls-kiss `2w` / OD | **2w = 1.82 mm · OD = 2.33 mm** | `2w = OD − ID = 2.33 − 0.51`; matches Ismatec standard exactly; sets gap `G = 2w − δ` |
 | Roller bearing | MR105ZZ, 10 mm OD (`R_r` = 5 mm) | Unchanged |
 | Interference `δ` (nominal) | 0.20 mm | Unchanged design point |
 | Inflation factor `k` | 1.15 (provisional) | **Do not change yet** — back-calculate from clean proto-02 data |
 | **Rotor radius `R`** | **≈ 19.7 mm** | **Recomputed** with N_c = 2 (was 17.70) — see §5 |
-| **Gap `G` — head sweep** | **1.25 / 1.45 / 1.65 / 1.85 mm** | **NEW** — 4 interchangeable heads, 0.20 mm steps (see §6) |
+| **Gap `G` — head sweep** | **1.72 / 1.62 / 1.52 mm** (target installed) | **NEW** — 3 heads at δ = 0.10/0.20/0.30, `G = 2w − δ` with measured 2w = 1.82; CAD nominal +FDM offset (see §6–§7) |
 | Head lock | **screw clamp** (provisional) | **NEW** — simplest to test; final mechanism chosen after params settle |
-| Loose-fit tolerance | **0.10 mm** | Tightened from 0.25 mm, paired with the lock |
+| Loose-fit tolerance | **0.15–0.20 mm/side** | Was 0.25; **revised up from 0.10** — FDM undersizing makes 0.10 mm print as near-zero/interference (won't slide). Sliding fit for insertion, lock removes play. See §7 |
 | Steps / stroke (firmware) | recalibrate to new `R` | Was 50; re-derive for the larger rotor |
 | Microstepping / speed | 1/4 step @ 2400 steps/s (180 RPM) | Port the proto-01 §9 bench result into production firmware |
 
@@ -115,20 +116,46 @@ gap value into the model).
 
 ## 6. The gap sweep — design of the key experiment
 
-`w` is uncertain (~0.85 mm ± unknown), and `w` sets the gap via `G = 2w − δ`. Rather than bet
-on one gap, print **4 interchangeable pump heads** spanning the plausible `w` range:
+The sweep tunes the **interference** `δ = 2w − G` — how far the gap squeezes past the measured
+walls-kiss `2w = 1.82 mm` (OD 2.33; microscope + caliper + ISO/Ismatec standard agree —
+see [tube-wall-thickness-analysis](../Tube%20OD%20Thikness/tube-wall-thickness-analysis.md)).
 
-| Head | Nominal `G` | Intent (at w ≈ 0.85) |
-|------|-------------|----------------------|
-| H1 | 1.25 mm | Over-squeeze (δ_eff ≈ 0.45) — sanity high-occlusion point |
-| H2 | 1.45 mm | Near design (δ_eff ≈ 0.25) |
-| H3 | 1.65 mm | Light squeeze (δ_eff ≈ 0.05) — near walls-kiss |
-| H4 | 1.85 mm | At/just past walls-kiss — occlusion → ~0 (model floor check) |
+### Delivery is leak-limited, not arc-limited (key correction from proto-01)
 
-**Why 0.20 mm steps (wider than the proto-01 brief's 0.15 mm):** the Bambu P1S prints slot
-gaps to ~±0.05–0.10 mm. At 0.15 mm steps two adjacent heads can print indistinguishably; at
-0.20 mm the model predicts a clear ~0.5 µL volume separation per step, resolvable over n = 10.
-**[Likely]**
+The displaced-volume model's arc-compensation term assumes the tube is **already fully sealed** —
+it only describes the **over-squeezed** side. **Below the seal threshold the tube backflows, and a
+*looser* gap leaks *more* → delivers *less*.** So delivery vs gap is a **hump**, not a line:
+
+```
+delivery ▲        ╭─●─╮   ← peak = loosest gap that still fully SEALS
+         │      ╱      ╲____   over-squeezed: slow decline (arc loss + deformation)
+         │    ╱  LEAK zone: looser = more backflow = LESS delivery
+         └────────────────────► looser gap →
+```
+
+proto-01 operated **entirely on the leak (left) side** — which is exactly why tightening it (the
+shim) gave *more*, and any looser gap gave *less*. **The optimum is the top of the hump: the
+loosest gap that still fully seals** (max delivery, least over-squeeze and wear). The arc-compensation
+model is only meaningful *right* of the peak.
+
+### The sweep is run FIRM → LOOSE, hunting the peak
+
+| Test order | δ | Target gap `G` | Sealed-regime model | Real expectation |
+|------------|-----|----------------|---------------------|------------------|
+| **1st (start firm)** | 0.30 | **1.52 mm** | ~4.70 µL | firmly sealed → real delivery; de-risks "does it pump" |
+| 2nd | 0.20 | **1.62 mm** | ~5.00 µL | looser; if delivery **rises**, peak is here or looser |
+| 3rd | 0.10 | **1.72 mm** | ~5.39 µL | likely **leaks** → delivery drops (≈ proto-01's marginal 1.75) |
+
+Read the trend: delivery climbs as you loosen **until it doesn't** — that turning point is the
+operating gap. If even 1.52 leaks → go firmer (1.42); if 1.72 still climbs → go looser. The
+"sealed-regime model" column is the arc-compensation prediction (valid only past the seal point).
+The **fixed rotor** (sized at δ=0.20) means each head delivers a different volume — a single-variable
+(δ) sweep that characterizes **both** regimes (leak + sealed). 0.10 mm δ-steps clear the P1S print
+tolerance so the heads come out distinct.
+
+> **Superseded:** (1) a 4-head raw-gap sweep (1.25/1.45/1.65/1.85) — wider gaps don't all occlude;
+> (2) an earlier loose→firm framing that assumed "looser = more delivery" — backwards below the
+> seal threshold (see hump). proto-01's clean correction: **start firm.**
 
 **Critical — measure the real gap, don't trust the nominal.** Each head gets **3 caliper-access
 slots at the tube midline, spaced across the 180° arc** (the two arc ends = "sides" + the apex
@@ -138,7 +165,86 @@ slots at the tube midline, spaced across the 180° arc** (the two arc ends = "si
 
 ---
 
-## 7. Planned experiments
+## 7. Print process — orientation, tolerances & fits (Bambu P1S, 0.4 mm nozzle)
+
+### 7.1 Orientation — print the arc FLAT in the bed plane (settled)
+
+Print so the semicircular occlusion wall lies **flat in the build-plate plane** — the
+channel/rotor axis points **straight up**, and the occlusion wall is a **vertical cylinder you
+look straight down into**. Do **not** stand the head up with the arc climbing through the layers
+("arc on the Z axis").
+
+> **Label-free decision test:** does the semicircle lie *flat on the bed* (correct) or *stand up
+> in a vertical plane* (wrong)? Flat = wall is a vertical cylinder; standing = curve built through
+> stacked layers.
+
+- **Flat (chosen):** every layer is the identical U-outline → the gap is an **XY dimension
+  everywhere around the arc** (FDM's most accurate axis); the curve is smooth (XY motion, no
+  stair-step); the roller travels *along* the horizontal layer rings (smooth); no overhang, no
+  supports on the critical surface. **Bonus:** gap accuracy is **decoupled from layer height** →
+  can print faster (0.12–0.16 mm) with no loss of gap precision.
+- **Standing / arc-through-Z (rejected):** the bottom of the U tilts into the 30–60° worst
+  stair-stepping band → gap stepped at the bottom, smooth at the sides → **non-uniform gap around
+  the arc**; the roller climbs layer-to-layer → periodic occlusion ripple; overhang/supports land
+  on the occlusion face.
+
+### 7.2 Why orientation is a first-order driver — gap → volume sensitivity
+
+The rotor is fixed (sized at δ=0.20); the head only changes δ = 2w − G. From the model, volume
+responds to gap as:
+
+**dVol/dG ≈ 3.4 µL per mm** (at δ=0.20)  →  **σ_vol ≈ 3.4 · σ_G**   `[Likely — model-based]`
+
+So **gap control *is* the CV battle.** Orientation moves σ_G, hence CV:
+
+| Orientation | σ_G around arc | σ_vol | CV on 5 µL |
+|-------------|----------------|-------|------------|
+| **Flat** (gap in XY, smooth wall) | ~0.03–0.05 mm | 0.10–0.17 µL | **2–3.4 %** ✓ |
+| **Standing** (stair-step + supports) | ~0.08–0.15 mm | 0.27–0.51 µL | **5–10 %** ✗ |
+
+This reframes "precision pump" as **"precision gap"**: orientation, the head lock, the slot fit,
+and the measured-gap workflow are all one fight to shrink σ_G. (σ_G values `[Guessing-but-bracketed]`;
+the 3.4 µL/mm lever is firm.)
+
+### 7.3 P1S dimensional accuracy & fit clearances (0.4 mm nozzle)
+
+General values, well-calibrated PLA/PETG, 0.4 mm nozzle:
+
+| Quantity | Value | Note |
+|----------|-------|------|
+| Overall dimensional accuracy | **±0.1–0.2 mm** (≈ ±0.15 calibrated) | ±0.5 % / ±0.5 mm uncalibrated worst case; P1S ~0.1 mm in testing |
+| Gaps/holes print **undersized** | by **0.1–0.3 mm** | nozzle oozes into the gap — comes out tighter than nominal; **systematic, calibratable** |
+| Smallest resolvable gap | ~**0.05 mm not reproduced** (slicer skips with 0.4 nozzle) | below ~0.1 mm a modelled gap may not print as a gap |
+| **Press / interference fit** | **−0.1 to −0.15 mm** (hole < pin) | force-together |
+| **Snug / transition fit** | ~**0.0 to +0.1 mm** total | seats, then needs a push |
+| **Sliding fit** (precise guidance) | **0.1–0.2 mm per side** (0.2–0.4 mm total) | moves with light play |
+| **Loose / clearance fit** (free) | **0.3–0.5 mm per side** | free rotation/sliding |
+
+### 7.4 Implications for proto-02
+
+- **Calibrate the print, don't predict it.** The generic "holes print 0.1–0.3 mm tight" rule is
+  for small enclosed holes; on this **large open concave channel** proto-01 evidence says the
+  undersize is **small** (its 1.75 mm gap printed ≈ nominal). So **start the first (firm, 1.52 mm)
+  head at nominal = target** — it doubles as the calibration head — caliper the 3 arc-slots,
+  derive the offset (sign and size unknown until measured, but likely small), then apply it to the
+  set. Every result is recorded vs **measured** gap, never nominal.
+- **The 0.10 mm head-slot fit was too tight** — revised to a **sliding fit 0.15–0.20 mm/side**
+  (a nominal 0.10 mm closes to ~0/interference after undersizing → won't slide). Clearance gets
+  the head in; the **screw-clamp lock** removes the play during operation. `[Likely]`
+- **Elephant's foot** tightens the **bottom of the channel** (along the axis) in the flat
+  orientation → add a base chamfer or brim; caliper bottom-vs-top on the calibration head.
+
+**Sources:** [Niro3D tolerances guide](https://www.niro3d.cz/en/blog/3d-printing-tolerances-accuracy-guide),
+[3DPut fit guide](https://3dput.com/complete-guide-to-3d-printing-tolerances-and-fit-getting-perfect-clearance-for-moving-parts/),
+[AON3D engineering fits](https://www.aon3d.com/applications/engineering-fits-how-to-design-for-3d-printed-assemblies/),
+[Raphael Garcia — Bambu X1C fits](https://www.raphaelgarcia.me/blog/2024/9/9/tolerances-and-fits-in-3d-printing-how-to-get-it-right-with-your-bambu-lab-x1c),
+[3Dnatives P1S test](https://www.3dnatives.com/en/3dnatives-lab-testing-the-bambu-lab-p1s-3d-printer-140920234/),
+[Bambu forum — 0.05 mm gap not resolved with 0.4 nozzle](https://forum.bambulab.com/t/nozzle-size-p1s/40940),
+[Xometry FDM tolerances](https://xometry.pro/en/articles/3d-printing-tolerances/).
+
+---
+
+## 8. Planned experiments
 
 > Run order **randomized** (Sirio has an app for this) and, where possible, **tube wear
 > controlled** — interleave heads or use a fresh tube section per head, because silicone
@@ -147,8 +253,8 @@ slots at the tube midline, spaced across the 180° arc** (the two arc ends = "si
 
 | # | Experiment | Method | n | Output |
 |---|-----------|--------|---|--------|
-| E1 | **Wall thickness `w`** | Cut a cross-section, image under microscope (fallback: micrometer OD → `w = (OD − d)/2`) | ≥3 sections | True `w` + its spread; feeds the model |
-| E2 | **Gap sweep → volume** | Gravimetric: dispense fixed stroke count, weigh, per head; record *measured* gap | 10 / head | Mean µL/stroke vs measured gap; pick best head |
+| E1 | **Wall thickness `w`** ✅ done (2026-06-22) | Microscope (ruler-calibrated) + **caliper OD**, vs ISO/Ismatec standard | 3 wall + OD | **w = 0.91 mm, 2w = 1.82, OD = 2.33** — 3 lines converge; [analysis](../Tube%20OD%20Thikness/tube-wall-thickness-analysis.md); confirms proto-01's w≈0.90 inference |
+| E2 | **Gap sweep → volume** (run **firm→loose**, 1.52→1.62→1.72) | Gravimetric: fixed stroke count, weigh, per head; record *measured* gap | 10 / head | Delivery-vs-gap **hump**; locate the peak (loosest gap that still seals) = operating point |
 | E3 | **Precision (CV)** | Same setup, repeated | 10 / head | CV per head — the pass gate (≤ 5 %) |
 | E4 | **Head-lock repeatability** | Snap head in/out, caliper the gap at the 3 slots each time | 10 reinstalls | Gap drift on reinstall; bowing/asymmetry around arc |
 | E5 | **Back-calculate `k`** | Invert the model from E2 mean volume + E1 `w` + E2 measured gap | — | Effective `k` for this tube (confirm/correct 1.15) |
@@ -160,7 +266,7 @@ leaves the CV estimate too uncertain (~±40 %) to support the thesis claim.
 
 ---
 
-## 8. Morphological analysis — relevance
+## 9. Morphological analysis — relevance
 
 For proto-02 the design is largely **pre-determined by the proto-01 fixes**, so a full
 morphological chart is **not warranted**. The one genuine open choice is the **head-lock
@@ -171,10 +277,17 @@ deferred until the geometry parameters are settled. The morphological method ear
 
 ---
 
-## 9. Open questions / risks
+## 10. Open questions / risks
 
-- **True `w`** — the dominant model unknown (E1 resolves it). `[High leverage]`
-- **Effective `k`** for this specific tube — provisional 1.15, confirmed only by E5. `[Likely OK]`
+- **Seal threshold / leak regime (model limitation).** The displaced-volume model's arc-compensation
+  term only holds *once fully sealed*; below the seal threshold the tube backflows and delivery
+  *drops* as the gap opens (proto-01 lived here — see §6 hump). The model needs a **sealing/leak
+  term** to describe the under-sealed side. proto-01 (leak-limited) + proto-02's firm→loose sweep
+  (through the peak) characterize both regimes — a genuine model-improvement result for the thesis.
+  `[Key finding]`
+- **True `w`** — resolved (E1: w = 0.91 mm). `[Done]`
+- **Effective `k`** for this specific tube — provisional 1.15, confirmed only by E5 (and only on
+  the sealed side of the hump). `[Likely OK]`
 - **Tube wear / hysteresis** confounding the gap sweep if not controlled (interleave or fresh
   sections — see §7). `[Real risk]`
 - **Backing-wall bowing** under clamp load making the gap non-uniform around the arc (E4 detects). `[Possible]`
@@ -188,7 +301,7 @@ deferred until the geometry parameters are settled. The morphological method ear
 
 ---
 
-## 10. Version log
+## 11. Version log
 
 - **v1 (planned, this file)** — corrected N_c = 2 (R ≈ 19.7 mm), 4-head gap sweep
   (1.25/1.45/1.65/1.85 mm) with caliper-access slots, screw-clamp head lock, 0.10 mm fit,
@@ -197,7 +310,7 @@ deferred until the geometry parameters are settled. The morphological method ear
 
 ---
 
-## 11. Test data (forward links → 03. CODING)
+## 12. Test data (forward links → 03. CODING)
 
 - Calibration / gap sweep: `03. CODING/manual-dispense-check/proto-02-5ul-4roller-v2/`
   (to be created once the build is tested).

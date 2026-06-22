@@ -487,7 +487,7 @@
               <div class="proto-card-thumb-ph" aria-hidden="true">design</div>
               <div class="proto-card-tag">Proto 02 · 2026</div>
               <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
-              <p class="proto-card-purpose">The first build meant to work to spec. Fixes the three proto-01 errors and turns the gap into a measured, locked, repeatable quantity via a 4-head gap sweep.</p>
+              <p class="proto-card-purpose">The first build meant to work to spec. Fixes the three proto-01 errors and turns the gap into a measured, locked, repeatable quantity via a firm→loose gap sweep.</p>
               <div class="proto-card-kpi">
                 <span class="kpi-pill">N<sub>c</sub> = 2 · R ≈ 19.7 mm</span>
                 <span class="kpi-pill">target CV ≤ 5 %</span>
@@ -838,10 +838,11 @@
             <tbody>
               <tr><td>Rollers engaged <em>N<sub>c</sub></em></td><td>2</td><td><strong>Fixed</strong> (was 1)</td></tr>
               <tr><td>Rotor radius <em>R</em></td><td>≈ 19.7 mm</td><td><strong>Recomputed</strong> (was 17.70)</td></tr>
-              <tr><td>Gap <em>G</em> — head sweep</td><td>1.25 / 1.45 / 1.65 / 1.85 mm</td><td><strong>New</strong> — 4 interchangeable heads, 0.20 mm steps</td></tr>
+              <tr><td>Gap <em>G</em> — head sweep</td><td>1.52 / 1.62 / 1.72 mm (target installed)</td><td><strong>New</strong> — 3 heads at <em>δ</em> = 0.30/0.20/0.10, tested firm→loose</td></tr>
               <tr><td>Head lock</td><td>screw clamp (provisional)</td><td><strong>New</strong> — easiest to test; final pick deferred</td></tr>
-              <tr><td>Loose-fit tolerance</td><td>0.10 mm</td><td>Tightened (was 0.25), paired with the lock</td></tr>
-              <tr><td>Tube wall <em>w</em></td><td>measure first (~0.85 est.)</td><td>Microscope cross-section before testing</td></tr>
+              <tr><td>Loose-fit tolerance</td><td>0.15–0.20 mm/side</td><td>Sliding fit (was 0.25, briefly 0.10 — too tight for FDM); lock removes play</td></tr>
+              <tr><td>Tube wall <em>w</em></td><td><strong>0.91 mm</strong> (measured)</td><td>Microscope + caliper-OD + ISO/Ismatec standard converge</td></tr>
+              <tr><td>Walls-kiss 2<em>w</em> / OD</td><td>1.82 mm / 2.33 mm</td><td>Measured; sets gap <em>G</em> = 2<em>w</em> − <em>δ</em></td></tr>
               <tr><td>Interference <em>δ</em> (nominal)</td><td>0.20 mm</td><td>Unchanged</td></tr>
               <tr><td>Inflation factor <em>k</em></td><td>1.15 (provisional)</td><td><strong>Hold</strong> — back-calculate from clean data</td></tr>
               <tr><td>Roller count <em>N</em></td><td>4</td><td>Unchanged — discrete-dosing rationale now testable</td></tr>
@@ -858,17 +859,19 @@
 
         <section class="detail-block">
           <h3 class="block-heading">The gap sweep — the key experiment</h3>
-          <p><em>w</em> is uncertain and sets the gap via <em>G</em> = 2<em>w</em> − <em>δ</em>. Rather than bet on one gap, print <strong>4 interchangeable heads</strong> spanning the plausible <em>w</em> range. 0.20 mm steps (not 0.15) because the Bambu P1S prints slot gaps to ~±0.05–0.10 mm — at 0.15 mm two heads can print indistinguishably; at 0.20 mm the model predicts a clear ~0.5 µL separation per step.</p>
+          <p>The sweep tunes the <strong>interference</strong> <em>δ</em> = 2<em>w</em> − <em>G</em> — how far the gap squeezes past the measured walls-kiss (2<em>w</em> = 1.82 mm).</p>
+          <div class="callout callout-warn"><span class="callout-label">Delivery is leak-limited, not arc-limited (key correction from proto-01).</span> The displaced-volume model's arc-compensation term assumes the tube is <em>already fully sealed</em> — it only describes the over-squeezed side. <strong>Below the seal threshold the tube backflows, so a <em>looser</em> gap leaks <em>more</em> and delivers <em>less</em>.</strong> Delivery vs gap is therefore a <strong>hump</strong>: it rises as you tighten (better seal), peaks at the <em>loosest gap that still fully seals</em>, then slowly declines if over-squeezed. proto-01 operated entirely on the leak side — which is why tightening it (the shim) gave more. <strong>The optimum is the top of the hump.</strong></div>
+          <p>So the sweep is run <strong>firm → loose</strong>, hunting the peak:</p>
           <table class="param-table">
-            <thead><tr><th>Head</th><th>Nominal <em>G</em></th><th>Intent (at <em>w</em> ≈ 0.85)</th></tr></thead>
+            <thead><tr><th>Order</th><th><em>δ</em></th><th>Target <em>G</em></th><th>Real expectation</th></tr></thead>
             <tbody>
-              <tr><td>H1</td><td>1.25 mm</td><td>Over-squeeze — high-occlusion sanity point</td></tr>
-              <tr><td>H2</td><td>1.45 mm</td><td>Near design</td></tr>
-              <tr><td>H3</td><td>1.65 mm</td><td>Light squeeze — near walls-kiss</td></tr>
-              <tr><td>H4</td><td>1.85 mm</td><td>At/just past walls-kiss — occlusion → ~0 (model floor check)</td></tr>
+              <tr><td><strong>1st (firm)</strong></td><td>0.30</td><td>1.52 mm</td><td>firmly sealed → real delivery; de-risks "does it pump"</td></tr>
+              <tr><td>2nd</td><td>0.20</td><td>1.62 mm</td><td>looser; if delivery <strong>rises</strong>, peak is here or looser</td></tr>
+              <tr><td>3rd</td><td>0.10</td><td>1.72 mm</td><td>likely <strong>leaks</strong> → delivery drops (≈ proto-01's marginal 1.75)</td></tr>
             </tbody>
           </table>
-          <div class="callout callout-warn"><span class="callout-label">Measure the real gap.</span> Each head gets <strong>3 caliper-access slots at the tube midline, spaced across the 180° arc</strong> (the two arc ends = "sides" + the apex = "top"). This reveals the true installed gap <em>and</em> whether the backing wall <strong>bows</strong> under clamp load. Results are recorded as "measured gap → delivered volume", never as the nominal dimension.</div>
+          <p class="block-note">Read the trend: delivery climbs as you loosen <em>until it doesn't</em> — that turning point is the operating gap. If even 1.52 leaks → go firmer; if 1.72 still climbs → go looser. The fixed rotor (sized at <em>δ</em> = 0.20) makes this a clean single-variable sweep that characterizes <strong>both</strong> regimes.</p>
+          <div class="callout callout-note"><span class="callout-label">Measure the real gap.</span> Each head gets <strong>3 caliper-access slots across the 180° arc</strong> (apex + two sides) → records the true installed gap (never nominal) and reveals any clamp-bow / non-uniformity. The first (firm) head doubles as the <strong>calibration head</strong> for the FDM print offset.</div>
         </section>
 
         <section class="detail-block">
@@ -877,8 +880,8 @@
           <table class="param-table">
             <thead><tr><th>#</th><th>Experiment</th><th>n</th><th>Output</th></tr></thead>
             <tbody>
-              <tr><td>E1</td><td>Wall thickness <em>w</em> — microscope cross-section (fallback micrometer OD)</td><td>≥3</td><td>True <em>w</em> + spread</td></tr>
-              <tr><td>E2</td><td>Gap sweep → volume (gravimetric, record measured gap)</td><td>10 / head</td><td>µL/stroke vs gap; best head</td></tr>
+              <tr><td>E1 ✅</td><td>Wall thickness <em>w</em> — microscope + caliper OD + ISO standard</td><td>3 + OD</td><td><strong>Done: w = 0.91, 2w = 1.82, OD = 2.33</strong></td></tr>
+              <tr><td>E2</td><td>Gap sweep → volume, run <strong>firm→loose</strong> (gravimetric, record measured gap)</td><td>10 / head</td><td>Delivery-vs-gap hump; locate the peak = operating gap</td></tr>
               <tr><td>E3</td><td>Precision (CV)</td><td>10 / head</td><td>CV per head — the pass gate</td></tr>
               <tr><td>E4</td><td>Head-lock repeatability (caliper the 3 slots per reinstall)</td><td>10 reinstalls</td><td>Gap drift; arc bowing/asymmetry</td></tr>
               <tr><td>E5</td><td>Back-calculate <em>k</em> (invert model from E1+E2)</td><td>—</td><td>Effective <em>k</em> for this tube</td></tr>
@@ -891,8 +894,9 @@
         <section class="detail-block">
           <h3 class="block-heading">Open questions / risks</h3>
           <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
-            <li><strong>True <em>w</em></strong> — the dominant model unknown (E1 resolves it).</li>
-            <li><strong>Effective <em>k</em></strong> for this tube — provisional 1.15, confirmed only by E5.</li>
+            <li><strong>Seal threshold / leak regime (model limitation)</strong> — the arc-compensation model only holds once fully sealed; below the threshold the tube leaks and delivery drops as the gap opens (proto-01 lived here). The model needs a sealing/leak term — a genuine thesis finding.</li>
+            <li><strong>True <em>w</em></strong> — resolved (0.91 mm).</li>
+            <li><strong>Effective <em>k</em></strong> for this tube — provisional 1.15, confirmed only by E5 (sealed side only).</li>
             <li><strong>Tube wear / hysteresis</strong> confounding the sweep if order isn't controlled.</li>
             <li><strong>Backing-wall bowing</strong> under clamp load → non-uniform gap around the arc (E4 detects).</li>
             <li><strong>System effects deferred</strong> — downstream backpressure + tubing dead volume will shift calibration in the assembled device; not tested at pump-only stage.</li>
