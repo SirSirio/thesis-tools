@@ -164,13 +164,14 @@
             entry.target.style.setProperty('--thumb-scale', w / 1280);
           }
         });
+        overview.__resizeObserver = observer;
 
         slides.forEach((slide, idx) => {
           const thumb = document.createElement('div');
           thumb.className = 'deck-overview-thumb';
           
-          observer.observe(thumb);
-          
+          // Observer will be attached when overview is shown
+
           // Clone
           const clone = slide.cloneNode(true);
           clone.classList.remove('slide', 'slide--active', 'slide--leaving');
@@ -205,14 +206,25 @@
       overview.hidden = !isHidden;
       if (isHidden) {
         document.body.setAttribute('data-overview', '');
+        if (overview.__resizeObserver) {
+          overview.querySelectorAll('.deck-overview-thumb').forEach(t => overview.__resizeObserver.observe(t));
+        }
       } else {
         document.body.removeAttribute('data-overview');
+        if (overview.__resizeObserver) {
+          overview.__resizeObserver.disconnect();
+        }
       }
     }
     
     function closeOverview() {
       const overview = document.querySelector('.deck-overview');
-      if (overview) overview.hidden = true;
+      if (overview) {
+        overview.hidden = true;
+        if (overview.__resizeObserver) {
+          overview.__resizeObserver.disconnect();
+        }
+      }
       document.body.removeAttribute('data-overview');
     }
     
