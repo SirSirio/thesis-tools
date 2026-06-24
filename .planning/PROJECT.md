@@ -16,6 +16,10 @@ A thesis companion site where each tool is developed on demand — when a design
 
 - ✓ Peristaltic Rotor Geometry Solver — solves rotor radius for target stroke volume, checks 3 feasibility constraints across roller counts 3–12. (Phase 0 / shipped)
 - ✓ Motor & Microstepping Panel — 6 per-row motor columns (contact rollers, steps/stroke, µL/step, torque rim, FoS with traffic light, max step rate), voltage-dependent speed derating, dynamic Time column, RPM card, full EN/IT documentation. (Phase 1 / shipped)
+- ✓ GSD Workflow Guide — Interactive visual diagram of the GSD spec-driven development loop. (Phase 2 / shipped)
+- ✓ Peristaltic Occlusion & Displaced-Volume Model — Two-part mathematical model with interactive SVG and KaTeX formulas. (Phase 3 / shipped)
+- ✓ Prototype Design Space — Animated prototype journey page with hardware details and test results. (Phase 4 / shipped)
+- ✓ HTML Presentation Decks — Reveal-style presentation framework and seed lab meeting deck. (Phase 5 / shipped)
 
 ### Active
 
@@ -68,4 +72,4 @@ A thesis companion site where each tool is developed on demand — when a design
 | Voltage-dependent speed derating on torque/FoS (min(1, f_max/SP)) | DRV8825 chopper can't reach rated current above inductive ceiling; derating makes FoS physically accurate | ✓ Added post-Phase 1 |
 
 ---
-*Last updated: 2026-05-30 after Phase 1 — Motor & Microstepping Panel*
+*Last updated: 2026-06-24 after Phase 5 — HTML Presentation Decks*
