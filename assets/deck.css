@@ -171,14 +171,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  padding: 24px;
   color: var(--text-muted);
-  transition: border-color 0.2s, transform 0.2s;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .deck-overview-thumb:hover {
   border-color: var(--accent);
-  transform: translateY(-4px);
+  transform: translateY(-8px) scale(1.02);
   color: var(--text);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow);
+}
+
+.deck-overview-thumb::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  opacity: 0.6;
 }
 
 body[data-overview] .deck-stage {
