@@ -2,9 +2,13 @@
 
 ## Purpose
 
-Interactive reference page displaying the GSD (Get Shit Done) spec-driven development
+Interactive reference page displaying the GSD ("Git. Ship. Done.") spec-driven development
 workflow as a visual diagram. Demonstrates the discuss → plan → execute loop used to build
 this thesis tools site. Serves as a personal methodology reference and thesis showcase artifact.
+
+Includes an introductory "What is GSD?" section (acronym expansion, context-rot premise,
+five-phase loop) and a link to the official system repository:
+https://github.com/open-gsd/gsd-core
 
 ## Inputs
 

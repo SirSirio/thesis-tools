@@ -36,6 +36,8 @@
     }
     .tool-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; max-width: 700px; }
     .tool-header p + p { margin-top: 10px; font-size: 0.85rem; }
+    .tool-header a { color: var(--accent, #ff6b2b); font-weight: 500; transition: color 0.2s ease; }
+    .tool-header a:hover { color: #ffaa7a; }
 
     /* ── Diagram layout ───────────────────────────── */
     .diagram-layout {
@@ -205,6 +207,8 @@
     }
     .section-body p:last-child { margin-bottom: 0; }
     .section-body strong { color: #d8d0c8; font-weight: 600; }
+    .section-body a { color: var(--accent, #ff6b2b); font-weight: 500; transition: color 0.2s ease; }
+    .section-body a:hover { color: #ffaa7a; }
     .section-body code {
       font-family: monospace; font-size: 0.82em;
       color: var(--accent, #ff6b2b);
@@ -343,9 +347,23 @@
 
   <header class="tool-header animate-in" style="--delay: 0s;">
     <h1>GSD Workflow Guide</h1>
-    <p>Spec-driven development workflow used to build this thesis tools site. Each tool on this site was built using the discuss &rarr; plan &rarr; execute loop below &mdash; locking decisions before planning, planning before building, to keep AI context lean and work reviewable at every step.</p>
+    <p><strong>GSD</strong> (&ldquo;Git. Ship. Done.&rdquo;) is a lightweight spec-driven development system for AI coding agents. It structures work into a repeatable loop so the AI&rsquo;s context stays lean and output quality holds up as a project grows. This guide documents the exact workflow used to build every tool on this site &mdash; see <a href="https://github.com/open-gsd/gsd-core" target="_blank" rel="noopener">github.com/open-gsd/gsd-core</a> for the system itself.</p>
+    <p>Each tool was built using the discuss &rarr; plan &rarr; execute loop below &mdash; locking decisions before planning, planning before building, to keep AI context lean and work reviewable at every step.</p>
     <p>Click any command node to see what it does and the exact slash command to type.</p>
   </header>
+
+  <!-- Expandable: What is GSD? -->
+  <section class="collapsible-section animate-in" style="--delay: 0.12s;">
+    <button class="section-toggle" aria-expanded="false">
+      <span class="section-title">What is GSD?</span>
+      <span class="section-chevron" aria-hidden="true">&#9656;</span>
+    </button>
+    <div class="section-body">
+      <p><strong>GSD</strong> &mdash; &ldquo;Git. Ship. Done.&rdquo; &mdash; is a lightweight meta-prompting, context-engineering, and spec-driven development system for AI coding agents such as Claude Code, GitHub Copilot, and Cursor. Its pitch: <em>&ldquo;Claude Code is powerful. GSD makes it reliable.&rdquo;</em></p>
+      <p>The system is built on one insight: AI output quality rarely degrades from poor planning &mdash; it degrades from <strong>context rot</strong>, the accumulated noise that fills an agent&rsquo;s context window over a long session. GSD fights this by splitting work into a disciplined five-phase loop &mdash; <strong>Discuss &rarr; Plan &rarr; Execute &rarr; Verify &rarr; Ship</strong> &mdash; and pushing the heavy lifting into fresh-context subagents, each starting with a clean ~200k-token budget. The main session stays lean while structured artifacts (<code>STATE.md</code>, <code>CONTEXT.md</code>, <code>PLAN.md</code>) preserve decisions and progress across context resets.</p>
+      <p>Source &amp; full documentation: <a href="https://github.com/open-gsd/gsd-core" target="_blank" rel="noopener">github.com/open-gsd/gsd-core</a>.</p>
+    </div>
+  </section>
 
   <!-- Expandable: About spec-driven development -->
   <section class="collapsible-section animate-in" style="--delay: 0.15s;">
