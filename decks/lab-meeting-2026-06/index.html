@@ -7,13 +7,24 @@
   <link rel="stylesheet" href="../../assets/style.css" />
   <link rel="stylesheet" href="../../assets/deck.css" />
   <style>
-    /* Deck-specific overrides go here */
     .glass {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .auto-fade-text {
+      animation: fadeIn 1s ease forwards;
+    }
+    .auto-fade-iframe {
+      opacity: 0;
+      animation: fadeIn 1s 1.5s ease forwards;
     }
   </style>
 </head>
@@ -33,11 +44,10 @@
         </div>
       </section>
 
-      <!-- 2. CODING-WITH-AI (GSD) -->
       <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 80px;">
-        <h2 class="site-title" style="font-size: 2.8rem;">Accelerating Development with AI</h2>
+        <h2 class="site-title" style="font-size: 2.8rem; margin-bottom: 24px;">Conversational AI accelerates spec-driven development</h2>
         <p style="font-size: 1.4rem; color: var(--text-muted); max-width: 800px; margin-bottom: 40px;">
-          The GSD (Get Sh*t Done) workflow uses a conversational <span style="color: var(--accent);">Discuss &rarr; Plan &rarr; Execute</span> loop to build tools rapidly while preventing context loss.
+          The GSD workflow prevents context loss through a rigorous <span style="color: var(--accent);">Discuss &rarr; Plan &rarr; Execute</span> loop.
         </p>
         <div class="tools-grid fragment">
           <div class="glass" style="flex: 1; padding: 30px;">
@@ -57,10 +67,10 @@
       <section class="slide" style="display: flex; flex-direction: column; height: 100%; padding: 40px;">
         <div style="text-align: center; margin-bottom: 24px;">
           <div class="site-label">Live Tool Embed</div>
-          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Rotor Geometry Solver</h2>
-          <p class="fragment" style="font-size: 0.95rem; color: var(--text-muted);">Fully interactive offline tool driven by mathematical models.</p>
+          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Rotor Solver calculates geometry instantly</h2>
+          <p class="auto-fade-text" style="font-size: 1.1rem; font-weight: bold; color: var(--text-muted);">Fully interactive offline tool driven by mathematical models.</p>
         </div>
-        <div class="iframe-wrapper glass" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
+        <div class="iframe-wrapper glass auto-fade-iframe" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
           <iframe src="../../tools/rotor-solver/index.html" tabindex="-1"></iframe>
           <div class="iframe-overlay" aria-hidden="true"></div>
         </div>
@@ -70,29 +80,62 @@
       <section class="slide" style="display: flex; flex-direction: column; height: 100%; padding: 40px;">
         <div style="text-align: center; margin-bottom: 24px;">
           <div class="site-label">Live Tool Embed</div>
-          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Occlusion &amp; Displaced-Volume</h2>
-          <p class="fragment" style="font-size: 0.95rem; color: var(--text-muted);">Calculating required stroke volume accurately.</p>
+          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Occlusion model predicts displacement</h2>
+          <p class="auto-fade-text" style="font-size: 1.1rem; font-weight: bold; color: var(--text-muted);">Calculating required stroke volume accurately.</p>
         </div>
-        <div class="iframe-wrapper glass" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
+        <div class="iframe-wrapper glass auto-fade-iframe" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
           <iframe src="../../tools/peristaltic-roller-displaced-volume-model/index.html#calculator" tabindex="-1"></iframe>
           <div class="iframe-overlay" aria-hidden="true"></div>
         </div>
       </section>
 
       <!-- 5. proto-01 -->
-      <section class="slide" style="display: flex; align-items: center; padding: 0 60px; gap: 40px;">
-        <div style="flex: 1;">
+      <section class="slide" style="display: flex; align-items: center; padding: 0 40px; gap: 30px;">
+        <div style="flex: 1.2;">
           <div class="site-label">Baseline Build</div>
-          <h2 class="site-title" style="font-size: 2.6rem;">Proto-01 Validation</h2>
-          <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
-            Proving the core fluidic concept and benchmarking our theoretical models against real physical constraints.
-          </p>
-          <div class="fragment glass" style="padding: 20px; border-radius: var(--radius); border-left: 4px solid var(--accent);">
-            <strong style="color: var(--text);">Key Finding:</strong> Theoretical displacement matches physical output within 11% once manual shim occlusion is applied.
-          </div>
+          <h2 class="site-title" style="font-size: 2.2rem; line-height: 1.1; margin-bottom: 24px;">Proto-01 proved the concept but underdelivered</h2>
+          <ul style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; padding-left: 20px;">
+            <li class="fragment" style="margin-bottom: 12px;">Hardware gap was too wide.</li>
+            <li class="fragment" style="margin-bottom: 12px;">Tube required manual shimming.</li>
+            <li class="fragment">Output fell 32% short of target.</li>
+          </ul>
         </div>
-        <div class="fragment" style="flex: 1;">
-          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_Render_Closed.png" alt="Proto-01 Render" style="width: 100%; border-radius: var(--radius); box-shadow: 0 20px 40px rgba(0,0,0,0.5);" />
+        <div class="fragment" style="flex: 1.8; display: flex; flex-direction: column; gap: 20px;">
+          <!-- Reduced Image -->
+          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_Render_Closed.png" alt="Proto-01 Render" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: var(--radius); box-shadow: 0 10px 20px rgba(0,0,0,0.5);" />
+          
+          <!-- RESULTS PORTED FROM PROTOTYPES/INDEX.HTML -->
+          <div class="glass" style="padding: 15px; border-radius: var(--radius);">
+            <div style="font-size: 1rem; margin-bottom: 12px; color: var(--text);">1 mL Open-Loop Calibration</div>
+            <div class="bar-chart" role="img" style="font-size: 0.8rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Commanded</span><span>1000 µL</span></div>
+              <div style="background: #333; height: 20px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background: #666; width: 100%; height: 100%;"></div>
+              </div>
+              
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span style="color:var(--accent);">Gravimetric (Ref)</span><span style="color:var(--accent); font-weight:bold;">678 µL</span></div>
+              <div style="background: #333; height: 20px; margin-bottom: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+                <div style="background: var(--accent); width: 67.8%; height: 100%;"></div>
+                <div style="position: absolute; right: 8px; top: 0; line-height: 20px; color: #fff; font-weight: bold; font-size: 0.75rem;">CV 4.5%</div>
+              </div>
+              
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Flow Sensor</span><span>600 µL</span></div>
+              <div style="background: #333; height: 20px; margin-bottom: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+                <div style="background: #844; width: 60.0%; height: 100%;"></div>
+                <div style="position: absolute; right: 8px; top: 0; line-height: 20px; color: #fff; font-weight: bold; font-size: 0.75rem;">CV 17.6%</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <div style="flex: 1; text-align: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                <div style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">3.39 µL</div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">per stroke</div>
+              </div>
+              <div style="flex: 1; text-align: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                <div style="font-size: 1.4rem; font-weight: bold; color: var(--accent);">−32.2%</div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">under-dispense</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -100,16 +143,15 @@
       <section class="slide" style="display: flex; flex-direction: row-reverse; align-items: center; padding: 0 60px; gap: 40px;">
         <div style="flex: 1;">
           <div class="site-label">Iteration</div>
-          <h2 class="site-title" style="font-size: 2.6rem;">Gap-Sweep Approach</h2>
-          <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6;">
-            Moving from manual shimming to precision tolerance. We mapped three distinct head geometries to empirically locate the optimal occlusion seal peak.
-          </p>
-          <p class="fragment" style="margin-top: 16px; font-size: 1.1rem; color: var(--accent);">
-            A systematic characterization to lock in the absolute gap and guarantee repeatability.
-          </p>
+          <h2 class="site-title" style="font-size: 2.6rem; line-height: 1.1; margin-bottom: 24px;">Gap-sweep approach maps the optimal seal</h2>
+          <ul style="font-size: 1.4rem; color: var(--text-muted); line-height: 1.6; padding-left: 20px;">
+            <li class="fragment" style="margin-bottom: 15px;">Manual shims are unpredictable.</li>
+            <li class="fragment" style="margin-bottom: 15px;">Mapped 3 distinct geometries.</li>
+            <li class="fragment">Empirically locks in the absolute gap.</li>
+          </ul>
         </div>
         <div class="fragment" style="flex: 1; text-align: center;">
-          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_Geometry_Diagram.png" alt="Geometry Map" style="width: 85%; border-radius: var(--radius); filter: invert(0.9) hue-rotate(180deg); opacity: 0.85; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
+          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_Real_Open.jpg" alt="Pump Head" style="width: 100%; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
         </div>
       </section>
 
