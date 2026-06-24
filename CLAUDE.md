@@ -13,7 +13,16 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 ```
 /
 ├── index.html              Landing page — links to all tools
-├── assets/style.css        Shared stylesheet — imported by every page
+├── assets/
+│   ├── style.css           Shared stylesheet — imported by every page
+│   ├── deck.css            Shared deck runtime (styles/transitions) — D-01 exception
+│   └── deck.js             Shared deck runtime (state machine) — D-01 exception
+├── decks/
+│   ├── index.html              Presentations index — card deal-out magic
+│   └── <slug>/
+│       ├── index.html          Slide deck HTML (flat <section class="slide"> sequence)
+│       ├── SPEC.md             Deck spec — runtime structure, embedded tools, assumptions
+│       └── assets/             Local deck assets (e.g., screenshots of external apps)
 ├── tools/
 │   ├── rotor-solver/
 │   │   ├── index.html      Peristaltic Rotor Geometry Solver
@@ -104,7 +113,7 @@ tools/<tool-name>/
 
 **Rules:**
 - Tool-specific constants and formulas live in `SPEC.md` and inline in the tool's `<script>` — **not** in shared files
-- The only shared resource between tools is `assets/style.css`
+- The only shared resources between pages are `assets/style.css` and the presentation deck runtime (`assets/deck.css`, `assets/deck.js` — a sanctioned D-01 exception for reuse across one-shot decks)
 - `SPEC.md` is the canonical reference; `.planning/phases/` context files point to it
 - Keep `SPEC.md` in sync when formulas or constants change
 
@@ -114,8 +123,8 @@ tools/<tool-name>/
 
 - No CDN-only dependencies — any external resource needs a local fallback
 - No horizontal scroll on any page — table columns must wrap headers before adding scroll
-- All calculation logic lives in inline `<script>` tags in the tool's `index.html`
-- Tool-specific styles go in a `<style>` block inside the tool's HTML; shared styles go in `assets/style.css`
+- All calculation logic lives in inline `<script>` tags in the tool's `index.html` (except for the deck runtime exception)
+- Tool-specific styles go in a `<style>` block inside the tool's HTML; shared styles go in `assets/style.css` and `assets/deck.css`
 
 ---
 
