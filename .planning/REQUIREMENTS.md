@@ -36,6 +36,12 @@
 
 ## v2 Requirements
 
+### HTML Presentation Decks
+
+- [x] **SC-1**: A shared deck runtime (`deck.css`, `deck.js`) exists and provides scale-to-fit letterbox staging, fragment stepping, hash routing, and reduced-motion guards.
+- [x] **SC-2**: A Presentations Index page exists at `decks/index.html` with a card-deck deal-out animation.
+- [x] **SC-3**: The seed lab-meeting deck is fully implemented at `decks/lab-meeting-2026-06/index.html` and embeds live tool iframes.
+
 ### Backlog Tools (no spec yet)
 
 - **BACKLOG-01**: Flow sensor calibration curve viewer
@@ -72,12 +78,15 @@
 | GSD-02 | Phase 2 | Planning |
 | GSD-03 | Phase 2 | Planning |
 | GSD-04 | Phase 2 | Planning |
+| SC-1 | Phase 5 | Complete |
+| SC-2 | Phase 5 | Complete |
+| SC-3 | Phase 5 | Complete |
 
 **Coverage:**
 
-- v1 requirements: 13 total
+- v1 requirements: 16 total
 - Shipped: 5 (LANG-01–05)
-- Complete: 4 (MOTOR-01–04, Phase 1)
+- Complete: 7 (MOTOR-01–04, SC-1–3)
 - Active: 4 (GSD-01–04, Phase 2)
 - Unmapped: 0
 

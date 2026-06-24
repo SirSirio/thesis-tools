@@ -1,5 +1,5 @@
 ---
-status: gaps_found
+status: human_needed
 ---
 
 # Phase 05 Verification: HTML Presentation Decks
@@ -20,7 +20,7 @@ The overarching phase goal to "Build a reveal-style HTML slide system on the too
 
 ## Identified Gaps
 
-1. **Requirements Tracking Gap:** Requirement IDs `SC-1`, `SC-2`, `SC-3` are tracked as completed in the PLAN frontmatters (`05-*-PLAN.md`). However, these Success Criteria IDs have NOT been added to `.planning/REQUIREMENTS.md`. The requirements traceability matrix must be updated to formally track the deck system requirements.
+1. ~~**Requirements Tracking Gap:** Requirement IDs `SC-1`, `SC-2`, `SC-3` are tracked as completed in the PLAN frontmatters (`05-*-PLAN.md`). However, these Success Criteria IDs have NOT been added to `.planning/REQUIREMENTS.md`. The requirements traceability matrix must be updated to formally track the deck system requirements.~~ *(Resolved by orchestrator: SC-1, SC-2, SC-3 added to `REQUIREMENTS.md`)*
 
 ## Manual / Human Testing Steps
 
