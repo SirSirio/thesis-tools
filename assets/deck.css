@@ -1,0 +1,228 @@
+/* ── Deck Tokens ────────────────────────────────────────────── */
+:root {
+  --deck-w: 1280px;
+  --deck-h: 720px;
+  --slide-transition: 0.4s ease;
+  --fragment-transition: 0.35s ease;
+}
+
+/* ── Stage Layout ───────────────────────────────────────────── */
+.deck-viewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck-stage {
+  width: var(--deck-w);
+  height: var(--deck-h);
+  transform-origin: top left;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Slide Visibility ───────────────────────────────────────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--slide-transition);
+  color: var(--text);
+}
+
+.slide--active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide--leaving {
+  opacity: 0;
+}
+
+.slide-title {
+  color: var(--accent);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Fragments ──────────────────────────────────────────────── */
+.fragment {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--fragment-transition), transform var(--fragment-transition);
+}
+
+.fragment[data-fragment-revealed] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── HUD ────────────────────────────────────────────────────── */
+.deck-hud {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  z-index: 100;
+  transition: opacity 0.3s ease;
+}
+
+.hud-idle {
+  opacity: 0.3;
+}
+.deck-hud:hover {
+  opacity: 1;
+}
+
+.deck-progress {
+  width: 100px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.deck-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.deck-counter {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.deck-arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.deck-arrow {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.deck-arrow:hover {
+  color: var(--accent);
+}
+
+/* ── Persistent Back Link ───────────────────────────────────── */
+.deck-back-link {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  z-index: 100;
+  transition: opacity 0.2s ease;
+}
+.deck-back-link:hover {
+  opacity: 0.75;
+}
+
+/* ── Overview Grid ──────────────────────────────────────────── */
+.deck-overview {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 12, 0.95);
+  backdrop-filter: blur(12px);
+  z-index: 200;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.deck-overview[hidden] {
+  display: none;
+}
+
+.deck-overview-thumb {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.deck-overview-thumb:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  color: var(--text);
+}
+
+body[data-overview] .deck-stage {
+  filter: brightness(0.5);
+}
+
+/* ── iframe Panel ───────────────────────────────────────────── */
+.iframe-wrapper {
+  width: 70%;
+  height: 70%;
+  margin: 0 auto;
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.iframe-overlay {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05); /* faint hint */
+  transition: background 0.2s;
+}
+
+.iframe-overlay:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body[data-demo-active] .iframe-overlay {
+  display: none;
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .slide, .fragment {
+    transition: none;
+  }
+}
