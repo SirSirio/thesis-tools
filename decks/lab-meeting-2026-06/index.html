@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Meeting Jun 2026 — Thesis Tools</title>
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/deck.css" />
+  <style>
+    /* Deck-specific overrides go here */
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <div class="deck-stage" tabindex="0">
+      
+      <!-- 1. TITLE slide -->
+      <section class="slide slide--active">
+        <h1 class="slide-title">Lab Meeting — June 2026</h1>
+        <p>Author: Sirio Vittorio Feltrin</p>
+        <p>Date: June 2026</p>
+        <p>Agenda: GSD workflow, Designing with AI, proto-01, proto-02, Test-Campaign App</p>
+      </section>
+
+      <!-- 2. CODING-WITH-AI (GSD) -->
+      <section class="slide">
+        <h2 class="slide-title">Coding with AI: GSD</h2>
+        <p>GSD (Get Sh*t Done) is a lightweight spec-driven development system.</p>
+        <ul>
+          <li class="fragment">Discuss &rarr; Plan &rarr; Execute loop</li>
+          <li class="fragment">Prevents context rot by splitting work</li>
+          <li class="fragment"><a href="../../tools/gsd-workflow-guide/index.html">GSD Workflow Guide</a></li>
+        </ul>
+      </section>
+
+      <!-- TASK 2: rotor-solver iframe slide here -->
+      <!-- TASK 2: displaced-volume-model iframe slide here -->
+
+      <!-- 6. proto-01 -->
+      <section class="slide">
+        <h2 class="slide-title">proto-01: 5 µL 4-roller baseline</h2>
+        <p>Purpose: Prove the concept, validate the model, learn before next cycle.</p>
+        <ul>
+          <li class="fragment">Target 5.0 µL/stroke, 4 rollers, design interference δ = 0.20 mm</li>
+          <li class="fragment">Issue: Gap was 1.75 mm (no natural occlusion); needed paper shim (δ_eff ≈ 0.6–0.8 mm)</li>
+          <li class="fragment">Measured result: ≈3.4 µL/stroke (gravimetric), −32% error</li>
+          <li class="fragment">Finding: Model predicts the shimmed result within ~11%</li>
+        </ul>
+      </section>
+
+      <!-- 7. proto-02 -->
+      <section class="slide">
+        <h2 class="slide-title">proto-02: Gap-Sweep Redesign</h2>
+        <p>Correction &amp; characterization build to hit spec and lock the gap.</p>
+        <ul>
+          <li class="fragment">Corrected N_c = 2 (Rotor R: 17.7 &rarr; 19.7 mm)</li>
+          <li class="fragment">Measured gap sweep: 1.52 / 1.62 / 1.72 mm to locate the seal peak</li>
+          <li class="fragment">Head lock: Screw clamp + 0.15–0.20 mm sliding fit for repeatability</li>
+          <li class="fragment">Tests: Determine true tube wall (w) and inflation factor (k)</li>
+        </ul>
+      </section>
+
+      <!-- 8. TEST-CAMPAIGN APP -->
+      <section class="slide">
+        <h2 class="slide-title">Automated Test-Campaign App</h2>
+        <div style="text-align: center;">
+          <!-- Presenter: drop captured screenshots/recording (e.g., test-campaign.png) into the assets/ folder -->
+          <img src="assets/test-campaign.png" alt="Test-Campaign App Interface" style="max-width: 80%; border-radius: 8px; border: 1px solid var(--glass-border);" />
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <a class="deck-back-link" href="../../decks/index.html">← Presentations</a>
+
+  <script src="../../assets/deck.js"></script>
+</body>
+</html>
