@@ -8,6 +8,13 @@
   <link rel="stylesheet" href="../../assets/deck.css" />
   <style>
     /* Deck-specific overrides go here */
+    .glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
   </style>
 </head>
 <body>
@@ -15,74 +22,107 @@
     <div class="deck-stage" tabindex="0">
       
       <!-- 1. TITLE slide -->
-      <section class="slide slide--active">
-        <h1 class="slide-title">Lab Meeting — June 2026</h1>
-        <p>Author: Sirio Vittorio Feltrin</p>
-        <p>Date: June 2026</p>
-        <p>Agenda: GSD workflow, Designing with AI, proto-01, proto-02, Test-Campaign App</p>
+      <section class="slide slide--active" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <div class="glass" style="padding: 60px; border-radius: var(--radius); border: 1px solid var(--glass-border);">
+          <div class="site-label">June 2026</div>
+          <h1 class="site-title" style="margin-bottom: 12px;">Thesis Lab Meeting</h1>
+          <p class="site-author" style="font-size: 1.2rem;">Sirio Vittorio Feltrin</p>
+          <div style="margin-top: 32px; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">
+            GSD Workflow &nbsp;|&nbsp; Design Tools &nbsp;|&nbsp; proto-01 &nbsp;|&nbsp; proto-02
+          </div>
+        </div>
       </section>
 
       <!-- 2. CODING-WITH-AI (GSD) -->
-      <section class="slide">
-        <h2 class="slide-title">Coding with AI: GSD</h2>
-        <p>GSD (Get Sh*t Done) is a lightweight spec-driven development system.</p>
-        <ul>
-          <li class="fragment">Discuss &rarr; Plan &rarr; Execute loop</li>
-          <li class="fragment">Prevents context rot by splitting work</li>
-          <li class="fragment"><a href="../../tools/gsd-workflow-guide/index.html">GSD Workflow Guide</a></li>
-        </ul>
+      <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 80px;">
+        <h2 class="site-title" style="font-size: 2.8rem;">Accelerating Development with AI</h2>
+        <p style="font-size: 1.4rem; color: var(--text-muted); max-width: 800px; margin-bottom: 40px;">
+          The GSD (Get Sh*t Done) workflow uses a conversational <span style="color: var(--accent);">Discuss &rarr; Plan &rarr; Execute</span> loop to build tools rapidly while preventing context loss.
+        </p>
+        <div class="tools-grid fragment">
+          <div class="glass" style="flex: 1; padding: 30px;">
+            <div class="card-icon" style="font-size: 2rem; margin-bottom: 12px;">⚡</div>
+            <div class="card-title" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">Spec-Driven Focus</div>
+            <div class="card-desc" style="color: var(--text-muted);">Keeps AI execution strictly bounded to one problem at a time.</div>
+          </div>
+          <div class="glass" style="flex: 1; padding: 30px;">
+            <div class="card-icon" style="font-size: 2rem; margin-bottom: 12px;">🔗</div>
+            <div class="card-title" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">Living Documentation</div>
+            <div class="card-desc" style="color: var(--text-muted);">State and roadmap files naturally evolve alongside the codebase.</div>
+          </div>
+        </div>
       </section>
 
       <!-- 3. Rotor Solver -->
-      <section class="slide">
-        <h2 class="slide-title">Designing with AI: Rotor Geometry Solver</h2>
-        <p class="fragment" style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">This is the real tool, always in sync.</p>
-        <div class="iframe-wrapper">
+      <section class="slide" style="display: flex; flex-direction: column; height: 100%; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div class="site-label">Live Tool Embed</div>
+          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Rotor Geometry Solver</h2>
+          <p class="fragment" style="font-size: 0.95rem; color: var(--text-muted);">Fully interactive offline tool driven by mathematical models.</p>
+        </div>
+        <div class="iframe-wrapper glass" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
           <iframe src="../../tools/rotor-solver/index.html" tabindex="-1"></iframe>
           <div class="iframe-overlay" aria-hidden="true"></div>
         </div>
       </section>
 
       <!-- 4. Displaced-Volume Model -->
-      <section class="slide">
-        <h2 class="slide-title">Designing with AI: Occlusion &amp; Displaced-Volume Model</h2>
-        <p class="fragment" style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">This is the real tool, always in sync.</p>
-        <div class="iframe-wrapper">
+      <section class="slide" style="display: flex; flex-direction: column; height: 100%; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div class="site-label">Live Tool Embed</div>
+          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Occlusion &amp; Displaced-Volume</h2>
+          <p class="fragment" style="font-size: 0.95rem; color: var(--text-muted);">Calculating required stroke volume accurately.</p>
+        </div>
+        <div class="iframe-wrapper glass" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
           <iframe src="../../tools/peristaltic-roller-displaced-volume-model/index.html#calculator" tabindex="-1"></iframe>
           <div class="iframe-overlay" aria-hidden="true"></div>
         </div>
       </section>
 
-      <!-- 6. proto-01 -->
-      <section class="slide">
-        <h2 class="slide-title">proto-01: 5 µL 4-roller baseline</h2>
-        <p>Purpose: Prove the concept, validate the model, learn before next cycle.</p>
-        <ul>
-          <li class="fragment">Target 5.0 µL/stroke, 4 rollers, design interference δ = 0.20 mm</li>
-          <li class="fragment">Issue: Gap was 1.75 mm (no natural occlusion); needed paper shim (δ_eff ≈ 0.6–0.8 mm)</li>
-          <li class="fragment">Measured result: ≈3.4 µL/stroke (gravimetric), −32% error</li>
-          <li class="fragment">Finding: Model predicts the shimmed result within ~11%</li>
-        </ul>
+      <!-- 5. proto-01 -->
+      <section class="slide" style="display: flex; align-items: center; padding: 0 60px; gap: 40px;">
+        <div style="flex: 1;">
+          <div class="site-label">Baseline Build</div>
+          <h2 class="site-title" style="font-size: 2.6rem;">Proto-01 Validation</h2>
+          <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+            Proving the core fluidic concept and benchmarking our theoretical models against real physical constraints.
+          </p>
+          <div class="fragment glass" style="padding: 20px; border-radius: var(--radius); border-left: 4px solid var(--accent);">
+            <strong style="color: var(--text);">Key Finding:</strong> Theoretical displacement matches physical output within 11% once manual shim occlusion is applied.
+          </div>
+        </div>
+        <div class="fragment" style="flex: 1;">
+          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_Render_Closed.png" alt="Proto-01 Render" style="width: 100%; border-radius: var(--radius); box-shadow: 0 20px 40px rgba(0,0,0,0.5);" />
+        </div>
       </section>
 
-      <!-- 7. proto-02 -->
-      <section class="slide">
-        <h2 class="slide-title">proto-02: Gap-Sweep Redesign</h2>
-        <p>Correction &amp; characterization build to hit spec and lock the gap.</p>
-        <ul>
-          <li class="fragment">Corrected N_c = 2 (Rotor R: 17.7 &rarr; 19.7 mm)</li>
-          <li class="fragment">Measured gap sweep: 1.52 / 1.62 / 1.72 mm to locate the seal peak</li>
-          <li class="fragment">Head lock: Screw clamp + 0.15–0.20 mm sliding fit for repeatability</li>
-          <li class="fragment">Tests: Determine true tube wall (w) and inflation factor (k)</li>
-        </ul>
+      <!-- 6. proto-02 -->
+      <section class="slide" style="display: flex; flex-direction: row-reverse; align-items: center; padding: 0 60px; gap: 40px;">
+        <div style="flex: 1;">
+          <div class="site-label">Iteration</div>
+          <h2 class="site-title" style="font-size: 2.6rem;">Gap-Sweep Approach</h2>
+          <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6;">
+            Moving from manual shimming to precision tolerance. We mapped three distinct head geometries to empirically locate the optimal occlusion seal peak.
+          </p>
+          <p class="fragment" style="margin-top: 16px; font-size: 1.1rem; color: var(--accent);">
+            A systematic characterization to lock in the absolute gap and guarantee repeatability.
+          </p>
+        </div>
+        <div class="fragment" style="flex: 1; text-align: center;">
+          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_Geometry_Diagram.png" alt="Geometry Map" style="width: 85%; border-radius: var(--radius); filter: invert(0.9) hue-rotate(180deg); opacity: 0.85; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
+        </div>
       </section>
 
-      <!-- 8. TEST-CAMPAIGN APP -->
-      <section class="slide">
-        <h2 class="slide-title">Automated Test-Campaign App</h2>
-        <div style="text-align: center;">
-          <!-- Presenter: drop captured screenshots/recording (e.g., test-campaign.png) into the assets/ folder -->
-          <img src="assets/test-campaign.png" alt="Test-Campaign App Interface" style="max-width: 80%; border-radius: 8px; border: 1px solid var(--glass-border);" />
+      <!-- 7. TEST-CAMPAIGN APP -->
+      <section class="slide" style="display: flex; flex-direction: column; align-items: center; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 class="site-title" style="font-size: 2.6rem;">Automated Test Campaigns</h2>
+          <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 0 auto;">
+            Closing the loop between physical hardware and digital telemetry using integrated test electronics.
+          </p>
+        </div>
+        <div class="fragment glass" style="width: 80%; flex: 1; border-radius: var(--radius); overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; background: #000; padding: 10px;">
+          <img src="../../prototypes/proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Test Setup" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: calc(var(--radius) - 10px);" />
         </div>
       </section>
 
