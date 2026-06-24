@@ -17,7 +17,10 @@
       const scale = Math.min(scaleX, scaleY);
       const tx = (window.innerWidth - 1280 * scale) / 2;
       const ty = (window.innerHeight - 720 * scale) / 2;
-      stage.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+      stage.style.position = 'absolute';
+      stage.style.left = '0px';
+      stage.style.top = '0px';
+      stage.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
     }
     window.addEventListener('resize', fitStage);
     fitStage();
@@ -134,8 +137,24 @@
     
     // 5. Overview Grid
     function toggleOverview() {
-      const overview = document.querySelector('.deck-overview');
-      if (!overview) return;
+      let overview = document.querySelector('.deck-overview');
+      if (!overview) {
+        overview = document.createElement('div');
+        overview.className = 'deck-overview';
+        overview.hidden = true;
+        slides.forEach((slide, idx) => {
+          const thumb = document.createElement('div');
+          thumb.className = 'deck-overview-thumb';
+          const heading = slide.querySelector('h1, h2, .slide-title');
+          thumb.textContent = heading ? heading.textContent : `Slide ${idx + 1}`;
+          thumb.addEventListener('click', () => {
+            goToSlide(idx);
+            closeOverview();
+          });
+          overview.appendChild(thumb);
+        });
+        document.body.appendChild(overview);
+      }
       const isHidden = overview.hidden;
       overview.hidden = !isHidden;
       if (isHidden) {
@@ -208,13 +227,15 @@
       if (document.body.hasAttribute('data-demo-active')) {
         if (e.key === 'Escape') {
           deactivateIframe();
+          e.preventDefault();
           e.stopPropagation();
         }
         return;
       }
       
-      if (e.key === 'Escape' && document.body.hasAttribute('data-overview')) {
-        closeOverview();
+      if (e.key === 'Escape') {
+        toggleOverview();
+        e.preventDefault();
         return;
       }
       
