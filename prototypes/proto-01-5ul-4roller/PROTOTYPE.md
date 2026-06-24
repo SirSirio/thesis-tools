@@ -38,6 +38,31 @@ pass acceptance.
 
 ---
 
+## 1a. Parts & assembly — the physical build
+
+Five components: four printed parts, the roller bearings, and the tube. **proto-02 reuses the
+same set** (edited, not redesigned), so this is the canonical parts description for the whole
+pump line.
+
+| # | Part | What it is / does |
+|---|------|-------------------|
+| 1 | **NEMA17 motor holder** | L-bracket. A central bore passes the motor shaft (motor bolts to the back). The top edge carries **dovetail-female channels** that guide the pump head straight **down** to a **hard stop** — the stop fixes seat depth and keeps the head off the rotor. Base feet with slots for mounting. |
+| 2 | **Rotor** — RotorMain + RotorCover | A disk on the motor shaft (keyed shaft hole). Holds the rollers in **4 pockets at 90°**; RotorCover caps them in (M3 screws join the two halves). The radius to the **bearing outer surface** is the working roller radius `R`. |
+| 3 | **Roller bearings — 8 × MR105ZZ** (10 mm OD) | **Two bearings stacked per roller position** (4 positions × 2 = **8 total**). A single MR105ZZ is not wide enough to span the tube contact, so they are doubled up for width. Radius is unchanged (`R_r` = 5 mm). |
+| 4 | **Pump head** | Carries the **semicircular 180° occlusion wall**. Slides down the holder's dovetail and bottoms on the hard stop. The arch wraps the **top** ~180° of the rotor; the tube routes up and **over the top**. |
+| — | **Tube** | **Masterflex** 2-stop microbore (Puri-Clear LL, 0.51 mm ID), bought through **Darwin Microfluidics** (the reseller — see §3). Squeezed between rollers and wall. |
+
+**How it works.** Motor on the holder → shaft through the bore → rotor on the shaft with its 8
+bearings (4 roller positions) → pump head slides down the dovetail over the **top** of the rotor
+and bottoms on the hard stop → tube threaded into the gap. The motor spins the rotor; the rollers
+sweep the top 180° arc, each pressing the tube against the wall → peristaltic delivery.
+
+> **proto-01-specific:** there was **no head lock** (the head had to be held down by hand) and
+> **no way to measure the installed gap** — only the nominal CAD value was known (see §5a). Both
+> are fixed in proto-02.
+
+---
+
 ## 2. Nomenclature — every symbol used below
 
 | Symbol | Meaning | Value (proto-01) | Unit |
@@ -45,7 +70,7 @@ pass acceptance.
 | `d` | Tube **inner** diameter (the lumen that carries liquid) | 0.51 | mm |
 | `w` | Tube **wall** thickness (one wall) | 0.85 *(estimated)* | mm |
 | `A` | Lumen cross-section area `= π(d/2)²` | 0.2043 | mm² |
-| `R_r` | Roller radius (MR105ZZ bearing, 10 mm OD) | 5.0 | mm |
+| `R_r` | Roller radius (MR105ZZ bearing, 10 mm OD — 2 stacked per roller, 8 total) | 5.0 | mm |
 | `δ` (delta) | Radial **interference** — how far the roller closes *past* the point where the walls first touch. Higher δ = harder squeeze. | 0.20 *(design)* | mm |
 | `k` | **Inflation factor** — empirical correction (>1) because a real tube contacts over a longer length than the ideal-geometry prediction (Klespitz & Kovács 2022) | 1.15 | — |
 | `G` | **Printed gap** between roller surface and the backing wall `= 2w − δ` | see §5 | mm |
@@ -77,16 +102,17 @@ pass acceptance.
 | Rollers engaged `N_c` **(as entered)** | **1** ← *should have been 2* | Mistake — a 180° arc with 4 rollers always has 2 engaged |
 | Tube inner diameter `d` | 0.51 mm | Smallest 2-stop microbore giving a workable rotor size |
 | Tube wall `w` | 0.85 mm *(estimated — see §8)* | From a **similar** tube (online) + caliper check; exact model wall not published |
-| Roller bearing | MR105ZZ, 10 mm OD (`R_r` = 5 mm) | Small standard shielded bearing → compact rotor |
+| Roller bearings | 8 × MR105ZZ, 10 mm OD (`R_r` = 5 mm) — **2 stacked per roller** | A single bearing isn't wide enough to span the tube → doubled for contact width. Compact standard shielded bearing → small rotor |
 | Interference `δ` (design) | 0.20 mm | Mid of the 10–20 % × 2w occlusion band |
 | Inflation factor `k` | 1.15 | Compliant-tube correction (Klespitz & Kovács 2022) |
 | Rotor radius `R` (as built) | 17.70 mm | Rotor solver output (carries the `N_c`=1 error) |
-| Printed gap `G` (as built) | **1.75 mm** ← *should have been ≈1.50 mm* | CAD design — tool's gap not carried into CAD (see §5) |
+| Designed gap `G` (CAD) | **1.75 mm** ← *should have been ≈1.50 mm* | **Nominal only — proto-01 had no way to measure the installed gap.** Tool's gap not carried into CAD (see §5) |
 | Loose-fit tolerance (pump-head slot) | 0.25 mm | Too loose → head wobble |
 | Steps per stroke (firmware) | 50 (200 steps/rev ÷ 4 rollers) | `manual_dispense.cpp` |
 
-> **Tube:** [Darwin Microfluidics 2-stop Puri-Clear LL](https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12)
-> (0.51 mm ID), platinum-cured silicone microbore.
+> **Tube:** a **Masterflex** 2-stop microbore (Puri-Clear LL, 0.51 mm ID), platinum-cured silicone,
+> bought through [Darwin Microfluidics](https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12)
+> — **Darwin is the reseller, the tube is Masterflex.**
 
 ### 3a. Key design decision — why 4 rollers
 
@@ -208,6 +234,13 @@ design, **the rollers never occluded the tube at all** (effective δ ≈ −0.05
 This is the second error, and it is independent of the `N_c` error — I simply did
 not follow the tool's gap prescription.
 
+> **Important — the gap was never measured.** 1.75 mm is the **nominal CAD** value;
+> proto-01 had **no caliper access / no measurement slots**, so the *installed* gap is
+> **unknown**. It can only be **inferred**: with no shim the tube was not squeezed and
+> delivered **nothing**, which means the real gap was **≥ the walls-kiss 2w** (and so
+> **≥ the nominal**, almost certainly larger). proto-02 adds caliper-access slots precisely
+> to remove this blind spot.
+
 > **Honest note for the report:** I did not transfer the tool's `G = 1.50 mm`
 > output into the CAD gap; I used 1.75 mm. Combined with the `N_c` mistake, this is
 > a *workflow* failure (not reading my own tool's output back into the model),
@@ -313,9 +346,12 @@ and it is **the hardest to pin down**:
 - That estimate was then **checked with a caliper**, which roughly confirmed it —
   though the reading is unreliable because the soft tube compresses under the jaws.
 
-That the pump delivered *anything* before reliable shimming hints `w` may be
-slightly **above** 0.85 mm (if `w` ≈ 0.90, then `2w` = 1.80 > 1.75 gap → marginal
-occlusion existed). **For proto-02, measure `w` properly** — *preferred: cut a
+Without any shim the pump delivered **nothing** — consistent with the actual gap being
+**≥ 2w** (no occlusion). The hint that `w` may be **above** 0.85 mm comes instead from how
+*little* shim was needed to start delivery, and is since confirmed by the proto-02 microscope
+measurement (`w` = 0.91 mm). Note the installed gap was never measured on proto-01 (only the
+nominal 1.75 mm), so it cannot be combined with `2w` to claim "marginal occlusion" — the
+no-delivery result simply says the real gap was too wide. **For proto-02, measure `w` properly** — *preferred: cut a
 cross-section and image it under the microscope* (a micrometer on the OD, then
 `w = (OD − d)/2`, is the fallback if one is available). This wall-thickness
 uncertainty belongs in the report as a **known model limitation**: a critical input

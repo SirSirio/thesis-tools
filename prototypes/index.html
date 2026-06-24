@@ -484,14 +484,14 @@
 
           <div class="proto-node" id="node-proto-02">
             <button class="proto-card" data-proto="proto-02">
-              <div class="proto-card-thumb-ph" aria-hidden="true">design</div>
+              <div class="proto-card-thumb-ph" aria-hidden="true">2.1 built</div>
               <div class="proto-card-tag">Proto 02 · 2026</div>
               <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
-              <p class="proto-card-purpose">The first build meant to work to spec. Fixes the three proto-01 errors and turns the gap into a measured, locked, repeatable quantity via a firm→loose gap sweep.</p>
+              <p class="proto-card-purpose">The first build meant to work to spec. Build 2.1 is printed and measured: occlusion stays partial from two stacked geometry errors — a slightly small rotor and a head seated ~0.45 mm too high. Redesign to 2.2 underway.</p>
               <div class="proto-card-kpi">
-                <span class="kpi-pill">N<sub>c</sub> = 2 · R ≈ 19.7 mm</span>
-                <span class="kpi-pill">target CV ≤ 5 %</span>
-                <span class="kpi-pill">in design</span>
+                <span class="kpi-pill kpi-warn">2.1 · partial occlusion</span>
+                <span class="kpi-pill">2R 39.04 → R 19.52</span>
+                <span class="kpi-pill">redesign → 2.2</span>
               </div>
               <span class="proto-card-cta">Explore →</span>
             </button>
@@ -553,6 +553,22 @@
           <p style="margin-top:14px">On all three it delivered: it pumps, the model predicts the messy reality to ~11 %, and it exposed three concrete, fixable design errors.</p>
         </section>
 
+        <section class="detail-block">
+          <h3 class="block-heading">Parts &amp; assembly — the physical build</h3>
+          <p class="block-note">Five components: four printed parts, the roller bearings, and the tube. <strong>proto-02 reuses the same set</strong> (edited, not redesigned) — so this is the canonical parts description for the whole pump line.</p>
+          <table class="param-table">
+            <thead><tr><th>Part</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td><strong>NEMA17 motor holder</strong></td><td>L-bracket; a central bore passes the motor shaft (motor bolts to the back). The top edge has <strong>dovetail-female channels</strong> that guide the pump head straight down to a <strong>hard stop</strong> — the stop fixes seat depth and keeps the head off the rotor.</td></tr>
+              <tr><td><strong>Rotor</strong> (Main + Cover)</td><td>Disk on the shaft (keyed hole) holding the rollers in <strong>4 pockets at 90°</strong>; the cover caps them in. The radius to the <strong>bearing outer surface</strong> is the working roller radius <em>R</em>.</td></tr>
+              <tr><td><strong>Roller bearings — 8 × MR105ZZ</strong></td><td><strong>Two stacked per roller position</strong> (4 × 2 = 8). A single MR105ZZ (10 mm OD) isn't wide enough to span the tube, so they're doubled for contact width; radius <em>R<sub>r</sub></em> = 5 mm unchanged.</td></tr>
+              <tr><td><strong>Pump head</strong></td><td>Carries the semicircular <strong>180° occlusion wall</strong>; slides down the dovetail and bottoms on the hard stop. The arch wraps the <strong>top</strong> of the rotor — the tube routes up and over the top.</td></tr>
+              <tr><td><strong>Tube</strong></td><td><strong>Masterflex</strong> 2-stop microbore (Puri-Clear LL, 0.51 mm ID), bought through <a class="tool-link" href="https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12" target="_blank" rel="noopener">Darwin Microfluidics</a> — the reseller; the tube itself is Masterflex.</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-note"><span class="callout-label">How it works.</span> Motor → shaft through the bore → rotor with its 8 bearings → pump head drops down the dovetail over the <strong>top</strong> of the rotor and bottoms on the stop → tube in the gap. The rotor spins; the rollers sweep the top 180° arc, each pressing the tube against the wall → peristaltic delivery. <strong>proto-01-specific:</strong> no head lock (it had to be held by hand) and <strong>no way to measure the installed gap</strong> — only the nominal CAD value was known.</div>
+        </section>
+
         <figure class="detail-figure">
           <div class="figure-grid">
             <figure>
@@ -582,17 +598,17 @@
               <tr><td>Rollers engaged <em>N<sub>c</sub></em> (entered)</td><td>1&nbsp;⚠</td><td>Mistake — a 180° arc with 4 rollers always has 2 engaged</td></tr>
               <tr><td>Tube inner diameter <em>d</em></td><td>0.51 mm</td><td>Smallest 2-stop microbore that gives a workable rotor size</td></tr>
               <tr><td>Tube wall <em>w</em></td><td>0.85 mm (est.)</td><td>From a similar tube (online) + caliper check — see below</td></tr>
-              <tr><td>Roller bearing</td><td>MR105ZZ, 10 mm OD (<em>R<sub>r</sub></em> = 5 mm)</td><td>Small standard shielded bearing → compact rotor</td></tr>
+              <tr><td>Roller bearings</td><td>8 × MR105ZZ, 10 mm OD (<em>R<sub>r</sub></em> = 5 mm) — 2 stacked/roller</td><td>A single bearing isn't wide enough to span the tube → doubled for width</td></tr>
               <tr><td>Interference <em>δ</em> (design)</td><td>0.20 mm</td><td>Mid of the 10–20 % × 2<em>w</em> occlusion band</td></tr>
               <tr><td>Inflation factor <em>k</em></td><td>1.15</td><td>Compliant-tube correction (Klespitz &amp; Kovács 2022)</td></tr>
               <tr><td>Rotor radius <em>R</em> (built)</td><td>17.70 mm</td><td>Solver output (carries the <em>N<sub>c</sub></em>=1 error)</td></tr>
-              <tr><td>Printed gap <em>G</em> (built)</td><td>1.75 mm&nbsp;⚠</td><td>Should have been ≈1.50 mm — see below</td></tr>
+              <tr><td>Designed gap <em>G</em> (CAD)</td><td>1.75 mm&nbsp;⚠</td><td>Nominal only — never measured (no caliper access); should have been ≈1.50 mm</td></tr>
               <tr><td>Loose-fit tolerance</td><td>0.25 mm&nbsp;⚠</td><td>Too loose → head wobble</td></tr>
               <tr><td>Steps / stroke (firmware)</td><td>50</td><td>200 steps/rev ÷ 4 rollers</td></tr>
             </tbody>
           </table>
 
-          <p class="block-note" style="margin-top:8px">The tube is a <a class="tool-link" href="https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12" target="_blank" rel="noopener">Darwin Microfluidics 2-stop Puri-Clear LL</a> (0.51 mm ID), platinum-cured silicone microbore.</p>
+          <p class="block-note" style="margin-top:8px">The tube is a <strong>Masterflex</strong> 2-stop Puri-Clear LL (0.51 mm ID), platinum-cured silicone microbore, bought through <a class="tool-link" href="https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12" target="_blank" rel="noopener">Darwin Microfluidics</a> (the reseller).</p>
 
           <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Key decision — why 4 rollers</h4>
           <p>Selected over higher counts despite continuous-flow practice (Cole-Parmer, Ismatec) recommending 8–10 rollers for low-flow accuracy below 5 mL/min. The distinction is <strong>operational mode</strong>: those recommendations target continuous metering, where more rollers reduce <em>pulsation</em>. This system does <strong>discrete stop-start aliquot dosing</strong>, where each roller hand-off (one releasing as the next engages) is an <em>error event</em> at the stop. Fewer rollers → fewer hand-offs per dispense → fewer stop-event errors — the opposite of the continuous-flow heuristic. A 4-roller pump completes ~one hand-off where an 8-roller pump completes ~two.</p>
@@ -641,7 +657,7 @@
 
         <section class="detail-block">
           <h3 class="block-heading">What actually happened in the hardware</h3>
-          <p><strong>The gap was wrong — the tube was never occluded.</strong> The displaced-volume tool prescribes the gap as <em>G</em> = 2<em>w</em> − <em>δ</em> = 1.50 mm. The part was instead built at <strong>1.75 mm</strong>. The tube only fully closes once the gap drops below the "walls-kiss" point, <em>G</em> = 2<em>w</em> = 1.70 mm. Since 1.75 mm &gt; 1.70 mm, <strong>the rollers never squeezed the tube shut at all</strong> — by design — so the pump could not move liquid. This is independent of the <em>N<sub>c</sub></em> error: the tool's gap output simply was not carried into the CAD.</p>
+          <p><strong>The gap was wrong — the tube was never occluded.</strong> The displaced-volume tool prescribes the gap as <em>G</em> = 2<em>w</em> − <em>δ</em> = 1.50 mm. The part was instead designed at <strong>1.75 mm</strong> (nominal CAD — proto-01 had <strong>no way to measure the installed gap</strong>). The tube only fully closes once the gap drops below the "walls-kiss" point, <em>G</em> = 2<em>w</em> = 1.70 mm. Since the nominal 1.75 mm &gt; 1.70 mm — and with no shim the tube was not squeezed and delivered nothing, so the <em>real</em> gap was inferably ≥ 2<em>w</em> too — <strong>the rollers never squeezed the tube shut</strong>. This is independent of the <em>N<sub>c</sub></em> error: the tool's gap output simply was not carried into the CAD.</p>
           <p style="margin-top:12px"><strong>The paper-shim fix.</strong> To make it run, paper was folded into the groove so the tube sat proud and the rollers could reach it. Measuring the folded paper with a caliper (itself hard — it compresses): ≈1.0–1.1 mm light, ≈0.85 mm firm, ≈0.78 mm very hard. That raised the tube by ~0.8–1.1 mm, turning the effective gap into roughly 0.9–1.1 mm — an <em>effective</em> interference <em>δ<sub>eff</sub></em> ≈ 0.6–0.8 mm, a heavy over-squeeze. The actual delivery is measured next; the model is then checked against it.</p>
         </section>
 
@@ -798,7 +814,7 @@
           <h2 class="detail-title">5 µL 4-roller peristaltic — corrected geometry + gap sweep</h2>
         </div>
 
-        <div class="callout callout-note"><span class="callout-label">Status: in design.</span> Not yet built or tested. This page holds the agreed purpose, design parameters, and planned experiments; results sections will be filled once the build is measured.</div>
+        <div class="callout callout-warn"><span class="callout-label">Status: build 2.1 printed &amp; measured — not yet pumped.</span> The firm head (nominal gap 1.52 mm) and a reprinted rotor were measured against the reused proto-01 holder. Occlusion is only partial — two stacked geometry errors (see <strong>Build 2.1</strong> at the bottom). The design sections below remain the plan; the gap-sweep experiments run once 2.2 seals.</div>
 
         <section class="detail-block">
           <h3 class="block-heading">Purpose</h3>
@@ -810,6 +826,22 @@
             <li><strong>Pin down <em>w</em> and <em>k</em></strong> — measure the tube wall before testing; back-calculate the inflation factor from clean post-fix data (proto-01 confounded two error sources).</li>
             <li><strong>Understand gravimetric vs flow</strong> — with a solid build, investigate <em>why</em> the weighed mass reads higher than the integrated flow sensor.</li>
           </ul>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Parts &amp; assembly — what changed from proto-01</h3>
+          <p class="block-note">Four printed parts + 8 bearings + the tube. The full part-by-part breakdown and how it assembles lives in <strong>Proto 01</strong> (same set, reused) — proto-02 edits them as follows.</p>
+          <table class="param-table">
+            <thead><tr><th>Part</th><th>Change from proto-01</th></tr></thead>
+            <tbody>
+              <tr><td><strong>NEMA17 motor holder</strong></td><td><strong>Unchanged — reused as the fixed reference / datum</strong> (not reprinted).</td></tr>
+              <tr><td><strong>Rotor</strong> (Main + Cover)</td><td>Radius <em>R</em> recomputed <strong>17.7 → 19.7 mm</strong> (N<sub>c</sub> fix). <em>Planned for 2.2:</em> tighter bearing pockets + PLA-shrink compensation.</td></tr>
+              <tr><td><strong>Bearings</strong> (8 × MR105ZZ, 2/roller)</td><td>Unchanged.</td></tr>
+              <tr><td><strong>Pump head</strong></td><td><strong>Gap-sweep heads</strong> 1.52 / 1.62 / 1.72 mm; <strong>caliper-access slots</strong> added to read the installed gap; <strong>screw-clamp lock</strong> added; sliding fit 0.15–0.20 mm/side.</td></tr>
+              <tr><td><strong>Tube</strong> (Masterflex, via Darwin reseller)</td><td>Unchanged; wall <em>w</em> now <strong>measured</strong> 0.91 mm (was estimated 0.85).</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-note"><span class="callout-label">The one datum that matters: the shaft.</span> It locates every part and can't be moved, so all geometry is referenced to the shaft centre. <strong>Installed gap = wall radius − R</strong>, and it should be <strong>uniform around the arc</strong> (wall concentric with the shaft). Non-uniformity means the wall isn't centred — the lens for reading Build 2.1.</div>
         </section>
 
         <section class="detail-block">
@@ -860,7 +892,33 @@
         <section class="detail-block">
           <h3 class="block-heading">The gap sweep — the key experiment</h3>
           <p>The sweep tunes the <strong>interference</strong> <em>δ</em> = 2<em>w</em> − <em>G</em> — how far the gap squeezes past the measured walls-kiss (2<em>w</em> = 1.82 mm).</p>
-          <div class="callout callout-warn"><span class="callout-label">Delivery is leak-limited, not arc-limited (key correction from proto-01).</span> The displaced-volume model's arc-compensation term assumes the tube is <em>already fully sealed</em> — it only describes the over-squeezed side. <strong>Below the seal threshold the tube backflows, so a <em>looser</em> gap leaks <em>more</em> and delivers <em>less</em>.</strong> Delivery vs gap is therefore a <strong>hump</strong>: it rises as you tighten (better seal), peaks at the <em>loosest gap that still fully seals</em>, then slowly declines if over-squeezed. proto-01 operated entirely on the leak side — which is why tightening it (the shim) gave more. <strong>The optimum is the top of the hump.</strong></div>
+          <div class="callout callout-warn"><span class="callout-label">Delivery is leak-limited, not arc-limited (key correction from proto-01).</span> The displaced-volume model's arc-compensation term assumes the tube is <em>already fully sealed</em> — it only describes the over-squeezed side. <strong>Below the seal threshold the tube backflows, so a <em>looser</em> gap leaks <em>more</em> and delivers <em>less</em>.</strong> Delivery vs gap is therefore a <strong>hump</strong>: rising as you tighten (better seal), peaking at the <em>loosest gap that still fully seals</em>, then slowly declining if over-squeezed. <strong>The optimum is the top of the hump</strong> — and proto-02's job is to find it.</div>
+
+          <figure class="detail-figure">
+            <svg viewBox="0 0 560 280" role="img" aria-label="Delivery-versus-gap hump curve, with the two proto-01 operating points" style="width:100%;height:auto;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:var(--radius);font-family:var(--font);">
+              <!-- axes -->
+              <line x1="70" y1="28" x2="70" y2="232" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+              <line x1="62" y1="232" x2="532" y2="232" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+              <text x="64" y="22" fill="#7a7068" font-size="12">delivery</text>
+              <text x="530" y="252" fill="#7a7068" font-size="12" text-anchor="end">looser gap →</text>
+              <text x="80" y="252" fill="#7a7068" font-size="12">← tighter</text>
+              <!-- region labels -->
+              <text x="165" y="222" fill="#7a7068" font-size="11" text-anchor="middle">over-squeezed (sealed)</text>
+              <text x="445" y="140" fill="#7a7068" font-size="11" text-anchor="middle">leak zone</text>
+              <!-- hump curve -->
+              <path d="M 95 152 C 180 96, 250 72, 300 70 C 360 68, 435 178, 505 214" fill="none" stroke="#ff6b2b" stroke-width="3" stroke-linecap="round"/>
+              <!-- seal-point peak -->
+              <circle cx="300" cy="70" r="5" fill="#ff6b2b"/>
+              <text x="300" y="54" fill="#f0ece8" font-size="12" font-weight="600" text-anchor="middle">seal point — max delivery (proto-02 target)</text>
+              <!-- proto-01 + shim (over-squeezed, left of peak) -->
+              <circle cx="112" cy="145" r="5" fill="#e83535"/>
+              <text x="122" y="135" fill="#e83535" font-size="11.5">proto-01 + shim ≈ 3.4 µL</text>
+              <!-- proto-01 no shim (leak, far right) -->
+              <circle cx="495" cy="210" r="5" fill="#e83535"/>
+              <text x="487" y="200" fill="#e83535" font-size="11.5" text-anchor="end">proto-01, no shim ≈ 0</text>
+            </svg>
+            <figcaption>Delivery vs gap is a hump. proto-01 never sat at the peak: with <strong>no shim</strong> the gap was far too loose → leak zone, ≈ 0 delivered; with the <strong>hand shim</strong> it overshot into the over-squeezed zone → ≈ 3.4 µL, below the peak. proto-02 sweeps firm→loose to find the peak between them.</figcaption>
+          </figure>
           <p>So the sweep is run <strong>firm → loose</strong>, hunting the peak:</p>
           <table class="param-table">
             <thead><tr><th>Order</th><th><em>δ</em></th><th>Target <em>G</em></th><th>Real expectation</th></tr></thead>
@@ -892,6 +950,33 @@
         </section>
 
         <section class="detail-block">
+          <h3 class="block-heading">Tube wall thickness — measurement &amp; analysis</h3>
+          <p class="block-note">The gap is defined by <em>G = 2w − δ</em>, making the wall thickness <em>w</em> the highest-leverage input. Three independent lines of measurement were used to converge on a reliable value:</p>
+          <table class="param-table">
+            <thead><tr><th>Source</th><th><em>w</em></th><th><em>2w</em></th><th>OD</th></tr></thead>
+            <tbody>
+              <tr><td>Microscopy (ruler-calibrated)</td><td>0.896 mm</td><td>1.79 mm</td><td>2.30 mm</td></tr>
+              <tr><td><strong>Caliper (physical OD)</strong></td><td><strong>0.91 mm</strong></td><td><strong>1.82 mm</strong></td><td><strong>2.33 mm</strong></td></tr>
+              <tr><td><strong>ISO / manufacturer standard</strong></td><td><strong>0.91 mm</strong></td><td><strong>1.82 mm</strong></td><td><strong>2.33 mm</strong></td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-good"><span class="callout-label">Adopted result.</span> <strong>w = 0.91 mm · 2w = 1.82 mm · OD = 2.33 mm.</strong> The caliper reading and the ISO standard match exactly, and the optical microscopy corroborates within ~1.5 %.</div>
+          
+          <figure class="detail-figure">
+            <div class="figure-grid">
+              <figure>
+                <img src="Tube%20OD%20Thikness/Ruler.png" alt="Ruler calibration — 1 mm interval reads 976 px" />
+                <figcaption>Calibration: 1 mm interval reads 976 px → 976 px/mm</figcaption>
+              </figure>
+              <figure>
+                <img src="Tube%20OD%20Thikness/Wall%20Thikness.png" alt="Three radial wall measurements" />
+                <figcaption>Wall thickness: Mean 0.896 mm, CV 0.7 %</figcaption>
+              </figure>
+            </div>
+          </figure>
+        </section>
+
+        <section class="detail-block">
           <h3 class="block-heading">Open questions / risks</h3>
           <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
             <li><strong>Seal threshold / leak regime (model limitation)</strong> — the arc-compensation model only holds once fully sealed; below the threshold the tube leaks and delivery drops as the gap opens (proto-01 lived here). The model needs a sealing/leak term — a genuine thesis finding.</li>
@@ -902,6 +987,72 @@
             <li><strong>System effects deferred</strong> — downstream backpressure + tubing dead volume will shift calibration in the assembled device; not tested at pump-only stage.</li>
             <li><strong>Ambition note</strong> — at 5 µL, ±10 % = ±0.5 µL, which a single stroke won't hit open-loop; small commanded volumes rely on stroke-count averaging. State explicitly in the thesis.</li>
           </ul>
+        </section>
+
+        <section class="detail-block">
+          <h3 class="block-heading">Build 2.1 — first print, measurements &amp; diagnosis</h3>
+          <p class="block-note">First print of the <strong>firm head</strong> (nominal gap 1.52 mm) plus a reprinted rotor, measured against the reused proto-01 holder. Built and measured — <strong>not yet pumped</strong>. The design gap 1.52 is a <em>nominal − nominal</em> figure (wall radius 21.22 − R 19.70); what governs occlusion is the <strong>printed, installed gap measured from the shaft</strong>.</p>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-value">39.04 mm</div>
+              <div class="stat-label">bearing–bearing (2R) measured → R = 19.52 · nominal 39.4 / 19.70</div>
+            </div>
+            <div class="stat-card stat-warn">
+              <div class="stat-value">~0.45 mm</div>
+              <div class="stat-label">head seated too high → wall not concentric with shaft</div>
+            </div>
+            <div class="stat-card stat-warn">
+              <div class="stat-value">apex open</div>
+              <div class="stat-label">top gap &gt; 2 mm → no occlusion → partial delivery</div>
+            </div>
+          </div>
+
+          <p class="block-note" style="margin-top:8px"><strong>Measurements (firm head).</strong> 2R is the precise anchor; the shaft→wall radii are the soft numbers (curved features, ±0.1+). The caliper-access holes get enlarged for 2.2 so the wall reads directly.</p>
+          <table class="param-table">
+            <thead><tr><th>Quantity</th><th>Nominal</th><th>Measured</th><th>Confidence</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Bearing–bearing (2R)</strong></td><td>39.4</td><td><strong>39.04</strong> (39.05 / 39.03)</td><td>High — easy, precise</td></tr>
+              <tr><td>→ Roller radius <em>R</em></td><td>19.70</td><td><strong>19.52</strong></td><td>High</td></tr>
+              <tr><td>Shaft → wall, apex (top)</td><td>21.22</td><td>21.74</td><td>Low — curved (±0.1+)</td></tr>
+              <tr><td>Shaft → wall, 0° / 180°</td><td>21.22</td><td>21.34 / 21.23</td><td>Low</td></tr>
+              <tr><td>Holder dovetail-female → shaft</td><td>—</td><td>25.72</td><td>±0.05–0.1</td></tr>
+              <tr><td>Dovetail hard-stop height from base</td><td>64.44</td><td>64.52</td><td>±~0.05</td></tr>
+            </tbody>
+          </table>
+
+          <p class="block-note" style="margin-top:8px"><strong>Installed gap = wall radius − R</strong> (with R = 19.52):</p>
+          <table class="param-table">
+            <thead><tr><th>Position</th><th>Gap</th><th>δ = 2w − G (2w = 1.82)</th><th>State</th></tr></thead>
+            <tbody>
+              <tr><td>Apex (top)</td><td><strong>2.22</strong></td><td>−0.40</td><td><strong>open — no occlusion</strong></td></tr>
+              <tr><td>0° left</td><td>1.82</td><td>0.00</td><td>knife-edge</td></tr>
+              <tr><td>180° right</td><td>1.71</td><td>+0.11</td><td>marginal seal</td></tr>
+            </tbody>
+          </table>
+          <p class="block-note">Two methods — caliper from the shaft centre vs an object probed into the gap — disagree ~0.2 mm on the absolute side gap but <strong>agree the apex is ~0.4–0.5 mm more open than the sides</strong>, so the relative apex-opening is the robust finding.</p>
+
+          <div class="callout callout-warn"><span class="callout-label">Two stacked causes.</span> <strong>(1) Rotor 2R undersized ~0.36 mm</strong> (R short ~0.18/side) → every gap ~0.18 mm too big, uniformly — from PLA shrink <em>plus</em> bearing-pocket play (which also makes R wander, a direct CV source). <strong>(2) Head seated ~0.45 mm too high</strong> → wall not concentric → the apex blows open. Only 0.08 mm of that is the dovetail stop printing high (64.52 vs 64.44); ~0.37 mm is an unexplained CAD/seat offset. <strong>Both must be fixed</strong> — centring the head alone, with the rotor still small, gives ≈ 1.77 mm uniform → δ ≈ 0.05 → barely seals.</div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">→ Changes for 2.2</h4>
+          <div class="next-brief">
+            <h4>Rotor (fix first — it sets the datum)</h4>
+            <ul>
+              <li>Tighten the <strong>bearing pockets</strong> — less play pushes 2R back up <em>and</em> lowers σ<sub>G</sub> (a precision fix, not just sizing).</li>
+              <li><strong>PLA-shrink compensation</strong> so 2R returns to ~39.4 (R → 19.7), restoring the datum — the existing head radii then stay correct as-designed. Shrink scales with size → <strong>scale the model, don't add a fixed offset</strong>. The observed 0.36 mm = 0.91 % deficit is an <em>upper bound</em> (part is bearing play): tighten pockets first, then bracket the rotor at <strong>+0.4 / +0.6 / +0.8 %</strong> XY scale and pick the one landing 2R at 39.4 — or measure a calibration coupon for the factor directly. Don't apply the full 0.91 % <em>and</em> tighten pockets, or you'll overshoot.</li>
+            </ul>
+            <h4>Head</h4>
+            <ul>
+              <li><strong>Centre the wall on the shaft</strong> — close the ~0.45 mm too-high (resolve the CAD/seat offset) so the gap is uniform around the arc.</li>
+              <li><strong>Enlarge the caliper-access holes</strong> so the installed wall radius reads directly.</li>
+            </ul>
+            <h4>Sequence &amp; notes</h4>
+            <ul>
+              <li>Fix + reprint + <strong>re-measure the rotor first</strong>, then build and centre the head against the corrected R — the two fixes are naturally sequential, not simultaneous.</li>
+              <li>R 19.52 vs 19.70 slightly lowers swept volume/stroke — fine, volume is calibrated by step count once it seals.</li>
+            </ul>
+          </div>
+          <p class="block-note" style="margin-top:12px">Parked for the thesis report (after 2.1): an FDM-vs-resin printer comparison (Bambu P1S vs Prusa SL1S SPEED) and a PLA-shrinkage note (typical 0.2–0.5 %; ~1 % is high-end).</p>
         </section>
       </div>
 

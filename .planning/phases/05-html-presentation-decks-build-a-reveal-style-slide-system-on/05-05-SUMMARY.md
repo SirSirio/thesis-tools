@@ -11,5 +11,7 @@
   - Reorganized slide layouts using Flexbox for proper scaling and modern side-by-side structures.
 
 ## Outcomes
+- **Content Overhauled**: The engineering narrative from Proto-1 and Proto-2 has been accurately injected into the slides (including the custom SVG hump curve for gap-sweep).
+- **Live Thumbnails**: Overview mode now generates perfect live, scaled DOM clones of the slides and integrates directly with the site's styling and page structure.
 - The entire `05-HUMAN-UAT.md` gap report is fully addressed.
 - The presentation suite is now fully ready to deliver premium offline visual experiences via the `assets/deck.js` engine.

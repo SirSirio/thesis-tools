@@ -2,9 +2,9 @@
 id: proto-02
 slug: proto-02-5ul-4roller-v2
 title: Prototype 2 — 5 µL 4-roller peristaltic (corrected geometry + gap sweep)
-status: design-in-progress
+status: 2.1-built-redesign-pending
 created: 2026-06-17
-updated: 2026-06-17
+updated: 2026-06-24
 ---
 
 # Prototype 2 — 5 µL 4-roller peristaltic (corrected geometry + gap sweep)
@@ -19,6 +19,27 @@ factor `k`.
 > **This is a correction-and-characterization build, not an open research question.** The
 > design space is largely fixed by the proto-01 diagnosis; the work is executing the fixes
 > cleanly and measuring carefully.
+
+---
+
+## 0. Parts & assembly — what changed from proto-01
+
+The pump is **four printed parts + 8 bearings + the tube**. For the full breakdown of each part
+and how the pump assembles, see **[proto-01 §1a](../proto-01-5ul-4roller/PROTOTYPE.md)** — the same
+set carries over. proto-02 **edits** them as follows:
+
+| Part | Change from proto-01 |
+|------|----------------------|
+| **NEMA17 motor holder** | **Unchanged — reused as the fixed reference / datum** (not reprinted; see §11.5). |
+| **Rotor** (Main + Cover) | Radius `R` recomputed **17.7 → 19.7 mm** (N_c fix, §5). **Planned for 2.2:** tighter bearing pockets + PLA-shrink compensation (§11.4–11.6). |
+| **Bearings** (8 × MR105ZZ, 2 stacked per roller) | Unchanged. |
+| **Pump head** | **Gap-sweep heads** 1.52 / 1.62 / 1.72 mm (§6); **caliper-access slots** added to read the installed gap; **screw-clamp lock** added; sliding fit 0.15–0.20 mm/side. |
+| **Tube** (Masterflex, via Darwin reseller) | Unchanged; wall `w` now **measured** 0.91 mm (was estimated 0.85). |
+
+**The one datum that matters: the shaft.** It locates every part and cannot be moved, so **all
+geometry is referenced to the shaft centre.** **Installed gap = wall radius − `R`**, which should be
+**uniform around the arc** (wall concentric with the shaft). Non-uniformity means the wall is not
+centred on the shaft — the lens for reading the proto-2.1 measurements in §11.
 
 ---
 
@@ -127,16 +148,20 @@ it only describes the **over-squeezed** side. **Below the seal threshold the tub
 *looser* gap leaks *more* → delivers *less*.** So delivery vs gap is a **hump**, not a line:
 
 ```
-delivery ▲        ╭─●─╮   ← peak = loosest gap that still fully SEALS
-         │      ╱      ╲____   over-squeezed: slow decline (arc loss + deformation)
-         │    ╱  LEAK zone: looser = more backflow = LESS delivery
-         └────────────────────► looser gap →
+delivery ▲        ╭──●──╮
+         │       ╱        ╲___        ● peak = loosest gap that still SEALS
+         │      ╱ over-       ╲___       (proto-02 target)
+         │   (squeezed)          leak zone — looser → backflow → less
+         └──────────────────────────────► looser gap →
+   proto-01:   +shim ≈3.4 µL ↑ (over-squeezed)      no-shim ≈0 ↑ (leaks)
 ```
 
-proto-01 operated **entirely on the leak (left) side** — which is exactly why tightening it (the
-shim) gave *more*, and any looser gap gave *less*. **The optimum is the top of the hump: the
-loosest gap that still fully seals** (max delivery, least over-squeeze and wear). The arc-compensation
-model is only meaningful *right* of the peak.
+proto-01 had **two states, neither at the peak**: with **no shim** the gap was far too loose →
+deep in the **leak zone**, delivering **nothing**; with the **hand-folded shim** it **overshot**
+into the **over-squeezed** zone (δ_eff ≈ 0.6–0.8) → it sealed and delivered, but only ≈3.4 µL,
+*below* the peak (arc lost to deformation). **The optimum sits between them: the loosest gap that
+still fully seals** (max delivery, least over-squeeze and wear). The arc-compensation model is only
+meaningful on the **over-squeezed side** of the peak.
 
 ### The sweep is run FIRM → LOOSE, hunting the peak
 
@@ -301,16 +326,137 @@ deferred until the geometry parameters are settled. The morphological method ear
 
 ---
 
-## 11. Version log
+## 11. Build 2.1 — first print, measurements & diagnosis
 
-- **v1 (planned, this file)** — corrected N_c = 2 (R ≈ 19.7 mm), 4-head gap sweep
-  (1.25/1.45/1.65/1.85 mm) with caliper-access slots, screw-clamp head lock, 0.10 mm fit,
-  tube-retention fixes, 1/4-step firmware. Targets: mean ~5 µL *known*, CV ≤ 5 %. Design
-  in progress; not yet built or tested.
+> **Status:** built (firm head, nominal gap 1.52 mm) and measured; **not yet pumped.**
+> Reprinted the **rotor** and **pump head**; reused the proto-01 **motor holder**. Occlusion is
+> only partial — the diagnosis below explains why and sets the 2.2 changes.
+
+### 11.1 Nominal vs measured — the framing
+The design gap **1.52 mm is a nominal − nominal construct** (nominal wall radius 21.22 − nominal
+`R` 19.70). It is a valid per-part design figure, but **what governs occlusion is the
+printed-and-installed gap**, measured from the shaft (§0). The job of 2.1 was to measure that real
+gap and explain the partial occlusion.
+
+### 11.2 Measurements (firm head)
+| Quantity | Nominal | Measured | Confidence |
+|----------|---------|----------|------------|
+| **Bearing–bearing (2R)** | 39.4 | **39.04** (39.05 / 39.03, two diameters) | **High** — easy, precise |
+| → Roller radius `R` (= 2R/2) | 19.70 | **19.52** | High |
+| Pump-head bore Ø (at the sides) | 42.44 | 42.33 | Caliper ±0.01; part ±~0.1 |
+| Shaft centre → wall, **apex (top)** | 21.22 | 21.74 | **Low** — curved, hard to place (±0.1+) |
+| Shaft centre → wall, 0° (left) | 21.22 | 21.34 | Low |
+| Shaft centre → wall, 180° (right) | 21.22 | 21.23 | Low |
+| Probe-object gap, sides | — | ~1.55 (1.55 object fits, tiny wobble) | Fair |
+| Probe-object gap, apex | — | > 2.0 | Fair |
+| Holder dovetail-female → shaft centre | — | 25.72 (an earlier read gave 26.00) | ±0.05–0.1 |
+| Dovetail hard-stop height from base | 64.44 | 64.52 | ±~0.05 |
+
+> Every caliper reading carries ≥0.01 mm instrument uncertainty; **curved / awkward features (the
+> wall radii especially) are worse, ±0.1+.** The **2R measure is the trustworthy anchor**; the wall
+> radii are the soft numbers. **Action for 2.2:** enlarge the caliper-access holes so the caliper
+> reaches the wall directly.
+
+### 11.3 Gaps implied (gap = wall radius − `R`, with `R` = 19.52)
+| Position | Gap | δ = 2w − G (2w = 1.82) | State |
+|----------|-----|------------------------|-------|
+| Apex (top) | **2.22** | −0.40 | **open — no occlusion** |
+| 0° left | **1.82** | 0.00 | knife-edge |
+| 180° right | **1.71** | +0.11 | marginal seal |
+
+The two methods (caliper-from-centre vs object-probe) **disagree on the absolute side gap by
+~0.2 mm** (probe → ~1.55; caliper → 1.7–1.8) but **agree the apex is ~0.4–0.5 mm more open than the
+sides.** So the **relative** apex-opening is the robust finding; treat the absolute gap as ±0.15
+until the 2.2 holes allow a clean read.
+
+### 11.4 Diagnosis — two stacked causes
+1. **Rotor 2R undersized ~0.36 mm (`R` short ~0.18/side) → every gap ~0.18 mm too big, uniformly.**
+   Causes: PLA shrink (0.3–0.5 % on 39.4 ≈ 0.12–0.20 mm) **+ bearing-pocket play** letting the
+   bearings nest inward. The play also makes `R` vary per roller and per reseat → a **direct CV
+   (σ_G) source**, so tightening the pockets is a precision fix, not only a sizing one.
+2. **Pump head seated ~0.45 mm too high → wall not concentric with the shaft → apex (top) blown
+   open.** Fitting a circle to the three wall radii gives bore radius ρ ≈ 21.29 and a vertical
+   offset ≈ 0.45 mm (the shaft sits *below* the bore centre). Only **0.08 mm** of that is the
+   dovetail hard-stop being high (64.52 vs 64.44); the remaining **~0.37 mm is unexplained** —
+   either incomplete seating or a **CAD offset** between the dovetail stop and the bore centre.
+   **To pin it:** compare the measured holder dovetail-to-shaft (25.72) against the head's CAD
+   `dovetail-stop → bore-centre`; whatever fails to put the bore centre on the shaft axis is the
+   offset to remove.
+
+> **Both causes must be fixed.** Centring the head alone, with the rotor still small, gives a uniform
+> gap ≈ ρ − `R` = 21.29 − 19.52 ≈ **1.77 mm → δ ≈ 0.05 → barely seals.** Fixing only one leaves it
+> leaking.
+
+### 11.5 Decisions for 2.2
+- **Fix the rotor (chosen).** Tighten the bearing pockets (less play → 2R back up *and* lower σ_G)
+  and add **PLA shrink compensation** so 2R returns to ~39.4 (`R` → 19.7). This restores the design
+  datum and yields the **nominal → actual compensation factor**. With `R` back at 19.7 the existing
+  head wall radii are correct as-designed — no head-radius redesign needed.
+- **Centre the head on the shaft.** Resolve the ~0.45 mm too-high (close the CAD/seat offset) so the
+  wall is concentric and the gap uniform around the arc.
+- **Sequence, not simultaneous.** Fix + reprint + **re-measure the rotor first** (it defines the
+  datum), *then* build and centre the head against the corrected rotor. The two fixes are naturally
+  sequential — head geometry depends on the final `R`.
+- **Enlarge the caliper-access holes** so the installed wall radius reads directly in 2.2.
+- **Volume side-effect (flag only):** `R` = 19.52 vs 19.70 means a slightly shorter roller circle →
+  slightly less swept volume/stroke than the model assumes. Fine — the spec calibrates volume by
+  step count. Occlusion first, volume recalibration after it seals.
+
+> **Parked for the thesis report (after 2.1):** an FDM-vs-resin printer comparison (Bambu P1S vs
+> Prusa SL1S SPEED) and a PLA-shrinkage note (typical 0.2–0.5 %; ~1 % is high-end → another reason
+> to confirm `R` directly rather than assume pure shrink).
+
+### 11.6 PLA shrink compensation — how to apply it
+
+**The number.** Nominal 2R = 39.40, measured 39.04 → apparent deficit **0.36 mm = 0.91 %**. This is
+an **upper bound** on true material shrink, because bearing-pocket play (bearings sitting inward)
+also lowers measured 2R. PLA's intrinsic shrink is typically **0.2–0.5 %** (occasionally ~0.8 %),
+so realistically **true shrink ≈ 0.3–0.5 %** and the rest (~0.4–0.6 %) is play.
+
+**The formula — shrink is a *percentage* of size, so compensate by SCALING, not by adding a fixed offset:**
+
+```
+scale factor  S = nominal / measured = 39.40 / 39.04 = 1.0092   → +0.92 %  (upper bound)
+equivalently  shrink fraction  f = (nominal − measured) / measured ;   scale = 1 + f
+```
+
+Apply `S` as a **uniform XY scale** in the slicer (or scale the model in CAD). Z/height shrink
+differs and matters far less for the gap geometry.
+
+**Procedure — separate the two effects, don't lump them:**
+1. **Fix the play first** — tighten the bearing pockets so the bearings seat at their true radius.
+   This removes the play component of the deficit.
+2. **Get the true shrink from a feature that does *not* depend on bearing seating** — either print
+   a **calibration coupon** (e.g. a 40 mm bar / 20 mm cube) in the same material + orientation and
+   compute `f = (nominal − measured)/measured`, **or** measure a **solid feature of the rotor itself**
+   (rotor OD, a boss) against its CAD value.
+3. **Apply the shrink scale** `(1 + f)` to the rotor, reprint, **re-measure 2R** (target 39.40).
+
+**Values to print (bracket, if you skip the coupon):** because you are *also* removing the play, do
+**not** bake in the full 0.92 %. Print the rotor at **+0.4 % / +0.6 % / +0.8 %** XY scale
+(1.004 / 1.006 / 1.008), measure 2R for each, and pick/interpolate the one that lands 2R at 39.40.
+If you measure a coupon first you get `f` directly and print once.
+
+> **Warning:** applying the full 0.92 % *and* tightening the pockets will likely **overshoot** 2R
+> (you would add back the play you just removed). Compensate for **shrink only**.
 
 ---
 
-## 12. Test data (forward links → 03. CODING)
+## 12. Version log
+
+- **v1 (planned)** — corrected N_c = 2 (R ≈ 19.7 mm), gap-sweep heads, caliper-access slots,
+  screw-clamp head lock, tube-retention fixes, 1/4-step firmware. Targets: mean ~5 µL *known*,
+  CV ≤ 5 %.
+- **v2.1 (built 2026-06-24)** — first print: firm head (nominal gap 1.52 mm) + reprinted rotor;
+  reused the proto-01 motor holder. Measured **2R = 39.04 mm (R = 19.52)** and a **non-concentric
+  wall** (head seated ~0.45 mm too high → apex open). Diagnosis: two stacked causes — undersized
+  rotor (PLA shrink + bearing play) and head seated too high. Decisions for 2.2: **fix the rotor**
+  (tighten bearing pockets + shrink compensation → 2R ≈ 39.4) and **centre the head on the shaft**.
+  Not yet pumped. Full detail → §11.
+
+---
+
+## 13. Test data (forward links → 03. CODING)
 
 - Calibration / gap sweep: `03. CODING/manual-dispense-check/proto-02-5ul-4roller-v2/`
   (to be created once the build is tested).
