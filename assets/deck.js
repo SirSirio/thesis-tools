@@ -158,9 +158,18 @@
         grid.className = 'deck-overview-grid';
         overview.appendChild(grid);
 
+        const observer = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            const w = entry.contentRect.width;
+            entry.target.style.setProperty('--thumb-scale', w / 1280);
+          }
+        });
+
         slides.forEach((slide, idx) => {
           const thumb = document.createElement('div');
           thumb.className = 'deck-overview-thumb';
+          
+          observer.observe(thumb);
           
           // Clone
           const clone = slide.cloneNode(true);

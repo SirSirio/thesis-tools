@@ -137,7 +137,7 @@
   color: var(--accent);
   font-size: 0.85rem;
   letter-spacing: 0.04em;
-  z-index: 100;
+  z-index: 300;
   transition: opacity 0.2s ease;
 }
 .deck-back-link:hover {
@@ -148,12 +148,18 @@
 .deck-overview {
   position: absolute;
   inset: 0;
-  background: var(--bg);
+  background: transparent;
   z-index: 200;
   display: flex;
   flex-direction: column;
   padding: 60px 80px;
   overflow-y: auto;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+body[data-overview] .deck-stage {
+  display: none;
 }
 
 .deck-overview[hidden] {
@@ -184,7 +190,6 @@
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  container-type: inline-size;
 }
 
 .deck-overview-thumb:hover {
@@ -198,7 +203,7 @@
   height: 720px;
   background: transparent;
   pointer-events: none;
-  transform: scale(calc(100cqw / 1280));
+  transform: scale(var(--thumb-scale, 0.25));
   transform-origin: top left;
   position: absolute;
   top: 0; left: 0;
