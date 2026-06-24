@@ -29,9 +29,9 @@ Decks are authored as static HTML without a build pipeline:
 - **Structure:** A flat sequence of `<section class="slide">` elements within a `.deck-stage` container.
 - **Stage Size:** Fixed 1280×720 widescreen canvas that scales-to-fit the browser viewport while letterboxing, ensuring standard projector proportions.
 - **Fragments:** Elements marked with `.fragment` remain hidden until revealed via forward stepping.
-- **Embeds:** Live tools are embedded using a `.iframe-wrapper` container with an inner `<iframe>` and `.iframe-overlay` to manage focus capture safely.
-
----
+- **Embeds:** Live tools are embedded using a `.iframe-wrapper` container with an inner `<iframe>` and `.iframe-overlay` to manage focus capture safely. Tools use `auto-fade-iframe` to appear smoothly.
+- **Copywriting:** Use massive text, minimal bullet points, and message-driven titles (e.g., "Proto 1 proved the concept but underdelivered").
+- **Visuals:** Rely on direct technical visual evidence (e.g., raw SVG curve rendering) rather than raw equations.
 
 ## Seed Deck Contents (Lab Meeting Jun 2026)
 
@@ -51,7 +51,7 @@ The seed deck covers six sequential segments:
 - **Stepping:** Arrow keys or Spacebar advance through fragments (D-13), then transition to the next slide once all fragments are revealed.
 - **Deep Links:** Slide-level routing is tracked in the URL hash (`#/<n>`) allowing direct navigation and browser history support (D-11).
 - **HUD:** An idle-fading interface overlay provides a progress bar, slide counter, and clickable prev/next arrows (D-12).
-- **Overview:** Pressing `O` or `Esc` toggles a thumbnail overview grid for rapid jumping (D-14).
+- **Overview:** Pressing `O` or `Esc` toggles a glassmorphic thumbnail overview grid. Thumbnails use a JS `ResizeObserver` to perfectly scale the 1280x720 clones (`transform: scale(var(--thumb-scale))`), avoiding CSS container query quirks (D-14).
 - **Exit:** A persistent "← Presentations" link returns to the index page.
 
 ---
