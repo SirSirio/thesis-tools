@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presentations — Thesis Tools</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    /* ── Nav bar ──────────────────────────────────────────────── */
+    .tool-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--glass-border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(10, 10, 12, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .nav-back { color: var(--accent); font-size: 0.85rem; letter-spacing: 0.04em; }
+    .nav-back:hover { opacity: 0.75; }
+    .nav-title { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.04em; }
+
+    /* ── Layout ────────────────────────────────────────────────── */
+    .presentations-view {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 32px 100px;
+    }
+
+    /* ── Deck cards & Deal-out ─────────────────────────────────── */
+    .decks-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .deck-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 380px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 30px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      transition: box-shadow 0.32s ease, border-color 0.32s ease;
+      cursor: pointer;
+      text-decoration: none;
+      
+      opacity: 1;
+      transform: none;
+    }
+    
+    .deck-card:hover {
+      border-color: rgba(255, 107, 43, 0.5);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 48px var(--accent-glow);
+    }
+
+    .deck-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .deck-date {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+    .deck-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .deck-card {
+        opacity: 0;
+        transform: translateY(40px) rotate(var(--card-angle, 0deg));
+        transition: opacity 0.6s cubic-bezier(.22,.68,0,1.2),
+                    transform 0.6s cubic-bezier(.22,.68,0,1.2);
+        transition-delay: var(--delay, 0s);
+      }
+      .deck-card.is-visible {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+      }
+      .deck-card:hover.is-visible {
+        transform: translateY(-8px) rotate(0deg);
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .presentations-view { padding: 40px 20px 60px; }
+      .tool-nav { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+<!-- Ambient background blobs for glassmorphism depth -->
+<div class="bg-blobs" aria-hidden="true">
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+</div>
+
+<nav class="tool-nav animate-in" style="--delay: 0s">
+  <a class="nav-back" href="../index.html">← Resources</a>
+  <span class="nav-title">Presentations</span>
+</nav>
+
+<main class="presentations-view">
+  <div class="decks-container" id="decks-container">
+    
+    <a class="deck-card" href="lab-meeting-2026-06/index.html" style="--card-angle: -4deg; --delay: 0.15s;">
+      <div class="deck-date">2026-06-24</div>
+      <h2 class="deck-title">Lab Meeting — June 2026</h2>
+      <p class="deck-desc">GSD · rotor solver · displaced-volume model · proto-01 · proto-02 · test-campaign app</p>
+    </a>
+
+    <!-- Future decks — duplicate the card block above -->
+
+  </div>
+</main>
+
+<script>
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reducedMotion) {
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.deck-card').forEach(card => {
+          card.classList.add('is-visible');
+        });
+      }, 50);
+    });
+  }
+</script>
+</body>
+</html>
