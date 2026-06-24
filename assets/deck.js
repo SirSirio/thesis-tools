@@ -142,16 +142,53 @@
         overview = document.createElement('div');
         overview.className = 'deck-overview';
         overview.hidden = true;
+        
+        // Header
+        const header = document.createElement('div');
+        header.className = 'deck-overview-header';
+        const pageTitle = document.title.split('—')[0].trim() || 'Presentation';
+        header.innerHTML = `
+          <div class="site-label" style="margin-bottom: 10px;">Overview</div>
+          <h1 class="site-title" style="font-size: 2.5rem;">${pageTitle}</h1>
+        `;
+        overview.appendChild(header);
+
+        // Grid
+        const grid = document.createElement('div');
+        grid.className = 'deck-overview-grid';
+        overview.appendChild(grid);
+
         slides.forEach((slide, idx) => {
           const thumb = document.createElement('div');
           thumb.className = 'deck-overview-thumb';
-          const heading = slide.querySelector('h1, h2, .slide-title');
-          thumb.textContent = heading ? heading.textContent : `Slide ${idx + 1}`;
+          
+          // Clone
+          const clone = slide.cloneNode(true);
+          clone.classList.remove('slide', 'slide--active', 'slide--leaving');
+          clone.classList.add('deck-overview-clone');
+          
+          // Reveal fragments & hide iframes
+          clone.querySelectorAll('.fragment').forEach(f => f.setAttribute('data-fragment-revealed', ''));
+          clone.querySelectorAll('iframe').forEach(ifr => {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'iframe-placeholder';
+            placeholder.textContent = 'Interactive Demo';
+            ifr.parentNode.replaceChild(placeholder, ifr);
+          });
+
+          thumb.appendChild(clone);
+
+          // Badge
+          const badge = document.createElement('div');
+          badge.className = 'deck-overview-badge';
+          badge.textContent = idx + 1;
+          thumb.appendChild(badge);
+
           thumb.addEventListener('click', () => {
             goToSlide(idx);
             closeOverview();
           });
-          overview.appendChild(thumb);
+          grid.appendChild(thumb);
         });
         document.body.appendChild(overview);
       }
