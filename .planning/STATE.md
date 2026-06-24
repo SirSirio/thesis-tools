@@ -75,6 +75,8 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
+- **[general]** Clarify .agent vs .agents folder difference — `.planning/todos/pending/2026-06-24-clarify-agent-vs-agents.md`: The user is confused about the difference between the `.agent` and `.agents` folders and why they were both present. They want to understand the architecture and why deleting one broke the other.
+
 - Prototype tracker established (2026-06-15). Entry point:
   `.planning/notes/2026-06-15-prototype-tracker-architecture.md`. Back-fill
   proto-01 design params in `prototypes/proto-01-5ul-4roller/PROTOTYPE.md`.
