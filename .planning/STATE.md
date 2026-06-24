@@ -3,15 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: "Phase 4 planned — 2 PLAN.md files written (04-01: main page; 04-02: integration). Next: /gsd:execute-phase 4. Also pending: run /gsd:profile-user to enable advisor mode."
-last_updated: "2026-06-15T17:05:35.191Z"
+last_updated: "2026-06-24T17:27:19.331Z"
 last_activity: 2026-06-15 -- Phase 04 marked complete
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 2
   total_plans: 7
   completed_plans: 5
-  percent: 50
+  percent: 40
 ---
 
 # Project State
@@ -55,6 +54,10 @@ Progress: [██████████] 100%
 *Updated after each plan completion*
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 5 added (2026-06-24): HTML Presentation Decks — reveal-style slide system + creative dated presentations index, first deck = 15-min lab meeting (GSD, two design tools, proto-01, proto-02, automated test-campaign app). Milestone v1.0 reopened from `completed` to accommodate.
 
 ### Decisions
 
@@ -109,6 +112,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-15T00:00:00Z
-Stopped at: Phase 4 planned — 2 PLAN.md files written (04-01: main page; 04-02: integration). Next: /gsd:execute-phase 4. Also pending: run /gsd:profile-user to enable advisor mode.
-Resume file: .planning/phases/04-prototype-design-space/04-CONTEXT.md
+Last session: 2026-06-24T17:27:19.311Z
+Stopped at: Phase 5 context gathered
+Resume file: .planning/phases/05-html-presentation-decks-build-a-reveal-style-slide-system-on/05-CONTEXT.md
