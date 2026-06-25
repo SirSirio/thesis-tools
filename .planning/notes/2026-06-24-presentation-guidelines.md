@@ -18,7 +18,22 @@ This document captures the recurring stylistic, structural, and technical guidel
 - **Backgrounds:** Slides should sit over the global site background (e.g., animated blobs). Do not use opaque solid backgrounds that break the site's immersion.
 - **Animations:** Tools and iframes should utilize auto-fade animations (e.g., `auto-fade-iframe`, `auto-fade-text`) so they appear smoothly without requiring manual clicks.
 
-## 4. Overview Mode (Thumbnails)
+## 4. Section Structure & Divider Slides
+
+Long decks should be **divided into sections, each opened by a divider slide**. Established presentation-design practice (Duarte/Reynolds-school, TED) treats dividers as *narrative stops*, not content:
+
+- **Purpose:** signal a new section and give the audience a mental reset — the presenter does the talking; the slide just orients.
+- **No bullets.** Maximum negative space, one focal point. A divider with a bulleted list defeats its purpose.
+- **Big type, ≤5 words.** A short, unambiguous section name that sets expectations.
+- **Deliberate visual contrast.** Dividers should look *different* from content slides so the break registers instantly. This project's house style is **full-bleed image tint**: a representative cover image behind a left-weighted dark scrim, with an eyebrow section number + large gradient title + one-line subtitle.
+- **Consistency.** All dividers in a deck share one layout.
+- **Pick a representative image per section** (e.g. a render for a hardware module, a tool screenshot for a methods section, a video poster frame for a demo module).
+
+## 5. Animation Ordering — Media First
+
+On content slides, **the image/media animates in first, then the writing.** Visuals anchor the slide; text supports them. Implementation in this project: an `.auto-anim` reveal system replayed per slide activation (media at delay 0, writing at staged `.delay-N`), with section videos auto-playing when their slide is shown. See the deck SPEC for the mechanism. Respect `prefers-reduced-motion`.
+
+## 6. Overview Mode (Thumbnails)
 - **Visual Fidelity:** The slide thumbnails in Overview Mode (`Esc` or `O`) must not be dull boxes. They must be styled as premium glass cards with hover lift effects (`transform: translateY(-8px) scale(1.02)`) and accent glows.
 - **Scaling Mechanic:** Slide thumbnails must use a robust `ResizeObserver` approach in JavaScript to calculate scaling. Because slides are fixed at 1280x720, the observer calculates the actual container width and sets a `--thumb-scale` CSS variable (e.g., `width / 1280`). This ensures perfect scaling across all browsers without relying on fragile CSS container queries for absolutely positioned clones.
 - **Layering:** The "Back to Index" link must maintain a high `z-index` (e.g., 300) so it remains accessible and visible on top of the overview grid.

@@ -35,14 +35,32 @@ Decks are authored as static HTML without a build pipeline:
 
 ## Seed Deck Contents (Lab Meeting Jun 2026)
 
-The seed deck covers six sequential segments:
-1. **Title Slide:** Introduction and agenda.
-2. **Coding-with-AI (GSD):** Overview of the spec-driven development loop.
-3. **Designing-with-AI (Rotor Solver):** Features a **live iframe** embed of the Peristaltic Rotor Geometry Solver tool.
-4. **Designing-with-AI (Displaced-Volume Model):** Features a **live iframe** embed of the Occlusion & Displaced-Volume Model, deep-linked to the `#calculator` anchor.
-5. **proto-01:** Static content detailing the 5 µL 4-roller baseline test.
-6. **proto-02:** Static content detailing the gap-sweep redesign.
-7. **Test-Campaign App:** Static media (screenshots/recording) of the external test-campaign app, as it cannot be served via same-origin iframe (D-10).
+The deck is organised into **three modules, each introduced by a full-bleed section divider**. Order: Alignment → AI → Pump.
+
+1. **Title Slide:** Introduction; agenda lists the three sections.
+2. **Divider 01 — Alignment Module:** Full-bleed background = `assets/alignment_poster.jpg`.
+3. **Alignment Module:** Title only + embedded `Alignment_Module_V2.mp4` (no bullets). Video auto-plays/pauses on slide activation, muted + looped.
+4. **Divider 02 — AI for Engineering:** Full-bleed background = the displaced-volume tool screenshot.
+5. **AI as a tool:** Claude Code splash (`CaludeCode_image.png`) in a terminal frame + two points (research partner / build accelerator).
+6. **GSD:** Distinguishes **spec-driven development** (the discipline) from **GSD** (one framework that automates it). Discuss → Plan → Execute cards mirror the `gsd-workflow-guide` tool.
+7. **Divider 03 — Pump Module:** Full-bleed background = `Prototype1_Render_Open.png`.
+8. **Rotor Solver:** **Live iframe** embed of the Peristaltic Rotor Geometry Solver tool.
+9. **Displaced-Volume Model:** **Live iframe** embed, deep-linked to the `#calculator` anchor.
+10. **proto-01:** CAD render + real-prototype photo side-by-side, plus the open-loop calibration results card.
+11. **proto-02:** Gap-sweep hump-curve SVG.
+12. **Test-Campaign App:** Static media of the external test-campaign app, which cannot be served via same-origin iframe (D-10).
+
+### Section Dividers (full-bleed image tint)
+
+Each module opens with a divider slide: a full-bleed cover image behind a left-weighted dark scrim, with an eyebrow section number, a large (≈4.6rem) gradient title (≤3 words), and a one-line subtitle. No bullets — the divider is a narrative "breath" that resets audience attention before a new section (per established presentation-design practice). All three dividers share one layout for consistency.
+
+### Image-First Animation Model
+
+All content slides reveal **media first, then writing**. Because inactive slides sit at `opacity:0` (not `display:none`), plain CSS animations would fire once at page load and be finished before a later slide is shown. A **deck-local inline script** (shared `assets/deck.js` is intentionally untouched — D-01) uses a `MutationObserver` to:
+- restart every `.auto-anim` element each time its slide gains `slide--active`, so the `avIn` keyframe replays on every visit (media has no delay; writing carries `.delay-1/2/3`);
+- `play()`/`pause()` any `video[data-deck-video]` as its slide enters/leaves.
+
+`prefers-reduced-motion` forces `.auto-anim` elements visible and disables the animation.
 
 ---
 

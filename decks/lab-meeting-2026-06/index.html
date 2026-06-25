@@ -14,17 +14,121 @@
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    /* ── Image-first reveal system ───────────────────────────────
+       Inactive slides sit at opacity:0 (not display:none), so plain
+       CSS animations would fire once at page load. The inline script
+       at the bottom restarts every .auto-anim element each time its
+       slide becomes active — so media animates first, writing after,
+       on every visit. */
+    @keyframes avIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: none; }
     }
-    .auto-fade-text {
-      animation: fadeIn 1s ease forwards;
+    .auto-anim { opacity: 0; animation: avIn 0.7s ease both; }
+    .auto-anim.delay-1 { animation-delay: 0.45s; }
+    .auto-anim.delay-2 { animation-delay: 0.70s; }
+    .auto-anim.delay-3 { animation-delay: 0.95s; }
+    @media (prefers-reduced-motion: reduce) {
+      .auto-anim { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
-    .auto-fade-iframe {
-      opacity: 0;
-      animation: fadeIn 1s 1.5s ease forwards;
+
+    /* ── Section divider slides (full-bleed image tint) ──────────── */
+    .slide-divider { padding: 0; }
+    .divider-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .divider-scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(95deg,
+        rgba(8,8,10,0.95) 0%,
+        rgba(8,8,10,0.86) 38%,
+        rgba(8,8,10,0.55) 66%,
+        rgba(8,8,10,0.30) 100%);
+    }
+    .divider-content {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 96px;
+    }
+    .divider-eyebrow {
+      font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .divider-title {
+      font-size: 4.6rem; font-weight: 800;
+      line-height: 1.02; letter-spacing: -0.02em;
+      margin: 0; max-width: 64%;
+      background: linear-gradient(120deg, #ffffff 55%, var(--accent) 130%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .divider-sub {
+      font-size: 1.3rem; color: var(--text-muted);
+      margin-top: 24px; max-width: 50%; line-height: 1.5;
+    }
+
+    /* ── GSD phase cards (mirrors the gsd-workflow-guide tool) ───── */
+    .gsd-cards { display: flex; align-items: stretch; gap: 14px; margin-top: 4px; }
+    .gsd-arrow { align-self: center; color: rgba(255,107,43,0.5); font-size: 1.7rem; flex-shrink: 0; }
+    .gsd-card {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,107,43,0.22);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .gsd-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .gsd-num {
+      width: 34px; height: 34px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,107,43,0.16); border-radius: 50%;
+      font-weight: 700; color: var(--accent); font-size: 1rem;
+    }
+    .gsd-card-name { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+    .gsd-card-desc { color: var(--text-muted); font-size: 1.02rem; line-height: 1.45; }
+    .term-tag { color: #ffffff; font-weight: 700; }
+    .gsd-tag  { color: var(--accent); font-weight: 700; }
+
+    /* ── Terminal frame for the Claude Code splash ──────────────── */
+    .term {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 22px 55px rgba(0,0,0,0.55);
+      background: #000;
+    }
+    .term-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 11px 14px; background: #161616;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .term-label { margin-left: 10px; font-family: monospace; font-size: 0.78rem; color: var(--text-muted); }
+    .term-img { display: block; width: 100%; }
+
+    /* ── Two-up image row (proto-01) ─────────────────────────────── */
+    .img-pair { display: flex; gap: 16px; }
+    .img-pair figure { flex: 1; margin: 0; display: flex; flex-direction: column; }
+    .img-pair img {
+      width: 100%; height: 190px; object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.5);
+    }
+    .img-pair figcaption {
+      margin-top: 7px; font-size: 0.72rem; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-muted); text-align: center;
+    }
+
+    /* ── Alignment video ─────────────────────────────────────────── */
+    .align-video {
+      max-height: 560px; max-width: 90%;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      background: #000;
     }
   </style>
 </head>
@@ -36,80 +140,179 @@
   </div>
   <div class="deck-viewport">
     <div class="deck-stage" tabindex="0">
-      
-      <!-- 1. TITLE slide -->
+
+      <!-- ░░ 1. TITLE ░░ -->
       <section class="slide slide--active" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-        <div class="glass" style="padding: 60px; border-radius: var(--radius); border: 1px solid var(--glass-border);">
+        <div class="glass auto-anim" style="padding: 60px; border-radius: var(--radius); border: 1px solid var(--glass-border);">
           <div class="site-label">June 2026</div>
           <h1 class="site-title" style="margin-bottom: 12px;">Thesis Lab Meeting</h1>
           <p class="site-author" style="font-size: 1.2rem;">Sirio Vittorio Feltrin</p>
-          <div style="margin-top: 32px; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">
-            GSD Workflow &nbsp;|&nbsp; Design Tools &nbsp;|&nbsp; proto-01 &nbsp;|&nbsp; proto-02
+          <div class="auto-anim delay-2" style="margin-top: 32px; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">
+            Alignment Module &nbsp;|&nbsp; AI for Engineering &nbsp;|&nbsp; Pump Module
           </div>
         </div>
       </section>
 
-      <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 80px;">
-        <h2 class="site-title" style="font-size: 2.8rem; margin-bottom: 24px;">Conversational AI accelerates spec-driven development</h2>
-        <p style="font-size: 1.4rem; color: var(--text-muted); max-width: 800px; margin-bottom: 40px;">
-          The GSD workflow prevents context loss through a rigorous <span style="color: var(--accent);">Discuss &rarr; Plan &rarr; Execute</span> loop.
+      <!-- ░░ 2. DIVIDER — ALIGNMENT MODULE ░░ -->
+      <section class="slide slide-divider">
+        <img class="divider-bg auto-anim" src="assets/alignment_poster.jpg" alt="Alignment module test rig on the bench" />
+        <div class="divider-scrim auto-anim"></div>
+        <div class="divider-content">
+          <div class="divider-eyebrow auto-anim delay-1">Section 01</div>
+          <h2 class="divider-title auto-anim delay-1">Alignment Module</h2>
+          <p class="divider-sub auto-anim delay-2">Repeatable positioning of the dispensing head.</p>
+        </div>
+      </section>
+
+      <!-- ░░ 3. ALIGNMENT MODULE — title + video, no bullets ░░ -->
+      <section class="slide" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 36px 40px 48px;">
+        <div class="auto-anim delay-1" style="text-align: center; margin-bottom: 22px;">
+          <div class="site-label">Module 01 · Prototype V2</div>
+          <h2 class="site-title" style="font-size: 2.4rem; margin: 6px 0 0;">The alignment module, in motion</h2>
+        </div>
+        <video
+          class="align-video auto-anim"
+          data-deck-video
+          src="../../prototypes/Prototype-2-Alignment-Module/Alignment_Module_V2.mp4"
+          poster="assets/alignment_poster.jpg"
+          muted loop playsinline controls preload="metadata"
+          tabindex="-1"></video>
+      </section>
+
+      <!-- ░░ 4. DIVIDER — AI FOR ENGINEERING ░░ -->
+      <section class="slide slide-divider">
+        <img class="divider-bg auto-anim" src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Displaced_Volume_Tool.png" alt="Displaced-volume calculator built for the project" />
+        <div class="divider-scrim auto-anim"></div>
+        <div class="divider-content">
+          <div class="divider-eyebrow auto-anim delay-1">Section 02</div>
+          <h2 class="divider-title auto-anim delay-1">AI for Engineering</h2>
+          <p class="divider-sub auto-anim delay-2">Using AI to research, model, and build the tooling.</p>
+        </div>
+      </section>
+
+      <!-- ░░ 5. AI AS A TOOL ░░ -->
+      <section class="slide" style="display: flex; align-items: center; padding: 0 64px; gap: 48px;">
+        <div style="flex: 1.05;">
+          <div class="site-label auto-anim delay-1">AI as a tool</div>
+          <h2 class="site-title auto-anim delay-1" style="font-size: 2.5rem; line-height: 1.12; margin: 8px 0 28px;">AI compresses the gap from idea to working prototype</h2>
+          <div class="auto-anim delay-2" style="display: flex; flex-direction: column; gap: 18px;">
+            <div class="glass" style="padding: 18px 22px;">
+              <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A research partner</div>
+              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Surveys methods, models the physics, and stress-tests assumptions before I commit to a build.</div>
+            </div>
+            <div class="glass" style="padding: 18px 22px;">
+              <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A build accelerator</div>
+              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Turns a validated concept into a live, offline calculator in hours — not weeks.</div>
+            </div>
+          </div>
+          <p class="auto-anim delay-3" style="margin-top: 22px; color: var(--text-muted); font-size: 0.95rem;">
+            Every model and tool on this site was designed and built this way.
+          </p>
+        </div>
+        <div class="term auto-anim" style="flex: 0.95;">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f56;"></span>
+            <span class="term-dot" style="background:#ffbd2e;"></span>
+            <span class="term-dot" style="background:#27c93f;"></span>
+            <span class="term-label">claude-code</span>
+          </div>
+          <img class="term-img" src="CaludeCode_image.png" alt="Welcome to Claude Code terminal splash" />
+        </div>
+      </section>
+
+      <!-- ░░ 6. GSD — spec-driven development vs GSD ░░ -->
+      <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 72px;">
+        <div class="auto-anim delay-1">
+          <div class="site-label">Methodology</div>
+          <h2 class="site-title" style="font-size: 2.5rem; margin: 6px 0 16px;">Spec-driven development, run by GSD</h2>
+          <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 980px; line-height: 1.5; margin-bottom: 30px;">
+            <span class="term-tag">Spec-driven development</span> is the discipline — lock decisions before plans, plans before code.
+            <span class="gsd-tag">GSD</span> (&ldquo;Get Sh*t Done&rdquo;) is one framework that automates that loop.
+          </p>
+        </div>
+        <div class="gsd-cards auto-anim">
+          <div class="gsd-card">
+            <div class="gsd-card-head"><span class="gsd-num">1</span><span class="gsd-card-name">Discuss</span></div>
+            <div class="gsd-card-desc">Lock decisions before planning — binding context the planner can&rsquo;t contradict.</div>
+          </div>
+          <span class="gsd-arrow">&rarr;</span>
+          <div class="gsd-card">
+            <div class="gsd-card-head"><span class="gsd-num">2</span><span class="gsd-card-name">Plan</span></div>
+            <div class="gsd-card-desc">Research first, then atomic tasks — each executable in a fresh context.</div>
+          </div>
+          <span class="gsd-arrow">&rarr;</span>
+          <div class="gsd-card">
+            <div class="gsd-card-head"><span class="gsd-num">3</span><span class="gsd-card-name">Execute</span></div>
+            <div class="gsd-card-desc">Parallel waves, atomic commits — reviewable at every step, not one giant diff.</div>
+          </div>
+        </div>
+        <p class="auto-anim delay-2" style="margin-top: 26px; color: var(--text-muted); font-size: 0.98rem;">
+          GSD wraps the loop with research, verification, and atomic commits — keeping AI context lean as a project grows.
         </p>
-        <div class="tools-grid fragment">
-          <div class="glass" style="flex: 1; padding: 30px;">
-            <div class="card-icon" style="font-size: 2rem; margin-bottom: 12px;">⚡</div>
-            <div class="card-title" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">Spec-Driven Focus</div>
-            <div class="card-desc" style="color: var(--text-muted);">Keeps AI execution strictly bounded to one problem at a time.</div>
-          </div>
-          <div class="glass" style="flex: 1; padding: 30px;">
-            <div class="card-icon" style="font-size: 2rem; margin-bottom: 12px;">🔗</div>
-            <div class="card-title" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">Living Documentation</div>
-            <div class="card-desc" style="color: var(--text-muted);">State and roadmap files naturally evolve alongside the codebase.</div>
-          </div>
+      </section>
+
+      <!-- ░░ 7. DIVIDER — PUMP MODULE ░░ -->
+      <section class="slide slide-divider">
+        <img class="divider-bg auto-anim" src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Render_Open.png" alt="Peristaltic pump module render, cover open" />
+        <div class="divider-scrim auto-anim"></div>
+        <div class="divider-content">
+          <div class="divider-eyebrow auto-anim delay-1">Section 03</div>
+          <h2 class="divider-title auto-anim delay-1">Pump Module</h2>
+          <p class="divider-sub auto-anim delay-2">The dispensing core — from model to prototype.</p>
         </div>
       </section>
 
-      <!-- 3. Rotor Solver -->
+      <!-- ░░ 8. ROTOR SOLVER (live) ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; height: 100%; padding: 40px;">
-        <div style="text-align: center; margin-bottom: 24px;">
-          <div class="site-label">Live Tool Embed</div>
-          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Rotor Solver calculates geometry instantly</h2>
-          <p class="auto-fade-text" style="font-size: 1.1rem; font-weight: bold; color: var(--text-muted);">Fully interactive offline tool driven by mathematical models.</p>
-        </div>
-        <div class="iframe-wrapper glass auto-fade-iframe" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
+        <div class="iframe-wrapper glass auto-anim" style="order: 2; flex: 1; width: 85%; margin: 16px auto 0; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
           <iframe src="../../tools/rotor-solver/index.html" tabindex="-1"></iframe>
           <div class="iframe-overlay" aria-hidden="true"></div>
         </div>
+        <div class="auto-anim delay-1" style="order: 1; text-align: center;">
+          <div class="site-label">Live Tool Embed</div>
+          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Rotor Solver calculates geometry instantly</h2>
+          <p style="font-size: 1.1rem; font-weight: bold; color: var(--text-muted);">A fully interactive offline tool driven by the mathematical models.</p>
+        </div>
       </section>
 
-      <!-- 4. Displaced-Volume Model -->
+      <!-- ░░ 9. DISPLACED-VOLUME MODEL (live) ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; height: 100%; padding: 40px;">
-        <div style="text-align: center; margin-bottom: 24px;">
-          <div class="site-label">Live Tool Embed</div>
-          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Occlusion model predicts displacement</h2>
-          <p class="auto-fade-text" style="font-size: 1.1rem; font-weight: bold; color: var(--text-muted);">Calculating required stroke volume accurately.</p>
-        </div>
-        <div class="iframe-wrapper glass auto-fade-iframe" style="flex: 1; width: 85%; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
+        <div class="iframe-wrapper glass auto-anim" style="order: 2; flex: 1; width: 85%; margin: 16px auto 0; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
           <iframe src="../../tools/peristaltic-roller-displaced-volume-model/index.html#calculator" tabindex="-1"></iframe>
           <div class="iframe-overlay" aria-hidden="true"></div>
         </div>
+        <div class="auto-anim delay-1" style="order: 1; text-align: center;">
+          <div class="site-label">Live Tool Embed</div>
+          <h2 class="site-title" style="font-size: 2.2rem; margin-bottom: 8px;">Occlusion model predicts displacement</h2>
+          <p style="font-size: 1.1rem; font-weight: bold; color: var(--text-muted);">Calculating the required stroke volume accurately.</p>
+        </div>
       </section>
 
-      <!-- 5. proto-01 -->
+      <!-- ░░ 10. proto-01 ░░ -->
       <section class="slide" style="display: flex; align-items: center; padding: 0 40px; gap: 30px;">
         <div style="flex: 1.2;">
-          <div class="site-label">Baseline Build</div>
-          <h2 class="site-title" style="font-size: 2.2rem; line-height: 1.1; margin-bottom: 24px;">Proto-01 proved the concept but underdelivered</h2>
+          <div class="site-label auto-anim delay-1">Baseline Build</div>
+          <h2 class="site-title auto-anim delay-1" style="font-size: 2.2rem; line-height: 1.1; margin-bottom: 24px;">Proto-01 proved the concept but underdelivered</h2>
           <ul style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; padding-left: 20px;">
             <li class="fragment" style="margin-bottom: 12px;">Designed gap (1.75 mm) was too wide.</li>
             <li class="fragment" style="margin-bottom: 12px;">Tube never occluded without manual paper shims.</li>
             <li class="fragment">Delivered 3.39 µL (32% systematic error).</li>
           </ul>
         </div>
-        <div class="fragment" style="flex: 1.8; display: flex; flex-direction: column; gap: 20px;">
-          <!-- Reduced Image -->
-          <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Render_Closed.png" alt="Proto-01 Render" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: var(--radius); box-shadow: 0 10px 20px rgba(0,0,0,0.5);" />
-          
-          <!-- RESULTS PORTED FROM PROTOTYPES/INDEX.HTML -->
+        <div class="auto-anim" style="flex: 1.8; display: flex; flex-direction: column; gap: 16px;">
+          <!-- Render + real prototype, side by side -->
+          <div class="img-pair">
+            <figure>
+              <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Render_Closed.png" alt="Proto-01 CAD render" />
+              <figcaption>CAD render</figcaption>
+            </figure>
+            <figure>
+              <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Real_Closed.jpg" alt="Proto-01 printed prototype on the bench" />
+              <figcaption>Printed prototype</figcaption>
+            </figure>
+          </div>
+
+          <!-- Results card -->
           <div class="glass" style="padding: 15px; border-radius: var(--radius);">
             <div style="font-size: 1rem; margin-bottom: 12px; color: var(--text);">1 mL Open-Loop Calibration</div>
             <div class="bar-chart" role="img" style="font-size: 0.8rem;">
@@ -117,13 +320,13 @@
               <div style="background: #333; height: 20px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
                 <div style="background: #666; width: 100%; height: 100%;"></div>
               </div>
-              
+
               <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span style="color:var(--accent);">Gravimetric (Ref)</span><span style="color:var(--accent); font-weight:bold;">678 µL</span></div>
               <div style="background: #333; height: 20px; margin-bottom: 8px; border-radius: 4px; overflow: hidden; position: relative;">
                 <div style="background: var(--accent); width: 67.8%; height: 100%;"></div>
                 <div style="position: absolute; right: 8px; top: 0; line-height: 20px; color: #fff; font-weight: bold; font-size: 0.75rem;">CV 4.5%</div>
               </div>
-              
+
               <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Flow Sensor</span><span>600 µL</span></div>
               <div style="background: #333; height: 20px; margin-bottom: 8px; border-radius: 4px; overflow: hidden; position: relative;">
                 <div style="background: #844; width: 60.0%; height: 100%;"></div>
@@ -144,18 +347,18 @@
         </div>
       </section>
 
-      <!-- 6. proto-02 -->
+      <!-- ░░ 11. proto-02 ░░ -->
       <section class="slide" style="display: flex; flex-direction: row-reverse; align-items: center; padding: 0 60px; gap: 40px;">
         <div style="flex: 1;">
-          <div class="site-label">Iteration</div>
-          <h2 class="site-title" style="font-size: 2.6rem; line-height: 1.1; margin-bottom: 24px;">Gap-sweep approach maps the optimal seal</h2>
+          <div class="site-label auto-anim delay-1">Iteration</div>
+          <h2 class="site-title auto-anim delay-1" style="font-size: 2.6rem; line-height: 1.1; margin-bottom: 24px;">Gap-sweep approach maps the optimal seal</h2>
           <ul style="font-size: 1.4rem; color: var(--text-muted); line-height: 1.6; padding-left: 20px;">
             <li class="fragment" style="margin-bottom: 15px;">Delivery is leak-limited, not arc-limited.</li>
             <li class="fragment" style="margin-bottom: 15px;">Sweeping 3 distinct head geometries (1.52, 1.62, 1.72 mm).</li>
             <li class="fragment">Hunting the peak: the loosest gap that fully seals.</li>
           </ul>
         </div>
-        <div class="fragment" style="flex: 1; text-align: center;">
+        <div class="auto-anim" style="flex: 1; text-align: center;">
             <svg viewBox="0 0 560 280" role="img" aria-label="Delivery-versus-gap hump curve, with the two proto-01 operating points" style="width:100%;height:auto;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:var(--radius);font-family:var(--font);">
               <!-- axes -->
               <line x1="70" y1="28" x2="70" y2="232" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
@@ -181,17 +384,17 @@
         </div>
       </section>
 
-      <!-- 7. TEST-CAMPAIGN APP -->
+      <!-- ░░ 12. TEST-CAMPAIGN APP ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; align-items: center; padding: 40px;">
-        <div style="text-align: center; margin-bottom: 24px;">
-          <h2 class="site-title" style="font-size: 2.6rem; margin-bottom: 24px;">Automated campaigns close the hardware loop</h2>
+        <div class="glass auto-anim" style="order: 2; width: 80%; flex: 1; border-radius: var(--radius); overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; background: #000; padding: 10px; margin-top: 16px;">
+          <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Test Setup" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: calc(var(--radius) - 10px);" />
+        </div>
+        <div class="auto-anim delay-1" style="order: 1; text-align: center;">
+          <h2 class="site-title" style="font-size: 2.6rem; margin-bottom: 16px;">Automated campaigns close the hardware loop</h2>
           <ul style="font-size: 1.4rem; color: var(--text-muted); line-height: 1.6; max-width: 700px; margin: 0 auto; text-align: left;">
             <li class="fragment" style="margin-bottom: 12px;">Live telemetry feeds the mathematical models.</li>
             <li class="fragment">Replaces manual pipetting for high-n testing.</li>
           </ul>
-        </div>
-        <div class="fragment glass" style="width: 80%; flex: 1; border-radius: var(--radius); overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; background: #000; padding: 10px;">
-          <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Test Setup" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: calc(var(--radius) - 10px);" />
         </div>
       </section>
 
@@ -201,5 +404,51 @@
   <a class="deck-back-link" href="../../decks/index.html">← Presentations</a>
 
   <script src="../../assets/deck.js"></script>
+  <script>
+    /* Deck-local enhancement (keeps shared deck.js untouched, D-01):
+       replay .auto-anim elements and play/pause section videos whenever
+       a slide gains/loses .slide--active. */
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function restart(el) {
+          el.style.animation = 'none';
+          // force reflow so the animation restarts from frame 0
+          void el.offsetWidth;
+          el.style.animation = '';
+        }
+
+        function activate(slide) {
+          if (!reduce) {
+            slide.querySelectorAll('.auto-anim').forEach(restart);
+          }
+          var v = slide.querySelector('video[data-deck-video]');
+          if (v) { try { v.currentTime = 0; v.play().catch(function () {}); } catch (e) {} }
+        }
+
+        function deactivate(slide) {
+          var v = slide.querySelector('video[data-deck-video]');
+          if (v) { try { v.pause(); } catch (e) {} }
+        }
+
+        var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (m) {
+            var slide = m.target;
+            if (slide.classList.contains('slide--active')) activate(slide);
+            else deactivate(slide);
+          });
+        });
+        slides.forEach(function (s) {
+          observer.observe(s, { attributes: true, attributeFilter: ['class'] });
+        });
+
+        // Kick off whichever slide is already active (deck.js set it just before us).
+        var current = document.querySelector('.slide--active');
+        if (current) activate(current);
+      });
+    })();
+  </script>
 </body>
 </html>

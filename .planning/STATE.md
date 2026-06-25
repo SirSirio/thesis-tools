@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 Phase: 05 — COMPLETE
 Plan: 4 of 4
 Status: Phase complete — ready for verification
-Last activity: 2026-06-24
+Last activity: 2026-06-25 - Quick task: lab-meeting deck sectioning & content rework
 
 Progress: [██████████] 100%
 
@@ -111,6 +111,7 @@ Recent decisions affecting current work:
 | 2026-06-01 | rotor-solver: add live top-down geometry diagram below results table (roller-count selector, all geometric dimensions labelled, ENG/IT) | `tools/rotor-solver/index.html`, `tools/rotor-solver/SPEC.md` |
 | 2026-06-03 | rotor-solver: display all mm measurements (table, summary, figure) to 2 decimals; fix µL column headers rendering as "ΜL"/"ML" (CSS uppercase turned μ→Μ) via `.u { text-transform:none }` | `tools/rotor-solver/index.html` |
 | 2026-06-17 | proto-02 initialized: PROTOTYPE.md (corrected N_c=2 → R≈19.7, 4-head gap sweep, screw-clamp lock, n=10 experiment plan), HTML journey stub (proto-02 active card + detail view; proto-03/04/05 grayed ghosts), standards-benchmark note, registries updated | `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md`, `prototypes/index.html`, `.planning/notes/2026-06-17-dispensing-accuracy-standards.md`, `prototypes/PROTOTYPES.md`, `prototypes/SPEC.md` |
+| 2026-06-25 | lab-meeting deck restructured into 3 sections (Alignment → AI → Pump) with full-bleed divider slides; new AI-as-a-tool slide (Claude Code splash), rewritten GSD slide (spec-driven-development vs GSD), alignment-module slide with embedded auto-playing video; image-first animation system (per-activation `.auto-anim` replay via deck-local MutationObserver); proto-01 render + real photo side-by-side | `decks/lab-meeting-2026-06/index.html`, `decks/lab-meeting-2026-06/SPEC.md`, `decks/lab-meeting-2026-06/assets/alignment_poster.jpg`, `decks/lab-meeting-2026-06/CaludeCode_image.png`, `.planning/notes/2026-06-24-presentation-guidelines.md` |
 
 ## Session Continuity
 
