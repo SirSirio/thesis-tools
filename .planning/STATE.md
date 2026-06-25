@@ -79,7 +79,7 @@ Recent decisions affecting current work:
 
 - Prototype tracker established (2026-06-15). Entry point:
   `.planning/notes/2026-06-15-prototype-tracker-architecture.md`. Back-fill
-  proto-01 design params in `prototypes/proto-01-5ul-4roller/PROTOTYPE.md`.
+  proto-01 design params in `prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/PROTOTYPE.md`.
 
 - **OPEN DECISION (candidate phase):** per-prototype test-plan & pass-criteria
   schema — `.planning/notes/2026-06-15-prototype-test-schema-decision.md`.
@@ -110,7 +110,7 @@ Recent decisions affecting current work:
 | 2026-06-01 | rotor-solver: replace occlusion-efficiency slider with manual arc-compensation (ΔArc_total) input; link to displaced-volume model `#calculator` anchor | `tools/rotor-solver/index.html`, `tools/peristaltic-roller-displaced-volume-model/index.html`, `tools/rotor-solver/SPEC.md` |
 | 2026-06-01 | rotor-solver: add live top-down geometry diagram below results table (roller-count selector, all geometric dimensions labelled, ENG/IT) | `tools/rotor-solver/index.html`, `tools/rotor-solver/SPEC.md` |
 | 2026-06-03 | rotor-solver: display all mm measurements (table, summary, figure) to 2 decimals; fix µL column headers rendering as "ΜL"/"ML" (CSS uppercase turned μ→Μ) via `.u { text-transform:none }` | `tools/rotor-solver/index.html` |
-| 2026-06-17 | proto-02 initialized: PROTOTYPE.md (corrected N_c=2 → R≈19.7, 4-head gap sweep, screw-clamp lock, n=10 experiment plan), HTML journey stub (proto-02 active card + detail view; proto-03/04/05 grayed ghosts), standards-benchmark note, registries updated | `prototypes/proto-02-5ul-4roller-v2/PROTOTYPE.md`, `prototypes/index.html`, `.planning/notes/2026-06-17-dispensing-accuracy-standards.md`, `prototypes/PROTOTYPES.md`, `prototypes/SPEC.md` |
+| 2026-06-17 | proto-02 initialized: PROTOTYPE.md (corrected N_c=2 → R≈19.7, 4-head gap sweep, screw-clamp lock, n=10 experiment plan), HTML journey stub (proto-02 active card + detail view; proto-03/04/05 grayed ghosts), standards-benchmark note, registries updated | `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md`, `prototypes/index.html`, `.planning/notes/2026-06-17-dispensing-accuracy-standards.md`, `prototypes/PROTOTYPES.md`, `prototypes/SPEC.md` |
 
 ## Session Continuity
 

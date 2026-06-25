@@ -89,7 +89,7 @@ Downstream agents MUST read `04-SPEC.md` before planning or implementing. Requir
 - `.planning/notes/2026-06-15-prototype-tracker-architecture.md` — the design/test split, two-tier knowledge, why prototypes live in this repo
 - `.planning/notes/2026-06-15-prototype-test-schema-decision.md` — open per-prototype schema decision (out of scope here; context only)
 - `prototypes/PROTOTYPES.md` — registry + conventions
-- `prototypes/proto-01-5ul-4roller/PROTOTYPE.md` — proto-01 deep detail; some design-param TODOs to back-fill into the page
+- `prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/PROTOTYPE.md` — proto-01 deep detail; some design-param TODOs to back-fill into the page
 
 ### proto-01 test data (sibling repo — transcribe, do NOT runtime-link)
 - `../03. CODING Thesis Out of Drive/manual-dispense-check/proto-01-5ul-4roller/REPORT.md` — flow + gravimetric results; source for proto-01's Results section

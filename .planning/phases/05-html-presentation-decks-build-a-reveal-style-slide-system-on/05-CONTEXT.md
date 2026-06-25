@@ -66,8 +66,8 @@ Deliver a **reveal-style HTML slide-deck runtime** on the tools site plus a **cr
 - `tools/gsd-workflow-guide/index.html` — GSD Workflow Guide (Coding-with-AI segment may reference/embed it).
 
 ### First-deck content sources
-- `prototypes/proto-01-5ul-4roller/PROTOTYPE.md` — proto-01 segment content.
-- `prototypes/proto-02-5ul-4roller-v2/PROTOTYPE.md` — proto-02 segment content.
+- `prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/PROTOTYPE.md` — proto-01 segment content.
+- `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md` — proto-02 segment content.
 - `prototypes/PROTOTYPES.md` — shallow prototype registry.
 - **External (test-campaign app, screenshots only — D-10):** sibling `03. CODING` project docs (`manual-dispense-check/.../REPORT.md` and the test-campaign app's own docs). Not part of this repo; capture as images checked into the deck folder.
 

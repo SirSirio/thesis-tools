@@ -12,7 +12,7 @@ The space's *primary purpose* is a place where the AI helps **design** new proto
 
 ## Background
 
-The prototype tracker today is markdown-only: `prototypes/PROTOTYPES.md` (registry) and `prototypes/proto-01-5ul-4roller/PROTOTYPE.md` (deep detail), established from a `/gsd:explore` handover (`.planning/notes/2026-06-15-prototype-tracker-architecture.md`). There is **no visual/published page** for prototypes.
+The prototype tracker today is markdown-only: `prototypes/PROTOTYPES.md` (registry) and `prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/PROTOTYPE.md` (deep detail), established from a `/gsd:explore` handover (`.planning/notes/2026-06-15-prototype-tracker-architecture.md`). There is **no visual/published page** for prototypes.
 
 proto-01's real test data already exists in the sibling repo `03. CODING Thesis Out of Drive`:
 - `manual-dispense-check/proto-01-5ul-4roller/REPORT.md` — flow + gravimetric calibration. **Measured ≈3.4 µL/stroke (gravimetric) vs 5.0 assumed → under-dispenses ~32%** (delivers ~678 µL gravimetric / ~600 µL flow for a 1 mL command).

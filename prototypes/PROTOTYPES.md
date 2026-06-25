@@ -1,16 +1,18 @@
 # Prototype Tracker
 
-Single source of truth for every physical pump prototype: what it is, the
-design parameters used to make it, and where its test data lives.
+Single source of truth for every physical prototype across all hardware modules:
+what it is, the design parameters used to make it, and where its test data lives.
 
 This is the **shallow / few-token layer** — scan this table to know what exists.
 Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 
 ## How this is organised
 
+- **Modules:** Each hardware module has its own folder under `prototypes/`:
+  `prototypes/Prototype-N-<Module-Name>/`
 - **Naming:** number + descriptive slug — `proto-NN-<descriptor>` (e.g.
   `proto-01-5ul-4roller`).
-- **One folder per prototype:** `prototypes/proto-NN-<slug>/PROTOTYPE.md`
+- **One folder per prototype:** `prototypes/Prototype-N-<Module>/proto-NN-<slug>/PROTOTYPE.md`
 - **Design lives here** (this `02. Tools` repo) because prototypes are *born*
   here — designed with the **peristaltic roller displaced-volume solver** and
   the **rotor solver**.
@@ -23,14 +25,28 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 - **Discussions** use `/gsd:thread` — design debates here, test/runner debates
   in `03. CODING`.
 
-## Registry
+---
+
+## Prototype-1-Pump-Module
 
 | ID | Slug | Status | µL/stroke (target → measured) | Test data | Notes |
 |----|------|--------|-------------------------------|-----------|-------|
 | 01 | proto-01-5ul-4roller | Built, redesign pending | 5.0 → ≈3.4 (grav) | `03. CODING` (see PROTOTYPE-INDEX.md) | Under-dispenses ~32%; flow + gravimetric, see REPORT.md |
 | 02 | proto-02-5ul-4roller-v2 | 2.1 built, redesign to 2.2 pending | 5.0 → partial occlusion (not yet pumped) | (pending) | 2.1: measured 2R=39.04 (R=19.52) + non-concentric wall; two causes — undersized rotor (shrink + bearing play) + head seated ~0.45mm high. 2.2: fix rotor + centre head. See PROTOTYPE.md §11 |
 
-<!-- Add a row per prototype. Keep newest at the bottom. -->
+<!-- Add a row per pump prototype. Keep newest at the bottom. -->
+
+---
+
+## Prototype-2-Alignment-Module
+
+| ID | Slug | Status | Notes |
+|----|------|--------|-------|
+| — | (none yet) | Not yet designed | Module folder created; design work to begin. |
+
+<!-- Add a row per alignment prototype. Keep newest at the bottom. -->
+
+---
 
 ## Test results contract (cross-repo)
 

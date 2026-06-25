@@ -88,7 +88,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 ### Phase 4: Prototype Design Space
 
 **Goal**: Build a styled, animated "prototype design space" page on the tools site — a vertical journey of prototype cards that expand into full per-prototype detail (purpose, parameters with tool links, per-prototype results/KPIs, design reasoning), plus a de-emphasized expandable section showcasing the author's functional AI reasoning skills. The HTML page is the content source of truth, maintained via chat; proto-01 is authored end-to-end as the seed. Primary purpose: a space where the AI helps design prototypes and the author reviews past ones to improve the process.
-**Depends on**: Prototype tracker handover (`.planning/notes/2026-06-15-prototype-tracker-architecture.md`, `2026-06-15-prototype-test-schema-decision.md`), `prototypes/PROTOTYPES.md`, `prototypes/proto-01-5ul-4roller/PROTOTYPE.md`, sibling `03. CODING` report (`manual-dispense-check/proto-01-5ul-4roller/REPORT.md`)
+**Depends on**: Prototype tracker handover (`.planning/notes/2026-06-15-prototype-tracker-architecture.md`, `2026-06-15-prototype-test-schema-decision.md`), `prototypes/PROTOTYPES.md`, `prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/PROTOTYPE.md`, sibling `03. CODING` report (`manual-dispense-check/proto-01-5ul-4roller/REPORT.md`)
 **Requirements**: See `04-SPEC.md` (6 requirements locked)
 **Success Criteria**: See `04-SPEC.md` acceptance criteria
 

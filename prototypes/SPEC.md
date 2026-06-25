@@ -39,7 +39,7 @@ Per-prototype sections in order (proto-01 as the reference layout):
 
 ← Back to journey control returns to the path view.
 
-**Reusable components added in this build:** `.proto-card-thumb` (circular real-photo node on the journey card), `.detail-figure` / `.figure-grid` (single + 2-up images), `.calc-block` (worked formulas), `.callout` (good/warn/note), `.next-brief` (forward design brief). Images live in each prototype folder as `PrototypeN_*.{png,jpg}` and are referenced by relative path.
+**Reusable components added in this build:** `.proto-card-thumb` (circular real-photo node on the journey card), `.detail-figure` / `.figure-grid` (single + 2-up images), `.calc-block` (worked formulas), `.callout` (good/warn/note), `.next-brief` (forward design brief). Images live in each prototype folder as `PrototypeN_*.{png,jpg}` and are referenced by relative path from `prototypes/` (e.g. `Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Real_Closed.jpg`).
 
 ## Animation Technique
 
@@ -54,12 +54,20 @@ Per-prototype sections in order (proto-01 as the reference layout):
 - `.proto-node` reverts to `position: static`, full-width vertical stack
 - No horizontal scroll guaranteed at 375px viewport
 
-## Prototype Registry (initial)
+## Prototype Registry
+
+### Prototype-1-Pump-Module
 
 | ID | Title | Status | Key result |
 |----|-------|--------|------------|
 | proto-01 | 5 µL 4-roller peristaltic | Built — redesign pending | −32.2 % under-dispense; ≈3.39 µL/stroke (grav); model validated to ~11 %; 3 design errors found (N_c, gap, head lock) |
 | proto-02 | 5 µL 4-roller — corrected geometry | In design | N_c=2 (R≈19.7 mm), 4-head gap sweep (1.25/1.45/1.65/1.85 mm) with caliper slots, screw-clamp lock, 0.10 mm fit; targets mean ~5 µL known + CV ≤ 5 % |
+
+### Prototype-2-Alignment-Module
+
+| ID | Title | Status | Key result |
+|----|-------|--------|------------|
+| — | (none yet) | Not yet designed | Module created; design work to begin |
 
 ## Constraints
 

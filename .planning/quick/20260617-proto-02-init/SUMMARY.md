@@ -13,7 +13,7 @@ Proto-02 initialized across docs + tools site. All four deliverables done.
 - **`.planning/notes/2026-06-17-dispensing-accuracy-standards.md`** (new) — standards
   landscape (ISO 8655 primary comparator, ISO 22870/15197/13485/CLIA relevance map),
   microdispensing CV benchmarks, sources, confidence tags. Flagged for move to thesis repo.
-- **`prototypes/proto-02-5ul-4roller-v2/PROTOTYPE.md`** (new) — full design brief: purpose,
+- **`prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md`** (new) — full design brief: purpose,
   targets (mean ~5 µL known + CV ≤ 5 % as the pass gate), as-designed parameters, corrected
   geometry (N_c=2 → R≈19.7 mm), 4-head gap sweep design, n=10 experiment plan E1–E7,
   morphological-analysis note, open risks.

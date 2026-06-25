@@ -42,8 +42,15 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   ├── index.html              Prototype Design Space — animated journey page
 │   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
 │   ├── PROTOTYPES.md           Shallow prototype registry (scan before opening deep PROTOTYPE.md)
-│   └── proto-01-5ul-4roller/
-│       └── PROTOTYPE.md        Proto-01 deep detail — design params, test forward-links, version log
+│   ├── Prototype-1-Pump-Module/
+│   │   ├── proto-01-5ul-4roller/
+│   │   │   └── PROTOTYPE.md    Proto-01 deep detail — design params, test forward-links, version log
+│   │   ├── proto-02-5ul-4roller-v2/
+│   │   │   └── PROTOTYPE.md    Proto-02 deep detail — corrected geometry + gap sweep
+│   │   └── Tube OD Thikness/
+│   │       └── tube-wall-thickness-analysis.md  Tube wall measurement & validation
+│   └── Prototype-2-Alignment-Module/
+│       └── PROTOTYPE.md        Alignment module placeholder — design work to begin
 ├── .planning/              GSD planning workspace (workflow artifacts)
 │   ├── PROJECT.md          Project context and core value
 │   ├── REQUIREMENTS.md     Active requirements with IDs
