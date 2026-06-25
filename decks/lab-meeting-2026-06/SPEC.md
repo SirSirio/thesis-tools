@@ -39,16 +39,18 @@ The deck is organised into **three modules, each introduced by a full-bleed sect
 
 1. **Title Slide:** Introduction; agenda lists the three sections.
 2. **Divider 01 — Alignment Module:** Full-bleed background = `assets/alignment_poster.jpg`.
-3. **Alignment Module:** Title only + embedded `Alignment_Module_V2.mp4` (no bullets). Video auto-plays/pauses on slide activation, muted + looped.
-4. **Divider 02 — AI for Engineering:** Full-bleed background = the displaced-volume tool screenshot.
-5. **AI as a tool:** Claude Code splash (`CaludeCode_image.png`) in a terminal frame + two points (research partner / build accelerator).
-6. **GSD:** Distinguishes **spec-driven development** (the discipline) from **GSD** (one framework that automates it). Discuss → Plan → Execute cards mirror the `gsd-workflow-guide` tool.
-7. **Divider 03 — Pump Module:** Full-bleed background = `Prototype1_Render_Open.png`.
-8. **Rotor Solver:** **Live iframe** embed of the Peristaltic Rotor Geometry Solver tool.
-9. **Displaced-Volume Model:** **Live iframe** embed, deep-linked to the `#calculator` anchor.
-10. **proto-01:** CAD render + real-prototype photo side-by-side, plus the open-loop calibration results card.
-11. **proto-02:** Gap-sweep hump-curve SVG.
-12. **Test-Campaign App:** Static media of the external test-campaign app, which cannot be served via same-origin iframe (D-10).
+3. **Alignment Module:** Title only + embedded `Alignment_Module_V2.mp4` (no bullets). Video auto-plays/pauses on slide activation, muted + looped. Subtitle/divider note: the module **moves the 8-tube sample rack under the nozzle** — it does not move the dispensing head.
+4. **Alignment — Roadmap:** Future-perspective slide. Queue schematic SVG (input queue → proven indexing stage → output queue) + Today ✓ / Next → cards. Message: one rack proven today; next is automatic queues of ≥4 racks.
+5. **Divider 02 — AI for Engineering:** Full-bleed background = the displaced-volume tool screenshot.
+6. **AI as a tool:** Claude Code splash (`CaludeCode_image.png`) in a terminal frame + two points (thinking & analysis partner / build & documentation engine).
+7. **AI workflow (the cycle):** SVG diagram — `Build tools` (dashed, outside) feeds a **Discuss & Design ⇄ Analyze** loop that orbits a central, always-on **Document** hub. Conveys that results arrive already analysed and presentation-ready.
+8. **GSD:** Distinguishes **spec-driven development** (the discipline) from **GSD** (one framework that automates it). Discuss → Plan → Execute cards mirror the `gsd-workflow-guide` tool.
+9. **Divider 03 — Pump Module:** Full-bleed background = `Prototype1_Render_Open.png`.
+10. **Rotor Solver:** **Live iframe** embed of the Peristaltic Rotor Geometry Solver tool.
+11. **Displaced-Volume Model:** **Live iframe** embed, deep-linked to the `#calculator` anchor.
+12. **proto-01:** CAD render + real-prototype photo side-by-side, plus the open-loop calibration results card.
+13. **proto-02:** Gap-sweep hump-curve SVG.
+14. **Test-Campaign App:** DoE setup + randomization + Arduino command automation + collect-and-weigh workflow. Three images: `assets/run-campaign.png` (hero), `assets/pump-validator-app.png`, and the physical-setup photo. (External app — cannot be served via same-origin iframe, D-10.)
 
 ### Section Dividers (full-bleed image tint)
 

@@ -160,7 +160,7 @@
         <div class="divider-content">
           <div class="divider-eyebrow auto-anim delay-1">Section 01</div>
           <h2 class="divider-title auto-anim delay-1">Alignment Module</h2>
-          <p class="divider-sub auto-anim delay-2">Repeatable positioning of the dispensing head.</p>
+          <p class="divider-sub auto-anim delay-2">Indexing each sample tube under the nozzle.</p>
         </div>
       </section>
 
@@ -177,6 +177,69 @@
           poster="assets/alignment_poster.jpg"
           muted loop playsinline controls preload="metadata"
           tabindex="-1"></video>
+      </section>
+
+      <!-- ░░ 3b. ALIGNMENT — FUTURE PERSPECTIVE ░░ -->
+      <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 80px;">
+        <div class="auto-anim delay-1">
+          <div class="site-label">Module 01 · Roadmap</div>
+          <h2 class="site-title" style="font-size: 2.5rem; margin: 6px 0 28px;">One rack today — a self-feeding queue next</h2>
+        </div>
+
+        <!-- Queue schematic: proven stage (solid) flanked by future queues (dashed) -->
+        <svg class="auto-anim" viewBox="0 0 980 200" role="img" aria-label="Input queue feeds the indexing stage, which feeds an output queue" style="width: 100%; max-width: 980px; margin: 0 auto 10px; font-family: var(--font);">
+          <defs>
+            <marker id="qhead" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6b2b"/></marker>
+          </defs>
+          <!-- input queue (future) -->
+          <g fill="none" stroke="rgba(255,107,43,0.45)" stroke-width="2" stroke-dasharray="5 4">
+            <rect x="40"  y="62" width="58" height="76" rx="8"/>
+            <rect x="74"  y="50" width="58" height="76" rx="8"/>
+            <rect x="108" y="38" width="58" height="76" rx="8"/>
+          </g>
+          <text x="103" y="162" fill="#7a7068" font-size="13" text-anchor="middle">input queue</text>
+          <text x="103" y="180" fill="#ff6b2b" font-size="11" text-anchor="middle" font-weight="600">NEXT · ≥4 racks</text>
+          <!-- arrow in -->
+          <line x1="180" y1="88" x2="250" y2="88" stroke="#ff6b2b" stroke-width="2.5" marker-end="url(#qhead)"/>
+          <!-- indexing stage (proven) -->
+          <g>
+            <rect x="268" y="40" width="220" height="100" rx="12" fill="rgba(255,107,43,0.10)" stroke="#ff6b2b" stroke-width="2.5"/>
+            <!-- nozzle over a tube -->
+            <rect x="368" y="20" width="20" height="22" rx="3" fill="#ff6b2b"/>
+            <line x1="378" y1="42" x2="378" y2="60" stroke="#ff6b2b" stroke-width="2"/>
+            <!-- 8 tube dots -->
+            <g fill="rgba(240,236,232,0.8)">
+              <circle cx="300" cy="100" r="6"/><circle cx="322" cy="100" r="6"/><circle cx="344" cy="100" r="6"/><circle cx="366" cy="100" r="6"/>
+              <circle cx="388" cy="100" r="6"/><circle cx="410" cy="100" r="6"/><circle cx="432" cy="100" r="6"/><circle cx="454" cy="100" r="6"/>
+            </g>
+          </g>
+          <text x="378" y="162" fill="#f0ece8" font-size="13" text-anchor="middle" font-weight="600">indexing stage · 8-tube rack</text>
+          <text x="378" y="180" fill="#27c93f" font-size="11" text-anchor="middle" font-weight="600">PROVEN · one rack</text>
+          <!-- arrow out -->
+          <line x1="502" y1="88" x2="572" y2="88" stroke="#ff6b2b" stroke-width="2.5" marker-end="url(#qhead)"/>
+          <!-- output queue (future) -->
+          <g fill="none" stroke="rgba(255,107,43,0.45)" stroke-width="2" stroke-dasharray="5 4">
+            <rect x="590" y="38" width="58" height="76" rx="8"/>
+            <rect x="624" y="50" width="58" height="76" rx="8"/>
+            <rect x="658" y="62" width="58" height="76" rx="8"/>
+          </g>
+          <text x="653" y="162" fill="#7a7068" font-size="13" text-anchor="middle">output queue</text>
+          <text x="653" y="180" fill="#ff6b2b" font-size="11" text-anchor="middle" font-weight="600">NEXT · automatic</text>
+          <!-- future-throughput note -->
+          <text x="820" y="84" fill="#7a7068" font-size="13" text-anchor="middle">hands-off</text>
+          <text x="820" y="104" fill="#7a7068" font-size="13" text-anchor="middle">high throughput</text>
+        </svg>
+
+        <div class="auto-anim delay-2" style="display: flex; gap: 18px; margin-top: 8px;">
+          <div class="glass" style="flex: 1; padding: 16px 20px;">
+            <div style="font-size: 1.1rem; font-weight: 700; color: #27c93f; margin-bottom: 4px;">Today ✓</div>
+            <div style="color: var(--text-muted); font-size: 1.02rem; line-height: 1.45;">Moves a single 8-tube rack under the nozzle — reliably. The core motion is proven.</div>
+          </div>
+          <div class="glass" style="flex: 1; padding: 16px 20px;">
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px;">Next →</div>
+            <div style="color: var(--text-muted); font-size: 1.02rem; line-height: 1.45;">Input + output queues holding ≥4 racks, handled automatically — for seamless, high-throughput sample handling.</div>
+          </div>
+        </div>
       </section>
 
       <!-- ░░ 4. DIVIDER — AI FOR ENGINEERING ░░ -->
@@ -197,16 +260,16 @@
           <h2 class="site-title auto-anim delay-1" style="font-size: 2.5rem; line-height: 1.12; margin: 8px 0 28px;">AI compresses the gap from idea to working prototype</h2>
           <div class="auto-anim delay-2" style="display: flex; flex-direction: column; gap: 18px;">
             <div class="glass" style="padding: 18px 22px;">
-              <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A research partner</div>
-              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Surveys methods, models the physics, and stress-tests assumptions before I commit to a build.</div>
+              <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A thinking &amp; analysis partner</div>
+              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Discusses each design decision, models the physics, and processes the experimental results.</div>
             </div>
             <div class="glass" style="padding: 18px 22px;">
-              <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A build accelerator</div>
-              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Turns a validated concept into a live, offline calculator in hours — not weeks.</div>
+              <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A build &amp; documentation engine</div>
+              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Turns concepts into live tools and captures the whole process as presentable text — as it happens.</div>
             </div>
           </div>
           <p class="auto-anim delay-3" style="margin-top: 22px; color: var(--text-muted); font-size: 0.95rem;">
-            Every model and tool on this site was designed and built this way.
+            Design, build, analysis, and write-up run as one continuous loop &mdash; next.
           </p>
         </div>
         <div class="term auto-anim" style="flex: 0.95;">
@@ -218,6 +281,59 @@
           </div>
           <img class="term-img" src="CaludeCode_image.png" alt="Welcome to Claude Code terminal splash" />
         </div>
+      </section>
+
+      <!-- ░░ 5b. AI WORKFLOW — the cycle ░░ -->
+      <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 64px;">
+        <div class="auto-anim delay-1" style="text-align: center; margin-bottom: 6px;">
+          <div class="site-label">AI · workflow</div>
+          <h2 class="site-title" style="font-size: 2.4rem; margin: 6px 0 0;">Working with AI is one continuous loop</h2>
+        </div>
+
+        <svg class="auto-anim" viewBox="0 0 1120 430" role="img"
+             aria-label="A loop between Discuss & Design and Analyze, orbiting a continuous Document hub; Build tools feeds in from outside"
+             style="width: 100%; max-width: 1120px; margin: 0 auto; font-family: var(--font);">
+          <defs>
+            <marker id="ahead" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6b2b"/></marker>
+          </defs>
+
+          <!-- loop arcs orbiting the hub -->
+          <path d="M508,150 C560,55 700,55 752,150" fill="none" stroke="rgba(255,107,43,0.6)" stroke-width="2.5" marker-end="url(#ahead)"/>
+          <path d="M752,300 C700,395 560,395 508,300" fill="none" stroke="rgba(255,107,43,0.6)" stroke-width="2.5" marker-end="url(#ahead)"/>
+          <text x="630" y="388" fill="#7a7068" font-size="14" text-anchor="middle" font-style="italic">iterate</text>
+
+          <!-- Build tools (outside, dashed) -->
+          <rect x="24" y="165" width="212" height="120" rx="14" fill="rgba(255,255,255,0.04)" stroke="rgba(255,107,43,0.4)" stroke-width="2" stroke-dasharray="6 5"/>
+          <text x="130" y="205" fill="#f0ece8" font-size="19" font-weight="700" text-anchor="middle">Build tools</text>
+          <text x="130" y="231" fill="#7a7068" font-size="14" text-anchor="middle">calculators &amp; the</text>
+          <text x="130" y="249" fill="#7a7068" font-size="14" text-anchor="middle">campaign app</text>
+          <text x="130" y="271" fill="#ff6b2b" font-size="12" text-anchor="middle" font-weight="600">evolving · reused</text>
+          <!-- feed arrow into the loop -->
+          <line x1="240" y1="225" x2="284" y2="225" stroke="#ff6b2b" stroke-width="2.5" marker-end="url(#ahead)"/>
+
+          <!-- Discuss & Design -->
+          <rect x="288" y="165" width="220" height="120" rx="14" fill="rgba(255,255,255,0.045)" stroke="rgba(255,107,43,0.32)" stroke-width="2"/>
+          <text x="398" y="205" fill="#ff6b2b" font-size="14" font-weight="700" text-anchor="middle">1 · DISCUSS &amp; DESIGN</text>
+          <text x="398" y="233" fill="#cdc6bf" font-size="14.5" text-anchor="middle">talk through the next</text>
+          <text x="398" y="252" fill="#cdc6bf" font-size="14.5" text-anchor="middle">move; AI proposes it</text>
+
+          <!-- Document hub (center) -->
+          <circle cx="610" cy="225" r="104" fill="none" stroke="rgba(255,107,43,0.12)" stroke-width="2"/>
+          <circle cx="610" cy="225" r="88" fill="rgba(255,107,43,0.12)" stroke="rgba(255,107,43,0.6)" stroke-width="2.5"/>
+          <text x="610" y="216" fill="#f0ece8" font-size="20" font-weight="700" text-anchor="middle">Document</text>
+          <text x="610" y="240" fill="#cdc6bf" font-size="13.5" text-anchor="middle">captured</text>
+          <text x="610" y="258" fill="#cdc6bf" font-size="13.5" text-anchor="middle">continuously</text>
+
+          <!-- Analyze data -->
+          <rect x="752" y="165" width="220" height="120" rx="14" fill="rgba(255,255,255,0.045)" stroke="rgba(255,107,43,0.32)" stroke-width="2"/>
+          <text x="862" y="205" fill="#ff6b2b" font-size="14" font-weight="700" text-anchor="middle">2 · ANALYZE DATA</text>
+          <text x="862" y="233" fill="#cdc6bf" font-size="14.5" text-anchor="middle">AI processes results</text>
+          <text x="862" y="252" fill="#cdc6bf" font-size="14.5" text-anchor="middle">&amp; runs the stats</text>
+        </svg>
+
+        <p class="auto-anim delay-2" style="text-align: center; color: var(--text-muted); font-size: 1rem; margin-top: 2px;">
+          Because the discussion happens in text, the results arrive already analysed and presentation-ready.
+        </p>
       </section>
 
       <!-- ░░ 6. GSD — spec-driven development vs GSD ░░ -->
@@ -385,16 +501,32 @@
       </section>
 
       <!-- ░░ 12. TEST-CAMPAIGN APP ░░ -->
-      <section class="slide" style="display: flex; flex-direction: column; align-items: center; padding: 40px;">
-        <div class="glass auto-anim" style="order: 2; width: 80%; flex: 1; border-radius: var(--radius); overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; background: #000; padding: 10px; margin-top: 16px;">
-          <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Test Setup" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: calc(var(--radius) - 10px);" />
-        </div>
-        <div class="auto-anim delay-1" style="order: 1; text-align: center;">
-          <h2 class="site-title" style="font-size: 2.6rem; margin-bottom: 16px;">Automated campaigns close the hardware loop</h2>
-          <ul style="font-size: 1.4rem; color: var(--text-muted); line-height: 1.6; max-width: 700px; margin: 0 auto; text-align: left;">
-            <li class="fragment" style="margin-bottom: 12px;">Live telemetry feeds the mathematical models.</li>
-            <li class="fragment">Replaces manual pipetting for high-n testing.</li>
+      <section class="slide" style="display: flex; align-items: center; padding: 0 56px; gap: 40px;">
+        <div style="flex: 1.05;">
+          <div class="site-label auto-anim delay-1">Test-campaign app</div>
+          <h2 class="site-title auto-anim delay-1" style="font-size: 2.2rem; line-height: 1.12; margin: 6px 0 22px;">One app runs the campaign — I just weigh the tubes</h2>
+          <ul class="auto-anim delay-2" style="font-size: 1.18rem; color: var(--text-muted); line-height: 1.5; padding-left: 20px; margin: 0;">
+            <li style="margin-bottom: 12px;">Set the DoE parameters — the app designs &amp; <span style="color: var(--accent);">randomizes</span> the run order.</li>
+            <li style="margin-bottom: 12px;">Commands the Arduino directly: dose &amp; parameters per run — no re-flashing.</li>
+            <li style="margin-bottom: 12px;">Runs unattended — I just collect the tubes and weigh them.</li>
+            <li>Randomized order &rarr; statistically robust results, far faster.</li>
           </ul>
+          <p class="auto-anim delay-3" style="margin-top: 18px; color: var(--text-muted); font-size: 0.88rem;">
+            Inline flow-sensor volume readout still WIP — gravimetric weigh-out is the working measure today.
+          </p>
+        </div>
+        <div class="auto-anim" style="flex: 1.5; display: flex; flex-direction: column; gap: 14px;">
+          <div class="glass" style="padding: 8px; border-radius: var(--radius); box-shadow: 0 16px 40px rgba(0,0,0,0.5);">
+            <img src="assets/run-campaign.png" alt="Run Campaign — DoE & hardware setup" style="display: block; width: 100%; max-height: 420px; object-fit: contain; border-radius: calc(var(--radius) - 6px);" />
+          </div>
+          <div style="display: flex; gap: 14px;">
+            <div class="glass" style="flex: 1; padding: 8px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; background: #0d0f12;">
+              <img src="assets/pump-validator-app.png" alt="Pump Validator app home" style="max-width: 100%; max-height: 150px; object-fit: contain; border-radius: calc(var(--radius) - 6px);" />
+            </div>
+            <div class="glass" style="flex: 1; padding: 8px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; background: #000;">
+              <img src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Hardware test setup" style="max-width: 100%; max-height: 150px; object-fit: contain; border-radius: calc(var(--radius) - 6px);" />
+            </div>
+          </div>
         </div>
       </section>
 
