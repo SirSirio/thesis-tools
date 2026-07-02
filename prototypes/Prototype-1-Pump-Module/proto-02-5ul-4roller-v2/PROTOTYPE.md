@@ -22,6 +22,16 @@ factor `k`.
 
 ---
 
+## ▣ Version status
+
+| Version | State | Where |
+|---------|-------|-------|
+| 🟥 **v2.1** | **BUILT — did not seal** (partial occlusion, diagnosed) | §11 |
+| 🟧 **v2.2** | **IN DESIGN** — rotor datum: **fix bearing play** (0.2 mm nozzle, **arrived 2026-07-02**) + shrink comp · centre head · **axial align** · enlarge gap access. Filament + shrink-coupon method fixed. | §11.5–§11.7 |
+| ⬜ **v2.3** | future — first clean seal + gap sweep | — |
+
+---
+
 ## 0. Parts & assembly — what changed from proto-01
 
 The pump is **four printed parts + 8 bearings + the tube**. For the full breakdown of each part
@@ -383,17 +393,30 @@ until the 2.2 holes allow a clean read.
    `dovetail-stop → bore-centre`; whatever fails to put the bore centre on the shaft axis is the
    offset to remove.
 
-> **Both causes must be fixed.** Centring the head alone, with the rotor still small, gives a uniform
+**Also observed — axial misalignment (in-plane vs along-shaft are different).** Causes 1–2 are *in
+the arc plane* (radius too big, bore off-centre). Separately, **along the shaft axis the rotor sits
+~1 mm proud of the pump head**, so the rollers aren't centred on the tube/channel height — they ride
+toward one edge of the channel. This is a distinct alignment defect (axial, not radial) and is fixed
+in 2.2 by axial registration.
+
+> **Both in-plane causes must be fixed.** Centring the head alone, with the rotor still small, gives a uniform
 > gap ≈ ρ − `R` = 21.29 − 19.52 ≈ **1.77 mm → δ ≈ 0.05 → barely seals.** Fixing only one leaves it
-> leaking.
+> leaking. (The axial ~1 mm offset is a third, independent fix.)
 
 ### 11.5 Decisions for 2.2
 - **Fix the rotor (chosen).** Tighten the bearing pockets (less play → 2R back up *and* lower σ_G)
   and add **PLA shrink compensation** so 2R returns to ~39.4 (`R` → 19.7). This restores the design
   datum and yields the **nominal → actual compensation factor**. With `R` back at 19.7 the existing
   head wall radii are correct as-designed — no head-radius redesign needed.
-- **Centre the head on the shaft.** Resolve the ~0.45 mm too-high (close the CAD/seat offset) so the
-  wall is concentric and the gap uniform around the arc.
+- **Centre the head on the shaft (in-plane).** Resolve the ~0.45 mm too-high (close the CAD/seat offset)
+  so the wall is concentric and the gap uniform around the arc.
+- **Axial alignment (along the shaft).** Shift the head/rotor so the rollers sit **centred in the channel
+  height** — currently the rotor is ~1 mm proud of the head along the shaft, so the rollers ride to one
+  edge. Register the two axially (this is independent of the in-plane centring above).
+- **0.2 mm nozzle for the bearing pockets (ordered, ~next week).** The 0.4 mm nozzle can't hit the 5 mm
+  seat — it prints **4.8 mm (play)** or **5.2 mm (loose)**, and that play is a direct σ_G source. Try the
+  finer nozzle **+ light sanding + PLA-shrink comp first**; **metal dowel-pin axles** are the fallback if
+  play persists. (Bet on the nozzle before the more complex pin solution.)
 - **Sequence, not simultaneous.** Fix + reprint + **re-measure the rotor first** (it defines the
   datum), *then* build and centre the head against the corrected rotor. The two fixes are naturally
   sequential — head geometry depends on the final `R`.
@@ -439,6 +462,45 @@ If you measure a coupon first you get `f` directly and print once.
 
 > **Warning:** applying the full 0.92 % *and* tightening the pockets will likely **overshoot** 2R
 > (you would add back the play you just removed). Compensate for **shrink only**.
+
+### 11.7 Filament & shrink-calibration method (v2.2)
+
+**Filament used — all v2.2 prints.** 3DE MAX PLA — "Cold White", 1.75 mm, 1 kg (3D Eksperten).
+
+| Property | Value |
+|----------|-------|
+| Type / diameter | PLA · 1.75 mm, tolerance **±0.05 mm** |
+| Print (nozzle) temp | **215–230 °C** (recommended min–max) |
+| Bed temp | **35–60 °C** |
+| Density | 1.23 g/cm³ |
+| Heat-distortion temp (HDT) | 55 °C |
+| Tensile / elongation | 42.6 MPa · 285.1 % |
+| Flexural / flex modulus | 64.8 MPa · 2353 MPa |
+| Melt-flow index | 2–5 g/10 min |
+| RAL/Pantone · EAN | 11-0602 TCX · 5711336018236 |
+| Source | https://3deksperten.dk/products/3de-max-cold-white-1-75mm |
+
+**Shrink-calibration coupon — decision (2026-07-02).** Use the MakerWorld *Filament Shrinkage Test Bar*
+(two 100 mm bars, one on X and one on Y) — model 786685
+(https://makerworld.com/en/models/786685-filament-shrinkage-test-bar).
+**Print the bars with the 0.4 mm nozzle, not the 0.2.** Thermal shrink is a *material* property
+(a percentage of length), essentially **nozzle-independent over a 100 mm span** — a 0.2 and a 0.4 nozzle
+give the same shrink fraction to well inside the ±0.2 % bracket, and 0.4 mm prints much faster. The nozzle
+only changes *fine-feature* accuracy (the 5 mm bearing pockets), which this coupon does not measure. Keep
+everything else identical to the rotor print — **same spool, same nozzle temp, same bed temp, same
+plate/orientation** — that is what makes the measured shrink valid to transfer onto the rotor (which is
+printed at **0.2 mm** for the pockets).
+
+**Procedure.**
+1. Print both bars @ **0.4 mm**, matched filament + temps to the rotor print.
+2. **Let them fully cool** before measuring — PLA keeps contracting for several minutes after the print ends.
+3. Caliper each bar at a few points, average; compute `f = (100 − measured) / measured` for **X and Y separately**.
+4. If X and Y agree (they usually do), apply a single XY scale `1 + f` in the slicer; if they differ noticeably, apply per-axis scale.
+5. Apply the coupon's **material-shrink** scale (~0.3–0.5 %) to the rotor — **NOT** the full 0.91 % v2.1
+   apparent deficit, which also contains bearing-pocket play (fixed separately). See §11.6 overshoot warning.
+
+This replaces the "bracket the rotor at +0.4 / +0.6 / +0.8 %" fallback in §11.6: the coupon gives `f`
+directly, so the rotor prints once.
 
 ---
 

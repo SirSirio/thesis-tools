@@ -814,6 +814,21 @@
           <h2 class="detail-title">5 µL 4-roller peristaltic — corrected geometry + gap sweep</h2>
         </div>
 
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;">
+          <div style="flex:1; min-width:150px; padding:12px 16px; border-radius:10px; background:rgba(232,53,53,0.12); border:1px solid rgba(232,53,53,0.5);">
+            <div style="font-size:1.15rem; font-weight:800; color:var(--accent-2);">v2.1</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">BUILT — didn't seal · diagnosed</div>
+          </div>
+          <div style="flex:1.4; min-width:200px; padding:12px 16px; border-radius:10px; background:rgba(255,107,43,0.14); border:1px solid var(--accent);">
+            <div style="font-size:1.15rem; font-weight:800; color:var(--accent);">v2.2 — in design</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor datum: fix bearing play (0.2 mm nozzle) + shrink comp · centre head · axial align · enlarge gap access</div>
+          </div>
+          <div style="flex:0.8; min-width:120px; padding:12px 16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px dashed var(--glass-border); opacity:0.6;">
+            <div style="font-size:1.15rem; font-weight:800; color:var(--text-muted);">v2.3</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">future — first clean seal</div>
+          </div>
+        </div>
+
         <div class="callout callout-warn"><span class="callout-label">Status: build 2.1 printed &amp; measured — not yet pumped.</span> The firm head (nominal gap 1.52 mm) and a reprinted rotor were measured against the reused proto-01 holder. Occlusion is only partial — two stacked geometry errors (see <strong>Build 2.1</strong> at the bottom). The design sections below remain the plan; the gap-sweep experiments run once 2.2 seals.</div>
 
         <section class="detail-block">
@@ -965,11 +980,11 @@
           <figure class="detail-figure">
             <div class="figure-grid">
               <figure>
-                <img src="Tube%20OD%20Thikness/Ruler.png" alt="Ruler calibration — 1 mm interval reads 976 px" />
+                <img src="Prototype-1-Pump-Module/Tube%20OD%20Thikness/Ruler.png" alt="Ruler calibration — 1 mm interval reads 976 px" />
                 <figcaption>Calibration: 1 mm interval reads 976 px → 976 px/mm</figcaption>
               </figure>
               <figure>
-                <img src="Tube%20OD%20Thikness/Wall%20Thikness.png" alt="Three radial wall measurements" />
+                <img src="Prototype-1-Pump-Module/Tube%20OD%20Thikness/Wall%20Thikness.png" alt="Three radial wall measurements" />
                 <figcaption>Wall thickness: Mean 0.896 mm, CV 0.7 %</figcaption>
               </figure>
             </div>
@@ -990,7 +1005,8 @@
         </section>
 
         <section class="detail-block">
-          <h3 class="block-heading">Build 2.1 — first print, measurements &amp; diagnosis</h3>
+          <div style="display:inline-block; font-size:1.3rem; font-weight:800; letter-spacing:0.02em; color:var(--accent-2); background:rgba(232,53,53,0.12); border:1px solid rgba(232,53,53,0.5); border-radius:8px; padding:6px 16px; margin-bottom:16px;">v2.1 — BUILT, DIDN'T SEAL</div>
+          <h3 class="block-heading">First print, measurements &amp; diagnosis</h3>
           <p class="block-note">First print of the <strong>firm head</strong> (nominal gap 1.52 mm) plus a reprinted rotor, measured against the reused proto-01 holder. Built and measured — <strong>not yet pumped</strong>. The design gap 1.52 is a <em>nominal − nominal</em> figure (wall radius 21.22 − R 19.70); what governs occlusion is the <strong>printed, installed gap measured from the shaft</strong>.</p>
 
           <div class="stats-row">
@@ -1043,8 +1059,13 @@
             </ul>
             <h4>Head</h4>
             <ul>
-              <li><strong>Centre the wall on the shaft</strong> — close the ~0.45 mm too-high (resolve the CAD/seat offset) so the gap is uniform around the arc.</li>
+              <li><strong>Centre the wall on the shaft (in-plane)</strong> — close the ~0.45 mm too-high (resolve the CAD/seat offset) so the gap is uniform around the arc.</li>
+              <li><strong>Axial alignment (along the shaft)</strong> — the rotor sits ~1 mm proud of the head, so the rollers ride to one edge of the channel; register the two axially so the rollers sit centred on the tube. Independent of the in-plane centring.</li>
               <li><strong>Enlarge the caliper-access holes</strong> so the installed wall radius reads directly.</li>
+            </ul>
+            <h4>Printer / precision</h4>
+            <ul>
+              <li><strong>0.2 mm nozzle</strong> (ordered, ~next week) for the bearing pockets — the 0.4 mm nozzle can't hit the 5 mm seat (prints 4.8 = play, or 5.2 = loose), and that play is a direct σ<sub>G</sub> source. Try the finer nozzle <strong>+ light sanding + PLA-shrink first</strong>; <strong>metal dowel-pin axles</strong> are the fallback if play persists.</li>
             </ul>
             <h4>Sequence &amp; notes</h4>
             <ul>
@@ -1053,6 +1074,55 @@
             </ul>
           </div>
           <p class="block-note" style="margin-top:12px">Parked for the thesis report (after 2.1): an FDM-vs-resin printer comparison (Bambu P1S vs Prusa SL1S SPEED) and a PLA-shrinkage note (typical 0.2–0.5 %; ~1 % is high-end).</p>
+        </section>
+
+        <section class="detail-block">
+          <div style="display:inline-block; font-size:1.3rem; font-weight:800; letter-spacing:0.02em; color:var(--accent); background:rgba(255,107,43,0.12); border:1px solid rgba(255,107,43,0.5); border-radius:8px; padding:6px 16px; margin-bottom:16px;">v2.2 — IN DESIGN</div>
+          <h3 class="block-heading">Rotor-datum rebuild — materials &amp; shrink calibration</h3>
+          <p class="block-note">The v2.2 fixes are set (see <strong>→ Changes for 2.2</strong> above): rebuild the rotor to restore the datum, then centre and axially align the head. The gating part — the <strong>0.2 mm nozzle</strong> for the bearing pockets — <strong>arrived 2026-07-02</strong>, so the build is unblocked. This block records the filament and the shrink-calibration method.</p>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-value">0.2 mm</div>
+              <div class="stat-label">nozzle arrived 2026-07-02 → bearing pockets (rotor)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">0.4 mm</div>
+              <div class="stat-label">nozzle for the shrink-calibration bars (faster; shrink is nozzle-independent)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">~0.3–0.5 %</div>
+              <div class="stat-label">expected material shrink to scale into the rotor</div>
+            </div>
+          </div>
+
+          <p class="block-note" style="margin-top:8px"><strong>Filament — all v2.2 prints.</strong> 3DE MAX PLA "Cold White", 1.75 mm, 1 kg (<a href="https://3deksperten.dk/products/3de-max-cold-white-1-75mm" target="_blank" rel="noopener">3D Eksperten</a>).</p>
+          <table class="param-table">
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Type / diameter</td><td>PLA · 1.75 mm, tolerance <strong>±0.05 mm</strong></td></tr>
+              <tr><td>Print (nozzle) temp</td><td><strong>215–230 °C</strong></td></tr>
+              <tr><td>Bed temp</td><td><strong>35–60 °C</strong></td></tr>
+              <tr><td>Density · HDT</td><td>1.23 g/cm³ · 55 °C</td></tr>
+              <tr><td>Tensile · elongation</td><td>42.6 MPa · 285.1 %</td></tr>
+              <tr><td>Flexural · flex modulus</td><td>64.8 MPa · 2353 MPa</td></tr>
+              <tr><td>Melt-flow index</td><td>2–5 g/10 min</td></tr>
+              <tr><td>RAL/Pantone · EAN</td><td>11-0602 TCX · 5711336018236</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-note"><span class="callout-label">Shrink bars: print at 0.4 mm, not 0.2.</span> Using the MakerWorld <a href="https://makerworld.com/en/models/786685-filament-shrinkage-test-bar" target="_blank" rel="noopener">Filament Shrinkage Test Bar</a> (two 100 mm bars, X and Y). Thermal shrink is a <strong>material</strong> property — a percentage of length, essentially <strong>nozzle-independent over 100 mm</strong> — so 0.2 and 0.4 give the same shrink fraction well inside the ±0.2 % bracket, and 0.4 mm is much faster. The nozzle only matters for fine features (the 5 mm pockets), which the bars don't measure. Keep everything else identical to the rotor print — <strong>same spool, same nozzle temp, same bed temp, same plate/orientation</strong>.</div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Shrink procedure</h4>
+          <div class="next-brief">
+            <ul>
+              <li>Print both bars @ <strong>0.4 mm</strong>, matched filament + temps to the rotor print.</li>
+              <li><strong>Let them fully cool</strong> before measuring — PLA keeps contracting for minutes after the print ends.</li>
+              <li>Caliper each bar at a few points, average; compute <code>f = (100 − measured) / measured</code> for <strong>X and Y separately</strong>.</li>
+              <li>If X and Y agree, apply a single XY scale <code>1 + f</code>; if they differ, per-axis scale.</li>
+              <li>Apply the coupon's <strong>material-shrink</strong> scale (~0.3–0.5 %) to the rotor — <strong>not</strong> the full 0.91 % v2.1 deficit (that includes bearing-pocket play, fixed separately), or 2R will overshoot 39.4.</li>
+            </ul>
+          </div>
         </section>
       </div>
 
