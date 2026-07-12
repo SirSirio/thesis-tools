@@ -27,7 +27,7 @@ factor `k`.
 | Version | State | Where |
 |---------|-------|-------|
 | 🟥 **v2.1** | **BUILT — did not seal** (partial occlusion, diagnosed) | §11 |
-| 🟧 **v2.2** | **IN DESIGN** — rotor datum: **fix bearing play** (0.2 mm nozzle, **arrived 2026-07-02**) + shrink comp · centre head · **axial align** · enlarge gap access. Filament + shrink-coupon method fixed. | §11.5–§11.7 |
+| 🟧 **v2.2** | **IN DESIGN** — rotor datum: **fix bearing play** (0.2 mm nozzle, **arrived 2026-07-02**) + shrink comp · centre head · **axial align** · enlarge gap access. Filament + shrink-coupon method fixed. **Rotor print #1 measured & decomposed: play confirmed (0.085 mm), peg ladder must be re-run at 0.2 mm before print #2.** | §11.5–§11.7.9 |
 | ⬜ **v2.3** | future — first clean seal + gap sweep | — |
 
 ---
@@ -501,6 +501,586 @@ printed at **0.2 mm** for the pockets).
 
 This replaces the "bracket the rotor at +0.4 / +0.6 / +0.8 %" fallback in §11.6: the coupon gives `f`
 directly, so the rotor prints once.
+
+#### 11.7.1 RESULTS — shrink coupon measured (2026-07-02, 0.4 mm nozzle)
+
+Bars printed at **100.00 mm** nominal, 3DE MAX PLA "Cold White", 0.4 mm nozzle.
+
+![Shrink coupons — two 100 mm bars printed along X and Y, 3DE MAX PLA "Cold White"](ShrinkTest10cm.jpg)
+
+*The two 100 mm calibration bars, embossed `10cm` and marked **X** / **Y** for the axis each was printed along.
+Both were left to cool fully before calipering.*
+
+| Axis | Measured | Shrink `f = (100 − m)/m` | Compensation scale `1 + f` |
+|------|----------|--------------------------|----------------------------|
+| **X** | **99.74 mm** | **0.26 %** | **×1.0026** |
+| **Y** | **99.82 mm** | **0.18 %** | **×1.0018** |
+| mean | 99.78 mm | 0.22 % | ×1.0022 |
+
+> **This number is FINAL and is not revised anywhere later in this document.** It is a **material** property of
+> the filament (thermal contraction of PLA), measured once, correctly. Everything discovered later about the
+> **0.2 mm nozzle** is a *separate, process* effect and is carried by a **separate parameter** (`NozzleComp`,
+> §11.7.12) — never by folding it into this one. See §11.7.13 for why that separation matters.
+
+**→ Apply per-axis scale (X ×1.0026 · Y ×1.0018) to the rotor.** X and Y differ by 0.08 %, which on
+Ø39.4 mm prints the rotor ~**0.03 mm out-of-round** (slightly elliptical). Small, but it feeds gap
+non-uniformity around the arc — and per-axis scaling is free in the slicer, so use it rather than a
+single mean scale.
+
+**⭐ The key finding — play is ~4.5× the shrink.**
+
+> **Only the printed pitch circle shrinks — the bearings are steel.** `R` = pitch radius (**14.70 mm,
+> printed**) + bearing radius (**5.00 mm, steel — does not shrink**). So shrink acts on 14.70, not on 39.40:
+
+```
+2R shrink deficit = 2 × 14.70 × 0.0022 ≈ 0.065 mm
+
+2R deficit  0.36 mm  =  shrink ~0.065 mm (18 %)  +  bearing play ~0.30 mm (82 %)
+                                                    (≈0.15 mm inward nesting per bearing)
+```
+
+This **quantitatively confirms** the shrink-vs-play split (§11.4, §11.6) and makes play *even more*
+dominant than first estimated: true PLA shrink is at the **low end** of the 0.2–0.5 % band, and
+**bearing play is ~82 % of the error**. So the **0.2 mm nozzle / pin fit is the big lever**; shrink
+compensation is a **small correction (~0.065 mm on 2R)**. It also retro-justifies the §11.6 warning:
+applying the full 0.91 % would have over-scaled the rotor by ~0.3 mm.
+
+#### 11.7.2 What the 0.2 mm-nozzle print must include
+
+The shrink bars do **not** need reprinting at 0.2 mm (shrink is nozzle-independent over 100 mm). What
+the 0.2 mm nozzle changes is **fine-feature accuracy** — i.e. the bearing pockets, the 75 % error. So:
+
+1. **Bearing-pocket fit ladder (the critical coupon).** Print the bearing seat/pin feature at a range of
+   sizes bracketing nominal — e.g. **4.90 / 4.95 / 5.00 / 5.05 / 5.10 mm** — in the **same orientation and
+   settings as the rotor**, and test-fit a real **MR105ZZ**. Pick the size that gives **zero play but still
+   assembles**. This directly kills the dominant error. Cheap, fast, do it *before* the rotor.
+2. **Then the rotor**, printed at 0.2 mm with (a) the winning pocket size and (b) the **per-axis shrink
+   scale** above. Re-measure **2R → target 39.40 mm**.
+3. *(Optional sanity check)* a short dimensional coupon at 0.2 mm to confirm the 0.4 mm-derived shrink
+   still holds at 0.2 mm — validates the nozzle-independence assumption cheaply.
+
+#### 11.7.3 RESULTS — bearing-pin fit ladder (2026-07-02, 0.2 mm nozzle)
+
+| Pin Ø (CAD) | Result |
+|-------------|--------|
+| < 5.05 mm | a bit of **play** |
+| **5.05 mm** | ✅ **best fit — "just works"** (snug, bearing inserts) |
+| > 5.05 mm | **difficult to insert** the bearing |
+
+**→ Bearing pin = 5.05 mm CAD, printed at 0.2 mm nozzle.** Note the fit window is narrow and 5.05 sits
+at the **tight end** of it ("just works") — so any change that *grows* the pin risks a non-assemblable rotor.
+
+#### 11.7.4 How to rescale the rotor — DO NOT global-scale
+
+**Do NOT apply a global XY scale to the rotor in the slicer.** It would scale the **pin** too
+(5.05 → ~5.06), pushing the empirically-validated fit toward the "can't insert" end. The pin is a
+**fine feature already compensated empirically** by the ladder — it needs no shrink scale.
+
+**Compensate shrink on the printed radial geometry only:**
+
+```
+pitch radius (printed)   nominal 14.70 mm  →  CAD 14.70 × 1.0022 = 14.73 mm
+bearing radius            5.00 mm  (steel — NOT scaled)
+bearing pin Ø             5.05 mm  (validated — NOT scaled)
+
+→ printed pitch ≈ 14.73 × 0.9978 ≈ 14.70   →   2R = 2 × (14.70 + 5.00) = 39.40 ✓
+```
+
+**Rules for the v2.2 rotor print:**
+1. **Pin stays 5.05 mm** — untouched by any scale.
+2. **Pitch radius +0.22 %** (14.70 → **14.73 mm**) in CAD — this is the *only* shrink compensation needed.
+3. **No slicer scale.** Same settings/orientation as the fit ladder (0.2 mm nozzle).
+4. Print → **measure 2R (target 39.40 mm)** and check the bearing fit → iterate if off.
+
+> **Anisotropy note:** X shrinks 0.26 %, Y 0.18 %, so a uniform +0.22 % leaves the rotor ~0.03 mm
+> out-of-round. That is second-order against the 0.36 mm we are fixing — accept it for v2.2, measure 2R on
+> two diameters, and only chase it if the gap uniformity demands it.
+
+#### 11.7.5 Fusion 360 parameter set (v2.2)
+
+The CAD model is driven by these user parameters. **Two rules govern which may be shrink-scaled:**
+**steel does not shrink** (bearings), and **empirically-fitted features are already compensated**
+(the peg — set by the fit ladder, not by theory).
+
+| Parameter | Expression | Value | What it is | Shrink-scaled? |
+|-----------|-----------|-------|------------|----------------|
+| `PumpDiam` | `19.7 * 2 mm` | **39.40** | **2R** — roller-circle (bearing-to-bearing) outer Ø = 2 × roller radius `R`. The design datum; the **target as-printed** value. | No — it's the target |
+| `BearingD` | `10 mm` | 10.00 | Bearing **outer** Ø (MR105ZZ OD). | **Never** — steel |
+| `RotorLength` | `(PumpDiam - BearingD) * ShrinkComp * NozzleComp` | ~~29.46~~ → **29.67** | **Pitch Ø** — centre-to-centre span between opposite bearings. The **printed plastic** dimension, so it carries **both** compensations. | **Yes** ← the only one |
+| `ShrinkComp` | `1.0022` | **1.0022** | **MATERIAL.** PLA thermal contraction (+0.22 %), measured on the 100 mm coupon (§11.7.1). **Final — not revised.** Changes only if the **filament** changes. | — |
+| `NozzleComp` | `1.0068` | **1.0068** | **PROCESS (NEW, §11.7.12–13).** The **0.2 mm nozzle's** dimensional offset (+0.68 %), back-calculated from the play-free rotor: `1.0090 / 1.0022`. Changes only if the **nozzle** changes. Working constant — validate on the next print. | — |
+| `BearingBoreD` | `5.05 mm` | **5.05** | Ø of the **printed peg**. The peg prints as a **cone** — its **base lands at ≈5.00 = the bearing bore = a perfect press fit**, which is why the single bottom bearing has **zero play** (§11.7.11–12). Empirically correct; leave it. | **Never** — set empirically |
+| `BearingWidth` | ~~`8 mm`~~ → **`4 mm`** | **4.00** | Roller width — **ONE MR105ZZ** (was 2 stacked). The 2nd bearing sat on the narrow end of the cone, tilted inward, and caused skew + tube walking (§11.7.11). | No |
+| `PegHeight` | ~~`8 mm`~~ → **`~4.5 mm`** | ~4.5 | Peg height — just enough for one 4 mm bearing on the **base land**. Shorter peg = less cone to develop. | No |
+| `ToleranceTight` | `0.05 mm` | 0.05 | **Generic** tight/press-fit clearance, used across several features. *Not a single-purpose parameter — some features have been overridden locally in the model.* | No |
+| `ToleranceLoose` | `0.25 mm` | 0.25 | **Generic** loose/sliding clearance, used across several features (same caveat — locally overridden in places). **Note:** the head↔motor-holder interface **no longer carries the proto-01 play** — that fit is fixed. | No |
+| `FaceThikness` | `2.5 mm` | 2.50 | Thickness of the **motor-holder lateral faces**. Minor/non-critical parameter. | No |
+| `TubeID` | `0.51 mm` | 0.51 | Tube inner Ø (lumen `d`). | n/a |
+| `TubeWallThickness` | `0.91 mm` | 0.91 | Tube wall `w` — **measured** (§11.7 / tube analysis). | n/a |
+| `TubeOD` | `TubeID + TubeWallThickness * 2` | 2.33 | Tube outer Ø = ID + 2w. Matches the Ismatec standard exactly. | n/a |
+| `GapPumpHeadRotor` | `1.52 mm` | 1.52 | Gap between pump-head wall and roller — currently the **firm head** (δ = 0.30). Sweep values: 1.52 / 1.62 / 1.72. | see below |
+
+> **Pump-head print (later, not the rotor):** the head's arc wall radius (~21.22 mm) is *also* printed
+> plastic and shrinks ~0.22 % → the wall comes in ~**0.047 mm** tighter, closing the gap by that much.
+> The head will need its own shrink compensation on its radial geometry when it is printed.
+
+#### 11.7.6 The CAD gap now reads 1.488 — why, and what to do
+
+**Expected. Do not "fix" it by editing the gap number.** Shrink-compensating the rotor grew it in CAD
+(that is the whole point — it shrinks *back* to R = 19.70 when printed), so the CAD-space gap closed:
+
+```
+pitch radius CAD = 14.70 × 1.0022 = 14.7323      (+0.0323 mm)
+CAD R            = 14.7323 + 5.00 = 19.7323
+CAD gap          = 21.22 − 19.7323 = 1.488  ✓ (matches the model exactly)
+```
+
+**Once shrink comp is in play, the CAD gap is a derived artifact, not a target.** The only number that
+means anything is the **as-printed installed gap**.
+
+**The problem this exposes: the HEAD is not yet shrink-compensated.** If printed as-is:
+
+| | CAD | × 0.9978 (shrink) | Printed |
+|---|---|---|---|
+| Rotor `R` | 19.7323 | → | **19.70** ✓ (comp works) |
+| Head wall radius | 21.22 | → | 21.173 ✗ (shrank 0.047) |
+| **Installed gap** | | | **1.473** — not 1.52 (δ = 0.35, firmer than the 0.30 intended) |
+
+**Fix — compensate the head's wall radius too**, and keep `GapPumpHeadRotor` as the *as-printed intent*:
+
+```
+HeadWallRadius = (PumpDiam/2 + GapPumpHeadRotor) * ShrinkComp
+               = (19.70 + 1.52) × 1.0022 = 21.267 mm
+→ printed wall = 21.267 × 0.9978 = 21.22 → installed gap = 21.22 − 19.70 = 1.52 ✓
+```
+
+With **both** parts compensated the CAD gap will read ≈ **1.534** and print at **1.52**. That is correct —
+ignore the CAD number, trust the printed one.
+
+> **Rule:** apply `ShrinkComp` to **every printed plastic dimension that sets the gap** — the rotor's
+> *pitch* (done) **and** the head's *wall radius* (to do). Never to steel (`BearingD`) or to
+> empirically-fitted features (`BearingBoreD`).
+
+#### 11.7.7 Print order — ROTOR FIRST, then the heads (decided)
+
+**Do not print the pump head yet.** The rotor is the **datum**: `installed gap = head wall radius − R`.
+The shrink comp is an *estimate*, so the printed `R` may not land exactly at 19.70. If it lands at, say,
+19.66, every head designed against 19.70 has a gap 0.04 mm off — and at **3.4 µL/mm** that is ~0.14 µL
+(~3 %) *and* it shifts the whole gap sweep. With **three heads** to print, that is 3× the waste.
+
+**Sequence:**
+1. **Print the rotor** (peg 5.05, pitch 29.46, 0.2 mm nozzle, no slicer scale).
+2. **Measure 2R** on two diameters → get the **real printed `R`**; confirm the bearings still insert.
+3. **Set the head wall radius from the *measured* `R`** (not the nominal 19.70), with `ShrinkComp` applied.
+4. **Then print the heads.**
+
+> **Do the head CAD work now** — centring on the shaft (§11.5), the ~1 mm axial alignment, and enlarging
+> the gap-measurement access are all **independent of `R`**. Have the head model ready so that the moment
+> 2R is measured, only one radius parameter changes and the heads go straight to print.
+
+#### 11.7.8 RESULTS — v2.2 rotor, print #1 (0.2 mm nozzle)
+
+Printed with peg 5.05, pitch Ø 29.46 (`ShrinkComp` = 1.0022), 0.2 mm nozzle, no slicer scale.
+
+| Quantity | Target | **Measured** | Off by |
+|----------|--------|--------------|--------|
+| **2R** (across bearings, both axes) | 39.40 | **39.20 mm** | **−0.20 mm** |
+| → Roller radius `R` | 19.70 | **19.60** | −0.10 mm |
+| (v2.1 was) | — | 39.04 | −0.36 mm |
+
+**Progress: +0.16 mm recovered** of the 0.36 mm needed (~44 %). **0.20 mm still short.** Measured the
+**same on both axes → the rotor printed round** (the predicted ~0.03 mm out-of-round did not materialize).
+
+**Back out the plastic — the deficit is still 4× the material shrink:**
+
+```
+printed pitch radius = 19.60 − 5.00 (steel) = 14.60
+CAD pitch radius     = 14.7323
+effective deficit    = 0.1323 mm = 0.90 %     ← material shrink is only 0.22 %
+→ ~0.68 % (≈0.10 mm on pitch radius, 0.20 mm on 2R) UNEXPLAINED
+```
+
+**Two candidate causes — they demand opposite responses, so diagnose before compensating:**
+
+1. **Residual bearing play** (bearings still nesting inward on the peg). ⚠ If this is it, **scaling the
+   rotor up would be the WRONG fix** — play is *variable*, a direct σ_G / CV source. You would be papering
+   over a precision defect with a dimensional fudge, and the rollers would still wander under load.
+2. **A 0.2 mm-nozzle dimensional offset** — the shrink coupon was printed at **0.4 mm**, and §11.7 assumed
+   shrink is nozzle-independent. **That assumption is now in doubt:** changing to the 0.2 nozzle also broke
+   previously-good tolerances/fits elsewhere (see below), which is direct evidence the 0.2 nozzle has a
+   *different dimensional signature*. If this is it, it **is** a fixed offset and **is** compensable by scale.
+
+**The decomposing measurement (cheap, do this first):** caliper the rotor's **plastic geometry without the
+bearings** — the printed **peg Ø** and the **peg-to-peg pitch**. That separates *plastic dimension* from
+*bearing seating*:
+- If printed pitch ≈ 14.60 → the **plastic** is short → it's a 0.2 mm-nozzle scale offset → recalibrate
+  `ShrinkComp` empirically at 0.2 mm.
+- If printed pitch ≈ 14.70 but 2R still reads 39.20 → the loss is at the **bearing seat** → residual play →
+  fix the peg, do **not** scale.
+
+**Also — do not assume 2R must equal 39.40.** `R` is a *datum*, not a spec: the gap is
+`head wall radius − R`. If `R` = 19.60 is **stable and play-free**, the heads can simply be designed against
+the **measured 19.60** (§11.7.7) and the pump is fine — volume/stroke drops slightly and is recovered by
+step-count calibration. **Reprinting the rotor is only necessary if the 0.20 mm is play** (unstable), not if
+it is a stable offset.
+
+**Tolerance fallout from the nozzle change (open).** Switching 0.4 → 0.2 mm **invalidated fits that were
+good before** — the 0.2 nozzle prints holes/clearances closer to nominal, so features that were sized to
+compensate the 0.4 nozzle's undersizing now come out loose. **Affected parts must be re-tuned and
+reprinted.** *(Which parts/fits — to be listed.)*
+
+#### 11.7.9 DECOMPOSED — it is bearing PLAY, not a scale offset (v2.2 rotor, print #1)
+
+The §11.7.8 fork is resolved. The rotor was calipered **without the bearings**.
+
+##### Measurement method & reliability (important — this drives which numbers we trust)
+
+Three readings were taken; **they are not equally reliable**, and the analysis weights them accordingly:
+
+| # | Reading | Value | Reliability | Why |
+|---|---------|-------|-------------|-----|
+| **O** | **Outer span**, outer edge → outer edge of two **opposite** pegs | **34.20 mm** | **High** | Flat caliper jaws close onto solid convex surfaces — the normal, well-conditioned caliper measurement. |
+| **P** | **Peg Ø**, measured **directly** on the pegs | **4.90–4.93 mm** (mean **4.915**) | **High** | Same reason — flat jaws on a convex cylinder. Spread across pegs = 0.03 mm. |
+| **I** | **Inner span**, inner edge → inner edge of two opposite pegs | **24.44 mm** | **Low** ⚠ | Requires the caliper's **sharp knife edges**, which **bite into and locally deform the PLA**. The jaws push *outward* into the material → the reading is biased **high**. |
+
+**Two ways to get the pitch (centre-to-centre) — and the residual proves the bias is real:**
+
+```
+Method A (trusted):   pitch = O − P        = 34.20 − 4.915 = 29.285 mm
+Method B (inner):     pitch = (O + I)/2    = (34.20 + 24.44)/2 = 29.32 mm
+
+Predicted inner from A:  I = pitch − P = 29.285 − 4.915 = 24.37 mm
+Measured inner:                                           24.44 mm   (+0.07 mm)
+```
+
+The inner reads **0.07 mm too large**, in **exactly the direction** the knife-edge indentation predicts.
+This is a self-validating check: the metrology hierarchy is confirmed by its own residual.
+
+> **Rule adopted for this build:** trust **outer spans and direct outer-surface diameters**. Treat
+> **inner/knife-edge spans as a cross-check only**, never as a primary number. Where an internal dimension
+> matters, derive it (`inner = outer − 2 × feature Ø`) rather than measure it.
+
+##### The result
+
+| Quantity | CAD | **Printed (measured)** | Off by | |
+|----------|-----|------------------------|--------|---|
+| **Pitch Ø** (`RotorLength`) | 29.465 | **29.285** | −0.18 mm (**−0.61 %**) | plastic — mildly short |
+| **Peg Ø** (`BearingBoreD`) | 5.05 | **4.915** | −0.135 mm (**−2.7 %**) | ⚠ **the problem** |
+
+The two errors are **not the same percentage** (0.61 % vs 2.7 %) — so this is **not a global scale error**.
+The peg carries a roughly **fixed −0.13 mm offset**, characteristic of a perimeter/extrusion-width effect
+on a small cylindrical feature at the 0.2 mm nozzle.
+
+##### This closes the loop on 2R = 39.20 exactly
+
+MR105ZZ bore = **5.000 mm**. A **4.915 mm** peg in a 5.000 mm bore = **0.085 mm diametral clearance** —
+i.e. **play**. And when you caliper across two opposite bearings, **the jaws squeeze that play shut**,
+pulling both rollers inward:
+
+```
+2R (as measured) = pitch + bearing OD − play
+                 = 29.285 + 10.000 − 0.085
+                 = 39.20 mm          ← the measured value, reproduced exactly
+```
+
+**Three independent routes (outer span, direct peg Ø, and the across-bearings 2R) all converge on the same
+picture.** The rotor is **not** meaningfully undersized — **the bearings are loose on the pegs, and the act
+of measuring 2R with a caliper was hiding it.**
+
+> **Free of the jaws, each roller can wander ±0.043 mm radially.** At **3.4 µL/mm** that is **±0.15 µL —
+> ~3 % of a 5 µL stroke — re-randomised every revolution.** This is a **σ_G / CV source**, i.e. it attacks the
+> *binding* requirement (§2). It is the same failure that dominated v2.1 (82 % of that deficit).
+
+##### Consequences — the two fixes are now unambiguous
+
+**1. DO NOT rescale the rotor to "recover" the 0.20 mm.** ⚠ That was the trap flagged in §11.7.8: it would
+paper over a **variable** error with a **fixed** correction, locking the CV in while the numbers *looked*
+right. The 0.20 mm is play, not size.
+
+**2. Fix the peg — the ladder was right, its RESOLUTION is too coarse.** ⚠ The §11.7.3 ladder **was** printed
+on the **0.2 mm nozzle** — `BearingBoreD = 5.05` is a valid 0.2-nozzle answer, selected on a *tactile*
+criterion ("just works"). What the tactile criterion could not see is that "just works" still carries
+**0.085 mm of clearance**. The ladder's problem is its **step size**:
+
+| Ladder peg (CAD) | Printed actual | Clearance vs 5.000 bore | Assembly |
+|---|---|---|---|
+| **5.05** | **4.915** | **+0.085 (play)** ⚠ | easy — "just works" |
+| **5.10** | **5.00** | **≈ 0 (press)** | very painful in/out |
+
+**A 0.05 mm CAD step moves the actual peg by ~0.085 mm** — so the ladder jumps straight from *loose* to
+*press-fit*, with no rung in the usable middle. **The right peg is between them, and was never printed.**
+
+```
+Fine ladder (CAD):  5.06 / 5.07 / 5.08 / 5.09      ← ~10-min print
+Predicted actual:   4.93 / 4.95 / 4.965 / 4.98
+Predicted play:     0.07 / 0.05 / 0.035 / 0.02
+Accept: the tightest peg still assemblable BY HAND with no tool and no crack risk.
+```
+
+**3. Shrink comp gets a modest bump — and is renamed in meaning.** The pitch loss is **0.61 %**, not the
+0.22 % measured on the 0.4 mm coupon. `ShrinkComp` is therefore **not a material constant** — it is a
+**material + nozzle process constant**, and it must be recalibrated per nozzle:
+
+```
+printed / CAD  = 29.285 / 29.4647 = 0.99390   →  0.61 % total loss @ 0.2 mm nozzle
+   of which:  material shrink (0.4 mm coupon, §11.7.1)  = 0.22 %
+              0.2 mm-nozzle process offset (residual)   ≈ 0.39 %
+
+New:  ShrinkComp = 29.40 / 29.285 × 1.0022 ≈ 1.0061      (was 1.0022)
+      RotorLength = (PumpDiam − BearingD) × 1.0061 = 29.58  → prints ≈ 29.40 ✓
+      HeadWallRadius = (PumpDiam/2 + GapPumpHeadRotor) × 1.0061 = 21.35  (§11.7.6 — recompute)
+```
+
+No double-compensation risk: the peg is fixed **empirically by the ladder** (a CAD number for that nozzle),
+and is **never** touched by `ShrinkComp` — the §11.7.4 rule still holds.
+
+##### 11.7.10 Can the play just be COMPENSATED instead of removed?
+
+**Partly yes — and the reason is worth stating, because it is the load direction that saves us.**
+
+The tube is squeezed between the roller and the head wall. Its reaction force on the roller is **radially
+inward, always, in the same direction, regardless of rotation direction.** So under load the bearing bore is
+pressed against the **inboard** side of the peg and the play is **taken up deterministically** — it does not
+randomise. **This is exactly what the caliper does when its jaws squeeze the rollers inward.** Therefore:
+
+> **The caliper 2R (39.20) *is* the load-seated, operational 2R.** `R_eff = 19.60`.
+> A one-sided, always-inward load converts *clearance* into a **fixed offset**, and a fixed offset **is**
+> compensable — design the head against the **measured 19.60**, and the pump is nominally correct with
+> **no rotor reprint**.
+
+**What compensation does NOT protect against (the honest list):**
+
+1. **The disengaged sector.** Off the tube arc the roller is unloaded and free to sit anywhere in the
+   0.085 mm band. It must **re-seat at every tube entry** — a transient at the start of each occlusion,
+   once per roller per revolution, i.e. exactly where the seal is being *established*.
+2. **Skew on the peg.** 0.085 mm of clearance over the **8 mm** roller stack permits ~**0.6°** of tilt →
+   the occlusion line is **not parallel** to the head wall → uneven squeeze along the roller length. The
+   gap model assumes a line contact; this violates it.
+3. **PLA creep at the peg.** A one-sided, repeated load on a plastic post **locally flattens it over time**
+   → the seat migrates → `R_eff` **drifts across the test campaign**. This compounds the creep risk already
+   flagged for the deployed device.
+4. **It is an unverified assumption.** At **3.4 µL/mm**, being wrong costs ~**±0.15 µL (3 %)** of CV — and
+   CV is the *binding* requirement (§2).
+
+**Verdict: compensation is a legitimate fallback, not the first move.** The cost of *removing* the play is a
+10-minute print (a 4-rung fine ladder); the cost of *living with* it is four unquantified risks against the
+binding spec. **Close the play first.** Keep compensation as the plan if the fine ladder fails to find a
+hand-assemblable rung.
+
+> **Do NOT press-fit the 5.10 peg** (actual 5.00, zero clearance). Press-fitting steel into a PLA post
+> risks splitting it, and extraction typically destroys it — losing the ability to disassemble is a real cost
+> for a rig that will be rebuilt many times.
+
+#### 11.7.11 DECIDED — single bearing per roller (v2.2 final rotor config)
+
+**The peg is not a cylinder — it is a truncated cone.** Measured behaviour: the **base is fat** (press-fit even
+at `BearingBoreD` = 5.05) and the **top is loose** (perceptible play). This is a print artifact of a small
+cylindrical feature and it is **not fixable by a fit ladder** — every rung of a ladder is also a cone, so
+growing the peg only makes the base harder to press while the top stays loose.
+
+**Consequence with 2 stacked bearings:** the bottom bearing is **located** (tight) and the top one is **free** →
+the roller does not translate, it **pivots about the bottom bearing and tilts inward at the top** (~0.6° over
+the 8 mm stack). A tilted roller is the worst case: it violates the line-contact assumption of the gap model
+**and** it acts like a screw thread that **drives the tube axially** ("tube walking").
+
+##### Decision
+
+> **Use ONE bearing per roller, seated on the tight bottom land.** The taper is not corrected — **the bad part
+> of it is simply not used.**
+
+| | 2 bearings (v2.1/v2.2-p1) | **1 bearing (adopted)** |
+|---|---|---|
+| Bottom bearing | located, tight | **located, tight** ✓ |
+| Top bearing | loose → pivots inward | **removed** ✓ |
+| Radial play | 0.085 mm | ~none |
+| Skew | ~0.6° | **impossible** — one bearing cannot pivot |
+| Tube walking | driven by skew | **cause removed** |
+| Roller width vs 2.33 mm tube | 8 mm (over-specified) | **4 mm — sufficient** |
+| Assembly | 8 mm of press-fit | 4 mm, once |
+| **Rotor reprint needed** | — | **NO** — reuse the printed rotor |
+
+**Rationale (why this is *sufficient*, not a compromise):** proto-02 is a **proof of concept in plastic**. The
+production device will be **machined in metal**, where the pin is a ground steel dowel and none of this applies.
+The job here is *sufficient precision to prove the concept*, not a perfect plastic rotor. Residual gap error
+after this fix is ~0.05 mm → ~3 % on stroke volume → **inside the CV ≤ 5 % target** (§2). **Stop there.**
+
+##### What this changes
+
+- **Rotor: nothing.** Pull the top bearing off each peg. `R` becomes whatever it measures (**expect ≈19.64**);
+  it is a **datum, not a spec** (§11.7.8). Do **not** chase 2R = 39.40, do **not** re-run a ladder, do **not**
+  touch `ShrinkComp`.
+- **Add 4 spacer rings** (ID ~5.2 / OD ~8 / h 4 mm) above each bearing so the cover plate still traps it and the
+  bearing cannot walk up the peg. ~10-minute print.
+- **The head absorbs all remaining work** — and it was being reprinted anyway, so the single-bearing redesign
+  costs **zero extra print cycles**.
+
+##### ⚠ The new binding constraint: axial alignment
+
+Roller contact width drops **8 mm → 4 mm**. Excluding the bearing's outer-race edge chamfer (~0.3 mm/side),
+the **usable band is ~3.4 mm** for a **2.33 mm** tube:
+
+```
+axial slack = (3.4 − 2.33) / 2  =  ±0.53 mm      ← the head's tube channel must hit this
+v2.1 axial misalignment was     ≈  1 mm          ← would now be FATAL, not merely sloppy
+```
+
+**The ~1 mm axial misalignment (§11.5) is upgraded from "fix it" to "the single hardest requirement on the
+head."** The tube channel must be positively located and centred on the bearing band to **±0.5 mm**.
+
+##### DFM finding → carry to the metal version
+
+The printed peg is a **proof-of-concept expedient**. It tapers, and PLA **creeps** under the one-sided
+(always-radially-inward) tube load, so `R` would drift over thousands of strokes. **The production rotor uses a
+ground steel pin** (or an M3 shoulder screw with a Ø5 h9 shoulder) — the metal pin cannot taper or creep, and
+the plastic/metal body then only has to hold **hole positions**, which is the one thing the process does well.
+**Recorded, not built.**
+
+#### 11.7.12 CONFIRMED — play gone, and the rescale is now justified
+
+**Test (single bearing, bottom land only):**
+
+| Observation | Result |
+|---|---|
+| Radial rock on a roller | **none** — play eliminated |
+| **2R**, both axes | **39.20 mm** — *unchanged*, and now **play-free** |
+| 2R measured across the **top** bearing (when 2 were fitted) | **LOWER** than 39.20 |
+
+That last line is the **direct empirical proof of the skew**: the top bearing was sitting **inward** on the
+narrow end of the cone. §11.7.11's tilt mechanism is confirmed by measurement, not inferred.
+
+##### The key consequence: 39.20 is now a REAL dimension
+
+Previously 39.20 was ambiguous — the caliper jaws could have been squeezing play shut (§11.7.9). **With a single
+bearing there is no play to squeeze.** So:
+
+```
+2R  = 39.20  (play-free, both axes)
+→ printed pitch Ø = 39.20 − 10.000 (steel bearing OD) = 29.20 mm
+   CAD pitch Ø                                        = 29.465 mm
+→ shortfall = 0.265 mm = 0.90 %          ← a REAL, FIXED, plastic dimensional offset
+   (material shrink from the 0.4 mm coupon was only 0.22 %)
+```
+
+**This is the "0.2 mm-nozzle offset" branch of the §11.7.8 fork, and it is now the confirmed one.** The
+0.90 % is **repeatable and fixed** — exactly the kind of error that **is** compensable by scale. (The 0.68 %
+that looked "unexplained" in §11.7.8 was never play at all; the play was a *separate*, additive problem, and
+it lived entirely in the **top** bearing.)
+
+> **Retraction:** §11.7.9's derived pitch of 29.285 (from `outer − peg Ø`) is **superseded**. The direct peg
+> readings (4.90–4.93) were taken on the **narrow upper region of the cone**, so they under-report the land
+> the bearing actually sits on. **Trust the play-free 2R = 39.20 and nothing else** — the bearing OD is steel
+> and exact, so `pitch = 2R − 10` is the one clean, assumption-free number in this whole analysis.
+
+##### DECISION — rescale the rotor (it costs nothing)
+
+The rotor is **being reprinted anyway** (4 mm peg for the single bearing), so the rescale is **free**. Take it:
+it restores `R` = 19.70, keeps the nominal 5 µL honest, and leaves the parameter set clean.
+
+```
+printed / CAD  = 29.20 / 29.4647 = 0.99102     →  0.90 % total loss @ 0.2 mm nozzle
+```
+
+**⚠ Do NOT fold this into `ShrinkComp`.** The 0.90 % is **two different physical effects stacked**, and they
+must stay as **two separate parameters** (§11.7.13):
+
+| Parameter | Value | What it is | Changes when… |
+|-----------|-------|------------|---------------|
+| `ShrinkComp` | **1.0022** *(unchanged)* | **Material.** PLA thermal contraction — measured on the 100 mm coupon (§11.7.1). | …the **filament** changes |
+| `NozzleComp` | **1.0068** *(NEW)* | **Process.** The 0.2 mm nozzle's dimensional offset — extrusion-width / perimeter effect. | …the **nozzle** changes |
+
+```
+RotorLength  = (PumpDiam − BearingD) × ShrinkComp × NozzleComp
+             = 29.40 × 1.0022 × 1.0068
+             = 29.67 mm          → should print at 29.40  →  2R = 39.40 ✓
+             (combined factor 1.0091 — the same number, but now decomposable)
+
+BearingBoreD = 5.05 — UNCHANGED. The cone's BASE lands at ≈5.00 = the bearing bore = a perfect
+               press. Empirically correct; NEVER scaled by either factor (§11.7.4).
+PegHeight    = 8 mm → ~4.5 mm  (one MR105ZZ, 4 mm wide, seated on the base land)
+```
+
+#### 11.7.13 Why `ShrinkComp` stays at 1.0022 — and why NO new shrink test is needed
+
+**`ShrinkComp` is not revised.** It is a **measured material property** of the filament (§11.7.1), it was
+measured correctly, and **nothing since has contradicted it.** Overwriting it with 1.0091 would silently bury a
+process artifact inside a material constant — and the first time the filament *or* the nozzle changed, there
+would be no way to know which half of the number to touch. Two effects, two parameters:
+
+```
+material shrink  (filament property, nozzle-independent)   = 0.22 %   → ShrinkComp = 1.0022
+0.2 mm-nozzle offset (process artifact, filament-independent) = 0.68 % → NozzleComp = 1.0068
+                                                    total    ≈ 0.90 %
+```
+
+##### And **no**, the shrink test does NOT need re-running at 0.2 mm
+
+**It has already been run — the rotor was the test.** The 0.2 mm print gave a **0.90 %** total loss on a known
+CAD dimension; the material contributes a **known 0.22 %**; the remainder is the nozzle:
+
+```
+NozzleComp = 1.0090 / 1.0022 = 1.0068
+```
+
+A fresh 100 mm coupon at 0.2 mm would measure the **same 0.90 % combined** figure and tell us **nothing new** —
+it cannot separate the two effects either, and it would burn a print for a number already in hand. **Skip it.**
+
+> **Caveat, stated honestly:** `NozzleComp` is derived from **one** part (the rotor pitch, a ~29 mm
+> centre-to-centre span). It is a **working constant**, not a characterised one. It will be **validated on the
+> next print** — if the rescaled rotor lands at **2R = 39.40**, `NozzleComp` is confirmed; if it overshoots or
+> undershoots, adjust **`NozzleComp` only** and leave `ShrinkComp` alone. That is precisely the diagnostic
+> power the separation buys.
+
+##### Tube location moved from the HEAD to the ROTOR (design change, v2.2)
+
+The rotor now carries **enlarged side flanges** forming a **groove** that the tube drops into
+(`RotorV2.2.png`). Tube axial location is therefore a **rotor** function, not a head function.
+
+**This answers "do I need the axial height of the bearing band?" → No.** The ±0.5 mm axial spec of §11.7.11 is
+**satisfied by the rotor groove**, so the head no longer has to hit it. Two requirements replace it, and both
+are **CAD collision checks, not measurements**:
+
+1. The head's **arc wall must fully cover the tube axially**, with margin — make it generously tall.
+2. The head's arc wall must **clear (or enter) the flange groove** without crashing into the flanges.
+
+> ⚠ **Watch item (not a blocker):** the flanges **rotate**, the tube does **not**. Any flange face that
+> *presses* on the tube will rub it continuously → friction, tube wear, added motor torque. Conventional
+> designs locate the tube on the **stationary head** for exactly this reason. Keep the groove a **guide with
+> clearance**, never a clamp. Acceptable for a proof-of-concept; revisit for the metal device.
+
+##### The play experiment (keep this — it is a thesis result)
+
+Whatever is chosen, the two rotors (**5.05 = 0.085 mm play** and a **tight** one) differ in *exactly one
+variable*. Running the same head + same tube on both **isolates bearing clearance as a CV source** and answers
+a question the displaced-volume model cannot: **does roller-bearing clearance limit peristaltic dosing
+precision, and by how much?** Predicted effect: **≈3 % CV**. Cheap, controlled, publishable.
+
+##### Build order for v2.2 (SETTLED — supersedes the ladder plan)
+
+**The rotor is DONE. All remaining work is in the head.** No rotor reprint, no ladder, no new parts.
+
+| # | Step | Output |
+|---|------|--------|
+| 1 | **Strip the top bearing** off each peg → 1 × MR105ZZ per roller, seated on the tight bottom land | single-bearing rotor |
+| 2 | **Print 4 spacer rings** (ID ~5.2 / OD ~8 / h 4 mm) → cover plate traps the bearings | ~10 min |
+| 3 | **Play test:** caliper **2R on both axes**, then re-check **free of the jaws** (push a roller radially, feel for rock). **Squeezed == free ⇒ play is gone.** | **`R` datum** (expect ≈19.64) |
+| 4 | **Measure the axial position of the bearing band** from a fixed datum (rotor face / motor-holder face) | tube-channel Z |
+| 5 | **Design the head** — see below | one head model |
+| 6 | **Print the FIRM head only** (gap 1.52). Measure the installed gap through the access slots → back out the head's real shrink | corrected head radius |
+| 7 | **Print the other two sweep heads** with the correction (1.62 / 1.72) | sweep set |
+| 8 | **Pump.** Calibrate stroke volume by **step count** — the nominal shifts slightly (R ≈ 19.64, not 19.70) and that is fine | v2.2 result |
+
+**Head design requirements (all four in one print):**
+
+```
+1. wall radius = (R_measured + GapPumpHeadRotor) × ShrinkComp × NozzleComp   ← from step 3
+2. CENTRED on the shaft                                       ← fixes the 0.45 mm from v2.1
+3. arc wall must COVER the tube axially, with margin          ← tube is now located by the ROTOR
+   and CLEAR / ENTER the rotor flange groove without crashing    groove (§11.7.12), not the head
+4. caliper access slots enlarged (top + 2 sides)              ← so the gap is measurable at all
+```
+
+> Do **not** print three heads blind — step 6 exists because the head's own shrink is still unmeasured, and it
+> costs one head to learn it instead of three.
 
 ---
 
