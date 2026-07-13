@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 Phase: 05 — COMPLETE
 Plan: 4 of 4
 Status: Phase complete — ready for verification
-Last activity: 2026-06-25 - Quick task: lab-meeting deck content revisions (round 2)
+Last activity: 2026-07-13 - Quick task: homepage redesign (premium layout, full EN/IT i18n coverage)
 
 Progress: [██████████] 100%
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 ### Roadmap Evolution
 
 - Phase 5 added (2026-06-24): HTML Presentation Decks — reveal-style slide system + creative dated presentations index, first deck = 15-min lab meeting (GSD, two design tools, proto-01, proto-02, automated test-campaign app). Milestone v1.0 reopened from `completed` to accommodate.
+- Phase 6 added (2026-07-12): System Architecture Explorer — the live cost/complexity matrix built ad-hoc in `prototypes/System-Architecture/index.html` has outgrown a design-record page (editable BOM, DKK↔EUR converter, sortable/filterable 17-variant matrix, expandable per-variant BOM math). Promote it to a first-class tool at `tools/system-architecture-explorer/` (index.html + SPEC.md + nav + landing card + README row); **keep the three decision records** (ARCHITECTURE.md, PUMP-CONTROL-CONCEPTS.md, SOLUTION-MATRIX.md) in `prototypes/System-Architecture/` as design documentation, matching the `multi-liquid-architecture/` precedent. Partially retires the deferred **"BOM / component selector"** v2 backlog item.
 
 ### Decisions
 
@@ -87,8 +88,6 @@ Recent decisions affecting current work:
 
 - **[ui]** Open tool links in new tab from prototype detail view — `prototypes/index.html`: add `target="_blank" rel="noopener"` to Parameters table tool links.
 
-- **[ui]** Redesign and restructure landing page for many tools — `index.html`: flat card grid needs rethinking now that 4+ tools + prototype space exist.
-
 ### Blockers/Concerns
 
 - ADR cross-reference cycle between README.md and CLAUDE.md flagged by ingest (INGEST-CONFLICTS.md — informational only; no synthesis correctness impact, can be dismissed)
@@ -113,7 +112,7 @@ Recent decisions affecting current work:
 | 2026-06-17 | proto-02 initialized: PROTOTYPE.md (corrected N_c=2 → R≈19.7, 4-head gap sweep, screw-clamp lock, n=10 experiment plan), HTML journey stub (proto-02 active card + detail view; proto-03/04/05 grayed ghosts), standards-benchmark note, registries updated | `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md`, `prototypes/index.html`, `.planning/notes/2026-06-17-dispensing-accuracy-standards.md`, `prototypes/PROTOTYPES.md`, `prototypes/SPEC.md` |
 | 2026-06-25 | lab-meeting deck restructured into 3 sections (Alignment → AI → Pump) with full-bleed divider slides; new AI-as-a-tool slide (Claude Code splash), rewritten GSD slide (spec-driven-development vs GSD), alignment-module slide with embedded auto-playing video; image-first animation system (per-activation `.auto-anim` replay via deck-local MutationObserver); proto-01 render + real photo side-by-side | `decks/lab-meeting-2026-06/index.html`, `decks/lab-meeting-2026-06/SPEC.md`, `decks/lab-meeting-2026-06/assets/alignment_poster.jpg`, `decks/lab-meeting-2026-06/CaludeCode_image.png`, `.planning/notes/2026-06-24-presentation-guidelines.md` |
 | 2026-06-25 | lab-meeting deck content revisions (round 2): fixed alignment divider subtitle; wrote full alignment-module description into PROTOTYPE.md; new alignment roadmap slide (queue schematic); new AI workflow-cycle slide (Document-hub loop, Build outside); reworked test-campaign app slide (DoE/randomization/Arduino-automation/weigh + 2 new app images) → 14 slides | `decks/lab-meeting-2026-06/index.html`, `decks/lab-meeting-2026-06/SPEC.md`, `prototypes/Prototype-2-Alignment-Module/PROTOTYPE.md`, `decks/lab-meeting-2026-06/assets/run-campaign.png`, `decks/lab-meeting-2026-06/assets/pump-validator-app.png` |
-
+| 2026-07-13 | homepage redesign (260713-o6s): fixed glass top nav with segmented EN/IT switch; hero meta chips; numbered section headers with hairline rules; icon-tile cards with mouse spotlight + hover hairline; wide horizontal cards for single-item sections; IntersectionObserver scroll reveals; background grid overlay; inline SVG favicon; full EN/IT i18n coverage (all cards/sections now translate, was ~half); `assets/style.css` untouched. Retires backlog item "Redesign and restructure landing page for many tools" | `index.html` |
 ## Session Continuity
 
 Last session: 2026-06-24T17:27:19.311Z
