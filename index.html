@@ -1,99 +1,400 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Computational tools, reference guides, and prototype documentation for a DTU master's thesis on modular automated liquid dispensing for point-of-care use." />
   <title>Thesis Tools — Sirio Vittorio Feltrin</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='7' fill='%23ff6b2b'/%3E%3Crect x='11' y='11' width='10' height='10' rx='3' fill='%230a0a0c'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/style.css" />
+  <script>document.documentElement.classList.add('js');</script>
   <style>
+    /* ── Top navigation ─────────────────────────────────────── */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 28px;
+      background: rgba(10, 10, 12, 0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .nav-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+    .brand-dot {
+      width: 9px; height: 9px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .brand-muted { color: var(--text-muted); font-weight: 500; }
+
+    /* Segmented language switch */
+    .lang-switch {
+      display: flex;
+      gap: 2px;
+      padding: 3px;
+      background: var(--glass-bg);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 100px;
+    }
+    .lang-opt {
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      padding: 4px 13px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .lang-opt.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(255, 107, 43, 0.85), rgba(232, 53, 53, 0.85));
+      box-shadow: 0 2px 12px var(--accent-glow);
+    }
+    .lang-opt:not(.active):hover { color: var(--text); }
+
+    /* ── Background grid overlay ────────────────────────────── */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      -webkit-mask-image: radial-gradient(ellipse 100% 58% at 50% 0%, black 25%, transparent 78%);
+      mask-image: radial-gradient(ellipse 100% 58% at 50% 0%, black 25%, transparent 78%);
+    }
+
+    /* ── Hero refinements ───────────────────────────────────── */
+    main { padding-top: 150px; }
+    .site-title { font-size: clamp(2.1rem, 5.4vw, 3.6rem); padding-bottom: 4px; text-wrap: balance; }
+    .site-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .site-author::before, .site-author::after {
+      content: '';
+      width: 38px; height: 1px;
+    }
+    .site-author::before { background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.5)); }
+    .site-author::after  { background: linear-gradient(90deg, rgba(255, 107, 43, 0.5), transparent); }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 7px 15px;
+      border-radius: 100px;
+    }
+    .meta-chip::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 7px var(--accent);
+      flex: none;
+    }
+
+    /* ── Editorial section headers ──────────────────────────── */
+    .resources-sections section + section { margin-top: 72px; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .section-index {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    .section-head .section-label { margin-bottom: 0; color: var(--text); font-weight: 600; }
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255, 107, 43, 0.4), rgba(255, 255, 255, 0.06) 55%, transparent);
+    }
     .section-desc {
       font-size: 0.88rem;
       color: var(--text-muted);
       line-height: 1.6;
-      margin-top: -16px;
       margin-bottom: 28px;
-      max-width: 560px;
+      max-width: 620px;
     }
-    .resources-sections section + section {
-      margin-top: 60px;
+
+    /* ── Premium card treatment ─────────────────────────────── */
+    .tool-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      border-color: rgba(255, 255, 255, 0.09);
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 12%; right: 12%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.6), transparent);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .tool-card:hover::before { opacity: 1; }
+    .tool-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 140, 66, 0.09), transparent 65%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .tool-card:hover::after { opacity: 1; }
+    .card-icon {
+      width: 54px; height: 54px;
+      display: grid;
+      place-items: center;
+      font-size: 1.55rem;
+      line-height: 1;
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(255, 107, 43, 0.16), rgba(232, 53, 53, 0.06));
+      border: 1px solid rgba(255, 107, 43, 0.28);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+      filter: none;
+      flex: none;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .card-link .arrow { transition: transform 0.28s cubic-bezier(.22,.68,0,1.2); }
+    .tool-card:hover .card-link { letter-spacing: 0.03em; }
+    .tool-card:hover .card-link .arrow { transform: translateX(5px); }
+
+    /* Wide horizontal card — single-item sections */
+    .tools-row { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    .tool-card--wide {
+      flex-direction: row;
+      align-items: center;
+      gap: 26px;
+      padding: 26px 30px;
+    }
+    .tool-card--wide .card-link { white-space: nowrap; }
+
+    /* ── Scroll-triggered reveals (gated on .js) ────────────── */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.7s cubic-bezier(.22,.68,0,1), transform 0.7s cubic-bezier(.22,.68,0,1);
+      transition-delay: var(--rd, 0s);
+    }
+    .js .reveal.in-view { opacity: 1; transform: none; }
+
+    /* ── Footer refinements ─────────────────────────────────── */
+    .site-footer {
+      border-top: 0;
+      margin-top: 24px;
+      padding: 44px 32px 40px;
+    }
+    .site-footer::before {
+      content: '';
+      display: block;
+      width: min(640px, 80%);
+      height: 1px;
+      margin: 0 auto 32px;
+      background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.35), transparent);
+    }
+
+    /* ── Accessibility & motion ─────────────────────────────── */
+    .tool-card:focus-visible, .lang-opt:focus-visible, .nav-brand:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .js .reveal { opacity: 1; transform: none; transition: none; }
+      .card-link .arrow { transition: none; }
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .tool-card--wide { flex-direction: column; align-items: flex-start; }
+      .tool-card--wide .card-link { white-space: normal; }
+    }
+    @media (max-width: 600px) {
+      main { padding-top: 118px; }
+      .top-nav { padding: 11px 18px; }
+      .brand-muted { display: none; }
     }
   </style>
 </head>
 <body>
-<!-- Ambient background blobs for glassmorphism depth -->
+<!-- Fixed glass navigation -->
+<nav class="top-nav" aria-label="Site">
+  <a class="nav-brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>Thesis Tools&nbsp;<span class="brand-muted">· Sirio V. Feltrin</span></a>
+  <div class="lang-switch" role="group" aria-label="Language">
+    <button type="button" class="lang-opt" data-lang="en">EN</button>
+    <button type="button" class="lang-opt" data-lang="it">IT</button>
+  </div>
+</nav>
+
+<!-- Ambient background blobs + grid for glassmorphism depth -->
 <div class="bg-blobs" aria-hidden="true">
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
 </div>
-<main><header class="site-header animate-in" style="--delay: 0s;"><span class="site-label" data-i18n="site-label">DTU Master's Thesis &middot; 2026</span>
-<h1 class="site-title" data-i18n="site-title">Modular Automated Liquid Dispensing<br>for Point-of-Care Use</h1>
-<p class="site-author">Sirio Vittorio Feltrin</p>
-<p class="site-subtitle" data-i18n="site-subtitle">Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.</p>
+<div class="bg-grid" aria-hidden="true"></div>
+
+<main>
+<header class="site-header">
+<span class="site-label animate-in" style="--delay: 0s;" data-i18n="site-label">DTU Master&rsquo;s Thesis &middot; 2026</span>
+<h1 class="site-title animate-in" style="--delay: 0.08s;" data-i18n="site-title">Modular Automated Liquid Dispensing<br>for Point-of-Care Use</h1>
+<p class="site-author animate-in" style="--delay: 0.16s;">Sirio Vittorio Feltrin</p>
+<p class="site-subtitle animate-in" style="--delay: 0.24s;" data-i18n="site-subtitle">Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.</p>
+<div class="hero-meta animate-in" style="--delay: 0.32s;">
+<span class="meta-chip" data-i18n="meta-chip-browser">Runs in any browser</span>
+<span class="meta-chip" data-i18n="meta-chip-offline">Offline-ready &middot; USB</span>
+<span class="meta-chip" data-i18n="meta-chip-nodeps">No install required</span>
+</div>
 </header>
+
 <div class="resources-sections">
 
 <section aria-label="Calculators and solvers">
-<p class="section-label animate-in" style="--delay: 0.15s;" data-i18n="section-label-tools">Calculators</p>
-<p class="section-desc animate-in" style="--delay: 0.2s;" data-i18n="section-desc-tools">Computational solvers built for the thesis design process — enter your parameters and get answers.</p>
-<div class="tools-grid"><a href="tools/rotor-solver/index.html" class="tool-card animate-in" style="--delay: 0.28s;">
-<div class="card-icon">⚙</div>
+<div class="section-head reveal">
+<span class="section-index">01</span>
+<p class="section-label" data-i18n="section-label-tools">Calculators</p>
+<span class="section-rule" aria-hidden="true"></span>
+</div>
+<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-tools">Computational solvers built for the thesis design process — enter your parameters and get answers.</p>
+<div class="tools-grid">
+<a href="tools/rotor-solver/index.html" class="tool-card reveal" style="--rd: 0.1s;">
+<div class="card-icon" aria-hidden="true">⚙</div>
 <div class="card-body">
 <h2 class="card-title" data-i18n="card-title-rotor">Peristaltic Rotor Geometry Solver</h2>
 <p class="card-desc" data-i18n="card-desc-rotor">Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.</p>
 </div>
-<span class="card-link" data-i18n="card-link-tool">Open tool &rarr;</span></a>
-<a href="tools/peristaltic-roller-displaced-volume-model/index.html" class="tool-card animate-in" style="--delay: 0.38s;">
-<div class="card-icon">🧫</div>
+<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+<a href="tools/peristaltic-roller-displaced-volume-model/index.html" class="tool-card reveal" style="--rd: 0.18s;">
+<div class="card-icon" aria-hidden="true">🧫</div>
 <div class="card-body">
-<h2 class="card-title">Peristaltic Occlusion &amp; Displaced-Volume Model</h2>
-<p class="card-desc">Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.</p>
+<h2 class="card-title" data-i18n="card-title-occlusion">Peristaltic Occlusion &amp; Displaced-Volume Model</h2>
+<p class="card-desc" data-i18n="card-desc-occlusion">Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.</p>
 </div>
-<span class="card-link">Open tool &rarr;</span></a></div>
+<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+<a href="tools/peristaltic-tensioned-path-model/index.html" class="tool-card reveal" style="--rd: 0.26s;">
+<div class="card-icon" aria-hidden="true">〰</div>
+<div class="card-body">
+<h2 class="card-title" data-i18n="card-title-tensioned">Tensioned Tube-Path &amp; Stroke Volume Model</h2>
+<p class="card-desc" data-i18n="card-desc-tensioned">Alternative path geometry for a tube pinned at both ends under seating tension — straight roller-to-roller runs with α/2 wraps instead of the 180° wall arc. Includes axial pre-strain corrections (lumen shrink, interference loss), volume-per-stroke prediction, and a closed-form corrected rotor radius.</p>
+</div>
+<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+</div>
 </section>
 
 <section aria-label="Guides and references">
-<p class="section-label animate-in" style="--delay: 0.5s;" data-i18n="section-label-guides">Guides</p>
-<p class="section-desc animate-in" style="--delay: 0.55s;" data-i18n="section-desc-guides">Reference documentation and workflow diagrams.</p>
-<div class="tools-grid"><a href="tools/gsd-workflow-guide/index.html" class="tool-card animate-in" style="--delay: 0.63s;">
-<div class="card-icon">⬡</div>
-<div class="card-body">
-<h2 class="card-title">GSD Workflow Guide</h2>
-<p class="card-desc">Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.</p>
+<div class="section-head reveal">
+<span class="section-index">02</span>
+<p class="section-label" data-i18n="section-label-guides">Guides</p>
+<span class="section-rule" aria-hidden="true"></span>
 </div>
-<span class="card-link">Open guide &rarr;</span></a></div>
+<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-guides">Reference documentation and workflow diagrams.</p>
+<div class="tools-row">
+<a href="tools/gsd-workflow-guide/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
+<div class="card-icon" aria-hidden="true">⬡</div>
+<div class="card-body">
+<h2 class="card-title" data-i18n="card-title-gsd">GSD Workflow Guide</h2>
+<p class="card-desc" data-i18n="card-desc-gsd">Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.</p>
+</div>
+<span class="card-link"><span data-i18n="card-link-guide">Open guide</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+</div>
 </section>
 
 <section aria-label="Hardware prototypes">
-<p class="section-label animate-in" style="--delay: 0.75s;" data-i18n="section-label-prototypes">Prototypes</p>
-<p class="section-desc animate-in" style="--delay: 0.80s;" data-i18n="section-desc-prototypes">Hardware iterations logged with design parameters, test data, and design reasoning.</p>
-<div class="tools-grid"><a href="prototypes/index.html" class="tool-card animate-in" style="--delay: 0.88s;">
-<div class="card-icon">🧪</div>
-<div class="card-body">
-<h2 class="card-title">Prototype Design Space</h2>
-<p class="card-desc">A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.</p>
+<div class="section-head reveal">
+<span class="section-index">03</span>
+<p class="section-label" data-i18n="section-label-prototypes">Prototypes</p>
+<span class="section-rule" aria-hidden="true"></span>
 </div>
-<span class="card-link">Explore &rarr;</span></a><!-- Future prototypes — duplicate the block above and update href, title, desc --></div>
+<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-prototypes">Hardware iterations logged with design parameters, test data, and design reasoning.</p>
+<div class="tools-row">
+<a href="prototypes/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
+<div class="card-icon" aria-hidden="true">🧪</div>
+<div class="card-body">
+<h2 class="card-title" data-i18n="card-title-proto">Prototype Design Space</h2>
+<p class="card-desc" data-i18n="card-desc-proto">A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.</p>
+</div>
+<span class="card-link"><span data-i18n="card-link-explore">Explore</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+<!-- Future prototypes — duplicate the block above and update href, title, desc -->
+</div>
 </section>
 
 <section aria-label="Presentations">
-<p class="section-label animate-in" style="--delay: 1.00s;">Presentations</p>
-<p class="section-desc animate-in" style="--delay: 1.05s;">Reveal-style HTML slide decks covering the AI-assisted design process — runnable in the browser or offline.</p>
-<div class="tools-grid"><a href="decks/index.html" class="tool-card animate-in" style="--delay: 1.12s;">
-<div class="card-icon">🃏</div>
-<div class="card-body">
-<h2 class="card-title">Presentations</h2>
-<p class="card-desc">Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.</p>
+<div class="section-head reveal">
+<span class="section-index">04</span>
+<p class="section-label" data-i18n="section-label-decks">Presentations</p>
+<span class="section-rule" aria-hidden="true"></span>
 </div>
-<span class="card-link">Open &rarr;</span></a></div>
+<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-decks">Reveal-style HTML slide decks covering the AI-assisted design process — runnable in the browser or offline.</p>
+<div class="tools-row">
+<a href="decks/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
+<div class="card-icon" aria-hidden="true">🃏</div>
+<div class="card-body">
+<h2 class="card-title" data-i18n="card-title-decks">Presentations</h2>
+<p class="card-desc" data-i18n="card-desc-decks">Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.</p>
+</div>
+<span class="card-link"><span data-i18n="card-link-open">Open</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+</div>
 </section>
 
 </div>
-</main><footer class="site-footer">
+</main>
+
+<footer class="site-footer">
 <p data-i18n="footer-university">Technical University of Denmark &middot; Department of Bioengineering - Nano Bio Integrated System group</p>
 <p>Sirio Vittorio Feltrin &middot; 2026</p>
 </footer>
-  <button id="lang-toggle" class="lang-toggle" style="position:fixed;top:20px;right:28px;z-index:100">IT</button>
 
   <script>
     const LANG = {
@@ -101,36 +402,73 @@
         'site-label':               'DTU Master’s Thesis · 2026',
         'site-title':               'Modular Automated Liquid Dispensing<br>for Point-of-Care Use',
         'site-subtitle':            'Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.',
+        'meta-chip-browser':        'Runs in any browser',
+        'meta-chip-offline':        'Offline-ready · USB',
+        'meta-chip-nodeps':         'No install required',
         'section-label-tools':      'Calculators',
         'section-desc-tools':       'Computational solvers built for the thesis design process — enter your parameters and get answers.',
         'section-label-guides':     'Guides',
         'section-desc-guides':      'Reference documentation and workflow diagrams.',
         'section-label-prototypes': 'Prototypes',
         'section-desc-prototypes':  'Hardware iterations logged with design parameters, test data, and design reasoning.',
+        'section-label-decks':      'Presentations',
+        'section-desc-decks':       'Reveal-style HTML slide decks covering the AI-assisted design process — runnable in the browser or offline.',
         'card-title-rotor':         'Peristaltic Rotor Geometry Solver',
         'card-desc-rotor':          'Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.',
-        'card-link-tool':           'Open tool →',
+        'card-title-occlusion':     'Peristaltic Occlusion &amp; Displaced-Volume Model',
+        'card-desc-occlusion':      'Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.',
+        'card-title-tensioned':     'Tensioned Tube-Path &amp; Stroke Volume Model',
+        'card-desc-tensioned':      'Alternative path geometry for a tube pinned at both ends under seating tension — straight roller-to-roller runs with α/2 wraps instead of the 180° wall arc. Includes axial pre-strain corrections (lumen shrink, interference loss), volume-per-stroke prediction, and a closed-form corrected rotor radius.',
+        'card-title-gsd':           'GSD Workflow Guide',
+        'card-desc-gsd':            'Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.',
+        'card-title-proto':         'Prototype Design Space',
+        'card-desc-proto':          'A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.',
+        'card-title-decks':         'Presentations',
+        'card-desc-decks':          'Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.',
+        'card-link-tool':           'Open tool',
+        'card-link-guide':          'Open guide',
+        'card-link-explore':        'Explore',
+        'card-link-open':           'Open',
         'footer-university':        'Technical University of Denmark · Department of Bioengineering - Nano Bio Integrated System group',
       },
       it: {
         'site-label':               'Tesi Magistrale DTU · 2026',
         'site-title':               'Distribuzione Automatizzata Modulare di Liquidi<br>per Diagnostica Point-of-Care',
         'site-subtitle':            'Strumenti computazionali, guide di riferimento e documentazione dei prototipi sviluppati parallelamente alla tesi. Tutto funziona nel browser o offline da una chiavetta USB.',
+        'meta-chip-browser':        'Funziona in qualsiasi browser',
+        'meta-chip-offline':        'Utilizzabile offline · USB',
+        'meta-chip-nodeps':         'Nessuna installazione richiesta',
         'section-label-tools':      'Calcolatori',
         'section-desc-tools':       'Risolutori computazionali sviluppati per il processo di progettazione — inserisci i parametri e ottieni le risposte.',
         'section-label-guides':     'Guide',
         'section-desc-guides':      'Documentazione di riferimento e diagrammi del flusso di lavoro.',
         'section-label-prototypes': 'Prototipi',
         'section-desc-prototypes':  'Iterazioni hardware documentate con parametri di progettazione, dati di test e ragionamento progettuale.',
+        'section-label-decks':      'Presentazioni',
+        'section-desc-decks':       'Presentazioni HTML in stile reveal sul processo di progettazione assistito dall\'AI — eseguibili nel browser o offline.',
         'card-title-rotor':         'Risolutore Geometrico del Rotore Peristaltico',
         'card-desc-rotor':          'Calcola analiticamente il raggio del rotore per pompe peristaltiche. Imposta il volume target per ciclo, il diametro interno del tubo, il cuscinetto e l\'efficienza di occlusione — ottieni una tabella geometrica completa per 3–12 rulli con verifica di fattibilità.',
-        'card-link-tool':           'Apri strumento →',
+        'card-title-occlusion':     'Modello di Occlusione Peristaltica e Volume Spostato',
+        'card-desc-occlusion':      'Riferimento geometrico in due parti per la meccanica di deformazione del tubo. Parte 1: modello a sezione "stadium" con SVG interattivo — area residua del lume in funzione dello schiacciamento del rullo. Parte 2: lunghezza di contatto assiale, volume spostato per passaggio del rullo e formula di compensazione dell\'arco. Derivazioni complete con formule LaTeX.',
+        'card-title-tensioned':     'Modello del Percorso in Tensione e Volume per Ciclo',
+        'card-desc-tensioned':      'Geometria alternativa del percorso per un tubo fissato alle due estremità sotto tensione di montaggio — tratti rettilinei tra i rulli con avvolgimenti α/2 invece dell\'arco a parete di 180°. Include correzioni di pre-deformazione assiale (restringimento del lume, perdita di interferenza), previsione del volume per ciclo e raggio del rotore corretto in forma chiusa.',
+        'card-title-gsd':           'Guida al Flusso di Lavoro GSD',
+        'card-desc-gsd':            'Diagramma interattivo del flusso di sviluppo spec-driven usato per costruire questo sito. Esplora il ciclo discuss → plan → execute, i controlli di qualità opzionali e i comandi di utilità — clicca su un nodo per vedere cosa fa.',
+        'card-title-proto':         'Spazio di Progettazione dei Prototipi',
+        'card-desc-proto':          'Un percorso visivo attraverso i prototipi hardware — dai parametri di progetto ai risultati misurati. Clicca su un prototipo per esplorarne scopo, geometria, dati di test e ragionamento progettuale.',
+        'card-title-decks':         'Presentazioni',
+        'card-desc-decks':          'Sfoglia le presentazioni del lab meeting e dell\'architettura. Realizzate con un sistema di slide HTML personalizzato in stile reveal.',
+        'card-link-tool':           'Apri strumento',
+        'card-link-guide':          'Apri guida',
+        'card-link-explore':        'Esplora',
+        'card-link-open':           'Apri',
         'footer-university':        'Politecnico di Danimarca · Dipartimento di Bioingegneria - Gruppo Nano Bio Integrated System',
       }
     };
 
     let currentLang = 'en';
     try { currentLang = localStorage.getItem('lang') || 'en'; } catch(e) {}
+    if (!LANG[currentLang]) currentLang = 'en';
 
     function applyLang(lang) {
       currentLang = lang;
@@ -138,16 +476,43 @@
         const key = el.dataset.i18n;
         if (LANG[lang][key] !== undefined) el.innerHTML = LANG[lang][key];
       });
-      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'IT' : 'ENG';
-      document.documentElement.lang = lang === 'en' ? 'en' : 'it';
+      document.querySelectorAll('.lang-opt').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      document.documentElement.lang = lang;
       try { localStorage.setItem('lang', lang); } catch(e) {}
     }
 
     applyLang(currentLang);
 
-    document.getElementById('lang-toggle').addEventListener('click', () => {
-      applyLang(currentLang === 'en' ? 'it' : 'en');
+    document.querySelectorAll('.lang-opt').forEach(btn => {
+      btn.addEventListener('click', () => applyLang(btn.dataset.lang));
     });
+
+    // Mouse-tracking spotlight on cards
+    document.querySelectorAll('.tool-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+
+    // Scroll-triggered reveals
+    const revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('in-view');
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      revealEls.forEach(el => io.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('in-view'));
+    }
   </script>
 
 </body>
