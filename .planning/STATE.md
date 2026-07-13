@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 Phase: 05 — COMPLETE
 Plan: 4 of 4
 Status: Phase complete — ready for verification
-Last activity: 2026-07-13 - Quick task: homepage redesign (premium layout, full EN/IT i18n coverage)
+Last activity: 2026-07-13 - Completed quick task 260713-o8z: prototype journey cards aligned on the curved path
 
 Progress: [██████████] 100%
 
@@ -113,6 +113,8 @@ Recent decisions affecting current work:
 | 2026-06-25 | lab-meeting deck restructured into 3 sections (Alignment → AI → Pump) with full-bleed divider slides; new AI-as-a-tool slide (Claude Code splash), rewritten GSD slide (spec-driven-development vs GSD), alignment-module slide with embedded auto-playing video; image-first animation system (per-activation `.auto-anim` replay via deck-local MutationObserver); proto-01 render + real photo side-by-side | `decks/lab-meeting-2026-06/index.html`, `decks/lab-meeting-2026-06/SPEC.md`, `decks/lab-meeting-2026-06/assets/alignment_poster.jpg`, `decks/lab-meeting-2026-06/CaludeCode_image.png`, `.planning/notes/2026-06-24-presentation-guidelines.md` |
 | 2026-06-25 | lab-meeting deck content revisions (round 2): fixed alignment divider subtitle; wrote full alignment-module description into PROTOTYPE.md; new alignment roadmap slide (queue schematic); new AI workflow-cycle slide (Document-hub loop, Build outside); reworked test-campaign app slide (DoE/randomization/Arduino-automation/weigh + 2 new app images) → 14 slides | `decks/lab-meeting-2026-06/index.html`, `decks/lab-meeting-2026-06/SPEC.md`, `prototypes/Prototype-2-Alignment-Module/PROTOTYPE.md`, `decks/lab-meeting-2026-06/assets/run-campaign.png`, `decks/lab-meeting-2026-06/assets/pump-validator-app.png` |
 | 2026-07-13 | homepage redesign (260713-o6s): fixed glass top nav with segmented EN/IT switch; hero meta chips; numbered section headers with hairline rules; icon-tile cards with mouse spotlight + hover hairline; wide horizontal cards for single-item sections; IntersectionObserver scroll reveals; background grid overlay; inline SVG favicon; full EN/IT i18n coverage (all cards/sections now translate, was ~half); `assets/style.css` untouched. Retires backlog item "Redesign and restructure landing page for many tools" | `index.html` |
+| 2026-07-13 | prototype journey cards ride the curve (260713-o8z): `alignNodesToPath()` samples the real `.journey-path` (`getPointAtLength`, 240 pts) at load/resize and sets each `.proto-node`'s `left` so the card centre lands on the SVG S-curve at its own vertical middle — was a straight `left:50%` column. Clamped against stage overflow; clears inline `left` on mobile (≤640px static stack). Verified ≤1px centre-to-curve error at 929/1440px, no horizontal scroll | `prototypes/index.html`, `prototypes/SPEC.md` |
+
 ## Session Continuity
 
 Last session: 2026-06-24T17:27:19.311Z
