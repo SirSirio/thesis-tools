@@ -1467,6 +1467,43 @@
     obs.observe(stage);
   }
   // reducedMotion=true: CSS default (stroke-dasharray:1 0, opacity:1) already shows everything
+
+  // Node alignment — place each card's centre on the journey path.
+  // The SVG is stretched with preserveAspectRatio="none", so viewBox units
+  // map linearly to stage fractions: x/600 → width, y/900 → height.
+  const journeySvg = document.querySelector('.journey-path-svg');
+  const journeyPath = document.querySelector('.journey-path');
+
+  function alignNodesToPath() {
+    if (!stage || !journeySvg || !journeyPath) return;
+    const nodes = document.querySelectorAll('.proto-node');
+    if (getComputedStyle(journeySvg).display === 'none') {
+      // Mobile stack (≤640px): nodes are static — clear inline offsets so
+      // they don't leak back when resizing up to desktop.
+      nodes.forEach(n => { n.style.left = ''; });
+      return;
+    }
+    const H = stage.offsetHeight;
+    const W = stage.offsetWidth;
+    if (!H || !W) return;
+    // pathLength="1" only rescales stroke dashes; getPointAtLength stays in user units
+    const total = journeyPath.getTotalLength();
+    const SAMPLES = 240;
+    const pts = [];
+    for (let i = 0; i <= SAMPLES; i++) pts.push(journeyPath.getPointAtLength(total * i / SAMPLES));
+    nodes.forEach(node => {
+      const ySvg = (node.offsetTop + node.offsetHeight / 2) / H * 900;
+      let best = pts[0];
+      for (const p of pts) { if (Math.abs(p.y - ySvg) < Math.abs(best.y - ySvg)) best = p; }
+      const halfPct = node.offsetWidth / 2 / W * 100;
+      const leftPct = Math.min(100 - halfPct, Math.max(halfPct, best.x / 600 * 100));
+      node.style.left = leftPct + '%';
+    });
+  }
+
+  alignNodesToPath();
+  window.addEventListener('load', alignNodesToPath);   // card heights settle once the photo loads
+  window.addEventListener('resize', alignNodesToPath);
 </script>
 
 </body>

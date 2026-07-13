@@ -19,6 +19,7 @@ None — static content only. All content authored directly into the HTML file.
 ### Journey View (default)
 
 - Winding SVG path animates on scroll-into-view (draws itself, then prototype nodes pop in sequentially)
+- Cards sit **on** the path: at load/resize, JS samples the real `.journey-path` (`getPointAtLength`, 240 samples) and sets each node's `left` so the card centre lands on the curve at the card's vertical middle (viewBox units map linearly to stage fractions because `preserveAspectRatio="none"`; clamped so cards never overflow the stage). No-JS fallback: cards stay in the CSS centre column.
 - Each prototype: summary card with tag, title, one-line purpose, KPI pills, "Explore →" CTA
 - Clicking a card swaps to the detail view (no page reload; `hidden` attribute toggling)
 
