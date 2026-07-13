@@ -373,6 +373,22 @@
     }
     .formula .katex { font-size: 1.05em; }
 
+    /* ── Plain worked-calculation block (no KaTeX) ────────────── */
+    .calc-block {
+      margin: 14px 0 18px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.83rem;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .calc-block strong { color: #f0ece8; }
+
     /* ── Callouts ─────────────────────────────────────────────── */
     .callout {
       border-radius: 8px;
@@ -820,8 +836,8 @@
             <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">BUILT — didn't seal · diagnosed</div>
           </div>
           <div style="flex:1.4; min-width:200px; padding:12px 16px; border-radius:10px; background:rgba(255,107,43,0.14); border:1px solid var(--accent);">
-            <div style="font-size:1.15rem; font-weight:800; color:var(--accent);">v2.2 — in design</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor datum: fix bearing play (0.2 mm nozzle) + shrink comp · centre head · axial align · enlarge gap access</div>
+            <div style="font-size:1.15rem; font-weight:800; color:var(--accent);">v2.2 — rotor ✅ done · head printing</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor hits <strong style="color:#5fd08a">2R = 39.40 (R = 19.70)</strong>, play-free (single bearing/roller). Print model calibrated. Head: wall radius 21.52 — <strong>print FIRM alone, then measure the gap</strong>.</div>
           </div>
           <div style="flex:0.8; min-width:120px; padding:12px 16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px dashed var(--glass-border); opacity:0.6;">
             <div style="font-size:1.15rem; font-weight:800; color:var(--text-muted);">v2.3</div>
@@ -1123,6 +1139,253 @@
               <li>Apply the coupon's <strong>material-shrink</strong> scale (~0.3–0.5 %) to the rotor — <strong>not</strong> the full 0.91 % v2.1 deficit (that includes bearing-pocket play, fixed separately), or 2R will overshoot 39.4.</li>
             </ul>
           </div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Results — shrink coupon (2026-07-02, 0.4 mm nozzle)</h4>
+          <p class="block-note">Bars printed at 100.00 mm nominal, 3DE MAX PLA "Cold White".</p>
+          <table class="param-table">
+            <thead><tr><th>Axis</th><th>Measured</th><th>Shrink <em>f</em></th><th>Compensation <em>1+f</em></th></tr></thead>
+            <tbody>
+              <tr><td><strong>X</strong></td><td><strong>99.74 mm</strong></td><td><strong>0.26 %</strong></td><td>×1.0026</td></tr>
+              <tr><td><strong>Y</strong></td><td><strong>99.82 mm</strong></td><td><strong>0.18 %</strong></td><td>×1.0018</td></tr>
+              <tr><td>mean</td><td>99.78 mm</td><td>0.22 %</td><td>×1.0022 ← applied</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-good"><span class="callout-label">⭐ Key finding — play is ~4.5× the shrink.</span> <strong>Only the printed pitch circle shrinks — the bearings are steel.</strong> <em>R</em> = pitch radius (14.70 mm, printed) + bearing radius (5.00 mm, steel). So shrink acts on 14.70, not on 39.40: <code>2 × 14.70 × 0.0022 ≈ 0.065 mm</code>. The v2.1 deficit therefore splits <strong>0.36 mm = shrink ~0.065 (18 %) + bearing play ~0.30 (82 %)</strong> — about 0.15 mm of inward nesting per bearing. The measured PLA shrink is at the <em>low</em> end of the 0.2–0.5 % band, so the <strong>peg fit is the big lever</strong> and shrink comp is a small correction. It also retro-justifies the warning: applying the full 0.91 % would have over-scaled the rotor by ~0.3 mm.</div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Results — bearing-peg fit ladder (0.2 mm nozzle)</h4>
+          <figure class="detail-figure">
+            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/BearingPocketTest.jpg" alt="Printed fit-ladder bar with pegs at 4.90–5.10 mm; the MR105ZZ bearing is seated on the 5.05 mm peg" />
+            <figcaption>Fit ladder printed at 0.2 mm: pegs from 4.90 → 5.10 mm. The MR105ZZ bearing seats on the <strong>5.05 mm</strong> peg — the fit that "just works".</figcaption>
+          </figure>
+          <table class="param-table">
+            <thead><tr><th>Peg Ø (CAD)</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td>&lt; 5.05 mm</td><td>a bit of <strong>play</strong></td></tr>
+              <tr><td><strong>5.05 mm</strong></td><td>✅ <strong>best fit — "just works"</strong> (snug, bearing inserts)</td></tr>
+              <tr><td>&gt; 5.05 mm</td><td><strong>difficult to insert</strong> the bearing</td></tr>
+            </tbody>
+          </table>
+          <p class="block-note">The window is narrow and 5.05 sits at its <strong>tight end</strong> — so anything that <em>grows</em> the peg risks a rotor that won't assemble.</p>
+
+          <div class="callout callout-warn"><span class="callout-label">Rescaling rule — do NOT global-scale the rotor.</span> A global XY scale in the slicer would also scale the <strong>peg</strong> (5.05 → ~5.06), pushing the empirically-validated fit toward "can't insert". The peg is a fine feature <em>already compensated by the ladder</em> — it needs no shrink scale. Compensate the <strong>printed radial geometry only</strong>: pitch Ø 29.40 → <strong>29.46</strong> (×1.0022) in CAD, leaving the 10 mm steel bearing and the 5.05 mm peg untouched → <code>2R = 29.40 + 10 = 39.40 ✓</code>. Scaling the whole rotor instead would compensate the steel too and <strong>overshoot 2R by ~0.02 mm</strong>.</div>
+
+          <figure class="detail-figure">
+            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/ShrinkTest10cm.jpg" alt="Two 100 mm PLA calibration bars, embossed 10cm, marked X and Y" />
+            <figcaption>The two 100 mm coupons, embossed <code>10cm</code> and marked <strong>X</strong> / <strong>Y</strong> for the axis each was printed along. Both cooled fully before calipering. <strong>This coupon design turned out to be flawed</strong> — see the print model below.</figcaption>
+          </figure>
+        </section>
+
+        <!-- ═══ ROTOR REBUILD — THE CONE ═══════════════════════════ -->
+        <section class="detail-block">
+          <h3 class="block-heading">The rotor took four prints — because the peg is a cone</h3>
+          <p class="block-note">The v2.2 rotor came out <strong>2R = 39.20</strong>, still 0.20 mm short. Two candidate causes demanded <em>opposite</em> fixes — residual <strong>play</strong> (must be removed mechanically; scaling would bury a CV source) or a <strong>dimensional offset</strong> (compensable by scale). Guessing wrong would have been worse than doing nothing, so the rotor was calipered <em>without</em> the bearings.</p>
+
+          <div class="callout callout-warn"><span class="callout-label">The peg is not a cylinder — it is a truncated cone.</span> The <strong>base is fat</strong> (press-fit even at 5.05) and the <strong>top is loose</strong>. With <strong>two stacked bearings</strong>, the bottom one is <em>located</em> and the top one is <em>free</em> — so the roller does not translate, it <strong>pivots about the bottom bearing and tilts inward</strong> (~0.6° over the 8 mm stack). Confirmed by measurement: <strong>2R across the top bearing read <em>lower</em> than across the bottom.</strong> A tilted roller breaks the line-contact assumption <em>and</em> acts like a screw thread that drives the tube sideways.</div>
+
+          <p class="block-note"><strong>A fit ladder cannot fix a cone</strong> — every rung is also a cone, so growing the peg only makes the base harder to press while the top stays loose. The fix was to stop using the bad half of it:</p>
+
+          <table class="param-table">
+            <thead><tr><th>&nbsp;</th><th>2 bearings (as built)</th><th>1 bearing (adopted)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Bottom bearing</strong></td><td>located, tight</td><td>✅ located, tight</td></tr>
+              <tr><td><strong>Top bearing</strong></td><td>loose → pivots inward</td><td>✅ removed</td></tr>
+              <tr><td><strong>Radial play</strong></td><td>0.085 mm</td><td>✅ none</td></tr>
+              <tr><td><strong>Skew</strong></td><td>~0.6°</td><td>✅ impossible — one bearing cannot pivot</td></tr>
+              <tr><td><strong>Tube walking</strong></td><td>driven by skew</td><td>✅ cause removed</td></tr>
+              <tr><td><strong>Roller width</strong> vs 2.33 mm tube</td><td>8 mm (over-specified)</td><td>4 mm — sufficient</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-good"><span class="callout-label">Play gone → 39.20 became a <em>real</em> number.</span> With two bearings the caliper jaws could have been <strong>squeezing the play shut</strong>, so 39.20 was ambiguous. With a single bearing there is <strong>no play to squeeze</strong> — so the remaining 0.90 % pitch shortfall is a <strong>fixed, repeatable, compensable</strong> dimensional offset. <em>That</em> is what unlocked the print model below.</div>
+
+          <p class="block-note"><strong>Design-for-manufacture finding, recorded not built:</strong> the printed peg is a proof-of-concept expedient. It tapers, and PLA <strong>creeps</strong> under the one-sided (always radially inward) tube load, so <em>R</em> would drift over thousands of strokes. <strong>The production rotor uses a ground steel pin</strong> — metal cannot taper or creep, and the body then only has to hold <em>hole positions</em>, which is the one thing FDM does genuinely well.</p>
+        </section>
+
+        <!-- ═══ THE PRINT MODEL ════════════════════════════════════ -->
+        <section class="detail-block">
+          <h3 class="block-heading">⭐ The print model — two errors, not one</h3>
+          <p class="block-note">Four prints missed their target before the cause was properly separated. The reason: <strong>a 3D print does not have <em>one</em> dimensional error, it has two</strong> — and they behave completely differently depending on <em>what kind of dimension</em> you are measuring.</p>
+
+          <div class="callout callout-good"><span class="callout-label">The model.</span> <code>PRINTED = CAD / k ± SurfaceOffset</code> — where <strong><em>k</em></strong> is a proportional <strong>SCALE</strong> (the part comes out uniformly smaller) and <strong>SurfaceOffset</strong> is a fixed <strong>SHIFT</strong> (every surface moves by a constant amount, because the extruded bead spreads).</div>
+
+          <figure class="detail-figure">
+            <svg viewBox="0 0 760 300" role="img" aria-label="Schematic showing how the surface offset adds on convex surfaces, subtracts on concave surfaces, and cancels on centre-to-centre distances">
+              <rect x="0" y="0" width="760" height="300" fill="none"/>
+
+              <!-- ── Panel 1: CONVEX ── -->
+              <text x="130" y="26" fill="#ff6b2b" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">CONVEX / OUTER</text>
+              <text x="130" y="44" fill="#7a7068" font-size="11" text-anchor="middle">rotor flange · a peg</text>
+              <!-- CAD (dashed) -->
+              <rect x="70" y="70" width="120" height="80" fill="none" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <!-- printed (solid, proud) -->
+              <rect x="62" y="70" width="136" height="80" fill="rgba(255,107,43,0.14)" stroke="#ff6b2b" stroke-width="2"/>
+              <!-- offset arrows -->
+              <line x1="70" y1="110" x2="62" y2="110" stroke="#ff6b2b" stroke-width="1.5" marker-end="url(#ar-o)"/>
+              <line x1="190" y1="110" x2="198" y2="110" stroke="#ff6b2b" stroke-width="1.5" marker-end="url(#ar-o)"/>
+              <text x="130" y="115" fill="#f0ece8" font-size="11" text-anchor="middle">bead spreads out</text>
+              <text x="130" y="180" fill="#ff6b2b" font-size="15" font-weight="700" text-anchor="middle">+ SurfaceOffset</text>
+              <text x="130" y="205" fill="#f0ece8" font-size="11.5" text-anchor="middle">prints <tspan font-weight="700">PROUD</tspan></text>
+              <text x="130" y="228" fill="#7a7068" font-size="10.5" text-anchor="middle">measured Ø is too BIG</text>
+
+              <!-- ── Panel 2: CONCAVE ── -->
+              <text x="380" y="26" fill="#e83535" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">CONCAVE / INNER</text>
+              <text x="380" y="44" fill="#7a7068" font-size="11" text-anchor="middle">the pump-head arc · a hole</text>
+              <!-- part body left + right (a slot) -->
+              <rect x="300" y="70" width="30" height="80" fill="rgba(232,53,53,0.14)" stroke="#e83535" stroke-width="2"/>
+              <rect x="430" y="70" width="30" height="80" fill="rgba(232,53,53,0.14)" stroke="#e83535" stroke-width="2"/>
+              <!-- CAD cavity walls (dashed) -->
+              <line x1="322" y1="66" x2="322" y2="154" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <line x1="438" y1="66" x2="438" y2="154" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <!-- offset arrows: material intrudes INTO cavity -->
+              <line x1="322" y1="110" x2="332" y2="110" stroke="#e83535" stroke-width="1.5" marker-end="url(#ar-r)"/>
+              <line x1="438" y1="110" x2="428" y2="110" stroke="#e83535" stroke-width="1.5" marker-end="url(#ar-r)"/>
+              <text x="380" y="115" fill="#f0ece8" font-size="11" text-anchor="middle">bead intrudes</text>
+              <text x="380" y="180" fill="#e83535" font-size="15" font-weight="700" text-anchor="middle">− SurfaceOffset</text>
+              <text x="380" y="205" fill="#f0ece8" font-size="11.5" text-anchor="middle">prints <tspan font-weight="700">SMALL</tspan></text>
+              <text x="380" y="228" fill="#7a7068" font-size="10.5" text-anchor="middle">the gap comes out TIGHT</text>
+
+              <!-- ── Panel 3: CENTRE-TO-CENTRE ── -->
+              <text x="630" y="26" fill="#5fd08a" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">CENTRE-TO-CENTRE</text>
+              <text x="630" y="44" fill="#7a7068" font-size="11" text-anchor="middle">the rotor pitch (2R)</text>
+              <!-- CAD circles dashed -->
+              <circle cx="570" cy="110" r="20" fill="none" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <circle cx="690" cy="110" r="20" fill="none" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <!-- printed circles proud -->
+              <circle cx="570" cy="110" r="26" fill="rgba(95,208,138,0.12)" stroke="#5fd08a" stroke-width="2"/>
+              <circle cx="690" cy="110" r="26" fill="rgba(95,208,138,0.12)" stroke="#5fd08a" stroke-width="2"/>
+              <!-- centres -->
+              <circle cx="570" cy="110" r="3" fill="#f0ece8"/>
+              <circle cx="690" cy="110" r="3" fill="#f0ece8"/>
+              <line x1="570" y1="110" x2="690" y2="110" stroke="#f0ece8" stroke-width="1.5"/>
+              <line x1="570" y1="86" x2="570" y2="60" stroke="#7a7068" stroke-width="1"/>
+              <line x1="690" y1="86" x2="690" y2="60" stroke="#7a7068" stroke-width="1"/>
+              <text x="630" y="180" fill="#5fd08a" font-size="15" font-weight="700" text-anchor="middle">offset = 0</text>
+              <text x="630" y="205" fill="#f0ece8" font-size="11.5" text-anchor="middle">it <tspan font-weight="700">CANCELS</tspan></text>
+              <text x="630" y="228" fill="#7a7068" font-size="10.5" text-anchor="middle">surfaces move, centres do not</text>
+
+              <!-- bottom rule + takeaway -->
+              <line x1="30" y1="252" x2="730" y2="252" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="380" y="278" fill="#f0ece8" font-size="12.5" text-anchor="middle">A centre-to-centre span is <tspan fill="#5fd08a" font-weight="700">offset-immune</tspan> → it isolates <tspan font-style="italic" font-weight="700">k</tspan>. A convex surface <tspan fill="#ff6b2b" font-weight="700">is not</tspan> → given <tspan font-style="italic" font-weight="700">k</tspan>, it isolates the offset.</text>
+
+              <defs>
+                <marker id="ar-o" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6b2b"/></marker>
+                <marker id="ar-r" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#e83535"/></marker>
+              </defs>
+            </svg>
+            <figcaption>The offset's <strong>sign depends on the kind of dimension</strong>. This is the entire content of the model — and it is what makes it falsifiable: it <em>predicts</em> which dimensions carry which error.</figcaption>
+          </figure>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Calibration — one part gave both constants</h4>
+          <p class="block-note">The rotor happened to carry <strong>a steel-referenced span</strong> (2R, across the bearings) <em>and</em> <strong>a plastic surface</strong> (the flange OD). That is exactly the pair the model needs — so a single print calibrated it completely.</p>
+
+          <table class="param-table">
+            <thead><tr><th>Constant</th><th>Value</th><th>Calibrated from</th><th>Why that dimension</th></tr></thead>
+            <tbody>
+              <tr><td><strong><em>k</em></strong> (scale)</td><td><strong>1.00906</strong></td><td>the rotor <strong>pitch</strong></td><td>Centre-to-centre → <strong>offset-immune</strong> → isolates the scale <em>cleanly</em>.</td></tr>
+              <tr><td><strong>SurfaceOffset</strong></td><td><strong>0.11 mm</strong></td><td>the rotor <strong>flange OD</strong></td><td>A convex plastic surface <strong>is</strong> offset-sensitive → given <em>k</em>, isolates the offset.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="calc-block">
+            <div><strong>SCALE</strong> — from the pitch (offset-free):</div>
+            <div>printed pitch = 2R − 10.000 (steel, exact) = 39.20 − 10.00 = <strong>29.20</strong></div>
+            <div>CAD pitch = <strong>29.4647</strong> &nbsp;→&nbsp; <em>k</em> = 29.4647 / 29.20 = <strong>1.00906</strong></div>
+            <div style="margin-top:10px"><strong>OFFSET</strong> — from the flange (convex):</div>
+            <div>CAD flange Ø = <strong>42.665</strong> &nbsp;→&nbsp; scale-only prediction = 42.665 / 1.00906 = 42.282</div>
+            <div><strong>MEASURED = 42.50</strong> &nbsp;→&nbsp; 2 × offset = 0.218 &nbsp;→&nbsp; SurfaceOffset = <strong>0.11 mm</strong></div>
+          </div>
+
+          <div class="callout callout-good"><span class="callout-label">✅ The scale is validated.</span> The rescaled rotor was predicted to hit 2R = 39.40 and measured <strong>39.42 / 39.38 → mean 39.40, error 0.00</strong>. <em>R</em> = <strong>19.70 mm</strong> — the design value, recovered exactly. The 0.04 mm out-of-round was <em>also</em> predicted (X/Y shrink anisotropy under a single mean scale) and costs ~1.4 % worst case — periodic, not random, so it averages over a stroke.</div>
+
+          <div class="callout callout-warn"><span class="callout-label">The coupon design was flawed — and that is the real lesson.</span> A single 100 mm bar is measured between <strong>two convex faces</strong>, so it reports <code>100·s + 2·offset</code> — <strong>one equation, two unknowns.</strong> It <em>cannot</em> separate scale from offset. The apparent "0.22 % vs 0.90 % discrepancy" that sent us hunting for a phantom nozzle-shrink term was <strong>an artifact of the measurement, not a physical effect</strong>. <strong>The correct coupon: print two bars of <em>different lengths</em> at the same nozzle</strong> (e.g. 100 mm and 20 mm) → two equations, two unknowns → <em>s</em> and <em>offset</em> independently, from one print.</div>
+
+          <p class="block-note"><strong>Process lock.</strong> <em>k</em> and SurfaceOffset are calibrated for a <strong>process</strong>, not a material — valid only for the exact slicer profile that produced the rotor. Layer height, wall count, flow, speed, temperature, nozzle: change any one and the calibration is void. <strong>Adaptive layer height is off</strong> — it cannot help (the gap-critical arc is a <em>vertical</em> wall, so it has no stair-stepping at any layer height) and it would make SurfaceOffset <em>Z-dependent</em>, varying the gap along the roller's 4 mm contact band.</p>
+        </section>
+
+        <!-- ═══ PUMP HEAD v2.2 — PARAMETERS ════════════════════════ -->
+        <section class="detail-block">
+          <h3 class="block-heading">Pump head v2.2 — the parameters, and how they are calculated</h3>
+          <p class="block-note">With the rotor fixed at <strong><em>R</em> = 19.70</strong> and the flange measured at <strong>42.50</strong>, every head dimension follows from the print model. The gap is set by a <strong>local pad at the roller width</strong> — not by the head's structural wall — and the schematic shows why that distinction matters.</p>
+
+          <figure class="detail-figure">
+            <svg viewBox="0 0 760 290" role="img" aria-label="Radius ladder showing the roller surface, the pad surface, the rotor flange, and the head base wall, with the gap and clearance dimensioned">
+              <text x="230" y="22" fill="#7a7068" font-size="11" text-anchor="middle" letter-spacing="1">AS-PRINTED RADIUS FROM THE ROTOR AXIS (mm)</text>
+
+              <!-- axis -->
+              <line x1="50" y1="200" x2="720" y2="200" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+              <text x="50" y="222" fill="#7a7068" font-size="10">← rotor axis</text>
+
+              <!-- tube band (squeezed between roller and pad) -->
+              <rect x="109" y="120" width="374" height="46" fill="rgba(90,150,230,0.16)" stroke="rgba(120,175,240,0.5)" stroke-width="1" stroke-dasharray="4 3"/>
+              <text x="296" y="148" fill="#8fc0f0" font-size="11.5" text-anchor="middle" font-weight="600">tube — squeezed into the gap</text>
+
+              <!-- R = 19.70 : roller -->
+              <line x1="109" y1="70" x2="109" y2="200" stroke="#ff6b2b" stroke-width="3"/>
+              <text x="109" y="60" fill="#ff6b2b" font-size="12.5" font-weight="700" text-anchor="middle">19.70</text>
+              <text x="109" y="44" fill="#f0ece8" font-size="11" text-anchor="middle">R — roller</text>
+
+              <!-- 21.22 : pad surface -->
+              <line x1="483" y1="90" x2="483" y2="200" stroke="#5fd08a" stroke-width="3"/>
+              <text x="470" y="80" fill="#5fd08a" font-size="12.5" font-weight="700" text-anchor="end">21.22</text>
+              <text x="470" y="64" fill="#f0ece8" font-size="11" text-anchor="end">PAD surface</text>
+              <text x="470" y="48" fill="#7a7068" font-size="10" text-anchor="end">between the flanges</text>
+
+              <!-- 21.25 : flange OD -->
+              <line x1="491" y1="128" x2="491" y2="200" stroke="#9a9088" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <text x="500" y="112" fill="#9a9088" font-size="12.5" font-weight="700" text-anchor="start">21.25</text>
+              <text x="500" y="96" fill="#f0ece8" font-size="11" text-anchor="start">rotor FLANGE</text>
+              <text x="500" y="81" fill="#7a7068" font-size="10" text-anchor="start">(42.50 / 2)</text>
+
+              <!-- 21.65 : base wall -->
+              <line x1="589" y1="56" x2="589" y2="200" stroke="#7aa7e0" stroke-width="3"/>
+              <text x="601" y="46" fill="#7aa7e0" font-size="12.5" font-weight="700" text-anchor="start">21.65</text>
+              <text x="601" y="30" fill="#f0ece8" font-size="11" text-anchor="start">head BASE WALL</text>
+
+              <!-- GAP dimension -->
+              <line x1="109" y1="230" x2="483" y2="230" stroke="#5fd08a" stroke-width="1.5" marker-start="url(#hd-g)" marker-end="url(#hd-g)"/>
+              <text x="296" y="250" fill="#5fd08a" font-size="13" font-weight="700" text-anchor="middle">GAP = 1.52 mm</text>
+              <text x="296" y="268" fill="#7a7068" font-size="10.5" text-anchor="middle">the one number that sets the dose · 3.4 µL per mm</text>
+
+              <!-- CLEARANCE dimension -->
+              <line x1="491" y1="230" x2="589" y2="230" stroke="#7aa7e0" stroke-width="1.5" marker-start="url(#hd-b)" marker-end="url(#hd-b)"/>
+              <text x="600" y="250" fill="#7aa7e0" font-size="11.5" font-weight="700" text-anchor="start">clearance 0.40</text>
+              <text x="600" y="266" fill="#7a7068" font-size="10" text-anchor="start">spins free · tube can't escape</text>
+
+              <defs>
+                <marker id="hd-g" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#5fd08a" stroke-width="1.4"/></marker>
+                <marker id="hd-b" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#7aa7e0" stroke-width="1.4"/></marker>
+              </defs>
+            </svg>
+            <figcaption><strong>Look at 21.22 vs 21.25.</strong> The pad surface sits <em>inside</em> the rotor flange — it only gets away with that because the pad lives <strong>axially between the flanges</strong>, while the base wall passes <em>over</em> them. Two surfaces, two jobs: the <strong>pad</strong> sets the dose, the <strong>base wall</strong> retains the tube.</figcaption>
+          </figure>
+
+          <table class="param-table">
+            <thead><tr><th>Parameter</th><th>Expression</th><th>Value</th><th>What it is</th></tr></thead>
+            <tbody>
+              <tr><td><code>k</code></td><td><code>ShrinkComp * NozzleComp</code></td><td><strong>1.00901</strong></td><td>Combined <strong>scale</strong> multiplier. Any printed-plastic dimension is grown by <em>k</em> in CAD so it shrinks onto nominal.</td></tr>
+              <tr><td><code>SurfaceOffset</code></td><td><code>0.11 mm</code></td><td>0.11</td><td>The <strong>bead-spreading shift</strong>. Added to the target on <strong>concave</strong> surfaces (they print small), so the printed surface lands where intended.</td></tr>
+              <tr><td><code>HeadRotorClearance</code></td><td><code>0.40 mm</code></td><td>0.40</td><td><strong>As-printed</strong> radial clearance, head base wall → rotor flange OD. Spins freely; tight enough to keep the tube in the flange groove.</td></tr>
+              <tr><td><code>RotorFlangeDMeasured</code></td><td><code>42.50 mm</code></td><td>42.50</td><td><strong>MEASURED</strong> outer Ø of the <em>printed</em> rotor. Hard-typed from the caliper — the head must clear the rotor that <strong>exists</strong>, not the CAD one.</td></tr>
+              <tr><td><code>HeadBaseRadius</code></td><td><code>(RotorFlangeDMeasured/2 + HeadRotorClearance + SurfaceOffset) * k</code></td><td><strong>21.956</strong></td><td>CAD radius of the head's <strong>structural wall</strong> — the part that passes <em>over</em> the flanges.</td></tr>
+              <tr><td><code>HeadWallRadius</code></td><td><code>(PumpDiam/2 + GapPumpHeadRotor + SurfaceOffset) * k</code></td><td><strong>21.522</strong></td><td>CAD radius of the <strong>pad's inner arc</strong> — <strong>the gap-critical surface</strong>, living <em>between</em> the flanges.</td></tr>
+              <tr><td><code>PadExtrusion</code></td><td><code>HeadBaseRadius - HeadWallRadius</code></td><td><strong>0.434</strong></td><td>How far the pad extrudes inward from the base wall. <strong>⚠ Guard: below ~0.3 mm, <code>HeadRotorClearance</code> is too small.</strong></td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">The gap sweep</h4>
+          <table class="param-table">
+            <thead><tr><th>Head</th><th>Gap (as printed)</th><th>δ</th><th><code>HeadWallRadius</code> (CAD)</th><th><code>PadExtrusion</code></th></tr></thead>
+            <tbody>
+              <tr><td><strong>FIRM</strong></td><td><strong>1.52</strong></td><td>0.30</td><td><strong>21.52</strong></td><td><strong>0.43</strong> ← print this one <em>alone</em>, first</td></tr>
+              <tr><td>MID</td><td>1.62</td><td>0.20</td><td>21.62</td><td>0.33</td></tr>
+              <tr><td>LOOSE</td><td>1.72</td><td>0.10</td><td>21.72</td><td>0.23 ⚠ ≈1 line width</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-warn"><span class="callout-label">The CAD gap reads 1.69, not 1.52 — and that is CORRECT.</span> Both parts are deliberately <strong>oversized in CAD</strong> so they shrink onto target, so the CAD gap is a <strong>derived artifact, not a target</strong>. Forward-check: rotor <code>19.8325 / 1.00901 = 19.700</code>; head <code>21.5220 / 1.00901 − 0.11 = 21.220</code> → <strong>printed gap = 1.520 ✓</strong>. Had the CAD been "corrected" to read 1.52, the part would print at <strong>1.35</strong> — 0.17 mm too tight → 0.58 µL → <strong>~12 % of a 5 µL stroke</strong>. The compensation is not cosmetic.</div>
+
+          <div class="callout callout-good"><span class="callout-label">What the FIRM head actually tests.</span> The scale <em>k</em> is validated. The offset is <strong>fitted on a convex surface</strong> and assumed equal-and-opposite on concave ones — the standard assumption, but slicers ship <em>separate</em> hole and contour compensation for a reason. So: print the FIRM head <strong>alone</strong>, then <strong>caliper the installed gap</strong> through the access slots (top + both sides). <strong>If it reads 1.52, the print model is validated in both directions</strong> and MID/LOOSE go straight to print. If it reads tighter, the concave offset is larger and earns its own constant. <strong>One head to learn the number, or three heads to learn it three times.</strong></div>
         </section>
       </div>
 

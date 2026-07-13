@@ -1163,6 +1163,182 @@ precision, and by how much?** Predicted effect: **≈3 % CV**. Cheap, controlled
 
 ---
 
+## 11.8 ⭐ THE PRINT MODEL (canonical — supersedes §11.7.12–13)
+
+> **§11.7.1–11.7.14 is the audit trail — how we got here, including the wrong turns.**
+> **This section is the answer. Use only this.**
+
+### 11.8.1 The model
+
+Every printed plastic dimension is displaced by **two physically distinct errors**:
+
+```
+PRINTED  =  CAD / k   ±  SurfaceOffset
+
+    k              a proportional SCALE   (the part comes out uniformly smaller)
+    SurfaceOffset  a fixed SHIFT          (every surface moves by a constant amount)
+```
+
+**The sign of the offset depends on the *kind* of dimension** — and this is the whole content of the model:
+
+| Dimension type | Offset term | Why |
+|---|---|---|
+| **Convex / outer** surface (rotor flange OD, a peg) | **+ SurfaceOffset** | the bead spreads outward → prints **proud** |
+| **Concave / inner** surface (**the pump-head arc**, a hole) | **− SurfaceOffset** | the bead intrudes → prints **small** |
+| **Centre-to-centre** distance (the rotor **pitch**) | **0 — cancels exactly** | both surfaces shift the same way; the **centres do not move** |
+
+### 11.8.2 Calibrated values (Bambu P1S · 0.2 mm nozzle · 3DE MAX PLA "Cold White")
+
+| Constant | Value | Calibrated from | Why that dimension |
+|---|---|---|---|
+| **`k`** | **1.00906** | the **rotor pitch** (2R across steel bearings) | A centre-to-centre distance is **offset-immune** → it isolates the scale **cleanly**. |
+| **`SurfaceOffset`** | **0.11 mm** | the **rotor flange OD** | A convex plastic surface **is** offset-sensitive → given `k`, it isolates the offset. |
+
+**The calibration design is the insight:** you need **one offset-immune dimension and one offset-sensitive
+dimension on the same part.** The rotor happened to have both — a **steel**-referenced span (2R) and a
+**plastic** surface (the flange) — which is why one print calibrated the entire model.
+
+```
+SCALE   (from the pitch — offset-free):
+    printed pitch = 2R − 10.000 (steel, exact) = 39.20 − 10.00 = 29.20
+    CAD pitch                                                  = 29.4647
+    k = 29.4647 / 29.20                                        = 1.00906     ✅
+
+OFFSET  (from the flange — convex):
+    CAD flange Ø     = RotorLength + 6 + 7                     = 42.665
+    scale-only prediction = 42.665 / 1.00906                   = 42.282
+    MEASURED                                                    = 42.50
+    2 × SurfaceOffset = 42.50 − 42.282 = 0.218 → SurfaceOffset = 0.11 mm     ✅
+```
+
+### 11.8.3 ⚠ The two-parameter model REPLACES the earlier three-parameter one
+
+**`ShrinkComp` × `NozzleComp` was a false decomposition. Do not defend it.**
+
+```
+ShrinkComp  = 1.0022      measured on ONE 100 mm coupon
+NozzleComp  = 1.0068      := (total / ShrinkComp)   ← a RESIDUAL, never a measurement
+```
+
+**Only the product was ever measured, and only the product is ever used.** There is also **no physical
+mechanism** by which a nozzle changes a *proportional* shrink — thermal contraction is a material property.
+The split *looked* like it carried information and did not.
+
+> **The root cause was a flawed coupon design.** A single 100 mm bar measures its length between **two convex
+> faces**, so it reports `100·s + 2·offset` — **one equation, two unknowns.** It **cannot separate scale from
+> offset.** The "0.22 % vs 0.90 % discrepancy" that sent us hunting for a nozzle term was an **artifact of the
+> measurement**, not a physical effect. `ShrinkComp = 1.0022` was never a clean material constant.
+
+**What *is* certain `[Certain]`:** a fixed offset **cannot** produce an error on a centre-to-centre distance —
+it cancels by geometry. The pitch came out **0.265 mm short on 29.46**. Therefore **a proportional scale
+exists**, and it is real. And the flange error exceeds the scale-only prediction, so **an offset also exists**.
+**Two terms. Not one, not three.**
+
+> **In CAD this changes nothing.** `ShrinkComp × NozzleComp = 1.00901` vs the honest `k = 1.00906` →
+> **0.001 mm** on the head. **Do not rebuild the model.** Collapse the two into a single `ScaleComp` *after*
+> the head print, not before.
+
+### 11.8.4 The coupon test that SHOULD have been run (for the thesis, not for this build)
+
+Print **two bars of different lengths at the same nozzle** — e.g. **100 mm and 20 mm**:
+
+```
+L₁_printed = 100 · s + 2 · offset
+L₂_printed =  20 · s + 2 · offset      →  two equations, two unknowns
+                                       →  s and offset, INDEPENDENTLY, from one print
+```
+
+This is the **correct coupon design**. It turns the print model from *"calibrated on a rotor by luck"* into
+*"calibrated by design"*, and it would let the nozzle-independence of `s` be **tested** rather than assumed.
+**Worth running before the thesis writeup. It does not block the build.**
+
+### 11.8.5 Process lock ⚠
+
+> **`k` and `SurfaceOffset` are calibrated for a PROCESS, not for a MATERIAL.**
+
+They are valid **only** for the exact slicer profile that produced the rotor. **Layer height, wall count, flow,
+speed, temperature, nozzle — change any one and the calibration is void.**
+
+**Specifically: adaptive layer height is OFF.** It cannot help — the gap-critical arc is a **vertical wall**
+(the arc prints **flat in the bed plane**, §7.1), which has no stair-stepping at any layer height. But varying
+the layer height varies extrusion width and flow, which would make `SurfaceOffset` **Z-dependent** → the gap
+would **vary along the roller's 4 mm contact band**. That is exactly the non-uniform occlusion this whole build
+exists to eliminate.
+
+### 11.8.6 Status — validated in one direction, not yet the other
+
+| | Status |
+|---|---|
+| **Scale `k`** | ✅ **VALIDATED.** Predicted the rescaled rotor to **2R = 39.40 ± 0.02** (§11.7.14). |
+| **Offset, convex (+)** | ✅ **Fitted** to the flange OD. *(Fitted, not validated — the flange is where it came from.)* |
+| **Offset, concave (−)** | ⏳ **UNVALIDATED.** Assumed equal and opposite `[Likely]` — the standard assumption, but slicers ship **separate** hole and contour compensation for a reason. |
+
+> **The FIRM head is the test.** Print it **alone**, then **caliper the installed gap** through the access
+> slots (top + both sides). **If it reads 1.52, the model is validated in both directions** and MID/LOOSE go
+> straight to print. If it reads tighter, the concave offset is larger than the convex one and earns its own
+> constant.
+
+---
+
+## 11.9 v2.2 pump head — parameter set
+
+`R` = **19.70** (validated, §11.7.14) · flange Ø = **42.50** (measured) · `k` = **1.00906** ·
+`SurfaceOffset` = **0.11**
+
+### 11.9.1 The parameters
+
+| Parameter | Expression | Value | What it is |
+|-----------|-----------|-------|------------|
+| `k` | `ShrinkComp * NozzleComp` | **1.00901** | Combined **scale** multiplier. *(Honest value 1.00906; the 0.001 mm difference is irrelevant — see §11.8.3.)* |
+| `SurfaceOffset` | `0.11 mm` | 0.11 | The **bead-spreading shift**. Added to the target for **concave** surfaces (they print small), so the printed surface lands where intended. |
+| `HeadRotorClearance` | `0.40 mm` | 0.40 | **As-printed** radial clearance between the head's **base wall** and the **rotor flange OD**. Spins freely, but tight enough to keep the tube in the flange groove. |
+| `RotorFlangeDMeasured` | `42.50 mm` | 42.50 | **MEASURED** outer Ø of the *printed* rotor flanges. **Hard-typed from the caliper** — the head must clear the rotor that **exists**, not the CAD one. |
+| `HeadBaseRadius` | `(RotorFlangeDMeasured/2 + HeadRotorClearance + SurfaceOffset) * k` | **21.956** | CAD radius of the head's **structural wall** — the part that passes **over** the flanges. |
+| `HeadWallRadius` | `(PumpDiam/2 + GapPumpHeadRotor + SurfaceOffset) * k` | **21.522** | CAD radius of the **pad's inner arc** — **the gap-critical surface**, living **between** the flanges. |
+| `PadExtrusion` | `HeadBaseRadius - HeadWallRadius` | **0.434** | How far the pad extrudes inward from the base wall. **⚠ Guard: if this drops below ~0.3, `HeadRotorClearance` is too small.** |
+
+### 11.9.2 Why the pad geometry works
+
+The gap is set by a **local land at the roller width**, not by the head's structural wall. That is the right
+move, and the numbers show why:
+
+```
+FIRM head, as printed:   pad surface at 19.70 + 1.52 = 21.22
+                         rotor flange radius         = 21.25      ← the pad is INSIDE the flange!
+```
+
+**The pad can dip inside the flange OD only because it lives *axially between* the flanges.** The base wall
+(which passes *over* them) sits at 21.25 + 0.40 = **21.65 as printed** and clears them. Two surfaces, two jobs.
+
+### 11.9.3 The gap sweep
+
+| Head | `GapPumpHeadRotor` | δ | `HeadWallRadius` (CAD) | `PadExtrusion` |
+|------|-------------------|---|------------------------|----------------|
+| **FIRM** | **1.52** | 0.30 | **21.52** | **0.43** ← print this one **alone**, first |
+| MID | 1.62 | 0.20 | 21.62 | 0.33 |
+| LOOSE | 1.72 | 0.10 | 21.72 | **0.23** ⚠ ≈1 line width |
+
+### 11.9.4 ⚠ The CAD gap reads 1.69, NOT 1.52 — this is correct
+
+Both parts are deliberately **oversized in CAD** so they shrink onto target. The CAD gap is a **derived
+artifact, not a target** — do not "fix" it.
+
+```
+CAD rotor R  = RotorLength/2 + BearingD/2 = 29.665/2 + 5.00 = 19.8325
+CAD pad R                                                    = 21.5220
+CAD gap      = 21.5220 − 19.8325                             =  1.6895   ← what Fusion shows ✓
+
+Forward-check to the printed part:
+   rotor:  19.8325 / 1.00901              = 19.700
+   head:   21.5220 / 1.00901 − 0.11       = 21.220      (−0.11 = the CONCAVE offset)
+   →  printed gap = 21.220 − 19.700       =  1.520  ✅
+```
+
+> **Had the CAD gap been "corrected" to read 1.52, the part would print at 1.35** — 0.17 mm too tight →
+> **0.58 µL → ~12 % of a 5 µL stroke.** The compensation is worth 12 %; it is not cosmetic.
+
+---
+
 ## 12. Version log
 
 - **v1 (planned)** — corrected N_c = 2 (R ≈ 19.7 mm), gap-sweep heads, caliper-access slots,
