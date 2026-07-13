@@ -27,7 +27,7 @@ factor `k`.
 | Version | State | Where |
 |---------|-------|-------|
 | 🟥 **v2.1** | **BUILT — did not seal** (partial occlusion, diagnosed) | §11 |
-| 🟧 **v2.2** | **IN DESIGN** — rotor datum: **fix bearing play** (0.2 mm nozzle, **arrived 2026-07-02**) + shrink comp · centre head · **axial align** · enlarge gap access. Filament + shrink-coupon method fixed. **Rotor print #1 measured & decomposed: play confirmed (0.085 mm), peg ladder must be re-run at 0.2 mm before print #2.** | §11.5–§11.7.9 |
+| 🟧 **v2.2** | **ROTOR DONE ✅ — head in design.** Rotor print #2 hits **2R = 39.40 (R = 19.70)**, on target, play-free (single bearing per roller). `NozzleComp` calibrated. Remaining: pump head — wall radius **21.41**, centre on shaft, clear the flange groove, enlarge gap access. **Print the FIRM head alone first** and measure the installed gap. | §11.7.11–15 |
 | ⬜ **v2.3** | future — first clean seal + gap sweep | — |
 
 ---
@@ -1046,6 +1046,85 @@ are **CAD collision checks, not measurements**:
 > *presses* on the tube will rub it continuously → friction, tube wear, added motor torque. Conventional
 > designs locate the tube on the **stationary head** for exactly this reason. Keep the groove a **guide with
 > clearance**, never a clamp. Acceptable for a proof-of-concept; revisit for the metal device.
+
+#### 11.7.14 ✅ VALIDATED — rescaled rotor hits 2R = 39.40 (v2.2 rotor, print #2)
+
+Printed with `RotorLength` = 29.67 (`ShrinkComp` 1.0022 × `NozzleComp` 1.0068), `BearingBoreD` = 5.05,
+`PegHeight` ≈ 4.5, **one MR105ZZ per roller** on the base land.
+
+| Axis | Target | **Measured 2R** | Error |
+|------|--------|-----------------|-------|
+| X | 39.40 | **39.42** | +0.02 |
+| Y | 39.40 | **39.38** | −0.02 |
+| **mean** | **39.40** | **39.40** | **0.00** ✅ |
+
+**→ `R` = 19.70 mm — the design value, recovered exactly.**
+
+##### What this confirms
+
+1. **`NozzleComp` = 1.0068 is validated.** It was back-calculated from *one* part (§11.7.13) and flagged as a
+   *working* constant. It has now **predicted a second print to within 0.02 mm**. Promote it from working
+   constant to **calibrated constant** for this printer + 0.2 mm nozzle + Cold White PLA.
+2. **The two-parameter split (§11.7.13) was the right call** — and this print is the proof. Had shrink and
+   nozzle been fused into one number, this result would have been indistinguishable from luck.
+3. **The `ShrinkComp` / `NozzleComp` factor is a true SCALE, not an extrusion-width offset.** This matters, and
+   it is why the number **transfers to the pump head**:
+
+> A pure extrusion-width offset shifts every printed *surface* by a fixed amount — but it **cancels on a
+> centre-to-centre distance**, because both features' surfaces move and their *centres* do not. The pitch Ø
+> **is** a centre-to-centre distance, and the error **did** show up there. Therefore the error is
+> **proportional (a scale), not a fixed offset** — so it applies to the head's wall radius too.
+
+##### Out-of-round: 0.04 mm — predicted, and accepted
+
+X and Y differ by **0.04 mm**. §11.7.1 predicted ~0.03 mm from the coupon's X/Y anisotropy (0.26 % vs 0.18 %)
+when a **single mean scale** is used instead of per-axis scaling. **The prediction held.**
+
+```
+gap ripple around the arc = ±0.02 mm
+→ volume ripple = 3.4 µL/mm × 0.02 = ±0.068 µL  ≈  ±1.4 % of a 5 µL stroke   (worst case)
+```
+
+And it is **periodic, not random** — each roller sweeps both axes every revolution, so it largely **averages
+out** over a stroke rather than adding to CV. **Accept it.** Chasing it costs a reprint to buy back ~1 %; the
+per-axis scale (X ×1.0026 / Y ×1.0018) is noted for the metal version, not for this build.
+
+##### → GATE PASSED. The rotor is DONE. All remaining work is in the head.
+
+#### 11.7.15 Head parameters (derived from the validated `R` = 19.70)
+
+```
+HeadWallRadius = (R + GapPumpHeadRotor) × ShrinkComp × NozzleComp
+               = (19.70 + gap) × 1.0022 × 1.0068
+               = (19.70 + gap) × 1.00907
+```
+
+| Head | Gap (as-printed intent) | δ | **`HeadWallRadius` (CAD)** |
+|------|------------------------|---|---------------------------|
+| **FIRM** | **1.52** | 0.30 | **21.41** ← print this one FIRST, alone |
+| MID | 1.62 | 0.20 | 21.51 |
+| LOOSE | 1.72 | 0.10 | 21.61 |
+
+##### ⚠ Print the FIRM head ALONE first — the head carries an error the rotor could not reveal
+
+The rotor validated the **scale**. It could **not** validate a **surface offset**, because the pitch is a
+centre-to-centre distance and offsets cancel there (see above). **The head's arc wall is exactly the case where
+they do not cancel:** it is a **concave (inner) surface**, and FDM prints inner surfaces **undersized** —
+material squeezes inward, so the arc radius comes in **small** and the **gap comes out tighter than intended**.
+
+```
+A 0.10 mm surface offset on the head wall  →  3.4 µL/mm × 0.10  =  0.34 µL  =  ~7 % of a 5 µL stroke.
+```
+
+**That is a first-order error and it is currently unmeasured.** So:
+
+1. Print the **FIRM head only**.
+2. **Measure the installed gap** through the (enlarged) caliper access slots — top + both sides.
+3. `HeadOffset = intended gap − measured gap` → apply it to all three heads.
+4. **Then** print MID and LOOSE.
+
+> **Do not print three heads blind.** It costs one head to learn the offset, or three heads to learn it three
+> times.
 
 ##### The play experiment (keep this — it is a thesis result)
 
