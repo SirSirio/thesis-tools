@@ -400,19 +400,19 @@
       margin: 24px 0 10px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
+    .model-eq .eq-grp { display: flex; align-items: flex-start; gap: 10px; }
     .model-eq .eq-op {
-      align-self: flex-start;
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--text-muted);
-      padding-top: 12px;
+      padding-top: 8px;
     }
     .model-eq .eq-term {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      max-width: 190px;
+      max-width: 168px;
     }
     .model-eq .eq-chip {
       font-size: 1.15rem;
@@ -455,6 +455,93 @@
     }
     .callout-good { background: rgba(60, 200, 120, 0.08); border: 1px solid rgba(60, 200, 120, 0.32); }
     .callout-warn { background: rgba(232, 53, 53, 0.08); border: 1px solid rgba(232, 53, 53, 0.32); }
+
+    /* ── Table of contents ────────────────────────────────────── */
+    .toc {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 20px 24px;
+      margin: 0 0 28px;
+    }
+    .toc-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px 24px;
+    }
+    .toc-group-label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--glass-border);
+      color: var(--text);
+    }
+    .toc-g21 .toc-group-label { color: var(--accent-2); }
+    .toc-g22 .toc-group-label { color: var(--accent); }
+    .toc-link {
+      display: block;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      padding: 3px 0 3px 10px;
+      border-left: 2px solid transparent;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .toc-link:hover { color: var(--accent); border-left-color: var(--accent); }
+    .detail-block[id] { scroll-margin-top: 24px; }
+
+    /* ── Collapsible version panels ───────────────────────────── */
+    .ver-panel {
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      margin: 0 0 18px;
+    }
+    .ver-panel[open] { background: rgba(255, 255, 255, 0.015); }
+    .ver-panel > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      padding: 16px 20px;
+      user-select: none;
+    }
+    .ver-panel > summary::-webkit-details-marker { display: none; }
+    .ver-panel > summary::after {
+      content: '▸';
+      margin-left: auto;
+      color: var(--text-muted);
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+    .ver-panel[open] > summary::after { transform: rotate(90deg); }
+    .ver-panel > summary:hover { background: rgba(255, 255, 255, 0.025); border-radius: 14px; }
+    .ver-chip {
+      font-weight: 800;
+      font-size: 1.02rem;
+      padding: 5px 14px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .ver-design > summary .ver-chip { color: var(--text); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); }
+    .ver-21 > summary .ver-chip { color: var(--accent-2); background: rgba(232, 53, 53, 0.12); border: 1px solid rgba(232, 53, 53, 0.5); }
+    .ver-22 > summary .ver-chip { color: var(--accent); background: rgba(255, 107, 43, 0.12); border: 1px solid rgba(255, 107, 43, 0.5); }
+    .ver-sum-note { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; flex: 1; min-width: 180px; }
+    .ver-body { padding: 6px 22px 8px; border-top: 1px solid var(--glass-border); }
+    .ver-body > .detail-block:first-child { margin-top: 22px; }
     .callout-note { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); }
     .callout-label { font-weight: 600; }
     .callout-good .callout-label { color: #5fd08a; }
@@ -900,9 +987,43 @@
           </div>
         </div>
 
-        <div class="callout callout-warn"><span class="callout-label">Status: build 2.1 printed &amp; measured — not yet pumped.</span> The firm head (nominal gap 1.52 mm) and a reprinted rotor were measured against the reused proto-01 holder. Occlusion is only partial — two stacked geometry errors (see <strong>Build 2.1</strong> at the bottom). The design sections below remain the plan; the gap-sweep experiments run once 2.2 seals.</div>
+        <nav class="toc" aria-label="Page contents">
+          <div class="toc-title">Contents — click to jump (panels open automatically)</div>
+          <div class="toc-grid">
+            <div class="toc-group">
+              <div class="toc-group-label">The design (v2)</div>
+              <a class="toc-link" href="#sec-purpose">Purpose</a>
+              <a class="toc-link" href="#sec-parts">Parts &amp; assembly</a>
+              <a class="toc-link" href="#sec-targets">Targets &amp; pass criteria</a>
+              <a class="toc-link" href="#sec-parameters">Parameters as designed</a>
+              <a class="toc-link" href="#sec-gapsweep">The gap sweep</a>
+              <a class="toc-link" href="#sec-experiments">Planned experiments</a>
+              <a class="toc-link" href="#sec-tubewall">Tube wall measurement</a>
+              <a class="toc-link" href="#sec-risks">Open questions / risks</a>
+            </div>
+            <div class="toc-group toc-g21">
+              <div class="toc-group-label">v2.1 — built, didn't seal</div>
+              <a class="toc-link" href="#sec-v21">First print &amp; diagnosis</a>
+              <a class="toc-link" href="#sec-v21">→ Changes for 2.2</a>
+            </div>
+            <div class="toc-group toc-g22">
+              <div class="toc-group-label">v2.2 — rotor done, head in print</div>
+              <a class="toc-link" href="#sec-rebuild">Shrink calibration &amp; peg ladder</a>
+              <a class="toc-link" href="#sec-cone">The peg is a cone → single bearing</a>
+              <a class="toc-link" href="#sec-printmodel">⭐ The print model</a>
+              <a class="toc-link" href="#sec-head">Pump head — parameters</a>
+            </div>
+          </div>
+        </nav>
 
-        <section class="detail-block">
+        <details class="ver-panel ver-design">
+          <summary>
+            <span class="ver-chip">The design (v2)</span>
+            <span class="ver-sum-note">Corrected geometry (N<sub>c</sub> = 2, R = 19.7), the gap-sweep experiment, targets and the measured tube wall — the reference plan both builds execute against.</span>
+          </summary>
+          <div class="ver-body">
+
+        <section class="detail-block" id="sec-purpose">
           <h3 class="block-heading">Purpose</h3>
           <p class="block-note">The first build meant to <strong>actually work to spec</strong>. Proto-01 proved the concept and validated the model but carried three known, fixable errors and never occluded the tube without a paper shim. Proto-02:</p>
           <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
@@ -914,7 +1035,7 @@
           </ul>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-parts">
           <h3 class="block-heading">Parts &amp; assembly — what changed from proto-01</h3>
           <p class="block-note">Four printed parts + 8 bearings + the tube. The full part-by-part breakdown and how it assembles lives in <strong>Proto 01</strong> (same set, reused) — proto-02 edits them as follows.</p>
           <table class="param-table">
@@ -930,7 +1051,7 @@
           <div class="callout callout-note"><span class="callout-label">The one datum that matters: the shaft.</span> It locates every part and can't be moved, so all geometry is referenced to the shaft centre. <strong>Installed gap = wall radius − R</strong>, and it should be <strong>uniform around the arc</strong> (wall concentric with the shaft). Non-uniformity means the wall isn't centred — the lens for reading Build 2.1.</div>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-targets">
           <h3 class="block-heading">Targets &amp; pass criteria</h3>
           <table class="param-table">
             <thead><tr><th>Quantity</th><th>Target</th><th>Note</th></tr></thead>
@@ -944,7 +1065,7 @@
           <div class="callout callout-note"><span class="callout-label">Benchmark.</span> The device replaces a person pipetting by hand, so a <strong>pipette</strong> is the fair comparator: ISO 8655 holds CV ≈ 1.5–3 % at 5 µL. Proto-01 was already CV 4.5 % despite its errors.</div>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-parameters">
           <h3 class="block-heading">Parameters — as designed</h3>
           <p class="block-note">Recomputed with the
             <a class="tool-link" href="../tools/rotor-solver/index.html">Rotor Geometry Solver</a>
@@ -975,7 +1096,7 @@
           <p class="block-note">The <em>N<sub>c</sub></em> = 2 correction grows the rotor 17.7 → 19.7 mm. This time the tool's gap prescription <em>G</em> = 2<em>w</em> − <em>δ</em> is carried into CAD (the proto-01 workflow failure was re-estimating it instead).</p>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-gapsweep">
           <h3 class="block-heading">The gap sweep — the key experiment</h3>
           <p>The sweep tunes the <strong>interference</strong> <em>δ</em> = 2<em>w</em> − <em>G</em> — how far the gap squeezes past the measured walls-kiss (2<em>w</em> = 1.82 mm).</p>
           <div class="callout callout-warn"><span class="callout-label">Delivery is leak-limited, not arc-limited (key correction from proto-01).</span> The displaced-volume model's arc-compensation term assumes the tube is <em>already fully sealed</em> — it only describes the over-squeezed side. <strong>Below the seal threshold the tube backflows, so a <em>looser</em> gap leaks <em>more</em> and delivers <em>less</em>.</strong> Delivery vs gap is therefore a <strong>hump</strong>: rising as you tighten (better seal), peaking at the <em>loosest gap that still fully seals</em>, then slowly declining if over-squeezed. <strong>The optimum is the top of the hump</strong> — and proto-02's job is to find it.</div>
@@ -1018,7 +1139,7 @@
           <div class="callout callout-note"><span class="callout-label">Measure the real gap.</span> Each head gets <strong>3 caliper-access slots across the 180° arc</strong> (apex + two sides) → records the true installed gap (never nominal) and reveals any clamp-bow / non-uniformity. The first (firm) head doubles as the <strong>calibration head</strong> for the FDM print offset.</div>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-experiments">
           <h3 class="block-heading">Planned experiments</h3>
           <p class="block-note">Run order <strong>randomized</strong>; tube wear controlled (interleave heads or fresh tube section per head) — silicone hysteresis drifts <em>w<sub>eff</sub></em> with compression cycles and would otherwise confound the sweep. <strong>n = 10</strong> per condition (ISO 8655 minimum; n = 5 leaves the CV estimate ~±40 % uncertain).</p>
           <table class="param-table">
@@ -1035,7 +1156,7 @@
           </table>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-tubewall">
           <h3 class="block-heading">Tube wall thickness — measurement &amp; analysis</h3>
           <p class="block-note">The gap is defined by <em>G = 2w − δ</em>, making the wall thickness <em>w</em> the highest-leverage input. Three independent lines of measurement were used to converge on a reliable value:</p>
           <table class="param-table">
@@ -1062,7 +1183,7 @@
           </figure>
         </section>
 
-        <section class="detail-block">
+        <section class="detail-block" id="sec-risks">
           <h3 class="block-heading">Open questions / risks</h3>
           <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
             <li><strong>Seal threshold / leak regime (model limitation)</strong> — the arc-compensation model only holds once fully sealed; below the threshold the tube leaks and delivery drops as the gap opens (proto-01 lived here). The model needs a sealing/leak term — a genuine thesis finding.</li>
@@ -1075,8 +1196,17 @@
           </ul>
         </section>
 
-        <section class="detail-block">
-          <div style="display:inline-block; font-size:1.3rem; font-weight:800; letter-spacing:0.02em; color:var(--accent-2); background:rgba(232,53,53,0.12); border:1px solid rgba(232,53,53,0.5); border-radius:8px; padding:6px 16px; margin-bottom:16px;">v2.1 — BUILT, DIDN'T SEAL</div>
+          </div>
+        </details>
+
+        <details class="ver-panel ver-21">
+          <summary>
+            <span class="ver-chip">v2.1</span>
+            <span class="ver-sum-note"><strong>BUILT — didn't seal.</strong> Rotor undersized (2R = 39.04) + head seated ~0.45 mm too high → apex open. Fully diagnosed; every fix carried into v2.2.</span>
+          </summary>
+          <div class="ver-body">
+
+        <section class="detail-block" id="sec-v21">
           <h3 class="block-heading">First print, measurements &amp; diagnosis</h3>
           <p class="block-note">First print of the <strong>firm head</strong> (nominal gap 1.52 mm) plus a reprinted rotor, measured against the reused proto-01 holder. Built and measured — <strong>not yet pumped</strong>. The design gap 1.52 is a <em>nominal − nominal</em> figure (wall radius 21.22 − R 19.70); what governs occlusion is the <strong>printed, installed gap measured from the shaft</strong>.</p>
 
@@ -1147,8 +1277,17 @@
           <p class="block-note" style="margin-top:12px">Parked for the thesis report (after 2.1): an FDM-vs-resin printer comparison (Bambu P1S vs Prusa SL1S SPEED) and a PLA-shrinkage note (typical 0.2–0.5 %; ~1 % is high-end).</p>
         </section>
 
-        <section class="detail-block">
-          <div style="display:inline-block; font-size:1.3rem; font-weight:800; letter-spacing:0.02em; color:var(--accent); background:rgba(255,107,43,0.12); border:1px solid rgba(255,107,43,0.5); border-radius:8px; padding:6px 16px; margin-bottom:16px;">v2.2 — IN DESIGN</div>
+          </div>
+        </details>
+
+        <details class="ver-panel ver-22" open>
+          <summary>
+            <span class="ver-chip">v2.2</span>
+            <span class="ver-sum-note"><strong>Rotor ✅ validated (2R = 39.40, play-free)</strong> · print model calibrated · pump head in print. The current build.</span>
+          </summary>
+          <div class="ver-body">
+
+        <section class="detail-block" id="sec-rebuild">
           <h3 class="block-heading">Rotor-datum rebuild — materials &amp; shrink calibration</h3>
           <p class="block-note">The v2.2 fixes are set (see <strong>→ Changes for 2.2</strong> above): rebuild the rotor to restore the datum, then centre and axially align the head. The gating part — the <strong>0.2 mm nozzle</strong> for the bearing pockets — <strong>arrived 2026-07-02</strong>, so the build is unblocked. This block records the filament and the shrink-calibration method.</p>
 
@@ -1231,7 +1370,7 @@
         </section>
 
         <!-- ═══ ROTOR REBUILD — THE CONE ═══════════════════════════ -->
-        <section class="detail-block">
+        <section class="detail-block" id="sec-cone">
           <h3 class="block-heading">The rotor took four prints — because the peg is a cone</h3>
           <p class="block-note">The v2.2 rotor came out <strong>2R = 39.20</strong>, still 0.20 mm short. Two candidate causes demanded <em>opposite</em> fixes — residual <strong>play</strong> (must be removed mechanically; scaling would bury a CV source) or a <strong>dimensional offset</strong> (compensable by scale). Guessing wrong would have been worse than doing nothing, so the rotor was calipered <em>without</em> the bearings.</p>
 
@@ -1258,20 +1397,17 @@
         </section>
 
         <!-- ═══ THE PRINT MODEL ════════════════════════════════════ -->
-        <section class="detail-block">
+        <section class="detail-block" id="sec-printmodel">
           <h3 class="block-heading">⭐ The print model — two errors, not one</h3>
           <p class="block-note"><strong>Why build a model at all?</strong> Four prints missed their target, and the obvious loop — print, measure, nudge a number, reprint — is guesswork wearing a lab coat: it converges slowly and teaches nothing transferable. The alternative chosen here was to treat <strong>the printer itself as a system to characterize</strong>: measure how it transforms CAD dimensions into plastic, capture that transformation as a small model with its own data, and then <em>design against the model</em> — so every compensation parameter in Fusion comes from a measurement, not a hunch.</p>
           <p class="block-note"><strong>Ambition check, stated honestly:</strong> this model is <em>not</em> claimed to be an accurate or general theory of FDM printing. It is an <strong>educated guess with data behind it</strong> — just enough model to aim the compensation at the right value on the first try, cheap to recalibrate when the process changes, and falsifiable by the very next print. That is all it needs to be.</p>
           <p class="block-note">The core realization: <strong>a 3D print does not have <em>one</em> dimensional error, it has two</strong> — and they behave completely differently depending on <em>what kind of dimension</em> you are measuring.</p>
 
           <div class="model-eq">
-            <span class="eq-term eq-printed"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads on the real part</span></span>
-            <span class="eq-op">=</span>
-            <span class="eq-term eq-cad"><span class="eq-chip">CAD</span><span class="eq-note">what was drawn in Fusion</span></span>
-            <span class="eq-op">/</span>
-            <span class="eq-term eq-k"><span class="eq-chip">k</span><span class="eq-note"><strong>SCALE</strong> — the whole part comes out uniformly smaller (material shrink + process)</span></span>
-            <span class="eq-op">±</span>
-            <span class="eq-term eq-off"><span class="eq-chip">SurfaceOffset</span><span class="eq-note"><strong>SHIFT</strong> — every surface moves by a fixed amount, because the extruded bead spreads</span></span>
+            <span class="eq-grp"><span class="eq-term eq-printed"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads on the real part</span></span></span>
+            <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-cad"><span class="eq-chip">CAD</span><span class="eq-note">what was drawn in Fusion</span></span></span>
+            <span class="eq-grp"><span class="eq-op">/</span><span class="eq-term eq-k"><span class="eq-chip">k</span><span class="eq-note"><strong>SCALE</strong> — the whole part prints uniformly smaller</span></span></span>
+            <span class="eq-grp"><span class="eq-op">±</span><span class="eq-term eq-off"><span class="eq-chip">SurfaceOffset</span><span class="eq-note"><strong>SHIFT</strong> — every surface moves by a fixed amount (the bead spreads)</span></span></span>
           </div>
           <div class="model-eq-sign">
             <span><strong style="color:#ff6b2b">+</strong> on convex / outer surfaces</span>
@@ -1374,7 +1510,7 @@
         </section>
 
         <!-- ═══ PUMP HEAD v2.2 — PARAMETERS ════════════════════════ -->
-        <section class="detail-block">
+        <section class="detail-block" id="sec-head">
           <h3 class="block-heading">Pump head v2.2 — the parameters, and how they are calculated</h3>
           <p class="block-note">With the rotor fixed at <strong><em>R</em> = 19.70</strong> and the flange measured at <strong>42.50</strong>, every head dimension follows from the print model. The gap is set by a <strong>local pad at the roller width</strong> — not by the head's structural wall — and the schematic shows why that distinction matters.</p>
 
@@ -1498,6 +1634,9 @@
 
           <div class="callout callout-good"><span class="callout-label">What the FIRM head actually tests.</span> The scale <em>k</em> is validated. The offset is <strong>fitted on a convex surface</strong> and assumed equal-and-opposite on concave ones — the standard assumption, but slicers ship <em>separate</em> hole and contour compensation for a reason. So: print the FIRM head <strong>alone</strong>, then <strong>caliper the installed gap</strong> through the access slots (top + both sides). <strong>If it reads 1.52, the print model is validated in both directions</strong> and MID/LOOSE go straight to print. If it reads tighter, the concave offset is larger and earns its own constant. <strong>One head to learn the number, or three heads to learn it three times.</strong></div>
         </section>
+
+          </div>
+        </details>
       </div>
 
     </div>
@@ -1524,6 +1663,15 @@
         throwOnError: false
       });
     }
+  });
+
+  // TOC — open the containing version panel before the browser jumps to the anchor
+  document.querySelectorAll('.toc-link').forEach(a => {
+    a.addEventListener('click', () => {
+      const t = document.querySelector(a.getAttribute('href'));
+      const d = t && t.closest('details');
+      if (d && !d.open) d.open = true;
+    });
   });
 
   // Lightbox — open on any detail figure image, close on overlay/✕/Esc
