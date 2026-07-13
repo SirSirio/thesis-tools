@@ -306,6 +306,7 @@
       text-align: center;
       line-height: 1.4;
     }
+    .figure-compact { max-width: 540px; margin-left: auto; margin-right: auto; }
     .figure-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -388,6 +389,60 @@
       color: var(--text);
     }
     .calc-block strong { color: #f0ece8; }
+
+    /* ── Annotated model equation ─────────────────────────────── */
+    .model-eq {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: center;
+      gap: 10px;
+      margin: 24px 0 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .model-eq .eq-op {
+      align-self: flex-start;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding-top: 12px;
+    }
+    .model-eq .eq-term {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      max-width: 190px;
+    }
+    .model-eq .eq-chip {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      padding: 10px 18px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .model-eq .eq-note {
+      font-size: 0.72rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+      text-align: center;
+      font-family: var(--font);
+    }
+    .eq-printed .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.25); }
+    .eq-cad     .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.35); }
+    .eq-k       .eq-chip { color: #ff9c66; background: rgba(255,107,43,0.10); border: 1px solid rgba(255,107,43,0.55); }
+    .eq-off     .eq-chip { color: #8fc0f0; background: rgba(120,175,240,0.10); border: 1px solid rgba(120,175,240,0.55); }
+    .model-eq-sign {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 20px;
+      margin: 4px 0 20px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .model-eq-sign span strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
     /* ── Callouts ─────────────────────────────────────────────── */
     .callout {
@@ -1104,7 +1159,7 @@
             </div>
             <div class="stat-card">
               <div class="stat-value">0.4 mm</div>
-              <div class="stat-label">nozzle for the shrink-calibration bars (faster; shrink is nozzle-independent)</div>
+              <div class="stat-label">nozzle for the shrink-calibration bars (faster; shrink <em>assumed</em> nozzle-independent — later revised, see the print model)</div>
             </div>
             <div class="stat-card">
               <div class="stat-value">~0.3–0.5 %</div>
@@ -1142,6 +1197,10 @@
 
           <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Results — shrink coupon (2026-07-02, 0.4 mm nozzle)</h4>
           <p class="block-note">Bars printed at 100.00 mm nominal, 3DE MAX PLA "Cold White".</p>
+          <figure class="detail-figure figure-compact">
+            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/ShrinkTest10cm.jpg" alt="Two 100 mm PLA calibration bars, embossed 10cm, marked X and Y" />
+            <figcaption>The two 100 mm coupons, embossed <code>10cm</code> and marked <strong>X</strong> / <strong>Y</strong> for the axis each was printed along. Both cooled fully before calipering. <strong>This coupon design turned out to be flawed</strong> — see the print model below.</figcaption>
+          </figure>
           <table class="param-table">
             <thead><tr><th>Axis</th><th>Measured</th><th>Shrink <em>f</em></th><th>Compensation <em>1+f</em></th></tr></thead>
             <tbody>
@@ -1154,10 +1213,6 @@
           <div class="callout callout-good"><span class="callout-label">⭐ Key finding — play is ~4.5× the shrink.</span> <strong>Only the printed pitch circle shrinks — the bearings are steel.</strong> <em>R</em> = pitch radius (14.70 mm, printed) + bearing radius (5.00 mm, steel). So shrink acts on 14.70, not on 39.40: <code>2 × 14.70 × 0.0022 ≈ 0.065 mm</code>. The v2.1 deficit therefore splits <strong>0.36 mm = shrink ~0.065 (18 %) + bearing play ~0.30 (82 %)</strong> — about 0.15 mm of inward nesting per bearing. The measured PLA shrink is at the <em>low</em> end of the 0.2–0.5 % band, so the <strong>peg fit is the big lever</strong> and shrink comp is a small correction. It also retro-justifies the warning: applying the full 0.91 % would have over-scaled the rotor by ~0.3 mm.</div>
 
           <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Results — bearing-peg fit ladder (0.2 mm nozzle)</h4>
-          <figure class="detail-figure">
-            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/BearingPocketTest.jpg" alt="Printed fit-ladder bar with pegs at 4.90–5.10 mm; the MR105ZZ bearing is seated on the 5.05 mm peg" />
-            <figcaption>Fit ladder printed at 0.2 mm: pegs from 4.90 → 5.10 mm. The MR105ZZ bearing seats on the <strong>5.05 mm</strong> peg — the fit that "just works".</figcaption>
-          </figure>
           <table class="param-table">
             <thead><tr><th>Peg Ø (CAD)</th><th>Result</th></tr></thead>
             <tbody>
@@ -1167,13 +1222,12 @@
             </tbody>
           </table>
           <p class="block-note">The window is narrow and 5.05 sits at its <strong>tight end</strong> — so anything that <em>grows</em> the peg risks a rotor that won't assemble.</p>
+          <figure class="detail-figure figure-compact">
+            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/BearingPocketTest.jpg" alt="Printed fit-ladder bar with pegs at 4.90–5.10 mm; the MR105ZZ bearing is seated on the 5.05 mm peg" />
+            <figcaption>Fit ladder printed at 0.2 mm: pegs from 4.90 → 5.10 mm. The MR105ZZ bearing seats on the <strong>5.05 mm</strong> peg — the fit that "just works".</figcaption>
+          </figure>
 
           <div class="callout callout-warn"><span class="callout-label">Rescaling rule — do NOT global-scale the rotor.</span> A global XY scale in the slicer would also scale the <strong>peg</strong> (5.05 → ~5.06), pushing the empirically-validated fit toward "can't insert". The peg is a fine feature <em>already compensated by the ladder</em> — it needs no shrink scale. Compensate the <strong>printed radial geometry only</strong>: pitch Ø 29.40 → <strong>29.46</strong> (×1.0022) in CAD, leaving the 10 mm steel bearing and the 5.05 mm peg untouched → <code>2R = 29.40 + 10 = 39.40 ✓</code>. Scaling the whole rotor instead would compensate the steel too and <strong>overshoot 2R by ~0.02 mm</strong>.</div>
-
-          <figure class="detail-figure">
-            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/ShrinkTest10cm.jpg" alt="Two 100 mm PLA calibration bars, embossed 10cm, marked X and Y" />
-            <figcaption>The two 100 mm coupons, embossed <code>10cm</code> and marked <strong>X</strong> / <strong>Y</strong> for the axis each was printed along. Both cooled fully before calipering. <strong>This coupon design turned out to be flawed</strong> — see the print model below.</figcaption>
-          </figure>
         </section>
 
         <!-- ═══ ROTOR REBUILD — THE CONE ═══════════════════════════ -->
@@ -1190,24 +1244,40 @@
             <tbody>
               <tr><td><strong>Bottom bearing</strong></td><td>located, tight</td><td>✅ located, tight</td></tr>
               <tr><td><strong>Top bearing</strong></td><td>loose → pivots inward</td><td>✅ removed</td></tr>
-              <tr><td><strong>Radial play</strong></td><td>0.085 mm</td><td>✅ none</td></tr>
+              <tr><td><strong>Radial play</strong></td><td>≈ 0.085 mm <em>(estimate*)</em></td><td>✅ none</td></tr>
               <tr><td><strong>Skew</strong></td><td>~0.6°</td><td>✅ impossible — one bearing cannot pivot</td></tr>
               <tr><td><strong>Tube walking</strong></td><td>driven by skew</td><td>✅ cause removed</td></tr>
               <tr><td><strong>Roller width</strong> vs 2.33 mm tube</td><td>8 mm (over-specified)</td><td>4 mm — sufficient</td></tr>
             </tbody>
           </table>
+          <p class="block-note" style="font-size:0.78rem;">*The 0.085 mm play figure is an <strong>estimate</strong>, not a direct measurement — derived as bearing bore (5.000 mm) − caliper peg readings (~4.915 mm), and those peg readings were taken on the cone's narrow upper region. The <em>direction</em> and rough size are solid (the top bearing measurably tilted); the third decimal is not.</p>
 
           <div class="callout callout-good"><span class="callout-label">Play gone → 39.20 became a <em>real</em> number.</span> With two bearings the caliper jaws could have been <strong>squeezing the play shut</strong>, so 39.20 was ambiguous. With a single bearing there is <strong>no play to squeeze</strong> — so the remaining 0.90 % pitch shortfall is a <strong>fixed, repeatable, compensable</strong> dimensional offset. <em>That</em> is what unlocked the print model below.</div>
 
-          <p class="block-note"><strong>Design-for-manufacture finding, recorded not built:</strong> the printed peg is a proof-of-concept expedient. It tapers, and PLA <strong>creeps</strong> under the one-sided (always radially inward) tube load, so <em>R</em> would drift over thousands of strokes. <strong>The production rotor uses a ground steel pin</strong> — metal cannot taper or creep, and the body then only has to hold <em>hole positions</em>, which is the one thing FDM does genuinely well.</p>
+          <p class="block-note"><strong>Why plastic at all?</strong> The printed rotor is a deliberate choice, not a compromise discovered too late: it proves the pumping concept <em>fast and cheap</em>, and — just as valuable — it forces learning how to do precision engineering with one specific material and process (FDM PLA), errors included. It is not the endgame: plastic pins print slightly conical, and under the tube's constant inward push plastic also <strong>slowly deforms over time</strong> (creep) — so a printed peg would not hold its dimension over a long service life. <strong>The final pump will be machined in metal</strong>, where the pin is a ground steel dowel and neither problem exists. For the proof of concept, plastic with the compensations below is precise <em>enough</em>.</p>
         </section>
 
         <!-- ═══ THE PRINT MODEL ════════════════════════════════════ -->
         <section class="detail-block">
           <h3 class="block-heading">⭐ The print model — two errors, not one</h3>
-          <p class="block-note">Four prints missed their target before the cause was properly separated. The reason: <strong>a 3D print does not have <em>one</em> dimensional error, it has two</strong> — and they behave completely differently depending on <em>what kind of dimension</em> you are measuring.</p>
+          <p class="block-note"><strong>Why build a model at all?</strong> Four prints missed their target, and the obvious loop — print, measure, nudge a number, reprint — is guesswork wearing a lab coat: it converges slowly and teaches nothing transferable. The alternative chosen here was to treat <strong>the printer itself as a system to characterize</strong>: measure how it transforms CAD dimensions into plastic, capture that transformation as a small model with its own data, and then <em>design against the model</em> — so every compensation parameter in Fusion comes from a measurement, not a hunch.</p>
+          <p class="block-note"><strong>Ambition check, stated honestly:</strong> this model is <em>not</em> claimed to be an accurate or general theory of FDM printing. It is an <strong>educated guess with data behind it</strong> — just enough model to aim the compensation at the right value on the first try, cheap to recalibrate when the process changes, and falsifiable by the very next print. That is all it needs to be.</p>
+          <p class="block-note">The core realization: <strong>a 3D print does not have <em>one</em> dimensional error, it has two</strong> — and they behave completely differently depending on <em>what kind of dimension</em> you are measuring.</p>
 
-          <div class="callout callout-good"><span class="callout-label">The model.</span> <code>PRINTED = CAD / k ± SurfaceOffset</code> — where <strong><em>k</em></strong> is a proportional <strong>SCALE</strong> (the part comes out uniformly smaller) and <strong>SurfaceOffset</strong> is a fixed <strong>SHIFT</strong> (every surface moves by a constant amount, because the extruded bead spreads).</div>
+          <div class="model-eq">
+            <span class="eq-term eq-printed"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads on the real part</span></span>
+            <span class="eq-op">=</span>
+            <span class="eq-term eq-cad"><span class="eq-chip">CAD</span><span class="eq-note">what was drawn in Fusion</span></span>
+            <span class="eq-op">/</span>
+            <span class="eq-term eq-k"><span class="eq-chip">k</span><span class="eq-note"><strong>SCALE</strong> — the whole part comes out uniformly smaller (material shrink + process)</span></span>
+            <span class="eq-op">±</span>
+            <span class="eq-term eq-off"><span class="eq-chip">SurfaceOffset</span><span class="eq-note"><strong>SHIFT</strong> — every surface moves by a fixed amount, because the extruded bead spreads</span></span>
+          </div>
+          <div class="model-eq-sign">
+            <span><strong style="color:#ff6b2b">+</strong> on convex / outer surfaces</span>
+            <span><strong style="color:#e83535">−</strong> on concave / inner surfaces</span>
+            <span><strong style="color:#5fd08a">0</strong> on centre-to-centre distances</span>
+          </div>
 
           <figure class="detail-figure">
             <svg viewBox="0 0 760 300" role="img" aria-label="Schematic showing how the surface offset adds on convex surfaces, subtracts on concave surfaces, and cancels on centre-to-centre distances">

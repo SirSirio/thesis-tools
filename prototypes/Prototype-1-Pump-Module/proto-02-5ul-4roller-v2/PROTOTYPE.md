@@ -892,7 +892,7 @@ the 8 mm stack). A tilted roller is the worst case: it violates the line-contact
 |---|---|---|
 | Bottom bearing | located, tight | **located, tight** ✓ |
 | Top bearing | loose → pivots inward | **removed** ✓ |
-| Radial play | 0.085 mm | ~none |
+| Radial play | ≈ 0.085 mm *(estimate — from bore 5.000 − peg ~4.915; peg readings were taken on the cone's narrow region, so the direction is solid but not the third decimal)* | ~none |
 | Skew | ~0.6° | **impossible** — one bearing cannot pivot |
 | Tube walking | driven by skew | **cause removed** |
 | Roller width vs 2.33 mm tube | 8 mm (over-specified) | **4 mm — sufficient** |
