@@ -1379,55 +1379,96 @@
           <p class="block-note">With the rotor fixed at <strong><em>R</em> = 19.70</strong> and the flange measured at <strong>42.50</strong>, every head dimension follows from the print model. The gap is set by a <strong>local pad at the roller width</strong> — not by the head's structural wall — and the schematic shows why that distinction matters.</p>
 
           <figure class="detail-figure">
-            <svg viewBox="0 0 760 290" role="img" aria-label="Radius ladder showing the roller surface, the pad surface, the rotor flange, and the head base wall, with the gap and clearance dimensioned">
-              <text x="230" y="22" fill="#7a7068" font-size="11" text-anchor="middle" letter-spacing="1">AS-PRINTED RADIUS FROM THE ROTOR AXIS (mm)</text>
-
-              <!-- axis -->
-              <line x1="50" y1="200" x2="720" y2="200" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-              <text x="50" y="222" fill="#7a7068" font-size="10">← rotor axis</text>
-
-              <!-- tube band (squeezed between roller and pad) -->
-              <rect x="109" y="120" width="374" height="46" fill="rgba(90,150,230,0.16)" stroke="rgba(120,175,240,0.5)" stroke-width="1" stroke-dasharray="4 3"/>
-              <text x="296" y="148" fill="#8fc0f0" font-size="11.5" text-anchor="middle" font-weight="600">tube — squeezed into the gap</text>
-
-              <!-- R = 19.70 : roller -->
-              <line x1="109" y1="70" x2="109" y2="200" stroke="#ff6b2b" stroke-width="3"/>
-              <text x="109" y="60" fill="#ff6b2b" font-size="12.5" font-weight="700" text-anchor="middle">19.70</text>
-              <text x="109" y="44" fill="#f0ece8" font-size="11" text-anchor="middle">R — roller</text>
-
-              <!-- 21.22 : pad surface -->
-              <line x1="483" y1="90" x2="483" y2="200" stroke="#5fd08a" stroke-width="3"/>
-              <text x="470" y="80" fill="#5fd08a" font-size="12.5" font-weight="700" text-anchor="end">21.22</text>
-              <text x="470" y="64" fill="#f0ece8" font-size="11" text-anchor="end">PAD surface</text>
-              <text x="470" y="48" fill="#7a7068" font-size="10" text-anchor="end">between the flanges</text>
-
-              <!-- 21.25 : flange OD -->
-              <line x1="491" y1="128" x2="491" y2="200" stroke="#9a9088" stroke-width="2.5" stroke-dasharray="6 4"/>
-              <text x="500" y="112" fill="#9a9088" font-size="12.5" font-weight="700" text-anchor="start">21.25</text>
-              <text x="500" y="96" fill="#f0ece8" font-size="11" text-anchor="start">rotor FLANGE</text>
-              <text x="500" y="81" fill="#7a7068" font-size="10" text-anchor="start">(42.50 / 2)</text>
-
-              <!-- 21.65 : base wall -->
-              <line x1="589" y1="56" x2="589" y2="200" stroke="#7aa7e0" stroke-width="3"/>
-              <text x="601" y="46" fill="#7aa7e0" font-size="12.5" font-weight="700" text-anchor="start">21.65</text>
-              <text x="601" y="30" fill="#f0ece8" font-size="11" text-anchor="start">head BASE WALL</text>
-
-              <!-- GAP dimension -->
-              <line x1="109" y1="230" x2="483" y2="230" stroke="#5fd08a" stroke-width="1.5" marker-start="url(#hd-g)" marker-end="url(#hd-g)"/>
-              <text x="296" y="250" fill="#5fd08a" font-size="13" font-weight="700" text-anchor="middle">GAP = 1.52 mm</text>
-              <text x="296" y="268" fill="#7a7068" font-size="10.5" text-anchor="middle">the one number that sets the dose · 3.4 µL per mm</text>
-
-              <!-- CLEARANCE dimension -->
-              <line x1="491" y1="230" x2="589" y2="230" stroke="#7aa7e0" stroke-width="1.5" marker-start="url(#hd-b)" marker-end="url(#hd-b)"/>
-              <text x="600" y="250" fill="#7aa7e0" font-size="11.5" font-weight="700" text-anchor="start">clearance 0.40</text>
-              <text x="600" y="266" fill="#7a7068" font-size="10" text-anchor="start">spins free · tube can't escape</text>
-
+            <svg viewBox="0 0 760 410" role="img" aria-label="Cross-section through the pump at one roller, right half only: rotor hub and flanges, single bearing, squeezed tube, the head's gap-setting pad reaching between the flanges, and the head base wall, with the gap and clearance dimensioned">
               <defs>
-                <marker id="hd-g" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#5fd08a" stroke-width="1.4"/></marker>
-                <marker id="hd-b" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#7aa7e0" stroke-width="1.4"/></marker>
+                <pattern id="hatchR" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                  <rect width="8" height="8" fill="rgba(255,107,43,0.06)"/>
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,107,43,0.5)" stroke-width="1.1"/>
+                </pattern>
+                <pattern id="hatchH" width="8" height="8" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+                  <rect width="8" height="8" fill="rgba(122,167,224,0.06)"/>
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(122,167,224,0.5)" stroke-width="1.1"/>
+                </pattern>
+                <marker id="dmO" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#ff6b2b" stroke-width="1.4"/></marker>
+                <marker id="dmG" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#5fd08a" stroke-width="1.4"/></marker>
+                <marker id="dmB" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#7aa7e0" stroke-width="1.4"/></marker>
               </defs>
+
+              <text x="420" y="24" fill="#7a7068" font-size="11" text-anchor="middle" letter-spacing="1">CROSS-SECTION AT ONE ROLLER — radial spacing exaggerated, not to scale</text>
+
+              <!-- ── locator inset: top view with the cut plane ── -->
+              <path d="M 58 53 A 42 42 0 0 1 58 137 Z" fill="rgba(255,255,255,0.07)"/>
+              <circle cx="58" cy="95" r="42" fill="none" stroke="#7aa7e0" stroke-width="1.6"/>
+              <circle cx="58" cy="95" r="26" fill="none" stroke="#ff6b2b" stroke-width="1.4"/>
+              <circle cx="78" cy="95" r="4.5" fill="#c8ccd4"/>
+              <circle cx="38" cy="95" r="4.5" fill="rgba(200,204,212,0.35)"/>
+              <circle cx="58" cy="75" r="4.5" fill="rgba(200,204,212,0.35)"/>
+              <circle cx="58" cy="115" r="4.5" fill="rgba(200,204,212,0.35)"/>
+              <line x1="58" y1="45" x2="58" y2="145" stroke="#f0ece8" stroke-width="1.2" stroke-dasharray="7 3"/>
+              <text x="58" y="40" fill="#f0ece8" font-size="9.5" text-anchor="middle" font-weight="700">A</text>
+              <text x="58" y="156" fill="#f0ece8" font-size="9.5" text-anchor="middle" font-weight="700">A</text>
+              <text x="58" y="172" fill="#7a7068" font-size="9.5" text-anchor="middle">top view — cut A–A,</text>
+              <text x="58" y="184" fill="#7a7068" font-size="9.5" text-anchor="middle">highlighted half drawn ↓</text>
+
+              <!-- ── centreline (rotor axis) + mirrored ghost ── -->
+              <line x1="150" y1="60" x2="150" y2="345" stroke="#f0ece8" stroke-width="1.2" stroke-dasharray="14 4 3 4" opacity="0.7"/>
+              <text x="150" y="50" fill="#f0ece8" font-size="10.5" text-anchor="middle" font-weight="700">CL — rotor axis</text>
+              <g opacity="0.14">
+                <rect x="105" y="92" width="45" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1"/>
+                <rect x="105" y="280" width="45" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1"/>
+                <rect x="105" y="120" width="45" height="160" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1"/>
+              </g>
+              <text x="128" y="200" fill="#7a7068" font-size="9.5" text-anchor="middle" transform="rotate(-90 128 200)">left half = mirror image</text>
+
+              <!-- ── ROTOR: hub + two flanges (printed PLA, hatched) ── -->
+              <rect x="150" y="120" width="105" height="160" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1.6"/>
+              <rect x="150" y="92" width="365" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1.6"/>
+              <rect x="150" y="280" width="365" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1.6"/>
+              <text x="202" y="205" fill="#ff9c66" font-size="12" text-anchor="middle" font-weight="700">ROTOR</text>
+              <text x="202" y="221" fill="#7a7068" font-size="9.5" text-anchor="middle">(rotates)</text>
+              <text x="330" y="110" fill="#ff9c66" font-size="10.5" text-anchor="middle">flange — tip radius 21.25 (measured 42.50 / 2)</text>
+              <text x="330" y="299" fill="#ff9c66" font-size="10.5" text-anchor="middle">flange — the tube drops into the groove between them</text>
+
+              <!-- ── bearing (steel) on its peg ── -->
+              <rect x="255" y="158" width="85" height="84" fill="rgba(200,204,212,0.22)" stroke="#c8ccd4" stroke-width="1.6"/>
+              <text x="297" y="194" fill="#c8ccd4" font-size="10.5" text-anchor="middle" font-weight="700">bearing</text>
+              <text x="297" y="208" fill="#7a7068" font-size="9.5" text-anchor="middle">MR105ZZ · steel</text>
+              <text x="297" y="221" fill="#7a7068" font-size="9.5" text-anchor="middle">on its printed peg</text>
+
+              <!-- ── tube (cut across — runs into the page) ── -->
+              <ellipse cx="392" cy="200" rx="52" ry="40" fill="rgba(90,150,230,0.22)" stroke="#8fc0f0" stroke-width="2"/>
+              <text x="392" y="205" fill="#8fc0f0" font-size="11" text-anchor="middle" font-weight="700">TUBE</text>
+              <text x="392" y="258" fill="#7a7068" font-size="9.5" text-anchor="middle">squeezed · runs into the page</text>
+
+              <!-- ── HEAD: pad + base wall (printed PLA, hatched) ── -->
+              <rect x="445" y="142" width="145" height="116" fill="url(#hatchH)" stroke="#7aa7e0" stroke-width="1.6"/>
+              <rect x="590" y="70" width="60" height="260" fill="url(#hatchH)" stroke="#7aa7e0" stroke-width="1.6"/>
+              <text x="517" y="195" fill="#8fc0f0" font-size="12" text-anchor="middle" font-weight="700">PAD</text>
+              <text x="517" y="211" fill="#7a7068" font-size="9.5" text-anchor="middle">reaches between</text>
+              <text x="517" y="223" fill="#7a7068" font-size="9.5" text-anchor="middle">the flanges</text>
+              <text x="620" y="196" fill="#8fc0f0" font-size="11" text-anchor="middle" font-weight="700" transform="rotate(-90 620 196)">HEAD wall (static)</text>
+
+              <!-- ── top leaders: pad face + wall face ── -->
+              <line x1="445" y1="142" x2="445" y2="66" stroke="#5fd08a" stroke-width="1.2"/>
+              <text x="468" y="44" fill="#5fd08a" font-size="11.5" text-anchor="end" font-weight="700">PAD face = 21.22</text>
+              <text x="472" y="59" fill="#7a7068" font-size="9.5" text-anchor="end">0.03 inside the flange tip — only possible between the flanges</text>
+              <line x1="590" y1="70" x2="590" y2="52" stroke="#7aa7e0" stroke-width="1.2"/>
+              <text x="596" y="46" fill="#7aa7e0" font-size="11.5" text-anchor="start" font-weight="700">HEAD wall = 21.65</text>
+
+              <!-- ── clearance dim at the flange tip ── -->
+              <line x1="515" y1="106" x2="590" y2="106" stroke="#7aa7e0" stroke-width="1.4" marker-start="url(#dmB)" marker-end="url(#dmB)"/>
+              <text x="552" y="86" fill="#7aa7e0" font-size="10.5" text-anchor="middle" font-weight="700">0.40 clearance</text>
+
+              <!-- ── bottom dimension chain ── -->
+              <line x1="150" y1="352" x2="340" y2="352" stroke="#ff6b2b" stroke-width="1.4" marker-start="url(#dmO)" marker-end="url(#dmO)"/>
+              <line x1="340" y1="345" x2="340" y2="359" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+              <line x1="340" y1="352" x2="445" y2="352" stroke="#5fd08a" stroke-width="1.4" marker-start="url(#dmG)" marker-end="url(#dmG)"/>
+              <line x1="445" y1="345" x2="445" y2="359" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+              <text x="245" y="372" fill="#ff6b2b" font-size="11.5" text-anchor="middle" font-weight="700">R = 19.70</text>
+              <text x="392" y="372" fill="#5fd08a" font-size="11.5" text-anchor="middle" font-weight="700">GAP = 1.52</text>
+              <text x="380" y="396" fill="#7a7068" font-size="10.5" text-anchor="middle">the gap is the one number that sets the dose — 3.4 µL per mm of gap error</text>
             </svg>
-            <figcaption><strong>Look at 21.22 vs 21.25.</strong> The pad surface sits <em>inside</em> the rotor flange — it only gets away with that because the pad lives <strong>axially between the flanges</strong>, while the base wall passes <em>over</em> them. Two surfaces, two jobs: the <strong>pad</strong> sets the dose, the <strong>base wall</strong> retains the tube.</figcaption>
+            <figcaption><strong>Right half of the pump only</strong> — the drawing starts at the rotor axis (CL) and everything mirrors to the left, as the top-view inset shows. Solid hatched shapes are printed walls: <span style="color:#ff9c66">orange = rotor (rotates)</span>, <span style="color:#8fc0f0">blue = head (static)</span>. The key move: the <strong>PAD face (21.22) sits <em>inside</em> the flange tip (21.25)</strong> — legal only because the pad reaches <em>axially between</em> the flanges while the base wall passes <em>over</em> them. Two surfaces, two jobs: the <strong>pad</strong> sets the dose, the <strong>base wall</strong> retains the tube.</figcaption>
           </figure>
 
           <table class="param-table">
