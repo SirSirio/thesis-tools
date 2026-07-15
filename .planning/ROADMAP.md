@@ -171,7 +171,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 3** *(blocked on 06-01/06-03)*
 
-- [ ] 06-05-PLAN.md — Data model: per-component source + confidence tags (D-07/D-11), integrated-screen candidate variants + RAM/PSRAM (D-10/D-12), pin-budget feasibility with both screen scenarios, SPI/Low default + end-of-phase human-check on the owned ILI9341 (D-09)
+- [x] 06-05-PLAN.md — Data model: per-component source + confidence tags (D-07/D-11), integrated-screen candidate variants + RAM/PSRAM (D-10/D-12), pin-budget feasibility with both screen scenarios, SPI/Low default + end-of-phase human-check on the owned ILI9341 (D-09)
 
 **Wave 4** *(blocked on 06-05; disjoint files, parallel)*
 
@@ -187,4 +187,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
-| 6. System Architecture Explorer | 3/6 | In Progress|  |
+| 6. System Architecture Explorer | 4/6 | In Progress|  |

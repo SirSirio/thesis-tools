@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-15T14:12:15.728Z"
+last_updated: "2026-07-15T14:30:04.997Z"
 last_activity: 2026-07-15
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 19
-  completed_plans: 13
+  completed_plans: 14
   percent: 33
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 6 (System Architecture Explorer) — EXECUTING
-Plan: 4 of 6
+Plan: 5 of 6
 Status: Ready to execute
 Last activity: 2026-07-15
 
-Progress: [███████░░░] 72%
+Progress: [████████░░] 78%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [███████░░░] 72%
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P01 | 15m | 2 tasks | 2 files |
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P03 | 25min | 2 tasks | 5 files |
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P04 | 8min | 2 tasks | 4 files |
+| Phase 06-system-architecture-explorer-promote-the-electronics-archite P05 | 25min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,9 @@ Recent decisions affecting current work:
 - [Phase ?]: 06-03: Trimmed ARCHITECTURE.md's driver-vs-MCU section, U5-framing bullets, and PUMP-CONTROL-CONCEPTS.md's mental-model section to pointers into the tool's #theory anchor (D-05), keeping fixed components / open questions / the different-Arduino-per-pump verdict untouched
 - [Phase ?]: 06-04: Landing card and README copy trimmed to only currently-shipped features (BOM editor, DKK-EUR converter, matrix) -- pin-budget/diagram language deferred until 06-05/06-06 ship
 - [Phase ?]: 06-04: CLAUDE.md documents tools/system-architecture-explorer/SPEC.md ahead of its 06-07 creation, matching the site-wide tools/<slug>/ folder-shape convention
+- [Phase 06-05]: esp32.gpioUsable set to 15 (upper end of RESEARCH's 10-15 range) to produce a mixed pin-budget result set (S1/D2 overrun, T9-fused-*/T51-*/P6-rp-i2c borderline, printer boards fit) rather than all-pass or all-fail
+- [Phase 06-05]: Layer-C driver-link pins attached explicitly per-variant (pinsC field) rather than derived generically, since identical components cost different pin counts depending on wiring topology (S1 shared+EN=8 vs D2 per-motor=12 for the same 6x DRV8825)
+- [Phase 06-05]: Added two integrated-screen (espscreen/ESP32-2432S024) variants -- one that fits the 9-IO budget (TMC2209) and one that overruns it even at single concurrency (DRV8825) -- for honest D-11 contrast rather than only the flattering case
 
 ### Pending Todos
 
@@ -127,6 +131,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-15T14:12:15.705Z
-Stopped at: Completed 06-04-PLAN.md
+Last session: 2026-07-15T14:30:04.974Z
+Stopped at: Completed 06-05-PLAN.md
 Resume file: None

@@ -52,8 +52,8 @@
 - [x] **ARCH-04**: `prototypes/System-Architecture/` retains the three decision records, cross-linked both ways to the tool; no orphaned `index.html`. *(Plan 06-03; D-05, D-08)*
 - [ ] **ARCH-05**: `SPEC.md` documents the component price table, variant BOMs, three comms layers, pin-budget model, power/PSU model, and cost-model assumptions with confidence tags. *(Plan 06-07)*
 - [x] **ARCH-06**: `CLAUDE.md` folder structure updated; all logic/styles remain inline; no new shared files. *(Plan 06-04)*
-- [ ] **ARCH-07**: Data model computes pins-used/available/free per variant across Layer A (screen, fixed, SPI/parallel scenarios) + Layer B (bus) + Layer C (driver links); overruns flagged with confidence markers; the owned screen's SPI-vs-parallel interface is physically verified via the end-of-phase human-check (SPI/Low default until then). *(Plan 06-05; D-09, D-11)*
-- [ ] **ARCH-08**: ESP32-integrated-screen board(s) added as candidate variant(s); brain candidates record RAM/PSRAM/usable-GPIO with a UI-fluidity note; per-component source field + confidence tag. *(Plan 06-05; D-07, D-10, D-11, D-12)*
+- [x] **ARCH-07**: Data model computes pins-used/available/free per variant across Layer A (screen, fixed, SPI/parallel scenarios) + Layer B (bus) + Layer C (driver links); overruns flagged with confidence markers; the owned screen's SPI-vs-parallel interface is physically verified via the end-of-phase human-check (SPI/Low default until then). *(Plan 06-05; D-09, D-11)*
+- [x] **ARCH-08**: ESP32-integrated-screen board(s) added as candidate variant(s); brain candidates record RAM/PSRAM/usable-GPIO with a UI-fluidity note; per-component source field + confidence tag. *(Plan 06-05; D-07, D-10, D-11, D-12)*
 
 ### Backlog Tools (no spec yet)
 
