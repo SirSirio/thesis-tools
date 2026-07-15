@@ -879,6 +879,16 @@ document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click'
 /* ---------- init ---------- */
 loadPersisted();
 document.getElementById('rate').value = rate;
+/* Seed engine state from the DOM instead of trusting the JS literals: browsers
+   (Firefox on reload, Chrome on bfcache back/forward) restore form-control values
+   WITHOUT firing change events, so the controls could otherwise display one
+   scenario while pinsOf()/the filters compute with another (WR-04). */
+interfaceMode = document.getElementById('ifMode').value;
+includeShared = document.getElementById('fShared').value==='full';
+maxPrice = +document.getElementById('fPrice').value;
+document.getElementById('maxPriceLbl').textContent = maxPrice;
+maxCx = +document.getElementById('fCx').value;
+minCon = +document.getElementById('fCon').value;
 renderComps(); renderMatrix();
 </script>
 </body>
