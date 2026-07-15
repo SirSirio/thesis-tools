@@ -533,6 +533,7 @@
     }
     .toc-g21 .toc-group-label { color: var(--accent-2); }
     .toc-g22 .toc-group-label { color: var(--accent); }
+    .toc-g23 .toc-group-label { color: #5fd08a; }
     .toc-link {
       display: block;
       font-size: 0.85rem;
@@ -584,6 +585,7 @@
     .ver-design > summary .ver-chip { color: var(--text); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); }
     .ver-21 > summary .ver-chip { color: var(--accent-2); background: rgba(232, 53, 53, 0.12); border: 1px solid rgba(232, 53, 53, 0.5); }
     .ver-22 > summary .ver-chip { color: var(--accent); background: rgba(255, 107, 43, 0.12); border: 1px solid rgba(255, 107, 43, 0.5); }
+    .ver-23 > summary .ver-chip { color: #5fd08a; background: rgba(95, 208, 138, 0.12); border: 1px solid rgba(95, 208, 138, 0.5); }
     .ver-sum-note { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; flex: 1; min-width: 180px; }
     .ver-body { padding: 6px 22px 8px; border-top: 1px solid var(--glass-border); }
     .ver-body > .detail-block:first-child { margin-top: 22px; }
@@ -687,14 +689,14 @@
 
           <div class="proto-node" id="node-proto-02">
             <button class="proto-card" data-proto="proto-02">
-              <div class="proto-card-thumb-ph" aria-hidden="true">2.1 built</div>
+              <div class="proto-card-thumb-ph" aria-hidden="true">v2.3 printing</div>
               <div class="proto-card-tag">Proto 02 · 2026</div>
               <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
-              <p class="proto-card-purpose">The first build meant to work to spec. Build 2.1 is printed and measured: occlusion stays partial from two stacked geometry errors — a slightly small rotor and a head seated ~0.45 mm too high. Redesign to 2.2 underway.</p>
+              <p class="proto-card-purpose">The first build meant to work to spec. v2.1 didn't seal (two stacked errors); v2.2 rebuilt the rotor to <strong>2R = 39.40</strong> and turned the printer into a calibrated model. v2.3 recomputes the head on that model and re-centres it on the shaft — printing now.</p>
               <div class="proto-card-kpi">
-                <span class="kpi-pill kpi-warn">2.1 · partial occlusion</span>
-                <span class="kpi-pill">2R 39.04 → R 19.52</span>
-                <span class="kpi-pill">redesign → 2.2</span>
+                <span class="kpi-pill">rotor ✅ 2R 39.40</span>
+                <span class="kpi-pill">print model v2 ✓</span>
+                <span class="kpi-pill">v2.3 head → first seal</span>
               </div>
               <span class="proto-card-cta">Explore →</span>
             </button>
@@ -1022,13 +1024,13 @@
             <div style="font-size:1.15rem; font-weight:800; color:var(--accent-2);">v2.1</div>
             <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">BUILT — didn't seal · diagnosed</div>
           </div>
-          <div style="flex:1.4; min-width:200px; padding:12px 16px; border-radius:10px; background:rgba(255,107,43,0.14); border:1px solid var(--accent);">
-            <div style="font-size:1.15rem; font-weight:800; color:var(--accent);">v2.2 — rotor ✅ done · head printing</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor hits <strong style="color:#5fd08a">2R = 39.40 (R = 19.70)</strong>, play-free (single bearing/roller). Print model calibrated. Head: wall radius 21.52 — <strong>print FIRM alone, then measure the gap</strong>.</div>
+          <div style="flex:1.2; min-width:180px; padding:12px 16px; border-radius:10px; background:rgba(255,107,43,0.14); border:1px solid var(--accent);">
+            <div style="font-size:1.15rem; font-weight:800; color:var(--accent);">v2.2 — rotor ✅ · model built</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor hits <strong style="color:#5fd08a">2R = 39.40 (R = 19.70)</strong>, play-free (single bearing/roller). First head printed 0.23 mm loose → drove the <strong>ring calibration → print model v2</strong>.</div>
           </div>
-          <div style="flex:0.8; min-width:120px; padding:12px 16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px dashed var(--glass-border); opacity:0.6;">
-            <div style="font-size:1.15rem; font-weight:800; color:var(--text-muted);">v2.3</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">future — first clean seal</div>
+          <div style="flex:1.3; min-width:190px; padding:12px 16px; border-radius:10px; background:rgba(95,208,138,0.12); border:1px solid rgba(95,208,138,0.55);">
+            <div style="font-size:1.15rem; font-weight:800; color:#5fd08a;">v2.3 — calibrated head · printing</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">head recomputed on model v2 (arc R <strong>21.29</strong>) + <strong>re-centred on the shaft</strong> (apex fix) + dovetail corner relief. Print FIRM alone → measure gap + apex → results.</div>
           </div>
         </div>
 
@@ -1052,12 +1054,17 @@
               <a class="toc-link" href="#sec-v21">→ Changes for 2.2</a>
             </div>
             <div class="toc-group toc-g22">
-              <div class="toc-group-label">v2.2 — rotor done, head in print</div>
+              <div class="toc-group-label">v2.2 — rotor done, model built</div>
               <a class="toc-link" href="#sec-rebuild">Shrink calibration &amp; peg ladder</a>
               <a class="toc-link" href="#sec-cone">The peg is a cone → single bearing</a>
               <a class="toc-link" href="#sec-printmodel">Print model v1 (superseded)</a>
-              <a class="toc-link" href="#sec-head">Pump head — parameters</a>
+              <a class="toc-link" href="#sec-head">First head — parameters &amp; the 0.23 miss</a>
               <a class="toc-link" href="#sec-calibration">⭐ Ring calibration → model v2</a>
+            </div>
+            <div class="toc-group toc-g23">
+              <div class="toc-group-label">v2.3 — calibrated head (printing)</div>
+              <a class="toc-link" href="#sec-v23">The two fixes + corner relief</a>
+              <a class="toc-link" href="#sec-v23-params">Head parameters (model v2)</a>
             </div>
           </div>
         </nav>
@@ -1326,10 +1333,10 @@
           </div>
         </details>
 
-        <details class="ver-panel ver-22" open>
+        <details class="ver-panel ver-22">
           <summary>
             <span class="ver-chip">v2.2</span>
-            <span class="ver-sum-note"><strong>Rotor ✅ validated (2R = 39.40, play-free)</strong> · print model calibrated · pump head in print. The current build.</span>
+            <span class="ver-sum-note"><strong>Rotor ✅ validated (2R = 39.40, play-free)</strong> · first head printed 0.23 mm loose → drove the <strong>ring calibration → print model v2</strong>. The datum + the model.</span>
           </summary>
           <div class="ver-body">
 
@@ -1864,6 +1871,77 @@
             <li>NIST/SEMATECH e-Handbook of Statistical Methods (NIST Handbook 151) — process modeling: calibration &amp; inverse prediction. <a href="https://www.itl.nist.gov/div898/handbook/" target="_blank" rel="noopener">itl.nist.gov/div898/handbook</a></li>
             <li>Slicer practice — separate internal-feature compensation: SuperSlicer <code>hole_sizes_compensation</code> (<a href="https://github.com/prusa3d/PrusaSlicer/issues/4561" target="_blank" rel="noopener">PrusaSlicer #4561</a>); Cura "Hole Horizontal Expansion".</li>
           </ol>
+        </section>
+
+          </div>
+        </details>
+
+        <!-- ═══ v2.3 — THE CALIBRATED HEAD ═════════════════════════ -->
+        <details class="ver-panel ver-23" open>
+          <summary>
+            <span class="ver-chip">v2.3</span>
+            <span class="ver-sum-note"><strong>The calibrated head — printing now.</strong> The head recomputed on print model v2 (gap fix) and re-centred on the shaft (apex fix), plus dovetail corner relief. The first head designed entirely against measured numbers.</span>
+          </summary>
+          <div class="ver-body">
+
+        <section class="detail-block" id="sec-v23">
+          <h3 class="block-heading">The calibrated head — two independent fixes, one print</h3>
+          <p class="block-note">v2.2 delivered a validated rotor <em>and</em> a calibrated printer (<a href="#sec-calibration" style="color:var(--accent)">model v2</a>). v2.3 is the first head that spends both: it fixes the <strong>gap</strong> (the 0.23 mm loose miss) with the ring-calibration radii, and the <strong>apex</strong> (the ~0.37 mm that was "unexplained" in v2.1) now that a measurement has pinned its cause. The two problems are independent — one is a radius, one is a seat position — so they get separate fixes on the same part.</p>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-value">R = 21.29</div>
+              <div class="stat-label">pad-arc radius via model v2 (was 21.52) → printed gap <strong>1.52</strong></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">−0.35 mm</div>
+              <div class="stat-label">seat drop — lower the head so the arc centres on the real shaft → apex closes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">corner relief</div>
+              <div class="stat-label">round the male dovetail's bottom tips → seats deterministically, kills the press-and-it-moves wobble</div>
+            </div>
+          </div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:#5fd08a; margin:24px 0 8px;">Fix 1 — the gap: apply model v2, retire the old compensation</h4>
+          <p class="block-note">The v2.2 head printed 0.23 mm loose because model v1 applied a solid-body <em>scale</em> (<code>×k</code>) to a concave arc — bores barely scale. Model v2 replaces <code>k</code> and <code>SurfaceOffset</code> on the head with the <strong>inner rule</strong> (<code>CAD = (target + 0.208)/1.00164</code>). Both head radii drop ~0.23 mm — exactly the phantom shrink removed.</p>
+          <div class="callout callout-good"><span class="callout-label">Where <code>k</code> lives now.</span> The <strong>scale <code>k</code> = 1.00906 survives only on the rotor pitch</strong> — a centre-to-centre span, where it was validated to 2R = 39.40. It no longer touches the head: a concave arc is a different error regime, and conflating the two was the whole v1 mistake. <code>SurfaceOffset</code> is retired from the head (folded into the rule's intercept).</div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:#5fd08a; margin:28px 0 8px;">Fix 2 — the apex: the "unexplained 0.37 mm" was a CAD offset</h4>
+          <p class="block-note">The head's arc must be centred on the shaft. v2.1's apex sat ~0.45 mm too high (0.08 mm dovetail stop + ~0.37 mm unexplained). A direct measurement closed it: from the shaft edges (23.58 &amp; 28.51 → centre <strong>26.05</strong>, and the 4.93 mm span confirms the 5 mm shaft), the real holder's dovetail → shaft is <strong>26.05 mm</strong>, but the head CAD assumed <strong>25.70</strong>. So the head built its arc centre 0.35 mm above the real shaft → the apex opens by ~0.35, the sides barely move (a vertical shift is second-order there). That is the 0.37 mm.</p>
+          <div class="callout callout-warn"><span class="callout-label">The lever is the seat, not the dovetail width.</span> A dovetail is a slide — its trapezoid registers the head <em>laterally</em> (play is already ~zero — leave it) and how deep it seats is set by the <strong>hard stop</strong>. So the fix <strong>lowers the seat by 0.35 mm</strong> (<code>SeatDrop = HolderDovetailToShaft − DovetailToArcCenter</code>), dropping the arc centre onto the shaft — <em>not</em> shrinking the dovetail. Parameterised off the measured <code>HolderDovetailToShaft</code> (like <code>RotorFlangeDMeasured</code>), so re-measuring the holder is a one-number change. A residual ~0.08 mm (the stop printing high) is left to <strong>measure on the print</strong> through the slots — not chased blind.</div>
+
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:#5fd08a; margin:28px 0 8px;">Corner relief — a seating tweak, not a fit change</h4>
+          <p class="block-note">FDM rounds the female slot's internal corners, so a sharp male corner rides on point contact and props the head up — the "press harder and it shifts a bit" wobble. The dovetail <em>fits</em> are already nominal (male 18.97 / 19, female 27.95–28.08 / 28, lateral play ~zero), so this isn't a tolerance change: just <strong>relieve the male bottom tips</strong> so the flat faces seat, and <strong>keep the flat hard-stop face intact</strong> — it's the trustworthy vertical datum. Goal is to kill the force-dependence, not accommodate it with flex.</p>
+
+          <div class="next-brief">
+            <h4>Build order — print FIRM alone, then measure, then sweep</h4>
+            <ul>
+              <li><strong>Print the FIRM head only</strong> (arc R 21.29, gap target 1.52) with the seat drop, corner relief, and enlarged access slots.</li>
+              <li><strong>Measure through the slots before pumping</strong> — gap at apex + both sides. Gate: gap ≈ 1.52 ± 0.05 <em>and</em> apex ≈ sides ± 0.05 → both fixes land → print MID / LOOSE and run the firm→loose sweep. Apex still high → trim <code>HolderDovetailToShaft</code> by the residual. Uniformly off → feed the head back as a model-v2 datapoint.</li>
+              <li><strong>The play experiment (bonus thesis result):</strong> the two rotors (0.085 mm play vs tight) differ in one variable — same head + tube on both isolates bearing clearance as a CV source. Predicted ≈ 3 %.</li>
+            </ul>
+          </div>
+          <div class="callout callout-note"><span class="callout-label">Status.</span> v2.3 is <strong>designed and printing</strong> — the numbers below are the as-designed set; the installed gap and apex will be measured on the print and recorded here as results.</div>
+        </section>
+
+        <section class="detail-block" id="sec-v23-params">
+          <h3 class="block-heading">Head parameters — recomputed on model v2</h3>
+          <p class="block-note">Every gap-setting dimension is now a formula referencing a named parameter — no literals. The two calibration constants (<code>InnerSlope</code>, <code>InnerIntercept</code>) and the measured <code>HolderDovetailToShaft</code> are the only things that change when the printer or holder changes.</p>
+          <table class="param-table">
+            <thead><tr><th>Parameter</th><th>Expression</th><th>Value</th><th>Change from v2.2 (model v1)</th></tr></thead>
+            <tbody>
+              <tr><td><code>InnerSlope</code></td><td><code>1.00164</code></td><td>1.00164</td><td><strong>New</strong> — model v2 concave slope (bore transfer function)</td></tr>
+              <tr><td><code>InnerIntercept</code></td><td><code>0.208 mm</code></td><td>0.208</td><td><strong>New</strong> — concave rim intrusion, on Ø (replaces <code>SurfaceOffset</code>)</td></tr>
+              <tr><td><code>HeadWallRadius</code></td><td><code>(PumpDiam + 2·GapPumpHeadRotor + InnerIntercept) / InnerSlope / 2</code></td><td><strong>21.29</strong></td><td>was <strong>21.52</strong> (<code>… + SurfaceOffset) · k</code>) → −0.23 phantom shrink removed</td></tr>
+              <tr><td><code>HeadBaseRadius</code></td><td><code>(RotorFlangeDMeasured + 2·HeadRotorClearance + InnerIntercept) / InnerSlope / 2</code></td><td><strong>21.72</strong></td><td>was <strong>21.96</strong> → same −0.23 correction</td></tr>
+              <tr><td><code>PadExtrusion</code></td><td><code>HeadBaseRadius − HeadWallRadius</code></td><td>0.43</td><td>unchanged — still &gt; 0.3 mm guard ✓</td></tr>
+              <tr><td><code>HolderDovetailToShaft</code></td><td><code>26.05 mm</code></td><td><strong>26.05</strong></td><td><strong>New · MEASURED</strong> — real holder dovetail → shaft (was assumed 25.70)</td></tr>
+              <tr><td><code>SeatDrop</code></td><td><code>HolderDovetailToShaft − DovetailToArcCenter</code></td><td><strong>0.35</strong></td><td><strong>New</strong> — how much lower the head seats → arc centres on the shaft</td></tr>
+              <tr><td><code>k</code></td><td><code>ShrinkComp · NozzleComp</code></td><td>1.00906</td><td><strong>Rotor pitch only</strong> — removed from the head radii</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-good"><span class="callout-label">Forward-check.</span> CAD arc R 21.29 → through the inner rule → printed R 21.22 → <strong>gap = 21.22 − 19.70 = 1.52 ✓</strong> — the same value the head landed on out-of-sample in the ring validation. The CAD gap will read ≈ 1.53 (a derived artifact); only the printed gap is the target.</div>
         </section>
 
           </div>
