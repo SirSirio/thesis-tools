@@ -1163,10 +1163,12 @@ precision, and by how much?** Predicted effect: **≈3 % CV**. Cheap, controlled
 
 ---
 
-## 11.8 ⭐ THE PRINT MODEL (canonical — supersedes §11.7.12–13)
+## 11.8 THE PRINT MODEL v1 (superseded — see §11.10)
 
-> **§11.7.1–11.7.14 is the audit trail — how we got here, including the wrong turns.**
-> **This section is the answer. Use only this.**
+> ⚠ **SUPERSEDED.** The v2.2 head printed with this model came out **0.23 mm loose** (§11.10.6).
+> The ring calibration (§11.10) found why — the symmetric-offset assumption and the transfer of
+> solid-body shrink to bores were both wrong — and replaced this model. **Use §11.10.**
+> This section stays as the audit trail.
 
 ### 11.8.1 The model
 
@@ -1336,6 +1338,186 @@ Forward-check to the printed part:
 
 > **Had the CAD gap been "corrected" to read 1.52, the part would print at 1.35** — 0.17 mm too tight →
 > **0.58 µL → ~12 % of a 5 µL stroke.** The compensation is worth 12 %; it is not cosmetic.
+
+---
+
+## 11.10 ⭐ PRINTER CALIBRATION — ring artifact → two-line compensation (MODEL v2, canonical)
+
+### 11.10.1 Goal — a calibration, not a physics model
+
+The v2.2 head (printed with the §11.8 model) came out **0.23 mm too loose** — the third oversized
+print in a row. Rather than another guess-and-reprint cycle, a dedicated calibration artifact was
+printed and measured. Framing matters:
+
+- This is **not** an attempt to explain FDM physics. It is a **calibration**: fit the printer's
+  transfer function `printed = f(CAD)` on a test artifact, then **invert it** —
+  *"what CAD value gives the printed value I want?"* This is textbook **linear calibration /
+  inverse prediction** (NIST/SEMATECH e-Handbook [7]).
+- Test artifacts for exactly this purpose are standardized: **ISO/ASTM 52902** [6] defines
+  geometric-capability artifacts for AM systems; per-feature CAD compensation from such artifacts
+  is established practice [5]. The ring coupon here is a purpose-trimmed 52902-style artifact,
+  reduced to the two feature classes the pump cares about.
+- **The method transfers to any printer; only the two fitted lines are machine/material/profile-specific.**
+
+### 11.10.2 The artifact & how it was measured
+
+**Artifact:** concentric **free rings** (not connected — webs/spokes would restrain shrink, the
+quantity under measurement), wall 3 mm, printed flat, 0.2 mm nozzle, same profile and spool as the
+pump parts (process lock, §11.8.5). Three sizes measured; the mid ring printed **in triplicate** to
+measure repeatability. Photo: `Calibration Circles.png`.
+
+**Measurement:** digital caliper, **two perpendicular diameters per feature, averaged** (a circle's
+diameter is direction-independent, so ring orientation on the bed does not matter). Bores with the
+knife edges, ODs with the flat jaws.
+
+**Noise, stated honestly (two stacked sources):**
+1. **Printer print-to-print variation** — captured by the triplicate ring.
+2. **Measurement error, including deformation** — the rings are thin plastic: measuring a **bore**
+   pushes the ring **outward** (tends to over-read), measuring an **OD squeezes it** (tends to
+   under-read), worst on the largest ring. Care was taken, but this cannot be fully eliminated — a
+   concrete example of why measurement is never exact. The random part is folded into σ below; any
+   small systematic part folds into the fitted intercepts, which is acceptable *for a calibration*
+   because future parts are measured the same way.
+
+### 11.10.3 Raw data (mm)
+
+| Ring | Feature | Nominal | Read 1 | Read 2 | Mean | Deviation |
+|------|---------|---------|--------|--------|------|-----------|
+| small | bore | 22 | 21.81 | 21.87 | 21.84 | −0.16 |
+| small | OD | 28 | 27.88 | 27.90 | 27.89 | −0.11 |
+| mid #1 | bore | 37 | 36.90 | 36.72 | 36.81 | −0.19 |
+| mid #1 | OD | 43 | 42.81 | 42.83 | 42.82 | −0.18 |
+| mid #2 | bore | 37 | 36.83 | 36.83 | 36.83 | −0.17 |
+| mid #2 | OD | 43 | 42.76 | 42.79 | 42.78 | −0.22 |
+| mid #3 | bore | 37 | 36.90 | 36.90 | 36.90 | −0.10 |
+| mid #3 | OD | 43 | 42.77 | 42.77 | 42.77 | −0.23 |
+| large | bore | 82 | 81.95 | 81.91 | 81.93 | −0.07 |
+| large | OD | 88 | 87.47 | 87.53 | 87.50 | −0.50 |
+
+### 11.10.4 Analysis — the minimum the data supports
+
+1. **Plot deviation vs nominal, per class, before fitting.** The plot picks the model: both classes
+   fall on straight lines → two parameters suffice; no curvature term is justified.
+2. **Ordinary least squares per class** on all 5 points (triplicates included). Two parameters
+   because there are two physical mechanisms: an error that **grows with size** (shrink → slope)
+   and one that **doesn't** (bead geometry → intercept).
+3. **Judge the fit by residuals, not R².** A **residual** = measured − what the line predicts, for
+   each point: the leftover error, in mm. If residuals are small and patternless, the line captures
+   the behaviour. The **residual SD** (typical leftover) is **0.023 mm (outer)** and
+   **0.040 mm (inner)**.
+4. **Repeatability from the triplicate ring:** σ ≈ **0.03–0.05 mm** print-to-print. This *equals*
+   the residual SDs → **the lines capture everything measurable; nothing left to model. Stop.**
+5. **The one hypothesis test that matters:** are the two slopes different? −0.00646 ± 0.00050 vs
+   +0.00164 ± 0.00087 → they differ by **≈ 8 standard errors**. Per-class compensation is not a
+   choice, it's forced by the data. (Everything else here is estimation, not testing.)
+
+> **Why R² is the wrong headline number here (and what it is).** R² measures *how much of the
+> variation in the data the line explains*, versus just using the average. Outer class: deviations
+> swing −0.11 → −0.50 (big variation, mostly slope) → **R² = 0.98**. Inner class: the true slope is
+> ≈ 0, so the deviations barely vary — what's left is mostly print noise, and no line can "explain"
+> noise → **R² = 0.54** *even though the inner fit predicts just as accurately* (residual SD
+> 0.040 mm). **When the correct answer is a flat line, R² is low by construction.** Think of a
+> thermostat holding a room at 21 °C: "always 21.0" has R² ≈ 0 — and is accurate to a tenth of a
+> degree. The sound accuracy metric here is the residual SD compared against the repeatability σ.
+
+### 11.10.5 ⭐ THE TWO RULES (this printer · 0.2 mm nozzle · 3DE MAX PLA "Cold White" · this profile)
+
+```
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  EXTERNAL / CONVEX  (ODs, outer surfaces)      → prints SMALLER, ∝ size    ║
+║                                                                            ║
+║     printed = 0.99354 · CAD + 0.068        (R² 0.98 · resid SD 0.023)      ║
+║     CAD     = (target − 0.068) / 0.99354   ≈  target × 1.0065              ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  INTERNAL / CONCAVE  (bores, arcs — THE GAP SURFACE) → holds size,         ║
+║                                        rim intrudes ~0.10 mm per side      ║
+║                                                                            ║
+║     printed = 1.00164 · CAD − 0.208        (R² 0.54* · resid SD 0.040)     ║
+║     CAD     = (target + 0.208) / 1.00164   ≈  target + 0.21 on Ø           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+   * flat-line artifact — see §11.10.4; accuracy is the residual SD, not R².
+
+   Retained, validated separately:  rotor pitch (centre-to-centre) × 1.00906  (§11.7.14)
+
+   PREDICTION INTERVAL: a corrected feature lands within ±0.08–0.10 mm on Ø (95 %)
+   → ±0.04–0.05 mm on the gap → ±0.15 µL ≈ 3 % of a 5 µL stroke. Inside the CV budget.
+```
+
+### 11.10.6 Out-of-sample validation — the v2.2 head
+
+The head was **not used in the fits**. Its CAD arc (Ø 43.044, concave) through the inner rule:
+predicted printed **Ø 42.91** (deviation −0.14).
+
+| Measurement of the same head | Printed Ø | Deviation | vs prediction |
+|---|---|---|---|
+| **Drill-bit gauges** (gap 1.75 at the sides) | 42.90 | **−0.14** | **0.01 off** ✅ |
+| Caliper pad-to-pad (tilts, hard to centre) | 42.80 | −0.24 | 0.11 low — the weaker method |
+
+Both readings decisively reject model v1 (which predicted −0.60) and zero-error (0.00).
+
+**Next head:** `CAD arc R = (2×(19.70+1.52)+0.208)/1.00164/2 = 21.29` → printed gap 1.52. (The
+already-planned 21.27 lands at gap ≈ 1.50 — firm side of target, equally acceptable given the
+leak-limited hump.)
+
+### 11.10.7 Post-mortem of model v1 — what the ±0.11 actually did
+
+Model v1 measured **+0.11 (proud) on the convex flange** and **assumed the mirror image, −0.11
+(intrusion), for the concave arc** — then applied the **solid-body scale k = 1.00906 to everything**.
+
+The rings decomposed the head's 0.46 mm error:
+
+```
+phantom shrink   (0.9 % applied to a Ø43 bore; bores shrink ~0)  ≈ 0.45 mm   ← ~97 % of the error
+offset assumption (−0.11 assumed vs −0.104 measured)              ≈ 0.01 mm   ← nearly RIGHT
+```
+
+**The mirror-offset assumption was fine. Transferring solid-body shrink to bores was the error.**
+(For the record: the interim diagnosis "the concave offset has the opposite sign" was itself wrong —
+an artifact of assuming the shrink and blaming the residual on the offset. Two coupled unknowns
+cannot be separated from one part; that is what the rings were for.)
+
+Literature context, briefly: constant absolute undersize of holes/curved features independent of
+size is documented [1][2], internal cavities have been treated as a separate accuracy class since
+2015 [3], and geometry-dependent shrinkage (thin vs thick) is established [4]. The explicit
+per-class `printed = s·CAD + b` decomposition appears not to be published as such — the closest are
+constant hole-only corrections [2] and slope-only scale factors [5].
+
+### 11.10.8 Reusing this on another printer
+
+```
+1. Print the ring artifact (≥3 sizes spanning your working range, one size ×3) — target profile.
+2. 2 ⊥ diameters per feature, averaged → ~20 readings, ~20 min.
+3. Fit the two lines (any spreadsheet: SLOPE/INTERCEPT per class).
+4. Check: residual SD ≈ triplicate σ (line is complete) · slopes differ (classes are real).
+5. Invert → your two CAD rules. Valid until nozzle/material/profile changes.
+```
+
+### 11.10.9 References
+
+1. Gebre, N.M., Cristofolini, I., Zago, M., Gallo, P. (2026). *Influence of Geometry and Size on
+   Precision and Accuracy in Fused Deposition Modeling (FDM) Additive Manufacturing.* Material
+   Design & Processing Communications, 2026(1), 7177386. https://doi.org/10.1155/mdp2/7177386
+2. Grgić, I., Karakašić, M., Glavaš, H., Konjatić, P. (2023). *Accuracy of FDM PLA Polymer 3D
+   Printing Technology Based on Tolerance Fields.* Processes, 11(10), 2810.
+   https://doi.org/10.3390/pr11102810
+3. Kaveh, M., Badrossamay, M., Foroozmehr, E., Hemasian Etefagh, A. (2015). *Optimization of the
+   printing parameters affecting dimensional accuracy and internal cavity for HIPS material used in
+   fused deposition modeling processes.* Journal of Materials Processing Technology, 226, 280–286.
+   https://doi.org/10.1016/j.jmatprotec.2015.07.012
+4. Johar, M., Rosli, A.A., Shuib, R.K., Abdul Hamid, Z.A., Abdullah, M.K., Ku Ishak, K.M., Rusli, A.
+   (2025). *Dimensional stability of poly(lactic acid) (PLA) parts fabricated using fused deposition
+   modelling (FDM).* Progress in Rubber, Plastics and Recycling Technology, 41(2), 218–232.
+   https://doi.org/10.1177/14777606241262882
+5. Monzón, E., Bordón, P., Paz, R., Monzón, M. (2024). *Dimensional Characterization and Hybrid
+   Manufacturing of Copper Parts Obtained by Atomic Diffusion Additive Manufacturing, and CNC
+   Machining.* Materials, 17(6), 1437. https://doi.org/10.3390/ma17061437 — *method only (sinter
+   process; error magnitudes/signs do not transfer to FFF PLA).*
+6. ISO/ASTM 52902:2023. *Additive manufacturing — Test artefacts — Geometric capability assessment
+   of additive manufacturing systems.* https://www.iso.org/standard/79683.html
+7. NIST/SEMATECH e-Handbook of Statistical Methods (Handbook 151), §4 Process Modeling — calibration
+   / inverse prediction. https://www.itl.nist.gov/div898/handbook/
+8. Slicer practice (separate internal-feature compensation): SuperSlicer `hole_sizes_compensation`
+   (https://github.com/prusa3d/PrusaSlicer/issues/4561); Cura *Hole Horizontal Expansion*.
 
 ---
 
