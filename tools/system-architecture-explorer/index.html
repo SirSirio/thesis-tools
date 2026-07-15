@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>System Architecture Explorer — Thesis Tools</title>
+<link rel="stylesheet" href="../../assets/style.css" />
+<style>
+  /* ── Tool nav ──────────────────────────────────────────── */
+  .tool-nav {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.82rem;
+  }
+  .tool-nav a {
+    color: var(--accent); font-weight: 500; letter-spacing: 0.02em;
+    transition: letter-spacing 0.2s ease, color 0.2s ease;
+  }
+  .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
+  .tool-nav span { color: var(--text-muted); }
+
+  /* ── Page layout ───────────────────────────────────────── */
+  .tool-main {
+    position: relative; z-index: 1;
+    max-width: 1140px; margin: 0 auto;
+    padding: 60px 32px 90px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  /* ── Tool header ───────────────────────────────────────── */
+  .tool-header { margin-bottom: 4px; }
+  .tool-header h1 {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+    margin: 14px 0 14px;
+    background: linear-gradient(130deg, #ffffff 35%, var(--accent) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .tool-header p {
+    font-size: 0.95rem; color: var(--text-muted);
+    line-height: 1.70; max-width: 820px;
+  }
+
+  /* ── Part divider label ────────────────────────────────── */
+  .part-label {
+    display: flex; align-items: center; gap: 14px;
+    margin-top: 16px;
+  }
+  .part-label .num {
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(255,107,43,0.10);
+    border: 1px solid rgba(255,107,43,0.28);
+    padding: 4px 13px; border-radius: 100px;
+    white-space: nowrap;
+  }
+  .part-label h2 {
+    font-size: 1.30rem; font-weight: 600; letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .part-summary {
+    font-size: 0.91rem; color: var(--text-muted);
+    line-height: 1.72; max-width: 860px;
+  }
+
+  /* ── Theory card (Part 01 placeholder) ────────────────────── */
+  .theory-card {
+    background: rgba(255,255,255,0.022);
+    border: 1px solid rgba(255,107,43,0.10);
+    border-left: 3px solid rgba(255,107,43,0.42);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .theory-section h3 {
+    font-size: 0.80rem; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .theory-section p {
+    font-size: 0.93rem; color: var(--text); line-height: 1.78;
+    margin-bottom: 10px;
+  }
+  .theory-section p:last-child { margin-bottom: 0; }
+
+  /* ── Diagram region (reserved for a later plan) ───────────── */
+  #diagram { min-height: 2px; }
+  @media (prefers-reduced-motion: no-preference) {
+    #diagram svg { transition: opacity 0.15s ease; }
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     Ported cost/complexity engine styles (Part 02, id="matrix")
+     Reskinned onto the shared assets/style.css design tokens
+     (see 06-PATTERNS.md for the old-private-token to new-shared
+     -token mapping used during the reskin).
+     Tool-specific status colours (not part of the design system)
+     kept local: --ok, --warn, --blue.
+     ══════════════════════════════════════════════════════════ */
+  :root{ --ok:#3ec06b; --warn:#e0a53c; --blue:#4a90d9; }
+  #matrix h2{font-size:1.05rem;margin:26px 0 10px;color:var(--accent);font-weight:600}
+  #matrix .sub{color:var(--text-muted);margin:0 0 6px;font-size:0.86rem}
+  #matrix .sae-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;padding:14px 16px;margin:12px 0}
+  #matrix a{color:var(--accent)}
+  #matrix table{width:100%;border-collapse:collapse;font-size:0.845rem}
+  #matrix th,#matrix td{text-align:left;padding:7px 9px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:middle}
+  #matrix th{color:var(--accent);font-weight:600}
+  #matrix input[type=number]{width:76px;background:#15151a;border:1px solid rgba(255,255,255,.14);
+    color:var(--text);border-radius:6px;padding:4px 6px;font:inherit}
+  #matrix input[type=number]:focus{outline:1px solid var(--accent)}
+  #matrix .controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end}
+  #matrix .ctl{display:flex;flex-direction:column;gap:3px}
+  #matrix .ctl label{font-size:12px;color:var(--text-muted)}
+  #matrix select,#matrix input[type=range]{background:#15151a;border:1px solid rgba(255,255,255,.14);color:var(--text);
+    border-radius:6px;padding:5px 7px;font:inherit}
+  #matrix .conv{display:flex;align-items:center;gap:8px;font-size:14px}
+  #matrix .pill{display:inline-block;padding:1px 7px;border-radius:20px;font-size:11px;font-weight:600}
+  #matrix .p1{background:rgba(62,192,107,.15);color:var(--ok)}
+  #matrix .p2{background:rgba(224,165,60,.15);color:var(--warn)}
+  #matrix .p6{background:rgba(232,53,53,.15);color:var(--accent-2)}
+  #matrix .drv-dumb{color:var(--text-muted)}
+  #matrix .drv-smart{color:var(--accent)}
+  #matrix .drv-motion{color:var(--blue)}
+  #matrix th.sortable{cursor:pointer;user-select:none}
+  #matrix th.sortable:hover{color:#fff}
+  #matrix th.sortable::after{content:" ⇅";opacity:.4;font-size:11px}
+  #matrix th.sort-asc::after{content:" ▲";opacity:1}
+  #matrix th.sort-desc::after{content:" ▼";opacity:1}
+  #matrix tr.vrow{cursor:pointer}
+  #matrix tr.vrow:hover{background:rgba(255,107,43,.06)}
+  #matrix .cost{font-weight:700;color:var(--accent);white-space:nowrap}
+  #matrix .detail td{background:#111116;color:var(--text-muted);font-size:12.5px;padding:10px 14px}
+  #matrix .detail table{font-size:12.5px}
+  #matrix .detail th,#matrix .detail td{border-bottom:1px solid rgba(255,255,255,.06);padding:4px 8px}
+  #matrix .stars{letter-spacing:1px;color:var(--warn)}
+  #matrix .muted{color:var(--text-muted)}
+  #matrix .hidden{display:none}
+  #matrix .badge{font-size:11px;color:var(--text-muted);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:1px 5px}
+  #matrix .note{border-left:3px solid var(--accent);background:rgba(255,107,43,.06);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}
+  #matrix .reset{background:transparent;border:1px solid var(--glass-border);color:var(--accent);border-radius:7px;padding:6px 12px;cursor:pointer;font:inherit}
+  #matrix .reset:hover{background:rgba(255,107,43,.1)}
+  @media(max-width:640px){#matrix .hide-sm{display:none}}
+
+  /* ── Responsive ────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .tool-main { padding: 36px 18px 60px; }
+    .theory-card { padding: 22px 18px; }
+    .part-label h2 { font-size: 1.10rem; }
+  }
+</style>
+</head>
+<body>
+<nav class="tool-nav" aria-label="Breadcrumb">
+  <a href="../../index.html">← All tools</a>
+  <span>System Architecture Explorer</span>
+</nav>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<main class="tool-main">
+
+  <header class="tool-header animate-in" style="--delay:0s">
+    <div class="section-label">Thesis Tool — Modular Liquid Dispensing · Proto 1</div>
+    <h1>System Architecture Explorer</h1>
+    <p>
+      A live cost/complexity matrix for the pump-system control electronics — which brain
+      (MCU), which stepper driver, and which system bus, at what price and design complexity.
+      Edit component prices to match real quotes, sort and filter the seventeen candidate
+      architectures, and expand any row for its full bill-of-materials.
+    </p>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 01 — THEORY (prose added in a later plan)
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.06s">
+    <span class="num">Part 01</span>
+    <h2>Comms Layers &amp; The Driver Insight</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.075s">
+    The reasoning behind the matrix below — the three communication layers, why the stepper
+    driver choice matters more than the brain MCU, and the concurrency axis that dominates
+    system cost.
+  </p>
+  <div class="theory-card animate-in" id="theory" style="--delay:0.09s">
+    <div class="theory-section">
+      <h3>Theory</h3>
+      <p>Theory content follows — the full write-up of the three comms layers and the
+      driver-vs-MCU insight is added in a later plan.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 02 — INTERACTIVE SOLUTION MATRIX
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.12s">
+    <span class="num">Part 02</span>
+    <h2>Live Solution Matrix</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.135s">
+    Edit component prices below — every concept's cost updates live. Sort and filter by
+    price, complexity, and concurrency; click a row to expand its bill-of-materials.
+  </p>
+
+  <div id="matrix" class="animate-in" style="--delay:0.15s">
+
+    <div class="sae-card note">
+      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI (fixed, ILI9341) ·
+      <b>B</b> brain↔modules = <i>system bus</i> (I²C / RS-485 / CAN — the open choice) ·
+      <b>C</b> pump-MCU↔drivers = set by the driver (STEP/DIR wires · UART · SPI).
+      Brain = <b>ESP32</b> everywhere. Alignment module (28BYJ-48 + motor #2) is its own node =
+      part of the <b>shared</b> block, constant across all rows.
+    </div>
+
+    <!-- ===================== CONTROLS ===================== -->
+    <h2>Controls</h2>
+    <div class="sae-card">
+      <div class="controls">
+        <div class="ctl">
+          <label>DKK → EUR rate</label>
+          <input type="number" id="rate" step="0.001" value="0.134">
+        </div>
+        <div class="ctl">
+          <label>DKK converter</label>
+          <div class="conv"><input type="number" id="convDkk" placeholder="DKK" step="1">
+            <span>=</span><b id="convEur" style="color:var(--accent)">– €</b></div>
+        </div>
+        <div class="ctl">
+          <label>Include shared block (screen, 6 steppers, alignment)</label>
+          <select id="fShared"><option value="ctrl">No — controller electronics only</option>
+            <option value="full">Yes — whole-system cost</option></select>
+        </div>
+        <div class="ctl">
+          <label>Max price € (<span id="maxPriceLbl">200</span>)</label>
+          <input type="range" id="fPrice" min="20" max="200" step="1" value="200">
+        </div>
+        <div class="ctl">
+          <label>Max complexity</label>
+          <select id="fCx"><option value="5">any (★★★★★)</option>
+            <option value="2">≤ ★★</option><option value="3">≤ ★★★</option><option value="4">≤ ★★★★</option></select>
+        </div>
+        <div class="ctl">
+          <label>Concurrency</label>
+          <select id="fCon"><option value="0">any</option><option value="2">≥ 2 at once</option>
+            <option value="6">6 at once</option></select>
+        </div>
+        <div class="ctl"><label>&nbsp;</label><button class="reset" id="reset">Reset prices</button></div>
+      </div>
+    </div>
+
+    <!-- ===================== COMPONENT PRICES ===================== -->
+    <h2>Component unit prices <span class="badge">editable</span></h2>
+    <p class="sub">Type € directly, or type a DKK price to auto-convert. All cost math below uses these.</p>
+    <div class="sae-card" style="overflow-x:auto">
+      <table id="compTable">
+        <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th></tr></thead>
+        <tbody id="compBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ===================== SOLUTION MATRIX ===================== -->
+    <h2>Solution matrix <span class="badge">click a row for BOM · click headers to sort</span></h2>
+    <p class="sub"><span id="rowCount"></span> Cost = Σ(component × qty). Driver colour:
+      <span class="drv-dumb">dumb</span> · <span class="drv-smart">smart (UART)</span> · <span class="drv-motion">motion (SPI)</span>.</p>
+    <div class="sae-card" style="overflow-x:auto">
+      <table id="matrixTable">
+        <thead><tr>
+          <th>ID</th>
+          <th class="sortable" data-k="at">At once</th>
+          <th>Driver</th>
+          <th class="hide-sm">Bus (B)</th>
+          <th class="hide-sm">C link</th>
+          <th class="sortable" data-k="cx">Complexity</th>
+          <th class="sortable sort-asc" data-k="cost">Cost €</th>
+        </tr></thead>
+        <tbody id="matrixBody"></tbody>
+      </table>
+    </div>
+    <p class="sub" style="margin-top:14px">Shared block ≈ €72 (6 steppers €36 · screen €23 · alignment Nano €3 ·
+      28BYJ-48+ULN2003 €2.5 · align motor #2 + driver €7.5). Prices are hobby-class estimates (±20%).</p>
+
+  </div><!-- /#matrix -->
+
+  <div id="diagram" aria-hidden="true"></div>
+
+</main>
+
+<footer class="site-footer">
+  Sirio Vittorio Feltrin · DTU Master's Thesis 2025–2026 ·
+  Modular automated liquid dispensing for point-of-care use
+</footer>
+
+<script>
+/* ---------- component catalogue (eur is the source of truth) ---------- */
+const DEFAULTS = {
+  esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:5},
+  rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4},
+  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:3},
+  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:2.5},
+  nano:{label:'Arduino Nano', role:'alignment / small node', eur:3},
+  drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:1.5},
+  tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5},
+  tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12},
+  tmc5072:{label:'TMC5072 dual-axis', role:'2 motors/chip (SPI)', eur:14},
+  max485:{label:'MAX485 module', role:'RS-485 transceiver / node', eur:0.7},
+  mcp2515:{label:'MCP2515 module', role:'CAN transceiver / node', eur:2.5},
+  skr:{label:'BTT SKR / Octopus', role:'32-bit printer board', eur:30},
+  ramps:{label:'Mega2560 + RAMPS', role:'printer board bundle', eur:18},
+  carrier:{label:'Driver carrier PCB', role:'6 driver sockets', eur:4},
+  psu60:{label:'PSU 24V ~60W', role:'1–2 motors at once', eur:12},
+  psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:20},
+  /* shared */
+  screen:{label:'ILI9341 3.2" touch', role:'screen (174 DKK)', eur:23, shared:1},
+  stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:6, shared:1},
+  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:2.5, shared:1},
+  alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1},
+};
+const COMP = JSON.parse(JSON.stringify(DEFAULTS));
+
+/* shared block BOM (added when "whole-system") */
+const SHARED_BOM = {stepperNema:6, screen:1, nano:1, drv8825:1, align28byj:1, alignMot2:1};
+
+/* ---------- the variants ---------- */
+const VARIANTS = [
+  {id:'S1-i2c', at:1, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR shared+EN', cx:1,
+    bom:{esp32:1,drv8825:6,carrier:1,psu60:1}, note:'Cheapest. ESP32 fused, one shared step bus, ENABLE selects the motor.'},
+  {id:'S1-485', at:1, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR shared+EN', cx:2,
+    bom:{esp32:1,drv8825:6,carrier:1,psu60:1,max485:2}, note:'Serial, but on a robust RS-485 bus (future-proofs Layer B).'},
+  {id:'D2-i2c', at:2, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR per-motor', cx:2,
+    bom:{esp32:1,drv8825:6,carrier:1,psu60:1}, note:'ESP32 fused makes 2 independent trains. Value knee.'},
+  {id:'D2-485', at:2, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR per-motor', cx:2,
+    bom:{esp32:1,drv8825:6,carrier:1,psu60:1,max485:2}, note:'Cheapest sane default: 2-at-once, DRV8825, RS-485.'},
+  {id:'P6-rp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6', cx:3,
+    bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1}, note:'RP2040 PIO makes 6 clean trains. I²C only if one small box.'},
+  {id:'P6-rp-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6', cx:3,
+    bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'Cheapest TRUE 6-parallel while keeping DRV8825.'},
+  {id:'P6-stm-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (timers)', cx:3,
+    bom:{esp32:1,stm32:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'STM32 timers instead of RP2040 PIO; a bit cheaper, steeper toolchain.'},
+  {id:'P6-dist-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR, 1/node', cx:4.5,
+    bom:{esp32:1,promini:6,drv8825:6,psu150:1,max485:8}, note:'One MCU per pump = hot-swap modules. 8 nodes on RS-485.'},
+  {id:'P6-dist-can', at:6, driver:'DRV8825', dk:'dumb', b:'CAN', c:'STEP/DIR, 1/node', cx:4.5,
+    bom:{esp32:1,promini:6,drv8825:6,psu150:1,mcp2515:8}, note:'Same distributed, on CAN for fault-tolerance. Priciest bus.'},
+  {id:'T9-fused-i2c', at:6, driver:'TMC2209', dk:'smart', b:'I²C', c:'UART (self-steps)', cx:2,
+    bom:{esp32:1,tmc2209:6,carrier:1,psu150:1}, note:'Smart driver offloads stepping → ESP32 stays fused even at 6. Silent, cool.'},
+  {id:'T9-fused-485', at:6, driver:'TMC2209', dk:'smart', b:'RS-485', c:'UART (self-steps)', cx:2,
+    bom:{esp32:1,tmc2209:6,carrier:1,psu150:1,max485:2}, note:'Simplest 6-parallel firmware + robust bus. The eye-opener option.'},
+  {id:'T9-node-485', at:6, driver:'TMC2209', dk:'smart', b:'RS-485', c:'UART (self-steps)', cx:3,
+    bom:{esp32:1,nano:1,tmc2209:6,carrier:1,psu150:1,max485:3}, note:'TMC2209 on a dedicated node (keeps brain free of pump chatter).'},
+  {id:'T51-485', at:6, driver:'TMC5160', dk:'motion', b:'RS-485', c:'SPI (ramp+pos)', cx:3.5,
+    bom:{esp32:1,tmc5160:6,carrier:1,psu150:1,max485:2}, note:'Lab-grade: onboard accel + position. Overkill for peristaltic, priciest drivers.'},
+  {id:'T51-72-485', at:6, driver:'TMC5072×3', dk:'motion', b:'RS-485', c:'SPI', cx:3.5,
+    bom:{esp32:1,tmc5072:3,carrier:1,psu150:1,max485:2}, note:'Dual-axis motion controllers: 3 chips for 6 motors, cheaper than 6×5160.'},
+  {id:'B-ramps-drv', at:6, driver:'DRV8825', dk:'dumb', b:'USB/UART', c:'STEP/DIR sockets', cx:3.5,
+    bom:{esp32:1,ramps:1,drv8825:6,psu150:1,max485:2}, note:'Repurpose Mega+RAMPS + Klipper. Cheap solved hardware, hacky firmware fit.'},
+  {id:'B-skr-drv', at:6, driver:'DRV8825', dk:'dumb', b:'USB/UART/CAN', c:'STEP/DIR sockets', cx:3.5,
+    bom:{esp32:1,skr:1,drv8825:6,psu150:1,max485:2}, note:'32-bit printer board with driver sockets. Fastest to a working parallel rig.'},
+  {id:'B-skr-tmc', at:6, driver:'TMC2209', dk:'smart', b:'USB/UART/CAN', c:'UART sockets', cx:3.5,
+    bom:{esp32:1,skr:1,tmc2209:6,psu150:1,max485:2}, note:'Printer board populated with silent TMC2209s.'},
+];
+
+/* ---------- state ---------- */
+let rate=0.134, includeShared=false, maxPrice=200, maxCx=5, minCon=0;
+let sortKey='cost', sortDir=1;
+
+/* ---------- cost ---------- */
+function costOf(v){
+  let sum=0;
+  for(const k in v.bom) sum += (COMP[k]?.eur||0)*v.bom[k];
+  if(includeShared) for(const k in SHARED_BOM) sum += (COMP[k]?.eur||0)*SHARED_BOM[k];
+  return sum;
+}
+function stars(cx){
+  const f=Math.floor(cx), half=(cx-f)>=0.5;
+  return '★'.repeat(f)+(half?'⯨':'')+'☆'.repeat(5-f-(half?1:0));
+}
+const conPill=a=> a===1?'<span class="pill p1">1</span>':a===2?'<span class="pill p2">2</span>':'<span class="pill p6">6</span>';
+
+/* ---------- render component table ---------- */
+function renderComps(){
+  const b=document.getElementById('compBody'); b.innerHTML='';
+  for(const k in COMP){
+    const c=COMP[k];
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${c.label}${c.shared?' <span class="badge">shared</span>':''}</td>
+      <td class="muted">${c.role}</td>
+      <td><input type="number" step="0.1" min="0" data-k="${k}" data-cur="eur" value="${c.eur}"></td>
+      <td class="hide-sm"><input type="number" step="1" min="0" data-k="${k}" data-cur="dkk" value="${(c.eur/rate).toFixed(0)}"></td>`;
+    b.appendChild(tr);
+  }
+  b.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+    const k=e.target.dataset.k, cur=e.target.dataset.cur, val=parseFloat(e.target.value)||0;
+    if(cur==='eur') COMP[k].eur=val; else COMP[k].eur=val*rate;
+    syncCompRow(k); renderMatrix();
+  }));
+}
+function syncCompRow(k){
+  document.querySelectorAll(`#compBody input[data-k="${k}"]`).forEach(inp=>{
+    if(inp.dataset.cur==='eur') inp.value=COMP[k].eur.toFixed(2).replace(/\.00$/,'');
+    else inp.value=(COMP[k].eur/rate).toFixed(0);
+  });
+}
+function refreshAllDkk(){ for(const k in COMP) syncCompRow(k); }
+
+/* ---------- render matrix ---------- */
+function renderMatrix(){
+  const rows=VARIANTS.map(v=>({v, cost:costOf(v)}))
+    .filter(o=> o.cost<=maxPrice && o.v.cx<=maxCx && o.v.at>=minCon)
+    .sort((a,b)=>{
+      let x,y;
+      if(sortKey==='cost'){x=a.cost;y=b.cost;}
+      else if(sortKey==='cx'){x=a.v.cx;y=b.v.cx;}
+      else {x=a.v.at;y=b.v.at;}
+      return (x-y)*sortDir;
+    });
+  const body=document.getElementById('matrixBody'); body.innerHTML='';
+  rows.forEach(o=>{
+    const v=o.v, dc = v.dk==='dumb'?'drv-dumb':v.dk==='smart'?'drv-smart':'drv-motion';
+    const tr=document.createElement('tr'); tr.className='vrow';
+    tr.innerHTML=`<td><b>${v.id}</b></td><td>${conPill(v.at)}</td>
+      <td class="${dc}">${v.driver}</td>
+      <td class="hide-sm">${v.b}</td><td class="hide-sm muted">${v.c}</td>
+      <td><span class="stars">${stars(v.cx)}</span></td>
+      <td class="cost">€${o.cost.toFixed(1)}</td>`;
+    const det=document.createElement('tr'); det.className='detail hidden';
+    det.innerHTML=`<td colspan="7">${bomHtml(v)}</td>`;
+    tr.addEventListener('click',()=>det.classList.toggle('hidden'));
+    body.appendChild(tr); body.appendChild(det);
+  });
+  document.getElementById('rowCount').textContent=`${rows.length} of ${VARIANTS.length} variants shown.`;
+}
+function bomHtml(v){
+  let lines='', sum=0;
+  const add=(k,q)=>{const e=(COMP[k]?.eur||0)*q; sum+=e;
+    return `<tr><td>${COMP[k].label}</td><td>${q}×</td><td>€${COMP[k].eur}</td><td>€${e.toFixed(1)}</td></tr>`;};
+  for(const k in v.bom) lines+=add(k,v.bom[k]);
+  if(includeShared){ lines+=`<tr><td colspan="4" class="muted">— shared system block —</td></tr>`;
+    for(const k in SHARED_BOM) lines+=add(k,SHARED_BOM[k]); }
+  return `<b>${v.note}</b><table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th></tr></thead>
+    <tbody>${lines}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th class="cost">€${sum.toFixed(1)}</th></tr></tfoot></table>`;
+}
+
+/* ---------- wire up controls ---------- */
+document.getElementById('rate').addEventListener('input',e=>{rate=parseFloat(e.target.value)||0.134; refreshAllDkk(); updateConv();});
+document.getElementById('convDkk').addEventListener('input',updateConv);
+function updateConv(){const d=parseFloat(document.getElementById('convDkk').value);
+  document.getElementById('convEur').textContent = isNaN(d)?'– €':'€'+(d*rate).toFixed(2);}
+document.getElementById('fShared').addEventListener('change',e=>{includeShared=e.target.value==='full'; renderMatrix();});
+document.getElementById('fPrice').addEventListener('input',e=>{maxPrice=+e.target.value; document.getElementById('maxPriceLbl').textContent=maxPrice; renderMatrix();});
+document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.value; renderMatrix();});
+document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
+document.getElementById('reset').addEventListener('click',()=>{
+  for(const k in COMP) COMP[k].eur=DEFAULTS[k].eur; renderComps(); renderMatrix();});
+document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k;
+  if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=1;}
+  document.querySelectorAll('th.sortable').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+  th.classList.add(sortDir>0?'sort-asc':'sort-desc');
+  renderMatrix();
+}));
+
+/* ---------- init ---------- */
+renderComps(); renderMatrix();
+</script>
+</body>
+</html>
