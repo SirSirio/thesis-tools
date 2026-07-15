@@ -20,6 +20,12 @@ findings:
   info: 10
   total: 15
 status: issues_found
+fixes:
+  fixed_at: 2026-07-15T14:30:00Z
+  scope: critical_warning
+  fixed: 5
+  skipped: 0
+  commits: [95e7bab, b2ad2f2, 26f6b20, 3c21f21, 9d6b534]
 ---
 
 # Phase 6: Code Review Report
@@ -46,6 +52,7 @@ Real defects found: an input-rewrite loop that corrupts decimal price entry (WR-
 ### WR-01: Price-input rewrite loop destroys in-progress decimal typing (silent 10× price errors)
 
 **File:** `tools/system-architecture-explorer/index.html:764-775`
+**Fixed:** true — commit `95e7bab`. Handler now passes `e.target` as a `skip` argument; `syncCompRow(k, skip)` rewrites only the sibling currency field, never the input being typed into. `refreshAllDkk()` callers pass no skip and still sync both fields.
 **Issue:** The `input` handler calls `syncCompRow(k)` on every keystroke, and `syncCompRow` rewrites **all** inputs with that `data-k` — including the one currently being typed into. Typing `3.5` in a € field: after the `.` keystroke, `parseFloat("3.")` → `3`, the field is rewritten to `"3"` (the dot vanishes), the next keystroke produces `35` — a 10× price error that is immediately written into `COMP[k].eur` and persisted to `localStorage` via `persist()`. Clearing a field to retype also fails: `parseFloat('')||0` → `0`, the field is instantly rewritten to `"0"`. Decimal entry is central here — shipped defaults include 2.5, 3.5, 0.7, 25.6. Editing prices is the tool's headline interaction ("Type € directly").
 **Fix:** Never rewrite the input that fired the event — only sync its sibling currency field:
 ```js
@@ -67,6 +74,7 @@ function syncCompRow(k, skip){
 ### WR-02: Distributed-topology diagram draws the alignment node on top of Pro-Mini nodes 5–6
 
 **File:** `tools/system-architecture-explorer/index.html:611-629`
+**Fixed:** true — commit `b2ad2f2`. Used the second suggested option (shrink/shift the 6-node row: `nodeW:86`, `startX:24`, row ends at x 620 < 650) rather than moving the alignment box to y 246, because at y 246 the alignment box's bus-drop line (x 735) would cross Pro-Mini node 6's box (x 680–780, y 190–238).
 **Issue:** `buildDiagram()` places the constant alignment box at `{x:650,y:190,w:170,h:48}` (spans x 650–820, y 190–238) for **every** topology class. In the `distributed` class (P6-dist-485, P6-dist-can), the six Pro-Mini boxes are laid out at `startX=(880-680)/2=100`, `nx=100+i*116`, y 190–238 — node 5 (x 564–664) clips the alignment box and node 6 (x 680–780) sits entirely inside it. Two overlapping labelled boxes at the same y render as an unreadable collision in exactly the two variants whose selling point is node topology.
 **Fix:** In the distributed branch, offset one of the two rows, e.g. draw the alignment box lower for that class:
 ```js
@@ -78,12 +86,14 @@ and lengthen its bus drop line accordingly (`LINE(cx, busY, cx, alignBox.y)` alr
 ### WR-03: Tool header says "seventeen candidate architectures" — there are 19
 
 **File:** `tools/system-architecture-explorer/index.html:182-183`
+**Fixed:** true — commit `26f6b20`. "seventeen" → "nineteen", matching `VARIANTS.length` (19) and the counts in SPEC.md/README.md/ROADMAP.md.
 **Issue:** The header prose reads "sort and filter the seventeen candidate architectures", but `VARIANTS` contains 19 entries (the two ESPINT-* rows were added under D-10). SPEC.md, README.md, ROADMAP.md, and the landing-page card all correctly say 19 — the tool's own page is the only place with the stale count, and it is the first sentence a reader sees.
 **Fix:** Change "seventeen" → "nineteen" (or avoid the literal: "the candidate architectures"), matching `${VARIANTS.length}` which the row-count line already reports dynamically.
 
 ### WR-04: Scenario/filter state desyncs from the DOM on soft reload / back-forward navigation
 
 **File:** `tools/system-architecture-explorer/index.html:481-493, 851-876`
+**Fixed:** true — commit `3c21f21`. Init block now seeds `interfaceMode`, `includeShared`, `maxPrice` (+ label), `maxCx`, and `minCon` from the DOM before the first `renderMatrix()`, exactly as suggested; `rate` keeps its persisted-value-wins path.
 **Issue:** All engine state (`interfaceMode`, `includeShared`, `maxPrice`, `maxCx`, `minCon`) lives in JS globals initialized to hard-coded defaults, and is only updated by `change`/`input` listeners. Browsers (Firefox notably, and Chrome on bfcache restore) restore form-control values on reload/back-navigation **without firing change events**. Result: the "Screen interface (Layer A)" select can display "8-bit parallel (~13 pins)" while `pinsOf()` computes with `interfaceMode='spi'` — the pin-budget column, OVERRUN flags, and diagram labels then contradict the visible control. This is the duplicated-state hazard between the SPI/parallel toggle and the pin math; the same applies to the shared-block toggle and all three filters (matrix shows rows the visible filter says should be hidden).
 **Fix:** At init (before the first `renderMatrix()`), seed state from the DOM instead of trusting the literals:
 ```js
@@ -102,6 +112,7 @@ renderComps(); renderMatrix();
 ### WR-05: Live inputs accept negative/garbage values that the load-time guards reject — state silently changes on reload
 
 **File:** `tools/system-architecture-explorer/index.html:765-766, 852`
+**Fixed:** true — commit `9d6b534`. Price handler clamps with `Math.max(0, parseFloat(...)||0)`; rate handler uses `Number.isFinite(r)&&r>0 ? r : 0.134` — both now symmetric with `loadPersisted()`'s guards.
 **Issue:** `min="0"` on the number inputs does not prevent typed negatives, and the handlers do no clamping: `parseFloat(e.target.value)||0` accepts `-5` → `COMP[k].eur=-5` (negative costs, negative DKK columns, negative BOM totals). The rate handler `rate=parseFloat(e.target.value)||0.134` likewise accepts negatives (only falsy values fall back), producing negative conversions, and both get persisted. On reload, `loadPersisted()`'s stricter guards (`v>=0`, `savedRate>0`) silently discard them — so the session shows one state and the reload shows another, with no feedback. Validation should be symmetric with the persistence guards.
 **Fix:**
 ```js
