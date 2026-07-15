@@ -122,6 +122,11 @@
   #matrix .p1{background:rgba(62,192,107,.15);color:var(--ok)}
   #matrix .p2{background:rgba(224,165,60,.15);color:var(--warn)}
   #matrix .p6{background:rgba(232,53,53,.15);color:var(--accent-2)}
+  #matrix .conf-high{background:rgba(62,192,107,.15);color:var(--ok)}
+  #matrix .conf-medium{background:rgba(224,165,60,.15);color:var(--warn)}
+  #matrix .conf-low{background:rgba(255,255,255,.08);color:var(--text-muted)}
+  #matrix .sourceCell a{word-break:break-word}
+  #matrix .legend{font-size:0.82rem;color:var(--text-muted);margin:2px 0 10px}
   #matrix .drv-dumb{color:var(--text-muted)}
   #matrix .drv-smart{color:var(--accent)}
   #matrix .drv-motion{color:var(--blue)}
@@ -312,9 +317,12 @@
     <!-- ===================== COMPONENT PRICES ===================== -->
     <h2>Component unit prices <span class="badge">editable</span></h2>
     <p class="sub">Type € directly, or type a DKK price to auto-convert. All cost math below uses these.</p>
+    <p class="legend">Confidence — <span class="pill conf-high">High</span> vendor page/datasheet states it directly ·
+      <span class="pill conf-medium">Medium</span> reputable secondary source or near-identical variant ·
+      <span class="pill conf-low">Low</span> estimate / assumption / not yet sourced. (D-11)</p>
     <div class="sae-card" style="overflow-x:auto">
       <table id="compTable">
-        <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th></tr></thead>
+        <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th><th class="hide-sm">Source</th><th>Confidence</th></tr></thead>
         <tbody id="compBody"></tbody>
       </table>
     </div>
@@ -354,27 +362,29 @@
 <script>
 /* ---------- component catalogue (eur is the source of truth) ---------- */
 const DEFAULTS = {
-  esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:5},
-  rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4},
-  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:3},
-  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:2.5},
-  nano:{label:'Arduino Nano', role:'alignment / small node', eur:3},
-  drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:1.5},
-  tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5},
-  tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12},
-  tmc5072:{label:'TMC5072 dual-axis', role:'2 motors/chip (SPI)', eur:14},
-  max485:{label:'MAX485 module', role:'RS-485 transceiver / node', eur:0.7},
-  mcp2515:{label:'MCP2515 module', role:'CAN transceiver / node', eur:2.5},
-  skr:{label:'BTT SKR / Octopus', role:'32-bit printer board', eur:30},
-  ramps:{label:'Mega2560 + RAMPS', role:'printer board bundle', eur:18},
-  carrier:{label:'Driver carrier PCB', role:'6 driver sockets', eur:4},
-  psu60:{label:'PSU 24V ~60W', role:'1–2 motors at once', eur:12},
-  psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:20},
+  esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:5, confidence:'Low',
+    source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg DOIT ESP32 30P ≈67.50 DKK (≈€9) — price above is a rough working estimate, not yet reconciled to a specific listing'}},
+  rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4, confidence:'Low'},
+  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:3, confidence:'Low'},
+  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:2.5, confidence:'Low'},
+  nano:{label:'Arduino Nano', role:'alignment / small node', eur:3, confidence:'Low'},
+  drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:1.5, confidence:'Low'},
+  tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5, confidence:'Low'},
+  tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12, confidence:'Low'},
+  tmc5072:{label:'TMC5072 dual-axis', role:'2 motors/chip (SPI)', eur:14, confidence:'Low'},
+  max485:{label:'MAX485 module', role:'RS-485 transceiver / node', eur:0.7, confidence:'Low'},
+  mcp2515:{label:'MCP2515 module', role:'CAN transceiver / node', eur:2.5, confidence:'Low'},
+  skr:{label:'BTT SKR / Octopus', role:'32-bit printer board', eur:30, confidence:'Low'},
+  ramps:{label:'Mega2560 + RAMPS', role:'printer board bundle', eur:18, confidence:'Low'},
+  carrier:{label:'Driver carrier PCB', role:'6 driver sockets', eur:4, confidence:'Low'},
+  psu60:{label:'PSU 24V ~60W', role:'1–2 motors at once', eur:12, confidence:'Low'},
+  psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:20, confidence:'Low'},
   /* shared */
-  screen:{label:'ILI9341 3.2" touch', role:'screen (174 DKK)', eur:23, shared:1},
-  stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:6, shared:1},
-  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:2.5, shared:1},
-  alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1},
+  screen:{label:'ILI9341 3.2" touch', role:'screen (174 DKK)', eur:23, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/', note:'bitbyg, 174 DKK ≈ €23 — owned board; SPI vs 8-bit-parallel interface unverified, see the screen-interface toggle below'}},
+  stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:6, shared:1, confidence:'Low'},
+  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:2.5, shared:1, confidence:'Low'},
+  alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1, confidence:'Low'},
 };
 const COMP = JSON.parse(JSON.stringify(DEFAULTS));
 
@@ -458,6 +468,40 @@ function stars(cx){
 }
 const conPill=a=> a===1?'<span class="pill p1">1</span>':a===2?'<span class="pill p2">2</span>':'<span class="pill p6">6</span>';
 
+/* ---------- confidence (D-11) + XSS-safe rendering helpers (T-06-06) ---------- */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function confClass(level){
+  return level==='High' ? 'conf-high' : level==='Medium' ? 'conf-medium' : 'conf-low';
+}
+const CONF_RANK = {Low:0, Medium:1, High:2};
+function worstConf(...levels){
+  return levels.reduce((w,l)=> (CONF_RANK[l]!==undefined && CONF_RANK[l]<CONF_RANK[w]) ? l : w, 'High');
+}
+/* Builds the Source/Confidence cell content safely — user-typed note/url is NEVER
+   interpolated into an innerHTML template string; it is only ever set via
+   textContent (or as the automatically-escaped .textContent of an <a>). */
+function sourceCellContent(c){
+  const frag = document.createDocumentFragment();
+  if (c.source && (c.source.url || c.source.note)) {
+    if (c.source.url && /^https?:\/\//i.test(c.source.url)) {
+      const a = document.createElement('a');
+      a.href = c.source.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = c.source.note || c.source.url;
+      frag.appendChild(a);
+    } else if (c.source.note) {
+      const span = document.createElement('span');
+      span.textContent = c.source.note;
+      frag.appendChild(span);
+    }
+  } else {
+    const span = document.createElement('span'); span.className = 'muted'; span.textContent = '—';
+    frag.appendChild(span);
+  }
+  return frag;
+}
+
 /* ---------- render component table ---------- */
 function renderComps(){
   const b=document.getElementById('compBody'); b.innerHTML='';
@@ -467,7 +511,10 @@ function renderComps(){
     tr.innerHTML=`<td>${c.label}${c.shared?' <span class="badge">shared</span>':''}</td>
       <td class="muted">${c.role}</td>
       <td><input type="number" step="0.1" min="0" data-k="${k}" data-cur="eur" value="${c.eur}"></td>
-      <td class="hide-sm"><input type="number" step="1" min="0" data-k="${k}" data-cur="dkk" value="${(c.eur/rate).toFixed(0)}"></td>`;
+      <td class="hide-sm"><input type="number" step="1" min="0" data-k="${k}" data-cur="dkk" value="${(c.eur/rate).toFixed(0)}"></td>
+      <td class="hide-sm sourceCell"></td>
+      <td><span class="pill ${confClass(c.confidence)}">${c.confidence||'Low'}</span></td>`;
+    tr.querySelector('.sourceCell').appendChild(sourceCellContent(c));
     b.appendChild(tr);
   }
   b.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
