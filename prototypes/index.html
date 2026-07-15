@@ -402,7 +402,15 @@
     @media (max-width: 640px) { .fig-side { float: none; width: 100%; margin: 12px 0; } }
 
     /* ── Calibration rule cards (the two takeaway formulas) ───── */
-    .rule-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 18px 0; }
+    .rule-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 18px 0; }
+    .rule-card .model-eq { margin: 14px 0 6px; }
+    .rule-card .eq-note { max-width: 150px; }
+    .eq-plain .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.28); }
+    .eq-cadp  .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.35); }
+    .eq-s-ext .eq-chip { color: #ff9c66; background: rgba(255,107,43,0.10); border: 1px solid rgba(255,107,43,0.6); }
+    .eq-b-ext .eq-chip { color: #ff9c66; background: rgba(255,107,43,0.05); border: 1px dashed rgba(255,107,43,0.6); }
+    .eq-s-int .eq-chip { color: #8fc0f0; background: rgba(122,167,224,0.10); border: 1px solid rgba(122,167,224,0.6); }
+    .eq-b-int .eq-chip { color: #8fc0f0; background: rgba(122,167,224,0.05); border: 1px dashed rgba(122,167,224,0.6); }
     .rule-card {
       border-radius: 12px;
       padding: 16px 18px;
@@ -1798,20 +1806,33 @@
           <p class="block-note">Valid for: <strong>Bambu P1S · 0.2 mm nozzle · 3DE MAX PLA "Cold White" · this slicer profile.</strong> Recalibrate (20-minute reprint + refit) if any of those change.</p>
 
           <div class="rule-cards">
+
             <div class="rule-card rule-ext">
-              <div class="rc-tag">External · convex — ODs, outer surfaces</div>
+              <div class="rc-tag">Model A — External · convex (ODs, outer surfaces)</div>
               <div class="rc-behavior">prints SMALLER — proportional to size (−0.65 %)</div>
-              <div>printed = 0.99354 · CAD + 0.068</div>
-              <div class="rc-main">CAD = (target − 0.068) / 0.99354 ≈ target × 1.0065</div>
+              <div class="model-eq">
+                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads</span></span></span>
+                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-s-ext"><span class="eq-chip">0.99354</span><span class="eq-note"><strong>SCALE</strong> — shrinks 0.65 %, error grows with size</span></span></span>
+                <span class="eq-grp"><span class="eq-op">×</span><span class="eq-term eq-cadp"><span class="eq-chip">CAD</span><span class="eq-note">drawn in Fusion</span></span></span>
+                <span class="eq-grp"><span class="eq-op">+</span><span class="eq-term eq-b-ext"><span class="eq-chip">0.068</span><span class="eq-note"><strong>OFFSET</strong> — bead proud +0.034/side, constant</span></span></span>
+              </div>
+              <div class="rc-main">→ CAD = (target − 0.068) / 0.99354 ≈ target × 1.0065</div>
               <div class="rc-note">R² = 0.98 · residual SD 0.023 mm</div>
             </div>
+
             <div class="rule-card rule-int">
-              <div class="rc-tag">Internal · concave — bores, arcs (THE GAP SURFACE)</div>
+              <div class="rc-tag">Model B — Internal · concave (bores, arcs — THE GAP SURFACE)</div>
               <div class="rc-behavior">HOLDS SIZE — rim intrudes a constant ~0.10 mm per side</div>
-              <div>printed = 1.00164 · CAD − 0.208</div>
-              <div class="rc-main">CAD = (target + 0.208) / 1.00164 ≈ target + 0.21 on Ø</div>
+              <div class="model-eq">
+                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads</span></span></span>
+                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-s-int"><span class="eq-chip">1.00164</span><span class="eq-note"><strong>SCALE ≈ 1</strong> — bores do not shrink</span></span></span>
+                <span class="eq-grp"><span class="eq-op">×</span><span class="eq-term eq-cadp"><span class="eq-chip">CAD</span><span class="eq-note">drawn in Fusion</span></span></span>
+                <span class="eq-grp"><span class="eq-op">−</span><span class="eq-term eq-b-int"><span class="eq-chip">0.208</span><span class="eq-note"><strong>OFFSET</strong> — rim intrudes −0.104/side, constant</span></span></span>
+              </div>
+              <div class="rc-main">→ CAD = (target + 0.208) / 1.00164 ≈ target + 0.21 on Ø</div>
               <div class="rc-note">R² = 0.54 (flat-line artifact — see above) · residual SD 0.040 mm</div>
             </div>
+
           </div>
 
           <p class="block-note">Retained and validated separately: <strong>rotor pitch (centre-to-centre) × 1.00906</strong> — it hit 2R = 39.40 exactly and offsets cancel on centre-to-centre spans. <strong>Prediction interval:</strong> a corrected feature lands within <strong>±0.08–0.10 mm on Ø (95 %)</strong> → ±0.04–0.05 mm on the gap → <strong>±0.15 µL ≈ 3 % of a 5 µL stroke</strong> — inside the CV budget, which is the sentence that ties this back to the pump.</p>
