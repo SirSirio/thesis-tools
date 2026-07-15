@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-15T14:01:38.653Z"
+last_updated: "2026-07-15T14:12:15.728Z"
 last_activity: 2026-07-15
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 19
-  completed_plans: 12
+  completed_plans: 13
   percent: 33
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 6 (System Architecture Explorer) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
 Last activity: 2026-07-15
 
-Progress: [███████░░░] 67%
+Progress: [███████░░░] 72%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [███████░░░] 67%
 *Updated after each plan completion*
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P01 | 15m | 2 tasks | 2 files |
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P03 | 25min | 2 tasks | 5 files |
+| Phase 06-system-architecture-explorer-promote-the-electronics-archite P04 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 06-01]: Nav-bar back-link uses 'All tools' (thesis-timeline precedent) rather than 'Resources' (older i18n-era tools)
 - [Phase ?]: 06-03: Anchor mapping for repointed links -- #matrix for live cost/variant-table references, #diagram for 'see the diagram' promises, #theory for reasoning pointers
 - [Phase ?]: 06-03: Trimmed ARCHITECTURE.md's driver-vs-MCU section, U5-framing bullets, and PUMP-CONTROL-CONCEPTS.md's mental-model section to pointers into the tool's #theory anchor (D-05), keeping fixed components / open questions / the different-Arduino-per-pump verdict untouched
+- [Phase ?]: 06-04: Landing card and README copy trimmed to only currently-shipped features (BOM editor, DKK-EUR converter, matrix) -- pin-budget/diagram language deferred until 06-05/06-06 ship
+- [Phase ?]: 06-04: CLAUDE.md documents tools/system-architecture-explorer/SPEC.md ahead of its 06-07 creation, matching the site-wide tools/<slug>/ folder-shape convention
 
 ### Pending Todos
 
@@ -124,6 +127,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-15T14:01:38.629Z
-Stopped at: Completed 06-03-PLAN.md
+Last session: 2026-07-15T14:12:15.705Z
+Stopped at: Completed 06-04-PLAN.md
 Resume file: None
