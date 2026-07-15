@@ -406,22 +406,25 @@ Not meaningfully applicable — this is a hobby-electronics BOM (DRV8825/TMC2209
 
 **If this table is empty:** N/A — table is populated; see rows above. The screen-interface ambiguity (A1/A2) is the highest-risk item and should be resolved before the pin-budget feature is presented as authoritative in the shipped tool.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Is the owned bitbyg ILI9341 screen actually SPI or 8-bit parallel?**
    - What we know: The vendor page title says "SPI Touch Screen"; the vendor page body text describes a pin interface pattern (A0-A3, D4-D13, D0-D3 for I²C) that is characteristic of 8-bit-parallel Uno-shield-class modules, not true SPI.
    - What's unclear: Which description is accurate for the *specific* board bitbyg ships — vendor listings for this module class are frequently copy-pasted from a generic template regardless of the actual variant sold.
    - Recommendation: Planner should insert a `checkpoint:human-verify` task — physically inspect the owned board's silkscreen/header labels (Sirio already owns this part per CONTEXT.md) before the pin-budget feature ships with confident numbers. Until then, ship both scenarios or clearly mark the figure as unresolved in the UI.
+   - **RESOLVED:** via end-of-phase human-check (screen interface) — per `workflow.human_verify_mode: end-of-phase`, the physical inspection is a `<human-check>` in plan 06-05, not a mid-flight checkpoint. The tool ships both scenarios selectable with **SPI as the Low-confidence default**; the end-of-phase reviewer flips the default + confidence tag if inspection shows 8-bit parallel.
 
 2. **Does bitbyg stock a bare ESP32-S3 (no camera/Ethernet/screen), for its extra GPIO/PSRAM headroom as a D-12 comparison point?**
    - What we know: The full 12-product `produkt-tag/esp32/` catalogue was enumerated; only an ESP32-S3-with-Ethernet-and-camera board was found, no bare S3.
    - What's unclear: Whether this is a genuine catalogue gap or whether bitbyg has other S3 boards not tagged `esp32` (e.g. under a different product tag).
    - Recommendation: If the planner/tool wants an ESP32-S3 comparison row, either search bitbyg more broadly (different tags, search box) or explicitly source it elsewhere and flag the vendor mismatch per D-11.
+   - **RESOLVED:** non-blocking, documented in SPEC.md as ASSUMED.
 
 3. **Exact TMC2209 UART wiring mode for the 6-driver, 2-segment configuration described in `PUMP-CONTROL-CONCEPTS.md`.**
    - What we know: The record states "≤4 drivers per UART line, so 6 = two short UART segments."
    - What's unclear: Whether this uses TMC2209's single-wire half-duplex UART (shared TX/RX on one pin, address-selected) or standard full-duplex TX/RX per segment — a 2x pin difference.
    - Recommendation: Low-priority for this phase (doesn't block shipping) — note as `[ASSUMED]` in SPEC.md rather than blocking; revisit if the pin-budget feature needs to be precise to the pin for T9-* variants specifically.
+   - **RESOLVED:** non-blocking, documented in SPEC.md as ASSUMED.
 
 ## Environment Availability
 

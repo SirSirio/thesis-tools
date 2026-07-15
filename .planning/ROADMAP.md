@@ -158,21 +158,20 @@ The site grows incrementally as the thesis generates new design decisions needin
 - Feeds the open unknown **U5** (does the protocol need simultaneous multi-liquid dispensing?) in the multi-liquid architecture study — the tool prices what the answer costs.
 - Related pending todo: *"Redesign and restructure landing page for many tools"* — a 6th tool makes this more pressing, but it stays out of scope here.
 
-**Plans**: 7 plans in 4 waves
+**Plans**: 6 plans in 4 waves
 
 **Wave 1**
 
 - [ ] 06-01-PLAN.md — Promote + reskin + persistence: move the cost engine to `tools/system-architecture-explorer/index.html`, adopt style.css tokens, two-part shell (locked anchors #theory/#matrix/#diagram), localStorage price/rate persistence (D-06), delete old page
-- [ ] 06-02-PLAN.md — Screen-interface checkpoint: physically resolve the owned ILI9341 SPI-vs-8-bit-parallel ambiguity before pin-budget defaults (D-09) *(checkpoint)*
 
 **Wave 2** *(both blocked on 06-01; disjoint files, parallel)*
 
 - [ ] 06-03-PLAN.md — Theory prose (D-04) + trim the three decision records to pointers, repoint cross-links, SOLUTION-MATRIX reference-view preface (D-05, D-08), PROTOTYPES.md cross-link
 - [ ] 06-04-PLAN.md — Chrome/docs: landing-page card, README row, repo-root ROADMAP entry, CLAUDE.md folder structure (ARCH-02, ARCH-06)
 
-**Wave 3** *(blocked on 06-01/06-02/06-03)*
+**Wave 3** *(blocked on 06-01/06-03)*
 
-- [ ] 06-05-PLAN.md — Data model: per-component source + confidence tags (D-07/D-11), integrated-screen candidate variants + RAM/PSRAM (D-10/D-12), pin-budget feasibility with both screen scenarios (D-09)
+- [ ] 06-05-PLAN.md — Data model: per-component source + confidence tags (D-07/D-11), integrated-screen candidate variants + RAM/PSRAM (D-10/D-12), pin-budget feasibility with both screen scenarios, SPI/Low default + end-of-phase human-check on the owned ILI9341 (D-09)
 
 **Wave 4** *(blocked on 06-05; disjoint files, parallel)*
 
@@ -188,4 +187,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
-| 6. System Architecture Explorer | 0/7 | Planned | — |
+| 6. System Architecture Explorer | 0/6 | Planned | — |
