@@ -1681,7 +1681,19 @@
 
           <div class="callout callout-good"><span class="callout-label">What the FIRM head actually tests.</span> The scale <em>k</em> is validated. The offset is <strong>fitted on a convex surface</strong> and assumed equal-and-opposite on concave ones — the standard assumption, but slicers ship <em>separate</em> hole and contour compensation for a reason. So: print the FIRM head <strong>alone</strong>, then <strong>caliper the installed gap</strong> through the access slots (top + both sides). <strong>If it reads 1.52, the print model is validated in both directions</strong> and MID/LOOSE go straight to print. If it reads tighter, the concave offset is larger and earns its own constant. <strong>One head to learn the number, or three heads to learn it three times.</strong></div>
 
-          <div class="callout callout-warn"><span class="callout-label">As-printed result (the reason for the next section).</span> The FIRM head printed at <strong>gap ≈ 1.75 mm instead of 1.52</strong> (sides, drill-bit gauges) — 0.23 mm loose, the third oversized print in a row. The model v1 numbers above are kept as the record of what was <em>designed</em>; the diagnosis and the corrected rule (<strong>next head: arc R = 21.29</strong>) come from the ring calibration below.</div>
+          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">The as-printed result — measured, and 0.23 mm off</h4>
+          <p class="block-note">The FIRM head was printed and the installed gap measured — drill-bit shanks as go/no-go gauges at the sides (the reliable method), caliper pad-to-pad as a cross-check:</p>
+          <table class="param-table">
+            <thead><tr><th></th><th>Pad-arc Ø</th><th>Gap at the sides</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Aimed</strong> — printed target</td><td><strong>42.44</strong></td><td><strong>1.52</strong></td><td>from the design above</td></tr>
+              <tr><td>Drawn in CAD (model v1 compensation)</td><td>43.044</td><td>1.69</td><td>derived artifact, not a target</td></tr>
+              <tr><td><strong>Measured</strong> — drill-bit gauges</td><td><strong>≈ 42.90</strong></td><td><strong>≈ 1.75</strong></td><td>right ~1.75 goes; left just over — best method</td></tr>
+              <tr><td>Measured — caliper pad-to-pad</td><td>42.80</td><td>1.70</td><td>tilts, hard to centre — weaker method</td></tr>
+              <tr><td><strong>Miss</strong></td><td><strong>+0.46 mm on Ø</strong></td><td><strong>+0.23 mm LOOSE</strong></td><td>≈ 0.8 µL on a 5 µL stroke</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-warn"><span class="callout-label">This miss is the trigger for the next section.</span> Aimed at 1.52, got ≈ 1.75 — the <strong>third oversized print in a row</strong> (bearing pockets, first rotor, now the head). Rather than another guess-and-reprint cycle, the print model itself was put on trial: a dedicated calibration artifact (<a href="#sec-calibration" style="color:var(--accent)">⭐ ring calibration → model v2</a>) found why, and produced the corrected rule — <strong>next head: arc R = 21.29</strong>. Separately, the <strong>apex (top) gap read 2.33–2.50</strong>: an axial-seating effect (head sitting proud on its dovetail), <em>not</em> a radius error — parked as its own problem, one problem at a time.</div>
         </section>
 
         <!-- ═══ RING CALIBRATION → MODEL v2 ════════════════════════ -->

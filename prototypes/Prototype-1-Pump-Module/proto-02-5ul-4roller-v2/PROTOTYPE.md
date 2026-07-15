@@ -1339,14 +1339,37 @@ Forward-check to the printed part:
 > **Had the CAD gap been "corrected" to read 1.52, the part would print at 1.35** — 0.17 mm too tight →
 > **0.58 µL → ~12 % of a 5 µL stroke.** The compensation is worth 12 %; it is not cosmetic.
 
+### 11.9.5 As-printed result — the head missed by 0.23 mm ← this triggered the ring calibration
+
+The FIRM head was printed and the installed gap measured (drill-bit shanks as go/no-go gauges at the
+sides — the reliable method — plus caliper pad-to-pad as a cross-check):
+
+| | Pad-arc Ø | Gap at the sides | Source |
+|---|---|---|---|
+| **Aimed** (printed target) | **42.44** | **1.52** | design, §11.9.3 |
+| Drawn in CAD (model v1 compensation) | 43.044 | 1.69 (derived artifact) | §11.9.4 |
+| **Measured — drill-bit gauges** | **≈ 42.90** | **≈ 1.75** (right ~1.75 goes; left just over) | best method |
+| Measured — caliper pad-to-pad | 42.80 | 1.70 | tilts, hard to centre — weaker |
+| **Miss** | **+0.46 mm on Ø** | **+0.23 mm LOOSE** | |
+
+A 0.23 mm gap error is **~0.8 µL on a 5 µL stroke** — the third oversized print in a row
+(bearing pockets, first rotor, now the head), and unacceptable. Rather than another
+guess-and-reprint cycle, the print model itself was put on trial with a dedicated calibration
+artifact → **§11.10**.
+
+Separately: the **apex (top) gap read 2.33–2.50** (caliper; drill bits agree, > 2.20). That is an
+**axial-seating problem** (head sitting proud on its dovetail, same family as the v2.1 failure §
+"seated ~0.45 mm too high"), **not** a radius error — deliberately **parked as its own problem**,
+one problem at a time. The radius question is settled at the sides.
+
 ---
 
 ## 11.10 ⭐ PRINTER CALIBRATION — ring artifact → two-line compensation (MODEL v2, canonical)
 
 ### 11.10.1 Goal — a calibration, not a physics model
 
-The v2.2 head (printed with the §11.8 model) came out **0.23 mm too loose** — the third oversized
-print in a row. Rather than another guess-and-reprint cycle, a dedicated calibration artifact was
+The v2.2 head (printed with the §11.8 model) came out **0.23 mm too loose** (measurements in
+§11.9.5: aimed gap 1.52, got ≈ 1.75) — the third oversized print in a row. Rather than another guess-and-reprint cycle, a dedicated calibration artifact was
 printed and measured. Framing matters:
 
 - This is **not** an attempt to explain FDM physics. It is a **calibration**: fit the printer's
