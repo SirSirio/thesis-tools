@@ -16,7 +16,9 @@ The site grows incrementally as the thesis generates new design decisions needin
 - [x] **Phase 1: Motor & Microstepping Panel** - Extend the rotor solver with motor operating-point calculations so Proto 1 hardware decisions can be made from calculated data (completed 2026-05-30)
 - [ ] **Phase 2: GSD Workflow Visualizer** - Build a standalone tool that renders the GSD spec-driven development workflow as an interactive visual diagram
 - [x] **Phase 4: Prototype Design Space** - A visual, animated prototype-journey page where the AI helps design prototypes and the author reviews past ones to improve the process; HTML is the content source of truth (completed 2026-06-15)
-- [x] **Phase 5: HTML Presentation Decks** - Reveal-style HTML slide system on the tools site, with a creative dated presentations index, seeded by a 15-minute lab-meeting deck (completed 2026-06-24)
+- [x] **Phase 5: HTML Presentation Decks** - Reveal-style HTML slide system on the tools site, with a creative dated presentations index, seeded by a 15-minute lab-meeting deck (completed 2026-06-24)
+
+- [ ] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/`
 
 ## Phase Details
 
@@ -127,6 +129,56 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 - [x] 05-04-PLAN.md — Integration/docs: deck SPEC.md, README row, repo-root ROADMAP, CLAUDE.md folder structure + D-01 exception (SC-1/SC-2/SC-3)
 
+### Phase 6: System Architecture Explorer
+
+**Goal**: Promote the electronics/communication architecture cost-and-complexity matrix — built ad-hoc during the 2026-07 architecture sparring session at `prototypes/System-Architecture/index.html` — into a first-class, integrated tool, so the device's control-architecture decision (which MCU, which stepper driver, which bus, at what cost and complexity) can be explored interactively like every other design decision on the site.
+
+**Depends on**: Nothing (Phase 5 complete). Content already exists: `prototypes/System-Architecture/{ARCHITECTURE.md, PUMP-CONTROL-CONCEPTS.md, SOLUTION-MATRIX.md, index.html}`
+
+**Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05, ARCH-06, ARCH-07, ARCH-08 (registered in REQUIREMENTS.md 2026-07-15)
+
+**Structural decision (the reason this is a phase, not a quick task):**
+
+- The **interactive calculator is a tool** → move to `tools/system-architecture-explorer/` (`index.html` + `SPEC.md`), gaining the standard `← All tools` nav bar, landing-page card, and README row.
+- The **three markdown decision records stay** in `prototypes/System-Architecture/` as design documentation — matching the existing `prototypes/Prototype-1-Pump-Module/multi-liquid-architecture/` precedent (a design-study folder that is *not* a `proto-NN`).
+- Rationale: `prototypes/` is itself a tool (Prototype Design Space, its own `index.html`); nesting a second tool `index.html` beneath it is structurally wrong. Tools live in `tools/`; decision records live with the design docs. Cross-link both ways.
+
+**Success Criteria** (what must be TRUE):
+
+  1. Tool lives at `tools/system-architecture-explorer/index.html` with a co-located `SPEC.md`, follows the dark glassmorphic theme, and has the standard `← All tools` nav bar
+  2. It is reachable from the landing page (card) and listed in the README tool table and repo-root `ROADMAP.md`
+  3. It retains all current behaviour: editable component BOM prices, DKK↔EUR converter with adjustable rate, 17-variant matrix, sort by cost/complexity/concurrency, filter by max price / max complexity / concurrency, expandable per-variant BOM math, and a shared-block (whole-system vs controller-only) toggle
+  4. `prototypes/System-Architecture/` retains the three decision records, cross-linked to the tool (and the tool links back to them); no orphaned `index.html` left behind
+  5. `SPEC.md` documents the component price table, the variant BOMs, the three comms layers (A screen / B system bus / C driver link), and the assumptions behind the cost model
+  6. `CLAUDE.md` folder structure updated; all logic and styles remain inline (no new shared files)
+
+**Notes**:
+
+- Partially retires the deferred v2 backlog item **"BOM / component selector"** — this tool *is* a BOM-driven component/architecture selector, scoped to the control electronics.
+- Feeds the open unknown **U5** (does the protocol need simultaneous multi-liquid dispensing?) in the multi-liquid architecture study — the tool prices what the answer costs.
+- Related pending todo: *"Redesign and restructure landing page for many tools"* — a 6th tool makes this more pressing, but it stays out of scope here.
+
+**Plans**: 7 plans in 4 waves
+
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — Promote + reskin + persistence: move the cost engine to `tools/system-architecture-explorer/index.html`, adopt style.css tokens, two-part shell (locked anchors #theory/#matrix/#diagram), localStorage price/rate persistence (D-06), delete old page
+- [ ] 06-02-PLAN.md — Screen-interface checkpoint: physically resolve the owned ILI9341 SPI-vs-8-bit-parallel ambiguity before pin-budget defaults (D-09) *(checkpoint)*
+
+**Wave 2** *(both blocked on 06-01; disjoint files, parallel)*
+
+- [ ] 06-03-PLAN.md — Theory prose (D-04) + trim the three decision records to pointers, repoint cross-links, SOLUTION-MATRIX reference-view preface (D-05, D-08), PROTOTYPES.md cross-link
+- [ ] 06-04-PLAN.md — Chrome/docs: landing-page card, README row, repo-root ROADMAP entry, CLAUDE.md folder structure (ARCH-02, ARCH-06)
+
+**Wave 3** *(blocked on 06-01/06-02/06-03)*
+
+- [ ] 06-05-PLAN.md — Data model: per-component source + confidence tags (D-07/D-11), integrated-screen candidate variants + RAM/PSRAM (D-10/D-12), pin-budget feasibility with both screen scenarios (D-09)
+
+**Wave 4** *(blocked on 06-05; disjoint files, parallel)*
+
+- [ ] 06-06-PLAN.md — Live variant-driven SVG system diagram + row-click selection (D-01, D-02, D-03)
+- [ ] 06-07-PLAN.md — Co-located SPEC.md documenting prices, variant BOMs, comms layers, pin-budget + power models with confidence tags (ARCH-05)
+
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
@@ -136,3 +188,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
+| 6. System Architecture Explorer | 0/7 | Planned | — |

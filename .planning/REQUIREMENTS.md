@@ -42,12 +42,25 @@
 - [x] **SC-2**: A Presentations Index page exists at `decks/index.html` with a card-deck deal-out animation.
 - [x] **SC-3**: The seed lab-meeting deck is fully implemented at `decks/lab-meeting-2026-06/index.html` and embeds live tool iframes.
 
+### System Architecture Explorer (Phase 6)
+
+*Registered 2026-07-15 from the Phase 6 ROADMAP success criteria + CONTEXT.md decisions D-01…D-12. Traces to plans 06-01…06-07.*
+
+- [ ] **ARCH-01**: Tool lives at `tools/system-architecture-explorer/index.html` with a co-located `SPEC.md`, adopts `assets/style.css` design tokens (no private `:root` block), and has the standard `← All tools` nav bar. *(Plan 06-01; D-04, D-08)*
+- [ ] **ARCH-02**: Tool is reachable from the landing-page card and listed in `README.md` tool table and repo-root `ROADMAP.md`. *(Plan 06-04)*
+- [ ] **ARCH-03**: Tool retains all current behaviour (editable BOM prices, DKK↔EUR converter, 17-variant sortable/filterable matrix, expandable per-variant BOM, shared-block toggle) AND gains the live variant-driven SVG system diagram with row-click selection. *(Plans 06-01, 06-06; D-01, D-02, D-03)*
+- [ ] **ARCH-04**: `prototypes/System-Architecture/` retains the three decision records, cross-linked both ways to the tool; no orphaned `index.html`. *(Plan 06-03; D-05, D-08)*
+- [ ] **ARCH-05**: `SPEC.md` documents the component price table, variant BOMs, three comms layers, pin-budget model, power/PSU model, and cost-model assumptions with confidence tags. *(Plan 06-07)*
+- [ ] **ARCH-06**: `CLAUDE.md` folder structure updated; all logic/styles remain inline; no new shared files. *(Plan 06-04)*
+- [ ] **ARCH-07**: Data model computes pins-used/available/free per variant across Layer A (screen, fixed, SPI/parallel scenarios) + Layer B (bus) + Layer C (driver links); overruns flagged with confidence markers. *(Plans 06-02, 06-05; D-09, D-11)*
+- [ ] **ARCH-08**: ESP32-integrated-screen board(s) added as candidate variant(s); brain candidates record RAM/PSRAM/usable-GPIO with a UI-fluidity note; per-component source field + confidence tag. *(Plan 06-05; D-07, D-10, D-11, D-12)*
+
 ### Backlog Tools (no spec yet)
 
 - **BACKLOG-01**: Flow sensor calibration curve viewer
 - **BACKLOG-02**: Dispense protocol calculator (multi-step sequences)
 - **BACKLOG-03**: Tube occlusion efficiency estimator from gravimetric data
-- **BACKLOG-04**: Bill of materials / component selector
+- **BACKLOG-04**: Bill of materials / component selector *(partially retired by the Phase 6 System Architecture Explorer — a BOM-driven control-electronics selector)*
 
 ## Out of Scope
 
@@ -60,6 +73,10 @@
 | RTL language support | No RTL languages planned |
 | External CDN dependencies (no local fallback) | Offline constraint is hard |
 | Build tools, npm, frameworks | Static site constraint is hard |
+| URL-hash shareable price state (Phase 6) | Deferred in favour of localStorage (D-06); revisit only if a priced scenario must be cited by link |
+| Follow-cheapest-row diagram mode (Phase 6) | Rejected for explicit row-click selection (D-02) |
+| Landing-page redesign for many tools | Out of scope; Phase 6 adds one card to the existing grid |
+| Sourcing all ~20 component prices (Phase 6) | D-07 adds the source field; populating beyond the ILI9341 is ongoing BOM work |
 
 ## Traceability
 
@@ -81,6 +98,14 @@
 | SC-1 | Phase 5 | Complete |
 | SC-2 | Phase 5 | Complete |
 | SC-3 | Phase 5 | Complete |
+| ARCH-01 | Phase 6 | Planned |
+| ARCH-02 | Phase 6 | Planned |
+| ARCH-03 | Phase 6 | Planned |
+| ARCH-04 | Phase 6 | Planned |
+| ARCH-05 | Phase 6 | Planned |
+| ARCH-06 | Phase 6 | Planned |
+| ARCH-07 | Phase 6 | Planned |
+| ARCH-08 | Phase 6 | Planned |
 
 **Coverage:**
 
@@ -88,8 +113,9 @@
 - Shipped: 5 (LANG-01–05)
 - Complete: 7 (MOTOR-01–04, SC-1–3)
 - Active: 4 (GSD-01–04, Phase 2)
+- Planned: 8 (ARCH-01–08, Phase 6)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-29*
-*Last updated: 2026-05-30 after Phase 2 planning*
+*Last updated: 2026-07-15 after Phase 6 planning (ARCH-01–08 registered)*
