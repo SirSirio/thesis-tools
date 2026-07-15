@@ -192,9 +192,62 @@
   </p>
   <div class="theory-card animate-in" id="theory" style="--delay:0.09s">
     <div class="theory-section">
-      <h3>Theory</h3>
-      <p>Theory content follows — the full write-up of the three comms layers and the
-      driver-vs-MCU insight is added in a later plan.</p>
+      <h3>The Three Comms Layers</h3>
+      <p>Every variant in the matrix below is built from the same three communication links —
+      only their implementation changes row to row.</p>
+      <p><b>Layer A — brain ↔ screen.</b> The touchscreen is a fixed, owned component: an
+      ILI9341 3.2" resistive-touch TFT (bitbyg, 174&nbsp;DKK ≈ €23) wired SPI (or possibly 8-bit
+      parallel — the listing is ambiguous) straight to the brain. Because it must render a GUI,
+      the brain is confirmed ESP32-class in every variant; a Nano cannot hold a screen and the
+      system logic at once. This link never changes — it is not a variable in the matrix.</p>
+      <p><b>Layer B — the system bus.</b> How the brain talks to the other modules (pump
+      controller, alignment node) is the first genuinely open choice: I²C, RS-485, or CAN. I²C
+      only makes sense for a few nodes sharing one small enclosure; RS-485 is the recommended
+      default — differential, ignores motor EMI, ~€0.70/node, unchanged from 2 to 8 nodes; CAN
+      earns its extra cost only with many nodes and a real need for fault tolerance. The matrix's
+      <b>Bus (B)</b> column shows this choice with the variant's real node count.</p>
+      <p><b>Layer C — pump-controller ↔ drivers.</b> How the controller talks to the six stepper
+      drivers is set entirely by which driver family is chosen: bare STEP/DIR wires for a dumb
+      driver, a shared UART for a smart driver, or an SPI daisy-chain for a motion controller.
+      That distinction is the subject of the next section.</p>
+    </div>
+    <div class="theory-section">
+      <h3>The Driver Matters More Than the MCU</h3>
+      <p>The instinctive question is "do I need a bigger MCU to run six pumps at once?" — but a
+      stepper needs a driver chip regardless, and <b>the driver you pick decides who actually
+      generates the step pulses</b>, which is the real cost of concurrency:</p>
+      <p><b>Dumb driver (DRV8825, ~€1.5):</b> the MCU must toggle the STEP pin for every single
+      step, for every motor, in sync. Producing six independent, accelerating step trains is the
+      MCU's burden — this is the <i>only</i> reason a plain ESP32 stops being enough and the
+      design reaches for an RP2040 (PIO) or STM32 (hardware timers) as a dedicated pump node.</p>
+      <p><b>Smart driver (TMC2209, UART velocity mode, ~€3.5):</b> you send the driver a target
+      speed once, and the driver generates its own steps. The MCU is nearly idle, so it stays
+      <i>fused</i> — one ESP32 doing brain and pump-control together — even at six-parallel. In
+      the matrix, the <b>T9-fused-i2c</b> and <b>T9-fused-485</b> rows are exactly this: full
+      6-parallel with no separate pump-node MCU at all. TMC2209 is also silent, runs cooler, and
+      supports sensorless homing — practical bonuses that come for free with the same chip.</p>
+      <p>Since a driver is bought either way, spending roughly €2 more per driver on a smart part
+      buys full parallel capability outright and makes the "which MCU" question almost
+      irrelevant. That is the insight the matrix is built to make visible: driver family, not
+      brain choice, is what actually buys (or avoids) concurrency.</p>
+    </div>
+    <div class="theory-section">
+      <h3>The U5 Concurrency Axis</h3>
+      <p>Reading the matrix by cost cluster shows one axis dominates everything else: <b>how many
+      pumps must move at the exact same instant.</b> Rows at 1–2 concurrent (S1*, D2*) sit around
+      €29–30 at ★–★★ complexity on a 60&nbsp;W PSU. Committing to true 6-parallel jumps every row
+      to a 150&nbsp;W PSU and at least ★★☆☆ complexity, regardless of which driver or bus is
+      chosen — concurrency, not driver family, sets the floor cost and the floor complexity.</p>
+      <p>That is because parallelism is not just a firmware problem: six motors moving at once
+      draw roughly six times the peak current of one, which means a larger PSU, more heat,
+      thicker wiring, and more EMI — a real penalty for a portable point-of-care device, on top of
+      whatever the step-generation solution costs.</p>
+      <p>This question — does the dispensing protocol actually need liquids moved independently or
+      simultaneously — is tracked as open unknown <b>U5</b> in the
+      <a href="../../prototypes/Prototype-1-Pump-Module/multi-liquid-architecture/ARCHITECTURE-DECISION.md" style="color:var(--accent);">multi-liquid architecture study ↗</a>,
+      which owns the decision between replicated-pump control layers A1 (shared step bus, serial)
+      and A2 (independent per-motor control, parallel). This tool prices what each answer to U5
+      actually costs; it does not answer U5 itself.</p>
     </div>
   </div>
 
