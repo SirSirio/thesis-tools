@@ -18,7 +18,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 - [x] **Phase 4: Prototype Design Space** - A visual, animated prototype-journey page where the AI helps design prototypes and the author reviews past ones to improve the process; HTML is the content source of truth (completed 2026-06-15)
 - [x] **Phase 5: HTML Presentation Decks** - Reveal-style HTML slide system on the tools site, with a creative dated presentations index, seeded by a 15-minute lab-meeting deck (completed 2026-06-24)
 
-- [ ] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/`
+- [x] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/` (completed 2026-07-15)
 
 ## Phase Details
 
@@ -176,7 +176,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 **Wave 4** *(blocked on 06-05; disjoint files, parallel)*
 
 - [x] 06-06-PLAN.md — Live variant-driven SVG system diagram + row-click selection (D-01, D-02, D-03)
-- [ ] 06-07-PLAN.md — Co-located SPEC.md documenting prices, variant BOMs, comms layers, pin-budget + power models with confidence tags (ARCH-05)
+- [x] 06-07-PLAN.md — Co-located SPEC.md documenting prices, variant BOMs, comms layers, pin-budget + power models with confidence tags (ARCH-05)
 
 ## Progress
 
@@ -187,4 +187,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
-| 6. System Architecture Explorer | 5/6 | In Progress|  |
+| 6. System Architecture Explorer | 6/6 | Complete   | 2026-07-15 |
