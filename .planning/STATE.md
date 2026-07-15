@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-15T14:30:04.997Z"
+last_updated: "2026-07-15T14:45:27.771Z"
 last_activity: 2026-07-15
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 19
-  completed_plans: 14
+  completed_plans: 15
   percent: 33
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 6 (System Architecture Explorer) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-07-15
 
-Progress: [████████░░] 78%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [████████░░] 78%
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P03 | 25min | 2 tasks | 5 files |
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P04 | 8min | 2 tasks | 4 files |
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P05 | 25min | 3 tasks | 1 files |
+| Phase 06-system-architecture-explorer-promote-the-electronics-archite P06 | 12min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 06-05]: esp32.gpioUsable set to 15 (upper end of RESEARCH's 10-15 range) to produce a mixed pin-budget result set (S1/D2 overrun, T9-fused-*/T51-*/P6-rp-i2c borderline, printer boards fit) rather than all-pass or all-fail
 - [Phase 06-05]: Layer-C driver-link pins attached explicitly per-variant (pinsC field) rather than derived generically, since identical components cost different pin counts depending on wiring topology (S1 shared+EN=8 vs D2 per-motor=12 for the same 6x DRV8825)
 - [Phase 06-05]: Added two integrated-screen (espscreen/ESP32-2432S024) variants -- one that fits the 9-IO budget (TMC2209) and one that overruns it even at single concurrency (DRV8825) -- for honest D-11 contrast rather than only the flattering case
+- [Phase 06-06]: Topology class (fused/satellite/distributed/printer) derived from existing v.bom keys rather than a new VARIANTS field -- ramps/skr=printer, promini=distributed, rp2040/stm32/nano=satellite, else fused
+- [Phase 06-06]: Layer-B bus node count is 2 (brain+alignment) + a per-class pump-node count (0/1/6), matching the theory section's own claimed node counts (e.g. 8 nodes on RS-485 for the distributed variant)
+- [Phase 06-06]: Diagram auto-selects the first visible (cheapest) variant on load and after filter/sort removes the current selection, rather than an empty prompt -- selection stays click-driven only (D-02), no second control added
 
 ### Pending Todos
 
@@ -131,6 +135,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-15T14:30:04.974Z
-Stopped at: Completed 06-05-PLAN.md
+Last session: 2026-07-15T14:45:27.749Z
+Stopped at: Completed 06-06-PLAN.md
 Resume file: None

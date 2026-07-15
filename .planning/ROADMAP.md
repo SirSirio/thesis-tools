@@ -175,7 +175,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 4** *(blocked on 06-05; disjoint files, parallel)*
 
-- [ ] 06-06-PLAN.md — Live variant-driven SVG system diagram + row-click selection (D-01, D-02, D-03)
+- [x] 06-06-PLAN.md — Live variant-driven SVG system diagram + row-click selection (D-01, D-02, D-03)
 - [ ] 06-07-PLAN.md — Co-located SPEC.md documenting prices, variant BOMs, comms layers, pin-budget + power models with confidence tags (ARCH-05)
 
 ## Progress
@@ -187,4 +187,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
-| 6. System Architecture Explorer | 4/6 | In Progress|  |
+| 6. System Architecture Explorer | 5/6 | In Progress|  |
