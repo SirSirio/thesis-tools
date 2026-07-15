@@ -139,6 +139,11 @@
   #matrix tr.vrow:hover{background:rgba(255,107,43,.06)}
   #matrix tr.vrow.selected{background:rgba(255,107,43,.14);box-shadow:inset 3px 0 0 var(--accent)}
   #matrix .cost{font-weight:700;color:var(--accent);white-space:nowrap}
+  #matrix td.plain-col,#matrix th.plain-col{min-width:210px;max-width:320px}
+  #matrix td.plain-col{vertical-align:top}
+  #matrix ul.plain{margin:0;padding-left:15px;font-size:12px;line-height:1.4;color:var(--text)}
+  #matrix ul.plain li{margin:2px 0}
+  #matrix ul.plain li::marker{color:var(--accent)}
   #matrix .detail td{background:#111116;color:var(--text-muted);font-size:12.5px;padding:10px 14px}
   #matrix .detail table{font-size:12.5px}
   #matrix .detail th,#matrix .detail td{border-bottom:1px solid rgba(255,255,255,.06);padding:4px 8px}
@@ -347,6 +352,7 @@
       <table id="matrixTable">
         <thead><tr>
           <th>ID</th>
+          <th class="plain-col">In plain words</th>
           <th class="sortable" data-k="at">At once</th>
           <th>Driver</th>
           <th class="hide-sm">Bus (B)</th>
@@ -569,6 +575,28 @@ function pumpNodeLabelOf(v){
   if (v.bom.stm32) return 'STM32 Blue Pill';
   if (v.bom.nano) return 'Arduino Nano';
   return '';
+}
+/* plainBullets(v): a jargon-free description of each variant, generated from its own
+   fields so all rows stay consistent — capability, driver meaning, who runs the pumps
+   (topology), and how it's wired (bus). This is the "In plain words" matrix column. */
+function plainBullets(v){
+  const intK = intBrainKey(v), node = pumpNodeLabelOf(v), cls = topoClassOf(v);
+  const B = [];
+  B.push(v.at>=6 ? 'Runs <b>all 6 pumps at once</b>'
+       : v.at===2 ? 'Runs up to <b>2 pumps at once</b>'
+       : 'Runs <b>one pump at a time</b>');
+  B.push(v.dk==='dumb'  ? 'Cheap “dumb” drivers — the brain makes every step pulse itself'
+       : v.dk==='smart' ? '“Smart” drivers step themselves and run silent — the brain just sends targets'
+       : '“Motion” drivers with built-in acceleration &amp; positioning (lab-grade, priciest)');
+  B.push(cls==='fused'       ? `${intK?'One all-in-one board':'One ESP32 chip'} is the whole system — brain, screen and pump control together`
+       : cls==='satellite'   ? `${intK?'A screen-brain board':'The ESP32 brain'} plus one dedicated helper chip (${node}) that drives the pumps`
+       : cls==='distributed' ? 'One tiny board per pump — hot-swappable modules, most wiring'
+       : `A repurposed 3D-printer board (${node}) with ready-made driver sockets`);
+  B.push(v.b==='I²C'     ? 'Wired over I²C — simplest, but only short wiring inside one box'
+       : v.b==='RS-485'  ? 'Wired over RS-485 — a robust bus that tolerates longer, noisier runs'
+       : v.b==='CAN'     ? 'Wired over CAN — fault-tolerant bus (as used in cars/industry)'
+       : 'Driven over USB/serial from the printer board');
+  return `<ul class="plain">${B.map(b=>`<li>${b}</li>`).join('')}</ul>`;
 }
 function buildDiagram(v){
   const cls = topoClassOf(v);
@@ -829,14 +857,16 @@ function renderMatrix(){
       ? `<span class="pill p6">OVERRUN</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
       : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
     const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
-    tr.innerHTML=`<td><b>${v.id}</b></td><td>${conPill(v.at)}</td>
+    tr.innerHTML=`<td><b>${v.id}</b></td>
+      <td class="plain-col">${plainBullets(v)}</td>
+      <td>${conPill(v.at)}</td>
       <td class="${dc}">${v.driver}</td>
       <td class="hide-sm">${v.b}</td><td class="hide-sm muted">${v.c}</td>
       <td><span class="stars">${stars(v.cx)}</span></td>
       <td class="cost">€${o.cost.toFixed(1)}</td>
       <td class="hide-sm">${pinCell}</td>`;
     const det=document.createElement('tr'); det.className='detail hidden';
-    det.innerHTML=`<td colspan="8">${bomHtml(v)}</td>`;
+    det.innerHTML=`<td colspan="9">${bomHtml(v)}</td>`;
     /* D-02: one row click drives all three — BOM expand, row highlight, diagram redraw.
        Rebound on every renderMatrix() call so sort/filter never breaks the wiring. */
     tr.addEventListener('click',()=>{ det.classList.toggle('hidden'); selectVariant(v); });
