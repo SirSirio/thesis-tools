@@ -370,6 +370,28 @@ const VARIANTS = [
 let rate=0.134, includeShared=false, maxPrice=200, maxCx=5, minCon=0;
 let sortKey='cost', sortDir=1;
 
+/* ---------- persistence (D-06): edited prices + DKK->EUR rate ---------- */
+function loadPersisted(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('sae-prices'));
+    if(saved) for(const k in saved){
+      const v=saved[k];
+      if(COMP[k] && Number.isFinite(v) && v>=0) COMP[k].eur=v;
+    }
+  }catch(e){}
+  try{
+    const savedRate=parseFloat(localStorage.getItem('sae-rate'));
+    if(Number.isFinite(savedRate) && savedRate>0) rate=savedRate;
+  }catch(e){}
+}
+function persist(){
+  try{
+    const snap={}; for(const k in COMP) snap[k]=COMP[k].eur;
+    localStorage.setItem('sae-prices', JSON.stringify(snap));
+    localStorage.setItem('sae-rate', String(rate));
+  }catch(e){}
+}
+
 /* ---------- cost ---------- */
 function costOf(v){
   let sum=0;
@@ -398,7 +420,7 @@ function renderComps(){
   b.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
     const k=e.target.dataset.k, cur=e.target.dataset.cur, val=parseFloat(e.target.value)||0;
     if(cur==='eur') COMP[k].eur=val; else COMP[k].eur=val*rate;
-    syncCompRow(k); renderMatrix();
+    syncCompRow(k); renderMatrix(); persist();
   }));
 }
 function syncCompRow(k){
@@ -448,7 +470,7 @@ function bomHtml(v){
 }
 
 /* ---------- wire up controls ---------- */
-document.getElementById('rate').addEventListener('input',e=>{rate=parseFloat(e.target.value)||0.134; refreshAllDkk(); updateConv();});
+document.getElementById('rate').addEventListener('input',e=>{rate=parseFloat(e.target.value)||0.134; refreshAllDkk(); updateConv(); persist();});
 document.getElementById('convDkk').addEventListener('input',updateConv);
 function updateConv(){const d=parseFloat(document.getElementById('convDkk').value);
   document.getElementById('convEur').textContent = isNaN(d)?'– €':'€'+(d*rate).toFixed(2);}
@@ -457,7 +479,9 @@ document.getElementById('fPrice').addEventListener('input',e=>{maxPrice=+e.targe
 document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.value; renderMatrix();});
 document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
 document.getElementById('reset').addEventListener('click',()=>{
-  for(const k in COMP) COMP[k].eur=DEFAULTS[k].eur; renderComps(); renderMatrix();});
+  for(const k in COMP) COMP[k].eur=DEFAULTS[k].eur;
+  try{ localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-rate'); }catch(e){}
+  renderComps(); renderMatrix();});
 document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{
   const k=th.dataset.k;
   if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=1;}
@@ -467,6 +491,8 @@ document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click'
 }));
 
 /* ---------- init ---------- */
+loadPersisted();
+document.getElementById('rate').value = rate;
 renderComps(); renderMatrix();
 </script>
 </body>
