@@ -327,6 +327,14 @@
 </div>
 <span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
 </a>
+<a href="tools/system-architecture-explorer/index.html" class="tool-card reveal" style="--rd: 0.34s;">
+<div class="card-icon" aria-hidden="true">🔌</div>
+<div class="card-body">
+<h2 class="card-title" data-i18n="card-title-sysarch">System Architecture Explorer</h2>
+<p class="card-desc" data-i18n="card-desc-sysarch">Interactive cost / complexity / pin-budget matrix for the control electronics — 17 architecture variants, editable BOM with source/confidence tags, DKK↔EUR converter, and a live variant-driven system diagram.</p>
+</div>
+<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
 </div>
 </section>
 
@@ -369,9 +377,28 @@
 </div>
 </section>
 
-<section aria-label="Presentations">
+<section aria-label="Project roadmap">
 <div class="section-head reveal">
 <span class="section-index">04</span>
+<p class="section-label" data-i18n="section-label-roadmap">Roadmap</p>
+<span class="section-rule" aria-hidden="true"></span>
+</div>
+<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-roadmap">The thesis schedule as a live Gantt — original plan updated to the extended submission and defense dates.</p>
+<div class="tools-row">
+<a href="tools/thesis-timeline/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
+<div class="card-icon" aria-hidden="true">🗓</div>
+<div class="card-body">
+<h2 class="card-title" data-i18n="card-title-timeline">Thesis Roadmap &amp; Timeline</h2>
+<p class="card-desc" data-i18n="card-desc-timeline">Interactive Gantt of the whole project — work streams colour-coded by owner (author vs. thesis partner), shaded by status, with a live countdown to submission (15 Sep) and defense (28 Sep 2026). Built from the original Miro plan and updated for the extended schedule.</p>
+</div>
+<span class="card-link"><span data-i18n="card-link-open">Open</span><span class="arrow" aria-hidden="true">→</span></span>
+</a>
+</div>
+</section>
+
+<section aria-label="Presentations">
+<div class="section-head reveal">
+<span class="section-index">05</span>
 <p class="section-label" data-i18n="section-label-decks">Presentations</p>
 <span class="section-rule" aria-hidden="true"></span>
 </div>
@@ -411,6 +438,8 @@
         'section-desc-guides':      'Reference documentation and workflow diagrams.',
         'section-label-prototypes': 'Prototypes',
         'section-desc-prototypes':  'Hardware iterations logged with design parameters, test data, and design reasoning.',
+        'section-label-roadmap':    'Roadmap',
+        'section-desc-roadmap':      'The thesis schedule as a live Gantt — original plan updated to the extended submission and defense dates.',
         'section-label-decks':      'Presentations',
         'section-desc-decks':       'Reveal-style HTML slide decks covering the AI-assisted design process — runnable in the browser or offline.',
         'card-title-rotor':         'Peristaltic Rotor Geometry Solver',
@@ -419,10 +448,14 @@
         'card-desc-occlusion':      'Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.',
         'card-title-tensioned':     'Tensioned Tube-Path &amp; Stroke Volume Model',
         'card-desc-tensioned':      'Alternative path geometry for a tube pinned at both ends under seating tension — straight roller-to-roller runs with α/2 wraps instead of the 180° wall arc. Includes axial pre-strain corrections (lumen shrink, interference loss), volume-per-stroke prediction, and a closed-form corrected rotor radius.',
+        'card-title-sysarch':       'System Architecture Explorer',
+        'card-desc-sysarch':        'Interactive cost / complexity / pin-budget matrix for the control electronics — 17 architecture variants, editable BOM with source/confidence tags, DKK↔EUR converter, and a live variant-driven system diagram.',
         'card-title-gsd':           'GSD Workflow Guide',
         'card-desc-gsd':            'Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.',
         'card-title-proto':         'Prototype Design Space',
         'card-desc-proto':          'A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.',
+        'card-title-timeline':      'Thesis Roadmap &amp; Timeline',
+        'card-desc-timeline':       'Interactive Gantt of the whole project — work streams colour-coded by owner (author vs. thesis partner), shaded by status, with a live countdown to submission (15 Sep) and defense (28 Sep 2026). Built from the original Miro plan and updated for the extended schedule.',
         'card-title-decks':         'Presentations',
         'card-desc-decks':          'Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.',
         'card-link-tool':           'Open tool',
@@ -444,6 +477,8 @@
         'section-desc-guides':      'Documentazione di riferimento e diagrammi del flusso di lavoro.',
         'section-label-prototypes': 'Prototipi',
         'section-desc-prototypes':  'Iterazioni hardware documentate con parametri di progettazione, dati di test e ragionamento progettuale.',
+        'section-label-roadmap':    'Cronoprogramma',
+        'section-desc-roadmap':      'Il piano della tesi come diagramma di Gantt interattivo — piano originale aggiornato alle nuove date di consegna e discussione.',
         'section-label-decks':      'Presentazioni',
         'section-desc-decks':       'Presentazioni HTML in stile reveal sul processo di progettazione assistito dall\'AI — eseguibili nel browser o offline.',
         'card-title-rotor':         'Risolutore Geometrico del Rotore Peristaltico',
@@ -452,10 +487,14 @@
         'card-desc-occlusion':      'Riferimento geometrico in due parti per la meccanica di deformazione del tubo. Parte 1: modello a sezione "stadium" con SVG interattivo — area residua del lume in funzione dello schiacciamento del rullo. Parte 2: lunghezza di contatto assiale, volume spostato per passaggio del rullo e formula di compensazione dell\'arco. Derivazioni complete con formule LaTeX.',
         'card-title-tensioned':     'Modello del Percorso in Tensione e Volume per Ciclo',
         'card-desc-tensioned':      'Geometria alternativa del percorso per un tubo fissato alle due estremità sotto tensione di montaggio — tratti rettilinei tra i rulli con avvolgimenti α/2 invece dell\'arco a parete di 180°. Include correzioni di pre-deformazione assiale (restringimento del lume, perdita di interferenza), previsione del volume per ciclo e raggio del rotore corretto in forma chiusa.',
+        'card-title-sysarch':       'Esploratore dell\'Architettura di Sistema',
+        'card-desc-sysarch':        'Matrice interattiva costo / complessità / budget-pin per l\'elettronica di controllo — 17 varianti di architettura, distinta base modificabile con tag di fonte/affidabilità, convertitore DKK↔EUR e diagramma di sistema live in base alla variante.',
         'card-title-gsd':           'Guida al Flusso di Lavoro GSD',
         'card-desc-gsd':            'Diagramma interattivo del flusso di sviluppo spec-driven usato per costruire questo sito. Esplora il ciclo discuss → plan → execute, i controlli di qualità opzionali e i comandi di utilità — clicca su un nodo per vedere cosa fa.',
         'card-title-proto':         'Spazio di Progettazione dei Prototipi',
         'card-desc-proto':          'Un percorso visivo attraverso i prototipi hardware — dai parametri di progetto ai risultati misurati. Clicca su un prototipo per esplorarne scopo, geometria, dati di test e ragionamento progettuale.',
+        'card-title-timeline':      'Cronoprogramma e Timeline della Tesi',
+        'card-desc-timeline':       'Diagramma di Gantt interattivo dell\'intero progetto — flussi di lavoro colorati per responsabile (autore vs. partner di tesi), sfumati per stato, con conto alla rovescia per la consegna (15 set) e la discussione (28 set 2026). Costruito dal piano Miro originale e aggiornato al calendario esteso.',
         'card-title-decks':         'Presentazioni',
         'card-desc-decks':          'Sfoglia le presentazioni del lab meeting e dell\'architettura. Realizzate con un sistema di slide HTML personalizzato in stile reveal.',
         'card-link-tool':           'Apri strumento',
