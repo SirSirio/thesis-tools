@@ -480,6 +480,7 @@ const VARIANTS = [
 /* ---------- state ---------- */
 let rate=0.134, includeShared=false, maxPrice=200, maxCx=5, minCon=0;
 let sortKey='cost', sortDir=1;
+let selectedVariantId=null; // D-02: selection = click a matrix row; the diagram's ONLY control
 
 /* ---------- pin budget (D-09) ----------
    SCREEN_PINS: Layer-A fixed cost for the owned ILI9341, keyed by interface scenario.
@@ -774,6 +775,17 @@ function syncCompRow(k){
 }
 function refreshAllDkk(){ for(const k in COMP) syncCompRow(k); }
 
+/* ---------- selection (D-02): one click, one architecture — the diagram's only control ---------- */
+function highlightRow(id){
+  document.querySelectorAll('#matrixBody tr.vrow').forEach(r=>r.classList.toggle('selected', r.dataset.vid===id));
+}
+function selectVariant(v){
+  selectedVariantId=v.id;
+  document.getElementById('diagram').innerHTML=buildDiagram(v);
+  document.getElementById('diagramCaption').textContent=`System diagram — ${v.id}`;
+  highlightRow(v.id);
+}
+
 /* ---------- render matrix ---------- */
 function renderMatrix(){
   const rows=VARIANTS.map(v=>({v, cost:costOf(v)}))
@@ -792,7 +804,7 @@ function renderMatrix(){
     const pinCell = p.overrun
       ? `<span class="pill p6">OVERRUN</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
       : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
-    const tr=document.createElement('tr'); tr.className='vrow';
+    const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
     tr.innerHTML=`<td><b>${v.id}</b></td><td>${conPill(v.at)}</td>
       <td class="${dc}">${v.driver}</td>
       <td class="hide-sm">${v.b}</td><td class="hide-sm muted">${v.c}</td>
@@ -801,10 +813,18 @@ function renderMatrix(){
       <td class="hide-sm">${pinCell}</td>`;
     const det=document.createElement('tr'); det.className='detail hidden';
     det.innerHTML=`<td colspan="8">${bomHtml(v)}</td>`;
-    tr.addEventListener('click',()=>det.classList.toggle('hidden'));
+    /* D-02: one row click drives all three — BOM expand, row highlight, diagram redraw.
+       Rebound on every renderMatrix() call so sort/filter never breaks the wiring. */
+    tr.addEventListener('click',()=>{ det.classList.toggle('hidden'); selectVariant(v); });
     body.appendChild(tr); body.appendChild(det);
   });
   document.getElementById('rowCount').textContent=`${rows.length} of ${VARIANTS.length} variants shown.`;
+  /* keep the selection alive across sort/filter/price-edit re-renders; fall back to the
+     first visible row if the previously-selected variant has been filtered out */
+  const stillVisible = rows.find(o=>o.v.id===selectedVariantId);
+  if (stillVisible) selectVariant(stillVisible.v);
+  else if (rows.length) selectVariant(rows[0].v);
+  else { document.getElementById('diagram').innerHTML=''; document.getElementById('diagramCaption').textContent='System diagram'; selectedVariantId=null; }
 }
 function bomHtml(v){
   let lines='', sum=0;
