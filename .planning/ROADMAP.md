@@ -166,7 +166,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 2** *(both blocked on 06-01; disjoint files, parallel)*
 
-- [ ] 06-03-PLAN.md — Theory prose (D-04) + trim the three decision records to pointers, repoint cross-links, SOLUTION-MATRIX reference-view preface (D-05, D-08), PROTOTYPES.md cross-link
+- [x] 06-03-PLAN.md — Theory prose (D-04) + trim the three decision records to pointers, repoint cross-links, SOLUTION-MATRIX reference-view preface (D-05, D-08), PROTOTYPES.md cross-link
 - [ ] 06-04-PLAN.md — Chrome/docs: landing-page card, README row, repo-root ROADMAP entry, CLAUDE.md folder structure (ARCH-02, ARCH-06)
 
 **Wave 3** *(blocked on 06-01/06-03)*
@@ -187,4 +187,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
-| 6. System Architecture Explorer | 1/6 | In Progress|  |
+| 6. System Architecture Explorer | 2/6 | In Progress|  |

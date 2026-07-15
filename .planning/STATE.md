@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-15T13:48:38.441Z"
+last_updated: "2026-07-15T14:01:38.653Z"
 last_activity: 2026-07-15
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 19
-  completed_plans: 11
+  completed_plans: 12
   percent: 33
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 6 (System Architecture Explorer) — EXECUTING
-Plan: 2 of 6
+Plan: 3 of 6
 Status: Ready to execute
 Last activity: 2026-07-15
 
-Progress: [██████░░░░] 61%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [██████░░░░] 61%
 
 *Updated after each plan completion*
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P01 | 15m | 2 tasks | 2 files |
+| Phase 06-system-architecture-explorer-promote-the-electronics-archite P03 | 25min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - Post-Phase 1: speedDerating = min(1, maxStepRate/SP) added to torqueRim — voltage now affects FoS via inductive ceiling
 - [Phase 06-01]: Renamed ported <table id=matrix> to id=matrixTable, freeing id=matrix for the D-04 Part-02 container anchor
 - [Phase 06-01]: Nav-bar back-link uses 'All tools' (thesis-timeline precedent) rather than 'Resources' (older i18n-era tools)
+- [Phase ?]: 06-03: Anchor mapping for repointed links -- #matrix for live cost/variant-table references, #diagram for 'see the diagram' promises, #theory for reasoning pointers
+- [Phase ?]: 06-03: Trimmed ARCHITECTURE.md's driver-vs-MCU section, U5-framing bullets, and PUMP-CONTROL-CONCEPTS.md's mental-model section to pointers into the tool's #theory anchor (D-05), keeping fixed components / open questions / the different-Arduino-per-pump verdict untouched
 
 ### Pending Todos
 
@@ -121,6 +124,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-15T13:48:38.419Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-07-15T14:01:38.629Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None
