@@ -162,7 +162,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 **Wave 1**
 
-- [ ] 06-01-PLAN.md — Promote + reskin + persistence: move the cost engine to `tools/system-architecture-explorer/index.html`, adopt style.css tokens, two-part shell (locked anchors #theory/#matrix/#diagram), localStorage price/rate persistence (D-06), delete old page
+- [x] 06-01-PLAN.md — Promote + reskin + persistence: move the cost engine to `tools/system-architecture-explorer/index.html`, adopt style.css tokens, two-part shell (locked anchors #theory/#matrix/#diagram), localStorage price/rate persistence (D-06), delete old page
 
 **Wave 2** *(both blocked on 06-01; disjoint files, parallel)*
 
@@ -187,4 +187,4 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 3. Peristaltic Occlusion & Displaced-Volume Model | 1/1 | Complete | 2026-05-31 |
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
-| 6. System Architecture Explorer | 0/6 | Planned | — |
+| 6. System Architecture Explorer | 1/6 | In Progress|  |

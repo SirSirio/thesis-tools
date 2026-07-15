@@ -46,9 +46,9 @@
 
 *Registered 2026-07-15 from the Phase 6 ROADMAP success criteria + CONTEXT.md decisions D-01…D-12. Traces to plans 06-01 and 06-03…06-07 (former 06-02 checkpoint folded into 06-05 as an end-of-phase human-check).*
 
-- [ ] **ARCH-01**: Tool lives at `tools/system-architecture-explorer/index.html` with a co-located `SPEC.md`, adopts `assets/style.css` design tokens (no private `:root` block), and has the standard `← All tools` nav bar. *(Plan 06-01; D-04, D-08)*
+- [x] **ARCH-01**: Tool lives at `tools/system-architecture-explorer/index.html` with a co-located `SPEC.md`, adopts `assets/style.css` design tokens (no private `:root` block), and has the standard `← All tools` nav bar. *(Plan 06-01; D-04, D-08)*
 - [ ] **ARCH-02**: Tool is reachable from the landing-page card and listed in `README.md` tool table and repo-root `ROADMAP.md`. *(Plan 06-04)*
-- [ ] **ARCH-03**: Tool retains all current behaviour (editable BOM prices, DKK↔EUR converter, 17-variant sortable/filterable matrix, expandable per-variant BOM, shared-block toggle) AND gains the live variant-driven SVG system diagram with row-click selection. *(Plans 06-01, 06-06; D-01, D-02, D-03)*
+- [x] **ARCH-03**: Tool retains all current behaviour (editable BOM prices, DKK↔EUR converter, 17-variant sortable/filterable matrix, expandable per-variant BOM, shared-block toggle) AND gains the live variant-driven SVG system diagram with row-click selection. *(Plans 06-01, 06-06; D-01, D-02, D-03)*
 - [ ] **ARCH-04**: `prototypes/System-Architecture/` retains the three decision records, cross-linked both ways to the tool; no orphaned `index.html`. *(Plan 06-03; D-05, D-08)*
 - [ ] **ARCH-05**: `SPEC.md` documents the component price table, variant BOMs, three comms layers, pin-budget model, power/PSU model, and cost-model assumptions with confidence tags. *(Plan 06-07)*
 - [ ] **ARCH-06**: `CLAUDE.md` folder structure updated; all logic/styles remain inline; no new shared files. *(Plan 06-04)*

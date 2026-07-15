@@ -3,14 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 context gathered
-last_updated: "2026-07-15T13:34:46.519Z"
-last_activity: 2026-07-15 -- Phase 6 planning complete
+last_updated: "2026-07-15T13:48:38.441Z"
+last_activity: 2026-07-15
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 19
-  completed_plans: 10
+  completed_plans: 11
   percent: 33
 ---
 
@@ -21,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 05 — html-presentation-decks
+**Current focus:** Phase 6 — System Architecture Explorer
 
 ## Current Position
 
-Phase: 05 — COMPLETE
-Plan: 4 of 4
+Phase: 6 (System Architecture Explorer) — EXECUTING
+Plan: 2 of 6
 Status: Ready to execute
-Last activity: 2026-07-15 -- Phase 6 planning complete
+Last activity: 2026-07-15
 
-Progress: [██████████] 100%
+Progress: [██████░░░░] 61%
 
 ## Performance Metrics
 
@@ -53,6 +52,7 @@ Progress: [██████████] 100%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 06-system-architecture-explorer-promote-the-electronics-archite P01 | 15m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -74,6 +74,8 @@ Recent decisions affecting current work:
 - 01-02: maxStepRate is microstepping-independent (V / 2×L×I inductive ceiling); computed once in upd()
 - 01-02: motorCols gated on feasible flag — infeasible rows always show — (T-02-02 mitigation)
 - Post-Phase 1: speedDerating = min(1, maxStepRate/SP) added to torqueRim — voltage now affects FoS via inductive ceiling
+- [Phase 06-01]: Renamed ported <table id=matrix> to id=matrixTable, freeing id=matrix for the D-04 Part-02 container anchor
+- [Phase 06-01]: Nav-bar back-link uses 'All tools' (thesis-timeline precedent) rather than 'Resources' (older i18n-era tools)
 
 ### Pending Todos
 
@@ -119,6 +121,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-24T17:27:19.311Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-html-presentation-decks-build-a-reveal-style-slide-system-on/05-CONTEXT.md
+Last session: 2026-07-15T13:48:38.419Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None
