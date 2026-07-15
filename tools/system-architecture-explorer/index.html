@@ -363,11 +363,26 @@
 /* ---------- component catalogue (eur is the source of truth) ---------- */
 const DEFAULTS = {
   esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:5, confidence:'Low',
-    source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg DOIT ESP32 30P ≈67.50 DKK (≈€9) — price above is a rough working estimate, not yet reconciled to a specific listing'}},
-  rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4, confidence:'Low'},
-  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:3, confidence:'Low'},
-  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:2.5, confidence:'Low'},
-  nano:{label:'Arduino Nano', role:'alignment / small node', eur:3, confidence:'Low'},
+    source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg DOIT ESP32 30P ≈67.50 DKK (≈€9) — price above is a rough working estimate, not yet reconciled to a specific listing'},
+    gpioUsable:15, gpioConf:'Medium', ram:'520 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
+    uiNote:'No PSRAM: a single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight.'},
+  rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4, confidence:'Low',
+    gpioUsable:26, gpioConf:'Medium', ram:'264 KB SRAM', ramConf:'Low', psram:'None', psramConf:'Low',
+    uiNote:'Never drives the screen in any variant (pump-node co-processor only) — RAM is not a GUI concern here.'},
+  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:3, confidence:'Low',
+    gpioUsable:30, gpioConf:'Medium', ram:'20 KB SRAM', ramConf:'Low', psram:'None', psramConf:'Low',
+    uiNote:'20 KB is tight for anything beyond step generation, but this MCU never drives the screen — non-issue for GUI fluidity.'},
+  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:2.5, confidence:'Low',
+    gpioUsable:18, gpioConf:'Medium', ram:'2 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
+    uiNote:'Not a brain candidate — per-pump-node role only, never drives the screen.'},
+  nano:{label:'Arduino Nano', role:'alignment / small node', eur:3, confidence:'Low',
+    gpioUsable:18, gpioConf:'Medium', ram:'2 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
+    uiNote:'Alignment/small-node role only, never drives the screen.'},
+  espscreen:{label:'ESP32-2432S024 (2.4" integrated LVGL touch)', role:'brain + screen, one part', eur:25.6,
+    confidence:'Medium',
+    source:{url:'https://bitbyg.dk/shop/esp32-lvgl-wifibluetooth-2-4inch-lcd-touch-tft-module/', note:'bitbyg, 183.75–198.75 DKK — display resolution/touch chip not stated on the page'},
+    gpioUsable:9, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None (32 Mbit flash)', psramConf:'Medium',
+    uiNote:'No PSRAM: single-buffered UI comfortable. Integrated display eliminates all Layer-A wiring — the 9 free IO already accounts for the onboard screen + touch.'},
   drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:1.5, confidence:'Low'},
   tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5, confidence:'Low'},
   tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12, confidence:'Low'},
@@ -391,42 +406,49 @@ const COMP = JSON.parse(JSON.stringify(DEFAULTS));
 /* shared block BOM (added when "whole-system") */
 const SHARED_BOM = {stepperNema:6, screen:1, nano:1, drv8825:1, align28byj:1, alignMot2:1};
 
-/* ---------- the variants ---------- */
+/* ---------- the variants ----------
+   pinsC = Layer-C driver-link pins spent on the variant's brain MCU (D-09). 0 when a
+   dedicated pump-node MCU (rp2040/stm32/promini/nano) or a printer board (skr/ramps —
+   "plug into socket") absorbs the driver wiring instead. See pinsOf() below. */
 const VARIANTS = [
-  {id:'S1-i2c', at:1, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR shared+EN', cx:1,
+  {id:'S1-i2c', at:1, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR shared+EN', cx:1, pinsC:8,
     bom:{esp32:1,drv8825:6,carrier:1,psu60:1}, note:'Cheapest. ESP32 fused, one shared step bus, ENABLE selects the motor.'},
-  {id:'S1-485', at:1, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR shared+EN', cx:2,
+  {id:'S1-485', at:1, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR shared+EN', cx:2, pinsC:8,
     bom:{esp32:1,drv8825:6,carrier:1,psu60:1,max485:2}, note:'Serial, but on a robust RS-485 bus (future-proofs Layer B).'},
-  {id:'D2-i2c', at:2, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR per-motor', cx:2,
+  {id:'D2-i2c', at:2, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR per-motor', cx:2, pinsC:12,
     bom:{esp32:1,drv8825:6,carrier:1,psu60:1}, note:'ESP32 fused makes 2 independent trains. Value knee.'},
-  {id:'D2-485', at:2, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR per-motor', cx:2,
+  {id:'D2-485', at:2, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR per-motor', cx:2, pinsC:12,
     bom:{esp32:1,drv8825:6,carrier:1,psu60:1,max485:2}, note:'Cheapest sane default: 2-at-once, DRV8825, RS-485.'},
-  {id:'P6-rp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6', cx:3,
+  {id:'P6-rp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6', cx:3, pinsC:0,
     bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1}, note:'RP2040 PIO makes 6 clean trains. I²C only if one small box.'},
-  {id:'P6-rp-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6', cx:3,
+  {id:'P6-rp-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6', cx:3, pinsC:0,
     bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'Cheapest TRUE 6-parallel while keeping DRV8825.'},
-  {id:'P6-stm-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (timers)', cx:3,
+  {id:'P6-stm-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (timers)', cx:3, pinsC:0,
     bom:{esp32:1,stm32:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'STM32 timers instead of RP2040 PIO; a bit cheaper, steeper toolchain.'},
-  {id:'P6-dist-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR, 1/node', cx:4.5,
+  {id:'P6-dist-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR, 1/node', cx:4.5, pinsC:0,
     bom:{esp32:1,promini:6,drv8825:6,psu150:1,max485:8}, note:'One MCU per pump = hot-swap modules. 8 nodes on RS-485.'},
-  {id:'P6-dist-can', at:6, driver:'DRV8825', dk:'dumb', b:'CAN', c:'STEP/DIR, 1/node', cx:4.5,
+  {id:'P6-dist-can', at:6, driver:'DRV8825', dk:'dumb', b:'CAN', c:'STEP/DIR, 1/node', cx:4.5, pinsC:0,
     bom:{esp32:1,promini:6,drv8825:6,psu150:1,mcp2515:8}, note:'Same distributed, on CAN for fault-tolerance. Priciest bus.'},
-  {id:'T9-fused-i2c', at:6, driver:'TMC2209', dk:'smart', b:'I²C', c:'UART (self-steps)', cx:2,
+  {id:'T9-fused-i2c', at:6, driver:'TMC2209', dk:'smart', b:'I²C', c:'UART (self-steps)', cx:2, pinsC:4,
     bom:{esp32:1,tmc2209:6,carrier:1,psu150:1}, note:'Smart driver offloads stepping → ESP32 stays fused even at 6. Silent, cool.'},
-  {id:'T9-fused-485', at:6, driver:'TMC2209', dk:'smart', b:'RS-485', c:'UART (self-steps)', cx:2,
+  {id:'T9-fused-485', at:6, driver:'TMC2209', dk:'smart', b:'RS-485', c:'UART (self-steps)', cx:2, pinsC:4,
     bom:{esp32:1,tmc2209:6,carrier:1,psu150:1,max485:2}, note:'Simplest 6-parallel firmware + robust bus. The eye-opener option.'},
-  {id:'T9-node-485', at:6, driver:'TMC2209', dk:'smart', b:'RS-485', c:'UART (self-steps)', cx:3,
+  {id:'T9-node-485', at:6, driver:'TMC2209', dk:'smart', b:'RS-485', c:'UART (self-steps)', cx:3, pinsC:0,
     bom:{esp32:1,nano:1,tmc2209:6,carrier:1,psu150:1,max485:3}, note:'TMC2209 on a dedicated node (keeps brain free of pump chatter).'},
-  {id:'T51-485', at:6, driver:'TMC5160', dk:'motion', b:'RS-485', c:'SPI (ramp+pos)', cx:3.5,
+  {id:'T51-485', at:6, driver:'TMC5160', dk:'motion', b:'RS-485', c:'SPI (ramp+pos)', cx:3.5, pinsC:4,
     bom:{esp32:1,tmc5160:6,carrier:1,psu150:1,max485:2}, note:'Lab-grade: onboard accel + position. Overkill for peristaltic, priciest drivers.'},
-  {id:'T51-72-485', at:6, driver:'TMC5072×3', dk:'motion', b:'RS-485', c:'SPI', cx:3.5,
+  {id:'T51-72-485', at:6, driver:'TMC5072×3', dk:'motion', b:'RS-485', c:'SPI', cx:3.5, pinsC:4,
     bom:{esp32:1,tmc5072:3,carrier:1,psu150:1,max485:2}, note:'Dual-axis motion controllers: 3 chips for 6 motors, cheaper than 6×5160.'},
-  {id:'B-ramps-drv', at:6, driver:'DRV8825', dk:'dumb', b:'USB/UART', c:'STEP/DIR sockets', cx:3.5,
+  {id:'B-ramps-drv', at:6, driver:'DRV8825', dk:'dumb', b:'USB/UART', c:'STEP/DIR sockets', cx:3.5, pinsC:0,
     bom:{esp32:1,ramps:1,drv8825:6,psu150:1,max485:2}, note:'Repurpose Mega+RAMPS + Klipper. Cheap solved hardware, hacky firmware fit.'},
-  {id:'B-skr-drv', at:6, driver:'DRV8825', dk:'dumb', b:'USB/UART/CAN', c:'STEP/DIR sockets', cx:3.5,
+  {id:'B-skr-drv', at:6, driver:'DRV8825', dk:'dumb', b:'USB/UART/CAN', c:'STEP/DIR sockets', cx:3.5, pinsC:0,
     bom:{esp32:1,skr:1,drv8825:6,psu150:1,max485:2}, note:'32-bit printer board with driver sockets. Fastest to a working parallel rig.'},
-  {id:'B-skr-tmc', at:6, driver:'TMC2209', dk:'smart', b:'USB/UART/CAN', c:'UART sockets', cx:3.5,
+  {id:'B-skr-tmc', at:6, driver:'TMC2209', dk:'smart', b:'USB/UART/CAN', c:'UART sockets', cx:3.5, pinsC:0,
     bom:{esp32:1,skr:1,tmc2209:6,psu150:1,max485:2}, note:'Printer board populated with silent TMC2209s.'},
+  {id:'ESPINT-fused-i2c', at:6, driver:'TMC2209', dk:'smart', b:'I²C', c:'UART (self-steps)', cx:2, pinsC:4,
+    bom:{espscreen:1,tmc2209:6,carrier:1,psu150:1}, note:'One-part brain+screen (bitbyg ESP32-2432S024, 9 IO). Smart driver keeps the pin budget comfortable — fits within the 9 free IO.'},
+  {id:'ESPINT-dumb-i2c', at:1, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR shared+EN', cx:1, pinsC:8,
+    bom:{espscreen:1,drv8825:6,carrier:1,psu60:1}, note:'Same one-part integrated brain+screen, but a dumb driver — even single-concurrency STEP/DIR+EN wiring does not fit the 9 free IO. Shown for contrast (D-11 honesty: not every integrated-screen pairing is feasible).'},
 ];
 
 /* ---------- state ---------- */
@@ -459,7 +481,12 @@ function persist(){
 function costOf(v){
   let sum=0;
   for(const k in v.bom) sum += (COMP[k]?.eur||0)*v.bom[k];
-  if(includeShared) for(const k in SHARED_BOM) sum += (COMP[k]?.eur||0)*SHARED_BOM[k];
+  if(includeShared) for(const k in SHARED_BOM){
+    /* An integrated brain+screen variant (D-10) already prices its screen as part of the
+       brain component — do not double-count the shared-block screen line for it. */
+    if(k==='screen' && v.bom.espscreen) continue;
+    sum += (COMP[k]?.eur||0)*SHARED_BOM[k];
+  }
   return sum;
 }
 function stars(cx){
@@ -564,8 +591,19 @@ function bomHtml(v){
     return `<tr><td>${COMP[k].label}</td><td>${q}×</td><td>€${COMP[k].eur}</td><td>€${e.toFixed(1)}</td></tr>`;};
   for(const k in v.bom) lines+=add(k,v.bom[k]);
   if(includeShared){ lines+=`<tr><td colspan="4" class="muted">— shared system block —</td></tr>`;
-    for(const k in SHARED_BOM) lines+=add(k,SHARED_BOM[k]); }
-  return `<b>${v.note}</b><table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th></tr></thead>
+    for(const k in SHARED_BOM){
+      if(k==='screen' && v.bom.espscreen) continue; /* integrated screen already in the bom above */
+      lines+=add(k,SHARED_BOM[k]);
+    }
+  }
+  const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
+  const brain = COMP[brainKey];
+  const brainInfo = (brain && brain.ram) ? `<p class="muted" style="margin:8px 0 0;font-size:12.5px">
+      <b>${brain.label}</b> — RAM: ${brain.ram} · PSRAM: ${brain.psram}
+      <span class="pill ${confClass(brain.psramConf)}">${brain.psramConf}</span> ·
+      GPIO usable: ${brain.gpioUsable} <span class="pill ${confClass(brain.gpioConf)}">${brain.gpioConf}</span><br>
+      ${brain.uiNote}</p>` : '';
+  return `<b>${v.note}</b>${brainInfo}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th></tr></thead>
     <tbody>${lines}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th class="cost">€${sum.toFixed(1)}</th></tr></tfoot></table>`;
 }
 
