@@ -36,6 +36,13 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 
 <!-- Add a row per pump prototype. Keep newest at the bottom. -->
 
+### Architecture studies (not part of the proto-NN streak)
+
+| Study | Folder | Status | Decides |
+|-------|--------|--------|---------|
+| Multi-liquid architecture | `multi-liquid-architecture/` | Provisional decision (A family: one motor per pump — A1 build-first, A2 upgrade), pending tests U3/U6 | Scaling to 5–6 liquids across 4 concepts: A1 (shared step bus) / A2 (independent control) / B (shared motor + pinch) / C (shared motor + engage). A1/A2 = 74–75 %, B/C = 58–59 %. Feeds future proto-04. |
+| System architecture (control electronics) | `System-Architecture/` | Exploring — live cost/complexity matrix promoted to a first-class tool | Which MCU, stepper driver, and system bus for the pump-controller electronics, at what price/complexity. Interactive matrix + reasoning now live at the [System Architecture Explorer](../tools/system-architecture-explorer/index.html) (`tools/`); this folder keeps the three decision records (ARCHITECTURE.md, PUMP-CONTROL-CONCEPTS.md, SOLUTION-MATRIX.md) as design documentation. |
+
 ---
 
 ## Prototype-2-Alignment-Module
