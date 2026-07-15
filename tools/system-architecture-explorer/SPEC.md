@@ -50,6 +50,7 @@ Rendered live in the "Component unit prices" section (`#compTable`), editable pe
 | Arduino Pro-Mini | per-pump node | 2.5 | — (rough estimate) | Low |
 | Arduino Nano | alignment / small node | 3.0 | — (rough estimate) | Low |
 | ESP32-2432S024 (2.4" integrated LVGL touch) | brain + screen, one part | 25.6 | bitbyg, 183.75–198.75 DKK — resolution/touch chip not stated | Medium |
+| ESP32-2432S032R (3.2" integrated ST7789 touch) | brain + screen, one part | 16.0 | Sunton "CYD v2", 3.2" 240×320 + XPT2046 resistive touch — ~€13–18 AliExpress, NOT stocked at bitbyg | Low |
 | DRV8825 | dumb driver (STEP/DIR) | 1.5 | — (rough estimate) | Low |
 | TMC2209 | smart driver (UART) | 3.5 | — (rough estimate) | Low |
 | TMC5160 | motion driver (SPI) | 12.0 | — (rough estimate) | Low |
@@ -91,6 +92,7 @@ confidence), and a `uiNote` describing GUI-fluidity implications:
 | Arduino Pro-Mini | 18 | Medium | 2 KB SRAM | None | Not a brain candidate — per-pump-node role only, never drives the screen |
 | Arduino Nano | 18 | Medium | 2 KB SRAM | None | Alignment/small-node role only, never drives the screen |
 | ESP32-2432S024 (integrated) | 9 | **High** | 520 KB SRAM | None (32 Mbit flash) | No PSRAM: single-buffered UI comfortable. Integrated display eliminates all Layer-A wiring — the 9 free IO already accounts for the onboard screen + touch |
+| ESP32-2432S032R (3.2" integrated) | 3 | **High** | 520 KB SRAM | None (4 MB flash) | Only 3 free GPIO (22, 27, 35-input-only) after the onboard display/touch/SD. Can ONLY be a pure brain over a 2-pin I²C bus to a separate pump controller — cannot fuse pump control. Same 240×320 as the owned screen; ST7789 not ILI9341 (cosmetic under LVGL) |
 
 **Framebuffer arithmetic (once, per 06-RESEARCH.md):** 320×240 @ 16-bit colour ≈ 150 KB; a
 full-frame double-buffer needs ~300 KB. Base ESP32's 520 KB SRAM fits one 150 KB framebuffer
@@ -130,12 +132,22 @@ Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · La
 | B-skr-tmc | 6 | TMC2209 | USB/UART/CAN | UART sockets | ★★★½☆ | esp32, skr, tmc2209×6, psu150, max485×2 |
 | **ESPINT-fused-i2c** | 6 | TMC2209 | I²C | UART (self-steps) | ★★☆☆☆ | espscreen, tmc2209×6, carrier, psu150 |
 | **ESPINT-dumb-i2c** | 1 | DRV8825 | I²C | STEP/DIR shared+EN | ★☆☆☆☆ | espscreen, drv8825×6, carrier, psu60 |
+| **ESPINT32-brain-i2c** | 6 | DRV8825 | I²C | STEP/DIR ×6 (on node) | ★★★☆☆ | espscreen32, rp2040, drv8825×6, carrier, psu150 |
 
-The final two rows are the integrated-screen (bitbyg ESP32-2432S024) variants added under D-10.
-They are shown as a deliberate contrast pair: `ESPINT-fused-i2c` fits the board's 9 free IO
-(smart driver keeps the pin budget comfortable); `ESPINT-dumb-i2c` does **not** fit even at
-single concurrency (dumb STEP/DIR+EN wiring alone exceeds 9 pins) — both are shown rather than
-cherry-picking only the flattering pairing, per D-11's sourcing-honesty spirit.
+The `ESPINT-*` rows are the integrated-screen variants added under D-10. `ESPINT-fused-i2c` and
+`ESPINT-dumb-i2c` (bitbyg ESP32-2432S024, 2.4", 9 free IO) are a deliberate contrast pair:
+the fused smart-driver build fits the 9 free IO, the dumb build does **not** even at single
+concurrency — both shown rather than cherry-picking the flattering pairing, per D-11's honesty.
+
+`ESPINT32-brain-i2c` adds the **3.2" integrated board (ESP32-2432S032R)** — the size/resolution
+match to the owned screen. Its defining constraint is **only 3 free GPIO**: it spends 2 on the
+I²C bus and has **no pins left to fuse pump control**, so its *only* viable shape is a pure brain
+talking I²C to a separate pump node (here an RP2040 driving 6 DRV8825). It fits (1 pin free).
+Cost trade-off vs the discrete-screen equivalent `P6-rp-i2c` (bare ESP32 brain + owned ILI9341):
+whole-system **€102 vs €114** — the integrated board saves ~€12 and one part and all Layer-A
+wiring; controller-only it reads €53 vs €42 because that view credits no screen either way, so the
+integrated board's built-in display is "unpaid for". The board is **not stocked at bitbyg**
+(the default vendor) — hence Low sourcing confidence despite High-confidence pin data.
 
 Cost is always `Σ(component € × qty in bom)`, plus the shared block (below) when "include shared
 block" is toggled on. Shared-block cost double-counting is guarded for integrated-screen variants
@@ -353,7 +365,7 @@ audit trail (fixed components, open questions, raw exploration) and point back h
 duplicating content:
 
 - [`prototypes/System-Architecture/ARCHITECTURE.md`](../../prototypes/System-Architecture/ARCHITECTURE.md) — system-level electronics/comms decision record; fixed components (touchscreen, LM75), points to this tool's `#matrix`/`#theory` anchors
-- [`prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`](../../prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md) — the seven-concept pump-control menu this tool's 19 variants supersede/extend; the driver-vs-MCU "mental model" section is trimmed to a pointer at this tool's `#theory` anchor
+- [`prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`](../../prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md) — the seven-concept pump-control menu this tool's 20 variants supersede/extend; the driver-vs-MCU "mental model" section is trimmed to a pointer at this tool's `#theory` anchor
 - [`prototypes/System-Architecture/SOLUTION-MATRIX.md`](../../prototypes/System-Architecture/SOLUTION-MATRIX.md) — the original static matrix (17 rows); trimmed to a human-readable snapshot explicitly marked as a reference view, not the source of truth (D-08)
 
 The concurrency question this tool prices but does not answer (U5) is owned by

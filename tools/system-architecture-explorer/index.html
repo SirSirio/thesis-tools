@@ -179,7 +179,7 @@
     <p>
       A live cost/complexity matrix for the pump-system control electronics — which brain
       (MCU), which stepper driver, and which system bus, at what price and design complexity.
-      Edit component prices to match real quotes, sort and filter the nineteen candidate
+      Edit component prices to match real quotes, sort and filter the twenty candidate
       architectures, and expand any row for its full bill-of-materials.
     </p>
   </header>
@@ -409,6 +409,11 @@ const DEFAULTS = {
     source:{url:'https://bitbyg.dk/shop/esp32-lvgl-wifibluetooth-2-4inch-lcd-touch-tft-module/', note:'bitbyg, 183.75–198.75 DKK — display resolution/touch chip not stated on the page'},
     gpioUsable:9, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None (32 Mbit flash)', psramConf:'Medium',
     uiNote:'No PSRAM: single-buffered UI comfortable. Integrated display eliminates all Layer-A wiring — the 9 free IO already accounts for the onboard screen + touch.'},
+  espscreen32:{label:'ESP32-2432S032R (3.2" integrated ST7789 touch)', role:'brain + screen, one part', eur:16,
+    confidence:'Low',
+    source:{url:'https://mischianti.org/esp32-2432s032-3-2%E2%80%B3-sunton-cheap-yellow-display-v2-pinout-datasheet-schema-and-specs/', note:'Sunton "CYD v2" — 3.2" 240×320 ST7789 + XPT2046 resistive touch, ESP32-WROOM-32. ~€13–18 on AliExpress; NOT stocked at bitbyg (the default vendor), so price is an estimate.'},
+    gpioUsable:3, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None (4 MB flash)', psramConf:'Medium',
+    uiNote:'Only 3 free GPIO (22, 27, 35-input-only) after the onboard display/touch/SD. Consequence: it can ONLY be a pure brain over a 2-pin I²C bus to a separate pump controller — it cannot fuse pump control. Same 240×320 as the owned screen; ST7789 not ILI9341 (cosmetic under LVGL/TFT_eSPI).'},
   drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:1.5, confidence:'Low'},
   tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5, confidence:'Low'},
   tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12, confidence:'Low'},
@@ -428,6 +433,11 @@ const DEFAULTS = {
   alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1, confidence:'Low'},
 };
 const COMP = JSON.parse(JSON.stringify(DEFAULTS));
+
+/* Integrated brain+screen boards (D-10): the board key when a variant uses one, else null.
+   These skip all Layer-A screen wiring (the display is onboard) and carry their own free-GPIO
+   budget. Add future integrated boards here so pin/diagram/BOM logic picks them up. */
+function intBrainKey(v){ return v.bom.espscreen32 ? 'espscreen32' : v.bom.espscreen ? 'espscreen' : null; }
 
 /* shared block BOM (added when "whole-system") */
 const SHARED_BOM = {stepperNema:6, screen:1, nano:1, drv8825:1, align28byj:1, alignMot2:1};
@@ -475,6 +485,8 @@ const VARIANTS = [
     bom:{espscreen:1,tmc2209:6,carrier:1,psu150:1}, note:'One-part brain+screen (bitbyg ESP32-2432S024, 9 IO). Smart driver keeps the pin budget comfortable — fits within the 9 free IO.'},
   {id:'ESPINT-dumb-i2c', at:1, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR shared+EN', cx:1, pinsC:8,
     bom:{espscreen:1,drv8825:6,carrier:1,psu60:1}, note:'Same one-part integrated brain+screen, but a dumb driver — even single-concurrency STEP/DIR+EN wiring does not fit the 9 free IO. Shown for contrast (D-11 honesty: not every integrated-screen pairing is feasible).'},
+  {id:'ESPINT32-brain-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6 (on node)', cx:3, pinsC:0,
+    bom:{espscreen32:1,rp2040:1,drv8825:6,carrier:1,psu150:1}, note:'3.2" integrated board (ESP32-2432S032R — matches the owned screen size/res) as a PURE brain: only 3 free GPIO, so it spends 2 on the I²C bus and cannot fuse pump control. I²C out to an RP2040 pump node that drives 6 DRV8825. The only architecture the 3.2" integrated board actually supports — compare its whole-system cost against P6-rp-i2c (bare ESP32 brain + the owned discrete screen).'},
 ];
 
 /* ---------- state ---------- */
@@ -506,11 +518,12 @@ const BUS_PINS = { 'I²C':2, 'RS-485':3, 'CAN':4, 'USB/UART':2, 'USB/UART/CAN':2
            Layer B (bus attach) + Layer C (driver links, 0 when a dedicated pump-node MCU
            or a printer board's driver sockets absorb the wiring instead — see VARIANTS.pinsC). */
 function pinsOf(v){
-  const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
+  const intKey = intBrainKey(v);
+  const brainKey = intKey || 'esp32';
   const brain = COMP[brainKey] || {};
   const avail = brain.gpioUsable || 0;
   let used = 0;
-  if (brainKey !== 'espscreen') {
+  if (!intKey) {
     used += SCREEN_PINS[interfaceMode];
     used += (v.b === 'I²C') ? 0 : 2;   // LM75 onboard temp sensor
   }
@@ -524,10 +537,10 @@ function pinsOf(v){
    never present the number as more certain than its weakest source (RESEARCH Pitfall 1).
    Reuses worstConf()/CONF_RANK defined alongside the source/confidence helpers above. */
 function pinConfidenceOf(v){
-  const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
-  const brain = COMP[brainKey] || {};
+  const intKey = intBrainKey(v);
+  const brain = COMP[intKey || 'esp32'] || {};
   const levels = ['Medium'];              // Layer-B/Layer-C figures are ASSUMED/Medium per RESEARCH
-  if (brainKey !== 'espscreen') levels.push(INTERFACE_CONF[interfaceMode] || 'Low');
+  if (!intKey) levels.push(INTERFACE_CONF[interfaceMode] || 'Low');
   levels.push(brain.gpioConf || 'Low');
   return worstConf(...levels);
 }
@@ -578,12 +591,14 @@ function buildDiagram(v){
 
   /* ---------- Layer A: brain ↔ screen (fixed link, integrated boards skip it) ---------- */
   s += T(20,24,'Layer A — Brain ↔ Screen',{anchor:'start',size:12.5,weight:700,color:acc});
-  const isInt = !!v.bom.espscreen;
+  const intKey = intBrainKey(v);
+  const isInt = !!intKey;
   const overrunStroke = p.overrun ? acc2 : null;
   let brainBox;
   if (isInt) {
+    const intSize = intKey === 'espscreen32' ? '3.2″ touch (matches owned)' : '2.4″ LVGL touch';
     brainBox = {x:250,y:42,w:250,h:56};
-    s += BOX(brainBox.x,brainBox.y,brainBox.w,brainBox.h,'ESP32 + Screen (integrated)','espscreen · 2.4″ LVGL touch',
+    s += BOX(brainBox.x,brainBox.y,brainBox.w,brainBox.h,'ESP32 + Screen (integrated)',`${intKey} · ${intSize}`,
       {stroke: overrunStroke || 'rgba(255,107,43,0.5)'});
   } else {
     const screenBox = {x:80,y:42,w:150,h:56};
@@ -704,7 +719,7 @@ function costOf(v){
   if(includeShared) for(const k in SHARED_BOM){
     /* An integrated brain+screen variant (D-10) already prices its screen as part of the
        brain component — do not double-count the shared-block screen line for it. */
-    if(k==='screen' && v.bom.espscreen) continue;
+    if(k==='screen' && intBrainKey(v)) continue;
     sum += (COMP[k]?.eur||0)*SHARED_BOM[k];
   }
   return sum;
@@ -842,11 +857,11 @@ function bomHtml(v){
   for(const k in v.bom) lines+=add(k,v.bom[k]);
   if(includeShared){ lines+=`<tr><td colspan="4" class="muted">— shared system block —</td></tr>`;
     for(const k in SHARED_BOM){
-      if(k==='screen' && v.bom.espscreen) continue; /* integrated screen already in the bom above */
+      if(k==='screen' && intBrainKey(v)) continue; /* integrated screen already in the bom above */
       lines+=add(k,SHARED_BOM[k]);
     }
   }
-  const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
+  const brainKey = intBrainKey(v) || 'esp32';
   const brain = COMP[brainKey];
   const brainInfo = (brain && brain.ram) ? `<p class="muted" style="margin:8px 0 0;font-size:12.5px">
       <b>${brain.label}</b> — RAM: ${brain.ram} · PSRAM: ${brain.psram}
