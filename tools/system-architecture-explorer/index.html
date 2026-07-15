@@ -271,11 +271,15 @@
   <div id="matrix" class="animate-in" style="--delay:0.15s">
 
     <div class="sae-card note">
-      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI (fixed, ILI9341) ·
+      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI or 8-bit parallel (ILI9341;
+      selectable below, defaults to SPI — <span class="pill conf-low">Low</span> confidence,
+      unverified) — except the integrated-screen variants, where it's built in ·
       <b>B</b> brain↔modules = <i>system bus</i> (I²C / RS-485 / CAN — the open choice) ·
       <b>C</b> pump-MCU↔drivers = set by the driver (STEP/DIR wires · UART · SPI).
-      Brain = <b>ESP32</b> everywhere. Alignment module (28BYJ-48 + motor #2) is its own node =
-      part of the <b>shared</b> block, constant across all rows.
+      Brain = <b>ESP32</b>-class everywhere (bare ESP32 or an integrated ESP32+screen board).
+      Alignment module (28BYJ-48 + motor #2) is its own node = part of the <b>shared</b> block,
+      constant across all rows. <b>Pins free</b> flags whether a variant actually fits the
+      brain's usable GPIO — see the pin-budget column below.
     </div>
 
     <!-- ===================== CONTROLS ===================== -->
@@ -295,6 +299,13 @@
           <label>Include shared block (screen, 6 steppers, alignment)</label>
           <select id="fShared"><option value="ctrl">No — controller electronics only</option>
             <option value="full">Yes — whole-system cost</option></select>
+        </div>
+        <div class="ctl">
+          <label>Screen interface (Layer A) — <span class="pill conf-low">Low</span> confidence, unverified (D-09)</label>
+          <select id="ifMode">
+            <option value="spi" selected>SPI (~8 pins) — vendor-title assumption</option>
+            <option value="parallel">8-bit parallel (~13 pins)</option>
+          </select>
         </div>
         <div class="ctl">
           <label>Max price € (<span id="maxPriceLbl">200</span>)</label>
@@ -341,6 +352,7 @@
           <th class="hide-sm">C link</th>
           <th class="sortable" data-k="cx">Complexity</th>
           <th class="sortable sort-asc" data-k="cost">Cost €</th>
+          <th class="hide-sm">Pins free</th>
         </tr></thead>
         <tbody id="matrixBody"></tbody>
       </table>
@@ -454,6 +466,55 @@ const VARIANTS = [
 /* ---------- state ---------- */
 let rate=0.134, includeShared=false, maxPrice=200, maxCx=5, minCon=0;
 let sortKey='cost', sortDir=1;
+
+/* ---------- pin budget (D-09) ----------
+   SCREEN_PINS: Layer-A fixed cost for the owned ILI9341, keyed by interface scenario.
+   spi: SCK+MOSI+MISO+CS (4) + DC+RST (2) + touch T_CS/T_IRQ (2) = 8 (RESEARCH: "SPI ≈6 display +2 touch")
+   parallel: 8 data bits + RS/DC+CS+RD+WR+RST ≈ 13, touch already counted in the A0-A3 range
+   The vendor's own product page is internally contradictory on which this board actually is
+   (Open Questions Q1) — SPI is shipped as the DEFAULT, tagged Low confidence, until the
+   end-of-phase physical inspection (silkscreen/header check) resolves it. */
+const SCREEN_PINS = { spi: 8, parallel: 13 };
+let interfaceMode = 'spi';           // 'spi' | 'parallel' — DEFAULT: spi, Low confidence (unverified)
+let interfaceConf = 'Low';           // flip to 'High' here once the owned board is physically inspected
+
+/* Layer-B system-bus pins spent on the brain's own bus attachment (not multiplied by node
+   count — every node, including the brain, pays this once for its own port onto the bus). */
+const BUS_PINS = { 'I²C':2, 'RS-485':3, 'CAN':4, 'USB/UART':2, 'USB/UART/CAN':2 };
+
+/* pinsOf(v): mirrors costOf(v)'s aggregation shape, applied to GPIO instead of euros.
+   avail = the variant's brain usable-GPIO (esp32, or espscreen for the integrated board).
+   used  = Layer A (screen+touch, fixed — skipped for espscreen: the 9 free IO already
+           accounts for the onboard display) + LM75 (shares the I²C bus if the system bus
+           is I²C, else +2 dedicated pins; skipped for espscreen, which has no LM75) +
+           Layer B (bus attach) + Layer C (driver links, 0 when a dedicated pump-node MCU
+           or a printer board's driver sockets absorb the wiring instead — see VARIANTS.pinsC). */
+function pinsOf(v){
+  const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
+  const brain = COMP[brainKey] || {};
+  const avail = brain.gpioUsable || 0;
+  let used = 0;
+  if (brainKey !== 'espscreen') {
+    used += SCREEN_PINS[interfaceMode];
+    used += (v.b === 'I²C') ? 0 : 2;   // LM75 onboard temp sensor
+  }
+  used += BUS_PINS[v.b] || 0;
+  used += v.pinsC || 0;
+  const free = avail - used;
+  return { used, avail, free, overrun: used > avail };
+}
+
+/* The confidence carried by a variant's pin readout is the WORST (lowest) of its inputs —
+   never present the number as more certain than its weakest source (RESEARCH Pitfall 1).
+   Reuses worstConf()/CONF_RANK defined alongside the source/confidence helpers above. */
+function pinConfidenceOf(v){
+  const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
+  const brain = COMP[brainKey] || {};
+  const levels = ['Medium'];              // Layer-B/Layer-C figures are ASSUMED/Medium per RESEARCH
+  if (brainKey !== 'espscreen') levels.push(interfaceConf);
+  levels.push(brain.gpioConf || 'Low');
+  return worstConf(...levels);
+}
 
 /* ---------- persistence (D-06): edited prices + DKK->EUR rate ---------- */
 function loadPersisted(){
@@ -572,14 +633,19 @@ function renderMatrix(){
   const body=document.getElementById('matrixBody'); body.innerHTML='';
   rows.forEach(o=>{
     const v=o.v, dc = v.dk==='dumb'?'drv-dumb':v.dk==='smart'?'drv-smart':'drv-motion';
+    const p = pinsOf(v), pc = pinConfidenceOf(v);
+    const pinCell = p.overrun
+      ? `<span class="pill p6">OVERRUN</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
+      : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
     const tr=document.createElement('tr'); tr.className='vrow';
     tr.innerHTML=`<td><b>${v.id}</b></td><td>${conPill(v.at)}</td>
       <td class="${dc}">${v.driver}</td>
       <td class="hide-sm">${v.b}</td><td class="hide-sm muted">${v.c}</td>
       <td><span class="stars">${stars(v.cx)}</span></td>
-      <td class="cost">€${o.cost.toFixed(1)}</td>`;
+      <td class="cost">€${o.cost.toFixed(1)}</td>
+      <td class="hide-sm">${pinCell}</td>`;
     const det=document.createElement('tr'); det.className='detail hidden';
-    det.innerHTML=`<td colspan="7">${bomHtml(v)}</td>`;
+    det.innerHTML=`<td colspan="8">${bomHtml(v)}</td>`;
     tr.addEventListener('click',()=>det.classList.toggle('hidden'));
     body.appendChild(tr); body.appendChild(det);
   });
@@ -613,6 +679,7 @@ document.getElementById('convDkk').addEventListener('input',updateConv);
 function updateConv(){const d=parseFloat(document.getElementById('convDkk').value);
   document.getElementById('convEur').textContent = isNaN(d)?'– €':'€'+(d*rate).toFixed(2);}
 document.getElementById('fShared').addEventListener('change',e=>{includeShared=e.target.value==='full'; renderMatrix();});
+document.getElementById('ifMode').addEventListener('change',e=>{interfaceMode=e.target.value; renderMatrix();});
 document.getElementById('fPrice').addEventListener('input',e=>{maxPrice=+e.target.value; document.getElementById('maxPriceLbl').textContent=maxPrice; renderMatrix();});
 document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.value; renderMatrix();});
 document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
