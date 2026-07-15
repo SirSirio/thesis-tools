@@ -62,7 +62,7 @@ Rendered live in the "Component unit prices" section (`#compTable`), editable pe
 | PSU 24V ~60W | 1–2 motors at once | 12.0 | — (rough estimate) | Low |
 | PSU 24V ~150W | all-6 at once | 20.0 | — (rough estimate) | Low |
 | **Shared block (constant, all variants when "whole-system" toggled on):** | | | | |
-| ILI9341 3.2" touch screen (owned) | screen | 23.0 | bitbyg, 174 DKK ≈ €23 — SPI vs 8-bit-parallel interface unverified | **High** |
+| ILI9341 3.2" touch screen (owned) | screen | 23.0 | bitbyg, 174 DKK ≈ €23 — inspected, confirmed SPI (8 pins) | **High** |
 | NEMA17 pump stepper ×6 | pump motor | 6.0 (×6) | — (rough estimate) | Low |
 | 28BYJ-48 12V + ULN2003 | alignment motor #1 | 2.5 | — (rough estimate) | Low |
 | Alignment motor #2 (TBD) | alignment motor #2 | 6.0 | — (rough estimate) | Low |
@@ -149,8 +149,8 @@ Every variant is built from the same three communication links; only their imple
 row to row.
 
 **Layer A — brain ↔ screen.** The touchscreen is a fixed, owned component: an ILI9341 3.2"
-resistive-touch TFT (bitbyg, 174 DKK ≈ €23) wired SPI (or possibly 8-bit parallel — the listing is
-ambiguous, see Open Questions) straight to the brain. Because it must render a GUI, the brain is
+resistive-touch TFT (bitbyg, 174 DKK ≈ €23) wired SPI (owned board inspected and confirmed SPI;
+8-bit parallel retained as a counterfactual — see Open Questions) straight to the brain. Because it must render a GUI, the brain is
 ESP32-class in every variant. This link is not a per-variant field — it is either the selectable
 `interfaceMode` scenario (external ILI9341) or entirely absorbed by the integrated `espscreen`
 board (Layer A drawn as skipped in the diagram for those two variants).
@@ -195,12 +195,14 @@ overrun = used > avail
 
 | Scenario | Pins | Confidence | Basis |
 |---|:--:|:--:|---|
-| SPI (**default**) | 8 | **Low** | SCK+MOSI+MISO+CS (4) + DC+RST (2) + touch T_CS/T_IRQ (2) = 8 |
+| SPI (**default, verified**) | 8 | **High** | SCK+MOSI+MISO+CS (4) + DC+RST (2) + touch T_CS/T_IRQ (2) = 8 |
 | 8-bit parallel | 13 | Low | 8 data bits + RS/DC+CS+RD+WR+RST ≈ 13; touch already counted in the A0–A3 range |
 
-Selectable in the running tool via the "Screen interface (Layer A)" control; defaults to SPI,
-visibly labelled "unverified" in the UI. See Open Questions — this is the single highest-risk
-unresolved input to the entire pin-budget feature.
+Selectable in the running tool via the "Screen interface (Layer A)" control; defaults to SPI.
+The owned board was **physically inspected (2026-07-15) and confirmed SPI** — SPI is now the
+verified default at High confidence (`INTERFACE_CONF.spi = 'High'`). The 8-bit-parallel row is
+retained as a selectable counterfactual (Low confidence) so the pin-budget sensitivity to the
+interface choice stays visible. See Open Questions for the resolution record.
 
 ### BUS_PINS (Layer B, per brain's own bus attachment — not multiplied by node count)
 
@@ -231,7 +233,8 @@ field mirroring the `bom` qty-map pattern, rather than derived generically from 
 A variant's readout is `${free} free` when `used ≤ avail`, or an `OVERRUN` badge when
 `used > avail`. Both are paired with a confidence pill from `pinConfidenceOf(v)` — the **worst**
 of: the Medium/ASSUMED tier covering the Layer-B/Layer-C tables, the screen-interface confidence
-(`interfaceConf`, external-screen variants only), and the brain's own `gpioConf`. `esp32.gpioUsable`
+(`INTERFACE_CONF[interfaceMode]` — High for the verified SPI default, Low for the parallel
+counterfactual; external-screen variants only), and the brain's own `gpioConf`. `esp32.gpioUsable`
 is deliberately set to 15 (the upper end of the 10–15 "realistically usable" range cited in
 06-RESEARCH.md) so the result set is genuinely mixed — S1/D2 always overrun even at SPI;
 T9-fused-*/T51-*/P6-rp-i2c sit right at the SPI/parallel borderline; printer-board variants
@@ -320,19 +323,15 @@ distinct from the site's shared `lang` localStorage key — no collision.
 
 ## Open questions
 
-1. **Screen SPI vs 8-bit parallel (highest-risk open item).** The owned bitbyg ILI9341 module's
-   product-page title says "SPI Touch Screen," but the page body describes a pin interface
-   (A0–A3, D4–D13, I²C D0–D3) characteristic of **8-bit-parallel Uno-shield-class** modules, not
-   true 4-wire SPI. This is a **sourced vendor-page contradiction**, not a researcher guess. The
-   difference is 8 pins (SPI scenario) vs 13 pins (parallel scenario) — enough to flip several
-   6-parallel variants between "fits" and "OVERRUN." The tool ships **both scenarios selectable**,
-   defaulting to SPI at **Low confidence**, visibly labelled "unverified" in the UI
-   (`interfaceMode`/`interfaceConf` globals). **Status: PENDING end-of-phase physical inspection**
-   (per `workflow.human_verify_mode: end-of-phase`) — the reviewer should inspect the owned board's
-   silkscreen/header labels and, per 06-05-SUMMARY.md's documented procedure: if SPI confirmed,
-   flip `interfaceConf` to `'High'`; if 8-bit parallel confirmed, flip `interfaceMode` to
-   `'parallel'` AND `interfaceConf` to `'High'` (single-line edits, both flagged with an inline
-   comment directly above the `SCREEN_PINS` declaration in `index.html`).
+1. **Screen SPI vs 8-bit parallel — RESOLVED 2026-07-15.** The owned bitbyg ILI9341 module's
+   product-page title said "SPI Touch Screen," but the page body described a pin interface
+   (A0–A3, D4–D13, I²C D0–D3) characteristic of **8-bit-parallel Uno-shield-class** modules — a
+   **sourced vendor-page contradiction**, not a researcher guess. The difference is 8 pins (SPI)
+   vs 13 pins (parallel) — enough to flip several 6-parallel variants between "fits" and
+   "OVERRUN." **Resolution:** the owned board was physically inspected and confirmed to be **SPI**.
+   The tool's default is now SPI at **High confidence** (`INTERFACE_CONF = { spi:'High',
+   parallel:'Low' }`); the 8-bit-parallel scenario is retained as a selectable Low-confidence
+   counterfactual so the pin-budget sensitivity to interface choice stays visible.
 2. **TMC2209 UART wiring mode (T9-* variants).** `pinsC: 4` assumes 2 UART segments × TX/RX for
    6 drivers across the driver family's ≤4-drivers-per-line limit (per
    `prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`). Whether this uses TMC2209's

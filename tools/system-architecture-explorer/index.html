@@ -272,9 +272,9 @@
   <div id="matrix" class="animate-in" style="--delay:0.15s">
 
     <div class="sae-card note">
-      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI or 8-bit parallel (ILI9341;
-      selectable below, defaults to SPI — <span class="pill conf-low">Low</span> confidence,
-      unverified) — except the integrated-screen variants, where it's built in ·
+      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI (ILI9341; owned board inspected and
+      confirmed SPI — <span class="pill conf-high">High</span> confidence; 8-bit parallel stays
+      selectable below as a counterfactual) — except the integrated-screen variants, where it's built in ·
       <b>B</b> brain↔modules = <i>system bus</i> (I²C / RS-485 / CAN — the open choice) ·
       <b>C</b> pump-MCU↔drivers = set by the driver (STEP/DIR wires · UART · SPI).
       Brain = <b>ESP32</b>-class everywhere (bare ESP32 or an integrated ESP32+screen board).
@@ -302,10 +302,10 @@
             <option value="full">Yes — whole-system cost</option></select>
         </div>
         <div class="ctl">
-          <label>Screen interface (Layer A) — <span class="pill conf-low">Low</span> confidence, unverified (D-09)</label>
+          <label>Screen interface (Layer A) — SPI <span class="pill conf-high">High</span> confidence, verified (D-09)</label>
           <select id="ifMode">
-            <option value="spi" selected>SPI (~8 pins) — vendor-title assumption</option>
-            <option value="parallel">8-bit parallel (~13 pins)</option>
+            <option value="spi" selected>SPI (~8 pins) — verified (owned board)</option>
+            <option value="parallel">8-bit parallel (~13 pins) — counterfactual</option>
           </select>
         </div>
         <div class="ctl">
@@ -422,7 +422,7 @@ const DEFAULTS = {
   psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:20, confidence:'Low'},
   /* shared */
   screen:{label:'ILI9341 3.2" touch', role:'screen (174 DKK)', eur:23, shared:1, confidence:'High',
-    source:{url:'https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/', note:'bitbyg, 174 DKK ≈ €23 — owned board; SPI vs 8-bit-parallel interface unverified, see the screen-interface toggle below'}},
+    source:{url:'https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/', note:'bitbyg, 174 DKK ≈ €23 — owned board; physically inspected and confirmed SPI (8 pins)'}},
   stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:6, shared:1, confidence:'Low'},
   align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:2.5, shared:1, confidence:'Low'},
   alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1, confidence:'Low'},
@@ -486,12 +486,13 @@ let selectedVariantId=null; // D-02: selection = click a matrix row; the diagram
    SCREEN_PINS: Layer-A fixed cost for the owned ILI9341, keyed by interface scenario.
    spi: SCK+MOSI+MISO+CS (4) + DC+RST (2) + touch T_CS/T_IRQ (2) = 8 (RESEARCH: "SPI ≈6 display +2 touch")
    parallel: 8 data bits + RS/DC+CS+RD+WR+RST ≈ 13, touch already counted in the A0-A3 range
-   The vendor's own product page is internally contradictory on which this board actually is
-   (Open Questions Q1) — SPI is shipped as the DEFAULT, tagged Low confidence, until the
-   end-of-phase physical inspection (silkscreen/header check) resolves it. */
+   The vendor's product page is internally contradictory (SPI title vs 8-bit-parallel body),
+   but the OWNED board was physically inspected (silkscreen/headers) and confirmed SPI — so
+   SPI is the verified default (High confidence). 8-bit parallel stays selectable below as a
+   counterfactual "what-if" and remains Low confidence. */
 const SCREEN_PINS = { spi: 8, parallel: 13 };
-let interfaceMode = 'spi';           // 'spi' | 'parallel' — DEFAULT: spi, Low confidence (unverified)
-let interfaceConf = 'Low';           // flip to 'High' here once the owned board is physically inspected
+const INTERFACE_CONF = { spi: 'High', parallel: 'Low' };  // spi verified on the owned board; parallel = hypothetical
+let interfaceMode = 'spi';           // 'spi' | 'parallel' — DEFAULT: spi (verified High)
 
 /* Layer-B system-bus pins spent on the brain's own bus attachment (not multiplied by node
    count — every node, including the brain, pays this once for its own port onto the bus). */
@@ -526,7 +527,7 @@ function pinConfidenceOf(v){
   const brainKey = v.bom.espscreen ? 'espscreen' : 'esp32';
   const brain = COMP[brainKey] || {};
   const levels = ['Medium'];              // Layer-B/Layer-C figures are ASSUMED/Medium per RESEARCH
-  if (brainKey !== 'espscreen') levels.push(interfaceConf);
+  if (brainKey !== 'espscreen') levels.push(INTERFACE_CONF[interfaceMode] || 'Low');
   levels.push(brain.gpioConf || 'Low');
   return worstConf(...levels);
 }
@@ -593,7 +594,7 @@ function buildDiagram(v){
     const midY = screenBox.y+screenBox.h/2;
     s += LINE(screenBox.x+screenBox.w, midY, brainBox.x, midY, {stroke:acc, w:1.6, arrow:true});
     s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY-8, interfaceMode==='spi'?'SPI':'8-bit parallel', {size:10.5, color:mut});
-    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY+16, `${interfaceConf} confidence`, {size:9, color:mut});
+    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY+16, `${INTERFACE_CONF[interfaceMode]||'Low'} confidence`, {size:9, color:mut});
   }
   if (p.overrun) s += T(brainBox.x+brainBox.w/2, brainBox.y+brainBox.h+14, '⚠ pins overrun', {size:10, color:acc2, weight:600});
   const brainCX = brainBox.x + brainBox.w/2;
