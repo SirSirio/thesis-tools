@@ -30,27 +30,44 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   ├── gsd-workflow-guide/
 │   │   ├── index.html      GSD Workflow Guide — interactive diagram
 │   │   └── SPEC.md         Tool spec — content, interaction model, layout constants
-│   └── peristaltic-roller-displaced-volume-model/
-│       ├── index.html      Peristaltic Occlusion & Displaced-Volume Model (two-part)
-│       ├── SPEC.md         Tool spec — inputs, formulas, assumptions, sources
-│       ├── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js)
-│       ├── stadium_cross_section.html         Source prototype (unstyled) — do not serve
-│       ├── peristaltic_occlusion_model.html   Source prototype (unstyled) — do not serve
-│       ├── stadium_model_documentation.md     Source documentation
-│       └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
+│   ├── thesis-timeline/
+│   │   ├── index.html      Thesis Roadmap & Timeline — JS-driven Gantt (owner/status coded)
+│   │   └── SPEC.md         Tool spec — data model, layout constants, key dates, assumptions
+│   ├── peristaltic-tensioned-path-model/
+│   │   ├── index.html      Tensioned Tube-Path & Stroke Volume Model
+│   │   ├── SPEC.md         Tool spec — taut-path packet geometry, pre-strain corrections
+│   │   └── katex/          KaTeX local fallback (copied from displaced-volume tool)
+│   ├── peristaltic-roller-displaced-volume-model/
+│   │   ├── index.html      Peristaltic Occlusion & Displaced-Volume Model (two-part)
+│   │   ├── SPEC.md         Tool spec — inputs, formulas, assumptions, sources
+│   │   ├── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js)
+│   │   ├── stadium_cross_section.html         Source prototype (unstyled) — do not serve
+│   │   ├── peristaltic_occlusion_model.html   Source prototype (unstyled) — do not serve
+│   │   ├── stadium_model_documentation.md     Source documentation
+│   │   └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
+│   └── system-architecture-explorer/
+│       ├── index.html      System Architecture Explorer — control-electronics cost/complexity matrix (promoted from prototypes/System-Architecture/)
+│       └── SPEC.md         Tool spec — component prices, variant BOMs, comms-layer model, assumptions
 ├── prototypes/
 │   ├── index.html              Prototype Design Space — animated journey page
 │   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
 │   ├── PROTOTYPES.md           Shallow prototype registry (scan before opening deep PROTOTYPE.md)
+│   ├── REQUIREMENTS-CRITERIA.md  Device requirements (binary) + weighted criteria — canonical concept-evaluation table
 │   ├── Prototype-1-Pump-Module/
 │   │   ├── proto-01-5ul-4roller/
 │   │   │   └── PROTOTYPE.md    Proto-01 deep detail — design params, test forward-links, version log
 │   │   ├── proto-02-5ul-4roller-v2/
 │   │   │   └── PROTOTYPE.md    Proto-02 deep detail — corrected geometry + gap sweep
-│   │   └── Tube OD Thikness/
-│   │       └── tube-wall-thickness-analysis.md  Tube wall measurement & validation
-│   └── Prototype-2-Alignment-Module/
-│       └── PROTOTYPE.md        Alignment module placeholder — design work to begin
+│   │   ├── Tube OD Thikness/
+│   │   │   └── tube-wall-thickness-analysis.md  Tube wall measurement & validation
+│   │   └── multi-liquid-architecture/
+│   │       └── ARCHITECTURE-DECISION.md  Multi-pump scaling study (A vs C) — not a proto-NN; feeds proto-04
+│   ├── Prototype-2-Alignment-Module/
+│   │   └── PROTOTYPE.md        Alignment module placeholder — design work to begin
+│   └── System-Architecture/
+│       ├── ARCHITECTURE.md         Fixed components, open questions, driver-vs-MCU verdict — trimmed to pointers into the tool's #theory
+│       ├── PUMP-CONTROL-CONCEPTS.md  Comms-layer reasoning — trimmed to pointers into the tool's #theory
+│       └── SOLUTION-MATRIX.md      Reference snapshot of the variant matrix — tool is authoritative (index.html removed, moved to tools/system-architecture-explorer/)
 ├── .planning/              GSD planning workspace (workflow artifacts)
 │   ├── PROJECT.md          Project context and core value
 │   ├── REQUIREMENTS.md     Active requirements with IDs
