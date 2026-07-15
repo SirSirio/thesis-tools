@@ -1,8 +1,9 @@
 ---
 phase: 06-system-architecture-explorer-promote-the-electronics-archite
 verified: 2026-07-15T18:30:00Z
-status: human_needed
-score: 8/8 must-haves verified (automatable scope)
+status: passed
+human_verification_resolved: 2026-07-15T15:45:00Z
+score: 8/8 must-haves verified; both human-verification items resolved (see 06-HUMAN-UAT.md)
 overrides_applied: 0
 human_verification:
   - test: "Physically inspect the owned bitbyg ILI9341 3.2\" module's silkscreen/header labels to resolve the SPI-vs-8-bit-parallel vendor-page contradiction (Open Question #1 in SPEC.md)."
