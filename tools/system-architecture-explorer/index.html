@@ -764,11 +764,15 @@ function renderComps(){
   b.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
     const k=e.target.dataset.k, cur=e.target.dataset.cur, val=parseFloat(e.target.value)||0;
     if(cur==='eur') COMP[k].eur=val; else COMP[k].eur=val*rate;
-    syncCompRow(k); renderMatrix(); persist();
+    syncCompRow(k, e.target); renderMatrix(); persist();
   }));
 }
-function syncCompRow(k){
+/* `skip` = the input currently being typed into — never rewrite it mid-edit, or
+   in-progress decimals get destroyed ("3." -> "3" -> "35"). refreshAllDkk() and
+   other callers pass no skip, so they still sync every field in the row. */
+function syncCompRow(k, skip){
   document.querySelectorAll(`#compBody input[data-k="${k}"]`).forEach(inp=>{
+    if(inp===skip) return;
     if(inp.dataset.cur==='eur') inp.value=COMP[k].eur.toFixed(2).replace(/\.00$/,'');
     else inp.value=(COMP[k].eur/rate).toFixed(0);
   });
