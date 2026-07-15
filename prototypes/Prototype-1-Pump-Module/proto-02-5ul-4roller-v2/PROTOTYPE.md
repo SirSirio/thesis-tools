@@ -1424,18 +1424,30 @@ knife edges, ODs with the flat jaws.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║  EXTERNAL / CONVEX  (ODs, outer surfaces)      → prints SMALLER, ∝ size    ║
+║  MODEL A — EXTERNAL / CONVEX  (ODs, outer surfaces)                        ║
+║  behavior: prints SMALLER, ∝ size (−0.65 %) → the SCALE is the correction  ║
 ║                                                                            ║
-║     printed = 0.99354 · CAD + 0.068        (R² 0.98 · resid SD 0.023)      ║
-║     CAD     = (target − 0.068) / 0.99354   ≈  target × 1.0065              ║
+║  ★ USE IN CAD:   CAD = 1.0065 × target − 0.07                              ║
+║                                                                            ║
+║    fitted model: printed = 0.99354 · CAD + 0.068   (R² 0.98 · resid 0.023) ║
+║    (the CAD rule is its exact algebraic inverse)                           ║
 ╠═══════════════════════════════════════════════════════════════════════════╣
-║  INTERNAL / CONCAVE  (bores, arcs — THE GAP SURFACE) → holds size,         ║
-║                                        rim intrudes ~0.10 mm per side      ║
+║  MODEL B — INTERNAL / CONCAVE  (bores, arcs — THE GAP SURFACE)             ║
+║  behavior: HOLDS SIZE → no scaling; give back the constant rim intrusion   ║
 ║                                                                            ║
-║     printed = 1.00164 · CAD − 0.208        (R² 0.54* · resid SD 0.040)     ║
-║     CAD     = (target + 0.208) / 1.00164   ≈  target + 0.21 on Ø           ║
+║  ★ USE IN CAD:   CAD = target + 0.14 on Ø        (target × 1, unscaled)    ║
+║                                                                            ║
+║    fitted model: printed = 1.00164 · CAD − 0.208  (R² 0.54* · resid 0.040) ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
    * flat-line artifact — see §11.10.4; accuracy is the residual SD, not R².
+
+   ⚠ WHY +0.14 AND NOT +0.21: the fitted slope 1.00164 is statistically ≈ 1
+   (1.9 SE), so it is dropped for daily use — but the +0.208 intercept BELONGS
+   to that slope. Re-fitting with the slope forced to exactly 1 gives the mean
+   deviation as the constant: +0.14. Never combine "+0.21" with "no scaling" —
+   that mixes two different fits and overshoots ~0.07 mm. Both forms agree at
+   the pump's working size (Ø ≈ 43 → head arc R = 21.29 either way).
+   Valid over the calibrated range Ø 22–102; below Ø 22 is extrapolation.
 
    Retained, validated separately:  rotor pitch (centre-to-centre) × 1.00906  (§11.7.14)
 

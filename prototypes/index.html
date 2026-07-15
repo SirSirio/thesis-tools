@@ -1809,28 +1809,26 @@
 
             <div class="rule-card rule-ext">
               <div class="rc-tag">Model A — External · convex (ODs, outer surfaces)</div>
-              <div class="rc-behavior">prints SMALLER — proportional to size (−0.65 %)</div>
+              <div class="rc-behavior">prints SMALLER — proportional to size (−0.65 %) → the SCALE is the correction, keep it</div>
               <div class="model-eq">
-                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads</span></span></span>
-                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-s-ext"><span class="eq-chip">0.99354</span><span class="eq-note"><strong>SCALE</strong> — shrinks 0.65 %, error grows with size</span></span></span>
-                <span class="eq-grp"><span class="eq-op">×</span><span class="eq-term eq-cadp"><span class="eq-chip">CAD</span><span class="eq-note">drawn in Fusion</span></span></span>
-                <span class="eq-grp"><span class="eq-op">+</span><span class="eq-term eq-b-ext"><span class="eq-chip">0.068</span><span class="eq-note"><strong>OFFSET</strong> — bead proud +0.034/side, constant</span></span></span>
+                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">CAD</span><span class="eq-note">what to type into Fusion</span></span></span>
+                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-s-ext"><span class="eq-chip">1.0065</span><span class="eq-note"><strong>SCALE UP</strong> — undo the 0.65 % shrink</span></span></span>
+                <span class="eq-grp"><span class="eq-op">×</span><span class="eq-term eq-cadp"><span class="eq-chip">target</span><span class="eq-note">the printed dimension you want</span></span></span>
+                <span class="eq-grp"><span class="eq-op">−</span><span class="eq-term eq-b-ext"><span class="eq-chip">0.07</span><span class="eq-note">undo the bead spread (+0.034/side)</span></span></span>
               </div>
-              <div class="rc-main">→ CAD = (target − 0.068) / 0.99354 ≈ target × 1.0065</div>
-              <div class="rc-note">R² = 0.98 · residual SD 0.023 mm</div>
+              <div class="rc-note">fitted model: <code>printed = 0.99354 · CAD + 0.068</code> · R² = 0.98 · residual SD 0.023 mm · the rule above is its exact algebraic inverse</div>
             </div>
 
             <div class="rule-card rule-int">
               <div class="rc-tag">Model B — Internal · concave (bores, arcs — THE GAP SURFACE)</div>
-              <div class="rc-behavior">HOLDS SIZE — rim intrudes a constant ~0.10 mm per side</div>
+              <div class="rc-behavior">HOLDS SIZE — no scaling at all: just give back the constant rim intrusion</div>
               <div class="model-eq">
-                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads</span></span></span>
-                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-s-int"><span class="eq-chip">1.00164</span><span class="eq-note"><strong>SCALE ≈ 1</strong> — bores do not shrink</span></span></span>
-                <span class="eq-grp"><span class="eq-op">×</span><span class="eq-term eq-cadp"><span class="eq-chip">CAD</span><span class="eq-note">drawn in Fusion</span></span></span>
-                <span class="eq-grp"><span class="eq-op">−</span><span class="eq-term eq-b-int"><span class="eq-chip">0.208</span><span class="eq-note"><strong>OFFSET</strong> — rim intrudes −0.104/side, constant</span></span></span>
+                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">CAD</span><span class="eq-note">what to type into Fusion</span></span></span>
+                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-cadp"><span class="eq-chip">target</span><span class="eq-note">the printed Ø you want — <strong>× 1, unscaled</strong></span></span></span>
+                <span class="eq-grp"><span class="eq-op">+</span><span class="eq-term eq-b-int"><span class="eq-chip">0.14</span><span class="eq-note">give back the constant undersize (mean of all bores)</span></span></span>
               </div>
-              <div class="rc-main">→ CAD = (target + 0.208) / 1.00164 ≈ target + 0.21 on Ø</div>
-              <div class="rc-note">R² = 0.54 (flat-line artifact — see above) · residual SD 0.040 mm</div>
+              <div class="rc-note">fitted model: <code>printed = 1.00164 · CAD − 0.208</code> · R² = 0.54 (flat-line artifact — see above) · residual SD 0.040 mm<br>
+              <strong>Why +0.14 and not +0.21:</strong> the fitted slope 1.00164 is statistically ≈ 1 (1.9 SE), so it is dropped for daily use — but the +0.208 intercept <em>belongs to that slope</em>. Re-fit with the slope forced to exactly 1 and the constant becomes the mean deviation, <strong>+0.14</strong>. Never combine "+0.21" with "no scaling" — that mixes two different fits and overshoots ~0.07 mm. Both forms agree at the pump's working size (Ø ≈ 43 → head arc <strong>R = 21.29</strong> either way); valid over the calibrated range Ø 22–102.</div>
             </div>
 
           </div>
