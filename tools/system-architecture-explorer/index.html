@@ -620,7 +620,9 @@ function buildDiagram(v){
     s += T(brainCX+10, 235, '(pump control fused into brain)', {anchor:'start', size:10, color:mut});
     sources.push({x:brainCX, y:contY});
   } else if (cls==='distributed') {
-    const nodeW=100, gap=16, totalW=6*nodeW+5*gap, startX=(880-totalW)/2;
+    /* Row must end before x=650 so the six nodes clear the constant alignment box
+       (x 650–820, same y row) — nodeW 86 / startX 24 ends the row at x 620. */
+    const nodeW=86, gap=16, startX=24;
     for (let i=0;i<6;i++){
       const nx=startX+i*(nodeW+gap);
       s += BOX(nx,190,nodeW,48,'Pro-Mini',`node ${i+1}`,{labelSize:10.5});
