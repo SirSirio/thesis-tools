@@ -137,6 +137,7 @@
   #matrix th.sort-desc::after{content:" ▼";opacity:1}
   #matrix tr.vrow{cursor:pointer}
   #matrix tr.vrow:hover{background:rgba(255,107,43,.06)}
+  #matrix tr.vrow.selected{background:rgba(255,107,43,.14);box-shadow:inset 3px 0 0 var(--accent)}
   #matrix .cost{font-weight:700;color:var(--accent);white-space:nowrap}
   #matrix .detail td{background:#111116;color:var(--text-muted);font-size:12.5px;padding:10px 14px}
   #matrix .detail table{font-size:12.5px}
@@ -362,7 +363,20 @@
 
   </div><!-- /#matrix -->
 
-  <div id="diagram" aria-hidden="true"></div>
+  <div class="part-label animate-in" style="--delay:0.16s">
+    <span class="num">Diagram</span>
+    <h2 id="diagramCaption">System diagram</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.165s">
+    Live per-variant view of the three comms layers: <b>A</b> brain↔screen ·
+    <b>B</b> system bus (drawn with the variant's real node count) ·
+    <b>C</b> driver topology + the 6 driver→motor links — plus the constant
+    alignment node and the power block (60&nbsp;W / 150&nbsp;W PSU, 12&nbsp;V/24&nbsp;V
+    dual rail on common ground). Redraws whenever a matrix row is selected.
+  </p>
+  <div class="sae-card animate-in" style="--delay:0.17s;overflow-x:auto">
+    <div id="diagram" aria-hidden="true"></div>
+  </div>
 
 </main>
 
@@ -514,6 +528,147 @@ function pinConfidenceOf(v){
   if (brainKey !== 'espscreen') levels.push(interfaceConf);
   levels.push(brain.gpioConf || 'Low');
   return worstConf(...levels);
+}
+
+/* ---------- live system diagram (D-01/D-02/D-03) ----------
+   Hand-authored template-string SVG layouts keyed by topology class, mirroring
+   rotor-solver's buildFigure() technique (fixed pixel viewport, computed node
+   positions, template-string assembly, rebuild-on-every-change) rather than
+   fully generic layout from raw bom iteration (RESEARCH recommendation — avoids
+   unreadable diagrams). Topology classes, derived from the variant's real bom:
+     fused       — brain (ESP32/espscreen) IS the pump controller (no extra MCU)
+     satellite   — one dedicated pump-node MCU (rp2040 / stm32 / nano)
+     distributed — six independent per-pump nodes (promini ×6)
+     printer     — a printer-board (RAMPS/SKR) with driver sockets
+   Node count on Layer B = brain + alignment node + pump node(s) for this class. */
+function topoClassOf(v){
+  if (v.bom.ramps || v.bom.skr) return 'printer';
+  if (v.bom.promini) return 'distributed';
+  if (v.bom.rp2040 || v.bom.stm32 || v.bom.nano) return 'satellite';
+  return 'fused';
+}
+function pumpNodeLabelOf(v){
+  if (v.bom.skr) return 'BTT SKR / Octopus';
+  if (v.bom.ramps) return 'Mega2560 + RAMPS';
+  if (v.bom.rp2040) return 'RP2040 (Pico)';
+  if (v.bom.stm32) return 'STM32 Blue Pill';
+  if (v.bom.nano) return 'Arduino Nano';
+  return '';
+}
+function buildDiagram(v){
+  const cls = topoClassOf(v);
+  const acc='#ff6b2b', acc2='#e83535', txt='#f0ece8', mut='#7a7068', blue='#4a90d9';
+  const dcCol = v.dk==='dumb'?mut : v.dk==='smart'?acc : blue;
+  const fontFam='system-ui,sans-serif';
+  const p = pinsOf(v);
+  let s='';
+
+  const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.size||12}" fill="${o.color||txt}" text-anchor="${o.anchor||'middle'}" font-weight="${o.weight||400}" font-family="${fontFam}">${t}</text>`;
+  const LINE=(x1,y1,x2,y2,o={})=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${o.stroke||mut}" stroke-width="${o.w||1.3}"${o.dash?` stroke-dasharray="${o.dash}"`:''}${o.arrow?' marker-end="url(#dar)"':''}/>`;
+  const BOX=(x,y,w,h,label,sub,o={})=>{
+    let str = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${o.fill||'rgba(255,255,255,0.03)'}" stroke="${o.stroke||'rgba(255,107,43,0.35)'}" stroke-width="${o.sw||1.4}"/>`;
+    str += T(x+w/2, y+(sub?h/2-4:h/2+4), label, {size:o.labelSize||12, weight:600, color:o.labelColor||txt});
+    if (sub) str += T(x+w/2, y+h/2+14, sub, {size:10, color:mut});
+    return str;
+  };
+
+  s += `<defs><marker id="dar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M1,1 L4,4 L1,7" fill="none" stroke="${mut}" stroke-width="1"/></marker></defs>`;
+
+  /* ---------- Layer A: brain ↔ screen (fixed link, integrated boards skip it) ---------- */
+  s += T(20,24,'Layer A — Brain ↔ Screen',{anchor:'start',size:12.5,weight:700,color:acc});
+  const isInt = !!v.bom.espscreen;
+  const overrunStroke = p.overrun ? acc2 : null;
+  let brainBox;
+  if (isInt) {
+    brainBox = {x:250,y:42,w:250,h:56};
+    s += BOX(brainBox.x,brainBox.y,brainBox.w,brainBox.h,'ESP32 + Screen (integrated)','espscreen · 2.4″ LVGL touch',
+      {stroke: overrunStroke || 'rgba(255,107,43,0.5)'});
+  } else {
+    const screenBox = {x:80,y:42,w:150,h:56};
+    brainBox = {x:330,y:42,w:170,h:56};
+    s += BOX(screenBox.x,screenBox.y,screenBox.w,screenBox.h,'ILI9341 screen','3.2″ touch (owned)');
+    s += BOX(brainBox.x,brainBox.y,brainBox.w,brainBox.h,'ESP32','brain / controller',
+      {stroke: overrunStroke || 'rgba(255,107,43,0.5)'});
+    const midY = screenBox.y+screenBox.h/2;
+    s += LINE(screenBox.x+screenBox.w, midY, brainBox.x, midY, {stroke:acc, w:1.6, arrow:true});
+    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY-8, interfaceMode==='spi'?'SPI':'8-bit parallel', {size:10.5, color:mut});
+    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY+16, `${interfaceConf} confidence`, {size:9, color:mut});
+  }
+  if (p.overrun) s += T(brainBox.x+brainBox.w/2, brainBox.y+brainBox.h+14, '⚠ pins overrun', {size:10, color:acc2, weight:600});
+  const brainCX = brainBox.x + brainBox.w/2;
+
+  /* ---------- Layer B: system bus — variant's real node count ---------- */
+  const busY=170;
+  s += T(20,140,'Layer B — System Bus',{anchor:'start',size:12.5,weight:700,color:acc});
+  const pumpNodeCount = cls==='fused' ? 0 : cls==='distributed' ? 6 : 1;
+  const nodeCount = 2 + pumpNodeCount; // brain + alignment node + pump node(s)
+  s += LINE(60,busY,820,busY,{stroke:blue,w:2});
+  s += T(440,busY-12, `${v.b} bus · ${nodeCount} nodes`, {size:11.5, color:blue, weight:600});
+  s += LINE(brainCX, brainBox.y+brainBox.h, brainCX, busY, {stroke:mut});
+
+  /* alignment node — its own MCU, constant across every variant */
+  const alignBox = {x:650,y:190,w:170,h:48};
+  s += BOX(alignBox.x,alignBox.y,alignBox.w,alignBox.h,'Alignment node','28BYJ-48 + motor #2 (constant)');
+  s += LINE(alignBox.x+alignBox.w/2, busY, alignBox.x+alignBox.w/2, alignBox.y, {stroke:mut});
+
+  /* pump-controller node(s), class-dependent; `sources` = Layer-C fan-out anchor point(s) */
+  let sources = [];
+  if (cls==='fused') {
+    const contY = 250;
+    s += LINE(brainCX, busY, brainCX, contY, {stroke:mut});
+    s += T(brainCX+10, 235, '(pump control fused into brain)', {anchor:'start', size:10, color:mut});
+    sources.push({x:brainCX, y:contY});
+  } else if (cls==='distributed') {
+    const nodeW=100, gap=16, totalW=6*nodeW+5*gap, startX=(880-totalW)/2;
+    for (let i=0;i<6;i++){
+      const nx=startX+i*(nodeW+gap);
+      s += BOX(nx,190,nodeW,48,'Pro-Mini',`node ${i+1}`,{labelSize:10.5});
+      s += LINE(nx+nodeW/2, busY, nx+nodeW/2, 190, {stroke:mut});
+      sources.push({x:nx+nodeW/2, y:190+48});
+    }
+  } else { // satellite | printer
+    const nb={x:180,y:190,w:200,h:48};
+    s += BOX(nb.x,nb.y,nb.w,nb.h,pumpNodeLabelOf(v), cls==='printer' ? 'printer board (driver sockets)' : 'pump-control node');
+    s += LINE(nb.x+nb.w/2, busY, nb.x+nb.w/2, nb.y, {stroke:mut});
+    sources.push({x:nb.x+nb.w/2, y:nb.y+nb.h});
+  }
+
+  /* ---------- Layer C: driver topology + the 6 driver→motor links ---------- */
+  s += T(20,272,'Layer C — Driver Topology · 6 driver→motor links',{anchor:'start',size:12.5,weight:700,color:acc});
+  s += T(440,290, v.c, {size:10.5, color:mut});
+  const driverY=300, driverH=26, driverW=76, motorY=390, motorR=24;
+  const driverXs=[140,260,380,500,620,740];
+  const driverLabel = v.driver.split('×')[0];
+  driverXs.forEach((dx,i)=>{
+    const src = cls==='distributed' ? sources[i] : sources[0];
+    s += LINE(src.x, src.y, dx, driverY, {stroke:mut, dash: (cls==='satellite'||cls==='printer') ? '3 3' : null});
+    s += `<rect x="${dx-driverW/2}" y="${driverY}" width="${driverW}" height="${driverH}" rx="5" fill="rgba(255,255,255,0.04)" stroke="${dcCol}" stroke-width="1.4"/>`;
+    s += T(dx, driverY+driverH/2+4, driverLabel, {size:10, color:dcCol, weight:600});
+    s += LINE(dx, driverY+driverH, dx, motorY-motorR, {stroke:dcCol, w:1.4});
+    s += `<circle cx="${dx}" cy="${motorY}" r="${motorR}" fill="rgba(255,107,43,0.12)" stroke="${acc}" stroke-width="1.6"/>`;
+    s += T(dx, motorY+4, `M${i+1}`, {size:11, weight:600});
+  });
+
+  /* ---------- Power block: PSU 60 W / 150 W, 12 V/24 V dual rail, common ground ---------- */
+  s += T(20,452,'Power',{anchor:'start',size:12.5,weight:700,color:acc});
+  const psuW = v.bom.psu150 ? '150 W' : '60 W';
+  const psuConc = v.at>=6 ? 'all-6 at once' : v.at===2 ? '2 at once' : '1 at once';
+  const pb={x:230,y:464,w:420,h:96};
+  s += `<rect x="${pb.x}" y="${pb.y}" width="${pb.w}" height="${pb.h}" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,107,43,0.35)" stroke-width="1.4"/>`;
+  s += T(pb.x+pb.w/2, pb.y+20, `PSU 24V · ${psuW}`, {size:12.5, weight:700, color:acc});
+  s += T(pb.x+pb.w/2, pb.y+36, psuConc, {size:10, color:mut});
+  s += LINE(pb.x+24, pb.y+54, pb.x+pb.w-24, pb.y+54, {stroke:acc, w:2.2});
+  s += T(pb.x+pb.w-20, pb.y+50, '24V rail', {anchor:'end', size:9.5, color:acc});
+  s += LINE(pb.x+24, pb.y+72, pb.x+pb.w-24, pb.y+72, {stroke:blue, w:2.2});
+  s += T(pb.x+pb.w-20, pb.y+68, '12V rail', {anchor:'end', size:9.5, color:blue});
+  s += LINE(pb.x+24, pb.y+86, pb.x+pb.w-24, pb.y+86, {stroke:mut, w:1.4});
+  s += T(pb.x+pb.w-20, pb.y+84, 'common ground', {anchor:'end', size:9, color:mut});
+  s += LINE(pb.x+pb.w/2-40, pb.y, pb.x+pb.w/2-40, driverY-14, {stroke:acc, w:1.1, dash:'2 3'});
+  s += T(pb.x+pb.w/2-40, driverY-20, '24V → drivers', {size:8.5, color:acc});
+  s += LINE(pb.x+pb.w/2+40, pb.y, pb.x+pb.w/2+40, driverY-14, {stroke:blue, w:1.1, dash:'2 3'});
+  s += T(pb.x+pb.w/2+40, driverY-20, '12V → logic (reg.)', {size:8.5, color:blue});
+
+  return `<svg viewBox="0 0 880 600" width="100%" style="max-width:820px;height:auto;" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
 }
 
 /* ---------- persistence (D-06): edited prices + DKK->EUR rate ---------- */
