@@ -764,7 +764,9 @@ function renderComps(){
     b.appendChild(tr);
   }
   b.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
-    const k=e.target.dataset.k, cur=e.target.dataset.cur, val=parseFloat(e.target.value)||0;
+    /* clamp to >=0 — min="0" does not block typed negatives; keeps the live state
+       symmetric with loadPersisted()'s v>=0 guard (WR-05) */
+    const k=e.target.dataset.k, cur=e.target.dataset.cur, val=Math.max(0, parseFloat(e.target.value)||0);
     if(cur==='eur') COMP[k].eur=val; else COMP[k].eur=val*rate;
     syncCompRow(k, e.target); renderMatrix(); persist();
   }));
@@ -855,7 +857,11 @@ function bomHtml(v){
 }
 
 /* ---------- wire up controls ---------- */
-document.getElementById('rate').addEventListener('input',e=>{rate=parseFloat(e.target.value)||0.134; refreshAllDkk(); updateConv(); persist();});
+document.getElementById('rate').addEventListener('input',e=>{
+  /* must be finite AND >0 — symmetric with loadPersisted()'s savedRate>0 guard (WR-05) */
+  const r=parseFloat(e.target.value);
+  rate=(Number.isFinite(r)&&r>0)?r:0.134;
+  refreshAllDkk(); updateConv(); persist();});
 document.getElementById('convDkk').addEventListener('input',updateConv);
 function updateConv(){const d=parseFloat(document.getElementById('convDkk').value);
   document.getElementById('convEur').textContent = isNaN(d)?'– €':'€'+(d*rate).toFixed(2);}
