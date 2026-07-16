@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06.1-01-PLAN.md
-last_updated: "2026-07-16T11:47:22.392Z"
+stopped_at: Completed 06.1-02-PLAN.md
+last_updated: "2026-07-16T12:04:17.797Z"
 last_activity: 2026-07-16
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 17
+  completed_plans: 18
   percent: 43
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 06.1 (architecture-refinement-full-system-module-schema-design-dir) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-16
 
@@ -61,6 +61,7 @@ Progress: [█████████░] 89%
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P06 | 12min | 2 tasks | 1 files |
 | Phase 06 P07 | 15min | 1 tasks | 1 files |
 | Phase 06.1 P01 | 20min | 3 tasks | 1 files |
+| Phase 06.1 P02 | 35min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,9 @@ Recent decisions affecting current work:
 - [Phase 06-07]: Screen SPI-vs-parallel ambiguity documented as an open item with the exact end-of-phase resolution procedure carried over from 06-05
 - [Phase 06.1-01]: align28byj role changed to 'alignment motor x2' and its source note records the 12V winding as the researched choice (D-15), rather than adding a second differently-priced key
 - [Phase 06.1-01]: buck12/buck5 grouped into SHARED_BOM alongside the vibration motor and 2x 28BYJ-48, per RESEARCH's recommendation
+- [Phase ?]: [Phase 06.1-02] moduleBox() <g> grouping split across commits: data-module in Task 2 (structural), tabindex/role/aria-label/listeners in Task 3 (interactive)
+- [Phase ?]: [Phase 06.1-02] selectModule() hover-vs-selection: mouseleave restores the last sticky (click/keyboard) pick rather than losing it to a stray hover
+- [Phase ?]: [Phase 06.1-02] Schema spatial layout redesigned freely from the sticky-note sketch (D-05 permits this) -- top row of 4 modules, Alignment beneath, Software and Electronics + liquid barrier at the bottom
 
 ### Pending Todos
 
@@ -145,6 +149,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-16T11:47:22.382Z
-Stopped at: Completed 06.1-01-PLAN.md
+Last session: 2026-07-16T12:04:17.788Z
+Stopped at: Completed 06.1-02-PLAN.md
 Resume file: None

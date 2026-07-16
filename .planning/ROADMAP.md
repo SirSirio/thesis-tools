@@ -213,7 +213,7 @@ The site grows incrementally as the thesis generates new design decisions needin
   5. The voltage/power questions are answered (sourced) and reflected in the power-rail model
   6. SPEC.md and the three decision records are internally consistent (variant count, resolved open questions, current prices)
 
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 
 Plans:
 
@@ -223,7 +223,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — same file)*
 
-- [ ] 06.1-02-PLAN.md — Part 00 module schema: rewritten intro, `#system` section, buildSchema() six-module SVG with payload chips + dual flows + liquid barrier, hover/click/keyboard reveal, D-17 temperature note (D-01…D-05, D-17, SC-1)
+- [x] 06.1-02-PLAN.md — Part 00 module schema: rewritten intro, `#system` section, buildSchema() six-module SVG with payload chips + dual flows + liquid barrier, hover/click/keyboard reveal, D-17 temperature note (D-01…D-05, D-17, SC-1)
 
 **Wave 3** *(blocked on Wave 2 — same file)*
 
