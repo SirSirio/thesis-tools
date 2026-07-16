@@ -23,6 +23,10 @@ scope (`tools/system-architecture-explorer/index.html` only). Deferred for whoev
 **Also true of Plans 06.1-01 and 06.1-02** — same `not_found` result would apply to their
 requirement IDs (`D-13`...`D-18`, `SC-4`, `SC-5`), not something introduced by 06.1-03.
 
+**Also true of Plan 06.1-05** (the phase's final plan) — `requirements mark-complete D-13 D-15
+D-18 SC-6` returned `not_found` for all four, confirming this is a standing structural gap across
+every plan in the phase, not something any individual plan can fix from within its own file scope.
+
 ## Stale `TBD` in prototypes/System-Architecture/POWER-AND-MOTORS.md (out of scope for 06.1-05)
 
 06.1-05's overall `<verification>` step 1 greps the whole `prototypes/System-Architecture/`

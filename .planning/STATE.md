@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 06.1-04-PLAN.md
-last_updated: "2026-07-16T12:36:44.420Z"
+status: verifying
+stopped_at: Completed 06.1-05-PLAN.md
+last_updated: "2026-07-16T12:47:18.696Z"
 last_activity: 2026-07-16
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 24
-  completed_plans: 20
-  percent: 43
+  completed_plans: 21
+  percent: 57
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 
 Phase: 06.1 (architecture-refinement-full-system-module-schema-design-dir) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-16
 
 Progress: [█████████░] 89%
@@ -64,6 +64,7 @@ Progress: [█████████░] 89%
 | Phase 06.1 P02 | 35min | 3 tasks | 1 files |
 | Phase 06.1 P03 | 30min | 3 tasks | 1 files |
 | Phase 06.1 P04 | 10min | 2 tasks | 1 files |
+| Phase 06.1 P05 | 25min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,9 @@ Recent decisions affecting current work:
 - [Phase 06.1-03]: C link column left without hide-sm at 640px pending a human browser pass to confirm the 10-column table isn't too tight on mobile
 - [Phase 06.1-04]: Recounted 'components not stocked by bitbyg' to Seven (was Six) and added the previously-omitted espscreen32 entry -- recounted from shipped DEFAULTS rather than trusting the plan's phrasing
 - [Phase 06.1-04]: Fixed pin-budget pseudocode block missing the +1 vibration-PWM term and the Live-system-diagram/post-power-table prose still describing the old dual-rail topology -- both were drift bugs directly in scope of the D-18 consistency pass
+- [Phase 06.1-05]: SOLUTION-MATRIX.md's Component unit prices intro no longer claims to drive the tool's cost math -- the tool now maintains its own richer 26-component model
+- [Phase 06.1-05]: SOLUTION-MATRIX.md's own Alignment motor #2 (TBD) price-table row resolved to 28BYJ-48 12V + ULN2003 (resolved D-13), historical EUR estimate left untouched
+- [Phase 06.1-05]: Landing card, README, and CLAUDE.md avoid stating a hardcoded variant count anywhere, not just README which required it -- same D-18 drift lesson applied preemptively
 
 ### Pending Todos
 
@@ -156,6 +160,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-16T12:36:44.410Z
-Stopped at: Completed 06.1-04-PLAN.md
+Last session: 2026-07-16T12:47:18.684Z
+Stopped at: Completed 06.1-05-PLAN.md
 Resume file: None

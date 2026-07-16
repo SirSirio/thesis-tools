@@ -19,7 +19,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 - [x] **Phase 5: HTML Presentation Decks** - Reveal-style HTML slide system on the tools site, with a creative dated presentations index, seeded by a 15-minute lab-meeting deck (completed 2026-06-24)
 
 - [x] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/` (completed 2026-07-15)
-- [ ] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs
+- [x] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs (completed 2026-07-16)
 
 ## Phase Details
 
@@ -213,7 +213,7 @@ The site grows incrementally as the thesis generates new design decisions needin
   5. The voltage/power questions are answered (sourced) and reflected in the power-rail model
   6. SPEC.md and the three decision records are internally consistent (variant count, resolved open questions, current prices)
 
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 
@@ -232,4 +232,4 @@ Plans:
 **Wave 4** *(blocked on Wave 3; disjoint files, parallel)*
 
 - [x] 06.1-04-PLAN.md — SPEC.md: consistency pass (19→20 variants, recounted component confidence, PSU prices, shared-block total) + new sections for the schema, directions, new components, and the power-rail answer (D-17/D-18, SC-4/SC-5/SC-6)
-- [ ] 06.1-05-PLAN.md — Decision records + chrome: ARCHITECTURE.md (SPI resolved, motor #2 resolved, rail topology), PUMP-CONTROL-CONCEPTS.md dated preface, SOLUTION-MATRIX.md check, landing card / README / CLAUDE.md copy refresh (D-13/D-15/D-18, SC-6)
+- [x] 06.1-05-PLAN.md — Decision records + chrome: ARCHITECTURE.md (SPI resolved, motor #2 resolved, rail topology), PUMP-CONTROL-CONCEPTS.md dated preface, SOLUTION-MATRIX.md check, landing card / README / CLAUDE.md copy refresh (D-13/D-15/D-18, SC-6)
