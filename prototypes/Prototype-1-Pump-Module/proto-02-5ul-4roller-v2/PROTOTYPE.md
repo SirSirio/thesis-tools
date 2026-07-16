@@ -299,6 +299,47 @@ General values, well-calibrated PLA/PETG, 0.4 mm nozzle:
 **Why n = 10:** matches ISO 8655's minimum for a credible accuracy + precision claim; n = 5
 leaves the CV estimate too uncertain (~±40 %) to support the thesis claim.
 
+### 8.1 Execution protocol — v2.3 head (2026-07-16)
+
+**The rig split.** The two pass criteria in §2 need two *different* rigs. E2 and E3 are not the
+same run repeated:
+
+| | Measures | Collection | n | Why this size |
+|---|---|---|---|---|
+| **E2 / E5** | mean µL/stroke | **200 strokes** (≈ 1 g) | 3–5 / head | At 1 g, balance resolution (0.01 %) and evaporation (0.03 %/min) both vanish. n = 3 pins the mean to ±0.6 %; the hump steps are ≈ 7 % (3.4 µL/mm × 0.10 mm), so this is ample. n = 10 is overkill here. |
+| **E3** | **stroke-to-stroke CV** ← the gate | **single dose** (5 µL) | **10** (ISO 8655) | The gate is per-stroke. Batches cannot measure it — see below. |
+
+**Why E3 can never use 200-stroke batches.** §2 defines the gate as *stroke-to-stroke* CV, and
+the §2 arithmetic confirms it: σ_stroke = 5 % × 5 µL = 0.25 µL → over 200 strokes
+σ = 0.25·√200 = 3.5 µL → 95 % = ±6.9 µL, the quoted ±7 µL. So batch-to-batch CV at the gate is
+5 %/√200 = **0.35 %**. A single pendant drop at the outlet is 5–25 µL = **±1 % on a 1 mL
+collection** — roughly 3× the entire signal. **The 200-stroke run measures the *application*
+(accumulated dose), never the gate.**
+
+**Blockers on E3 (unresolved):**
+- **Balance.** ISO 8655-6 specifies 0.001 mg readability for V ≤ 10 µL. At 5 mg/dose a 0.1 mg
+  balance injects ≈ 2 % — 40 % of the CV budget, enough to fail a spec that actually passes.
+  Semi-micro (0.01 mg) → 0.2 %, acceptable.
+- **Pendant drop.** At a 5 µL dose, ±10 µL of hanging drop is not noise — it *is* the
+  measurement. Dispense with the outlet **submerged / under a light oil layer**: kills the drop
+  and evaporation in one move.
+- **Roller tagging.** Log stroke index → roller (k mod 4). Roller-systematic variation lands in
+  every single dose but averages over ~50 cycles inside a 200-stroke batch. The decomposition
+  (roller-systematic vs random) decides whether rollers get fixed or accepted.
+
+**Blockers on E2:**
+- Needs **3 heads** (1.52 / 1.62 / 1.72); only 1.52 exists. Print model v2 (§11.10) now makes
+  1.62 / 1.72 reliable to print.
+- **Fresh tube section per head** (§8 header). The v2.3 tube already carries 600+ strokes;
+  reusing it for the 1.62 head confounds the sweep with silicone hysteresis.
+
+**E4 is now urgent, not optional.** The v2.3 dovetail stop was over-scraped during setup — the
+head is held by clamp friction, with no hard datum. Reinstall repeatability is unproven and the
+< 0.10 mm criterion is directly at risk.
+
+**Status 2026-07-16:** 3 × 200 strokes collected at 180 rpm on the 1.52 head, unweighed →
+these are **E2 point 1**, not E3.
+
 ---
 
 ## 9. Morphological analysis — relevance
