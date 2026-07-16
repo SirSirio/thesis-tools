@@ -446,8 +446,10 @@
           </select>
         </div>
         <div class="ctl">
-          <label>Max price € (<span id="maxPriceLbl">200</span>)</label>
-          <input type="range" id="fPrice" min="20" max="200" step="1" value="200">
+          <label>Max price € (<span id="maxPriceLbl">400</span>)</label>
+          <!-- Ceiling must stay above the dearest whole-system variant (€341.48 at the
+               2026-07-16 prices). Re-check whenever DEFAULTS or SHARED_BOM change. -->
+          <input type="range" id="fPrice" min="20" max="400" step="1" value="400">
         </div>
         <div class="ctl">
           <label>Max complexity</label>
@@ -663,7 +665,7 @@ const VARIANTS = [
 ];
 
 /* ---------- state ---------- */
-let rate=0.134, includeShared=false, maxPrice=200, maxCx=5, minCon=0;
+let rate=0.134, includeShared=false, maxPrice=400, maxCx=5, minCon=0;
 let selectedDirection=null; // D-08/D-12: null = no filter; else a DIRECTIONS key
 let sortKey='cost', sortDir=1;
 let selectedVariantId=null; // D-02: selection = click a matrix row; the diagram's ONLY control
