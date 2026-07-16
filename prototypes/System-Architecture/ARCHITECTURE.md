@@ -54,10 +54,12 @@ costs): [PUMP-CONTROL-CONCEPTS.md](PUMP-CONTROL-CONCEPTS.md).**
     9.4 W** on the 24 V rail; no PSU wattage change needed. Full arithmetic:
     [SPEC.md — Power-rail model (SC-5)](../../tools/system-architecture-explorer/SPEC.md#power-rail-model-sc-5).
 
-**Component unit prices** (the standalone BOM used for all cost math) live in
-[SOLUTION-MATRIX.md](SOLUTION-MATRIX.md#component-unit-prices) and are **editable live** in the
-[System Architecture Explorer](../../tools/system-architecture-explorer/index.html#matrix) (with
-a DKK↔EUR converter; the solution table there sorts/filters by price and complexity).
+**Component unit prices** (the standalone BOM used for all cost math) are owned by the
+[System Architecture Explorer](../../tools/system-architecture-explorer/index.html#matrix), where
+they are **editable live** (with a DKK↔EUR converter; the solution table there sorts/filters by
+price and complexity). [SOLUTION-MATRIX.md](SOLUTION-MATRIX.md#component-unit-prices) keeps a
+**historical reference snapshot** of the same table — useful for reading the design history, but
+not the source of truth (D-08).
 
 ## Full solution matrix
 
@@ -81,8 +83,9 @@ cheap/easy regime — full 6-way simultaneity is **not** required.
 
 Quick summary: a dumb driver (DRV8825) puts pulse generation on the MCU — the only reason to
 "need" an RP2040/STM32; a smart driver (TMC2209, UART) generates its own steps, so even a plain
-ESP32 stays fused at 6-parallel. Since a driver is bought either way, the ~€2/driver premium for
-TMC2209 buys full parallel capability outright.
+ESP32 stays fused at 6-parallel. Since a driver is bought either way, TMC2209 buys full parallel
+capability outright — and at the sourced bitbyg prices it is not even a cost premium: €3.50 against
+€6.87 for a DRV8825. See the tool's live price table.
 
 ## Pump-controller options (cheaper alternatives to RP2040)
 
@@ -112,8 +115,9 @@ hot-swappable unit. Otherwise it's more hardware for the same capability.
 **Brain + HMI:** ESP32 (drives touchscreen, holds the sequence).
 **Bus between modules:** RS-485 (robust near steppers) — or I²C if everything is in one small box.
 **Nodes:** pump controller · alignment Arduino · nozzle-shaker (piggy-backed on nearest node).
-**Power:** separate motor rail (12/24 V) and logic rail (5/3.3 V) with a **common ground**;
-keep it clear of fluidics (R11).
+**Power:** one 24 V PSU output; 12 V (LM2596 buck) for the alignment motors and 5 V (synchronous
+buck) for logic are generated locally, on a **common ground** — see the rail topology above (D-15).
+Keep it clear of fluidics (R11).
 
 See the live diagram in the [System Architecture Explorer](../../tools/system-architecture-explorer/index.html#diagram).
 
