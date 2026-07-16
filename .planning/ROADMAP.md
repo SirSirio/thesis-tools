@@ -19,6 +19,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 - [x] **Phase 5: HTML Presentation Decks** - Reveal-style HTML slide system on the tools site, with a creative dated presentations index, seeded by a 15-minute lab-meeting deck (completed 2026-06-24)
 
 - [x] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/` (completed 2026-07-15)
+- [ ] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs
 
 ## Phase Details
 
@@ -188,3 +189,47 @@ The site grows incrementally as the thesis generates new design decisions needin
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
 | 6. System Architecture Explorer | 6/6 | Complete    | 2026-07-15 |
+
+### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
+
+**Goal:** Refine the System Architecture Explorer from a pump-control cost matrix into a whole-device architecture page: introduce the system with a general module schema (all six modules — pump, alignment, nozzle, storage, UI, software/electronics — with data/liquid flows), present a small gallery of visual design directions (SVG-first, minimal prose — e.g. standalone-screen vs integrated-screen builds), add a **Design type** column to the variant matrix so every option is compared in one table with price + functionality as the main drivers, and extend the bitbyg-sourced component model with the newly named parts (nozzle vibration motor, capacitive touch-sensor module for DIY volume detection, storage ×6).
+
+**Depends on:** Phase 6 (complete)
+**Requirements**: No formal REQ-IDs. The trackable set is CONTEXT.md decisions **D-01…D-18** plus the six Success Criteria **SC-1…SC-6** below (see `06.1-CONTEXT.md`; seed in `06.1-CONTEXT-SEED.md`).
+
+**Scope notes:**
+
+- New full-system schema diagram supersedes the old sticky-note sketch; tube-holding module is gone (custom rack is now part of the alignment module). Spatial layout is free — only connectivity must be right.
+- Design directions: creative freedom; the ~2.4–3.2" screen standalone-vs-integrated split is the seed example of two distinct design types.
+- Research questions to resolve (researcher): 28BYJ-48 5 V vs 12 V variant (power/torque trade-off, dual-rail implication), whether the 3 V micro vibration motor can take burst overdrive or needs its own rail/PWM drive, capacitive touch-sensor module (bitbyg) channel count vs 6 containers, temp-sensor-based dispense compensation feasibility (note only).
+- Consistency pass over `tools/system-architecture-explorer/SPEC.md` + `prototypes/System-Architecture/*.md` — known: 19-vs-20 variant count in SPEC, stale "confirm SPI vs parallel" warning in ARCHITECTURE.md (resolved 2026-07-15), stale pre-bitbyg PSU prices in SPEC power-model table.
+
+**Success Criteria** (what must be TRUE):
+
+  1. The tool opens with a general architecture schema: all six modules, their electronics payload (6× pump steppers, 2× alignment steppers, vibration motor, capacitive sensing, screen+SD+LM75), and data vs liquid flow visually distinguished
+  2. A design-direction section shows 2–4 visually distinct build directions as graphics (SVG), each mapping to rows in the matrix
+  3. The variant matrix has a Design type column; sorting/filtering still works; price + functionality remain the primary comparison drivers
+  4. New components are priced from bitbyg with confidence tags, following the existing COMP/DEFAULTS model
+  5. The voltage/power questions are answered (sourced) and reflected in the power-rail model
+  6. SPEC.md and the three decision records are internally consistent (variant count, resolved open questions, current prices)
+
+**Plans:** 5 plans in 4 waves
+
+Plans:
+
+**Wave 1**
+
+- [ ] 06.1-01-PLAN.md — Data model: new bitbyg components (vibration motor + IRF520 driver, MPR121, 2× buck converters), SHARED_BOM rebuild resolving alignment-motor-#2, pinsOf() + D-14 guard verification, two-buck power rails in the diagram (D-13/D-14/D-15/D-16, SC-4/SC-5)
+
+**Wave 2** *(blocked on Wave 1 — same file)*
+
+- [ ] 06.1-02-PLAN.md — Part 00 module schema: rewritten intro, `#system` section, buildSchema() six-module SVG with payload chips + dual flows + liquid barrier, hover/click/keyboard reveal, D-17 temperature note (D-01…D-05, D-17, SC-1)
+
+**Wave 3** *(blocked on Wave 2 — same file)*
+
+- [ ] 06.1-03-PLAN.md — Design directions: directionOf() classifier, `#directions` SVG gallery, Design type matrix column, shared direction filter (gallery + dropdown), break-out matrix width (D-06…D-12, SC-2/SC-3)
+
+**Wave 4** *(blocked on Wave 3; disjoint files, parallel)*
+
+- [ ] 06.1-04-PLAN.md — SPEC.md: consistency pass (19→20 variants, recounted component confidence, PSU prices, shared-block total) + new sections for the schema, directions, new components, and the power-rail answer (D-17/D-18, SC-4/SC-5/SC-6)
+- [ ] 06.1-05-PLAN.md — Decision records + chrome: ARCHITECTURE.md (SPI resolved, motor #2 resolved, rail topology), PUMP-CONTROL-CONCEPTS.md dated preface, SOLUTION-MATRIX.md check, landing card / README / CLAUDE.md copy refresh (D-13/D-15/D-18, SC-6)
