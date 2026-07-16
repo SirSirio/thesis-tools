@@ -359,28 +359,34 @@
       <p>The instinctive question is "do I need a bigger MCU to run six pumps at once?" — but a
       stepper needs a driver chip regardless, and <b>the driver you pick decides who actually
       generates the step pulses</b>, which is the real cost of concurrency:</p>
-      <p><b>Dumb driver (DRV8825, ~€1.5):</b> the MCU must toggle the STEP pin for every single
+      <p><b>Dumb driver (DRV8825):</b> the MCU must toggle the STEP pin for every single
       step, for every motor, in sync. Producing six independent, accelerating step trains is the
       MCU's burden — this is the <i>only</i> reason a plain ESP32 stops being enough and the
       design reaches for an RP2040 (PIO) or STM32 (hardware timers) as a dedicated pump node.</p>
-      <p><b>Smart driver (TMC2209, UART velocity mode, ~€3.5):</b> you send the driver a target
+      <p><b>Smart driver (TMC2209, UART velocity mode):</b> you send the driver a target
       speed once, and the driver generates its own steps. The MCU is nearly idle, so it stays
       <i>fused</i> — one ESP32 doing brain and pump-control together — even at six-parallel. In
       the matrix, the <b>T9-fused-i2c</b> and <b>T9-fused-485</b> rows are exactly this: full
       6-parallel with no separate pump-node MCU at all. TMC2209 is also silent, runs cooler, and
       supports sensorless homing — practical bonuses that come for free with the same chip.</p>
-      <p>Since a driver is bought either way, spending roughly €2 more per driver on a smart part
-      buys full parallel capability outright and makes the "which MCU" question almost
+      <p>Since a driver is bought either way, the smart part is the better buy twice over: on the
+      sourced prices in the table below it is <i>cheaper</i> per driver than the DRV8825, and it
+      buys full parallel capability outright, which makes the "which MCU" question almost
       irrelevant. That is the insight the matrix is built to make visible: driver family, not
       brain choice, is what actually buys (or avoids) concurrency.</p>
     </div>
     <div class="theory-section">
       <h3>The U5 Concurrency Axis</h3>
-      <p>Reading the matrix by cost cluster shows one axis dominates everything else: <b>how many
-      pumps must move at the exact same instant.</b> Rows at 1–2 concurrent (S1*, D2*) sit around
-      €29–30 at ★–★★ complexity on a 60&nbsp;W PSU. Committing to true 6-parallel jumps every row
-      to a 150&nbsp;W PSU and at least ★★☆☆ complexity, regardless of which driver or bus is
-      chosen — concurrency, not driver family, sets the floor cost and the floor complexity.</p>
+      <p>Reading the matrix by concurrency shows one axis dominates the <i>physical</i> design:
+      <b>how many pumps must move at the exact same instant.</b> Rows at 1–2 concurrent (S1*, D2*)
+      sit at ★–★★ complexity on a 60&nbsp;W PSU. Committing to true 6-parallel moves every row to
+      a 150&nbsp;W PSU and at least ★★☆☆ complexity, regardless of which driver or bus is chosen —
+      concurrency, not driver family, sets the floor <i>complexity</i> and the power budget.</p>
+      <p>Cost is the exception, and it is the more interesting result: 6-parallel does <b>not</b>
+      set a cost floor. The cheapest 6-parallel row (<b>T9-fused-i2c</b>) undercuts the cheapest
+      single-pump row (<b>S1-i2c</b>) outright, because TMC2209 drivers save more than the larger
+      PSU costs. Full concurrency is the cheap end of this matrix, not the expensive end — the
+      expensive rows are the ones that buy concurrency with dedicated pump-node MCUs instead.</p>
       <p>That is because parallelism is not just a firmware problem: six motors moving at once
       draw roughly six times the peak current of one, which means a larger PSU, more heat,
       thicker wiring, and more EMI — a real penalty for a portable point-of-care device, on top of
