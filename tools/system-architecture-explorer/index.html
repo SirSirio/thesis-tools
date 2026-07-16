@@ -128,6 +128,18 @@
     #system .schema-wrap { flex-direction: column; }
   }
 
+  /* ── Module schema interactivity (D-03) — hover/click/keyboard reveal ──── */
+  #system .schema-module { cursor: pointer; }
+  #system .schema-module:hover .module-box { stroke: rgba(255,107,43,0.65); }
+  #system .schema-module.selected .module-box { stroke: var(--accent); stroke-width: 2.2px; }
+  /* Focus ring drawn here (never assets/style.css) — CSS stroke overrides the rect's
+     presentation attribute, so the ring is visible on both mouse and keyboard focus. */
+  #system .schema-module:focus { outline: none; }
+  #system .schema-module:focus .module-box {
+    stroke: var(--accent); stroke-width: 2.6px;
+    filter: drop-shadow(0 0 4px rgba(255,107,43,0.55));
+  }
+
   /* ══════════════════════════════════════════════════════════
      Ported cost/complexity engine styles (Part 02, id="matrix")
      Reskinned onto the shared assets/style.css design tokens
@@ -718,12 +730,18 @@ const MODULES = {
   storage: {
     label: 'Storage',
     payload: ['6× containers', 'MPR121 ×12 electrodes'],
-    purpose: 'Holds the liquids and senses level by level-crossing / threshold detection, not continuous volume.'
+    /* RESEARCH Risk #1: MPR121 level-crossing sensing only works against non-conductive
+       containers — state the standing assumption plainly, do not present it as validated. */
+    purpose: 'Holds the liquids and senses level by level-crossing / threshold detection, not continuous volume. Assumes non-conductive (plastic/glass) containers — container material is not yet verified; a metal container would make this approach fail outright.'
   },
   ui: {
     label: 'UI',
     payload: ['ILI9341 3.2" touch', 'SD slot', 'LM75'],
-    purpose: 'Runs the GUI; the dispensing protocol is set on a laptop and loaded from the SD card.'
+    /* D-17 / RESEARCH Q5: viscosity (~2-2.5%/°C near room temperature) is the dominant
+       liquid-temperature effect, not the volume-expansion worry Sirio originally raised —
+       thermal expansion (~0.02-0.04%/°C) is real but much smaller. Marked plainly as a future
+       software hook, not a shipped capability, and kept out of the always-on SVG chips. */
+    purpose: 'Runs the GUI; the dispensing protocol is set on a laptop and loaded from the SD card. Future software hook: liquid viscosity is the dominant temperature effect near room temperature (≈2–2.5%/°C) — far larger than liquid thermal expansion (≈0.02–0.04%/°C) — so temperature-based dispensing compensation using the onboard LM75 is a possible future software feature, not a shipped capability.'
   },
   electronics: {
     label: 'Software & Electronics',
@@ -782,7 +800,12 @@ function buildSchema(){
      individual <rect>/<text> primitives inside it. */
   function moduleBox(key, box){
     const m = MODULES[key];
-    let g = `<g class="schema-module" data-module="${key}">`;
+    /* T-06.1-04: the group's own aria-label is the one place MODULES payload/purpose text is
+       interpolated into markup outside #schemaNote — escapeHtml() it, same rule sourceCellContent()
+       already enforces for the component table (T-06-06). tabindex="0" + role="button" give this
+       group a keyboard-reachable stop; Task 3 wires click/keydown/mouseenter to it below. */
+    const ariaLabel = escapeHtml(`${m.label}: ${m.payload.join(', ')}. ${m.purpose}`);
+    let g = `<g class="schema-module" data-module="${key}" tabindex="0" role="button" aria-label="${ariaLabel}">`;
     g += BOX(box.x, box.y, box.w, box.h, m.label, null,
       {cls:'module-box', titleTop:true, labelSize:12.5, labelWeight:700, labelColor:acc});
     m.payload.forEach((chip,i)=>{
@@ -840,6 +863,57 @@ function buildSchema(){
      content is exposed to assistive tech even before Task 3's keyboard path lands. */
   return `<svg viewBox="0 0 880 620" width="100%" style="max-width:820px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Whole-device module schema: six modules connected by liquid and data flows"><title>Whole-device module schema</title>${s}</svg>`;
 }
+
+/* ---------- module schema interactivity (D-03) ----------
+   selectModule() mirrors selectVariant()'s "one function, several writers" shape (see
+   selectVariant()/highlightRow() below): hover/click/keyboard all call it, it writes
+   #schemaNote via textContent/createElement only (T-06.1-04 — MODULES strings are never
+   innerHTML-interpolated here) and toggles .selected on the matching schema-module group.
+
+   `sticky` distinguishes a deliberate click/keyboard pick (which must survive a stray hover
+   elsewhere) from a transient hover preview. Chosen behaviour: hover always updates the note as
+   a live preview, but mouseleave restores the last STICKY pick (or the resting prompt if none) —
+   this is "hover restores to the selected module on mouseleave", the second of the two options
+   the plan allows, picked because it lets a reader skim every module by hovering without losing
+   a deliberate click/keyboard selection the moment the mouse moves away. */
+let selectedModuleKey = null;
+function showSchemaPrompt(){
+  document.getElementById('schemaNote').innerHTML =
+    '<p class="schema-note-prompt">Hover, click, or tab to a module in the diagram to see its hardware payload and purpose.</p>';
+  document.querySelectorAll('#schemaSvg .schema-module').forEach(g=>g.classList.remove('selected'));
+}
+function selectModule(key, sticky){
+  const m = MODULES[key];
+  if (!m) return; // T-06.1-05: an unrecognised data-module value is a no-op, never trusted
+  if (sticky) selectedModuleKey = key;
+  const note = document.getElementById('schemaNote');
+  note.innerHTML = '';
+  const h3 = document.createElement('h3'); h3.textContent = m.label;
+  const chips = document.createElement('div'); chips.className = 'schema-note-payload';
+  m.payload.forEach(p=>{ const span=document.createElement('span'); span.textContent=p; chips.appendChild(span); });
+  const purpose = document.createElement('p'); purpose.className = 'schema-note-purpose'; purpose.textContent = m.purpose;
+  note.append(h3, chips, purpose);
+  document.querySelectorAll('#schemaSvg .schema-module').forEach(g=>g.classList.toggle('selected', g.dataset.module===key));
+}
+/* Entry points: mouseenter (hover preview), click (sticky pick), keydown filtered to
+   Enter/Space (sticky pick, Space preventDefault()'d so the page does not scroll — this
+   keyboard path has no existing analog anywhere else in the file, per PATTERNS "No Analog
+   Found"; it is new, not copied). Listeners attach to the <g> group wrapper only, never to the
+   individual <rect>/<text> primitives inside it, for predictable hit-testing. */
+function wireSchemaInteractivity(){
+  document.querySelectorAll('#schemaSvg .schema-module').forEach(g=>{
+    g.addEventListener('mouseenter', ()=>selectModule(g.dataset.module));
+    g.addEventListener('mouseleave', ()=>{ selectedModuleKey ? selectModule(selectedModuleKey) : showSchemaPrompt(); });
+    g.addEventListener('click', ()=>selectModule(g.dataset.module, true));
+    g.addEventListener('keydown', e=>{
+      if (e.key==='Enter' || e.key===' ' || e.key==='Spacebar'){
+        e.preventDefault();
+        selectModule(g.dataset.module, true);
+      }
+    });
+  });
+}
+
 function buildDiagram(v){
   const cls = topoClassOf(v);
   const acc='#ff6b2b', acc2='#e83535', txt='#f0ece8', mut='#7a7068', blue='#4a90d9';
@@ -1200,6 +1274,7 @@ document.getElementById('maxPriceLbl').textContent = maxPrice;
 maxCx = +document.getElementById('fCx').value;
 minCon = +document.getElementById('fCon').value;
 document.getElementById('schemaSvg').innerHTML = buildSchema(); // static — rendered once, never rebuilt by renderMatrix() (T-06.1-06)
+wireSchemaInteractivity();
 renderComps(); renderMatrix();
 </script>
 </body>
