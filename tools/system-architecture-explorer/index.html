@@ -454,10 +454,18 @@ const DEFAULTS = {
     source:{url:'https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/', note:'bitbyg, 174 DKK — owned board; physically inspected and confirmed SPI (8 pins)'}},
   stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:14.41, shared:1, confidence:'High',
     source:{url:'https://bitbyg.dk/shop/stepper-motor-nema17-42byghw811/', note:'bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked NEMA17 (others 116–161 DKK)'}},
-  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:5.86, shared:1, confidence:'High',
-    source:{url:'https://bitbyg.dk/shop/step-gear-motor-28byj-48-5v-4-fase-5-ledning-dc-5v-12v/', note:'bitbyg bundle: 28BYJ-48 motor 25.00 DKK + "Stepmotor Driver Board ULN2003" 18.75 DKK = 43.75 DKK'}},
-  alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1, confidence:'Low',
-    source:{note:'⚠ Cannot be sourced — the part itself is not chosen yet (TBD in the alignment-module design). Placeholder estimate.'}},
+  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor ×2', eur:5.86, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/step-gear-motor-28byj-48-5v-4-fase-5-ledning-dc-5v-12v/', note:'bitbyg bundle: 28BYJ-48 motor 25.00 DKK + "Stepmotor Driver Board ULN2003" 18.75 DKK = 43.75 DKK. 12V variant researched (D-15): same price as 5V on the same listing dropdown, but ~60 mA/phase (200 Ω winding) vs ~83 mA/phase and ≥34.3 mN·m vs ≥29.4 mN·m pull-in torque — strictly better, no cost penalty.'}},
+  vibMotor:{label:'3V micro motor (RD520PA)', role:'nozzle vibration motor', eur:2.35, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/3v-micro-motor-for-diy/', note:'bitbyg, 17.50 DKK. ⚠ No datasheet is locatable for this model — its rated/stall current is unsourced, so any current figure used elsewhere is an estimate pending measurement.'}},
+  vibDriver:{label:'IRF520 MOSFET driver module', role:'vibration motor PWM switch', eur:1.84, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/irf520-mosfet-driver-modul/', note:'bitbyg, 13.75 DKK. ⚠ The IRF520 is not a logic-level MOSFET — its gate-drive adequacy from the ESP32\'s 3.3V GPIO needs build-time verification; a logic-level MOSFET or a BC547/2N2222-class NPN is the fallback. A flyback diode (1N5819-class) across the motor is mandatory, not optional.'}},
+  capTouch:{label:'MPR121 capacitive touch controller', role:'storage level sensing ×6', eur:6.37, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/capacitive-touch-sensor-controller/', note:'bitbyg, 47.50 DKK. Chip = MPR121 (12 electrodes, I²C, default address 0x5A, 2.5–3.6V — not 5V-tolerant, power from the ESP32\'s 3V3 pin). ⚠ A touch/proximity controller repurposed for threshold/level-crossing detection, which requires non-conductive (plastic/glass) containers; container material is currently unverified.'}},
+  buck12:{label:'LM2596 adjustable buck (set to 12V)', role:'24V → 12V alignment rail', eur:3.18, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/dc-dc-step-down-lm2596-lm2596s/', note:'bitbyg, 23.75 DKK. 4–35V in / 1.23–30V adj out / 3A, trimmed to 12V for the two 28BYJ-48s (~0.24A load).'}},
+  buck5:{label:'5V/5A synchronous buck', role:'24V → 5V logic rail', eur:5.70, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/dc-dc-buck-step-down-synchronous-rectification-power-module/', note:'bitbyg, 42.50 DKK. 9–35V in / 5V fixed out / 5A, feeding ESP32 + screen + SD + LM75 + MPR121 + the vibration-motor drive.'}},
 };
 const COMP = JSON.parse(JSON.stringify(DEFAULTS));
 
@@ -467,7 +475,7 @@ const COMP = JSON.parse(JSON.stringify(DEFAULTS));
 function intBrainKey(v){ return v.bom.espscreen32 ? 'espscreen32' : v.bom.espscreen ? 'espscreen' : null; }
 
 /* shared block BOM (added when "whole-system") */
-const SHARED_BOM = {stepperNema:6, screen:1, nano:1, drv8825:1, align28byj:1, alignMot2:1};
+const SHARED_BOM = {stepperNema:6, screen:1, nano:1, align28byj:2, vibMotor:1, vibDriver:1, capTouch:1, buck12:1, buck5:1};
 
 /* ---------- the variants ----------
    pinsC = Layer-C driver-link pins spent on the variant's brain MCU (D-09). 0 when a
@@ -744,7 +752,7 @@ function buildDiagram(v){
    discarded on load: without this, anyone who ever edited one price keeps seeing the
    whole stale set forever and silently never receives re-sourced vendor prices.
    BUMP THIS whenever a DEFAULTS price changes. */
-const PRICES_VERSION = '2026-07-16-bitbyg-sourced';
+const PRICES_VERSION = '2026-07-16-06-1-whole-system';
 function loadPersisted(){
   try{
     if(localStorage.getItem('sae-prices-v') !== PRICES_VERSION){
