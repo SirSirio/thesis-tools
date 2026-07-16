@@ -18,6 +18,69 @@ of the cost/complexity matrix originally built in `prototypes/System-Architectur
 
 ---
 
+## Whole-device module schema (Part 00 — D-01/D-02/D-03/D-04/D-05)
+
+Above the cost/complexity matrix, the tool draws a static SVG (`buildSchema()`) of the six
+hardware modules that make up the whole device — the **hardware-requirements baseline** (D-04)
+this tool's variants must satisfy, not itself a variant or a design decision. Spatial layout in
+the diagram carries no meaning; only the drawn connectivity does (D-05).
+
+| Module | Hardware payload | Purpose |
+|---|---|---|
+| **Pump** | 6× NEMA17 42BYGHW811, 6× peristaltic pumps | Meters each liquid by roller displacement. |
+| **Alignment** | 2× 28BYJ-48 12V, 2× ULN2003, custom rack | Moves the sample racks under the nozzles. The custom rack lives in this module — the old, separately-imagined tube-holding module no longer exists as a distinct module. |
+| **Nozzle** | 3V micro motor (RD520PA), IRF520 + flyback diode, eccentric mass (DIY) | Holds the nozzles and shakes droplets loose in short bursts. |
+| **Storage** | 6× containers, MPR121 ×12 electrodes | Holds the liquids; senses level by level-crossing / threshold detection, not continuous volume (see New components below for the unverified container-material precondition). |
+| **UI** | ILI9341 3.2" touch, SD slot, LM75 | Runs the GUI; the dispensing protocol is set on a laptop and loaded from the SD card. Carries the D-17 temperature note (below). |
+| **Software & Electronics** | ESP32-class brain, system bus (I²C/RS-485/CAN), stepper drivers ×6 | The brain and bus this tool's matrix compares — drawn enclosed by a liquid-glass barrier as the sealed dry zone. |
+
+**Connectivity** (the only thing spatial position in the diagram encodes): a solid liquid-flow
+path **Storage → Pump → Nozzle → Alignment**, and a dashed data-flow link from **Software &
+Electronics to every other module**. The Software & Electronics module is drawn inside a
+liquid-glass-styled barrier — the design intent that this module is the sealed dry zone the other
+five modules' liquid path must never breach.
+
+Hover, click, or keyboard-focus (Tab + Enter/Space) any module box to reveal its full payload and
+purpose text in the adjacent note panel — `selectModule()`/`wireSchemaInteractivity()` in the
+script, mirroring the matrix's existing "one function, several writers" state pattern.
+
+**D-17 temperature note.** The UI module documents one future software hook, no hardware, no cost
+impact, no modelling: viscosity dominates a liquid's temperature sensitivity near room temperature
+(water ≈2–2.5%/°C — ≈1.00 mPa·s at 20°C → ≈0.89 mPa·s at 25°C), while liquid thermal expansion is
+a much smaller secondary effect (≈0.02–0.04%/°C). Confidence: **High** (established physical
+constants). This is why the note leads with viscosity even though the originally-raised concern
+was volume expansion — dispensing-accuracy compensation from temperature would need to correct for
+flow-rate-through-viscosity change, not container-volume change.
+
+---
+
+## Design directions (D-06/D-07/D-08/D-09/D-10)
+
+Between the module schema and the theory section, a four-card gallery groups the 20 variants into
+four curated "device personalities." Each direction is **derived**, not stored — `directionOf(v)`
+classifies a variant from its existing `topoClassOf(v)` (fused/satellite/distributed/printer) and
+`intBrainKey(v)` (integrated-screen board or not) fields, so a future variant added to `VARIANTS`
+is classified automatically with no new per-variant field to remember to set.
+
+| Direction key | Display name | Derivation | Variant IDs (count) |
+|---|---|---|---|
+| `modular` | Distributed Modules | `topoClassOf(v) === 'distributed'` | `P6-dist-485`, `P6-dist-can` (2) |
+| `allinone` | All-in-One | integrated-screen board AND `topoClassOf(v) === 'fused'` | `ESPINT-fused-i2c`, `ESPINT-dumb-i2c` (2) |
+| `console` | Console | discrete screen AND `topoClassOf(v) === 'fused'` | `S1-i2c`, `S1-485`, `D2-i2c`, `D2-485`, `T9-fused-i2c`, `T9-fused-485`, `T51-485`, `T51-72-485` (8) |
+| `panelnode` | Panel + Node | everything else (`satellite` or `printer` topology) | `P6-rp-i2c`, `P6-rp-485`, `P6-stm-485`, `T9-node-485`, `ESPINT32-brain-i2c`, `B-ramps-drv`, `B-skr-drv`, `B-skr-tmc` (8) |
+
+2 + 2 + 8 + 8 = 20 — every variant resolves to exactly one direction, no unclassified bucket.
+`directionOf(v)` checks `distributed` first in an ordered if-chain (mirroring `topoClassOf(v)`'s
+own shape) so it can never be shadowed by the fused-vs-not-fused branches below it.
+
+The `DIRECTIONS` object (name, colour class, one-sentence copy) is the single vocabulary shared by
+three surfaces (D-10): the gallery cards (`renderDirections()`), the matrix's 2nd column ("Design
+type", a sortable, colour-coded `directionPill(v)` chip immediately after ID), and a shared
+`selectedDirection` filter driven by both the gallery cards and a `#fDir` dropdown — the same
+"one state variable, several writers" shape the matrix's other filters already use.
+
+---
+
 ## Confidence-tag legend (D-11)
 
 Every sourced fact in this tool — component prices, pin counts, RAM/PSRAM specs — carries one of
@@ -69,6 +132,11 @@ DKK figures are the vendor's listed incl.-VAT prices; € = DKK × 0.134.
 | ILI9341 3.2" touch screen (owned) | screen | 23.32 | bitbyg, 174 DKK — inspected, confirmed SPI (8 pins) | **High** |
 | NEMA17 pump stepper ×6 | pump motor | 14.41 (×6) | bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked (others 116–161 DKK) | **High** |
 | 28BYJ-48 12V + ULN2003 ×2 | alignment motor ×2 | 5.86 (×2) | bitbyg bundle: 28BYJ-48 25.00 + "Stepmotor Driver Board ULN2003" 18.75 = 43.75 DKK — 12V winding is the researched choice (D-15) | **High** |
+| 3V micro motor (RD520PA) | nozzle vibration motor | 2.35 | bitbyg, 17.50 DKK — ⚠ no datasheet locatable; rated/stall current unsourced (price is High, the electrical rating is not — see New components below) | **High** |
+| IRF520 MOSFET driver module | vibration motor PWM switch | 1.84 | bitbyg, 13.75 DKK — ⚠ not a logic-level MOSFET; gate-drive from 3.3V GPIO needs verification (see New components below) | **High** |
+| MPR121 capacitive touch controller | storage level sensing ×6 | 6.37 | bitbyg, 47.50 DKK — chip facts High; the level-crossing *application* is Medium (see New components below) | **High** |
+| LM2596 adjustable buck (→12V) | 24V → 12V alignment rail | 3.18 | bitbyg, 23.75 DKK | **High** |
+| 5V/5A synchronous buck | 24V → 5V logic rail | 5.70 | bitbyg, 42.50 DKK | **High** |
 
 **17 of 26 components are now High-confidence, directly sourced from bitbyg listings.** Two PSUs
 are Medium (nearest stocked wattage, not exact). Seven components are **not stocked by bitbyg** and
@@ -83,6 +151,36 @@ retain unsourced estimates — flagged inline in the tool's Source column with a
 
 The alignment-motor-#2 placeholder that previously occupied this table is resolved: the alignment
 module uses **2× 28BYJ-48**, both priced from the same bitbyg listing, not a second unsourced part.
+
+### New components — unresolved risks (D-13/D-14/D-15/D-16)
+
+The five new shared-block components above (`vibMotor`, `vibDriver`, `capTouch`, `buck12`,
+`buck5`) all carry **High** price confidence — real bitbyg listing prices — but three of them
+carry a real, unresolved technical risk that the price tag does not cover:
+
+- **RD520PA (vibration motor) — unsourced current rating.** No datasheet is locatable for this
+  exact part number; its rated/stall current is not stated anywhere. Any current figure used
+  elsewhere in this spec (see Power-rail model below) is an **estimate pending measurement** once
+  the part is ordered. Tag: **Low** for the electrical rating specifically — the €2.35 price
+  itself remains High.
+- **IRF520 (vibration-motor driver) — not a logic-level MOSFET.** Its gate-drive adequacy from the
+  ESP32's 3.3V GPIO is unverified; a logic-level MOSFET or a BC547/2N2222-class NPN transistor is
+  the documented fallback if bench testing shows it does not switch cleanly. A flyback diode
+  (1N5819-class) across the motor is **mandatory, not optional** — PWM-switching an inductive
+  motor without one destroys the MOSFET within a few cycles. Tag: **Medium**.
+- **MPR121 (storage level sensing) — chip facts vs. application.** The chip identification itself
+  is **High** confidence: MPR121, 12 electrodes (≥ 6 containers needed), I²C at address 0x5A (no
+  collision with the LM75's 0x48), 2.5–3.6V supply (runs off the ESP32's 3V3 pin, not
+  5V-tolerant). The **application** — repurposing a capacitive touch/proximity controller for
+  through-wall liquid **level-crossing** detection — is a separate claim: a **Medium-confidence
+  technique with an unverified precondition**. It requires **non-conductive (plastic/glass)
+  containers**, and the storage containers' actual material is not stated anywhere in the project
+  (RESEARCH Assumption A4). Risk if wrong is **High** — metal containers would make the whole
+  capacitive-sensing approach infeasible, not just less accurate. Capacitive level sensing is
+  **not** documented here as a validated capability; it is a technique pending a
+  container-material confirmation (see Open questions below).
+
+---
 
 Sourcing revealed that bitbyg's real prices run substantially above the generic hobby-class
 estimates the tool originally shipped (DRV8825 €1.5 → €6.87; NEMA17 €6 → €14.41; MAX485 €0.7 →
@@ -210,14 +308,25 @@ avail = brain.gpioUsable
 used  = (brainKey !== 'espscreen')
           ? SCREEN_PINS[interfaceMode]                 // Layer A, skipped for integrated boards
             + (v.b === 'I²C' ? 0 : 2)                   // LM75 onboard temp sensor: shares I²C bus, else +2
+                                                           //   (MPR121 rides this SAME I²C attachment — +0 pins)
           : 0
         + BUS_PINS[v.b]                                 // Layer B: brain's own bus attachment
         + v.pinsC                                        // Layer C: driver-link pins on the brain (0 if a
                                                            //   dedicated pump-node MCU or printer-board
                                                            //   socket absorbs the wiring instead)
+        + 1                                              // vibration-motor PWM pin (any LEDC-capable GPIO,
+                                                           //   fixed, every variant — D-13)
 free    = avail - used
 overrun = used > avail
 ```
+
+**New pin-budget terms (D-13/D-16).** The vibration motor costs **+1** fixed PWM pin on every
+variant — any ESP32 GPIO via the LEDC peripheral, added unconditionally in the formula above. The
+MPR121 costs **0** additional pins: it shares the LM75's existing I²C attachment (its 0x5A address
+does not collide with the LM75's 0x48), so it never appears as a separate term. Neither change
+alters any variant's relative feasibility ranking (RESEARCH Risk #7) — that is exactly why both
+are written as flat constants in the aggregation shape above rather than tracked as a per-variant
+field.
 
 ### SCREEN_PINS (Layer A, external ILI9341 only)
 
@@ -284,6 +393,53 @@ peak current of one — a real hidden cost of parallel dispensing (bigger PSU, m
 wiring, more EMI), on top of whatever the step-generation solution itself costs. This is the tool's
 "U5 concurrency axis" finding: concurrency, not driver family or bus choice, sets the cost/PSU
 floor.
+
+---
+
+## Power-rail model (SC-5)
+
+The Power / PSU model above only ever sized the PSU for driver/motor concurrency; it never
+accounted for logic, alignment, or screen current. This section documents the researched answer
+for those secondary rails.
+
+**28BYJ-48 winding: 12V is the researched choice (D-15).** The bitbyg listing offers a 5V/60Ω and
+a 12V/200Ω winding at the **identical price** on the same dropdown. The 12V winding draws **less**
+current (~60 mA/phase) than the 5V winding (~83 mA/phase) and delivers **more** pull-in torque
+(≥34.3 mN·m vs ≥29.4 mN·m) — a strict improvement, no trade-off. Confidence: **High** (manufacturer
+datasheet + the live vendor page).
+
+**Topology: one 24V PSU output, two local buck converters — not a wall-supplied "12V + 24V dual
+rail."** The single 24V PSU output feeds three destinations:
+- 24V straight to the 6× driver ICs / NEMA17 steppers (unchanged from the model above).
+- 24V → an **LM2596 buck** (`buck12`, trimmed to 12V) → the 2× 28BYJ-48 alignment motors.
+- 24V → a fixed **5V/5A synchronous buck** (`buck5`) → ESP32 + screen + SD + LM75 + MPR121 + the
+  vibration-motor drive.
+
+**The arithmetic:**
+- 12V rail: ≈0.24 A load (2× 28BYJ-48 at ~60 mA/phase) → 2.88 W out → ≈3.39 W in at ~85% buck
+  efficiency → **≈0.14 A** drawn off the 24V input.
+- 5V rail: ≈0.78 A nominal / ~1.1 A transient (ESP32 + screen + SD + LM75 + MPR121 + vibration
+  drive) → ≈5 W out → ≈5.88 W in → **≈0.25 A** drawn off the 24V input.
+- **Total new draw ≈ 0.39 A ≈ 9.4 W** — negligible against the existing 60W/150W PSU sizing.
+  **No PSU wattage change is required.**
+
+**Confidence: Medium** — and specifically why: the rail-voltage choice and the buck-converter
+sourcing are both High, but the ESP32/screen/SD current figures feeding the arithmetic above are
+typical datasheet-class estimates, not bench measurements of the specific bitbyg parts (RESEARCH
+Assumption A2), and the RD520PA vibration motor's contribution to the 5V rail is entirely
+unsourced (see New components above). The ESP32 dev board's onboard 3V3-regulator current rating
+is also an unsourced build-time check (RESEARCH Risk #4) — very likely fine given the MPR121's
+few-mA draw, but not a verified fact.
+
+**Why 7805-class linear regulation was rejected.** At 24V → 5V with a 0.5A load, a linear
+regulator dissipates (24−5)×0.5 = **9.5 W** as heat inside an enclosed device — thermally
+infeasible without a large heatsink, and it wastes ~80% of the input power versus a buck
+converter's ~85–92% efficiency. This follows directly from P = ΔV × I, not a vendor claim.
+
+**Why DRV2605L-class haptic drivers were rejected.** These chips are purpose-built for closed-loop
+ERM/LRA haptic actuators — a mismatch for open-loop mechanical shaking of a generic brushed motor
+(RD520PA). Adding one would cost an extra I²C chip and firmware complexity for no benefit over the
+simple IRF520 PWM-switch approach already used.
 
 ---
 
@@ -386,6 +542,18 @@ the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current
    bare ESP32-S3 (only an S3 board bundled with Ethernet + camera). Not added as a `DEFAULTS`
    entry — would require sourcing outside bitbyg, contradicting D-11's "lean toward what bitbyg
    stocks" guidance. Non-blocking.
+4. **Storage container material — blocks validating capacitive level sensing.** The MPR121-based
+   level-crossing sensing in the Storage module (see New components above) requires
+   non-conductive (plastic/glass) containers; the actual container material has not been specified
+   anywhere in the project. **Resolution:** confirm the material once the storage/container
+   design is chosen; if the containers turn out to be metal, capacitive level-crossing sensing
+   does not work and the Storage module's hardware baseline needs a new phase, not a fix to this
+   one.
+5. **RD520PA electrical rating — no datasheet.** The vibration motor's rated/stall current is
+   unsourced (see New components above); any current figure used in the Power-rail model is an
+   estimate. **Resolution:** measure the part directly (bench multimeter, stall-current test) once
+   it is ordered from bitbyg, and update the Power-rail model's arithmetic with the measured
+   value.
 
 ---
 
