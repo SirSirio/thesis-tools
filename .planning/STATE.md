@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06.1-03-PLAN.md
-last_updated: "2026-07-16T12:23:39.620Z"
+stopped_at: Completed 06.1-04-PLAN.md
+last_updated: "2026-07-16T12:36:44.420Z"
 last_activity: 2026-07-16
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 19
+  completed_plans: 20
   percent: 43
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 06.1 (architecture-refinement-full-system-module-schema-design-dir) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-07-16
 
@@ -63,6 +63,7 @@ Progress: [█████████░] 89%
 | Phase 06.1 P01 | 20min | 3 tasks | 1 files |
 | Phase 06.1 P02 | 35min | 3 tasks | 1 files |
 | Phase 06.1 P03 | 30min | 3 tasks | 1 files |
+| Phase 06.1 P04 | 10min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,8 @@ Recent decisions affecting current work:
 - [Phase 06.1-03]: directionOf(v) mirrors topoClassOf(v)'s exact ordered-if-chain, checking 'distributed' first so it can never be shadowed by the fused-vs-not-fused branches
 - [Phase 06.1-03]: Gallery click-wiring split into renderDirections() (static build) + wireDirectionsInteractivity() (click listeners), mirroring 06.1-02's buildSchema()/wireSchemaInteractivity() split
 - [Phase 06.1-03]: C link column left without hide-sm at 640px pending a human browser pass to confirm the 10-column table isn't too tight on mobile
+- [Phase 06.1-04]: Recounted 'components not stocked by bitbyg' to Seven (was Six) and added the previously-omitted espscreen32 entry -- recounted from shipped DEFAULTS rather than trusting the plan's phrasing
+- [Phase 06.1-04]: Fixed pin-budget pseudocode block missing the +1 vibration-PWM term and the Live-system-diagram/post-power-table prose still describing the old dual-rail topology -- both were drift bugs directly in scope of the D-18 consistency pass
 
 ### Pending Todos
 
@@ -153,6 +156,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-16T12:23:39.610Z
-Stopped at: Completed 06.1-03-PLAN.md
+Last session: 2026-07-16T12:36:44.410Z
+Stopped at: Completed 06.1-04-PLAN.md
 Resume file: None

@@ -213,7 +213,7 @@ The site grows incrementally as the thesis generates new design decisions needin
   5. The voltage/power questions are answered (sourced) and reflected in the power-rail model
   6. SPEC.md and the three decision records are internally consistent (variant count, resolved open questions, current prices)
 
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
 
@@ -231,5 +231,5 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3; disjoint files, parallel)*
 
-- [ ] 06.1-04-PLAN.md — SPEC.md: consistency pass (19→20 variants, recounted component confidence, PSU prices, shared-block total) + new sections for the schema, directions, new components, and the power-rail answer (D-17/D-18, SC-4/SC-5/SC-6)
+- [x] 06.1-04-PLAN.md — SPEC.md: consistency pass (19→20 variants, recounted component confidence, PSU prices, shared-block total) + new sections for the schema, directions, new components, and the power-rail answer (D-17/D-18, SC-4/SC-5/SC-6)
 - [ ] 06.1-05-PLAN.md — Decision records + chrome: ARCHITECTURE.md (SPI resolved, motor #2 resolved, rail topology), PUMP-CONTROL-CONCEPTS.md dated preface, SOLUTION-MATRIX.md check, landing card / README / CLAUDE.md copy refresh (D-13/D-15/D-18, SC-6)
