@@ -286,7 +286,7 @@
       <b>B</b> brain↔modules = <i>system bus</i> (I²C / RS-485 / CAN — the open choice) ·
       <b>C</b> pump-MCU↔drivers = set by the driver (STEP/DIR wires · UART · SPI).
       Brain = <b>ESP32</b>-class everywhere (bare ESP32 or an integrated ESP32+screen board).
-      Alignment module (28BYJ-48 + motor #2) is its own node = part of the <b>shared</b> block,
+      Alignment module (2× 28BYJ-48) is its own node = part of the <b>shared</b> block,
       constant across all rows. <b>Pins free</b> flags whether a variant actually fits the
       brain's usable GPIO — see the pin-budget column below.
     </div>
@@ -367,8 +367,11 @@
         <tbody id="matrixBody"></tbody>
       </table>
     </div>
-    <p class="sub" style="margin-top:14px">Shared block ≈ €72 (6 steppers €36 · screen €23 · alignment Nano €3 ·
-      28BYJ-48+ULN2003 €2.5 · align motor #2 + driver €7.5). Prices are hobby-class estimates (±20%).</p>
+    <p class="sub" style="margin-top:14px">Shared block ≈ €149.65 (6× NEMA17 €86.46 · ILI9341 screen €23.32 ·
+      alignment Nano €8.71 · 2× 28BYJ-48+ULN2003 €11.72 · vibration motor €2.35 · IRF520 driver €1.84 ·
+      MPR121 €6.37 · 12V buck €3.18 · 5V buck €5.70). Most shared-block prices are bitbyg-sourced
+      <span class="pill conf-high">High</span> confidence — unstocked/unverified parts carry ⚠ notes in the
+      Source column above.</p>
 
   </div><!-- /#matrix -->
 
@@ -380,8 +383,9 @@
     Live per-variant view of the three comms layers: <b>A</b> brain↔screen ·
     <b>B</b> system bus (drawn with the variant's real node count) ·
     <b>C</b> driver topology + the 6 driver→motor links — plus the constant
-    alignment node and the power block (60&nbsp;W / 150&nbsp;W PSU, 12&nbsp;V/24&nbsp;V
-    dual rail on common ground). Redraws whenever a matrix row is selected.
+    alignment node and the power block (60&nbsp;W / 150&nbsp;W PSU on a single
+    24&nbsp;V rail, stepped down locally by two buck converters: 12&nbsp;V for the
+    alignment motors, 5&nbsp;V for logic). Redraws whenever a matrix row is selected.
   </p>
   <div class="sae-card animate-in" style="--delay:0.17s;overflow-x:auto">
     <div id="diagram" aria-hidden="true"></div>
@@ -688,7 +692,7 @@ function buildDiagram(v){
 
   /* alignment node — its own MCU, constant across every variant */
   const alignBox = {x:650,y:190,w:170,h:48};
-  s += BOX(alignBox.x,alignBox.y,alignBox.w,alignBox.h,'Alignment node','28BYJ-48 + motor #2 (constant)');
+  s += BOX(alignBox.x,alignBox.y,alignBox.w,alignBox.h,'Alignment node','2× 28BYJ-48 + ULN2003 (constant)');
   s += LINE(alignBox.x+alignBox.w/2, busY, alignBox.x+alignBox.w/2, alignBox.y, {stroke:mut});
 
   /* pump-controller node(s), class-dependent; `sources` = Layer-C fan-out anchor point(s) */
@@ -731,24 +735,30 @@ function buildDiagram(v){
     s += T(dx, motorY+4, `M${i+1}`, {size:11, weight:600});
   });
 
-  /* ---------- Power block: PSU 60 W / 150 W, 12 V/24 V dual rail, common ground ---------- */
+  /* ---------- Power block: single 24V PSU rail, stepped down locally by two buck
+     converters (D-15/D-16 research answer) — NOT a raw "12V+24V dual rail" from the wall. ---------- */
   s += T(20,452,'Power',{anchor:'start',size:12.5,weight:700,color:acc});
   const psuW = v.bom.psu150 ? '150 W' : '60 W';
   const psuConc = v.at>=6 ? 'all-6 at once' : v.at===2 ? '2 at once' : '1 at once';
-  const pb={x:230,y:464,w:420,h:96};
+  const pb={x:230,y:464,w:420,h:120};
   s += `<rect x="${pb.x}" y="${pb.y}" width="${pb.w}" height="${pb.h}" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,107,43,0.35)" stroke-width="1.4"/>`;
-  s += T(pb.x+pb.w/2, pb.y+20, `PSU 24V · ${psuW}`, {size:12.5, weight:700, color:acc});
-  s += T(pb.x+pb.w/2, pb.y+36, psuConc, {size:10, color:mut});
-  s += LINE(pb.x+24, pb.y+54, pb.x+pb.w-24, pb.y+54, {stroke:acc, w:2.2});
-  s += T(pb.x+pb.w-20, pb.y+50, '24V rail', {anchor:'end', size:9.5, color:acc});
-  s += LINE(pb.x+24, pb.y+72, pb.x+pb.w-24, pb.y+72, {stroke:blue, w:2.2});
-  s += T(pb.x+pb.w-20, pb.y+68, '12V rail', {anchor:'end', size:9.5, color:blue});
-  s += LINE(pb.x+24, pb.y+86, pb.x+pb.w-24, pb.y+86, {stroke:mut, w:1.4});
-  s += T(pb.x+pb.w-20, pb.y+84, 'common ground', {anchor:'end', size:9, color:mut});
-  s += LINE(pb.x+pb.w/2-40, pb.y, pb.x+pb.w/2-40, driverY-14, {stroke:acc, w:1.1, dash:'2 3'});
-  s += T(pb.x+pb.w/2-40, driverY-20, '24V → drivers', {size:8.5, color:acc});
-  s += LINE(pb.x+pb.w/2+40, pb.y, pb.x+pb.w/2+40, driverY-14, {stroke:blue, w:1.1, dash:'2 3'});
-  s += T(pb.x+pb.w/2+40, driverY-20, '12V → logic (reg.)', {size:8.5, color:blue});
+  s += T(pb.x+pb.w/2, pb.y+18, `PSU 24V · ${psuW}`, {size:12.5, weight:700, color:acc});
+  s += T(pb.x+pb.w/2, pb.y+32, psuConc, {size:10, color:mut});
+  s += LINE(pb.x+24, pb.y+48, pb.x+pb.w-24, pb.y+48, {stroke:acc, w:2.2});
+  s += T(pb.x+pb.w-20, pb.y+44, '24V rail → 6× drivers/NEMA17', {anchor:'end', size:9, color:acc});
+  s += LINE(pb.x+24, pb.y+62, pb.x+pb.w-24, pb.y+62, {stroke:blue, w:2.2});
+  s += T(pb.x+pb.w-20, pb.y+58, '12V (LM2596 buck) → 2× 28BYJ-48 alignment', {anchor:'end', size:9, color:blue});
+  s += LINE(pb.x+24, pb.y+76, pb.x+pb.w-24, pb.y+76, {stroke:acc2, w:2.2});
+  s += T(pb.x+pb.w-20, pb.y+72, '5V (buck) → ESP32, screen, SD, LM75, MPR121, vib. driver', {anchor:'end', size:9, color:acc2});
+  s += LINE(pb.x+24, pb.y+90, pb.x+pb.w-24, pb.y+90, {stroke:mut, w:1.4});
+  s += T(pb.x+pb.w-20, pb.y+87, 'common ground', {anchor:'end', size:9, color:mut});
+  s += T(pb.x+pb.w/2, pb.y+108, '+0.39 A / 9.4 W new draw on 24V (logic + alignment) — estimate', {size:9, color:mut});
+  s += LINE(pb.x+pb.w/2-90, pb.y, pb.x+pb.w/2-90, driverY-14, {stroke:acc, w:1.1, dash:'2 3'});
+  s += T(pb.x+pb.w/2-90, driverY-20, '24V → drivers', {size:8.5, color:acc});
+  s += LINE(pb.x+pb.w/2, pb.y, pb.x+pb.w/2, driverY-14, {stroke:acc2, w:1.1, dash:'2 3'});
+  s += T(pb.x+pb.w/2, driverY-20, '5V → logic', {size:8.5, color:acc2});
+  s += LINE(pb.x+pb.w/2+90, pb.y, pb.x+pb.w/2+90, driverY-14, {stroke:blue, w:1.1, dash:'2 3'});
+  s += T(pb.x+pb.w/2+90, driverY-20, '12V → alignment', {size:8.5, color:blue});
 
   return `<svg viewBox="0 0 880 600" width="100%" style="max-width:820px;height:auto;" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
 }
