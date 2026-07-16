@@ -548,10 +548,15 @@ const BUS_PINS = { 'I²C':2, 'RS-485':3, 'CAN':4, 'USB/UART':2, 'USB/UART/CAN':2
 /* pinsOf(v): mirrors costOf(v)'s aggregation shape, applied to GPIO instead of euros.
    avail = the variant's brain usable-GPIO (esp32, or espscreen for the integrated board).
    used  = Layer A (screen+touch, fixed — skipped for espscreen: the 9 free IO already
-           accounts for the onboard display) + LM75 (shares the I²C bus if the system bus
-           is I²C, else +2 dedicated pins; skipped for espscreen, which has no LM75) +
-           Layer B (bus attach) + Layer C (driver links, 0 when a dedicated pump-node MCU
-           or a printer board's driver sockets absorb the wiring instead — see VARIANTS.pinsC). */
+           accounts for the onboard display) + LM75/MPR121 shared I²C (LM75 shares the
+           I²C bus if the system bus is I²C, else +2 dedicated pins, skipped for espscreen,
+           which has no LM75; the MPR121 capacitive touch controller rides the SAME
+           physical I²C attachment LM75 already pays for — its default address 0x5A does
+           not collide with LM75's 0x48 — so it costs 0 additional pins) + Layer B (bus
+           attach) + Layer C (driver links, 0 when a dedicated pump-node MCU or a printer
+           board's driver sockets absorb the wiring instead — see VARIANTS.pinsC) + 1 fixed
+           PWM pin for the vibration motor's MOSFET drive (via vibDriver), constant across
+           every variant (D-13: the vibration motor is fixed shared hardware). */
 function pinsOf(v){
   const intKey = intBrainKey(v);
   const brainKey = intKey || 'esp32';
@@ -560,10 +565,11 @@ function pinsOf(v){
   let used = 0;
   if (!intKey) {
     used += SCREEN_PINS[interfaceMode];
-    used += (v.b === 'I²C') ? 0 : 2;   // LM75 onboard temp sensor
+    used += (v.b === 'I²C') ? 0 : 2;   // LM75 onboard temp sensor — MPR121 shares this same I²C attachment, +0 pins
   }
   used += BUS_PINS[v.b] || 0;
   used += v.pinsC || 0;
+  used += 1;   // vibration motor PWM pin (vibDriver, LEDC-capable GPIO) — fixed, every variant
   const free = avail - used;
   return { used, avail, free, overrun: used > avail };
 }
