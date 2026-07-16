@@ -256,12 +256,16 @@ concurrency — both shown rather than cherry-picking the flattering pairing, pe
 `ESPINT32-brain-i2c` adds the **3.2" integrated board (ESP32-2432S032R)** — the size/resolution
 match to the owned screen. Its defining constraint is **only 3 free GPIO**: it spends 2 on the
 I²C bus and has **no pins left to fuse pump control**, so its *only* viable shape is a pure brain
-talking I²C to a separate pump node (here an RP2040 driving 6 DRV8825). It fits (1 pin free).
+talking I²C to a separate pump node (here an RP2040 driving 6 DRV8825). It fits with **zero** pins
+to spare (3 available = 2 I²C + 1 vibration PWM) — the D-13 vibration pin consumes the last free
+GPIO, so this variant has no headroom for any further fixed load.
 Cost trade-off vs the discrete-screen equivalent `P6-rp-i2c` (bare ESP32 brain + owned ILI9341):
-whole-system **€102 vs €114** — the integrated board saves ~€12 and one part and all Layer-A
-wiring; controller-only it reads €53 vs €42 because that view credits no screen either way, so the
-integrated board's built-in display is "unpaid for". The board is **not stocked at bitbyg**
-(the default vendor) — hence Low sourcing confidence despite High-confidence pin data.
+whole-system **€223.21 vs €239.58** — the integrated board saves €16.37, one part, and all Layer-A
+wiring; controller-only it reads **€96.88 vs €89.93** (+€6.95) because that view credits no screen
+either way, so the integrated board's built-in display is "unpaid for". The board is **not stocked
+at bitbyg** (the default vendor) — hence Low sourcing confidence despite High-confidence pin data.
+(Recompute these four figures whenever a `DEFAULTS` price or `SHARED_BOM` changes — same trigger
+as `PRICES_VERSION`.)
 
 Cost is always `Σ(component € × qty in bom)`, plus the shared block (below) when "include shared
 block" is toggled on. Shared-block cost double-counting is guarded for integrated-screen variants
