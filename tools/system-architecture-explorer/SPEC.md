@@ -42,37 +42,50 @@ Rendered live in the "Component unit prices" section (`#compTable`), editable pe
 € or DKK value updates `COMP[k].eur` and persists to localStorage). Defaults below are the
 `DEFAULTS` object's shipped values. DKK→EUR conversion rate defaults to **0.134** (editable).
 
+Prices were sourced against the **bitbyg.dk catalogue on 2026-07-16** (D-07/D-11 default vendor).
+DKK figures are the vendor's listed incl.-VAT prices; € = DKK × 0.134.
+
 | Component | Role | Default € | Source | Confidence |
 |---|---|:--:|---|:--:|
-| ESP32 dev board | brain / fused controller | 5.0 | bitbyg DOIT ESP32 30P ≈67.50 DKK (≈€9) — price above not yet reconciled to the listing | Low |
-| RP2040 (Pico) | 6-parallel node (PIO) | 4.0 | — (rough estimate) | Low |
-| STM32 Blue Pill | 6-parallel node (timers) | 3.0 | — (rough estimate) | Low |
-| Arduino Pro-Mini | per-pump node | 2.5 | — (rough estimate) | Low |
-| Arduino Nano | alignment / small node | 3.0 | — (rough estimate) | Low |
-| ESP32-2432S024 (2.4" integrated LVGL touch) | brain + screen, one part | 25.6 | bitbyg, 183.75–198.75 DKK — resolution/touch chip not stated | Medium |
+| ESP32 dev board | brain / fused controller | 9.05 | bitbyg "DOIT ESP32 30P IOT Mainboard", 67.50 DKK | **High** |
+| RP2040 (Pico) | 6-parallel node (PIO) | 4.0 | ⚠ **NOT STOCKED** at bitbyg — no bare Pico/RP2040 board (nearest: LiLyGo T-PicoC3 123.75 DKK, a different RP2040+ESP32-C3 combo). Unsourced estimate | Low |
+| STM32 Blue Pill | 6-parallel node (timers) | 13.23 | bitbyg "STM32F103C8T6 ARM STM32 System Development Board", 98.75 DKK | **High** |
+| Arduino Pro-Mini | per-pump node | 7.37 | bitbyg "Pro Mini 5V", 55.00 DKK (3.3V same price) | **High** |
+| Arduino Nano | alignment / small node | 8.71 | bitbyg "Nano V3.0 ATmega328 16M 5V CH340G", 65.00 DKK | **High** |
+| ESP32-2432S024 (2.4" integrated LVGL touch) | brain + screen, one part | 24.62 | bitbyg, 183.75 DKK resistive (198.75 DKK capacitive) — resolution/touch chip not stated | **High** |
 | ESP32-2432S032R (3.2" integrated ST7789 touch) | brain + screen, one part | 16.0 | Sunton "CYD v2", 3.2" 240×320 + XPT2046 resistive touch — ~€13–18 AliExpress, NOT stocked at bitbyg | Low |
-| DRV8825 | dumb driver (STEP/DIR) | 1.5 | — (rough estimate) | Low |
-| TMC2209 | smart driver (UART) | 3.5 | — (rough estimate) | Low |
-| TMC5160 | motion driver (SPI) | 12.0 | — (rough estimate) | Low |
-| TMC5072 dual-axis | 2 motors/chip (SPI) | 14.0 | — (rough estimate) | Low |
-| MAX485 module | RS-485 transceiver / node | 0.7 | — (rough estimate) | Low |
-| MCP2515 module | CAN transceiver / node | 2.5 | — (rough estimate) | Low |
-| BTT SKR / Octopus | 32-bit printer board | 30.0 | — (rough estimate) | Low |
-| Mega2560 + RAMPS | printer board bundle | 18.0 | — (rough estimate) | Low |
-| Driver carrier PCB | 6 driver sockets | 4.0 | — (rough estimate) | Low |
-| PSU 24V ~60W | 1–2 motors at once | 12.0 | — (rough estimate) | Low |
-| PSU 24V ~150W | all-6 at once | 20.0 | — (rough estimate) | Low |
+| DRV8825 | dumb driver (STEP/DIR) | 6.87 | bitbyg "DRV8825 stepmotor driver", 51.25 DKK — ~4.5× the generic estimate previously assumed | **High** |
+| TMC2209 | smart driver (UART) | 3.5 | ⚠ **NOT STOCKED** at bitbyg — catalogue carries **no Trinamic TMC drivers at all**. Unsourced estimate | Low |
+| TMC5160 | motion driver (SPI) | 12.0 | ⚠ **NOT STOCKED** at bitbyg — no TMC drivers. Unsourced estimate | Low |
+| TMC5072 dual-axis | 2 motors/chip (SPI) | 14.0 | ⚠ **NOT STOCKED** at bitbyg — no TMC drivers. Unsourced estimate | Low |
+| MAX485 module | RS-485 transceiver / node | 2.51 | bitbyg "TTL til RS-485 Modul", 18.75 DKK | **High** |
+| MCP2515 module | CAN transceiver / node | 8.21 | bitbyg "MCP2515 CAN Bus Modul TJA1050 SPI", 61.25 DKK | **High** |
+| BTT SKR / Octopus | 32-bit printer board | 30.0 | ⚠ **NOT STOCKED** at bitbyg — no BigTreeTech 32-bit boards. Unsourced estimate | Low |
+| Mega2560 + RAMPS | printer board bundle | 36.52 | bitbyg bundle: "ArduinoTech MEGA2560 R3" 173.75 + "Ramper 1.6 Kontroltavle" 98.75 = 272.50 DKK | **High** |
+| Driver carrier PCB | 6 driver sockets | 4.0 | ⚠ **NOT STOCKED** at bitbyg — no CNC shield / multi-driver carrier. Unsourced estimate (or fabricate custom) | Low |
+| PSU 24V ~60W | 1–2 motors at once | 18.26 | bitbyg "24V 3A Transformer 72W", 136.25 DKK — 72 W not 60 W, near-equivalent substitution | Medium |
+| PSU 24V ~150W | all-6 at once | 31.66 | bitbyg "12V-24V 200W-600W" PSU from 236.25 DKK (200 W variant) — nearest ≥150 W, near-equivalent | Medium |
 | **Shared block (constant, all variants when "whole-system" toggled on):** | | | | |
-| ILI9341 3.2" touch screen (owned) | screen | 23.0 | bitbyg, 174 DKK ≈ €23 — inspected, confirmed SPI (8 pins) | **High** |
-| NEMA17 pump stepper ×6 | pump motor | 6.0 (×6) | — (rough estimate) | Low |
-| 28BYJ-48 12V + ULN2003 | alignment motor #1 | 2.5 | — (rough estimate) | Low |
-| Alignment motor #2 (TBD) | alignment motor #2 | 6.0 | — (rough estimate) | Low |
+| ILI9341 3.2" touch screen (owned) | screen | 23.32 | bitbyg, 174 DKK — inspected, confirmed SPI (8 pins) | **High** |
+| NEMA17 pump stepper ×6 | pump motor | 14.41 (×6) | bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked (others 116–161 DKK) | **High** |
+| 28BYJ-48 12V + ULN2003 | alignment motor #1 | 5.86 | bitbyg bundle: 28BYJ-48 25.00 + "Stepmotor Driver Board ULN2003" 18.75 = 43.75 DKK | **High** |
+| Alignment motor #2 (TBD) | alignment motor #2 | 6.0 | ⚠ Cannot be sourced — part not chosen yet (TBD in the alignment-module design). Placeholder | Low |
 
-Only the ILI9341 screen carries a High-confidence, directly-sourced price — it is the "owned,
-already-purchased" anchor component. Every other price is a rough hobby-class working estimate
-(±20%, per the cost-model assumptions below) not yet reconciled against a specific bitbyg listing;
-sourcing the remaining ~20 prices is deferred (out of Phase 6 scope, per CONTEXT.md's Deferred
-Ideas — "ongoing BOM work, not this phase").
+**13 of 21 components are now High-confidence, directly sourced from bitbyg listings.** Two PSUs
+are Medium (nearest stocked wattage, not exact). Six components are **not stocked by bitbyg** and
+retain unsourced estimates — flagged inline in the tool's Source column with a ⚠ marker:
+
+- **No Trinamic TMC driver of any kind** is in bitbyg's catalogue. This affects every *smart*
+  (TMC2209) and *motion* (TMC5160/TMC5072) variant — a large share of the matrix — so those rows
+  cost out against unsourced prices and need a second vendor before they can be trusted or ordered.
+- **No bare RP2040/Pico**, **no BigTreeTech SKR/Octopus**, and **no CNC-shield/driver carrier**.
+- **Alignment motor #2** is unsourceable in principle until the alignment-module design picks a part.
+
+Sourcing revealed that bitbyg's real prices run substantially above the generic hobby-class
+estimates the tool originally shipped (DRV8825 €1.5 → €6.87; NEMA17 €6 → €14.41; MAX485 €0.7 →
+€2.51). **Absolute costs therefore rose sharply across every variant**; the relative ranking between
+architectures is the more durable output. Vendor listings change without notice — re-check before
+ordering.
 
 Prices are editable in the running tool; edits and the DKK→EUR rate persist to localStorage (see
 Persistence below). Reset button restores all `DEFAULTS` and clears the persisted keys.
@@ -326,10 +339,19 @@ all access wrapped in `try/catch` (mirrors the site-wide `lang` key idiom):
 | Key | Contents |
 |---|---|
 | `sae-prices` | JSON snapshot of `{componentKey: eur}` for every `COMP` entry |
+| `sae-prices-v` | The `PRICES_VERSION` stamp the snapshot was saved under |
 | `sae-rate` | The DKK→EUR conversion rate as a string |
 
-The Reset button restores all component prices to `DEFAULTS` and removes both keys. These are
+The Reset button restores all component prices to `DEFAULTS` and removes all three keys. These are
 distinct from the site's shared `lang` localStorage key — no collision.
+
+**`PRICES_VERSION` (defaults-invalidation).** Saved prices carry the `PRICES_VERSION` stamp in
+force when they were written; on load, a snapshot stamped with an *older* version is discarded and
+the fresh `DEFAULTS` are used. Without this, any reader who had ever edited a single price would
+keep their whole stale set forever and would silently never receive re-sourced vendor prices — the
+2026-07-16 bitbyg sourcing pass would have been invisible to exactly the users most engaged with
+the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current value:
+`2026-07-16-bitbyg-sourced`.
 
 ---
 

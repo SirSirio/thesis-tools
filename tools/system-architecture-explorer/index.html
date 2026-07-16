@@ -119,9 +119,12 @@
     border-radius:6px;padding:5px 7px;font:inherit}
   #matrix .conv{display:flex;align-items:center;gap:8px;font-size:14px}
   #matrix .pill{display:inline-block;padding:1px 7px;border-radius:20px;font-size:11px;font-weight:600}
-  #matrix .p1{background:rgba(62,192,107,.15);color:var(--ok)}
+  /* Concurrency pills: MORE pumps at once is BETTER, so 6 = green, 2 = amber, 1 = red.
+     The OVERRUN flag keeps its own .bad class so it stays red independently of this scale. */
+  #matrix .p1{background:rgba(232,53,53,.15);color:var(--accent-2)}
   #matrix .p2{background:rgba(224,165,60,.15);color:var(--warn)}
-  #matrix .p6{background:rgba(232,53,53,.15);color:var(--accent-2)}
+  #matrix .p6{background:rgba(62,192,107,.15);color:var(--ok)}
+  #matrix .bad{background:rgba(232,53,53,.15);color:var(--accent-2)}
   #matrix .conf-high{background:rgba(62,192,107,.15);color:var(--ok)}
   #matrix .conf-medium{background:rgba(224,165,60,.15);color:var(--warn)}
   #matrix .conf-low{background:rgba(255,255,255,.08);color:var(--text-muted)}
@@ -394,25 +397,29 @@
 <script>
 /* ---------- component catalogue (eur is the source of truth) ---------- */
 const DEFAULTS = {
-  esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:5, confidence:'Low',
-    source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg DOIT ESP32 30P ≈67.50 DKK (≈€9) — price above is a rough working estimate, not yet reconciled to a specific listing'},
+  esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:9.05, confidence:'High',
+    source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg "DOIT ESP32 30P IOT Mainboard", 67.50 DKK — cheapest bare-ESP32 brain in the catalogue'},
     gpioUsable:15, gpioConf:'Medium', ram:'520 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
     uiNote:'No PSRAM: a single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight.'},
   rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4, confidence:'Low',
+    source:{note:'⚠ NOT STOCKED at bitbyg — no bare Raspberry Pi Pico / RP2040 board in the catalogue (nearest: LiLyGo T-PicoC3, 123.75 DKK, a different RP2040+ESP32-C3 combo). Price is an unsourced estimate; needs a second vendor.'},
     gpioUsable:26, gpioConf:'Medium', ram:'264 KB SRAM', ramConf:'Low', psram:'None', psramConf:'Low',
     uiNote:'Never drives the screen in any variant (pump-node co-processor only) — RAM is not a GUI concern here.'},
-  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:3, confidence:'Low',
+  stm32:{label:'STM32 Blue Pill', role:'6-parallel node (timers)', eur:13.23, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/stm32f103c8t6-arm-stm32-system-development-board/', note:'bitbyg "STM32F103C8T6 ARM STM32 System Development Board", 98.75 DKK — the Blue Pill equivalent'},
     gpioUsable:30, gpioConf:'Medium', ram:'20 KB SRAM', ramConf:'Low', psram:'None', psramConf:'Low',
     uiNote:'20 KB is tight for anything beyond step generation, but this MCU never drives the screen — non-issue for GUI fluidity.'},
-  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:2.5, confidence:'Low',
+  promini:{label:'Arduino Pro-Mini', role:'per-pump node', eur:7.37, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/pro-mini-5v/', note:'bitbyg "Pro Mini 5V", 55.00 DKK (3.3V variant same price)'},
     gpioUsable:18, gpioConf:'Medium', ram:'2 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
     uiNote:'Not a brain candidate — per-pump-node role only, never drives the screen.'},
-  nano:{label:'Arduino Nano', role:'alignment / small node', eur:3, confidence:'Low',
+  nano:{label:'Arduino Nano', role:'alignment / small node', eur:8.71, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/nano-v3-0-atmega328-16m-5v-mikrocontroller-ch340g/', note:'bitbyg "Nano V3.0 ATmega328 16M 5V CH340G", 65.00 DKK'},
     gpioUsable:18, gpioConf:'Medium', ram:'2 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
     uiNote:'Alignment/small-node role only, never drives the screen.'},
-  espscreen:{label:'ESP32-2432S024 (2.4" integrated LVGL touch)', role:'brain + screen, one part', eur:25.6,
-    confidence:'Medium',
-    source:{url:'https://bitbyg.dk/shop/esp32-lvgl-wifibluetooth-2-4inch-lcd-touch-tft-module/', note:'bitbyg, 183.75–198.75 DKK — display resolution/touch chip not stated on the page'},
+  espscreen:{label:'ESP32-2432S024 (2.4" integrated LVGL touch)', role:'brain + screen, one part', eur:24.62,
+    confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/esp32-lvgl-wifibluetooth-2-4inch-lcd-touch-tft-module/', note:'bitbyg, 183.75 DKK resistive (198.75 DKK capacitive) — display resolution/touch chip not stated on the page'},
     gpioUsable:9, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None (32 Mbit flash)', psramConf:'Medium',
     uiNote:'No PSRAM: single-buffered UI comfortable. Integrated display eliminates all Layer-A wiring — the 9 free IO already accounts for the onboard screen + touch.'},
   espscreen32:{label:'ESP32-2432S032R (3.2" integrated ST7789 touch)', role:'brain + screen, one part', eur:16,
@@ -420,23 +427,37 @@ const DEFAULTS = {
     source:{url:'https://mischianti.org/esp32-2432s032-3-2%E2%80%B3-sunton-cheap-yellow-display-v2-pinout-datasheet-schema-and-specs/', note:'Sunton "CYD v2" — 3.2" 240×320 ST7789 + XPT2046 resistive touch, ESP32-WROOM-32. ~€13–18 on AliExpress; NOT stocked at bitbyg (the default vendor), so price is an estimate.'},
     gpioUsable:3, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None (4 MB flash)', psramConf:'Medium',
     uiNote:'Only 3 free GPIO (22, 27, 35-input-only) after the onboard display/touch/SD. Consequence: it can ONLY be a pure brain over a 2-pin I²C bus to a separate pump controller — it cannot fuse pump control. Same 240×320 as the owned screen; ST7789 not ILI9341 (cosmetic under LVGL/TFT_eSPI).'},
-  drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:1.5, confidence:'Low'},
-  tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5, confidence:'Low'},
-  tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12, confidence:'Low'},
-  tmc5072:{label:'TMC5072 dual-axis', role:'2 motors/chip (SPI)', eur:14, confidence:'Low'},
-  max485:{label:'MAX485 module', role:'RS-485 transceiver / node', eur:0.7, confidence:'Low'},
-  mcp2515:{label:'MCP2515 module', role:'CAN transceiver / node', eur:2.5, confidence:'Low'},
-  skr:{label:'BTT SKR / Octopus', role:'32-bit printer board', eur:30, confidence:'Low'},
-  ramps:{label:'Mega2560 + RAMPS', role:'printer board bundle', eur:18, confidence:'Low'},
-  carrier:{label:'Driver carrier PCB', role:'6 driver sockets', eur:4, confidence:'Low'},
-  psu60:{label:'PSU 24V ~60W', role:'1–2 motors at once', eur:12, confidence:'Low'},
-  psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:20, confidence:'Low'},
+  drv8825:{label:'DRV8825', role:'dumb driver (STEP/DIR)', eur:6.87, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/drv8825-stepper-motor-driver/', note:'bitbyg "DRV8825 stepmotor driver", 51.25 DKK — note this is ~4.5× the generic AliExpress estimate previously assumed'}},
+  tmc2209:{label:'TMC2209', role:'smart driver (UART)', eur:3.5, confidence:'Low',
+    source:{note:'⚠ NOT STOCKED at bitbyg — the catalogue carries NO Trinamic TMC drivers at all (searched TMC/TMC2209). Price is an unsourced estimate; every "smart driver" variant needs a second vendor.'}},
+  tmc5160:{label:'TMC5160', role:'motion driver (SPI)', eur:12, confidence:'Low',
+    source:{note:'⚠ NOT STOCKED at bitbyg — no Trinamic TMC drivers in the catalogue. Unsourced estimate; needs a second vendor.'}},
+  tmc5072:{label:'TMC5072 dual-axis', role:'2 motors/chip (SPI)', eur:14, confidence:'Low',
+    source:{note:'⚠ NOT STOCKED at bitbyg — no Trinamic TMC drivers in the catalogue. Unsourced estimate; needs a second vendor.'}},
+  max485:{label:'MAX485 module', role:'RS-485 transceiver / node', eur:2.51, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/ttl-til-rs-485-modul/', note:'bitbyg "TTL til RS-485 Modul", 18.75 DKK — the MAX485-class transceiver bitbyg actually sells'}},
+  mcp2515:{label:'MCP2515 module', role:'CAN transceiver / node', eur:8.21, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/mcp2515-can-bus-module-tja1050-spi/', note:'bitbyg "MCP2515 CAN Bus Modul TJA1050 SPI", 61.25 DKK'}},
+  skr:{label:'BTT SKR / Octopus', role:'32-bit printer board', eur:30, confidence:'Low',
+    source:{note:'⚠ NOT STOCKED at bitbyg — no BigTreeTech SKR/Octopus 32-bit printer boards in the catalogue. Unsourced estimate; needs a second vendor.'}},
+  ramps:{label:'Mega2560 + RAMPS', role:'printer board bundle', eur:36.52, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/ramps-1-6-control-board/', note:'bitbyg bundle: "ArduinoTech MEGA2560 R3" 173.75 DKK + "Ramper 1.6 Kontroltavle" 98.75 DKK = 272.50 DKK'}},
+  carrier:{label:'Driver carrier PCB', role:'6 driver sockets', eur:4, confidence:'Low',
+    source:{note:'⚠ NOT STOCKED at bitbyg — no CNC shield / multi-driver carrier board in the catalogue. Unsourced estimate (or fabricate a custom PCB).'}},
+  psu60:{label:'PSU 24V ~60W', role:'1–2 motors at once', eur:18.26, confidence:'Medium',
+    source:{url:'https://bitbyg.dk/shop/24v-3a-transformer-72w-power-supply-adapter/', note:'bitbyg "24V 3A Transformer 72W", 136.25 DKK — nearest stocked unit; 72 W not 60 W, so this is a near-equivalent substitution'}},
+  psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:31.66, confidence:'Medium',
+    source:{url:'https://bitbyg.dk/shop/12v-24v-200w-600w-stroemforsyning-16-5a-50a-power-supply/', note:'bitbyg "12V-24V 200W-600W" PSU, from 236.25 DKK (200 W variant) — nearest stocked unit ≥150 W; near-equivalent substitution'}},
   /* shared */
-  screen:{label:'ILI9341 3.2" touch', role:'screen (174 DKK)', eur:23, shared:1, confidence:'High',
-    source:{url:'https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/', note:'bitbyg, 174 DKK ≈ €23 — owned board; physically inspected and confirmed SPI (8 pins)'}},
-  stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:6, shared:1, confidence:'Low'},
-  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:2.5, shared:1, confidence:'Low'},
-  alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1, confidence:'Low'},
+  screen:{label:'ILI9341 3.2" touch', role:'screen (174 DKK)', eur:23.32, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/', note:'bitbyg, 174 DKK — owned board; physically inspected and confirmed SPI (8 pins)'}},
+  stepperNema:{label:'NEMA17 pump stepper', role:'pump motor ×6', eur:14.41, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/stepper-motor-nema17-42byghw811/', note:'bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked NEMA17 (others 116–161 DKK)'}},
+  align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor #1', eur:5.86, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/step-gear-motor-28byj-48-5v-4-fase-5-ledning-dc-5v-12v/', note:'bitbyg bundle: 28BYJ-48 motor 25.00 DKK + "Stepmotor Driver Board ULN2003" 18.75 DKK = 43.75 DKK'}},
+  alignMot2:{label:'Alignment motor #2 (TBD)', role:'alignment motor #2', eur:6, shared:1, confidence:'Low',
+    source:{note:'⚠ Cannot be sourced — the part itself is not chosen yet (TBD in the alignment-module design). Placeholder estimate.'}},
 };
 const COMP = JSON.parse(JSON.stringify(DEFAULTS));
 
@@ -718,13 +739,22 @@ function buildDiagram(v){
   return `<svg viewBox="0 0 880 600" width="100%" style="max-width:820px;height:auto;" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
 }
 
-/* ---------- persistence (D-06): edited prices + DKK->EUR rate ---------- */
+/* ---------- persistence (D-06): edited prices + DKK->EUR rate ----------
+   PRICES_VERSION stamps the DEFAULTS price set. Saved prices from an OLDER stamp are
+   discarded on load: without this, anyone who ever edited one price keeps seeing the
+   whole stale set forever and silently never receives re-sourced vendor prices.
+   BUMP THIS whenever a DEFAULTS price changes. */
+const PRICES_VERSION = '2026-07-16-bitbyg-sourced';
 function loadPersisted(){
   try{
-    const saved=JSON.parse(localStorage.getItem('sae-prices'));
-    if(saved) for(const k in saved){
-      const v=saved[k];
-      if(COMP[k] && Number.isFinite(v) && v>=0) COMP[k].eur=v;
+    if(localStorage.getItem('sae-prices-v') !== PRICES_VERSION){
+      localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-prices-v');
+    } else {
+      const saved=JSON.parse(localStorage.getItem('sae-prices'));
+      if(saved) for(const k in saved){
+        const v=saved[k];
+        if(COMP[k] && Number.isFinite(v) && v>=0) COMP[k].eur=v;
+      }
     }
   }catch(e){}
   try{
@@ -736,6 +766,7 @@ function persist(){
   try{
     const snap={}; for(const k in COMP) snap[k]=COMP[k].eur;
     localStorage.setItem('sae-prices', JSON.stringify(snap));
+    localStorage.setItem('sae-prices-v', PRICES_VERSION);
     localStorage.setItem('sae-rate', String(rate));
   }catch(e){}
 }
@@ -854,7 +885,7 @@ function renderMatrix(){
     const v=o.v, dc = v.dk==='dumb'?'drv-dumb':v.dk==='smart'?'drv-smart':'drv-motion';
     const p = pinsOf(v), pc = pinConfidenceOf(v);
     const pinCell = p.overrun
-      ? `<span class="pill p6">OVERRUN</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
+      ? `<span class="pill bad">OVERRUN</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
       : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
     const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
     tr.innerHTML=`<td><b>${v.id}</b></td>
@@ -918,7 +949,7 @@ document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.val
 document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
 document.getElementById('reset').addEventListener('click',()=>{
   for(const k in COMP) COMP[k].eur=DEFAULTS[k].eur;
-  try{ localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-rate'); }catch(e){}
+  try{ localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-prices-v'); localStorage.removeItem('sae-rate'); }catch(e){}
   renderComps(); renderMatrix();});
 document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{
   const k=th.dataset.k;
