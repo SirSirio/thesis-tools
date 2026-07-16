@@ -1076,6 +1076,14 @@ const MODULES = {
    variant, rendered once at init, never rebuilt by renderMatrix() (T-06.1-06). */
 function buildSchema(){
   const acc='#ff6b2b', acc2='#e83535', txt='#f0ece8', mut='#7a7068', blue='#4a90d9';
+  /* Flow colours are named by MEANING, not hue — the two flows are the only thing colour
+     encodes here, so nothing should have to chase a hex value to change them.
+     Liquid is blue because the sealed dry-zone barrier below is already drawn blue with the
+     liquidGlass gradient: one colour for "liquid" across the whole schema. Data is green —
+     far from both the blue liquid family and the orange module titles. Colour is the
+     secondary cue anyway: liquid stays solid/thick/filled-arrow and data stays dashed/thin,
+     so the distinction still survives greyscale printing. */
+  const liq = blue, dat = '#3ec06b';
   const fontFam='system-ui,sans-serif';
   let s='';
 
@@ -1092,8 +1100,8 @@ function buildSchema(){
   /* <defs>: arrow markers for the two flow types + the liquid-glass filter/gradient (D-05,
      Claude's Discretion — no in-repo precedent, new work within the existing palette only). */
   s += `<defs>`;
-  s += `<marker id="liqArrow" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8 Z" fill="${acc2}"/></marker>`;
-  s += `<marker id="dataArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M1,1 L7,4 L1,7" fill="none" stroke="${blue}" stroke-width="1.2"/></marker>`;
+  s += `<marker id="liqArrow" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8 Z" fill="${liq}"/></marker>`;
+  s += `<marker id="dataArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M1,1 L7,4 L1,7" fill="none" stroke="${dat}" stroke-width="1.2"/></marker>`;
   s += `<filter id="liquidGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.29  0 0 0 0 0.56  0 0 0 0 0.85  0 0 0 0.55 0" result="glow"/><feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
   s += `<linearGradient id="liquidGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${blue}" stop-opacity="0.16"/><stop offset="100%" stop-color="${blue}" stop-opacity="0.045"/></linearGradient>`;
   s += `</defs>`;
@@ -1147,14 +1155,14 @@ function buildSchema(){
      titleTop:true, labelSize:10, labelWeight:600, labelColor:blue});
   s += moduleBox('electronics', el);
 
-  /* liquid flow: Storage → Pump → Nozzle → Alignment (solid, thick, red + arrowhead — two
-     independent cues alongside colour, so the distinction survives greyscale printing). */
+  /* liquid flow: Storage → Pump → Nozzle → Alignment (solid, thick, blue + filled arrowhead —
+     two independent cues alongside colour, so the distinction survives greyscale printing). */
   const st=LAYOUT.storage, pu=LAYOUT.pump, nz=LAYOUT.nozzle, al=LAYOUT.alignment;
-  s += LINE(st.x+st.w, st.y+st.h/2, pu.x, pu.y+pu.h/2, {stroke:acc2, w:2.6, marker:'liqArrow'});
-  s += LINE(pu.x+pu.w, pu.y+pu.h/2, nz.x, nz.y+nz.h/2, {stroke:acc2, w:2.6, marker:'liqArrow'});
-  s += LINE(nz.x+nz.w*0.35, nz.y+nz.h, al.x+al.w*0.7, al.y, {stroke:acc2, w:2.6, marker:'liqArrow'});
+  s += LINE(st.x+st.w, st.y+st.h/2, pu.x, pu.y+pu.h/2, {stroke:liq, w:2.6, marker:'liqArrow'});
+  s += LINE(pu.x+pu.w, pu.y+pu.h/2, nz.x, nz.y+nz.h/2, {stroke:liq, w:2.6, marker:'liqArrow'});
+  s += LINE(nz.x+nz.w*0.35, nz.y+nz.h, al.x+al.w*0.7, al.y, {stroke:liq, w:2.6, marker:'liqArrow'});
 
-  /* data flow: Software & Electronics ↔ Storage, Pump, Nozzle, Alignment, UI (dashed, blue —
+  /* data flow: Software & Electronics ↔ Storage, Pump, Nozzle, Alignment, UI (dashed, green —
      colour + dash pattern are the two cues distinguishing it from the liquid links above). */
   /* Anchors and touch-down points are chosen so no link passes through the Alignment box
      (x 330–550). Alignment sits directly between Electronics and the Pump/Nozzle boxes, so
@@ -1172,13 +1180,13 @@ function buildSchema(){
   ];
   dataLinks.forEach(link=>{
     const ty = link.b===al ? al.y+al.h : link.b.y+link.b.h;
-    s += LINE(link.anchorX, el.y, link.tx, ty, {stroke:blue, w:1.3, dash:'5 4', marker:'dataArrow'});
+    s += LINE(link.anchorX, el.y, link.tx, ty, {stroke:dat, w:1.3, dash:'5 4', marker:'dataArrow'});
   });
 
   /* legend */
-  s += LINE(30,30,70,30,{stroke:acc2,w:2.6});
+  s += LINE(30,30,70,30,{stroke:liq,w:2.6});
   s += T(78,34,'Liquid flow',{anchor:'start',size:10,color:txt});
-  s += LINE(30,50,70,50,{stroke:blue,w:1.3,dash:'5 4'});
+  s += LINE(30,50,70,50,{stroke:dat,w:1.3,dash:'5 4'});
   s += T(78,54,'Data flow',{anchor:'start',size:10,color:txt});
 
   /* This schema is the ONLY place its content exists (unlike #diagram below, which is

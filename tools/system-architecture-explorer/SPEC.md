@@ -40,6 +40,25 @@ Electronics to every other module**. The Software & Electronics module is drawn 
 liquid-glass-styled barrier — the design intent that this module is the sealed dry zone the other
 five modules' liquid path must never breach.
 
+**Flow encoding.** Colour is named by meaning in `buildSchema()` (`liq` / `dat`), not written as
+loose hex values:
+
+| Flow | Colour | Line | Arrow |
+|---|---|---|---|
+| Liquid | blue `#4a90d9` | solid, 2.6 wide | filled triangle |
+| Data | green `#3ec06b` | dashed `5 4`, 1.3 wide | open chevron |
+
+Liquid is blue to match the liquid-glass barrier and its `liquidGlass` gradient, which were already
+blue — one colour means "liquid" everywhere in the schema. Colour is the *secondary* cue: weight,
+dash pattern and arrowhead each carry the distinction independently, so the diagram still reads in
+greyscale.
+
+**No data link may pass through a module box.** Because connectivity is the only thing the layout
+encodes, a data line crossing a box reads as "routes through it". Alignment sits directly between
+Electronics and the Pump/Nozzle boxes, so those two links touch down on their targets' **outer
+bottom corners** rather than their centres (x=330 is exactly Alignment's left edge; x=540 is inside
+it), and the anchors fan wide enough to clear Alignment's x-span of 330–550. Re-check this
+invariant if `LAYOUT` changes.
 
 Hover, click, or keyboard-focus (Tab + Enter/Space) any module box to reveal its full payload and
 purpose text in the adjacent note panel — `selectModule()`/`wireSchemaInteractivity()` in the
