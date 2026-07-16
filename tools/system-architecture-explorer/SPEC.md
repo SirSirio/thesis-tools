@@ -214,8 +214,32 @@ estimates the tool originally shipped (DRV8825 €1.5 → €6.87; NEMA17 €6 �
 architectures is the more durable output. Vendor listings change without notice — re-check before
 ordering.
 
-Prices are editable in the running tool; edits and the DKK→EUR rate persist to localStorage (see
-Persistence below). Reset button restores all `DEFAULTS` and clears the persisted keys.
+Prices are editable in the running tool; edits, pasted source links and the DKK→EUR rate persist
+to localStorage (see Persistence below). Reset restores all `DEFAULTS`, clears the user's
+provenance, resets the live rate, and removes the persisted keys.
+
+### Price provenance (D-11)
+
+A price and its confidence tag are one claim, so they move together. `provenanceOf(k)` is the
+single place that decides both, and it is **derived, never stored** — typing a price back to its
+shipped value restores the shipped tag with no sticky "edited" flag left behind.
+
+| State | Trigger | Confidence | Source shown | Date |
+|---|---|:--:|---|---|
+| `shipped` | untouched | the `DEFAULTS` tag | the bitbyg vendor link | `PRICES_SOURCED_ON` (2026-07-16), tagged *bitbyg* |
+| `user-estimate` | price edited, no link | **Low** | "Your estimate — no source given" | edit date, tagged *you* |
+| `user-sourced` | a valid `https?://` link pasted | **High** | "Your source — manually verified", link clickable | edit/paste date, tagged *you* |
+
+Rationale: a price the user changed is no longer the vendor's claim, so it drops to Low **and the
+now-lying vendor link is dropped with it**; pasting a real link raises it to High because a manual
+search is exactly what High means under this tool's own definition. Before this existed, editing a
+price left the bitbyg link and its green High pill untouched — vouching for a number bitbyg never
+quoted — and `worstConf()` propagated that fake High into the computed readouts.
+
+Per-component user state lives in a `USER` side-car (`{url, editedOn}`), not inside `COMP`, so
+`COMP` stays a clean deep-copy of `DEFAULTS` and "has the user touched this?" is never ambiguous.
+Rows carry a `data-prov` attribute driving a coloured left edge (amber = your estimate, green =
+your source), so ownership is visible while scanning, not only when reading the pill.
 
 ---
 
@@ -314,11 +338,13 @@ a second board whose only job is generating pulses a dumb driver forces onto the
 driver deletes.
 
 **Layer A — brain ↔ screen.** The touchscreen is a fixed, owned component: an ILI9341 3.2"
-resistive-touch TFT (bitbyg, 174 DKK ≈ €23) wired SPI (owned board inspected and confirmed SPI;
-8-bit parallel retained as a counterfactual — see Open Questions) straight to the brain. Because it must render a GUI, the brain is
-ESP32-class in every variant. This link is not a per-variant field — it is either the selectable
-`interfaceMode` scenario (external ILI9341) or entirely absorbed by the integrated `espscreen`
-board (Layer A drawn as skipped in the diagram for those two variants).
+resistive-touch TFT (bitbyg, 174 DKK ≈ €23) wired **SPI, 8 pins** — owned board physically
+inspected and confirmed on 2026-07-15 (D-09). Because it must render a GUI, the brain is
+ESP32-class in every variant. This link is not a per-variant field and **no longer a control**:
+`interfaceMode` is a `const 'spi'`. It is either that fixed scenario (external ILI9341) or
+entirely absorbed by an integrated `espscreen` board (Layer A drawn as skipped in the diagram for
+those variants). The 13-pin 8-bit-parallel figure survives only in `SCREEN_PINS`/`INTERFACE_CONF`
+so the written counterfactual below stays checkable against a real number.
 
 **Layer B — the system bus.** How the brain talks to the other modules (pump controller,
 alignment node) is a genuinely open choice: **I²C**, **RS-485**, or **CAN**. I²C only makes sense
@@ -374,11 +400,13 @@ field.
 | SPI (**default, verified**) | 8 | **High** | SCK+MOSI+MISO+CS (4) + DC+RST (2) + touch T_CS/T_IRQ (2) = 8 |
 | 8-bit parallel | 13 | Low | 8 data bits + RS/DC+CS+RD+WR+RST ≈ 13; touch already counted in the A0–A3 range |
 
-Selectable in the running tool via the "Screen interface (Layer A)" control; defaults to SPI.
-The owned board was **physically inspected (2026-07-15) and confirmed SPI** — SPI is now the
-verified default at High confidence (`INTERFACE_CONF.spi = 'High'`). The 8-bit-parallel row is
-retained as a selectable counterfactual (Low confidence) so the pin-budget sensitivity to the
-interface choice stays visible. See Open Questions for the resolution record.
+**Fixed at SPI — not selectable.** The owned board was **physically inspected (2026-07-15) and
+confirmed SPI** (`INTERFACE_CONF.spi = 'High'`), so `interfaceMode` is a `const 'spi'` and the
+"Screen interface (Layer A)" control was **removed**: Controls holds live decisions, and this
+question is answered. The 8-bit-parallel row is retained here as a *written* counterfactual — had
+the vendor listing's parallel hint been right, Layer A would cost 13 pins instead of 8, enough to
+push the tightest brains over their GPIO budget, which is why the question was worth resolving
+rather than assuming. See Open Questions for the resolution record.
 
 ### BUS_PINS (Layer B, per brain's own bus attachment — not multiplied by node count)
 
@@ -409,8 +437,8 @@ field mirroring the `bom` qty-map pattern, rather than derived generically from 
 A variant's readout is `${free} free` when `used ≤ avail`, or an `OVERRUN` badge when
 `used > avail`. Both are paired with a confidence pill from `pinConfidenceOf(v)` — the **worst**
 of: the Medium/ASSUMED tier covering the Layer-B/Layer-C tables, the screen-interface confidence
-(`INTERFACE_CONF[interfaceMode]` — High for the verified SPI default, Low for the parallel
-counterfactual; external-screen variants only), and the brain's own `gpioConf`. `esp32.gpioUsable`
+(`INTERFACE_CONF[interfaceMode]` — now always High, since SPI is verified and fixed;
+external-screen variants only), and the brain's own `gpioConf`. `esp32.gpioUsable`
 is deliberately set to 15 (the upper end of the 10–15 "realistically usable" range cited in
 06-RESEARCH.md) so the result set is genuinely mixed — S1/D2 always overrun even at SPI;
 T9-fused-*/T51-*/P6-rp-i2c sit right at the SPI/parallel borderline; printer-board variants
@@ -500,7 +528,7 @@ data field):
 | `printer` | a printer board (RAMPS/SKR) with driver sockets | 3 | B-ramps-drv, B-skr-drv, B-skr-tmc |
 
 Rendered regions, top to bottom: **Layer A** (brain↔screen — external ILI9341 box + link line
-labelled with `interfaceMode`/`interfaceConf`, or a single integrated brain+screen box for
+labelled `SPI · 8 pins` / `High confidence — verified`, or a single integrated brain+screen box for
 `espscreen` variants; the brain box strokes red with a "⚠ pins overrun" caption when
 `pinsOf(v).overrun`) → **Layer B** (bus line labelled `${v.b} bus · ${nodeCount} nodes`, the
 constant alignment node) → **Layer C** (driver topology + all 6 driver→motor links, driver ICs
@@ -509,6 +537,27 @@ for `fused`/`distributed`) → **Power** (PSU box, single-24V-rail-plus-two-buck
 line — see Power-rail model below). The diagram
 auto-selects the first visible (cheapest, by default sort) variant on load and after any
 filter/sort that removes the current selection.
+
+---
+
+## Controls
+
+The Controls card is grouped by **what a control does**, because its inputs do three different
+jobs and used to be rendered identically:
+
+| Group | Contains | Effect |
+|---|---|---|
+| **Cost model** | Shared block, Power supply, DKK→EUR rate, DKK converter | Changes what every number on the page *means* |
+| **Filters** | Max price, Max complexity, Concurrency, Design direction | Only changes which rows are *visible* — never a cost |
+| **Actions** | Reset prices | Destructive; discards edits, links and the rate |
+
+Reading a €207 cost correctly depends on knowing whether the shared block and PSU are inside it —
+a different question from "why is this row hidden", so the layout says so. A **Clear filters**
+button appears in the Filters header only while a filter is active (`syncClearFilters()`, called
+from `renderMatrix()` since every filter path lands there) and resets *only* the four filters —
+touching the cost-model selects there would silently change what every price means.
+
+The **"Screen interface (Layer A)"** control was removed once D-09 resolved (see Open questions).
 
 ---
 
@@ -528,6 +577,19 @@ filter/sort that removes the current selection.
 - **Double-count guard:** an `espscreen`-based variant already prices its own integrated display as
   part of the brain component — `costOf()`/`bomHtml()` skip the `SHARED_BOM` screen line for
   those two variants so the display is never billed twice.
+- **PSU toggle (`includePsu`, default on).** The supply stays in each variant's own `v.bom` rather
+  than the shared block, because its size is a per-variant *consequence*: 1–2-at-once rows take
+  `psu60` (€18.26), 6-at-once rows are forced up to `psu150` (€31.66). Setting Power supply to
+  "Excluded" skips `PSU_KEYS` in `costOf()`/`bomWorstConf()` without moving them out of the model
+  that explains them; `bomHtml()` still lists the line struck through and marked *excluded*, so the
+  reader can see which supply the concurrency forces and what excluding it took off. Reference
+  point: the cheapest row reads €65.71 with the PSU and €34.05 without.
+- **Per-line confidence in the expanded BOM.** Each BOM line carries its own price-confidence pill,
+  and the total carries `bomWorstConf(v)` — the worst across everything the total is built from,
+  the same "never look more certain than your weakest input" rule `worstConf()` applies to the pin
+  budget. `bomWorstConf()` mirrors `costOf()`'s membership exactly (same shared-block rule, same
+  integrated-screen skip, same PSU exclusion) so the tag can never describe a different set of
+  parts than the number above it.
 - Complexity (★, 1–5, half-stars) is a qualitative design/firmware/wiring-maintenance rating, not
   a derived formula — assigned per variant based on node count, driver firmware complexity, and
   bus robustness.
@@ -546,9 +608,19 @@ all access wrapped in `try/catch` (mirrors the site-wide `lang` key idiom):
 | `sae-prices` | JSON snapshot of `{componentKey: eur}` for every `COMP` entry |
 | `sae-prices-v` | The `PRICES_VERSION` stamp the snapshot was saved under |
 | `sae-rate` | The DKK→EUR conversion rate as a string |
+| `sae-user` | Provenance side-car: `{componentKey: {url, editedOn}}` — pasted source links and edit dates |
 
-The Reset button restores all component prices to `DEFAULTS` and removes all three keys. These are
-distinct from the site's shared `lang` localStorage key — no collision.
+Reset restores all component prices to `DEFAULTS`, clears `USER` (so no row keeps claiming "your
+source" for a price that is once again bitbyg's), resets the **live** `rate` as well as the stored
+one, and removes all four keys. These are distinct from the site's shared `lang` localStorage
+key — no collision.
+
+`sae-user` is **re-validated on load, not trusted**: a `url` must match `https?://` (so a
+hand-edited store cannot smuggle a `javascript:`/`data:` URL into an `<a href>`) and `editedOn`
+must be `YYYY-MM-DD`. Anything else is dropped field-by-field — the same fail-closed posture as the
+`v >= 0` price guard. `sae-user` is versioned by the same `PRICES_VERSION` stamp, because a
+re-sourced `DEFAULTS` set invalidates the user's "I checked this" claims too: the vendor price they
+were checked against has changed underneath them.
 
 **`PRICES_VERSION` (defaults-invalidation).** Saved prices carry the `PRICES_VERSION` stamp in
 force when they were written; on load, a snapshot stamped with an *older* version is discarded and
@@ -556,7 +628,7 @@ the fresh `DEFAULTS` are used. Without this, any reader who had ever edited a si
 keep their whole stale set forever and would silently never receive re-sourced vendor prices — the
 2026-07-16 bitbyg sourcing pass would have been invisible to exactly the users most engaged with
 the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current value:
-`2026-07-16-06-1-whole-system`.
+`2026-07-17-06-2-provenance`.
 
 ---
 
@@ -568,9 +640,12 @@ the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current
    **sourced vendor-page contradiction**, not a researcher guess. The difference is 8 pins (SPI)
    vs 13 pins (parallel) — enough to flip several 6-parallel variants between "fits" and
    "OVERRUN." **Resolution:** the owned board was physically inspected and confirmed to be **SPI**.
-   The tool's default is now SPI at **High confidence** (`INTERFACE_CONF = { spi:'High',
-   parallel:'Low' }`); the 8-bit-parallel scenario is retained as a selectable Low-confidence
-   counterfactual so the pin-budget sensitivity to interface choice stays visible.
+   The tool now fixes SPI at **High confidence** (`interfaceMode` is a `const 'spi'`;
+   `INTERFACE_CONF = { spi:'High', parallel:'Low' }`), and the "Screen interface (Layer A)"
+   control has been **removed** — a resolved question is not a live decision, and Controls is for
+   live decisions. The 8-bit-parallel scenario survives as a *written* counterfactual here and in
+   Part 01, with `SCREEN_PINS.parallel = 13` retained so that reasoning stays checkable against a
+   real number.
 2. **TMC2209 UART wiring mode (T9-* variants).** `pinsC: 4` assumes 2 UART segments × TX/RX for
    6 drivers across the driver family's ≤4-drivers-per-line limit (per
    `prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`). Whether this uses TMC2209's

@@ -256,6 +256,31 @@
   #matrix .controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end}
   #matrix .ctl{display:flex;flex-direction:column;gap:3px}
   #matrix .ctl label{font-size:12px;color:var(--text-muted)}
+
+  /* ── Grouped controls ────────────────────────────────────── */
+  #matrix .ctl-groups{display:flex;flex-direction:column;gap:20px}
+  #matrix .ctl-group + .ctl-group{
+    padding-top:18px; border-top:1px solid rgba(255,255,255,.07);
+  }
+  #matrix .ctl-group-title{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    font-size:0.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 12px;
+  }
+  #matrix .ctl-group-hint{
+    font-size:0.74rem; font-weight:400; letter-spacing:0; text-transform:none;
+    color:var(--text-muted);
+  }
+  #matrix .ctl-group--actions{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  #matrix .ctl-clear{
+    margin-left:auto; background:none; border:1px solid rgba(255,255,255,.16);
+    color:var(--text-muted); border-radius:6px; padding:3px 10px; cursor:pointer;
+    font-size:11px; letter-spacing:.04em; text-transform:none; font-weight:500;
+  }
+  #matrix .ctl-clear:hover{border-color:var(--accent);color:var(--accent)}
+  #matrix .ctl-group-title .pill{letter-spacing:0;text-transform:none}
   #matrix select,#matrix input[type=range]{background:#15151a;border:1px solid rgba(255,255,255,.14);color:var(--text);
     border-radius:6px;padding:5px 7px;font:inherit}
   #matrix .conv{display:flex;align-items:center;gap:8px;font-size:14px}
@@ -280,6 +305,30 @@
   #matrix .dir-panelnode{background:rgba(122,107,240,.15);color:#7a6bf0}
   #matrix .sourceCell a{word-break:break-word}
   #matrix .legend{font-size:0.82rem;color:var(--text-muted);margin:2px 0 10px}
+
+  /* ── Price provenance (source link input, last-modified, edited-row cue) ── */
+  #matrix .src-text{display:block}
+  #matrix input.src-link{
+    width:100%; max-width:260px; margin-top:5px; font-size:11.5px; padding:3px 6px;
+    background:#15151a; border:1px solid rgba(255,255,255,.14); border-radius:5px;
+    color:var(--text);
+  }
+  #matrix input.src-link::placeholder{color:#5c5650}
+  #matrix input.src-link:focus{outline:1px solid var(--accent)}
+  #matrix .dateCell{white-space:nowrap; font-size:12px}
+  /* An excluded PSU line stays visible but struck through — the reader still needs to see which
+     supply the variant's concurrency forces, and what excluding it took off the total. */
+  #matrix tr.bom-excluded td{opacity:.45; text-decoration:line-through}
+  #matrix tr.bom-excluded td:nth-child(4),
+  #matrix tr.bom-excluded td:last-child{text-decoration:none; font-style:italic}
+  #matrix .prov-by{
+    display:block; font-size:10px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-muted);
+  }
+  /* A row the user has taken ownership of gets a left edge — so "this number is mine, not
+     the catalogue's" is visible while scanning, not only when reading the pill. */
+  #matrix tr[data-prov="user-estimate"] td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+  #matrix tr[data-prov="user-sourced"] td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
   #matrix .drv-dumb{color:var(--text-muted)}
   #matrix .drv-smart{color:var(--accent)}
   #matrix .drv-motion{color:var(--blue)}
@@ -400,9 +449,11 @@
       What actually differs between the four directions is how three communication links are
       implemented, and every row in the matrix below is just one set of answers to them.</p>
       <p><b>Layer A — brain ↔ screen.</b> The touchscreen is an owned component: an ILI9341 3.2"
-      resistive-touch TFT (bitbyg, 174&nbsp;DKK ≈ €23), <b>inspected and confirmed SPI</b>
-      (2026-07-15; 8-bit parallel is kept selectable in the controls below only as a
-      Low-confidence counterfactual). Because it must render a GUI, the brain is ESP32-class in
+      resistive-touch TFT (bitbyg, 174&nbsp;DKK ≈ €23), <b>inspected and confirmed SPI</b> on
+      2026-07-15 — 8 pins, settled, and no longer a control on this page. (Had it been the 8-bit
+      parallel wiring the vendor listing also hinted at, Layer A would have cost ~13 pins instead
+      of 8, which is enough to push the tightest brains over their GPIO budget — the reason the
+      question was worth resolving rather than assuming.) Because it must render a GUI, the brain is ESP32-class in
       every variant — a Nano cannot hold a screen and the system logic at once. This link is
       where the gallery's first split lives: <b>Console</b> and <b>Panel + Node</b> wire a
       discrete screen to a bare ESP32 and pay Layer A in pins and wiring, while
@@ -500,9 +551,9 @@
   <div id="matrix" class="animate-in" style="--delay:0.18s">
 
     <div class="sae-card note">
-      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI (ILI9341; owned board inspected and
-      confirmed SPI — <span class="pill conf-high">High</span> confidence; 8-bit parallel stays
-      selectable below as a counterfactual) — except the integrated-screen variants, where it's built in ·
+      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI, 8 pins (ILI9341; owned board
+      inspected and confirmed SPI — <span class="pill conf-high">High</span> confidence, settled,
+      not a variable) — except the integrated-screen variants, where it's built in ·
       <b>B</b> brain↔modules = <i>system bus</i> (I²C / RS-485 / CAN — the open choice) ·
       <b>C</b> pump-MCU↔drivers = set by the driver (STEP/DIR wires · UART · SPI).
       Brain = <b>ESP32</b>-class everywhere (bare ESP32 or an integrated ESP32+screen board).
@@ -511,53 +562,73 @@
       brain's usable GPIO — see the pin-budget column below.
     </div>
 
-    <!-- ===================== CONTROLS ===================== -->
+    <!-- ===================== CONTROLS =====================
+         Grouped, because these nine inputs do three different jobs and used to be visually
+         identical: COST MODEL changes what every number on the page MEANS, FILTERS only change
+         which rows you can see, and ACTIONS are destructive. Reading a €207 cost correctly
+         depends on knowing whether the shared block and PSU are in it — that is a different
+         question from "why is this row hidden", and the layout now says so. -->
     <h2>Controls</h2>
-    <div class="sae-card">
-      <div class="controls">
-        <div class="ctl">
-          <label>DKK → EUR rate</label>
-          <input type="number" id="rate" step="0.001" value="0.134">
+    <div class="sae-card ctl-groups">
+
+      <section class="ctl-group">
+        <h3 class="ctl-group-title">Cost model <span class="ctl-group-hint">— what every price on this page includes</span></h3>
+        <div class="controls">
+          <div class="ctl">
+            <label for="fShared">Shared block <span class="muted">(screen, 6 steppers, alignment)</span></label>
+            <select id="fShared"><option value="ctrl">Excluded — controller electronics only</option>
+              <option value="full">Included — whole-system cost</option></select>
+          </div>
+          <div class="ctl">
+            <label for="fPsu">Power supply <span class="muted">(~60 W or ~150 W, set by concurrency)</span></label>
+            <select id="fPsu"><option value="yes">Included</option>
+              <option value="no">Excluded — electronics only</option></select>
+          </div>
+          <div class="ctl">
+            <label for="rate">DKK → EUR rate</label>
+            <input type="number" id="rate" step="0.001" value="0.134">
+          </div>
+          <div class="ctl">
+            <label for="convDkk">DKK converter <span class="muted">(scratchpad)</span></label>
+            <div class="conv"><input type="number" id="convDkk" placeholder="DKK" step="1">
+              <span>=</span><b id="convEur" style="color:var(--accent)">– €</b></div>
+          </div>
         </div>
-        <div class="ctl">
-          <label>DKK converter</label>
-          <div class="conv"><input type="number" id="convDkk" placeholder="DKK" step="1">
-            <span>=</span><b id="convEur" style="color:var(--accent)">– €</b></div>
+      </section>
+
+      <section class="ctl-group">
+        <h3 class="ctl-group-title">Filters
+          <span class="ctl-group-hint">— hide rows; never change a cost</span>
+          <button type="button" class="ctl-clear" id="clearFilters" hidden>Clear filters</button>
+        </h3>
+        <div class="controls">
+          <div class="ctl">
+            <label for="fPrice">Max price € (<span id="maxPriceLbl">400</span>)</label>
+            <!-- Ceiling must stay above the dearest whole-system variant (€341.48 at the
+                 2026-07-16 prices). Re-check whenever DEFAULTS or SHARED_BOM change. -->
+            <input type="range" id="fPrice" min="20" max="400" step="1" value="400">
+          </div>
+          <div class="ctl">
+            <label for="fCx">Max complexity</label>
+            <select id="fCx"><option value="5">any (★★★★★)</option>
+              <option value="2">≤ ★★</option><option value="3">≤ ★★★</option><option value="4">≤ ★★★★</option></select>
+          </div>
+          <div class="ctl">
+            <label for="fCon">Concurrency</label>
+            <select id="fCon"><option value="0">any</option><option value="2">≥ 2 at once</option>
+              <option value="6">6 at once</option></select>
+          </div>
+          <div class="ctl">
+            <label for="fDir">Design direction</label>
+            <select id="fDir"><option value="any">any</option></select>
+          </div>
         </div>
-        <div class="ctl">
-          <label>Include shared block (screen, 6 steppers, alignment)</label>
-          <select id="fShared"><option value="ctrl">No — controller electronics only</option>
-            <option value="full">Yes — whole-system cost</option></select>
-        </div>
-        <div class="ctl">
-          <label>Screen interface (Layer A) — SPI <span class="pill conf-high">High</span> confidence, verified (D-09)</label>
-          <select id="ifMode">
-            <option value="spi" selected>SPI (~8 pins) — verified (owned board)</option>
-            <option value="parallel">8-bit parallel (~13 pins) — counterfactual</option>
-          </select>
-        </div>
-        <div class="ctl">
-          <label>Max price € (<span id="maxPriceLbl">400</span>)</label>
-          <!-- Ceiling must stay above the dearest whole-system variant (€341.48 at the
-               2026-07-16 prices). Re-check whenever DEFAULTS or SHARED_BOM change. -->
-          <input type="range" id="fPrice" min="20" max="400" step="1" value="400">
-        </div>
-        <div class="ctl">
-          <label>Max complexity</label>
-          <select id="fCx"><option value="5">any (★★★★★)</option>
-            <option value="2">≤ ★★</option><option value="3">≤ ★★★</option><option value="4">≤ ★★★★</option></select>
-        </div>
-        <div class="ctl">
-          <label>Concurrency</label>
-          <select id="fCon"><option value="0">any</option><option value="2">≥ 2 at once</option>
-            <option value="6">6 at once</option></select>
-        </div>
-        <div class="ctl">
-          <label>Design direction</label>
-          <select id="fDir"><option value="any">any</option></select>
-        </div>
-        <div class="ctl"><label>&nbsp;</label><button class="reset" id="reset">Reset prices</button></div>
-      </div>
+      </section>
+
+      <section class="ctl-group ctl-group--actions">
+        <button class="reset" id="reset">Reset prices</button>
+        <span class="ctl-group-hint">Restores all 26 shipped prices, their sources and the DKK rate — discards your edits and links.</span>
+      </section>
     </div>
 
     <!-- ===================== COMPONENT PRICES =====================
@@ -572,9 +643,14 @@
       <p class="legend">Confidence — <span class="pill conf-high">High</span> vendor page/datasheet states it directly ·
         <span class="pill conf-medium">Medium</span> reputable secondary source or near-identical variant ·
         <span class="pill conf-low">Low</span> estimate / assumption / not yet sourced. (D-11)</p>
+      <p class="legend">Editing a price makes it <b>yours</b>, not the vendor's — so it drops to
+        <span class="pill conf-low">Low</span> and the old source link is cleared. Paste a vendor
+        URL in the Source column and it goes back to <span class="pill conf-high">High</span>:
+        a manual search is exactly what High means. Type a price back to its shipped value and the
+        row reverts to the catalogue's own tag.</p>
       <div class="sae-card" style="overflow-x:auto">
         <table id="compTable">
-          <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th><th class="hide-sm">Source</th><th>Confidence</th></tr></thead>
+          <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th><th class="hide-sm">Source</th><th class="hide-sm">Last modified</th><th>Confidence</th></tr></thead>
           <tbody id="compBody"></tbody>
         </table>
       </div>
@@ -707,10 +783,75 @@ const DEFAULTS = {
 };
 const COMP = JSON.parse(JSON.stringify(DEFAULTS));
 
+/* ---------- price provenance (D-11) ----------
+   Every shipped DEFAULTS price was read off the bitbyg catalogue on this date (see SPEC,
+   "Component price table"), so it is one constant rather than 26 identical fields. */
+const PRICES_SOURCED_ON = '2026-07-16';
+
+/* DKK→EUR rate every shipped € price was converted at. Hoisted from the three places that
+   used to repeat the literal (the #rate input, the live-handler fallback, and Reset) — WR-04. */
+const DEFAULT_RATE = 0.134;
+
+/* Per-component USER state, keyed the same as COMP. Kept beside COMP rather than inside it so
+   COMP stays a clean deep-copy of DEFAULTS and "has the user touched this?" is never ambiguous.
+     url      — a vendor/datasheet link the user pasted
+     editedOn — ISO date of their last price edit or link paste
+   Absent key = untouched. */
+const USER = {};
+
+const URL_OK = u => /^https?:\/\/\S+$/i.test((u||'').trim());
+const today = () => new Date().toISOString().slice(0,10);
+const priceEdited = k => Math.abs(COMP[k].eur - DEFAULTS[k].eur) > 0.005;
+
+/* provenanceOf(k) is DERIVED, never stored — the one place that decides what a price's
+   confidence, source and date actually are. Deriving it means typing a price back to its
+   shipped value silently restores the shipped tag instead of leaving a sticky "edited" flag
+   from a typo the user already undid.
+
+   The rule (Sirio's call, and what D-11 already implies — "High = a source states it
+   directly"): a price the user changed is no longer the vendor's claim, so it drops to Low
+   and the now-lying vendor link is dropped with it. Paste a real link and it becomes High,
+   because a manual search is exactly what High means. Before this existed, editing a price
+   left the bitbyg link and its green High pill in place, vouching for a number bitbyg never
+   quoted — and worstConf() propagated that fake High into the cost and Pins-free readouts. */
+function provenanceOf(k){
+  const u = USER[k];
+  if (u && URL_OK(u.url)) return {
+    kind: 'user-sourced', confidence: 'High',
+    source: {url: u.url.trim(), note: 'Your source — manually verified'},
+    date: u.editedOn, dateLabel: 'you'
+  };
+  if (priceEdited(k)) return {
+    kind: 'user-estimate', confidence: 'Low',
+    source: {note: 'Your estimate — no source given'},
+    date: (u && u.editedOn) || today(), dateLabel: 'you'
+  };
+  return {
+    kind: 'shipped', confidence: DEFAULTS[k].confidence,
+    source: DEFAULTS[k].source, date: PRICES_SOURCED_ON, dateLabel: 'bitbyg'
+  };
+}
+
+/* Push the derived provenance onto COMP so every existing reader — worstConf(), the matrix's
+   confidence pills, bomHtml() — keeps reading c.confidence/c.source with no change. */
+function applyProvenance(k){
+  const p = provenanceOf(k);
+  COMP[k].confidence = p.confidence;
+  COMP[k].source = p.source;
+  return p;
+}
+function applyAllProvenance(){ for(const k in COMP) applyProvenance(k); }
+
 /* Integrated brain+screen boards (D-10): the board key when a variant uses one, else null.
    These skip all Layer-A screen wiring (the display is onboard) and carry their own free-GPIO
    budget. Add future integrated boards here so pin/diagram/BOM logic picks them up. */
 function intBrainKey(v){ return v.bom.espscreen32 ? 'espscreen32' : v.bom.espscreen ? 'espscreen' : null; }
+
+/* The PSU stays in each variant's own bom rather than the shared block, because its size is a
+   per-variant consequence: 1–2-at-once rows take the ~60 W supply, 6-at-once rows are forced up
+   to ~150 W. The "Include PSU" control excludes these keys from the cost maths without moving
+   them out of the model that explains them. */
+const PSU_KEYS = new Set(['psu60','psu150']);
 
 /* shared block BOM (added when "whole-system") */
 const SHARED_BOM = {stepperNema:6, screen:1, nano:1, align28byj:2, vibMotor:1, vibDriver:1, capTouch:1, buck12:1, buck5:1};
@@ -763,7 +904,7 @@ const VARIANTS = [
 ];
 
 /* ---------- state ---------- */
-let rate=0.134, includeShared=false, maxPrice=400, maxCx=5, minCon=0;
+let rate=DEFAULT_RATE, includeShared=false, includePsu=true, maxPrice=400, maxCx=5, minCon=0;
 let selectedDirection=null; // D-08/D-12: null = no filter; else a DIRECTIONS key
 let sortKey='cost', sortDir=1;
 let selectedVariantId=null; // D-02: selection = click a matrix row; the diagram's ONLY control
@@ -813,11 +954,17 @@ function populateDirectionSelect(){
    parallel: 8 data bits + RS/DC+CS+RD+WR+RST ≈ 13, touch already counted in the A0-A3 range
    The vendor's product page is internally contradictory (SPI title vs 8-bit-parallel body),
    but the OWNED board was physically inspected (silkscreen/headers) and confirmed SPI — so
-   SPI is the verified default (High confidence). 8-bit parallel stays selectable below as a
-   counterfactual "what-if" and remains Low confidence. */
+   SPI is the verified answer (High confidence, owned board inspected 2026-07-15 — D-09).
+   The parallel figure is retained only so the written counterfactual in Part 01 / SPEC stays
+   checkable against a real number; it is no longer reachable from the UI. */
 const SCREEN_PINS = { spi: 8, parallel: 13 };
 const INTERFACE_CONF = { spi: 'High', parallel: 'Low' };  // spi verified on the owned board; parallel = hypothetical
-let interfaceMode = 'spi';           // 'spi' | 'parallel' — DEFAULT: spi (verified High)
+/* FIXED at 'spi' — no longer a control. The owned board was physically inspected and confirmed
+   SPI on 2026-07-15 (D-09), so this is a settled fact, and Controls is for live decisions only.
+   The 13-pin parallel case survives as a written counterfactual in Part 01 / SPEC, and the
+   constants above stay so that reasoning is still checkable — but the page no longer offers a
+   question it has already answered. */
+const interfaceMode = 'spi';
 
 /* Layer-B system-bus pins spent on the brain's own bus attachment (not multiplied by node
    count — every node, including the brain, pays this once for its own port onto the bus). */
@@ -1284,8 +1431,10 @@ function buildDiagram(v){
       {stroke: overrunStroke || 'rgba(255,107,43,0.5)'});
     const midY = screenBox.y+screenBox.h/2;
     s += LINE(screenBox.x+screenBox.w, midY, brainBox.x, midY, {stroke:acc, w:1.6, arrow:true});
-    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY-8, interfaceMode==='spi'?'SPI':'8-bit parallel', {size:10.5, color:mut});
-    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY+16, `${INTERFACE_CONF[interfaceMode]||'Low'} confidence`, {size:9, color:mut});
+    /* interfaceMode is fixed at 'spi' now that D-09 is resolved, so these read straight from the
+       constants rather than branching on a choice the page no longer offers. */
+    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY-8, `SPI · ${SCREEN_PINS[interfaceMode]} pins`, {size:10.5, color:mut});
+    s += T((screenBox.x+screenBox.w+brainBox.x)/2, midY+16, `${INTERFACE_CONF[interfaceMode]} confidence — verified`, {size:9, color:mut});
   }
   if (p.overrun) s += T(brainBox.x+brainBox.w/2, brainBox.y+brainBox.h+14, '⚠ pins overrun', {size:10, color:acc2, weight:600});
   const brainCX = brainBox.x + brainBox.w/2;
@@ -1377,16 +1526,32 @@ function buildDiagram(v){
    discarded on load: without this, anyone who ever edited one price keeps seeing the
    whole stale set forever and silently never receives re-sourced vendor prices.
    BUMP THIS whenever a DEFAULTS price changes. */
-const PRICES_VERSION = '2026-07-16-06-1-whole-system';
+const PRICES_VERSION = '2026-07-17-06-2-provenance';
+/* sae-user holds the provenance side-car (pasted links + edit dates). It is versioned by the
+   same stamp: a re-sourced DEFAULTS set invalidates the user's "I checked this" claims too,
+   because the vendor price they were checked against has changed underneath them. */
 function loadPersisted(){
   try{
     if(localStorage.getItem('sae-prices-v') !== PRICES_VERSION){
       localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-prices-v');
+      localStorage.removeItem('sae-user');
     } else {
       const saved=JSON.parse(localStorage.getItem('sae-prices'));
       if(saved) for(const k in saved){
         const v=saved[k];
         if(COMP[k] && Number.isFinite(v) && v>=0) COMP[k].eur=v;
+      }
+      const savedUser=JSON.parse(localStorage.getItem('sae-user'));
+      if(savedUser) for(const k in savedUser){
+        if(!COMP[k]) continue;
+        const u=savedUser[k]||{};
+        const rec={};
+        /* Re-validate on the way in — a hand-edited localStorage entry must not be able to
+           smuggle a javascript: URL into an <a href>, nor claim High confidence without a
+           real link. Same fail-closed posture as the v>=0 price guard above. */
+        if(URL_OK(u.url)) rec.url=String(u.url).trim();
+        if(typeof u.editedOn==='string' && /^\d{4}-\d{2}-\d{2}$/.test(u.editedOn)) rec.editedOn=u.editedOn;
+        if(rec.url || rec.editedOn) USER[k]=rec;
       }
     }
   }catch(e){}
@@ -1401,13 +1566,17 @@ function persist(){
     localStorage.setItem('sae-prices', JSON.stringify(snap));
     localStorage.setItem('sae-prices-v', PRICES_VERSION);
     localStorage.setItem('sae-rate', String(rate));
+    localStorage.setItem('sae-user', JSON.stringify(USER));
   }catch(e){}
 }
 
 /* ---------- cost ---------- */
 function costOf(v){
   let sum=0;
-  for(const k in v.bom) sum += (COMP[k]?.eur||0)*v.bom[k];
+  for(const k in v.bom){
+    if(!includePsu && PSU_KEYS.has(k)) continue;
+    sum += (COMP[k]?.eur||0)*v.bom[k];
+  }
   if(includeShared) for(const k in SHARED_BOM){
     /* An integrated brain+screen variant (D-10) already prices its screen as part of the
        brain component — do not double-count the shared-block screen line for it. */
@@ -1465,26 +1634,80 @@ function sourceCellContent(c){
 }
 
 /* ---------- render component table ---------- */
+/* Rewrites one row's provenance-dependent cells (source, date, confidence) in place. Called
+   after any edit so the tag tracks the number immediately — never a full renderComps(), which
+   would blow away the input the user is mid-keystroke in (the WR-01 lesson). */
+function refreshProvCells(k){
+  const p = applyProvenance(k);
+  const tr = document.querySelector(`#compBody tr[data-row="${k}"]`);
+  if(!tr) return;
+  /* Only the source TEXT is replaced — the link input is a sibling, so it survives a refresh
+     and the user's caret is never yanked out of it mid-paste. */
+  tr.querySelector('.src-text').replaceChildren(sourceCellContent(COMP[k]));
+  const dateCell = tr.querySelector('.dateCell');
+  dateCell.replaceChildren();
+  const dt = document.createElement('span');
+  dt.textContent = p.date || '—';
+  const by = document.createElement('span');
+  by.className = 'prov-by';
+  by.textContent = p.dateLabel;
+  dateCell.append(dt, by);
+  const pill = tr.querySelector('.confPill');
+  pill.className = `pill confPill ${confClass(COMP[k].confidence)}`;
+  pill.textContent = COMP[k].confidence || 'Low';
+  tr.dataset.prov = p.kind;
+}
 function renderComps(){
   const b=document.getElementById('compBody'); b.innerHTML='';
   for(const k in COMP){
     const c=COMP[k];
     const tr=document.createElement('tr');
+    tr.dataset.row = k;
     tr.innerHTML=`<td>${c.label}${c.shared?' <span class="badge">shared</span>':''}</td>
       <td class="muted">${c.role}</td>
       <td><input type="number" step="0.1" min="0" data-k="${k}" data-cur="eur" value="${c.eur}"></td>
       <td class="hide-sm"><input type="number" step="1" min="0" data-k="${k}" data-cur="dkk" value="${(c.eur/rate).toFixed(0)}"></td>
       <td class="hide-sm sourceCell"></td>
-      <td><span class="pill ${confClass(c.confidence)}">${c.confidence||'Low'}</span></td>`;
-    tr.querySelector('.sourceCell').appendChild(sourceCellContent(c));
+      <td class="hide-sm dateCell"></td>
+      <td><span class="pill confPill"></span></td>`;
+    /* Link input lives under the source text: pasting a vendor URL is the one action that can
+       raise a price back to High, so it belongs beside the source it replaces. */
+    const src = tr.querySelector('.sourceCell');
+    const srcText = document.createElement('span');
+    srcText.className = 'src-text';
+    src.appendChild(srcText);
+    const linkInp = document.createElement('input');
+    linkInp.type='url'; linkInp.className='src-link'; linkInp.dataset.link=k;
+    linkInp.placeholder='Paste vendor URL → High';
+    linkInp.value = (USER[k] && USER[k].url) || '';
+    src.appendChild(linkInp);
     b.appendChild(tr);
+    refreshProvCells(k);
   }
-  b.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+  /* Scoped to [data-k] — the link inputs are <input>s too, and a bare 'input' selector would
+     hand them to the price handler, where dataset.k is undefined and COMP[undefined] throws. */
+  b.querySelectorAll('input[data-k]').forEach(inp=>inp.addEventListener('input',e=>{
     /* clamp to >=0 — min="0" does not block typed negatives; keeps the live state
        symmetric with loadPersisted()'s v>=0 guard (WR-05) */
     const k=e.target.dataset.k, cur=e.target.dataset.cur, val=Math.max(0, parseFloat(e.target.value)||0);
     if(cur==='eur') COMP[k].eur=val; else COMP[k].eur=val*rate;
-    syncCompRow(k, e.target); renderMatrix(); persist();
+    /* Stamp the edit date only once the price actually differs from the shipped one, so
+       typing a value back to its default reverts the row to "shipped / bitbyg" cleanly
+       rather than leaving a stray date behind. */
+    if(priceEdited(k)) USER[k] = Object.assign({}, USER[k], {editedOn: today()});
+    else if(USER[k] && !USER[k].url) delete USER[k];
+    syncCompRow(k, e.target); refreshProvCells(k); renderMatrix(); persist();
+  }));
+  b.querySelectorAll('input[data-link]').forEach(inp=>inp.addEventListener('input',e=>{
+    const k=e.target.dataset.link, raw=e.target.value.trim();
+    if(URL_OK(raw)) USER[k] = Object.assign({}, USER[k], {url: raw, editedOn: today()});
+    else {
+      /* Not a usable URL (empty, or still being typed): drop the claim rather than half-honour
+         it. The row falls back to Low-if-edited / shipped-if-not — never High on a broken link. */
+      if(USER[k]) { delete USER[k].url; if(!USER[k].editedOn) delete USER[k]; }
+      if(USER[k] && !priceEdited(k) && !USER[k].url) delete USER[k];
+    }
+    refreshProvCells(k); renderMatrix(); persist();
   }));
 }
 /* `skip` = the input currently being typed into — never rewrite it mid-edit, or
@@ -1550,6 +1773,7 @@ function renderMatrix(){
     body.appendChild(tr); body.appendChild(det);
   });
   document.getElementById('rowCount').textContent=`${rows.length} of ${VARIANTS.length} variants shown.`;
+  syncClearFilters();  /* every filter path lands here, so this is the one place it needs calling */
   /* keep the selection alive across sort/filter/price-edit re-renders; fall back to the
      first visible row if the previously-selected variant has been filtered out */
   const stillVisible = rows.find(o=>o.v.id===selectedVariantId);
@@ -1557,12 +1781,37 @@ function renderMatrix(){
   else if (rows.length) selectVariant(rows[0].v);
   else { document.getElementById('diagram').innerHTML=''; document.getElementById('diagramCaption').textContent='System diagram'; selectedVariantId=null; }
 }
+/* Worst price-confidence across everything the variant's total is built from — same
+   "a number never looks more certain than its weakest input" rule worstConf() already
+   applies to the pin budget. Mirrors costOf()'s membership exactly (including the
+   integrated-screen double-count skip) so the tag can never describe a different set of
+   parts than the total above it. */
+function bomWorstConf(v){
+  const keys = Object.keys(v.bom).filter(k => includePsu || !PSU_KEYS.has(k));
+  if(includeShared) for(const k in SHARED_BOM){
+    if(k==='screen' && intBrainKey(v)) continue;
+    keys.push(k);
+  }
+  return worstConf(...keys.map(k => COMP[k]?.confidence));
+}
 function bomHtml(v){
   let lines='', sum=0;
-  const add=(k,q)=>{const e=(COMP[k]?.eur||0)*q; sum+=e;
-    return `<tr><td>${COMP[k].label}</td><td>${q}×</td><td>€${COMP[k].eur}</td><td>€${e.toFixed(1)}</td></tr>`;};
-  for(const k in v.bom) lines+=add(k,v.bom[k]);
-  if(includeShared){ lines+=`<tr><td colspan="4" class="muted">— shared system block —</td></tr>`;
+  /* Each line carries its own price confidence: a variant's total is only ever as trustworthy
+     as its weakest-sourced part, and the row-level pill alone cannot show WHICH part is weak.
+     €/ea is .toFixed(2) — typing a DKK price sets eur = val*rate (e.g. 67.5*0.134 = 9.045),
+     so the raw float would print €9.045 next to a € input reading 9.05 (IN-03). */
+  const add=(k,q)=>{const c=COMP[k], e=(c?.eur||0)*q; sum+=e;
+    return `<tr><td>${c.label}</td><td>${q}×</td><td>€${(c.eur||0).toFixed(2)}</td><td>€${e.toFixed(1)}</td>
+      <td><span class="pill ${confClass(c.confidence)}">${c.confidence||'Low'}</span></td></tr>`;};
+  /* An excluded PSU is shown struck-through rather than dropped: the reader still needs to see
+     WHICH supply the variant's concurrency forces, and what it would add back. */
+  const skipLine=(k,q)=>`<tr class="bom-excluded"><td>${COMP[k].label}</td><td>${q}×</td>
+    <td>€${(COMP[k].eur||0).toFixed(2)}</td><td>excluded</td><td class="muted">—</td></tr>`;
+  for(const k in v.bom){
+    if(!includePsu && PSU_KEYS.has(k)) { lines+=skipLine(k,v.bom[k]); continue; }
+    lines+=add(k,v.bom[k]);
+  }
+  if(includeShared){ lines+=`<tr><td colspan="5" class="muted">— shared system block —</td></tr>`;
     for(const k in SHARED_BOM){
       if(k==='screen' && intBrainKey(v)) continue; /* integrated screen already in the bom above */
       lines+=add(k,SHARED_BOM[k]);
@@ -1575,29 +1824,55 @@ function bomHtml(v){
       <span class="pill ${confClass(brain.psramConf)}">${brain.psramConf}</span> ·
       GPIO usable: ${brain.gpioUsable} <span class="pill ${confClass(brain.gpioConf)}">${brain.gpioConf}</span><br>
       ${brain.uiNote}</p>` : '';
-  return `<b>${v.note}</b>${brainInfo}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th></tr></thead>
-    <tbody>${lines}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th class="cost">€${sum.toFixed(1)}</th></tr></tfoot></table>`;
+  return `<b>${v.note}</b>${brainInfo}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th><th>Price confidence</th></tr></thead>
+    <tbody>${lines}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th class="cost">€${sum.toFixed(1)}</th>
+    <th><span class="pill ${confClass(bomWorstConf(v))}">${bomWorstConf(v)}</span></th></tr></tfoot></table>`;
 }
 
 /* ---------- wire up controls ---------- */
 document.getElementById('rate').addEventListener('input',e=>{
   /* must be finite AND >0 — symmetric with loadPersisted()'s savedRate>0 guard (WR-05) */
   const r=parseFloat(e.target.value);
-  rate=(Number.isFinite(r)&&r>0)?r:0.134;
+  rate=(Number.isFinite(r)&&r>0)?r:DEFAULT_RATE;
   refreshAllDkk(); updateConv(); persist();});
 document.getElementById('convDkk').addEventListener('input',updateConv);
 function updateConv(){const d=parseFloat(document.getElementById('convDkk').value);
   document.getElementById('convEur').textContent = isNaN(d)?'– €':'€'+(d*rate).toFixed(2);}
 document.getElementById('fShared').addEventListener('change',e=>{includeShared=e.target.value==='full'; renderMatrix();});
-document.getElementById('ifMode').addEventListener('change',e=>{interfaceMode=e.target.value; renderMatrix();});
+document.getElementById('fPsu').addEventListener('change',e=>{includePsu=e.target.value==='yes'; renderMatrix();});
 document.getElementById('fPrice').addEventListener('input',e=>{maxPrice=+e.target.value; document.getElementById('maxPriceLbl').textContent=maxPrice; renderMatrix();});
 document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.value; renderMatrix();});
 document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
 document.getElementById('fDir').addEventListener('change',e=>{ setDirection(e.target.value==='any'?null:e.target.value); });
+
+/* "Clear filters" only ever touches the FILTER group — the cost-model selects are a different
+   kind of state and resetting them here would silently change what every price means. */
+function syncClearFilters(){
+  const active = maxPrice < +document.getElementById('fPrice').max || maxCx<5 || minCon>0 || !!selectedDirection;
+  document.getElementById('clearFilters').hidden = !active;
+}
+document.getElementById('clearFilters').addEventListener('click',()=>{
+  const p=document.getElementById('fPrice'); p.value=p.max; maxPrice=+p.max;
+  document.getElementById('maxPriceLbl').textContent=maxPrice;
+  document.getElementById('fCx').value='5'; maxCx=5;
+  document.getElementById('fCon').value='0'; minCon=0;
+  document.getElementById('fDir').value='any'; setDirection(null);   /* setDirection re-renders */
+});
+
 document.getElementById('reset').addEventListener('click',()=>{
   for(const k in COMP) COMP[k].eur=DEFAULTS[k].eur;
-  try{ localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-prices-v'); localStorage.removeItem('sae-rate'); }catch(e){}
-  renderComps(); renderMatrix();});
+  /* Reset means "give me the shipped catalogue back" — so the user's provenance goes too, or
+     rows would keep claiming "your source" for prices that are once again bitbyg's. */
+  for(const k in USER) delete USER[k];
+  applyAllProvenance();
+  /* WR-04: the live rate must be reset alongside the persisted one. Previously only the
+     localStorage key was removed, so the DKK column kept using the custom rate and the very
+     next price keystroke called persist() and wrote it straight back. */
+  rate = DEFAULT_RATE;
+  document.getElementById('rate').value = DEFAULT_RATE;
+  try{ localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-prices-v');
+       localStorage.removeItem('sae-rate'); localStorage.removeItem('sae-user'); }catch(e){}
+  renderComps(); updateConv(); renderMatrix();});
 document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{
   const k=th.dataset.k;
   if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=1;}
@@ -1613,8 +1888,8 @@ document.getElementById('rate').value = rate;
    (Firefox on reload, Chrome on bfcache back/forward) restore form-control values
    WITHOUT firing change events, so the controls could otherwise display one
    scenario while pinsOf()/the filters compute with another (WR-04). */
-interfaceMode = document.getElementById('ifMode').value;
 includeShared = document.getElementById('fShared').value==='full';
+includePsu = document.getElementById('fPsu').value==='yes';
 maxPrice = +document.getElementById('fPrice').value;
 document.getElementById('maxPriceLbl').textContent = maxPrice;
 maxCx = +document.getElementById('fCx').value;
@@ -1624,7 +1899,7 @@ wireSchemaInteractivity();
 populateDirectionSelect();
 renderDirections();
 wireDirectionsInteractivity();
-/* Seed selectedDirection from the DOM, same WR-04 reasoning as interfaceMode/includeShared above
+/* Seed selectedDirection from the DOM, same WR-04 reasoning as includeShared/includePsu above
    — the #fDir <select> can be restored by the browser without firing a change event. */
 selectedDirection = document.getElementById('fDir').value==='any' ? null : document.getElementById('fDir').value;
 document.querySelectorAll('#directions .dir-card').forEach(c=>{
@@ -1632,6 +1907,10 @@ document.querySelectorAll('#directions .dir-card').forEach(c=>{
   c.classList.toggle('selected', on);
   c.setAttribute('aria-pressed', String(on));
 });
+/* Provenance must be resolved BEFORE the first render: loadPersisted() may have restored an
+   edited price or a pasted link, and the shipped DEFAULTS confidence/source would otherwise be
+   what the first paint (and worstConf()) sees. */
+applyAllProvenance();
 renderComps(); renderMatrix();
 </script>
 </body>
