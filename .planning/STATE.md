@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06.1-02-PLAN.md
-last_updated: "2026-07-16T12:04:17.797Z"
+stopped_at: Completed 06.1-03-PLAN.md
+last_updated: "2026-07-16T12:23:39.620Z"
 last_activity: 2026-07-16
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 18
+  completed_plans: 19
   percent: 43
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 06.1 (architecture-refinement-full-system-module-schema-design-dir) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-07-16
 
@@ -62,6 +62,7 @@ Progress: [█████████░] 89%
 | Phase 06 P07 | 15min | 1 tasks | 1 files |
 | Phase 06.1 P01 | 20min | 3 tasks | 1 files |
 | Phase 06.1 P02 | 35min | 3 tasks | 1 files |
+| Phase 06.1 P03 | 30min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,9 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 06.1-02] moduleBox() <g> grouping split across commits: data-module in Task 2 (structural), tabindex/role/aria-label/listeners in Task 3 (interactive)
 - [Phase ?]: [Phase 06.1-02] selectModule() hover-vs-selection: mouseleave restores the last sticky (click/keyboard) pick rather than losing it to a stray hover
 - [Phase ?]: [Phase 06.1-02] Schema spatial layout redesigned freely from the sticky-note sketch (D-05 permits this) -- top row of 4 modules, Alignment beneath, Software and Electronics + liquid barrier at the bottom
+- [Phase 06.1-03]: directionOf(v) mirrors topoClassOf(v)'s exact ordered-if-chain, checking 'distributed' first so it can never be shadowed by the fused-vs-not-fused branches
+- [Phase 06.1-03]: Gallery click-wiring split into renderDirections() (static build) + wireDirectionsInteractivity() (click listeners), mirroring 06.1-02's buildSchema()/wireSchemaInteractivity() split
+- [Phase 06.1-03]: C link column left without hide-sm at 640px pending a human browser pass to confirm the 10-column table isn't too tight on mobile
 
 ### Pending Todos
 
@@ -149,6 +153,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-16T12:04:17.788Z
-Stopped at: Completed 06.1-02-PLAN.md
+Last session: 2026-07-16T12:23:39.610Z
+Stopped at: Completed 06.1-03-PLAN.md
 Resume file: None

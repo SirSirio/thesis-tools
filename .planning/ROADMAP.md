@@ -213,7 +213,7 @@ The site grows incrementally as the thesis generates new design decisions needin
   5. The voltage/power questions are answered (sourced) and reflected in the power-rail model
   6. SPEC.md and the three decision records are internally consistent (variant count, resolved open questions, current prices)
 
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 
@@ -227,7 +227,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 — same file)*
 
-- [ ] 06.1-03-PLAN.md — Design directions: directionOf() classifier, `#directions` SVG gallery, Design type matrix column, shared direction filter (gallery + dropdown), break-out matrix width (D-06…D-12, SC-2/SC-3)
+- [x] 06.1-03-PLAN.md — Design directions: directionOf() classifier, `#directions` SVG gallery, Design type matrix column, shared direction filter (gallery + dropdown), break-out matrix width (D-06…D-12, SC-2/SC-3)
 
 **Wave 4** *(blocked on Wave 3; disjoint files, parallel)*
 
