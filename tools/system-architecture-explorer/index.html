@@ -692,6 +692,154 @@ function plainBullets(v){
        : 'Driven over USB/serial from the printer board');
   return `<ul class="plain">${B.map(b=>`<li>${b}</li>`).join('')}</ul>`;
 }
+
+/* ---------- whole-device module schema (Part 00, D-01/D-04/D-05) ----------
+   MODULES: the six-module hardware baseline (CONTEXT-SEED module inventory, cross-checked
+   against SHARED_BOM above). label/payload feed the SVG chips; purpose feeds the side-note
+   reveal (Task 3). Storage's payload/purpose deliberately says "level-crossing / threshold"
+   rather than overstating continuous volume sensing — RESEARCH Risk #1 is explicit the
+   sourced technique does not support it. */
+const MODULES = {
+  pump: {
+    label: 'Pump',
+    payload: ['6× NEMA17 42BYGHW811', '6× peristaltic pumps'],
+    purpose: 'Meters each liquid by roller displacement.'
+  },
+  alignment: {
+    label: 'Alignment',
+    payload: ['2× 28BYJ-48 12V', '2× ULN2003', 'Custom rack'],
+    purpose: 'Moves the sample racks under the nozzles — the rack lives in this module; the old tube-holding module no longer exists.'
+  },
+  nozzle: {
+    label: 'Nozzle',
+    payload: ['3V micro motor (RD520PA)', 'IRF520 + flyback', 'Eccentric mass (DIY)'],
+    purpose: 'Holds the nozzles and shakes droplets loose in short bursts.'
+  },
+  storage: {
+    label: 'Storage',
+    payload: ['6× containers', 'MPR121 ×12 electrodes'],
+    purpose: 'Holds the liquids and senses level by level-crossing / threshold detection, not continuous volume.'
+  },
+  ui: {
+    label: 'UI',
+    payload: ['ILI9341 3.2" touch', 'SD slot', 'LM75'],
+    purpose: 'Runs the GUI; the dispensing protocol is set on a laptop and loaded from the SD card.'
+  },
+  electronics: {
+    label: 'Software & Electronics',
+    payload: ['ESP32-class brain', 'System bus (I²C / RS-485 / CAN)', 'Stepper drivers ×6'],
+    purpose: 'The brain and bus that the rest of this page compares — enclosed by the liquid barrier as the sealed dry zone.'
+  }
+};
+
+/* buildSchema(): mirrors buildDiagram()'s technique below it — module-scope T()/LINE()/BOX()
+   template-string closures, a single <defs> block, s built by string concatenation section by
+   section, one return of an <svg viewBox> wrapper. Reuses the exact same 5-colour palette so
+   the schema visually matches the per-variant diagram. STATIC: does not depend on the selected
+   variant, rendered once at init, never rebuilt by renderMatrix() (T-06.1-06). */
+function buildSchema(){
+  const acc='#ff6b2b', acc2='#e83535', txt='#f0ece8', mut='#7a7068', blue='#4a90d9';
+  const fontFam='system-ui,sans-serif';
+  let s='';
+
+  const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.size||12}" fill="${o.color||txt}" text-anchor="${o.anchor||'middle'}" font-weight="${o.weight||400}" font-family="${fontFam}">${t}</text>`;
+  const LINE=(x1,y1,x2,y2,o={})=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${o.stroke||mut}" stroke-width="${o.w||1.3}"${o.dash?` stroke-dasharray="${o.dash}"`:''}${o.marker?` marker-end="url(#${o.marker})"`:''}/>`;
+  const BOX=(x,y,w,h,label,sub,o={})=>{
+    let str = `<rect${o.cls?` class="${o.cls}"`:''} x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.rx!=null?o.rx:10}" fill="${o.fill||'rgba(255,255,255,0.03)'}" stroke="${o.stroke||'rgba(255,107,43,0.35)'}" stroke-width="${o.sw||1.4}"${o.dash?` stroke-dasharray="${o.dash}"`:''}${o.filter?` filter="url(#${o.filter})"`:''}/>`;
+    const labelY = o.titleTop ? y+20 : y+(sub?h/2-4:h/2+4);
+    str += T(x+w/2, labelY, label, {size:o.labelSize||12, weight:o.labelWeight||600, color:o.labelColor||txt});
+    if (sub) str += T(x+w/2, y+h/2+14, sub, {size:10, color:mut});
+    return str;
+  };
+
+  /* <defs>: arrow markers for the two flow types + the liquid-glass filter/gradient (D-05,
+     Claude's Discretion — no in-repo precedent, new work within the existing palette only). */
+  s += `<defs>`;
+  s += `<marker id="liqArrow" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8 Z" fill="${acc2}"/></marker>`;
+  s += `<marker id="dataArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M1,1 L7,4 L1,7" fill="none" stroke="${blue}" stroke-width="1.2"/></marker>`;
+  s += `<filter id="liquidGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.29  0 0 0 0 0.56  0 0 0 0 0.85  0 0 0 0.55 0" result="glow"/><feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  s += `<linearGradient id="liquidGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${blue}" stop-opacity="0.16"/><stop offset="100%" stop-color="${blue}" stop-opacity="0.045"/></linearGradient>`;
+  s += `</defs>`;
+
+  /* Spatial layout is fully free (D-05) — the sticky-note sketch defines connectivity only,
+     not placement. Four modules across the top row, Alignment beneath (closest to the liquid
+     barrier since it receives the final liquid-flow hop), Software & Electronics at the bottom
+     inside its own liquid barrier. */
+  const LAYOUT = {
+    storage:    {x:30,  y:70,  w:180, h:120},
+    pump:       {x:240, y:70,  w:180, h:120},
+    nozzle:     {x:450, y:70,  w:180, h:120},
+    ui:         {x:660, y:70,  w:180, h:120},
+    alignment:  {x:330, y:250, w:220, h:120},
+    electronics:{x:270, y:440, w:340, h:110}
+  };
+
+  /* module box: title at top (via BOX()'s titleTop option) + a stacked column of payload-chip
+     pills below it, reusing the .pill visual language (small rounded rect + centred text,
+     BOX()'s own rx rounding convention scaled down) — SVG equivalent since the pills today are
+     HTML in the matrix below. Everything for one module is wrapped in a single <g data-module>
+     so hover/click/keyboard hit-testing (Task 3) targets one predictable group, never the
+     individual <rect>/<text> primitives inside it. */
+  function moduleBox(key, box){
+    const m = MODULES[key];
+    let g = `<g class="schema-module" data-module="${key}">`;
+    g += BOX(box.x, box.y, box.w, box.h, m.label, null,
+      {cls:'module-box', titleTop:true, labelSize:12.5, labelWeight:700, labelColor:acc});
+    m.payload.forEach((chip,i)=>{
+      const cy = box.y+40+i*20;
+      g += `<rect x="${box.x+10}" y="${cy-11}" width="${box.w-20}" height="16" rx="8" fill="rgba(255,107,43,0.10)" stroke="rgba(255,107,43,0.30)" stroke-width="1"/>`;
+      g += T(box.x+box.w/2, cy+1, chip, {size:9.5, color:txt, weight:500});
+    });
+    g += `</g>`;
+    return g;
+  }
+
+  for (const key of ['storage','pump','nozzle','ui','alignment']) s += moduleBox(key, LAYOUT[key]);
+
+  /* liquid barrier: the sealed dry zone around Software & Electronics (D-05). Drawn with the
+     liquid-glass gradient + glow filter, then the electronics module box sits on top of it. */
+  const el = LAYOUT.electronics;
+  const barrier = {x:el.x-24, y:el.y-24, w:el.w+48, h:el.h+56};
+  s += BOX(barrier.x, barrier.y, barrier.w, barrier.h, 'Liquid barrier — sealed dry zone', null,
+    {rx:16, fill:'url(#liquidGlass)', stroke:blue, sw:1.6, dash:'6 4', filter:'liquidGlow',
+     titleTop:true, labelSize:10, labelWeight:600, labelColor:blue});
+  s += moduleBox('electronics', el);
+
+  /* liquid flow: Storage → Pump → Nozzle → Alignment (solid, thick, red + arrowhead — two
+     independent cues alongside colour, so the distinction survives greyscale printing). */
+  const st=LAYOUT.storage, pu=LAYOUT.pump, nz=LAYOUT.nozzle, al=LAYOUT.alignment;
+  s += LINE(st.x+st.w, st.y+st.h/2, pu.x, pu.y+pu.h/2, {stroke:acc2, w:2.6, marker:'liqArrow'});
+  s += LINE(pu.x+pu.w, pu.y+pu.h/2, nz.x, nz.y+nz.h/2, {stroke:acc2, w:2.6, marker:'liqArrow'});
+  s += LINE(nz.x+nz.w*0.35, nz.y+nz.h, al.x+al.w*0.7, al.y, {stroke:acc2, w:2.6, marker:'liqArrow'});
+
+  /* data flow: Software & Electronics ↔ Storage, Pump, Nozzle, Alignment, UI (dashed, blue —
+     colour + dash pattern are the two cues distinguishing it from the liquid links above). */
+  const anchorStep = el.w/6;
+  const dataLinks = [
+    {b:st, anchorX:el.x+anchorStep*1},
+    {b:pu, anchorX:el.x+anchorStep*2},
+    {b:al, anchorX:el.x+anchorStep*3},
+    {b:nz, anchorX:el.x+anchorStep*4},
+    {b:LAYOUT.ui, anchorX:el.x+anchorStep*5}
+  ];
+  dataLinks.forEach(link=>{
+    const tx = link.b===al ? al.x+al.w*0.3 : link.b.x+link.b.w/2;
+    const ty = link.b===al ? al.y+al.h : link.b.y+link.b.h;
+    s += LINE(link.anchorX, el.y, tx, ty, {stroke:blue, w:1.3, dash:'5 4', marker:'dataArrow'});
+  });
+
+  /* legend */
+  s += LINE(30,30,70,30,{stroke:acc2,w:2.6});
+  s += T(78,34,'Liquid flow',{anchor:'start',size:10,color:txt});
+  s += LINE(30,50,70,50,{stroke:blue,w:1.3,dash:'5 4'});
+  s += T(78,54,'Data flow',{anchor:'start',size:10,color:txt});
+
+  /* This schema is the ONLY place its content exists (unlike #diagram below, which is
+     aria-hidden because the matrix row states the same facts in text) — role/aria-label give
+     it a text equivalent; every module name/chip is itself rendered as SVG <text>, so the
+     content is exposed to assistive tech even before Task 3's keyboard path lands. */
+  return `<svg viewBox="0 0 880 620" width="100%" style="max-width:820px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Whole-device module schema: six modules connected by liquid and data flows"><title>Whole-device module schema</title>${s}</svg>`;
+}
 function buildDiagram(v){
   const cls = topoClassOf(v);
   const acc='#ff6b2b', acc2='#e83535', txt='#f0ece8', mut='#7a7068', blue='#4a90d9';
@@ -1051,6 +1199,7 @@ maxPrice = +document.getElementById('fPrice').value;
 document.getElementById('maxPriceLbl').textContent = maxPrice;
 maxCx = +document.getElementById('fCx').value;
 minCon = +document.getElementById('fCon').value;
+document.getElementById('schemaSvg').innerHTML = buildSchema(); // static — rendered once, never rebuilt by renderMatrix() (T-06.1-06)
 renderComps(); renderMatrix();
 </script>
 </body>
