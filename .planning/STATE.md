@@ -7,7 +7,7 @@ stopped_at: Completed 06.1-05-PLAN.md
 last_updated: "2026-07-16T16:50:00.612Z"
 last_activity: 2026-07-16
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 4
   total_plans: 24
   completed_plans: 21
@@ -74,6 +74,7 @@ Progress: [█████████░] 89%
 - Phase 5 added (2026-06-24): HTML Presentation Decks — reveal-style slide system + creative dated presentations index, first deck = 15-min lab meeting (GSD, two design tools, proto-01, proto-02, automated test-campaign app). Milestone v1.0 reopened from `completed` to accommodate.
 - Phase 6 added (2026-07-12): System Architecture Explorer — the live cost/complexity matrix built ad-hoc in `prototypes/System-Architecture/index.html` has outgrown a design-record page (editable BOM, DKK↔EUR converter, sortable/filterable 17-variant matrix, expandable per-variant BOM math). Promote it to a first-class tool at `tools/system-architecture-explorer/` (index.html + SPEC.md + nav + landing card + README row); **keep the three decision records** (ARCHITECTURE.md, PUMP-CONTROL-CONCEPTS.md, SOLUTION-MATRIX.md) in `prototypes/System-Architecture/` as design documentation, matching the `multi-liquid-architecture/` precedent. Partially retires the deferred **"BOM / component selector"** v2 backlog item.
 - Phase 06.1 inserted after Phase 6: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (URGENT)
+- Phase 7 added (2026-07-16): Thesis Showcase Landing Page — remodel `index.html` from a tool directory into a showcase of the thesis itself (project introduction, media/video slot, motion on load), with the tool grid demoted to one section. Distinct from the 2026-07-13 homepage-redesign quick task, which restyled the directory without changing what the page is about. Key unresolved question for discuss-phase: vendored animation runtime (Rive/Lottie/Spline, KaTeX-style local fallback) vs hand-built CSS/SVG motion — the offline/USB + no-CDN constraint makes this a real decision, not a preference.
 
 ### Decisions
 

@@ -20,6 +20,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 
 - [x] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/` (completed 2026-07-15)
 - [x] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs (completed 2026-07-16)
+- [ ] **Phase 7: Thesis Showcase Landing Page** - Turn `index.html` from a tool directory into a thesis showcase: project introduction, video/media, and motion above the fold, with the tool grid demoted to one section among several
 
 ## Phase Details
 
@@ -233,3 +234,28 @@ Plans:
 
 - [x] 06.1-04-PLAN.md — SPEC.md: consistency pass (19→20 variants, recounted component confidence, PSU prices, shared-block total) + new sections for the schema, directions, new components, and the power-rail answer (D-17/D-18, SC-4/SC-5/SC-6)
 - [x] 06.1-05-PLAN.md — Decision records + chrome: ARCHITECTURE.md (SPI resolved, motor #2 resolved, rail topology), PUMP-CONTROL-CONCEPTS.md dated preface, SOLUTION-MATRIX.md check, landing card / README / CLAUDE.md copy refresh (D-13/D-15/D-18, SC-6)
+
+### Phase 7: Thesis Showcase Landing Page
+
+**Goal:** Remodel `index.html` from a directory of tools into a showcase of the thesis itself. A visitor who has never heard of the project should land, immediately see what "modular automated liquid dispensing for point-of-care use" *is* — through an introduction, media (a video is coming), and motion that starts on load — and only then find the tools, presented as one section of a larger story rather than the whole page.
+
+**Depends on:** Phase 6.1 (complete). Builds on the 2026-07-13 homepage redesign quick task (fixed glass nav, hero meta chips, numbered sections, icon-tile cards with mouse spotlight, IntersectionObserver reveals, full EN/IT i18n) — that pass restyled the directory; this phase changes what the page *is about*.
+
+**Requirements**: TBD at discuss-phase.
+
+**Scope notes:**
+
+- The tool grid stays, demoted to one section. Every existing tool must remain reachable and the EN/IT i18n coverage must not regress.
+- Source material already in the repo to draw the introduction and media from: `prototypes/index.html` (proto journey), `tools/system-architecture-explorer/` (six-module schema), `decks/lab-meeting-2026-06/assets/` (renders, photos, app screenshots, an alignment video), `.planning/PROJECT.md`.
+- A hero video is planned but the asset does not exist yet — the phase must define the slot and a graceful no-asset fallback, not block on the file.
+
+**Open questions for `/gsd:discuss-phase 7`:**
+
+  1. **Interactivity approach.** The user asked about "tools online" for richer interaction (Spline, Rive, Lottie, etc.). Constraint D-01 and the offline/USB + GitHub Pages requirement mean no CDN-only dependency: any such runtime would have to be vendored locally (the KaTeX precedent) and would be the first new shared front-end dependency on the site. Decide explicitly: vendored runtime vs. hand-built CSS/SVG/Canvas motion in the existing idiom. Default if unresolved: hand-built, per the user's own fallback ("something modern and quite dynamic, but still with a professional feel").
+  2. Page structure — which sections, in what order, and what the hero actually shows before the video asset lands.
+  3. Video: hosting (repo-committed vs external), size budget for the USB/Pages constraint, autoplay/muted/poster behaviour.
+  4. Whether the landing page becomes the thesis' front door for a QR-code/print audience (affects first-paint weight).
+
+**Success Criteria** (what must be TRUE): TBD at discuss-phase.
+
+**Plans:** Not planned yet
