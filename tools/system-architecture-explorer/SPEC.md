@@ -9,7 +9,7 @@
 ## Purpose
 
 Prices and compares the pump-system control electronics — which brain (MCU), which stepper
-driver, and which system bus — across 19 candidate architectures ("variants"). For each variant
+driver, and which system bus — across 20 candidate architectures ("variants"). For each variant
 it computes: total cost (editable component prices, live), a design-complexity rating, a
 pin-budget feasibility check against the brain's usable GPIO, and a live SVG system diagram
 showing the three communication layers and the power block. It is the promoted, canonical version
@@ -68,18 +68,21 @@ DKK figures are the vendor's listed incl.-VAT prices; € = DKK × 0.134.
 | **Shared block (constant, all variants when "whole-system" toggled on):** | | | | |
 | ILI9341 3.2" touch screen (owned) | screen | 23.32 | bitbyg, 174 DKK — inspected, confirmed SPI (8 pins) | **High** |
 | NEMA17 pump stepper ×6 | pump motor | 14.41 (×6) | bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked (others 116–161 DKK) | **High** |
-| 28BYJ-48 12V + ULN2003 | alignment motor #1 | 5.86 | bitbyg bundle: 28BYJ-48 25.00 + "Stepmotor Driver Board ULN2003" 18.75 = 43.75 DKK | **High** |
-| Alignment motor #2 (TBD) | alignment motor #2 | 6.0 | ⚠ Cannot be sourced — part not chosen yet (TBD in the alignment-module design). Placeholder | Low |
+| 28BYJ-48 12V + ULN2003 ×2 | alignment motor ×2 | 5.86 (×2) | bitbyg bundle: 28BYJ-48 25.00 + "Stepmotor Driver Board ULN2003" 18.75 = 43.75 DKK — 12V winding is the researched choice (D-15) | **High** |
 
-**13 of 21 components are now High-confidence, directly sourced from bitbyg listings.** Two PSUs
-are Medium (nearest stocked wattage, not exact). Six components are **not stocked by bitbyg** and
+**17 of 26 components are now High-confidence, directly sourced from bitbyg listings.** Two PSUs
+are Medium (nearest stocked wattage, not exact). Seven components are **not stocked by bitbyg** and
 retain unsourced estimates — flagged inline in the tool's Source column with a ⚠ marker:
 
 - **No Trinamic TMC driver of any kind** is in bitbyg's catalogue. This affects every *smart*
   (TMC2209) and *motion* (TMC5160/TMC5072) variant — a large share of the matrix — so those rows
   cost out against unsourced prices and need a second vendor before they can be trusted or ordered.
 - **No bare RP2040/Pico**, **no BigTreeTech SKR/Octopus**, and **no CNC-shield/driver carrier**.
-- **Alignment motor #2** is unsourceable in principle until the alignment-module design picks a part.
+- **No bare ESP32-2432S032R (3.2" integrated board)** at bitbyg either — sourced from a hobbyist
+  teardown site (Sunton/mischianti), not the default vendor, despite High-confidence pin data.
+
+The alignment-motor-#2 placeholder that previously occupied this table is resolved: the alignment
+module uses **2× 28BYJ-48**, both priced from the same bitbyg listing, not a second unsourced part.
 
 Sourcing revealed that bitbyg's real prices run substantially above the generic hobby-class
 estimates the tool originally shipped (DRV8825 €1.5 → €6.87; NEMA17 €6 → €14.41; MAX485 €0.7 →
@@ -118,7 +121,7 @@ an oversight.
 
 ---
 
-## Variant BOMs (19 total)
+## Variant BOMs (20 total)
 
 Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · Layer C link description
 · complexity (★, 1–5 scale, half-stars shown) · BOM (`bom` object, component→qty). Full BOM detail
@@ -271,12 +274,12 @@ comfortably fit — rather than an uninformative all-pass or all-fail set.
 
 | Concurrency | PSU | Rail |
 |---|---|---|
-| 1–2 motors at once | 24V ~60W (€12) | 24V rail to drivers, 12V rail to logic (regulated), common ground |
-| All 6 at once | 24V ~150W (€20) | Same dual-rail, common-ground topology, higher-current supply |
+| 1–2 motors at once | 24V ~60W (€18.26) | Single 24V rail from the PSU; two on-board buck converters step it down to 12V (alignment) and 5V (logic) — see Power-rail model below |
+| All 6 at once | 24V ~150W (€31.66) | Same single-24V-rail-plus-two-bucks topology, higher-current supply |
 
 The PSU choice is derived from `v.at` (concurrency), not a separate field: `v.bom.psu150` present
 ⇒ 150 W, else 60 W. This is drawn explicitly in the live diagram's Power block, alongside the
-12V/24V dual rail and common-ground line. Six motors moving at once draw roughly six times the
+single 24V rail, the two buck-converter drop-lines (12V/5V), and the common-ground line. Six motors moving at once draw roughly six times the
 peak current of one — a real hidden cost of parallel dispensing (bigger PSU, more heat, thicker
 wiring, more EMI), on top of whatever the step-generation solution itself costs. This is the tool's
 "U5 concurrency axis" finding: concurrency, not driver family or bus choice, sets the cost/PSU
@@ -307,7 +310,8 @@ labelled with `interfaceMode`/`interfaceConf`, or a single integrated brain+scre
 `pinsOf(v).overrun`) → **Layer B** (bus line labelled `${v.b} bus · ${nodeCount} nodes`, the
 constant alignment node) → **Layer C** (driver topology + all 6 driver→motor links, driver ICs
 coloured by dumb/smart/motion, dashed connector lines for `satellite`/`printer` classes vs solid
-for `fused`/`distributed`) → **Power** (PSU box, dual-rail lines, common-ground line). The diagram
+for `fused`/`distributed`) → **Power** (PSU box, single-24V-rail-plus-two-bucks lines, common-ground
+line — see Power-rail model below). The diagram
 auto-selects the first visible (cheapest, by default sort) variant on load and after any
 filter/sort that removes the current selection.
 
@@ -315,10 +319,16 @@ filter/sort that removes the current selection.
 
 ## Cost-model assumptions (SC-5, ARCH-05)
 
-- All prices are hobby-class estimates, **±20%** (explicit in the running tool's footer note) —
-  not quotes, except the ILI9341 screen (High confidence, real bitbyg listing price).
-- `costOf(v) = Σ(COMP[k].eur × qty)` over `v.bom`, plus `SHARED_BOM` (6× stepper, screen, alignment
-  Nano, DRV8825, 28BYJ-48, alignment motor #2 ≈ €72 total) when "include shared block" is toggled
+- The large majority of components (17 of 26) are now bitbyg-sourced, High-confidence listing
+  prices — not the hobby-class ±20% estimates this section originally described (plan 06.1-01
+  already removed the matching ±20% footnote from the running tool itself). Two PSUs are Medium
+  (nearest stocked wattage, not exact); seven components (the three Trinamic TMC drivers, RP2040,
+  SKR/Octopus, the driver carrier, and the 3.2" integrated board) remain unsourced Low-confidence
+  estimates pending a second vendor. Per-component confidence tags, not a blanket percentage, are
+  the source of truth for price certainty.
+- `costOf(v) = Σ(COMP[k].eur × qty)` over `v.bom`, plus `SHARED_BOM` (6× NEMA17, the ILI9341
+  screen, the alignment Nano, 2× 28BYJ-48 + ULN2003, the vibration motor, the IRF520 driver, the
+  MPR121, and the two buck converters ≈ **€149.65** total) when "include shared block" is toggled
   to whole-system cost. Controller-electronics-only view (default) excludes the shared block.
 - **Double-count guard:** an `espscreen`-based variant already prices its own integrated display as
   part of the brain component — `costOf()`/`bomHtml()` skip the `SHARED_BOM` screen line for
@@ -351,7 +361,7 @@ the fresh `DEFAULTS` are used. Without this, any reader who had ever edited a si
 keep their whole stale set forever and would silently never receive re-sourced vendor prices — the
 2026-07-16 bitbyg sourcing pass would have been invisible to exactly the users most engaged with
 the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current value:
-`2026-07-16-bitbyg-sourced`.
+`2026-07-16-06-1-whole-system`.
 
 ---
 
