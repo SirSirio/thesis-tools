@@ -337,8 +337,41 @@ collection** — roughly 3× the entire signal. **The 200-stroke run measures th
 head is held by clamp friction, with no hard datum. Reinstall repeatability is unproven and the
 < 0.10 mm criterion is directly at risk.
 
-**Status 2026-07-16:** 3 × 200 strokes collected at 180 rpm on the 1.52 head, unweighed →
-these are **E2 point 1**, not E3.
+### 8.2 E2 point 1 — RESULT · 1.52 head @ 180 rpm (2026-07-16)
+
+Setup: 1.52 mm gap (measured, concentric — §11.9.5/§11.10), 180 rpm, 3 × 200 strokes
+("1 mL command"), water, vials weighed empty then full. No conditioning run discarded.
+
+| Run | Empty (g) | Full (g) | **Net (g)** | µL/stroke |
+|-----|-----------|----------|-------------|-----------|
+| 1 | 0.9970 | 1.5608 | **0.5638** | 2.82 |
+| 2 | 0.9939 | 1.5634 | **0.5695** | 2.85 |
+| 3 | 0.9801 | 1.6136 | **0.6335** | 3.17 |
+
+**Mean 0.5889 g = 589 µL → 2.95 µL/stroke.** Target 5.0 µL → **−41 %**.
+Batch SD 0.0387 g → **batch CV 6.6 %** (proto-01's was 4.5 %).
+
+**⚠ Not yet a measurement — the runs are not stationary.** Net rises monotonically and run 3 is
+**+12 % on run 1**; the entire batch CV is that one step. Either the system was still stabilising
+(priming/air — no conditioning run was discarded) or something moved mid-session (clamp slip →
+gap change). **Until consecutive runs agree, the mean has no standing.** `[Certain]`
+
+**The gap was not the whole story.** v2.3 is geometrically correct for the first time — gap 1.52
+measured, concentric, print model validated out-of-sample — and it delivers **less** than
+proto-01 (3.39 µL/stroke). Fixing the gap made the dose *worse*, so the dominant error is
+somewhere else entirely. This is the key finding of the session.
+
+**Leading hypothesis — step loss at 180 rpm.** `[Likely, untested]` v2.3 occludes properly
+(δ = 0.30 vs proto-01's δ = 0.07), so it demands **more torque** — and stepper torque falls with
+speed. 2.95/5.0 = 59 % ≈ **118 of 200 commanded strokes actually completed**. This is precisely
+what **E7** was written to catch, and it explains the proto-01 inversion: worse geometry → lower
+load → fewer skips → more volume. If true, every µL/stroke number in this project measured at
+180 rpm is a step-count artefact, not a geometry result.
+
+Other candidates: refill limitation at 12 strokes/s `[Possible]`; incomplete priming
+`[Possible]`; clamp slip on the over-scraped dovetail `[Possible]`.
+
+**Next, before disassembly:** re-measure the gap → **E7** revolution count → 3 × 200 at 60 rpm.
 
 ---
 
