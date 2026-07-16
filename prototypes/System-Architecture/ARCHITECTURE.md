@@ -25,19 +25,34 @@ costs): [PUMP-CONTROL-CONCEPTS.md](PUMP-CONTROL-CONCEPTS.md).**
 
 - **Touchscreen / HMI:** [bitbyg 3.2" TFT](https://bitbyg.dk/shop/3-2-inch-tft-lcd-display-module-spi-touch-screen-onboard-temperature-sensor-pen/)
   — **ILI9341, 240×320, resistive touch** (pen), onboard **LM75 temp sensor on I²C (0x48)**, 5 V,
-  ~174 DKK (~€23). ⚠ Listed as *SPI*, but the quoted Arduino pin map (A0–A3, D4–D13) looks like the
-  **8-bit parallel Uno-shield** variant — **confirm SPI vs parallel before wiring** (changes brain
-  pin budget). **Layer A = SPI (or 8-bit parallel) to the brain.**
+  ~174 DKK (~€23). **Resolved 2026-07-15: SPI confirmed.** The product-page title said *SPI* but the
+  page body's quoted pin map (A0–A3, D4–D13) read like an **8-bit parallel Uno-shield** module — a
+  sourced vendor-page contradiction, not a guess. The owned board was physically inspected
+  (silkscreen/headers) and confirmed **SPI, High confidence**; full resolution in
+  [SPEC.md — Open questions, #1](../../tools/system-architecture-explorer/SPEC.md#open-questions).
+  **Layer A = SPI to the brain** — 8-bit parallel survives in the tool only as a selectable
+  Low-confidence counterfactual, not the default.
 - **Implication:** the brain must render the GUI → **ESP32-class brain confirmed** (a Nano can't
   hold a GUI + system logic). The LM75 means the brain already needs an I²C bus.
-- **Alignment module motors (≥2):**
-  - **28BYJ-48 (12 V)** + **ULN2003 driver board** — unipolar stepper, driven by **direct 4-wire
-    coil sequencing over 4 GPIO** (⚠ *not* STEP/DIR — no DRV8825 for this one). ~€2.5 incl. driver.
-  - **Motor #2 — TBD** (placeholder: NEMA17 + DRV8825 assumed for costing).
+- **Alignment module motors (2× 28BYJ-48):**
+  - **2× 28BYJ-48 (12 V winding)**, each with its own **ULN2003 driver board** — both motors
+    identical, unipolar steppers, each driven by **direct 4-wire coil sequencing over 4 GPIO**
+    (⚠ *not* STEP/DIR — no DRV8825 anywhere in the alignment module). **€5.86 each incl. driver**
+    (bitbyg bundle: 25.00 DKK motor + 18.75 DKK ULN2003 board = 43.75 DKK), matching the tool's
+    shipped `align28byj` price at qty 2 — the earlier `~€2.5` figure was a stale pre-bitbyg estimate.
+    The **12 V winding is a researched choice (D-15)**, not an inherited assumption: at 12 V the
+    motor draws **~60 mA/phase** and delivers **≥34.3 mN·m** pull-in torque, versus **~83 mA/phase**
+    and **≥29.4 mN·m** on the 5 V winding — less current *and* more torque at the identical bitbyg
+    price, so there is no trade-off.
   - These hang off the **alignment node** (its own Arduino), *not* the pump controller — so they are
     a **constant added to every variant**, they don't change the pump architecture or the matrix
-    ranking. They confirm the distributed/RS-485 direction. Note: 28BYJ-48 is 12 V vs 24 V pump
-    steppers → likely a **12 V + 24 V dual rail** on common ground.
+    ranking. They confirm the distributed/RS-485 direction.
+  - **Rail topology (researched, D-15):** there is **one 24 V PSU output** (unchanged), and
+    everything below 24 V is generated locally by **two buck converters** — an LM2596 trimmed to
+    12 V for the alignment motors, and a fixed 5 V/5 A synchronous buck for logic (ESP32, screen,
+    SD, LM75, capacitive module) — not a raw 12 V + 24 V dual supply. Total new draw ≈**0.39 A /
+    9.4 W** on the 24 V rail; no PSU wattage change needed. Full arithmetic:
+    [SPEC.md — Power-rail model (SC-5)](../../tools/system-architecture-explorer/SPEC.md#power-rail-model-sc-5).
 
 **Component unit prices** (the standalone BOM used for all cost math) live in
 [SOLUTION-MATRIX.md](SOLUTION-MATRIX.md#component-unit-prices) and are **editable live** in the
