@@ -170,6 +170,15 @@
   #directions .dir-card h3 { font-size: 1.0rem; font-weight: 700; margin: 0 0 6px; }
   #directions .dir-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; margin: 0; }
 
+  /* ── Break-out-width matrix container (D-11) — tools/rotor-solver/index.html
+     .glass-panel--wide precedent, capped and disabled on mobile. .tool-main is
+     already display:flex;flex-direction:column; so align-self:center works
+     the same way it does there. */
+  .matrix-wide { width: calc(100vw - 64px); max-width: 1500px; align-self: center; }
+  @media (max-width: 640px) {
+    .matrix-wide { width: 100%; max-width: 100%; align-self: stretch; }
+  }
+
   /* ══════════════════════════════════════════════════════════
      Ported cost/complexity engine styles (Part 02, id="matrix")
      Reskinned onto the shared assets/style.css design tokens
@@ -450,6 +459,10 @@
           <select id="fCon"><option value="0">any</option><option value="2">≥ 2 at once</option>
             <option value="6">6 at once</option></select>
         </div>
+        <div class="ctl">
+          <label>Design direction</label>
+          <select id="fDir"><option value="any">any</option></select>
+        </div>
         <div class="ctl"><label>&nbsp;</label><button class="reset" id="reset">Reset prices</button></div>
       </div>
     </div>
@@ -471,7 +484,7 @@
     <h2>Solution matrix <span class="badge">click a row for BOM · click headers to sort</span></h2>
     <p class="sub"><span id="rowCount"></span> Cost = Σ(component × qty). Driver colour:
       <span class="drv-dumb">dumb</span> · <span class="drv-smart">smart (UART)</span> · <span class="drv-motion">motion (SPI)</span>.</p>
-    <div class="sae-card" style="overflow-x:auto">
+    <div class="sae-card matrix-wide" style="overflow-x:auto">
       <table id="matrixTable">
         <thead><tr>
           <th>ID</th>
@@ -651,8 +664,48 @@ const VARIANTS = [
 
 /* ---------- state ---------- */
 let rate=0.134, includeShared=false, maxPrice=200, maxCx=5, minCon=0;
+let selectedDirection=null; // D-08/D-12: null = no filter; else a DIRECTIONS key
 let sortKey='cost', sortDir=1;
 let selectedVariantId=null; // D-02: selection = click a matrix row; the diagram's ONLY control
+
+/* setDirection(key): the ONE place selectedDirection is written (D-12 "same state, two entry
+   points" — gallery card click and the #fDir <select> both call this, never write the variable
+   directly). Validates key against DIRECTIONS (T-06.1-08): an unrecognised key degrades to the
+   no-filter sentinel rather than being trusted. Keeps the gallery's .selected state and the
+   <select>'s value in sync in one place so the two controls can never disagree. */
+function setDirection(key){
+  selectedDirection = (key && DIRECTIONS[key]) ? key : null;
+  const sel = document.getElementById('fDir');
+  if (sel) sel.value = selectedDirection || 'any';
+  document.querySelectorAll('#directions .dir-card').forEach(c=>{
+    const on = c.dataset.direction===selectedDirection;
+    c.classList.toggle('selected', on);
+    c.setAttribute('aria-pressed', String(on));
+  });
+  renderMatrix();
+}
+/* wireDirectionsInteractivity(): the second entry point into setDirection() (D-12) — clicking a
+   card toggles the filter (re-click the already-selected card clears it), mirroring
+   wireSchemaInteractivity()'s build-then-wire split for the Part 00 schema above. */
+function wireDirectionsInteractivity(){
+  document.querySelectorAll('#directions .dir-card').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const key = btn.dataset.direction;
+      setDirection(selectedDirection===key ? null : key);
+    });
+  });
+}
+/* populateDirectionSelect(): fills #fDir with an "any" option (already in the HTML) plus one
+   option per DIRECTIONS entry, its label read from the DIRECTIONS display name — never a
+   duplicated literal (D-10/D-12). */
+function populateDirectionSelect(){
+  const sel = document.getElementById('fDir');
+  for (const key in DIRECTIONS){
+    const opt = document.createElement('option');
+    opt.value = key; opt.textContent = DIRECTIONS[key].name;
+    sel.appendChild(opt);
+  }
+}
 
 /* ---------- pin budget (D-09) ----------
    SCREEN_PINS: Layer-A fixed cost for the owned ILI9341, keyed by interface scenario.
@@ -1347,7 +1400,8 @@ function selectVariant(v){
 /* ---------- render matrix ---------- */
 function renderMatrix(){
   const rows=VARIANTS.map(v=>({v, cost:costOf(v)}))
-    .filter(o=> o.cost<=maxPrice && o.v.cx<=maxCx && o.v.at>=minCon)
+    .filter(o=> o.cost<=maxPrice && o.v.cx<=maxCx && o.v.at>=minCon
+      && (!selectedDirection || directionOf(o.v)===selectedDirection))
     .sort((a,b)=>{
       if(sortKey==='direction'){
         return DIRECTIONS[directionOf(a.v)].name.localeCompare(DIRECTIONS[directionOf(b.v)].name)*sortDir;
@@ -1426,6 +1480,7 @@ document.getElementById('ifMode').addEventListener('change',e=>{interfaceMode=e.
 document.getElementById('fPrice').addEventListener('input',e=>{maxPrice=+e.target.value; document.getElementById('maxPriceLbl').textContent=maxPrice; renderMatrix();});
 document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.value; renderMatrix();});
 document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
+document.getElementById('fDir').addEventListener('change',e=>{ setDirection(e.target.value==='any'?null:e.target.value); });
 document.getElementById('reset').addEventListener('click',()=>{
   for(const k in COMP) COMP[k].eur=DEFAULTS[k].eur;
   try{ localStorage.removeItem('sae-prices'); localStorage.removeItem('sae-prices-v'); localStorage.removeItem('sae-rate'); }catch(e){}
@@ -1453,7 +1508,17 @@ maxCx = +document.getElementById('fCx').value;
 minCon = +document.getElementById('fCon').value;
 document.getElementById('schemaSvg').innerHTML = buildSchema(); // static — rendered once, never rebuilt by renderMatrix() (T-06.1-06)
 wireSchemaInteractivity();
-renderDirections(); // static gallery build, rendered once — Task 3 wires its click behaviour
+populateDirectionSelect();
+renderDirections();
+wireDirectionsInteractivity();
+/* Seed selectedDirection from the DOM, same WR-04 reasoning as interfaceMode/includeShared above
+   — the #fDir <select> can be restored by the browser without firing a change event. */
+selectedDirection = document.getElementById('fDir').value==='any' ? null : document.getElementById('fDir').value;
+document.querySelectorAll('#directions .dir-card').forEach(c=>{
+  const on = c.dataset.direction===selectedDirection;
+  c.classList.toggle('selected', on);
+  c.setAttribute('aria-pressed', String(on));
+});
 renderComps(); renderMatrix();
 </script>
 </body>
