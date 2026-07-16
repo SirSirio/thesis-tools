@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 6.1 context gathered
-last_updated: "2026-07-16T11:31:39.547Z"
-last_activity: 2026-07-16 -- Phase 06.1 planning complete
+stopped_at: Completed 06.1-01-PLAN.md
+last_updated: "2026-07-16T11:47:22.392Z"
+last_activity: 2026-07-16
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 16
+  completed_plans: 17
   percent: 43
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 06.1 — Architecture refinement: module schema, design directions, design-type column
+**Current focus:** Phase 06.1 — architecture-refinement-full-system-module-schema-design-dir
 
 ## Current Position
 
-Phase: 06.1
-Plan: Not started
+Phase: 06.1 (architecture-refinement-full-system-module-schema-design-dir) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-07-16 -- Phase 06.1 planning complete
+Last activity: 2026-07-16
 
 Progress: [█████████░] 89%
 
@@ -60,6 +60,7 @@ Progress: [█████████░] 89%
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P05 | 25min | 3 tasks | 1 files |
 | Phase 06-system-architecture-explorer-promote-the-electronics-archite P06 | 12min | 2 tasks | 1 files |
 | Phase 06 P07 | 15min | 1 tasks | 1 files |
+| Phase 06.1 P01 | 20min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,8 @@ Recent decisions affecting current work:
 - [Phase 06-07]: Adapted rotor-solver's SPEC.md section structure to this tool's shape (price table, brain specs, variant BOMs, comms layers, pin-budget model, power model, diagram, cost assumptions, persistence, open questions, cross-links)
 - [Phase 06-07]: Only the ILI9341 screen documented as High-confidence/sourced in SPEC.md's price table; all other ~19 prices remain Low-confidence rough estimates (sourcing deferred, out of Phase 6 scope)
 - [Phase 06-07]: Screen SPI-vs-parallel ambiguity documented as an open item with the exact end-of-phase resolution procedure carried over from 06-05
+- [Phase 06.1-01]: align28byj role changed to 'alignment motor x2' and its source note records the 12V winding as the researched choice (D-15), rather than adding a second differently-priced key
+- [Phase 06.1-01]: buck12/buck5 grouped into SHARED_BOM alongside the vibration motor and 2x 28BYJ-48, per RESEARCH's recommendation
 
 ### Pending Todos
 
@@ -142,6 +145,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-16T10:45:35.852Z
-Stopped at: Phase 6.1 context gathered
-Resume file: .planning/phases/06.1-architecture-refinement-full-system-module-schema-design-dir/06.1-CONTEXT.md
+Last session: 2026-07-16T11:47:22.382Z
+Stopped at: Completed 06.1-01-PLAN.md
+Resume file: None

@@ -213,13 +213,13 @@ The site grows incrementally as the thesis generates new design decisions needin
   5. The voltage/power questions are answered (sourced) and reflected in the power-rail model
   6. SPEC.md and the three decision records are internally consistent (variant count, resolved open questions, current prices)
 
-**Plans:** 5 plans in 4 waves
+**Plans:** 1/5 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 06.1-01-PLAN.md — Data model: new bitbyg components (vibration motor + IRF520 driver, MPR121, 2× buck converters), SHARED_BOM rebuild resolving alignment-motor-#2, pinsOf() + D-14 guard verification, two-buck power rails in the diagram (D-13/D-14/D-15/D-16, SC-4/SC-5)
+- [x] 06.1-01-PLAN.md — Data model: new bitbyg components (vibration motor + IRF520 driver, MPR121, 2× buck converters), SHARED_BOM rebuild resolving alignment-motor-#2, pinsOf() + D-14 guard verification, two-buck power rails in the diagram (D-13/D-14/D-15/D-16, SC-4/SC-5)
 
 **Wave 2** *(blocked on Wave 1 — same file)*
 
