@@ -46,8 +46,8 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   │   ├── stadium_model_documentation.md     Source documentation
 │   │   └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
 │   └── system-architecture-explorer/
-│       ├── index.html      System Architecture Explorer — control-electronics cost/complexity matrix (promoted from prototypes/System-Architecture/)
-│       └── SPEC.md         Tool spec — component prices, variant BOMs, comms-layer model, assumptions
+│       ├── index.html      System Architecture Explorer — whole-device architecture page: six-module hardware schema, design-direction gallery, driver/MCU/bus variant matrix (promoted from prototypes/System-Architecture/)
+│       └── SPEC.md         Tool spec — module schema, design directions, component prices, variant BOMs, comms-layer/power-rail model, assumptions
 ├── prototypes/
 │   ├── index.html              Prototype Design Space — animated journey page
 │   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
