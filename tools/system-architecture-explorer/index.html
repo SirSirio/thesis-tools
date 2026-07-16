@@ -140,6 +140,36 @@
     filter: drop-shadow(0 0 4px rgba(255,107,43,0.55));
   }
 
+  /* ── Design-direction gallery (id="directions") ────────────────────────
+     Card hover-affordance idiom restated inline from prototypes/index.html's
+     .proto-card (cursor:pointer + border-colour/box-shadow transition on the
+     existing --glass-border/--accent tokens) — assets/style.css unchanged. */
+  #directions .dir-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  #directions .dir-card {
+    display: block; width: 100%; text-align: left;
+    font-family: inherit; font-size: inherit; cursor: pointer;
+    background: rgba(255,255,255,0.022);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 18px 20px 20px;
+    color: var(--text);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  #directions .dir-card:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+  #directions .dir-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #directions .dir-card.selected {
+    border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow);
+    background: rgba(255,107,43,0.07);
+  }
+  #directions .dir-card-sketch { margin-bottom: 10px; }
+  #directions .dir-card h3 { font-size: 1.0rem; font-weight: 700; margin: 0 0 6px; }
+  #directions .dir-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; margin: 0; }
+
   /* ══════════════════════════════════════════════════════════
      Ported cost/complexity engine styles (Part 02, id="matrix")
      Reskinned onto the shared assets/style.css design tokens
@@ -260,18 +290,32 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════
-       PART 01 — THEORY (prose added in a later plan)
+       PART 00.5 — DESIGN-DIRECTION GALLERY
        ══════════════════════════════════════════════════════ -->
   <div class="part-label animate-in" style="--delay:0.06s">
+    <span class="num">Design directions</span>
+    <h2>Four Device Personalities</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.075s">
+    The module schema above is fixed; the electronics that run it are not. Every row in the
+    matrix below lands in one of four device personalities — click a card to filter the matrix
+    to it, click again to clear.
+  </p>
+  <div id="directions" class="animate-in" style="--delay:0.09s"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 01 — THEORY (prose added in a later plan)
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.105s">
     <span class="num">Part 01</span>
     <h2>Comms Layers &amp; The Driver Insight</h2>
   </div>
-  <p class="part-summary animate-in" style="--delay:0.075s">
+  <p class="part-summary animate-in" style="--delay:0.12s">
     The reasoning behind the matrix below — the three communication layers, why the stepper
     driver choice matters more than the brain MCU, and the concurrency axis that dominates
     system cost.
   </p>
-  <div class="theory-card animate-in" id="theory" style="--delay:0.09s">
+  <div class="theory-card animate-in" id="theory" style="--delay:0.135s">
     <div class="theory-section">
       <h3>The Three Comms Layers</h3>
       <p>Every variant in the matrix below is built from the same three communication links —
@@ -335,16 +379,16 @@
   <!-- ══════════════════════════════════════════════════════
        PART 02 — INTERACTIVE SOLUTION MATRIX
        ══════════════════════════════════════════════════════ -->
-  <div class="part-label animate-in" style="--delay:0.12s">
+  <div class="part-label animate-in" style="--delay:0.15s">
     <span class="num">Part 02</span>
     <h2>Live Solution Matrix</h2>
   </div>
-  <p class="part-summary animate-in" style="--delay:0.135s">
+  <p class="part-summary animate-in" style="--delay:0.165s">
     Edit component prices below — every concept's cost updates live. Sort and filter by
     price, complexity, and concurrency; click a row to expand its bill-of-materials.
   </p>
 
-  <div id="matrix" class="animate-in" style="--delay:0.15s">
+  <div id="matrix" class="animate-in" style="--delay:0.18s">
 
     <div class="sae-card note">
       <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI (ILI9341; owned board inspected and
@@ -442,11 +486,11 @@
 
   </div><!-- /#matrix -->
 
-  <div class="part-label animate-in" style="--delay:0.16s">
+  <div class="part-label animate-in" style="--delay:0.195s">
     <span class="num">Diagram</span>
     <h2 id="diagramCaption">System diagram</h2>
   </div>
-  <p class="part-summary animate-in" style="--delay:0.165s">
+  <p class="part-summary animate-in" style="--delay:0.21s">
     Live per-variant view of the three comms layers: <b>A</b> brain↔screen ·
     <b>B</b> system bus (drawn with the variant's real node count) ·
     <b>C</b> driver topology + the 6 driver→motor links — plus the constant
@@ -454,7 +498,7 @@
     24&nbsp;V rail, stepped down locally by two buck converters: 12&nbsp;V for the
     alignment motors, 5&nbsp;V for logic). Redraws whenever a matrix row is selected.
   </p>
-  <div class="sae-card animate-in" style="--delay:0.17s;overflow-x:auto">
+  <div class="sae-card animate-in" style="--delay:0.225s;overflow-x:auto">
     <div id="diagram" aria-hidden="true"></div>
   </div>
 
@@ -674,6 +718,118 @@ function topoClassOf(v){
   if (v.bom.rp2040 || v.bom.stm32 || v.bom.nano) return 'satellite';
   return 'fused';
 }
+
+/* ---------- design-direction gallery (D-06/D-07/D-08/D-09) ----------
+   directionOf(v) mirrors topoClassOf(v)'s exact ordered-if-chain shape, deriving a curated
+   screen-integration x control-topology "device personality" from the variant's EXISTING
+   bom/intBrainKey/topoClassOf fields — no new per-variant field is added to VARIANTS (RESEARCH
+   Implementation Notes). Checked in this order so 'distributed' can never be shadowed by the
+   fused-vs-not-fused branches below it:
+     modular   — topoClassOf(v)==='distributed' (six per-pump Pro-Minis)              — 2 rows
+     allinone  — intBrainKey(v) truthy AND topoClassOf(v)==='fused' (integrated screen
+                 board IS the pump controller)                                         — 2 rows
+     console   — intBrainKey(v) falsy AND topoClassOf(v)==='fused' (discrete screen,
+                 one bare ESP32 doing everything)                                      — 8 rows
+     panelnode — everything else: a screen-facing brain + a dedicated pump/printer node
+                 ('satellite' or 'printer' topology, either screen style)              — 8 rows
+   2+2+8+8 = 20 — every variant resolves to exactly one direction, no unclassified bucket. */
+function directionOf(v){
+  if (topoClassOf(v)==='distributed') return 'modular';
+  if (intBrainKey(v) && topoClassOf(v)==='fused') return 'allinone';
+  if (!intBrainKey(v) && topoClassOf(v)==='fused') return 'console';
+  return 'panelnode';
+}
+
+/* DIRECTIONS: the four curated device personalities (D-06). Each entry is the single source of
+   truth for its display name, pill colour class, and gallery copy — the matrix column
+   (directionPill(), below) and the gallery (renderDirections(), below) both read from here so
+   the two never drift into duplicated literals (D-10). Colours are new hues (violet/teal/
+   pink/indigo) chosen to stay visually distinct from the existing accent/accent-2/ok/warn/blue
+   palette already used by conPill()/confClass() pills — the matching .dir-* CSS classes live
+   under the #matrix style block above. Copy is capped at 1-2 sentences — D-07 is explicit the
+   SKETCH carries the description, not a paragraph (directionSketch(), below). Direction concepts
+   come from general design knowledge first; bitbyg prices these, it does not define them (D-09). */
+const DIRECTIONS = {
+  modular: {
+    name: 'Distributed Modules', cls: 'dir-modular', color: '#b06bf5',
+    copy: 'One small controller board per pump — hot-swappable modules on a shared bus, most wiring.'
+  },
+  allinone: {
+    name: 'All-in-One', cls: 'dir-allinone', color: '#3ecfae',
+    copy: 'A single integrated screen+brain board doubles as the pump controller — one part, one enclosure.'
+  },
+  console: {
+    name: 'Console', cls: 'dir-console', color: '#f06bc4',
+    copy: 'A discrete screen wired to one bare ESP32 that runs everything — the classic single-box console.'
+  },
+  panelnode: {
+    name: 'Panel + Node', cls: 'dir-panelnode', color: '#7a6bf0',
+    copy: 'A screen-facing brain plus a separate dedicated node that actually drives the pumps.'
+  }
+};
+
+/* directionSketch(key): a small, fixed-viewBox, stylized DEVICE-IMPRESSION sketch — where the
+   screen sits, one enclosure vs several, never an abstract topology chart (that already exists
+   as #diagram below). Mirrors buildDiagram()/buildSchema()'s template-string T()/CASE() closure
+   technique; reuses the direction's own colour for the case outline so the sketch and the
+   gallery card/chip read as one visual family (D-10). Inline, no new files. */
+function directionSketch(key){
+  const d = DIRECTIONS[key];
+  const mut='#7a7068', screenStroke='#4a90d9';
+  const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.size||8.5}" fill="${o.color||mut}" text-anchor="${o.anchor||'middle'}" font-weight="${o.weight||500}" font-family="system-ui,sans-serif">${t}</text>`;
+  const CASE=(x,y,w,h,o={})=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.rx!=null?o.rx:8}" fill="${o.fill||'rgba(255,255,255,0.03)'}" stroke="${o.stroke||d.color}" stroke-width="${o.sw!=null?o.sw:1.6}"${o.dash?` stroke-dasharray="${o.dash}"`:''}/>`;
+  const SCREEN=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="rgba(74,144,217,0.16)" stroke="${screenStroke}" stroke-width="1.2"/><line x1="${x+4}" y1="${y+h-4}" x2="${x+w-4}" y2="${y+4}" stroke="rgba(74,144,217,0.35)" stroke-width="1"/>`;
+  let s='';
+  if (key==='allinone'){
+    s += CASE(28,16,164,72,{rx:12});
+    s += SCREEN(44,26,132,44);
+    s += T(110,100,'brain + screen, one board');
+  } else if (key==='console'){
+    s += CASE(18,16,184,72,{rx:10});
+    s += SCREEN(28,24,92,40);
+    s += `<line x1="130" y1="22" x2="130" y2="82" stroke="rgba(255,255,255,0.16)" stroke-width="1" stroke-dasharray="2 3"/>`;
+    s += CASE(138,30,52,32,{rx:5, fill:'rgba(255,255,255,0.05)', sw:1.1, stroke:mut});
+    s += T(164,50,'MCU',{size:8});
+    s += T(74,100,'discrete screen + one ESP32');
+  } else if (key==='panelnode'){
+    s += CASE(14,20,96,60,{rx:10});
+    s += SCREEN(22,28,80,32);
+    s += `<line x1="110" y1="50" x2="146" y2="50" stroke="${d.color}" stroke-width="1.8"/>`;
+    s += CASE(146,32,60,36,{rx:6, fill:'rgba(255,255,255,0.05)', sw:1.1, stroke:mut});
+    s += T(176,54,'node',{size:8});
+    s += T(110,100,'screen brain + a separate pump/printer node');
+  } else { // modular
+    s += CASE(14,18,78,44,{rx:8});
+    s += SCREEN(20,24,66,22);
+    const boxW=30, gap=7, startX=100;
+    for (let i=0;i<4;i++){
+      const bx = startX + i*(boxW+gap);
+      s += CASE(bx,32,boxW,32,{rx:6, fill:'rgba(255,255,255,0.05)', sw:1.1, stroke:mut});
+    }
+    s += T(53,80,'screen',{size:8});
+    s += T(160,100,'six independent per-pump modules');
+  }
+  return `<svg viewBox="0 0 220 112" width="100%" style="max-width:220px;height:auto;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><title>${d.name} device impression</title>${s}</svg>`;
+}
+
+/* renderDirections(): builds the gallery once at init (alongside renderComps()/renderMatrix()) —
+   real <button> cards so Tab/Enter/Space work with zero extra keyboard wiring (native button
+   semantics) purely from being <button> elements. Static DOM build only — click/select wiring
+   (setDirection(), wireDirectionsInteractivity(), populateDirectionSelect()) is added later,
+   mirroring the buildSchema()/wireSchemaInteractivity() build-then-wire split already used for
+   the Part 00 module schema above. */
+function renderDirections(){
+  const host = document.getElementById('directions');
+  host.innerHTML = `<div class="dir-grid">${Object.keys(DIRECTIONS).map(key=>{
+    const d = DIRECTIONS[key];
+    return `<button type="button" class="dir-card" data-direction="${key}" aria-pressed="false">
+      <div class="dir-card-sketch">${directionSketch(key)}</div>
+      <h3 style="color:${d.color}">${d.name}</h3>
+      <p>${d.copy}</p>
+    </button>`;
+  }).join('')}</div>`;
+}
+
 function pumpNodeLabelOf(v){
   if (v.bom.skr) return 'BTT SKR / Octopus';
   if (v.bom.ramps) return 'Mega2560 + RAMPS';
@@ -1275,6 +1431,7 @@ maxCx = +document.getElementById('fCx').value;
 minCon = +document.getElementById('fCon').value;
 document.getElementById('schemaSvg').innerHTML = buildSchema(); // static — rendered once, never rebuilt by renderMatrix() (T-06.1-06)
 wireSchemaInteractivity();
+renderDirections(); // static gallery build, rendered once — Task 3 wires its click behaviour
 renderComps(); renderMatrix();
 </script>
 </body>
