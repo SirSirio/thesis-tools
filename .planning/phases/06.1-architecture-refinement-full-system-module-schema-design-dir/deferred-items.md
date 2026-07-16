@@ -22,3 +22,22 @@ scope (`tools/system-architecture-explorer/index.html` only). Deferred for whoev
 
 **Also true of Plans 06.1-01 and 06.1-02** — same `not_found` result would apply to their
 requirement IDs (`D-13`...`D-18`, `SC-4`, `SC-5`), not something introduced by 06.1-03.
+
+## Stale `TBD` in prototypes/System-Architecture/POWER-AND-MOTORS.md (out of scope for 06.1-05)
+
+06.1-05's overall `<verification>` step 1 greps the whole `prototypes/System-Architecture/`
+directory for `TBD` and expects zero matches. A match was found:
+`POWER-AND-MOTORS.md:219` — "`alignMot2` is still TBD" inside decision row **P5** of that file's
+own open-questions table.
+
+`POWER-AND-MOTORS.md` is a pre-existing tracked file (committed in `009818b`, before this phase)
+that is **not** in 06.1-05's `files_modified` list or file scope
+(`ARCHITECTURE.md`/`PUMP-CONTROL-CONCEPTS.md`/`SOLUTION-MATRIX.md`/`index.html`/`README.md`/
+`CLAUDE.md` only) and was never assigned to any plan in this phase's read/write scope. Its `alignMot2`
+reference now contradicts D-13's resolution (2× `align28byj`, no separate `alignMot2` part) — the
+same drift class 06.1-05 exists to fix, but in a file outside this plan's explicit boundary.
+
+**Not fixed here** — fixing it would mean editing a file not authorized by this plan's file-scope
+directive. Flagging for whoever next touches `POWER-AND-MOTORS.md`, or for a follow-up
+consistency-pass task if Sirio wants the whole `prototypes/System-Architecture/` directory (not just
+the three canonical decision records) swept for `TBD`/stale strings.

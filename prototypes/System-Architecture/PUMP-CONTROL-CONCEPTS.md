@@ -9,6 +9,15 @@ updated: 2026-07-02
 
 # Pump-control concept menu
 
+> **Scope note.** The ~€ prices below are **pre-bitbyg-sourcing estimates** (2026-07-02, hobby/
+> AliExpress-class guesses), retained as-is as a **historical record** of how this concept menu was
+> originally costed — not rewritten to preserve the audit trail of how the cost picture changed once
+> real vendor prices landed. Current, sourced figures live in the System Architecture Explorer's
+> [Component unit prices table](../../tools/system-architecture-explorer/index.html#matrix). The gap
+> is substantial, not cosmetic: the 6× DRV8825 line alone moved from **~€9** (this file's guess) to
+> **~€41** (`6 × €6.87 ≈ €41.22`, real bitbyg-sourced price) once sourced — every concept cost below
+> understates reality by a comparable margin.
+
 Seven concepts for driving the 5–6 pumps, spanning **serial → full-parallel** dispensing and
 **dumb → smart → motion-controller** drivers. No formal scoring yet — this is the option space to
 choose from. Rough EUR prices (hobby/AliExpress class), **controller electronics only**

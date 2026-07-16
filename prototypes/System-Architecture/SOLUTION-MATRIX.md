@@ -26,9 +26,11 @@ Parent docs: [ARCHITECTURE.md](ARCHITECTURE.md) · concept detail in
 
 ## Component unit prices
 
-Standalone BOM price reference — **all cost math below and in the
-[System Architecture Explorer](../../tools/system-architecture-explorer/index.html#matrix) is
-built from these**. Rough hobby-class EUR; edit them live in the tool. DKK→EUR at
+Standalone BOM price reference for this historical snapshot — **the cost math below is built from
+these**. The System Architecture Explorer now maintains its own, richer, live-editable component
+price list (26 components) — see the tool's
+[Component unit prices table](../../tools/system-architecture-explorer/index.html#matrix) for
+current, authoritative figures. Rough hobby-class EUR at the time of writing. DKK→EUR at
 **1 DKK ≈ €0.134** (screen: 174 DKK ≈ €23).
 
 | Component | Role | ~€ each |
@@ -53,7 +55,7 @@ built from these**. Rough hobby-class EUR; edit them live in the tool. DKK→EUR
 | ILI9341 3.2" touch | screen (174 DKK) | 23.0 |
 | NEMA17 pump stepper ×6 | pumps | 6.0 |
 | 28BYJ-48 12 V + ULN2003 | alignment motor #1 | 2.5 |
-| Alignment motor #2 (TBD) | alignment | 6.0 |
+| 28BYJ-48 12 V + ULN2003 | alignment motor #2 (resolved D-13) | 6.0 |
 
 **Shared system block** (added to any variant for whole-system cost): 6× NEMA17 (€36) + screen (€23)
 + alignment Nano (€3) + 28BYJ-48+ULN2003 (€2.5) + align motor #2 & driver (€7.5) ≈ **€72**.
