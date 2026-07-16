@@ -93,6 +93,41 @@
     #diagram svg { transition: opacity 0.15s ease; }
   }
 
+  /* ── Module schema (Part 00, id="system") ──────────────────
+     Two-column layout: SVG host + side-note reveal panel, side-by-side above
+     ~900px, stacked below it so the page never scrolls horizontally. */
+  #system .schema-wrap { display: flex; gap: 24px; align-items: stretch; }
+  #system .schema-svg-host {
+    flex: 1 1 62%; min-width: 0;
+    background: rgba(255,255,255,0.022);
+    border: 1px solid rgba(255,107,43,0.10);
+    border-radius: var(--radius);
+    padding: 16px;
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  }
+  #system .schema-svg-host svg { display: block; width: 100%; height: auto; }
+  #system .schema-note-panel {
+    flex: 1 1 34%; min-width: 240px;
+    background: rgba(255,255,255,0.022);
+    border: 1px solid rgba(255,107,43,0.10);
+    border-left: 3px solid rgba(255,107,43,0.42);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    font-size: 0.88rem; color: var(--text); line-height: 1.6;
+  }
+  #system .schema-note-panel h3 { font-size: 0.95rem; font-weight: 700; color: var(--accent); margin: 0 0 8px; }
+  #system .schema-note-prompt { color: var(--text-muted); margin: 0; }
+  #system .schema-note-payload { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
+  #system .schema-note-payload span {
+    display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    background: rgba(255,107,43,0.12); color: var(--accent); border: 1px solid rgba(255,107,43,0.28);
+  }
+  #system .schema-note-purpose { font-size: 0.87rem; color: var(--text); margin: 0; }
+  @media (max-width: 900px) {
+    #system .schema-wrap { flex-direction: column; }
+  }
+
   /* ══════════════════════════════════════════════════════════
      Ported cost/complexity engine styles (Part 02, id="matrix")
      Reskinned onto the shared assets/style.css design tokens
@@ -185,12 +220,32 @@
     <div class="section-label">Thesis Tool — Modular Liquid Dispensing · Proto 1</div>
     <h1>System Architecture Explorer</h1>
     <p>
-      A live cost/complexity matrix for the pump-system control electronics — which brain
-      (MCU), which stepper driver, and which system bus, at what price and design complexity.
-      Edit component prices to match real quotes, sort and filter the twenty candidate
-      architectures, and expand any row for its full bill-of-materials.
+      A modular automated liquid dispenser is six cooperating modules — pump, alignment,
+      nozzle, storage, UI, and the software/electronics that ties them together. This page
+      opens with that whole-device schema, walks through the design directions its control
+      electronics could take, and ends with a live cost/complexity matrix comparing them.
     </p>
   </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 00 — WHOLE-DEVICE MODULE SCHEMA
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.015s">
+    <span class="num">Part 00</span>
+    <h2>Whole-Device Module Schema</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.03s">
+    Six modules make up the device — what hardware each one carries, and how liquid and data
+    move between them. Hover, click, or tab to a module below for its payload and purpose.
+  </p>
+  <div id="system" class="animate-in" style="--delay:0.045s">
+    <div class="schema-wrap">
+      <div id="schemaSvg" class="schema-svg-host"></div>
+      <div id="schemaNote" class="schema-note-panel">
+        <p class="schema-note-prompt">Hover, click, or tab to a module in the diagram to see its hardware payload and purpose.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- ══════════════════════════════════════════════════════
        PART 01 — THEORY (prose added in a later plan)
