@@ -87,6 +87,51 @@
   }
   .theory-section p:last-child { margin-bottom: 0; }
 
+  /* ── Collapsible fold ─────────────────────────────────────────
+     Shared by the Part 01 theory sections and the component-price
+     table. Adapted from prototypes/index.html's .ver-panel <details>
+     precedent (same disclosure triangle, same rotate-on-open), retuned
+     to this tool's denser card rhythm. Closed by default everywhere:
+     the page's spine is schema → directions → matrix, and both the
+     reasoning and the 26-row price table are reference material the
+     reader opens on demand. */
+  .sae-fold > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 2px 0;
+    border-radius: 8px;
+  }
+  .sae-fold > summary::-webkit-details-marker { display: none; }
+  .sae-fold > summary::after {
+    content: '▸';
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    transition: transform 0.2s ease;
+    /* nudge onto the text baseline the flex row is aligned to */
+    align-self: center;
+  }
+  .sae-fold[open] > summary::after { transform: rotate(90deg); }
+  .sae-fold > summary:hover { background: rgba(255,255,255,0.03); }
+  .sae-fold > summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  /* summary is the h3 for theory folds — keep the existing heading look */
+  .sae-fold > summary > .fold-title {
+    font-size: 0.80rem; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .sae-fold > summary > .fold-note {
+    font-size: 0.82rem; color: var(--text-muted); font-weight: 400;
+    letter-spacing: 0; text-transform: none;
+  }
+  .sae-fold[open] > summary { margin-bottom: 14px; }
+  .theory-section.sae-fold > summary > .fold-title { margin: 0; }
+
   /* ── Diagram region (reserved for a later plan) ───────────── */
   #diagram { min-height: 2px; }
   @media (prefers-reduced-motion: no-preference) {
@@ -339,54 +384,84 @@
     <h2>Comms Layers &amp; The Driver Insight</h2>
   </div>
   <p class="part-summary animate-in" style="--delay:0.12s">
-    The reasoning behind the matrix below — the three communication layers, why the stepper
-    driver choice matters more than the brain MCU, and the concurrency axis that dominates
-    system cost.
+    What separates the four directions above, and why the matrix below is laid out the way it is:
+    the three communication layers each direction answers differently, why the stepper driver —
+    not the brain MCU — is what actually buys concurrency, and the concurrency axis that sets
+    complexity and the power budget but, on the sourced prices, <i>not</i> the cost floor.
+    Expand a section to read it.
   </p>
   <div class="theory-card animate-in" id="theory" style="--delay:0.135s">
-    <div class="theory-section">
-      <h3>The Three Comms Layers</h3>
-      <p>Every variant in the matrix below is built from the same three communication links —
-      only their implementation changes row to row.</p>
-      <p><b>Layer A — brain ↔ screen.</b> The touchscreen is a fixed, owned component: an
-      ILI9341 3.2" resistive-touch TFT (bitbyg, 174&nbsp;DKK ≈ €23) wired SPI (or possibly 8-bit
-      parallel — the listing is ambiguous) straight to the brain. Because it must render a GUI,
-      the brain is confirmed ESP32-class in every variant; a Nano cannot hold a screen and the
-      system logic at once. This link never changes — it is not a variable in the matrix.</p>
-      <p><b>Layer B — the system bus.</b> How the brain talks to the other modules (pump
-      controller, alignment node) is the first genuinely open choice: I²C, RS-485, or CAN. I²C
-      only makes sense for a few nodes sharing one small enclosure; RS-485 is the recommended
-      default — differential, ignores motor EMI, ~€0.70/node, unchanged from 2 to 8 nodes; CAN
-      earns its extra cost only with many nodes and a real need for fault tolerance. The matrix's
-      <b>Bus (B)</b> column shows this choice with the variant's real node count.</p>
+    <details class="theory-section sae-fold">
+      <summary>
+        <span class="fold-title">The Three Comms Layers</span>
+        <span class="fold-note">A = brain↔screen · B = brain↔modules · C = controller↔drivers</span>
+      </summary>
+      <p>The module schema in Part 00 is fixed — every device above carries the same six modules.
+      What actually differs between the four directions is how three communication links are
+      implemented, and every row in the matrix below is just one set of answers to them.</p>
+      <p><b>Layer A — brain ↔ screen.</b> The touchscreen is an owned component: an ILI9341 3.2"
+      resistive-touch TFT (bitbyg, 174&nbsp;DKK ≈ €23), <b>inspected and confirmed SPI</b>
+      (2026-07-15; 8-bit parallel is kept selectable in the controls below only as a
+      Low-confidence counterfactual). Because it must render a GUI, the brain is ESP32-class in
+      every variant — a Nano cannot hold a screen and the system logic at once. This link is
+      where the gallery's first split lives: <b>Console</b> and <b>Panel + Node</b> wire a
+      discrete screen to a bare ESP32 and pay Layer A in pins and wiring, while
+      <b>All-in-One</b> buys an integrated screen+brain board and Layer A disappears
+      entirely — no wiring, no pin cost, at the price of a board that is not stocked at the
+      default vendor.</p>
+      <p><b>Layer B — the system bus.</b> How the brain talks to the other modules is the first
+      genuinely open choice: I²C, RS-485, or CAN. I²C only makes sense for a few nodes sharing
+      one small enclosure — which is exactly the <b>All-in-One</b> and <b>Console</b> case. RS-485
+      is the recommended default the moment the device stops being one box: differential, ignores
+      motor EMI, ~€0.70/node, and unchanged in cost from 2 nodes to 8 — which is why it suits
+      <b>Distributed Modules</b>, where six per-pump boards each become a node. CAN earns its
+      extra cost only with many nodes plus a real need for fault tolerance. The <b>Bus (B)</b>
+      column shows this choice against the variant's real node count.</p>
       <p><b>Layer C — pump-controller ↔ drivers.</b> How the controller talks to the six stepper
-      drivers is set entirely by which driver family is chosen: bare STEP/DIR wires for a dumb
-      driver, a shared UART for a smart driver, or an SPI daisy-chain for a motion controller.
-      That distinction is the subject of the next section.</p>
-    </div>
-    <div class="theory-section">
-      <h3>The Driver Matters More Than the MCU</h3>
+      drivers is set entirely by the driver family: bare STEP/DIR wires for a dumb driver, a
+      shared UART for a smart driver, or an SPI daisy-chain for a motion controller. This is the
+      layer that decides whether a separate pump node needs to exist at all — the subject of the
+      next section, and the reason <b>Panel + Node</b> is a distinct direction rather than a
+      variation on Console.</p>
+    </details>
+    <details class="theory-section sae-fold">
+      <summary>
+        <span class="fold-title">The Driver Matters More Than the MCU</span>
+        <span class="fold-note">Why Panel + Node exists only to serve dumb drivers</span>
+      </summary>
       <p>The instinctive question is "do I need a bigger MCU to run six pumps at once?" — but a
       stepper needs a driver chip regardless, and <b>the driver you pick decides who actually
       generates the step pulses</b>, which is the real cost of concurrency:</p>
       <p><b>Dumb driver (DRV8825):</b> the MCU must toggle the STEP pin for every single
       step, for every motor, in sync. Producing six independent, accelerating step trains is the
       MCU's burden — this is the <i>only</i> reason a plain ESP32 stops being enough and the
-      design reaches for an RP2040 (PIO) or STM32 (hardware timers) as a dedicated pump node.</p>
+      design reaches for an RP2040 (PIO) or STM32 (hardware timers) as a dedicated pump node.
+      That node <i>is</i> the <b>Panel + Node</b> direction: a second board whose entire job is
+      to generate pulses the brain cannot. Push the same logic one board per pump and you get
+      <b>Distributed Modules</b>.</p>
       <p><b>Smart driver (TMC2209, UART velocity mode):</b> you send the driver a target
       speed once, and the driver generates its own steps. The MCU is nearly idle, so it stays
-      <i>fused</i> — one ESP32 doing brain and pump-control together — even at six-parallel. In
-      the matrix, the <b>T9-fused-i2c</b> and <b>T9-fused-485</b> rows are exactly this: full
-      6-parallel with no separate pump-node MCU at all. TMC2209 is also silent, runs cooler, and
-      supports sensorless homing — practical bonuses that come for free with the same chip.</p>
+      <i>fused</i> — one ESP32 doing brain and pump-control together — even at six-parallel.
+      This is what makes <b>Console</b> and <b>All-in-One</b> viable at full concurrency: the
+      <b>T9-fused-i2c</b> and <b>T9-fused-485</b> rows run all six pumps with no separate
+      pump-node MCU at all. TMC2209 is also silent, runs cooler, and supports sensorless
+      homing — practical bonuses that come free with the same chip.</p>
       <p>Since a driver is bought either way, the smart part is the better buy twice over: on the
       sourced prices in the table below it is <i>cheaper</i> per driver than the DRV8825, and it
       buys full parallel capability outright, which makes the "which MCU" question almost
       irrelevant. That is the insight the matrix is built to make visible: driver family, not
       brain choice, is what actually buys (or avoids) concurrency.</p>
-    </div>
-    <div class="theory-section">
-      <h3>The U5 Concurrency Axis</h3>
+      <p>Read the gallery through that lens and it collapses into one question. <b>Panel + Node</b>
+      and <b>Distributed Modules</b> spend boards, wiring and enclosure complexity to buy
+      step-generation the brain cannot supply — a bill that a smart driver simply deletes. They
+      earn their keep on <i>other</i> grounds (hot-swap servicing, per-pump isolation, physical
+      layout), not on concurrency. If concurrency is all you want, the fused directions win.</p>
+    </details>
+    <details class="theory-section sae-fold">
+      <summary>
+        <span class="fold-title">The U5 Concurrency Axis</span>
+        <span class="fold-note">Sets complexity and the power budget — but not, it turns out, cost</span>
+      </summary>
       <p>Reading the matrix by concurrency shows one axis dominates the <i>physical</i> design:
       <b>how many pumps must move at the exact same instant.</b> Rows at 1–2 concurrent (S1*, D2*)
       sit at ★–★★ complexity on a 60&nbsp;W PSU. Committing to true 6-parallel moves every row to
@@ -407,7 +482,7 @@
       which owns the decision between replicated-pump control layers A1 (shared step bus, serial)
       and A2 (independent per-motor control, parallel). This tool prices what each answer to U5
       actually costs; it does not answer U5 itself.</p>
-    </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════════════════
@@ -485,18 +560,25 @@
       </div>
     </div>
 
-    <!-- ===================== COMPONENT PRICES ===================== -->
-    <h2>Component unit prices <span class="badge">editable</span></h2>
-    <p class="sub">Type € directly, or type a DKK price to auto-convert. All cost math below uses these.</p>
-    <p class="legend">Confidence — <span class="pill conf-high">High</span> vendor page/datasheet states it directly ·
-      <span class="pill conf-medium">Medium</span> reputable secondary source or near-identical variant ·
-      <span class="pill conf-low">Low</span> estimate / assumption / not yet sourced. (D-11)</p>
-    <div class="sae-card" style="overflow-x:auto">
-      <table id="compTable">
-        <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th><th class="hide-sm">Source</th><th>Confidence</th></tr></thead>
-        <tbody id="compBody"></tbody>
-      </table>
-    </div>
+    <!-- ===================== COMPONENT PRICES =====================
+         Collapsed by default: 26 rows of reference data that every cost on the page already
+         reflects. The reader opens it to audit or edit a price, not to read top-to-bottom. -->
+    <details class="sae-fold" id="pricesFold">
+      <summary>
+        <h2 style="margin:0;">Component unit prices <span class="badge">editable</span></h2>
+        <span class="fold-note">26 components · open to audit or edit</span>
+      </summary>
+      <p class="sub">Type € directly, or type a DKK price to auto-convert. All cost math below uses these.</p>
+      <p class="legend">Confidence — <span class="pill conf-high">High</span> vendor page/datasheet states it directly ·
+        <span class="pill conf-medium">Medium</span> reputable secondary source or near-identical variant ·
+        <span class="pill conf-low">Low</span> estimate / assumption / not yet sourced. (D-11)</p>
+      <div class="sae-card" style="overflow-x:auto">
+        <table id="compTable">
+          <thead><tr><th>Component</th><th>Role</th><th>€ each</th><th class="hide-sm">DKK each</th><th class="hide-sm">Source</th><th>Confidence</th></tr></thead>
+          <tbody id="compBody"></tbody>
+        </table>
+      </div>
+    </details>
 
     <!-- ===================== SOLUTION MATRIX ===================== -->
     <h2>Solution matrix <span class="badge">click a row for BOM · click headers to sort</span></h2>

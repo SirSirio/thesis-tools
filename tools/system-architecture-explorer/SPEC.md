@@ -40,6 +40,7 @@ Electronics to every other module**. The Software & Electronics module is drawn 
 liquid-glass-styled barrier — the design intent that this module is the sealed dry zone the other
 five modules' liquid path must never breach.
 
+
 Hover, click, or keyboard-focus (Tab + Enter/Space) any module box to reveal its full payload and
 purpose text in the adjacent note panel — `selectModule()`/`wireSchemaInteractivity()` in the
 script, mirroring the matrix's existing "one function, several writers" state pattern.
@@ -104,6 +105,12 @@ weakest source (this mirrors 06-RESEARCH.md's Pitfall 1).
 Rendered live in the "Component unit prices" section (`#compTable`), editable per-row (typing a
 € or DKK value updates `COMP[k].eur` and persists to localStorage). Defaults below are the
 `DEFAULTS` object's shipped values. DKK→EUR conversion rate defaults to **0.134** (editable).
+
+The section is a **collapsible fold** (`<details id="pricesFold" class="sae-fold">`), **closed by
+default** — 26 rows of reference data that every cost on the page already reflects, opened to audit
+or edit rather than read top-to-bottom. `renderComps()` still runs at init regardless of the fold's
+state, so the table is fully populated the instant it opens and no cost math depends on it being
+visible.
 
 Prices were sourced against the **bitbyg.dk catalogue on 2026-07-16** (D-07/D-11 default vendor).
 DKK figures are the vendor's listed incl.-VAT prices; € = DKK × 0.134.
@@ -277,6 +284,15 @@ block" is toggled on. Shared-block cost double-counting is guarded for integrate
 
 Every variant is built from the same three communication links; only their implementation changes
 row to row.
+
+The page's Part 01 renders this reasoning as three **collapsible folds** (`.theory-section.sae-fold`),
+**closed by default** — the page's spine is Part 00 schema → directions gallery → matrix, and the
+theory is reference material opened on demand. Each fold's prose is written in the `DIRECTIONS`
+vocabulary so the funnel stays continuous: Layer A is where **All-in-One** splits from **Console** /
+**Panel + Node** (integrated board absorbs the link entirely); Layer B is why **Distributed Modules**
+wants RS-485 while single-box directions can use I²C; Layer C is why **Panel + Node** exists at all —
+a second board whose only job is generating pulses a dumb driver forces onto the MCU, a bill a smart
+driver deletes.
 
 **Layer A — brain ↔ screen.** The touchscreen is a fixed, owned component: an ILI9341 3.2"
 resistive-touch TFT (bitbyg, 174 DKK ≈ €23) wired SPI (owned board inspected and confirmed SPI;
