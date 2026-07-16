@@ -171,12 +171,22 @@
   #directions .dir-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; margin: 0; }
 
   /* ── Break-out-width matrix container (D-11) — tools/rotor-solver/index.html
-     .glass-panel--wide precedent, capped and disabled on mobile. .tool-main is
-     already display:flex;flex-direction:column; so align-self:center works
-     the same way it does there. */
-  .matrix-wide { width: calc(100vw - 64px); max-width: 1500px; align-self: center; }
+     .glass-panel--wide precedent, capped and disabled on mobile.
+     NOTE: this card's parent is #matrix (display:block), NOT .tool-main — so
+     align-self does nothing here and must not be used. #matrix is itself centred
+     in the viewport, so we break out by pushing to the parent's centre line
+     (margin-left:50%) and pulling back by half the card's own width. Keep the
+     64px inset comfortably wider than any scrollbar, since 100vw counts it. */
+  /* Specificity note: #matrix .sae-card below sets `margin:12px 0`, which outranks a bare
+     .matrix-wide selector and silently zeroes margin-left — so this rule must match it. */
+  #matrix .sae-card.matrix-wide {
+    width: calc(100vw - 64px);
+    max-width: 1500px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
   @media (max-width: 640px) {
-    .matrix-wide { width: 100%; max-width: 100%; align-self: stretch; }
+    #matrix .sae-card.matrix-wide { width: 100%; max-width: 100%; margin-left: 0; transform: none; }
   }
 
   /* ══════════════════════════════════════════════════════════
