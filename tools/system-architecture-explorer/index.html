@@ -205,6 +205,15 @@
   #matrix .conf-high{background:rgba(62,192,107,.15);color:var(--ok)}
   #matrix .conf-medium{background:rgba(224,165,60,.15);color:var(--warn)}
   #matrix .conf-low{background:rgba(255,255,255,.08);color:var(--text-muted)}
+  /* Design-type chips (D-10): four new hues (violet/teal/pink/indigo), distinct from the
+     accent/accent-2/ok/warn/blue palette already in use above so a reader never misreads a
+     direction chip as a status pill. Colour values are read from DIRECTIONS (index.html script
+     block) by directionPill() — the hex literals here are the CSS-side half of that one shared
+     vocabulary, kept in sync by hand since inline <style> cannot read JS constants. */
+  #matrix .dir-modular{background:rgba(176,107,245,.15);color:#b06bf5}
+  #matrix .dir-allinone{background:rgba(62,207,174,.15);color:#3ecfae}
+  #matrix .dir-console{background:rgba(240,107,196,.15);color:#f06bc4}
+  #matrix .dir-panelnode{background:rgba(122,107,240,.15);color:#7a6bf0}
   #matrix .sourceCell a{word-break:break-word}
   #matrix .legend{font-size:0.82rem;color:var(--text-muted);margin:2px 0 10px}
   #matrix .drv-dumb{color:var(--text-muted)}
@@ -466,6 +475,7 @@
       <table id="matrixTable">
         <thead><tr>
           <th>ID</th>
+          <th class="sortable" data-k="direction">Design type</th>
           <th class="plain-col">In plain words</th>
           <th class="sortable" data-k="at">At once</th>
           <th>Driver</th>
@@ -1245,6 +1255,14 @@ function stars(cx){
   return '★'.repeat(f)+(half?'⯨':'')+'☆'.repeat(5-f-(half?1:0));
 }
 const conPill=a=> a===1?'<span class="pill p1">1</span>':a===2?'<span class="pill p2">2</span>':'<span class="pill p6">6</span>';
+/* directionPill(v): mirrors conPill()'s shape — maps directionOf(v) to a colour-coded chip,
+   reading its name and colour class from DIRECTIONS so the gallery and this column never carry
+   duplicated literals (D-10). DIRECTIONS.name is a static, author-written, alphanumeric literal
+   (no user input reaches this template) — same trust level conPill()'s own static strings have. */
+function directionPill(v){
+  const d = DIRECTIONS[directionOf(v)];
+  return `<span class="pill ${d.cls}">${d.name}</span>`;
+}
 
 /* ---------- confidence (D-11) + XSS-safe rendering helpers (T-06-06) ---------- */
 function escapeHtml(s){
@@ -1331,6 +1349,9 @@ function renderMatrix(){
   const rows=VARIANTS.map(v=>({v, cost:costOf(v)}))
     .filter(o=> o.cost<=maxPrice && o.v.cx<=maxCx && o.v.at>=minCon)
     .sort((a,b)=>{
+      if(sortKey==='direction'){
+        return DIRECTIONS[directionOf(a.v)].name.localeCompare(DIRECTIONS[directionOf(b.v)].name)*sortDir;
+      }
       let x,y;
       if(sortKey==='cost'){x=a.cost;y=b.cost;}
       else if(sortKey==='cx'){x=a.v.cx;y=b.v.cx;}
@@ -1346,6 +1367,7 @@ function renderMatrix(){
       : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
     const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
     tr.innerHTML=`<td><b>${v.id}</b></td>
+      <td>${directionPill(v)}</td>
       <td class="plain-col">${plainBullets(v)}</td>
       <td>${conPill(v.at)}</td>
       <td class="${dc}">${v.driver}</td>
@@ -1354,7 +1376,7 @@ function renderMatrix(){
       <td class="cost">€${o.cost.toFixed(1)}</td>
       <td class="hide-sm">${pinCell}</td>`;
     const det=document.createElement('tr'); det.className='detail hidden';
-    det.innerHTML=`<td colspan="9">${bomHtml(v)}</td>`;
+    det.innerHTML=`<td colspan="10">${bomHtml(v)}</td>`;
     /* D-02: one row click drives all three — BOM expand, row highlight, diagram redraw.
        Rebound on every renderMatrix() call so sort/filter never breaks the wiring. */
     tr.addEventListener('click',()=>{ det.classList.toggle('hidden'); selectVariant(v); });
