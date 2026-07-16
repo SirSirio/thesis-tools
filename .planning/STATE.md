@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 06-07-PLAN.md
-last_updated: "2026-07-15T15:46:33.216Z"
+status: Phase 06.1 inserted (not planned yet)
+last_updated: "2026-07-16T10:45:35.874Z"
 last_activity: 2026-07-15
 progress:
-  total_phases: 6
+  total_phases: 8
   completed_phases: 3
   total_plans: 19
   completed_plans: 16
-  percent: 50
+  percent: 38
 ---
 
 # Project State
@@ -21,13 +20,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 6 — System Architecture Explorer
+**Current focus:** Phase 06.1 — Architecture refinement: module schema, design directions, design-type column
 
 ## Current Position
 
-Phase: 6
+Phase: 06.1
 Plan: Not started
-Status: Phase complete — ready for verification
+Status: Phase 06.1 inserted (not planned yet)
 Last activity: 2026-07-15
 
 Progress: [█████████░] 89%
@@ -67,6 +66,7 @@ Progress: [█████████░] 89%
 
 - Phase 5 added (2026-06-24): HTML Presentation Decks — reveal-style slide system + creative dated presentations index, first deck = 15-min lab meeting (GSD, two design tools, proto-01, proto-02, automated test-campaign app). Milestone v1.0 reopened from `completed` to accommodate.
 - Phase 6 added (2026-07-12): System Architecture Explorer — the live cost/complexity matrix built ad-hoc in `prototypes/System-Architecture/index.html` has outgrown a design-record page (editable BOM, DKK↔EUR converter, sortable/filterable 17-variant matrix, expandable per-variant BOM math). Promote it to a first-class tool at `tools/system-architecture-explorer/` (index.html + SPEC.md + nav + landing card + README row); **keep the three decision records** (ARCHITECTURE.md, PUMP-CONTROL-CONCEPTS.md, SOLUTION-MATRIX.md) in `prototypes/System-Architecture/` as design documentation, matching the `multi-liquid-architecture/` precedent. Partially retires the deferred **"BOM / component selector"** v2 backlog item.
+- Phase 06.1 inserted after Phase 6: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (URGENT)
 
 ### Decisions
 
@@ -141,6 +141,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-15T14:51:59.932Z
-Stopped at: Completed 06-07-PLAN.md
-Resume file: None
+Last session: 2026-07-16T10:45:35.852Z
+Stopped at: Phase 6.1 context gathered
+Resume file: .planning/phases/06.1-architecture-refinement-full-system-module-schema-design-dir/06.1-CONTEXT.md
