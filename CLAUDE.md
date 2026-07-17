@@ -16,7 +16,13 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 ├── assets/
 │   ├── style.css           Shared stylesheet — imported by every page
 │   ├── deck.css            Shared deck runtime (styles/transitions) — D-01 exception
-│   └── deck.js             Shared deck runtime (state machine) — D-01 exception
+│   ├── deck.js             Shared deck runtime (state machine) — D-01 exception
+│   ├── fonts/
+│   │   └── geist/
+│   │       ├── Geist-Bold.woff2  Vendored, subsetted Geist Bold — landing-page headline only (D-20)
+│   │       └── LICENSE.txt       SIL Open Font License 1.1 (mandatory to keep alongside a redistributed font)
+│   └── gsap/
+│       └── gsap.min.js     Vendored GSAP core, no plugins, no CDN — landing-page hero motif sync only (D-01/D-03 exception)
 ├── decks/
 │   ├── index.html              Presentations index — card deal-out magic
 │   └── <slug>/
@@ -57,7 +63,9 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   │   ├── proto-01-5ul-4roller/
 │   │   │   └── PROTOTYPE.md    Proto-01 deep detail — design params, test forward-links, version log
 │   │   ├── proto-02-5ul-4roller-v2/
-│   │   │   └── PROTOTYPE.md    Proto-02 deep detail — corrected geometry + gap sweep
+│   │   │   ├── PROTOTYPE.md          Proto-02 deep detail — corrected geometry + gap sweep
+│   │   │   ├── pump-head-web.mp4     Re-encoded pump-head clip (H.264, portrait, ~1.7MB) — landing-page proof video
+│   │   │   └── pump-head-poster.jpg  Poster frame for the pump-head clip
 │   │   ├── Tube OD Thikness/
 │   │   │   └── tube-wall-thickness-analysis.md  Tube wall measurement & validation
 │   │   └── multi-liquid-architecture/
@@ -93,8 +101,8 @@ Dark glassmorphic theme. See `assets/style.css` for all tokens.
 - **Accent:** `#ff6b2b` (orange) → `#e83535` (red)
 - **Glass cards:** `rgba(255,255,255,0.04)` background, `backdrop-filter: blur(24px)`, orange border
 - **Text:** `#f0ece8` primary · `#7a7068` muted
-- **Font:** system-ui sans-serif stack (no CDN fonts)
-- **Animations:** `fade-up` entrance with staggered `--delay`, hover lift + glow on cards
+- **Font:** system-ui sans-serif stack (no CDN fonts) for body text everywhere. The landing page (`index.html`) only additionally vendors **Geist Bold** (self-hosted `@font-face`, subsetted, SIL OFL 1.1) for its `.site-title` headline — body text on the landing page stays `system-ui` like every other page.
+- **Animations:** `fade-up` entrance with staggered `--delay`, hover lift + glow on cards. The landing page's hero motif additionally uses locally-vendored **GSAP core** (`assets/gsap/gsap.min.js`, no plugins, no CDN) to drive one synchronized animation timeline (rotor rotation + liquid-slug highlight) — a D-01/D-03 exception approved specifically for that motif; every other page's motion stays hand-built CSS/SVG.
 
 Each tool page links back to `../../index.html` via a `← All tools` nav bar and shares the blobs + animate-in pattern from the landing page.
 
@@ -137,7 +145,7 @@ tools/<tool-name>/
 
 **Rules:**
 - Tool-specific constants and formulas live in `SPEC.md` and inline in the tool's `<script>` — **not** in shared files
-- The only shared resources between pages are `assets/style.css` and the presentation deck runtime (`assets/deck.css`, `assets/deck.js` — a sanctioned D-01 exception for reuse across one-shot decks)
+- The shared resources between pages are `assets/style.css`, the presentation deck runtime (`assets/deck.css`, `assets/deck.js` — a sanctioned D-01 exception for reuse across one-shot decks), and now also `assets/fonts/` (vendored web fonts, precedent: `assets/fonts/geist/`) and `assets/gsap/gsap.min.js` (vendored GSAP core, referenced only by the landing page's hero motif, D-01/D-03 exception). `assets/fonts/` is a sanctioned shared-asset location going forward — future vendored fonts belong there, not in a tool-local folder
 - `SPEC.md` is the canonical reference; `.planning/phases/` context files point to it
 - Keep `SPEC.md` in sync when formulas or constants change
 
