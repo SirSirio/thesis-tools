@@ -965,28 +965,35 @@
 
       // ── 1.5ml Eppendorf-style collection tube (short shoulder,
       // aggressive taper, small liquid pooled at the tip, open snap
-      // cap on a hinge), far right — kept substantially smaller than
-      // the 50ml source ──
-      const dstX0 = 575, dstX1 = 625, dstCx = (dstX0 + dstX1) / 2;
-      const shoulderTop = 230, shoulderBottom = 246;
-      const eppTipY = shoulderBottom + 44; // aggressive taper: 44 over a 50-wide shoulder
+      // cap on a hinge), far right — kept substantially smaller AND
+      // substantially SLIMMER than the 50ml source (width 34 vs the
+      // Falcon's 70, height:width ratio ~1.9 so it reads as a slim
+      // 1.5ml tube, not a wide vial) ──
+      const dstX0 = 583, dstX1 = 617, dstCx = (dstX0 + dstX1) / 2;
+      const shoulderTop = 228, shoulderBottom = 242;
+      const eppTipY = shoulderBottom + 50; // aggressive taper: 50 over a 34-wide shoulder
       const liqFrac = 0.46; // liquid surface sits 46% of the way down the cone -- small pool at the tip
       const liqY = shoulderBottom + (eppTipY - shoulderBottom) * liqFrac;
       const halfWidthAtLiqY = ((dstX1 - dstX0) / 2) * (1 - liqFrac);
-      const hinge = { x: dstX1 - 6, y: shoulderTop };
+      // Open lid: hinged at the tube's own top rim (not extending past
+      // it), a short flap rotated 45° off horizontal so it stands up
+      // and back like a real opened snap-cap -- not the old ~110°
+      // sideways-swung flap.
+      const hinge = { x: dstX1, y: shoulderTop };
+      const capFlapLen = 22;
       const destVessel = `
         <path class="hero-vessel" d="M ${dstX0} ${shoulderBottom} L ${dstCx} ${eppTipY} L ${dstX1} ${shoulderBottom} Z" />
         <rect class="hero-vessel" x="${dstX0}" y="${shoulderTop}" width="${dstX1 - dstX0}" height="${shoulderBottom - shoulderTop}" rx="4" />
         <path class="hero-vessel-liquid" d="M ${f(dstCx - halfWidthAtLiqY)} ${f(liqY)} L ${f(dstCx + halfWidthAtLiqY)} ${f(liqY)} L ${dstCx} ${eppTipY} Z" />
-        <rect class="hero-cap-flap" x="${dstX0}" y="${shoulderTop - 9}" width="44" height="9" rx="3" transform="rotate(-110 ${hinge.x} ${hinge.y})" />
-        <circle class="hero-cap-hinge" cx="${hinge.x}" cy="${hinge.y}" r="2.6" />`;
+        <rect class="hero-cap-flap" x="${hinge.x - capFlapLen}" y="${hinge.y - 4}" width="${capFlapLen}" height="8" rx="3" transform="rotate(45 ${hinge.x} ${hinge.y})" />
+        <circle class="hero-cap-hinge" cx="${hinge.x}" cy="${hinge.y}" r="2.4" />`;
 
       // Needle: short, rigid, straight — visually distinct from the
       // soft tube (D-06 glass idiom stays on the tube; the needle is
       // deliberately NOT glass-styled). Positioned above the open
       // Eppendorf's shoulder, tip clear of it by a small air gap.
       const needleTop = { x: dstCx, y: 195 };
-      const needleTip = { x: dstCx, y: 222 };
+      const needleTip = { x: dstCx, y: shoulderTop - 8 };
       const needleLine = `<line class="hero-needle" x1="${needleTop.x}" y1="${needleTop.y}" x2="${needleTip.x}" y2="${needleTip.y}" />`;
       const dropletCircle = `<circle class="hero-droplet" id="hero-droplet" cx="${needleTip.x}" cy="${needleTip.y}" r="4.5" />`;
 
@@ -997,9 +1004,17 @@
       // the needle-top hand-off, arriving vertically there too (c2
       // shares needleTop.x) so the soft tube's own final tangent is
       // already straight-down before the rigid needle continues it.
-      const tubeD = `M ${dipStart.x} ${dipStart.y} `
+      //
+      // preWrapD is the SAME initial two segments (dip tube + entry
+      // Bezier), stopping exactly where the wrap arc begins. It is
+      // rendered nowhere (display:none) — it exists purely so
+      // initHeroMotion() can call .getTotalLength() on it to measure
+      // the real, DOM-derived arc-length position where the wrap
+      // starts, for the pinch-registration fix (Rework 3).
+      const preWrapD = `M ${dipStart.x} ${dipStart.y} `
         + `L ${capExit.x} ${capExit.y} `
-        + `C ${capExit.x} ${capExit.y - 20}, ${f(wrapLeftX)} ${f(pcy + 25)}, ${f(wrapLeftX)} ${pcy} `
+        + `C ${capExit.x} ${capExit.y - 20}, ${f(wrapLeftX)} ${f(pcy + 25)}, ${f(wrapLeftX)} ${pcy}`;
+      const tubeD = preWrapD + ` `
         + `A ${f(Rpx)} ${f(Rpx)} 0 0 0 ${f(wrapRightX)} ${pcy} `
         + `C ${f(wrapRightX)} ${f(pcy + 35)}, ${needleTop.x} ${needleTop.y - 20}, ${needleTop.x} ${needleTop.y}`;
 
@@ -1015,6 +1030,7 @@
         <path class="hero-tube-wall" d="${tubeD}" />
         <path class="hero-tube-liquid" d="${tubeD}" />
         <path class="hero-tube-slug" id="hero-tube-slug" d="${tubeD}" />
+        <path id="hero-tube-prewrap" d="${preWrapD}" style="display:none" />
         ${needleLine}
         ${dropletCircle}
         <circle class="hero-rotor-disc" cx="${pcx}" cy="${pcy}" r="${f(Rpx)}" />
@@ -1024,33 +1040,67 @@
       return { html, geo: { Rpx, rrPx, needleTip } };
     }
 
-    // ── GSAP-driven motion (Rework 2, D-01/D-03 amended) ───────────
+    // ── GSAP-driven motion (Rework 2/3, D-01/D-03 amended) ─────────
     // ONE timeline drives the rotor rotation and the slug highlight's
-    // stroke-dashoffset. Sync spec (derived numerically at runtime
-    // from the real, DOM-measured tube length -- not eyeballed):
+    // stroke-dashoffset.
+    //
+    // Direction (Rework 3): the wrap sits on TOP and liquid flows
+    // inlet(left) -> outlet(right), so the roller carrying the pinch
+    // must sweep LEFT -> TOP -> RIGHT across the wrap. In this file's
+    // angle parameterization (buildHeroRotor: ang=-90 top, 0 right, 90
+    // bottom, 180 left; position = cx + R·cos(ang), cy + R·sin(ang)),
+    // the wrap's left endpoint is ang=180 and its right endpoint is
+    // ang=360 -- so "left -> top -> right" is ang INCREASING through
+    // 180 -> 270 -> 360. A positive CSS/GSAP `rotation` increases a
+    // point's effective ang in this exact sense: rotating the point at
+    // ang=180 (i.e. offset (-R,0) from centre) by a small positive
+    // angle moves it to (-R·cosθ, -R·sinθ) ≈ (-R, -Rθ) for small θ --
+    // y DECREASES, i.e. the point moves toward the TOP. So a positive
+    // rotation (ROTOR_SIGN = +1 below) is the physically correct,
+    // clockwise-on-screen direction Sirio asked for. ROTOR_SIGN is the
+    // single source of truth for both the rotation tween and the
+    // slug's dashoffset tween, so the two can never disagree with each
+    // other even if this sign is ever revisited.
+    //
+    // Sync spec (derived numerically at runtime from the real,
+    // DOM-measured tube geometry -- not eyeballed):
     //   slug linear speed  = roller tangential speed at the wrap
     //                        radius = 2π·Rpx per rotor period T
     //   slug spacing       = a quarter of the wrap circumference,
     //                        matching the 90° roller spacing
     // Shifting the dash pattern by exactly one full circumference per
-    // period is therefore an exact 4x multiple of the pattern length,
-    // so the loop is seamless AND phase-locked to roller position by
+    // period is an exact 4x multiple of the pattern length, so the
+    // loop is seamless AND phase-locked to roller position by
     // construction (both tweens share the same timeline clock, same
-    // duration, same ease, same start position) -- not a tuned
-    // approximation.
+    // duration, same ease, same start position, same ROTOR_SIGN).
+    //
+    // Pinch registration (Rework 3): dashoffset0 is chosen so a
+    // "start-of-dash" slug boundary sits exactly at the wrap's entry
+    // arc-length position (measured via the hidden #hero-tube-prewrap
+    // path's real .getTotalLength()) at t=0. Because the wrap's own
+    // arc length (π·Rpx) is exactly 2x the slug spacing, that single
+    // alignment condition ALSO puts boundaries exactly at the wrap's
+    // midpoint (top roller) and far/exit boundary at t=0 -- i.e. at
+    // all three roller contact points relevant to the wrap at that
+    // instant, not just one.
     function initHeroMotion(geo) {
       const rotorGroupEl = document.getElementById('hero-rotor-group');
       const slugEl = document.getElementById('hero-tube-slug');
       const dropletEl = document.getElementById('hero-droplet');
+      const preWrapEl = document.getElementById('hero-tube-prewrap');
       if (!rotorGroupEl || !slugEl || !dropletEl || typeof gsap === 'undefined') return;
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      const ROTOR_SIGN = 1; // +1 = clockwise on screen -- see derivation above
       const T = 4; // rotor period, seconds
       const circumference = 2 * Math.PI * geo.Rpx;
       const spacing = circumference / 4;
       const slugDash = 10;
       slugEl.setAttribute('stroke-dasharray', `${slugDash.toFixed(2)} ${(spacing - slugDash).toFixed(2)}`);
+
+      const sWrapStart = preWrapEl ? preWrapEl.getTotalLength() : 0;
+      const dashOffset0 = -(((sWrapStart % spacing) + spacing) % spacing);
 
       const totalLen = slugEl.getTotalLength();
       const speed = circumference / T;
@@ -1059,8 +1109,8 @@
       const dropDelay = transitTime % dropCycle;   // in [0, dropCycle) by construction
 
       const tl = gsap.timeline({ repeat: -1, defaults: { ease: 'none' }, paused: true });
-      tl.fromTo(rotorGroupEl, { rotation: 0 }, { rotation: 360, duration: T, transformOrigin: '50% 50%' }, 0);
-      tl.fromTo(slugEl, { strokeDashoffset: 0 }, { strokeDashoffset: -circumference, duration: T }, 0);
+      tl.fromTo(rotorGroupEl, { rotation: 0 }, { rotation: ROTOR_SIGN * 360, duration: T, transformOrigin: '50% 50%' }, 0);
+      tl.fromTo(slugEl, { strokeDashoffset: dashOffset0 }, { strokeDashoffset: dashOffset0 - ROTOR_SIGN * circumference, duration: T }, 0);
 
       // Droplet release(s), timed so a drop detaches when a slug
       // reaches the needle tip. The loop condition itself guarantees
