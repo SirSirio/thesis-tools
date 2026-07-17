@@ -115,111 +115,93 @@
     }
     .hero-copy { flex: 1 1 440px; max-width: 520px; }
     .hero-rotor {
-      flex: 1 1 380px;
-      max-width: 460px;
+      flex: 1 1 400px;
+      max-width: 500px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* ── Hero fluidic-path motif (D-01/D-03/D-05/D-06) ──────────
-       Hand-built SVG, full left-to-right path: 50ml source tube ->
-       inlet -> pump (real proto-02 geometry: N=4, R=19.7mm rotor,
-       rollerR=5mm/MR105ZZ, 180° tube wrap ON TOP) -> outlet -> nozzle
-       -> 1.5ml collection tube. Glass idiom only (existing
-       --accent/--accent-2/glass tokens), no dimension lines/callouts.
+    /* ── Hero fluidic-path motif, Rework 2 (D-01/D-05/D-06, D-01/D-03
+       AMENDED by explicit user decision) ───────────────────────────
+       Hand-built SVG scene, one continuous tangent-entry/exit tube:
+       50ml Falcon-style source (screw cap, graduation ticks, conical
+       bottom, liquid pooled into the cone) -> dip tube rising through
+       the cap -> tangential entry into the pump wrap (real proto-02
+       geometry: N=4, R=19.7mm rotor, rollerR=5mm/MR105ZZ, 180° wrap
+       ON TOP) -> tangential exit -> smooth curve down into a short
+       rigid NEEDLE -> an open-lid 1.5ml Eppendorf-style collection
+       tube. Glass idiom only (existing --accent/--accent-2/glass
+       tokens), no dimension lines/callouts.
 
-       Sync fix: the 4 "liquid" arc segments (one per roller-to-roller
-       gap) live INSIDE THE SAME rotating <g> elements as the rollers
-       (same .rotor-spin-outer/.rotor-spin-inner classes -> the exact
-       same CSS animation-name/duration/timing-function/delay), so
-       they are byte-for-byte phase-locked to roller position, not
-       just period-matched. A static clip-path on a NON-rotating
-       wrapper reveals only the portion of that rotating liquid ring
-       that currently overlaps the top-180° wrap window, so each
-       inter-roller "plug" visibly enters, crosses, and exits the
-       wrap in lockstep with the two rollers that bound it — exactly
-       the "roller pushes the liquid ahead of it" read Sirio asked
-       for. Motion is otherwise two nested CSS @keyframes rotations —
-       a one-shot ease-out entrance layered under a continuous linear
-       steady rotation, so spin-up happens once on load and the loop
-       itself (0deg -> 360deg) is trivially seamless. The nozzle
-       droplet is a separate small looped fall/fade, same 4s period
-       as the rotor for a consistent rhythm. ─────────────────────── */
+       Motion, Rework 2: GSAP core (locally vendored, assets/gsap/
+       gsap.min.js — D-01/D-03 amended by Sirio to permit this) drives
+       ONE timeline: rotor rotation (gsap.to on the roller <g>'s
+       `rotation`) and the slug highlight's `strokeDashoffset` share
+       the identical duration/ease/repeat, so they are structurally
+       phase-locked rather than tuned to merely matching periods.
+       Sync spec: slug linear speed = roller tangential speed at the
+       wrap radius = 2π·Rpx per rotor period; slug spacing = a quarter
+       of the wrap circumference (matching the 90° roller spacing) —
+       see buildHeroRotor()/initHeroMotion() below for the derivation.
+       "Hybrid" liquid look (Sirio's decision): a static translucent
+       `.hero-tube-liquid` stroke always shows the tube as full, with
+       brighter `.hero-tube-slug` highlight segments animated on top. */
     .hero-rotor svg { display: block; overflow: visible; }
     .hero-vessel {
       fill: rgba(255, 255, 255, 0.04);
       stroke: rgba(255, 107, 43, 0.30);
       stroke-width: 1.4;
     }
-    .hero-vessel-liquid { fill: var(--accent); opacity: 0.14; }
-    .hero-nozzle {
-      fill: rgba(255, 255, 255, 0.06);
+    .hero-vessel-cap {
+      fill: rgba(255, 255, 255, 0.07);
       stroke: rgba(255, 107, 43, 0.35);
       stroke-width: 1.2;
     }
+    .hero-vessel-tick { stroke: rgba(255, 255, 255, 0.20); stroke-width: 1; }
+    .hero-vessel-liquid { fill: var(--accent); opacity: 0.16; }
+    .hero-cap-flap {
+      fill: rgba(255, 255, 255, 0.08);
+      stroke: rgba(255, 107, 43, 0.40);
+      stroke-width: 1.2;
+    }
+    .hero-cap-hinge { fill: var(--accent); opacity: 0.7; }
     .hero-rotor-disc {
       fill: rgba(255, 255, 255, 0.04);
       stroke: rgba(255, 107, 43, 0.30);
       stroke-width: 1;
-    }
-    .hero-tube {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.16);
-      stroke-width: 9;
-      stroke-linecap: round;
     }
     .hero-roller {
       fill: rgba(255, 107, 43, 0.18);
       stroke: var(--accent);
       stroke-width: 2;
     }
-    .hero-hub {
-      fill: var(--accent);
-      opacity: 0.85;
+    .hero-hub { fill: var(--accent); opacity: 0.85; }
+    .hero-tube-wall {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.14);
+      stroke-width: 11;
+      stroke-linecap: round;
     }
-    .hero-liquid-arc {
+    .hero-tube-liquid {
+      fill: none;
+      stroke: var(--accent);
+      stroke-opacity: 0.22;
+      stroke-width: 7;
+      stroke-linecap: round;
+    }
+    .hero-tube-slug {
       fill: none;
       stroke: url(#hero-packet-grad);
       stroke-width: 6;
       stroke-linecap: round;
     }
-    .rotor-spin-outer, .rotor-spin-inner {
-      transform-box: fill-box;
-      transform-origin: center;
+    .hero-needle {
+      stroke: rgba(255, 255, 255, 0.55);
+      stroke-width: 2.6;
+      stroke-linecap: round;
     }
-    .rotor-spin-inner {
-      animation: hero-rotor-steady 4s linear infinite;
-    }
-    .rotor-spin-outer {
-      animation: hero-rotor-entrance 0.6s ease-out both;
-    }
-    @keyframes hero-rotor-steady {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    @keyframes hero-rotor-entrance {
-      /* Starts "behind" and eases into place once, so the combined
-         (outer + inner) rotation reads as accelerating from rest up
-         to the inner group's constant cruise speed by ~0.6s — the
-         inner loop is unaffected and keeps looping seamlessly. Both
-         the roller ring AND the liquid-arc ring use these same two
-         keyframe rules, which is what keeps them phase-locked. */
-      from { transform: rotate(-32deg); }
-      to   { transform: rotate(0deg); }
-    }
-    .hero-droplet {
-      fill: url(#hero-packet-grad);
-      opacity: 0;
-      animation: hero-droplet-fall 4s ease-in 1.5s infinite;
-    }
-    @keyframes hero-droplet-fall {
-      0%   { transform: translateY(0); opacity: 0; }
-      8%   { opacity: 1; }
-      55%  { transform: translateY(28px); opacity: 1; }
-      70%  { transform: translateY(34px); opacity: 0; }
-      100% { transform: translateY(34px); opacity: 0; }
-    }
+    .hero-droplet { fill: url(#hero-packet-grad); opacity: 0; }
 
     .site-title {
       font-family: 'Geist', var(--font);
@@ -509,14 +491,14 @@
     @media (prefers-reduced-motion: reduce) {
       .js .reveal { opacity: 1; transform: none; transition: none; }
       .card-link .arrow { transition: none; }
-      /* Freeze the hero motif to a single legible frame — rollers and
-         liquid arcs at a fixed contact position, a drop caught at the
-         nozzle — rather than hiding it (D-03/D-11: reduced motion
-         means frozen, not gone). Freezing .rotor-spin-outer/-inner
-         freezes both the roller ring AND the liquid-arc ring, since
-         both share those same two classes. */
-      .rotor-spin-outer, .rotor-spin-inner { animation: none; }
-      .hero-droplet { animation: none; opacity: 1; transform: translateY(0); }
+      /* The hero motif itself (Rework 2) is driven entirely by a JS
+         GSAP timeline, not CSS animations — there is nothing left to
+         freeze here. initHeroMotion() checks prefers-reduced-motion
+         directly and, when set, never calls tl.play(): it seeks the
+         timeline to a fixed legible progress value and leaves it
+         paused (rollers at a natural angle, slugs visible mid-tube,
+         one droplet frozen at the needle) rather than hiding the
+         scene (D-03/D-11: reduced motion means frozen, not gone). */
     }
 
     /* ── Responsive ─────────────────────────────────────────── */
@@ -749,6 +731,10 @@
 <p>Sirio Vittorio Feltrin &middot; 2026</p>
 </footer>
 
+  <!-- D-01/D-03 AMENDED by explicit user decision (Rework 2): the hero
+       motif's rotor+slug sync now runs on locally-vendored GSAP core —
+       no CDN, no plugins, just this one local file. -->
+  <script src="assets/gsap/gsap.min.js"></script>
   <script>
     const LANG = {
       en: {
@@ -892,26 +878,27 @@
       btn.addEventListener('click', () => applyLang(btn.dataset.lang));
     });
 
-    // ── Hero rotor motif (D-01/D-05/D-06) ─────────────────────────
+    // ── Hero fluidic-path motif, Rework 2 ──────────────────────────
     // Hand-built SVG, built once via a template string and assigned
     // through innerHTML — same technique as tools/rotor-solver's
     // buildFigure(). Real proto-02 geometry (N=4, R=19.7mm rotor
     // radius, 5mm MR105ZZ roller radius, 180° tube-wrap contact arc
-    // on TOP of the rotor, N_c=2 rollers engaged at any moment) plus
-    // a full left-to-right fluidic path: 50ml source tube -> inlet ->
-    // pump -> outlet -> nozzle -> 1.5ml collection tube. All motion
-    // is driven by the CSS @keyframes defined above — this function
-    // never touches the DOM again after the initial build (no
-    // requestAnimationFrame, no per-frame JS).
+    // on TOP of the rotor). One continuous tube path: a dip tube
+    // inside the 50ml Falcon-style source, up through its screw cap,
+    // a Bezier sweep that enters the pump wrap TANGENTIALLY (both
+    // wrap endpoints get a same-x control point, forcing a vertical
+    // — i.e. tangent-to-the-circle — approach/departure, per Sirio's
+    // explicit complaint about the old 90° entry), 180° over the top,
+    // tangential exit, then a smooth curve down into a short rigid
+    // needle above the open 1.5ml Eppendorf-style collection tube.
     //
-    // Sync fix (post-checkpoint): the 4 liquid-arc segments share the
-    // exact .rotor-spin-outer/.rotor-spin-inner classes with the
-    // roller ring, so the SAME CSS animation drives both — perfectly
-    // phase-locked, not just period-matched. A clip-path on a static
-    // (non-rotating) wrapper reveals only the slice of that rotating
-    // liquid ring currently inside the top-180° wrap window, so each
-    // inter-roller plug visibly enters/crosses/exits in lockstep with
-    // the two rollers bounding it.
+    // Motion, Rework 2 (D-01/D-03 AMENDED by explicit user decision):
+    // buildHeroRotor() only builds the static markup + geometry; all
+    // motion lives in initHeroMotion() below, driven by ONE GSAP
+    // timeline (gsap core, locally vendored at assets/gsap/gsap.min.js
+    // — no CDN, no plugins). See initHeroMotion() for the sync
+    // derivation (roller rotation and slug stroke-dashoffset share
+    // the identical duration/ease/repeat on the same timeline clock).
     const cosd = a => Math.cos(a * Math.PI / 180);
     const sind = a => Math.sin(a * Math.PI / 180);
 
@@ -921,8 +908,8 @@
       const rollerR = 5;   // MR105ZZ bearing radius, mm (10mm OD)
       const f = v => v.toFixed(2);
 
-      // ── Pump (rotor) geometry, centred in the middle of the scene ──
-      const pcx = 340, pcy = 130;  // pump centre, SVG user-space
+      // ── Pump (rotor) geometry ──
+      const pcx = 380, pcy = 150;  // pump centre, SVG user-space
       const OUTER = 64;            // visual budget for R + rollerR, in SVG user units
       const scale = OUTER / (R + rollerR);
       const Rpx = R * scale;
@@ -936,92 +923,193 @@
         const y = pcy + Rpx * sind(ang);
         rollers += `<circle class="hero-roller" cx="${f(x)}" cy="${f(y)}" r="${f(rrPx)}" />`;
       }
+      const rotorGroup = `<g id="hero-rotor-group">
+        <circle class="hero-hub" cx="${pcx}" cy="${pcy}" r="${f(rrPx * 0.45)}" />
+        ${rollers}
+      </g>`;
 
-      // 4 liquid-arc segments, one per roller-to-roller gap (same
-      // 90° spacing as the rollers) — these ride in the SAME rotating
-      // group as the rollers (see markup below), so their angular
-      // position is always exactly "between the two current rollers".
-      let liquidArcs = '';
-      for (let i = 0; i < N; i++) {
-        const a0 = -90 + i * 360 / N;
-        const a1 = a0 + 360 / N;
-        const x0 = pcx + Rpx * cosd(a0), y0 = pcy + Rpx * sind(a0);
-        const x1 = pcx + Rpx * cosd(a1), y1 = pcy + Rpx * sind(a1);
-        liquidArcs += `<path class="hero-liquid-arc" d="M ${f(x0)} ${f(y0)} A ${f(Rpx)} ${f(Rpx)} 0 0 1 ${f(x1)} ${f(y1)}" />`;
+      // Wrap endpoints — both sit exactly on the horizontal through
+      // the pump centre; the tube's control points on either side are
+      // placed directly below each endpoint (same x), which forces a
+      // VERTICAL — i.e. tangent-to-the-pitch-circle — approach/depart,
+      // fixing the old 90°-elbow entry.
+      const wrapLeftX = pcx - Rpx, wrapRightX = pcx + Rpx;
+
+      // ── 50ml Falcon-style source (screw cap, ticks, conical bottom,
+      // liquid pooled into the cone), far left ──
+      const srcX0 = 30, srcX1 = 100, srcCx = (srcX0 + srcX1) / 2;
+      const capX0 = 27, capX1 = 103, capY0 = 20, capY1 = 38;
+      const bodyTop = 38, bodyBottom = 190;
+      const coneTipY = bodyBottom + Math.round((bodyBottom - bodyTop) / 4); // ~228, cone ~1/4 of body height
+      const liquidTop = bodyBottom - 60;
+      let ticks = '';
+      const tickCount = 5;
+      for (let i = 0; i < tickCount; i++) {
+        const ty = bodyTop + (bodyBottom - bodyTop) * (i + 1) / (tickCount + 1);
+        ticks += `<line class="hero-vessel-tick" x1="${srcX1 - 10}" y1="${f(ty)}" x2="${srcX1}" y2="${f(ty)}" />`;
       }
-
-      // 180° tube-wrap contact arc, on TOP of the rotor now (per
-      // review feedback) — right -> top -> left (sweep-flag 0, the
-      // mirror of rotor-solver's bottom-wrap sweep-flag 1 convention)
-      const tubeWrapPath = `M ${f(pcx + Rpx)} ${pcy} A ${f(Rpx)} ${f(Rpx)} 0 0 0 ${f(pcx - Rpx)} ${pcy}`;
-
-      // Static clip: only the top half of the pump (y <= pcy) is ever
-      // revealed for the rotating liquid ring, matching where the
-      // tube-wrap actually is.
-      const clipRect = `<rect x="0" y="0" width="640" height="${pcy}" />`;
-
-      // ── 50ml source tube (Falcon-style, conical bottom), far left ──
-      const srcX0 = 25, srcX1 = 95, srcTop = 25, srcBodyBottom = 175, srcTip = 215;
-      const srcCx = (srcX0 + srcX1) / 2;
       const sourceVessel = `
-        <rect class="hero-vessel" x="${srcX0}" y="${srcTop}" width="${srcX1 - srcX0}" height="${srcBodyBottom - srcTop}" rx="7" />
-        <path class="hero-vessel" d="M ${srcX0} ${srcBodyBottom} L ${srcCx} ${srcTip} L ${srcX1} ${srcBodyBottom} Z" />
-        <rect class="hero-vessel-liquid" x="${srcX0 + 3}" y="${srcBodyBottom - 62}" width="${srcX1 - srcX0 - 6}" height="62" rx="4" />`;
+        <path class="hero-vessel" d="M ${srcX0} ${bodyBottom} L ${srcCx} ${coneTipY} L ${srcX1} ${bodyBottom} Z" />
+        <rect class="hero-vessel" x="${srcX0}" y="${bodyTop}" width="${srcX1 - srcX0}" height="${bodyBottom - bodyTop}" rx="6" />
+        <path class="hero-vessel-liquid" d="M ${srcX0} ${bodyBottom} L ${srcCx} ${coneTipY} L ${srcX1} ${bodyBottom} Z" />
+        <rect class="hero-vessel-liquid" x="${srcX0 + 3}" y="${liquidTop}" width="${srcX1 - srcX0 - 6}" height="${bodyBottom - liquidTop}" rx="4" />
+        ${ticks}
+        <rect class="hero-vessel-cap" x="${capX0}" y="${capY0}" width="${capX1 - capX0}" height="${capY1 - capY0}" rx="3" />
+        <line class="hero-vessel-tick" x1="${capX0 + 5}" y1="26" x2="${capX1 - 5}" y2="26" />
+        <line class="hero-vessel-tick" x1="${capX0 + 5}" y1="32" x2="${capX1 - 5}" y2="32" />`;
 
-      // ── 1.5ml collection tube (Eppendorf-style), far right — kept
-      // substantially smaller than the 50ml source, per review ──
-      const dstX0 = 555, dstX1 = 605, dstTop = 140, dstBodyBottom = 185, dstTip = 205;
-      const dstCx = (dstX0 + dstX1) / 2;
+      // Dip tube: starts just above the conical bottom, rises straight
+      // up through the vessel and exits just above the cap.
+      const dipStart = { x: srcCx, y: coneTipY - 16 };
+      const capExit  = { x: srcCx, y: capY0 - 6 };
+
+      // ── 1.5ml Eppendorf-style collection tube (short shoulder,
+      // aggressive taper, small liquid pooled at the tip, open snap
+      // cap on a hinge), far right — kept substantially smaller than
+      // the 50ml source ──
+      const dstX0 = 575, dstX1 = 625, dstCx = (dstX0 + dstX1) / 2;
+      const shoulderTop = 230, shoulderBottom = 246;
+      const eppTipY = shoulderBottom + 44; // aggressive taper: 44 over a 50-wide shoulder
+      const liqFrac = 0.46; // liquid surface sits 46% of the way down the cone -- small pool at the tip
+      const liqY = shoulderBottom + (eppTipY - shoulderBottom) * liqFrac;
+      const halfWidthAtLiqY = ((dstX1 - dstX0) / 2) * (1 - liqFrac);
+      const hinge = { x: dstX1 - 6, y: shoulderTop };
       const destVessel = `
-        <rect class="hero-vessel" x="${dstX0}" y="${dstTop}" width="${dstX1 - dstX0}" height="${dstBodyBottom - dstTop}" rx="5" />
-        <path class="hero-vessel" d="M ${dstX0} ${dstBodyBottom} L ${dstCx} ${dstTip} L ${dstX1} ${dstBodyBottom} Z" />
-        <rect class="hero-vessel-liquid" x="${dstX0 + 3}" y="${dstBodyBottom - 14}" width="${dstX1 - dstX0 - 6}" height="14" rx="3" />`;
+        <path class="hero-vessel" d="M ${dstX0} ${shoulderBottom} L ${dstCx} ${eppTipY} L ${dstX1} ${shoulderBottom} Z" />
+        <rect class="hero-vessel" x="${dstX0}" y="${shoulderTop}" width="${dstX1 - dstX0}" height="${shoulderBottom - shoulderTop}" rx="4" />
+        <path class="hero-vessel-liquid" d="M ${f(dstCx - halfWidthAtLiqY)} ${f(liqY)} L ${f(dstCx + halfWidthAtLiqY)} ${f(liqY)} L ${dstCx} ${eppTipY} Z" />
+        <rect class="hero-cap-flap" x="${dstX0}" y="${shoulderTop - 9}" width="44" height="9" rx="3" transform="rotate(-110 ${hinge.x} ${hinge.y})" />
+        <circle class="hero-cap-hinge" cx="${hinge.x}" cy="${hinge.y}" r="2.6" />`;
 
-      // ── Nozzle, above the collection tube's opening ──
-      const nozzleTipX = dstCx, nozzleTipY = 120, nozzleTop = 95;
-      const nozzle = `<path class="hero-nozzle" d="M ${nozzleTipX - 12} ${nozzleTop} L ${nozzleTipX + 12} ${nozzleTop} L ${nozzleTipX} ${nozzleTipY} Z" />`;
+      // Needle: short, rigid, straight — visually distinct from the
+      // soft tube (D-06 glass idiom stays on the tube; the needle is
+      // deliberately NOT glass-styled). Positioned above the open
+      // Eppendorf's shoulder, tip clear of it by a small air gap.
+      const needleTop = { x: dstCx, y: 195 };
+      const needleTip = { x: dstCx, y: 222 };
+      const needleLine = `<line class="hero-needle" x1="${needleTop.x}" y1="${needleTop.y}" x2="${needleTip.x}" y2="${needleTip.y}" />`;
+      const dropletCircle = `<circle class="hero-droplet" id="hero-droplet" cx="${needleTip.x}" cy="${needleTip.y}" r="4.5" />`;
 
-      // ── Inlet / outlet tube runs connecting source -> pump -> nozzle ──
-      const inletPath = `M ${srcX1} 150 C 170 150, 230 ${pcy}, ${f(pcx - Rpx)} ${pcy}`;
-      const outletPath = `M ${f(pcx + Rpx)} ${pcy} C 460 ${pcy}, 500 ${nozzleTop}, ${nozzleTipX - 5} ${nozzleTop}`;
+      // One continuous path, no elbows: dip tube (straight) -> smooth
+      // Bezier into the wrap, arriving VERTICALLY (control point c2
+      // shares wrapLeftX, forcing tangent entry) -> 180° top wrap ->
+      // smooth Bezier departing VERTICALLY (c1 shares wrapRightX) into
+      // the needle-top hand-off, arriving vertically there too (c2
+      // shares needleTop.x) so the soft tube's own final tangent is
+      // already straight-down before the rigid needle continues it.
+      const tubeD = `M ${dipStart.x} ${dipStart.y} `
+        + `L ${capExit.x} ${capExit.y} `
+        + `C ${capExit.x} ${capExit.y - 20}, ${f(wrapLeftX)} ${f(pcy + 25)}, ${f(wrapLeftX)} ${pcy} `
+        + `A ${f(Rpx)} ${f(Rpx)} 0 0 0 ${f(wrapRightX)} ${pcy} `
+        + `C ${f(wrapRightX)} ${f(pcy + 35)}, ${needleTop.x} ${needleTop.y - 20}, ${needleTop.x} ${needleTop.y}`;
 
-      return `<svg viewBox="0 0 640 260" width="100%" style="max-width:560px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+      const html = `<svg viewBox="0 0 700 320" width="100%" style="max-width:580px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
         <defs>
           <linearGradient id="hero-packet-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="var(--accent)"/>
             <stop offset="100%" stop-color="var(--accent-2)"/>
           </linearGradient>
-          <clipPath id="hero-wrap-clip">${clipRect}</clipPath>
         </defs>
-
         ${sourceVessel}
-        <path class="hero-tube" d="${inletPath}" />
-        <path class="hero-tube" d="${outletPath}" />
-        ${nozzle}
         ${destVessel}
-        <circle class="hero-droplet" cx="${nozzleTipX}" cy="${nozzleTipY}" r="4.5" />
-
+        <path class="hero-tube-wall" d="${tubeD}" />
+        <path class="hero-tube-liquid" d="${tubeD}" />
+        <path class="hero-tube-slug" id="hero-tube-slug" d="${tubeD}" />
+        ${needleLine}
+        ${dropletCircle}
         <circle class="hero-rotor-disc" cx="${pcx}" cy="${pcy}" r="${f(Rpx)}" />
-        <path class="hero-tube" d="${tubeWrapPath}" />
-
-        <g clip-path="url(#hero-wrap-clip)">
-          <g class="rotor-spin-outer">
-            <g class="rotor-spin-inner">
-              ${liquidArcs}
-            </g>
-          </g>
-        </g>
-        <g class="rotor-spin-outer">
-          <g class="rotor-spin-inner">
-            <circle class="hero-hub" cx="${pcx}" cy="${pcy}" r="${f(rrPx * 0.45)}" />
-            ${rollers}
-          </g>
-        </g>
+        ${rotorGroup}
       </svg>`;
+
+      return { html, geo: { Rpx, rrPx, needleTip } };
+    }
+
+    // ── GSAP-driven motion (Rework 2, D-01/D-03 amended) ───────────
+    // ONE timeline drives the rotor rotation and the slug highlight's
+    // stroke-dashoffset. Sync spec (derived numerically at runtime
+    // from the real, DOM-measured tube length -- not eyeballed):
+    //   slug linear speed  = roller tangential speed at the wrap
+    //                        radius = 2π·Rpx per rotor period T
+    //   slug spacing       = a quarter of the wrap circumference,
+    //                        matching the 90° roller spacing
+    // Shifting the dash pattern by exactly one full circumference per
+    // period is therefore an exact 4x multiple of the pattern length,
+    // so the loop is seamless AND phase-locked to roller position by
+    // construction (both tweens share the same timeline clock, same
+    // duration, same ease, same start position) -- not a tuned
+    // approximation.
+    function initHeroMotion(geo) {
+      const rotorGroupEl = document.getElementById('hero-rotor-group');
+      const slugEl = document.getElementById('hero-tube-slug');
+      const dropletEl = document.getElementById('hero-droplet');
+      if (!rotorGroupEl || !slugEl || !dropletEl || typeof gsap === 'undefined') return;
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const T = 4; // rotor period, seconds
+      const circumference = 2 * Math.PI * geo.Rpx;
+      const spacing = circumference / 4;
+      const slugDash = 10;
+      slugEl.setAttribute('stroke-dasharray', `${slugDash.toFixed(2)} ${(spacing - slugDash).toFixed(2)}`);
+
+      const totalLen = slugEl.getTotalLength();
+      const speed = circumference / T;
+      const transitTime = totalLen / speed;   // time for liquid to travel the full tube length once
+      const dropCycle = T / 4;                // matches the roller-spaced slug cadence
+      const dropDelay = transitTime % dropCycle;   // in [0, dropCycle) by construction
+
+      const tl = gsap.timeline({ repeat: -1, defaults: { ease: 'none' }, paused: true });
+      tl.fromTo(rotorGroupEl, { rotation: 0 }, { rotation: 360, duration: T, transformOrigin: '50% 50%' }, 0);
+      tl.fromTo(slugEl, { strokeDashoffset: 0 }, { strokeDashoffset: -circumference, duration: T }, 0);
+
+      // Droplet release(s), timed so a drop detaches when a slug
+      // reaches the needle tip. The loop condition itself guarantees
+      // no child tween's end time ever exceeds T, regardless of the
+      // exact runtime-measured dropDelay: a GSAP timeline's own
+      // repeat cycle length is the max end-time of its children, so
+      // letting one overflow past T would silently stretch the loop
+      // and desync it from the rotation/slug tweens above.
+      const dropDuration = dropCycle * 0.6;
+      for (let k = 0, pos = dropDelay; pos + dropDuration <= T && k < 4; k++, pos += dropCycle) {
+        tl.fromTo(dropletEl,
+          { attr: { cy: geo.needleTip.y }, opacity: 0 },
+          {
+            keyframes: {
+              '0%':   { opacity: 0 },
+              '15%':  { opacity: 1 },
+              '75%':  { attr: { cy: geo.needleTip.y + 18 }, opacity: 1 },
+              '100%': { attr: { cy: geo.needleTip.y + 22 }, opacity: 0 }
+            },
+            duration: dropDuration,
+            ease: 'power1.in'
+          },
+          pos);
+      }
+
+      if (prefersReducedMotion) {
+        // Freeze on a legible static frame -- rollers at a natural
+        // angle, slugs visible mid-tube, one droplet frozen at the
+        // needle -- rather than hiding the scene (D-03/D-11).
+        tl.progress(0.15).pause();
+        gsap.set(dropletEl, { attr: { cy: geo.needleTip.y + 6 }, opacity: 1 });
+        return;
+      }
+
+      tl.play();
+      // Brief spin-up feel: ramp the WHOLE timeline's playback rate
+      // from a standstill to normal speed over ~0.6s. Scaling
+      // timeScale uniformly cannot desync the rotation/slug tweens --
+      // they share the same clock -- so this is a free embellishment
+      // layered on top of the structural sync guarantee above.
+      gsap.fromTo(tl, { timeScale: 0 }, { timeScale: 1, duration: 0.6, ease: 'power2.out' });
     }
 
     const heroRotorEl = document.getElementById('hero-rotor');
-    if (heroRotorEl) heroRotorEl.innerHTML = buildHeroRotor();
+    if (heroRotorEl) {
+      const built = buildHeroRotor();
+      heroRotorEl.innerHTML = built.html;
+      initHeroMotion(built.geo);
+    }
 
     // ── Six-module device schema (D-16) ───────────────────────────
     // NEW, purpose-built, simplified graphic — NOT a port of the
