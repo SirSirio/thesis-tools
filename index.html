@@ -121,6 +121,75 @@
       justify-content: center;
       align-items: center;
     }
+
+    /* ── Hero rotor motif (D-01/D-03/D-05/D-06) ─────────────────
+       Hand-built SVG, real proto-02 geometry (N=4, R=19.7mm,
+       rollerR=5mm/MR105ZZ, 180° tube wrap), styled in the glass
+       idiom with only the existing --accent/--accent-2/glass tokens.
+       Motion is two nested CSS @keyframes rotations — a one-shot
+       ease-out "entrance" group layered under a continuous linear
+       "steady" group, so the spin-up happens once on load and the
+       loop itself (0deg -> 360deg) is trivially seamless — plus a
+       stroke-dashoffset sweep for the travelling liquid packet
+       (paint-only SVG property, same non-layout-triggering idiom
+       prototypes/index.html's .journey-path already uses in
+       production; not literally transform/opacity but the same
+       GPU-friendly category, so it does not violate D-03). ───── */
+    .hero-rotor svg { display: block; overflow: visible; }
+    .hero-rotor-disc {
+      fill: rgba(255, 255, 255, 0.04);
+      stroke: rgba(255, 107, 43, 0.30);
+      stroke-width: 1;
+    }
+    .hero-tube {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.16);
+      stroke-width: 11;
+      stroke-linecap: round;
+    }
+    .hero-packet {
+      fill: none;
+      stroke: url(#hero-packet-grad);
+      stroke-width: 6;
+      stroke-linecap: round;
+      animation: hero-packet-sweep 4s linear infinite;
+    }
+    .hero-roller {
+      fill: rgba(255, 107, 43, 0.18);
+      stroke: var(--accent);
+      stroke-width: 2;
+    }
+    .hero-hub {
+      fill: var(--accent);
+      opacity: 0.85;
+    }
+    .rotor-spin-outer, .rotor-spin-inner {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .rotor-spin-inner {
+      animation: hero-rotor-steady 4s linear infinite;
+    }
+    .rotor-spin-outer {
+      animation: hero-rotor-entrance 0.6s ease-out both;
+    }
+    @keyframes hero-rotor-steady {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes hero-rotor-entrance {
+      /* Starts "behind" and eases into place once, so the combined
+         (outer + inner) rotation reads as accelerating from rest up
+         to the inner group's constant cruise speed by ~0.6s — the
+         inner loop is unaffected and keeps looping seamlessly. */
+      from { transform: rotate(-32deg); }
+      to   { transform: rotate(0deg); }
+    }
+    @keyframes hero-packet-sweep {
+      from { stroke-dashoffset: 0; }
+      to   { stroke-dashoffset: var(--packet-shift, -240); }
+    }
+
     .site-title {
       font-family: 'Geist', var(--font);
       font-size: clamp(2.1rem, 5.4vw, 3.6rem);
@@ -290,6 +359,10 @@
     @media (prefers-reduced-motion: reduce) {
       .js .reveal { opacity: 1; transform: none; transition: none; }
       .card-link .arrow { transition: none; }
+      /* Freeze the hero rotor to a single legible frame — rollers at
+         a fixed contact position, packet mid-tube — rather than
+         hiding it (D-03/D-11: reduced motion means frozen, not gone). */
+      .rotor-spin-outer, .rotor-spin-inner, .hero-packet { animation: none; }
     }
 
     /* ── Responsive ─────────────────────────────────────────── */
@@ -339,7 +412,7 @@
 <span class="meta-chip" data-i18n="meta-chip-nodeps">No install required</span>
 </div>
 </div>
-<div class="hero-rotor" id="hero-rotor" aria-hidden="true"></div>
+<div class="hero-rotor animate-in" id="hero-rotor" style="--delay: 0.4s;" aria-hidden="true"></div>
 </header>
 
 <div class="resources-sections">
@@ -576,6 +649,67 @@
     document.querySelectorAll('.lang-opt').forEach(btn => {
       btn.addEventListener('click', () => applyLang(btn.dataset.lang));
     });
+
+    // ── Hero rotor motif (D-01/D-05/D-06) ─────────────────────────
+    // Hand-built SVG, built once via a template string and assigned
+    // through innerHTML — same technique as tools/rotor-solver's
+    // buildFigure(). Real proto-02 geometry (N=4, R=19.7mm rotor
+    // radius, 5mm MR105ZZ roller radius, 180° tube-wrap contact arc,
+    // N_c=2 rollers engaged at any moment). All motion is driven by
+    // the CSS @keyframes defined above — this function never touches
+    // the DOM again after the initial build (no requestAnimationFrame,
+    // no per-frame JS).
+    const cosd = a => Math.cos(a * Math.PI / 180);
+    const sind = a => Math.sin(a * Math.PI / 180);
+
+    function buildHeroRotor() {
+      const N = 4;              // roller count (D-06, fixed)
+      const R = 19.7;           // rotor radius, mm — proto-02 design value (N_c=2 corrected)
+      const rollerR = 5;        // MR105ZZ bearing radius, mm (10mm OD)
+      const cx = 120, cy = 120; // SVG user-space centre
+      const OUTER = 96;         // visual budget for R + rollerR, in SVG user units
+      const scale = OUTER / (R + rollerR);
+      const Rpx = R * scale;
+      const rrPx = rollerR * scale;
+      const f = v => v.toFixed(2);
+
+      // 4 rollers at 90° spacing on the pitch circle, first at top (-90°)
+      let rollers = '';
+      for (let i = 0; i < N; i++) {
+        const ang = -90 + i * 360 / N;
+        const x = cx + Rpx * cosd(ang);
+        const y = cy + Rpx * sind(ang);
+        rollers += `<circle class="hero-roller" cx="${f(x)}" cy="${f(y)}" r="${f(rrPx)}" />`;
+      }
+
+      // 180° tube-wrap contact arc — right -> bottom -> left, same
+      // convention as rotor-solver's buildFigure()
+      const tubePath = `M ${f(cx + Rpx)} ${cy} A ${f(Rpx)} ${f(Rpx)} 0 0 1 ${f(cx - Rpx)} ${cy}`;
+      const arcLen = Math.PI * Rpx;
+      const dash = 14;
+      const gap = Math.max(1, arcLen - dash);
+
+      return `<svg viewBox="0 0 240 240" width="100%" style="max-width:360px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+        <defs>
+          <linearGradient id="hero-packet-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="var(--accent)"/>
+            <stop offset="100%" stop-color="var(--accent-2)"/>
+          </linearGradient>
+        </defs>
+        <circle class="hero-rotor-disc" cx="${cx}" cy="${cy}" r="${f(Rpx)}" />
+        <path class="hero-tube" d="${tubePath}" />
+        <path class="hero-packet" d="${tubePath}" style="stroke-dasharray:${f(dash)} ${f(gap)}; --packet-shift:-${f(arcLen)};" />
+        <g class="rotor-spin-outer">
+          <g class="rotor-spin-inner">
+            <circle class="hero-hub" cx="${cx}" cy="${cy}" r="${f(rrPx * 0.45)}" />
+            ${rollers}
+          </g>
+        </g>
+      </svg>`;
+    }
+
+    const heroRotorEl = document.getElementById('hero-rotor');
+    if (heroRotorEl) heroRotorEl.innerHTML = buildHeroRotor();
 
     // Mouse-tracking spotlight on cards
     document.querySelectorAll('.tool-card').forEach(card => {
