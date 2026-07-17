@@ -1067,7 +1067,13 @@
       slugEl.setAttribute('stroke-dasharray', `${slugDash.toFixed(2)} ${(spacing - slugDash).toFixed(2)}`);
 
       const sWrapStart = preWrapEl ? preWrapEl.getTotalLength() : 0;
-      const dashOffset0 = -(((sWrapStart % spacing) + spacing) % spacing);
+      // A roller occludes the tube completely at its contact point, so no
+      // liquid can sit there -- each slug is the pocket TRAPPED BETWEEN two
+      // consecutive rollers. Roller contacts fall at sWrapStart + k*spacing,
+      // so centre the dash in the gap: half a spacing along, minus half the
+      // dash's own length.
+      const pocketOffset = spacing / 2 - slugDash / 2;
+      const dashOffset0 = -((((sWrapStart + pocketOffset) % spacing) + spacing) % spacing);
 
       const totalLen = slugEl.getTotalLength();
       const speed = circumference / T;
