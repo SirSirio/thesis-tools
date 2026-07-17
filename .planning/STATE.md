@@ -3,15 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 7 context gathered
-last_updated: "2026-07-17T10:56:29.281Z"
-last_activity: 2026-07-17 -- Phase 7 planning complete
+last_updated: "2026-07-17T11:05:44.580Z"
+last_activity: 2026-07-17
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 4
   total_plans: 28
-  completed_plans: 21
-  percent: 50
+  completed_plans: 22
+  percent: 44
 ---
 
 # Project State
@@ -21,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 06.1 — architecture-refinement-full-system-module-schema-design-dir
+**Current focus:** Phase 07 — thesis-showcase-landing-page
 
 ## Current Position
 
-Phase: 06.1
-Plan: Not started
+Phase: 07 (thesis-showcase-landing-page) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-07-17 -- Phase 7 planning complete
+Last activity: 2026-07-17
 
-Progress: [█████████░] 89%
+Progress: [████████░░] 81%
 
 ## Performance Metrics
 
@@ -66,6 +65,7 @@ Progress: [█████████░] 89%
 | Phase 06.1 P03 | 30min | 3 tasks | 1 files |
 | Phase 06.1 P04 | 10min | 2 tasks | 1 files |
 | Phase 06.1 P05 | 25min | 3 tasks | 6 files |
+| Phase 07 P01 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -117,6 +117,9 @@ Recent decisions affecting current work:
 - [Phase 06.1-05]: SOLUTION-MATRIX.md's Component unit prices intro no longer claims to drive the tool's cost math -- the tool now maintains its own richer 26-component model
 - [Phase 06.1-05]: SOLUTION-MATRIX.md's own Alignment motor #2 (TBD) price-table row resolved to 28BYJ-48 12V + ULN2003 (resolved D-13), historical EUR estimate left untouched
 - [Phase 06.1-05]: Landing card, README, and CLAUDE.md avoid stating a hardcoded variant count anywhere, not just README which required it -- same D-18 drift lesson applied preemptively
+- [Phase 07-01]: CRF 26 at 540x960 hit the 1-3 MB target on first pass (1,746,708 bytes); no re-run needed
+- [Phase 07-01]: Poster extracted at -ss 8 from the same source clip (not head-result.jpeg) to guarantee no visual jump on playback
+- [Phase 07-01]: Generous Geist-Bold glyph subset (Basic Latin + Latin-1 Supplement + em-dash + curly quotes) used instead of exact-glyph subset, since D-19 copy edits have not landed yet
 
 ### Pending Todos
 
@@ -162,6 +165,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-17T10:14:17.846Z
-Stopped at: Phase 7 context gathered
-Resume file: .planning/phases/07-thesis-showcase-landing-page/07-CONTEXT.md
+Last session: 2026-07-17T11:05:44.567Z
+Stopped at: Completed 07-01-PLAN.md
+Resume file: None

@@ -266,11 +266,11 @@ Plans:
 6. `assets/style.css` is byte-identical; the `.bg-blobs` suppression is landing-page-only and every other page keeps its blobs (D-07).
 7. Geist-Bold is vendored locally, subsetted, and ships with its SIL OFL 1.1 license; the committed video is 1–3 MB with no audio and the 9.9 MB master stays untracked (D-10, D-20).
 
-**Plans:** 4 plans in 4 waves
+**Plans:** 1/4 plans executed
 Plans:
 **Wave 1**
 
-- [ ] 07-01-PLAN.md — Prepare assets: re-encode the pump-head clip, extract its poster, vendor + subset Geist with its OFL license
+- [x] 07-01-PLAN.md — Prepare assets: re-encode the pump-head clip, extract its poster, vendor + subset Geist with its OFL license
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
