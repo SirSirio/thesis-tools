@@ -459,6 +459,17 @@
     }
     .tool-card--wide .card-link { white-space: nowrap; }
 
+    /* Deliberate asymmetry for the merged 5-card Tools grid (D-04,
+       D-14): rather than let 5 cards fall into a 3+2 orphan row or
+       pad to a filler 6th card, the richest-scoped tool spans two
+       grid tracks so the grid reads as an intentional composition,
+       not a leftover. Reverts to a single column at 600px alongside
+       the rest of .tools-grid (assets/style.css). */
+    .tool-card--feature { grid-column: span 2; }
+    @media (max-width: 600px) {
+      .tool-card--feature { grid-column: span 1; }
+    }
+
     /* ── Scroll-triggered reveals (gated on .js) ────────────── */
     .js .reveal {
       opacity: 0;
@@ -603,13 +614,13 @@
 
 <div class="resources-sections">
 
-<section aria-label="Calculators and solvers">
+<section aria-label="Tools and guides">
 <div class="section-head reveal">
 <span class="section-index">01</span>
-<p class="section-label" data-i18n="section-label-tools">Calculators</p>
+<p class="section-label" data-i18n="section-label-tools">Tools</p>
 <span class="section-rule" aria-hidden="true"></span>
 </div>
-<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-tools">Computational solvers built for the thesis design process — enter your parameters and get answers.</p>
+<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-tools">Computational solvers and reference guides built for the thesis design process — enter your parameters and get answers, or see how the site itself was built.</p>
 <div class="tools-grid">
 <a href="tools/rotor-solver/index.html" class="tool-card reveal" style="--rd: 0.1s;">
 <div class="card-icon" aria-hidden="true">⚙</div>
@@ -635,7 +646,7 @@
 </div>
 <span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
 </a>
-<a href="tools/system-architecture-explorer/index.html" class="tool-card reveal" style="--rd: 0.34s;">
+<a href="tools/system-architecture-explorer/index.html" class="tool-card tool-card--feature reveal" style="--rd: 0.34s;">
 <div class="card-icon" aria-hidden="true">🔌</div>
 <div class="card-body">
 <h2 class="card-title" data-i18n="card-title-sysarch">System Architecture Explorer</h2>
@@ -643,18 +654,7 @@
 </div>
 <span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
 </a>
-</div>
-</section>
-
-<section aria-label="Guides and references">
-<div class="section-head reveal">
-<span class="section-index">02</span>
-<p class="section-label" data-i18n="section-label-guides">Guides</p>
-<span class="section-rule" aria-hidden="true"></span>
-</div>
-<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-guides">Reference documentation and workflow diagrams.</p>
-<div class="tools-row">
-<a href="tools/gsd-workflow-guide/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
+<a href="tools/gsd-workflow-guide/index.html" class="tool-card reveal" style="--rd: 0.42s;">
 <div class="card-icon" aria-hidden="true">⬡</div>
 <div class="card-body">
 <h2 class="card-title" data-i18n="card-title-gsd">GSD Workflow Guide</h2>
@@ -665,29 +665,9 @@
 </div>
 </section>
 
-<section aria-label="Hardware prototypes">
-<div class="section-head reveal">
-<span class="section-index">03</span>
-<p class="section-label" data-i18n="section-label-prototypes">Prototypes</p>
-<span class="section-rule" aria-hidden="true"></span>
-</div>
-<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-prototypes">Hardware iterations logged with design parameters, test data, and design reasoning.</p>
-<div class="tools-row">
-<a href="prototypes/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
-<div class="card-icon" aria-hidden="true">🧪</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-proto">Prototype Design Space</h2>
-<p class="card-desc" data-i18n="card-desc-proto">A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-explore">Explore</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<!-- Future prototypes — duplicate the block above and update href, title, desc -->
-</div>
-</section>
-
 <section aria-label="Project roadmap">
 <div class="section-head reveal">
-<span class="section-index">04</span>
+<span class="section-index">02</span>
 <p class="section-label" data-i18n="section-label-roadmap">Roadmap</p>
 <span class="section-rule" aria-hidden="true"></span>
 </div>
@@ -706,7 +686,7 @@
 
 <section aria-label="Presentations">
 <div class="section-head reveal">
-<span class="section-index">05</span>
+<span class="section-index">03</span>
 <p class="section-label" data-i18n="section-label-decks">Presentations</p>
 <span class="section-rule" aria-hidden="true"></span>
 </div>
@@ -764,12 +744,8 @@
         'narrative-journey-title':   'Every prototype is a corrected mistake.',
         'narrative-journey-body':    'Proto-01 under-dispensed by about a third against its target &mdash; a real, measured gap. Proto-02 corrects the rotor geometry that caused it, and whatever proto-02 gets wrong will shape the version after that. None of it moves in a straight line.',
         'narrative-journey-link':    'Explore the prototype journey',
-        'section-label-tools':      'Calculators',
-        'section-desc-tools':       'Computational solvers built for the thesis design process — enter your parameters and get answers.',
-        'section-label-guides':     'Guides',
-        'section-desc-guides':      'Reference documentation and workflow diagrams.',
-        'section-label-prototypes': 'Prototypes',
-        'section-desc-prototypes':  'Hardware iterations logged with design parameters, test data, and design reasoning.',
+        'section-label-tools':      'Tools',
+        'section-desc-tools':       'Computational solvers and reference guides built for the thesis design process — enter your parameters and get answers, or see how the site itself was built.',
         'section-label-roadmap':    'Roadmap',
         'section-desc-roadmap':      'The thesis schedule as a live Gantt — original plan updated to the extended submission and defense dates.',
         'section-label-decks':      'Presentations',
@@ -784,15 +760,12 @@
         'card-desc-sysarch':        'Whole-device architecture page: an interactive six-module hardware schema, design-direction device personas (single board to fully distributed), then a sortable/filterable cost-and-complexity matrix with a live variant-driven system diagram, pin-budget feasibility readout, and an editable BOM with a DKK↔EUR converter.',
         'card-title-gsd':           'GSD Workflow Guide',
         'card-desc-gsd':            'Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.',
-        'card-title-proto':         'Prototype Design Space',
-        'card-desc-proto':          'A visual journey through hardware prototypes — from design parameters to measured results. Click any prototype to explore its purpose, geometry, test data, and design reasoning.',
         'card-title-timeline':      'Thesis Roadmap &amp; Timeline',
         'card-desc-timeline':       'Interactive Gantt of the whole project — work streams colour-coded by owner (author vs. thesis partner), shaded by status, with a live countdown to submission (15 Sep) and defense (28 Sep 2026). Built from the original Miro plan and updated for the extended schedule.',
         'card-title-decks':         'Presentations',
         'card-desc-decks':          'Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.',
         'card-link-tool':           'Open tool',
         'card-link-guide':          'Open guide',
-        'card-link-explore':        'Explore',
         'card-link-open':           'Open',
         'footer-university':        'Technical University of Denmark · Department of Bioengineering - Nano Bio Integrated System group',
       },
@@ -823,12 +796,8 @@
         'narrative-journey-title':   'Ogni prototipo &egrave; un errore corretto.',
         'narrative-journey-body':    'Proto-01 dosava circa un terzo in meno del target &mdash; uno scarto reale e misurato. Proto-02 corregge la geometria del rotore che lo causava, e ci&ograve; che proto-02 sbaglier&agrave; former&agrave; la versione successiva. Niente di tutto questo procede in linea retta.',
         'narrative-journey-link':    'Esplora il percorso dei prototipi',
-        'section-label-tools':      'Calcolatori',
-        'section-desc-tools':       'Risolutori computazionali sviluppati per il processo di progettazione — inserisci i parametri e ottieni le risposte.',
-        'section-label-guides':     'Guide',
-        'section-desc-guides':      'Documentazione di riferimento e diagrammi del flusso di lavoro.',
-        'section-label-prototypes': 'Prototipi',
-        'section-desc-prototypes':  'Iterazioni hardware documentate con parametri di progettazione, dati di test e ragionamento progettuale.',
+        'section-label-tools':      'Strumenti',
+        'section-desc-tools':       'Risolutori computazionali e guide di riferimento sviluppati per il processo di progettazione — inserisci i parametri e ottieni le risposte, oppure scopri come è stato costruito il sito stesso.',
         'section-label-roadmap':    'Cronoprogramma',
         'section-desc-roadmap':      'Il piano della tesi come diagramma di Gantt interattivo — piano originale aggiornato alle nuove date di consegna e discussione.',
         'section-label-decks':      'Presentazioni',
@@ -843,15 +812,12 @@
         'card-desc-sysarch':        'Pagina di architettura dell\'intero dispositivo: uno schema hardware interattivo a sei moduli, tipologie di dispositivo per direzione progettuale (scheda singola a struttura completamente distribuita), poi una matrice di costo e complessità ordinabile e filtrabile con diagramma di sistema live per variante, verifica di fattibilità dei pin e distinta base modificabile con convertitore DKK↔EUR.',
         'card-title-gsd':           'Guida al Flusso di Lavoro GSD',
         'card-desc-gsd':            'Diagramma interattivo del flusso di sviluppo spec-driven usato per costruire questo sito. Esplora il ciclo discuss → plan → execute, i controlli di qualità opzionali e i comandi di utilità — clicca su un nodo per vedere cosa fa.',
-        'card-title-proto':         'Spazio di Progettazione dei Prototipi',
-        'card-desc-proto':          'Un percorso visivo attraverso i prototipi hardware — dai parametri di progetto ai risultati misurati. Clicca su un prototipo per esplorarne scopo, geometria, dati di test e ragionamento progettuale.',
         'card-title-timeline':      'Cronoprogramma e Timeline della Tesi',
         'card-desc-timeline':       'Diagramma di Gantt interattivo dell\'intero progetto — flussi di lavoro colorati per responsabile (autore vs. partner di tesi), sfumati per stato, con conto alla rovescia per la consegna (15 set) e la discussione (28 set 2026). Costruito dal piano Miro originale e aggiornato al calendario esteso.',
         'card-title-decks':         'Presentazioni',
         'card-desc-decks':          'Sfoglia le presentazioni del lab meeting e dell\'architettura. Realizzate con un sistema di slide HTML personalizzato in stile reveal.',
         'card-link-tool':           'Apri strumento',
         'card-link-guide':          'Apri guida',
-        'card-link-explore':        'Esplora',
         'card-link-open':           'Apri',
         'footer-university':        'Politecnico di Danimarca · Dipartimento di Bioingegneria - Gruppo Nano Bio Integrated System',
       }
