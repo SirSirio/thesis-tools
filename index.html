@@ -113,29 +113,51 @@
       text-align: left;
       margin-bottom: 64px;
     }
-    .hero-copy { flex: 1 1 480px; max-width: 560px; }
+    .hero-copy { flex: 1 1 440px; max-width: 520px; }
     .hero-rotor {
-      flex: 1 1 340px;
-      max-width: 400px;
+      flex: 1 1 380px;
+      max-width: 460px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* ── Hero rotor motif (D-01/D-03/D-05/D-06) ─────────────────
-       Hand-built SVG, real proto-02 geometry (N=4, R=19.7mm,
-       rollerR=5mm/MR105ZZ, 180° tube wrap), styled in the glass
-       idiom with only the existing --accent/--accent-2/glass tokens.
-       Motion is two nested CSS @keyframes rotations — a one-shot
-       ease-out "entrance" group layered under a continuous linear
-       "steady" group, so the spin-up happens once on load and the
-       loop itself (0deg -> 360deg) is trivially seamless — plus a
-       stroke-dashoffset sweep for the travelling liquid packet
-       (paint-only SVG property, same non-layout-triggering idiom
-       prototypes/index.html's .journey-path already uses in
-       production; not literally transform/opacity but the same
-       GPU-friendly category, so it does not violate D-03). ───── */
+    /* ── Hero fluidic-path motif (D-01/D-03/D-05/D-06) ──────────
+       Hand-built SVG, full left-to-right path: 50ml source tube ->
+       inlet -> pump (real proto-02 geometry: N=4, R=19.7mm rotor,
+       rollerR=5mm/MR105ZZ, 180° tube wrap ON TOP) -> outlet -> nozzle
+       -> 1.5ml collection tube. Glass idiom only (existing
+       --accent/--accent-2/glass tokens), no dimension lines/callouts.
+
+       Sync fix: the 4 "liquid" arc segments (one per roller-to-roller
+       gap) live INSIDE THE SAME rotating <g> elements as the rollers
+       (same .rotor-spin-outer/.rotor-spin-inner classes -> the exact
+       same CSS animation-name/duration/timing-function/delay), so
+       they are byte-for-byte phase-locked to roller position, not
+       just period-matched. A static clip-path on a NON-rotating
+       wrapper reveals only the portion of that rotating liquid ring
+       that currently overlaps the top-180° wrap window, so each
+       inter-roller "plug" visibly enters, crosses, and exits the
+       wrap in lockstep with the two rollers that bound it — exactly
+       the "roller pushes the liquid ahead of it" read Sirio asked
+       for. Motion is otherwise two nested CSS @keyframes rotations —
+       a one-shot ease-out entrance layered under a continuous linear
+       steady rotation, so spin-up happens once on load and the loop
+       itself (0deg -> 360deg) is trivially seamless. The nozzle
+       droplet is a separate small looped fall/fade, same 4s period
+       as the rotor for a consistent rhythm. ─────────────────────── */
     .hero-rotor svg { display: block; overflow: visible; }
+    .hero-vessel {
+      fill: rgba(255, 255, 255, 0.04);
+      stroke: rgba(255, 107, 43, 0.30);
+      stroke-width: 1.4;
+    }
+    .hero-vessel-liquid { fill: var(--accent); opacity: 0.14; }
+    .hero-nozzle {
+      fill: rgba(255, 255, 255, 0.06);
+      stroke: rgba(255, 107, 43, 0.35);
+      stroke-width: 1.2;
+    }
     .hero-rotor-disc {
       fill: rgba(255, 255, 255, 0.04);
       stroke: rgba(255, 107, 43, 0.30);
@@ -144,15 +166,8 @@
     .hero-tube {
       fill: none;
       stroke: rgba(255, 255, 255, 0.16);
-      stroke-width: 11;
+      stroke-width: 9;
       stroke-linecap: round;
-    }
-    .hero-packet {
-      fill: none;
-      stroke: url(#hero-packet-grad);
-      stroke-width: 6;
-      stroke-linecap: round;
-      animation: hero-packet-sweep 4s linear infinite;
     }
     .hero-roller {
       fill: rgba(255, 107, 43, 0.18);
@@ -162,6 +177,12 @@
     .hero-hub {
       fill: var(--accent);
       opacity: 0.85;
+    }
+    .hero-liquid-arc {
+      fill: none;
+      stroke: url(#hero-packet-grad);
+      stroke-width: 6;
+      stroke-linecap: round;
     }
     .rotor-spin-outer, .rotor-spin-inner {
       transform-box: fill-box;
@@ -181,13 +202,23 @@
       /* Starts "behind" and eases into place once, so the combined
          (outer + inner) rotation reads as accelerating from rest up
          to the inner group's constant cruise speed by ~0.6s — the
-         inner loop is unaffected and keeps looping seamlessly. */
+         inner loop is unaffected and keeps looping seamlessly. Both
+         the roller ring AND the liquid-arc ring use these same two
+         keyframe rules, which is what keeps them phase-locked. */
       from { transform: rotate(-32deg); }
       to   { transform: rotate(0deg); }
     }
-    @keyframes hero-packet-sweep {
-      from { stroke-dashoffset: 0; }
-      to   { stroke-dashoffset: var(--packet-shift, -240); }
+    .hero-droplet {
+      fill: url(#hero-packet-grad);
+      opacity: 0;
+      animation: hero-droplet-fall 4s ease-in 1.5s infinite;
+    }
+    @keyframes hero-droplet-fall {
+      0%   { transform: translateY(0); opacity: 0; }
+      8%   { opacity: 1; }
+      55%  { transform: translateY(28px); opacity: 1; }
+      70%  { transform: translateY(34px); opacity: 0; }
+      100% { transform: translateY(34px); opacity: 0; }
     }
 
     .site-title {
@@ -359,10 +390,14 @@
     @media (prefers-reduced-motion: reduce) {
       .js .reveal { opacity: 1; transform: none; transition: none; }
       .card-link .arrow { transition: none; }
-      /* Freeze the hero rotor to a single legible frame — rollers at
-         a fixed contact position, packet mid-tube — rather than
-         hiding it (D-03/D-11: reduced motion means frozen, not gone). */
-      .rotor-spin-outer, .rotor-spin-inner, .hero-packet { animation: none; }
+      /* Freeze the hero motif to a single legible frame — rollers and
+         liquid arcs at a fixed contact position, a drop caught at the
+         nozzle — rather than hiding it (D-03/D-11: reduced motion
+         means frozen, not gone). Freezing .rotor-spin-outer/-inner
+         freezes both the roller ring AND the liquid-arc ring, since
+         both share those same two classes. */
+      .rotor-spin-outer, .rotor-spin-inner { animation: none; }
+      .hero-droplet { animation: none; opacity: 1; transform: translateY(0); }
     }
 
     /* ── Responsive ─────────────────────────────────────────── */
@@ -654,54 +689,124 @@
     // Hand-built SVG, built once via a template string and assigned
     // through innerHTML — same technique as tools/rotor-solver's
     // buildFigure(). Real proto-02 geometry (N=4, R=19.7mm rotor
-    // radius, 5mm MR105ZZ roller radius, 180° tube-wrap contact arc,
-    // N_c=2 rollers engaged at any moment). All motion is driven by
-    // the CSS @keyframes defined above — this function never touches
-    // the DOM again after the initial build (no requestAnimationFrame,
-    // no per-frame JS).
+    // radius, 5mm MR105ZZ roller radius, 180° tube-wrap contact arc
+    // on TOP of the rotor, N_c=2 rollers engaged at any moment) plus
+    // a full left-to-right fluidic path: 50ml source tube -> inlet ->
+    // pump -> outlet -> nozzle -> 1.5ml collection tube. All motion
+    // is driven by the CSS @keyframes defined above — this function
+    // never touches the DOM again after the initial build (no
+    // requestAnimationFrame, no per-frame JS).
+    //
+    // Sync fix (post-checkpoint): the 4 liquid-arc segments share the
+    // exact .rotor-spin-outer/.rotor-spin-inner classes with the
+    // roller ring, so the SAME CSS animation drives both — perfectly
+    // phase-locked, not just period-matched. A clip-path on a static
+    // (non-rotating) wrapper reveals only the slice of that rotating
+    // liquid ring currently inside the top-180° wrap window, so each
+    // inter-roller plug visibly enters/crosses/exits in lockstep with
+    // the two rollers bounding it.
     const cosd = a => Math.cos(a * Math.PI / 180);
     const sind = a => Math.sin(a * Math.PI / 180);
 
     function buildHeroRotor() {
-      const N = 4;              // roller count (D-06, fixed)
-      const R = 19.7;           // rotor radius, mm — proto-02 design value (N_c=2 corrected)
-      const rollerR = 5;        // MR105ZZ bearing radius, mm (10mm OD)
-      const cx = 120, cy = 120; // SVG user-space centre
-      const OUTER = 96;         // visual budget for R + rollerR, in SVG user units
+      const N = 4;        // roller count (D-06, fixed)
+      const R = 19.7;      // rotor radius, mm — proto-02 design value (N_c=2 corrected)
+      const rollerR = 5;   // MR105ZZ bearing radius, mm (10mm OD)
+      const f = v => v.toFixed(2);
+
+      // ── Pump (rotor) geometry, centred in the middle of the scene ──
+      const pcx = 340, pcy = 130;  // pump centre, SVG user-space
+      const OUTER = 64;            // visual budget for R + rollerR, in SVG user units
       const scale = OUTER / (R + rollerR);
       const Rpx = R * scale;
       const rrPx = rollerR * scale;
-      const f = v => v.toFixed(2);
 
       // 4 rollers at 90° spacing on the pitch circle, first at top (-90°)
       let rollers = '';
       for (let i = 0; i < N; i++) {
         const ang = -90 + i * 360 / N;
-        const x = cx + Rpx * cosd(ang);
-        const y = cy + Rpx * sind(ang);
+        const x = pcx + Rpx * cosd(ang);
+        const y = pcy + Rpx * sind(ang);
         rollers += `<circle class="hero-roller" cx="${f(x)}" cy="${f(y)}" r="${f(rrPx)}" />`;
       }
 
-      // 180° tube-wrap contact arc — right -> bottom -> left, same
-      // convention as rotor-solver's buildFigure()
-      const tubePath = `M ${f(cx + Rpx)} ${cy} A ${f(Rpx)} ${f(Rpx)} 0 0 1 ${f(cx - Rpx)} ${cy}`;
-      const arcLen = Math.PI * Rpx;
-      const dash = 14;
-      const gap = Math.max(1, arcLen - dash);
+      // 4 liquid-arc segments, one per roller-to-roller gap (same
+      // 90° spacing as the rollers) — these ride in the SAME rotating
+      // group as the rollers (see markup below), so their angular
+      // position is always exactly "between the two current rollers".
+      let liquidArcs = '';
+      for (let i = 0; i < N; i++) {
+        const a0 = -90 + i * 360 / N;
+        const a1 = a0 + 360 / N;
+        const x0 = pcx + Rpx * cosd(a0), y0 = pcy + Rpx * sind(a0);
+        const x1 = pcx + Rpx * cosd(a1), y1 = pcy + Rpx * sind(a1);
+        liquidArcs += `<path class="hero-liquid-arc" d="M ${f(x0)} ${f(y0)} A ${f(Rpx)} ${f(Rpx)} 0 0 1 ${f(x1)} ${f(y1)}" />`;
+      }
 
-      return `<svg viewBox="0 0 240 240" width="100%" style="max-width:360px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+      // 180° tube-wrap contact arc, on TOP of the rotor now (per
+      // review feedback) — right -> top -> left (sweep-flag 0, the
+      // mirror of rotor-solver's bottom-wrap sweep-flag 1 convention)
+      const tubeWrapPath = `M ${f(pcx + Rpx)} ${pcy} A ${f(Rpx)} ${f(Rpx)} 0 0 0 ${f(pcx - Rpx)} ${pcy}`;
+
+      // Static clip: only the top half of the pump (y <= pcy) is ever
+      // revealed for the rotating liquid ring, matching where the
+      // tube-wrap actually is.
+      const clipRect = `<rect x="0" y="0" width="640" height="${pcy}" />`;
+
+      // ── 50ml source tube (Falcon-style, conical bottom), far left ──
+      const srcX0 = 25, srcX1 = 95, srcTop = 25, srcBodyBottom = 175, srcTip = 215;
+      const srcCx = (srcX0 + srcX1) / 2;
+      const sourceVessel = `
+        <rect class="hero-vessel" x="${srcX0}" y="${srcTop}" width="${srcX1 - srcX0}" height="${srcBodyBottom - srcTop}" rx="7" />
+        <path class="hero-vessel" d="M ${srcX0} ${srcBodyBottom} L ${srcCx} ${srcTip} L ${srcX1} ${srcBodyBottom} Z" />
+        <rect class="hero-vessel-liquid" x="${srcX0 + 3}" y="${srcBodyBottom - 62}" width="${srcX1 - srcX0 - 6}" height="62" rx="4" />`;
+
+      // ── 1.5ml collection tube (Eppendorf-style), far right — kept
+      // substantially smaller than the 50ml source, per review ──
+      const dstX0 = 555, dstX1 = 605, dstTop = 140, dstBodyBottom = 185, dstTip = 205;
+      const dstCx = (dstX0 + dstX1) / 2;
+      const destVessel = `
+        <rect class="hero-vessel" x="${dstX0}" y="${dstTop}" width="${dstX1 - dstX0}" height="${dstBodyBottom - dstTop}" rx="5" />
+        <path class="hero-vessel" d="M ${dstX0} ${dstBodyBottom} L ${dstCx} ${dstTip} L ${dstX1} ${dstBodyBottom} Z" />
+        <rect class="hero-vessel-liquid" x="${dstX0 + 3}" y="${dstBodyBottom - 14}" width="${dstX1 - dstX0 - 6}" height="14" rx="3" />`;
+
+      // ── Nozzle, above the collection tube's opening ──
+      const nozzleTipX = dstCx, nozzleTipY = 120, nozzleTop = 95;
+      const nozzle = `<path class="hero-nozzle" d="M ${nozzleTipX - 12} ${nozzleTop} L ${nozzleTipX + 12} ${nozzleTop} L ${nozzleTipX} ${nozzleTipY} Z" />`;
+
+      // ── Inlet / outlet tube runs connecting source -> pump -> nozzle ──
+      const inletPath = `M ${srcX1} 150 C 170 150, 230 ${pcy}, ${f(pcx - Rpx)} ${pcy}`;
+      const outletPath = `M ${f(pcx + Rpx)} ${pcy} C 460 ${pcy}, 500 ${nozzleTop}, ${nozzleTipX - 5} ${nozzleTop}`;
+
+      return `<svg viewBox="0 0 640 260" width="100%" style="max-width:560px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
         <defs>
           <linearGradient id="hero-packet-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="var(--accent)"/>
             <stop offset="100%" stop-color="var(--accent-2)"/>
           </linearGradient>
+          <clipPath id="hero-wrap-clip">${clipRect}</clipPath>
         </defs>
-        <circle class="hero-rotor-disc" cx="${cx}" cy="${cy}" r="${f(Rpx)}" />
-        <path class="hero-tube" d="${tubePath}" />
-        <path class="hero-packet" d="${tubePath}" style="stroke-dasharray:${f(dash)} ${f(gap)}; --packet-shift:-${f(arcLen)};" />
+
+        ${sourceVessel}
+        <path class="hero-tube" d="${inletPath}" />
+        <path class="hero-tube" d="${outletPath}" />
+        ${nozzle}
+        ${destVessel}
+        <circle class="hero-droplet" cx="${nozzleTipX}" cy="${nozzleTipY}" r="4.5" />
+
+        <circle class="hero-rotor-disc" cx="${pcx}" cy="${pcy}" r="${f(Rpx)}" />
+        <path class="hero-tube" d="${tubeWrapPath}" />
+
+        <g clip-path="url(#hero-wrap-clip)">
+          <g class="rotor-spin-outer">
+            <g class="rotor-spin-inner">
+              ${liquidArcs}
+            </g>
+          </g>
+        </g>
         <g class="rotor-spin-outer">
           <g class="rotor-spin-inner">
-            <circle class="hero-hub" cx="${cx}" cy="${cy}" r="${f(rrPx * 0.45)}" />
+            <circle class="hero-hub" cx="${pcx}" cy="${pcy}" r="${f(rrPx * 0.45)}" />
             ${rollers}
           </g>
         </g>
