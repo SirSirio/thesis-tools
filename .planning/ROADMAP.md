@@ -266,7 +266,7 @@ Plans:
 6. `assets/style.css` is byte-identical; the `.bg-blobs` suppression is landing-page-only and every other page keeps its blobs (D-07).
 7. Geist-Bold is vendored locally, subsetted, and ships with its SIL OFL 1.1 license; the committed video is 1–3 MB with no audio and the 9.9 MB master stays untracked (D-10, D-20).
 
-**Plans:** 1/4 plans executed
+**Plans:** 2/4 plans executed
 Plans:
 **Wave 1**
 
@@ -274,7 +274,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 07-02-PLAN.md — Rebuild the hero: suppress blobs, wire the Geist headline, hand-build the animated proto-02 rotor
+- [x] 07-02-PLAN.md — Rebuild the hero: suppress blobs, wire the Geist headline, hand-build the animated proto-02 rotor
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
