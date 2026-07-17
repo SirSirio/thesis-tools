@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-last_updated: "2026-07-17T13:27:57.212Z"
+status: verifying
+last_updated: "2026-07-17T14:54:20.101Z"
 last_activity: 2026-07-17
 progress:
   total_phases: 9
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 28
-  completed_plans: 24
-  percent: 44
+  completed_plans: 25
+  percent: 56
 ---
 
 # Project State
@@ -26,10 +26,10 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 
 Phase: 07 (thesis-showcase-landing-page) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-17
 
-Progress: [█████████░] 89%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -68,6 +68,7 @@ Progress: [█████████░] 89%
 | Phase 07 P01 | 5min | 2 tasks | 4 files |
 | Phase 07 P02 | 50min | 2 tasks | 1 files |
 | Phase 07 P03 | 13min | 2 tasks | 1 files |
+| Phase 07 P04 | 15min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,9 @@ Recent decisions affecting current work:
 - [Phase 07]: [Phase 07-03]: Rejected RESEARCH's recommendation for a second IntersectionObserver -- extended the existing one with a target-identity branch for video play/pause (D-11)
 - [Phase 07]: [Phase 07-03]: Six module-graphic labels kept identical in LANG.en/LANG.it, matching the System Architecture Explorer's own untranslated technical vocabulary
 - [Phase 07]: [Phase 07-03]: Checkpoint approved as drafted by Sirio -- zero copy edits to any of the 14 narrative/module LANG key pairs
+- [Phase 07]: 07-04: Re-verified Tasks 1-3 (resource-section collapse, invariant checker, CLAUDE.md doc pass) as already committed from a prior session rather than redoing them
+- [Phase 07]: 07-04: Sirio approved the finished landing page and explicitly confirmed the vendored GSAP exception (D-01/D-03 amendment) is justified and should be kept
+- [Phase 07]: 07-04: README.md's Tech section 'no external dependencies' claim corrected post-approval -- now notes the locally-vendored GSAP core, no other change
 
 ### Pending Todos
 
@@ -172,6 +176,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-17T13:27:57.200Z
-Stopped at: Completed 07-03-PLAN.md (approved as drafted -- no copy edits)
-Resume file: None
+Last session: 2026-07-17T14:54:20.085Z
+Stopped at: Completed 07-04-PLAN.md (Sirio approved, phase 07 complete)
+Resume file: 
