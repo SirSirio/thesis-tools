@@ -267,9 +267,19 @@ Plans:
 7. Geist-Bold is vendored locally, subsetted, and ships with its SIL OFL 1.1 license; the committed video is 1–3 MB with no audio and the 9.9 MB master stays untracked (D-10, D-20).
 
 **Plans:** 4 plans in 4 waves
-
 Plans:
+**Wave 1**
+
 - [ ] 07-01-PLAN.md — Prepare assets: re-encode the pump-head clip, extract its poster, vendor + subset Geist with its OFL license
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 07-02-PLAN.md — Rebuild the hero: suppress blobs, wire the Geist headline, hand-build the animated proto-02 rotor
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 07-03-PLAN.md — Insert the narrative: problem, device (six-module graphic), proof (portrait video), journey
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
 - [ ] 07-04-PLAN.md — Collapse five resource sections to three, apply Sirio's copy edits, prove the invariants
