@@ -154,6 +154,8 @@ By the time this rework was requested, plan 07-02 was already marked complete an
 
 **Commit:** `a6f9a26` (`fix(07-02): rework hero motif with GSAP-driven sync, tangential tube, real vessels`)
 
+**Follow-up fix (commit `822f720`):** after a live review ("OK, much better" — three items before approval), corrected the rotor to turn clockwise on screen via a single `ROTOR_SIGN` constant shared by the rotation and slug-dashoffset tweens (derived, not guessed — verified numerically that the roller's arc-offset into the wrap increases left-to-right over a quarter period); redrew the Eppendorf slimmer (34 units wide, height:width ≈1.9) with its lid hinged at the tube's own rim and opened at 45° instead of swung out sideways; and phase-registered the slug dash pattern to the roller contact points via a real DOM-measured (`getTotalLength()`) wrap-entry position, verified numerically to hold at both t=0 and t=T/4.
+
 ---
 *Phase: 07-thesis-showcase-landing-page*
 *Completed: 2026-07-17*
