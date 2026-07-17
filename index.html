@@ -69,6 +69,12 @@
     }
     .lang-opt:not(.active):hover { color: var(--text); }
 
+    /* ── Landing-page-only overrides (D-07) ─────────────────── */
+    /* .bg-blobs markup stays in the body for other pages that share
+       assets/style.css; this page alone suppresses it so the hero
+       rotor motif owns that visual space instead. */
+    .bg-blobs { display: none; }
+
     /* ── Background grid overlay ────────────────────────────── */
     .bg-grid {
       position: fixed;
@@ -84,12 +90,47 @@
     }
 
     /* ── Hero refinements ───────────────────────────────────── */
-    main { padding-top: 150px; }
-    .site-title { font-size: clamp(2.1rem, 5.4vw, 3.6rem); padding-bottom: 4px; text-wrap: balance; }
+    main { padding-top: 92px; }
+
+    /* Self-hosted, subsetted Geist Bold — headline only (D-20).
+       Source: https://github.com/vercel/geist-font (SIL OFL 1.1),
+       license text at assets/fonts/geist/LICENSE.txt. */
+    @font-face {
+      font-family: 'Geist';
+      src: url('assets/fonts/geist/Geist-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* Asymmetric two-column hero (D-04 variance 7): copy left, rotor
+       motif right. Collapses to a single centred column at 600px. */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+      text-align: left;
+      margin-bottom: 64px;
+    }
+    .hero-copy { flex: 1 1 480px; max-width: 560px; }
+    .hero-rotor {
+      flex: 1 1 340px;
+      max-width: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .site-title {
+      font-family: 'Geist', var(--font);
+      font-size: clamp(2.1rem, 5.4vw, 3.6rem);
+      padding-bottom: 4px;
+      text-wrap: balance;
+    }
     .site-author {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 16px;
     }
     .site-author::before, .site-author::after {
@@ -98,11 +139,12 @@
     }
     .site-author::before { background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.5)); }
     .site-author::after  { background: linear-gradient(90deg, rgba(255, 107, 43, 0.5), transparent); }
+    .site-subtitle { max-width: 480px; }
     .hero-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      justify-content: center;
+      justify-content: flex-start;
       margin-top: 32px;
     }
     .meta-chip {
@@ -256,9 +298,13 @@
       .tool-card--wide .card-link { white-space: normal; }
     }
     @media (max-width: 600px) {
-      main { padding-top: 118px; }
+      main { padding-top: 84px; }
       .top-nav { padding: 11px 18px; }
       .brand-muted { display: none; }
+      .site-header { flex-direction: column; text-align: center; gap: 32px; margin-bottom: 52px; }
+      .hero-copy, .hero-rotor { max-width: 100%; }
+      .site-author { justify-content: center; }
+      .hero-meta { justify-content: center; }
     }
   </style>
 </head>
@@ -282,15 +328,18 @@
 
 <main>
 <header class="site-header">
+<div class="hero-copy">
 <span class="site-label animate-in" style="--delay: 0s;" data-i18n="site-label">DTU Master&rsquo;s Thesis &middot; 2026</span>
 <h1 class="site-title animate-in" style="--delay: 0.08s;" data-i18n="site-title">Modular Automated Liquid Dispensing<br>for Point-of-Care Use</h1>
 <p class="site-author animate-in" style="--delay: 0.16s;">Sirio Vittorio Feltrin</p>
-<p class="site-subtitle animate-in" style="--delay: 0.24s;" data-i18n="site-subtitle">Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.</p>
+<p class="site-subtitle animate-in" style="--delay: 0.24s;" data-i18n="site-subtitle">Computational tools, reference guides, and prototype documentation built alongside the thesis research, runnable offline from a browser or USB drive.</p>
 <div class="hero-meta animate-in" style="--delay: 0.32s;">
 <span class="meta-chip" data-i18n="meta-chip-browser">Runs in any browser</span>
 <span class="meta-chip" data-i18n="meta-chip-offline">Offline-ready &middot; USB</span>
 <span class="meta-chip" data-i18n="meta-chip-nodeps">No install required</span>
 </div>
+</div>
+<div class="hero-rotor" id="hero-rotor" aria-hidden="true"></div>
 </header>
 
 <div class="resources-sections">
@@ -428,7 +477,7 @@
       en: {
         'site-label':               'DTU Master’s Thesis · 2026',
         'site-title':               'Modular Automated Liquid Dispensing<br>for Point-of-Care Use',
-        'site-subtitle':            'Computational tools, reference guides, and prototype documentation built alongside the thesis research. Everything runs in the browser or offline from a USB drive.',
+        'site-subtitle':            'Computational tools, reference guides, and prototype documentation built alongside the thesis research, runnable offline from a browser or USB drive.',
         'meta-chip-browser':        'Runs in any browser',
         'meta-chip-offline':        'Offline-ready · USB',
         'meta-chip-nodeps':         'No install required',
@@ -467,7 +516,7 @@
       it: {
         'site-label':               'Tesi Magistrale DTU · 2026',
         'site-title':               'Distribuzione Automatizzata Modulare di Liquidi<br>per Diagnostica Point-of-Care',
-        'site-subtitle':            'Strumenti computazionali, guide di riferimento e documentazione dei prototipi sviluppati parallelamente alla tesi. Tutto funziona nel browser o offline da una chiavetta USB.',
+        'site-subtitle':            'Strumenti computazionali, guide di riferimento e documentazione dei prototipi sviluppati parallelamente alla tesi, utilizzabili offline dal browser o da una chiavetta USB.',
         'meta-chip-browser':        'Funziona in qualsiasi browser',
         'meta-chip-offline':        'Utilizzabile offline · USB',
         'meta-chip-nodeps':         'Nessuna installazione richiesta',
