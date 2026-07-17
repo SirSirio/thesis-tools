@@ -268,6 +268,94 @@
       flex: none;
     }
 
+    /* ── Narrative sections (D-13/D-17) ─────────────────────────
+       Four eyebrow-less story beats between the hero and the
+       resource sections: problem -> device -> proof -> journey.
+       Deliberately NOT using .section-head/.section-index — those
+       carry the numbered eyebrow, and D-17 keeps eyebrows below the
+       fold only (story ends, index begins). Four distinct layout
+       families here (centred prose / split copy+media / centred
+       heading+media / CTA panel) join the existing hero, card-grid,
+       and wide-row families for taste-skill's layout-variety rule. */
+    .narrative-sections { margin-bottom: 96px; }
+    .narrative-sections section + section { margin-top: 96px; }
+    .narrative-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+    .narrative-body {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 640px;
+    }
+    .narrative-body + .narrative-body { margin-top: 14px; }
+    .narrative-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 22px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .narrative-link .arrow { transition: transform 0.28s cubic-bezier(.22,.68,0,1.2); }
+    .narrative-link:hover .arrow { transform: translateX(5px); }
+
+    /* Problem — centred prose, no card: reads as a story, not a UI element */
+    .narrative-center { max-width: 680px; margin: 0 auto; text-align: center; }
+    .narrative-center .narrative-body { max-width: 100%; margin-left: auto; margin-right: auto; }
+    .narrative-center .narrative-link { justify-content: center; }
+
+    /* Device — split copy + media (echoes, then varies, the hero's asymmetry) */
+    .narrative-split { display: flex; align-items: center; gap: 48px; }
+    .narrative-copy { flex: 1 1 380px; }
+    .narrative-media { flex: 1 1 320px; display: flex; flex-direction: column; align-items: center; }
+    .module-schema { width: 100%; }
+    .module-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+    .legend-swatch { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
+    .legend-swatch--liquid { background: #4a90d9; }
+    .legend-swatch--data { height: 0; border-top: 3px dashed #3ec06b; }
+
+    /* Proof — centred heading, portrait video below (video + graphic wired in Task 2) */
+    .narrative-video-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 36px; }
+    .narrative-caption {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Journey — CTA panel, deliberately distinct from .tool-card (story, not a directory entry, D-15) */
+    .narrative-cta {
+      text-align: center;
+      padding: 48px 40px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .narrative-cta .narrative-body { max-width: 560px; margin: 0 auto; }
+    .narrative-cta .narrative-link { justify-content: center; }
+
     /* ── Editorial section headers ──────────────────────────── */
     .resources-sections section + section { margin-top: 72px; }
     .section-head {
@@ -404,6 +492,8 @@
     @media (max-width: 680px) {
       .tool-card--wide { flex-direction: column; align-items: flex-start; }
       .tool-card--wide .card-link { white-space: normal; }
+      .narrative-split { flex-direction: column; gap: 32px; }
+      .narrative-cta { padding: 36px 24px; }
     }
     @media (max-width: 600px) {
       main { padding-top: 84px; }
@@ -449,6 +539,54 @@
 </div>
 <div class="hero-rotor animate-in" id="hero-rotor" style="--delay: 0.4s;" aria-hidden="true"></div>
 </header>
+
+<div class="narrative-sections">
+
+<section class="narrative narrative-problem" aria-label="Why this matters">
+<div class="narrative-center">
+<h2 class="narrative-title reveal" data-i18n="narrative-problem-title">A pipette and a bench aren&rsquo;t always there.</h2>
+<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-problem-body-1">Most diagnostic assays assume a lab: a technician, a pipette, a bench. Point-of-care testing removes all three &mdash; the device itself has to get the liquid handling right, unsupervised, wherever the patient actually is.</p>
+<p class="narrative-body reveal" style="--rd: 0.16s;" data-i18n="narrative-problem-body-2">The requirements are unforgiving on purpose: dispense five or more different liquids, from 5&nbsp;&micro;L to 1000&nbsp;&micro;L, accurate and reproducible to within &plusmn;10% &mdash; and every wetted part has to be cleanable or disposable, with no spill and no contact with the operator. That&rsquo;s not a chemistry problem. It&rsquo;s a mechanical design problem, and it&rsquo;s the one this thesis is about.</p>
+</div>
+</section>
+
+<section class="narrative narrative-device" aria-label="What the device is">
+<div class="narrative-split">
+<div class="narrative-copy">
+<h2 class="narrative-title reveal" data-i18n="narrative-device-title">Six modules, one job each.</h2>
+<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-device-body">Storage holds the liquids and watches their level. Pump meters each one out by roller displacement. Nozzle shakes a droplet loose in short bursts. Alignment moves the sample rack underneath. Software &amp; Electronics is the brain and the bus, sealed away from anything wet. UI is where a protocol gets set &mdash; on a laptop, loaded in from an SD card &mdash; and where the run gets watched.</p>
+<a class="narrative-link reveal" style="--rd: 0.16s;" href="tools/system-architecture-explorer/index.html"><span data-i18n="narrative-device-link">See the full architecture</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+</div>
+<div class="narrative-media reveal" style="--rd: 0.12s;">
+<div id="module-schema" class="module-schema"></div>
+<div class="module-legend">
+<span class="legend-item"><span class="legend-swatch legend-swatch--liquid" aria-hidden="true"></span><span data-i18n="narrative-legend-liquid">Liquid flow</span></span>
+<span class="legend-item"><span class="legend-swatch legend-swatch--data" aria-hidden="true"></span><span data-i18n="narrative-legend-data">Data flow</span></span>
+</div>
+</div>
+</div>
+</section>
+
+<section class="narrative narrative-proof" aria-label="See it running">
+<div class="narrative-center">
+<h2 class="narrative-title reveal" data-i18n="narrative-proof-title">It&rsquo;s not a diagram. It runs.</h2>
+<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-proof-body">This is proto-02&rsquo;s pump head &mdash; the same four-roller mechanism the animation above is drawn from, actually turning and dispensing.</p>
+</div>
+<div class="narrative-video-wrap reveal" style="--rd: 0.16s;">
+<!-- <video> element wired in Task 2 (D-08/D-09/D-11) -->
+<p class="narrative-caption" data-i18n="narrative-proof-caption">Proto-02 pump head, dispensing &mdash; portrait clip, sound off.</p>
+</div>
+</section>
+
+<section class="narrative narrative-journey" aria-label="The prototype journey">
+<div class="narrative-cta">
+<h2 class="narrative-title reveal" data-i18n="narrative-journey-title">Every prototype is a corrected mistake.</h2>
+<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-journey-body">Proto-01 under-dispensed by about a third against its target &mdash; a real, measured gap. Proto-02 corrects the rotor geometry that caused it, and whatever proto-02 gets wrong will shape the version after that. None of it moves in a straight line.</p>
+<a class="narrative-link narrative-link--cta reveal" style="--rd: 0.16s;" href="prototypes/index.html"><span data-i18n="narrative-journey-link">Explore the prototype journey</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+</div>
+</section>
+
+</div>
 
 <div class="resources-sections">
 
@@ -589,6 +727,26 @@
         'meta-chip-browser':        'Runs in any browser',
         'meta-chip-offline':        'Offline-ready · USB',
         'meta-chip-nodeps':         'No install required',
+        'narrative-problem-title':   'A pipette and a bench aren&rsquo;t always there.',
+        'narrative-problem-body-1':  'Most diagnostic assays assume a lab: a technician, a pipette, a bench. Point-of-care testing removes all three &mdash; the device itself has to get the liquid handling right, unsupervised, wherever the patient actually is.',
+        'narrative-problem-body-2':  'The requirements are unforgiving on purpose: dispense five or more different liquids, from 5&nbsp;&micro;L to 1000&nbsp;&micro;L, accurate and reproducible to within &plusmn;10% &mdash; and every wetted part has to be cleanable or disposable, with no spill and no contact with the operator. That&rsquo;s not a chemistry problem. It&rsquo;s a mechanical design problem, and it&rsquo;s the one this thesis is about.',
+        'narrative-device-title':    'Six modules, one job each.',
+        'narrative-device-body':     'Storage holds the liquids and watches their level. Pump meters each one out by roller displacement. Nozzle shakes a droplet loose in short bursts. Alignment moves the sample rack underneath. Software &amp; Electronics is the brain and the bus, sealed away from anything wet. UI is where a protocol gets set &mdash; on a laptop, loaded in from an SD card &mdash; and where the run gets watched.',
+        'narrative-device-link':     'See the full architecture',
+        'narrative-legend-liquid':   'Liquid flow',
+        'narrative-legend-data':     'Data flow',
+        'module-storage':            'Storage',
+        'module-pump':                'Pump',
+        'module-nozzle':              'Nozzle',
+        'module-alignment':          'Alignment',
+        'module-ui':                  'UI',
+        'module-software-electronics': 'Software &amp; Electronics',
+        'narrative-proof-title':     'It&rsquo;s not a diagram. It runs.',
+        'narrative-proof-body':      'This is proto-02&rsquo;s pump head &mdash; the same four-roller mechanism the animation above is drawn from, actually turning and dispensing.',
+        'narrative-proof-caption':   'Proto-02 pump head, dispensing &mdash; portrait clip, sound off.',
+        'narrative-journey-title':   'Every prototype is a corrected mistake.',
+        'narrative-journey-body':    'Proto-01 under-dispensed by about a third against its target &mdash; a real, measured gap. Proto-02 corrects the rotor geometry that caused it, and whatever proto-02 gets wrong will shape the version after that. None of it moves in a straight line.',
+        'narrative-journey-link':    'Explore the prototype journey',
         'section-label-tools':      'Calculators',
         'section-desc-tools':       'Computational solvers built for the thesis design process — enter your parameters and get answers.',
         'section-label-guides':     'Guides',
@@ -628,6 +786,26 @@
         'meta-chip-browser':        'Funziona in qualsiasi browser',
         'meta-chip-offline':        'Utilizzabile offline · USB',
         'meta-chip-nodeps':         'Nessuna installazione richiesta',
+        'narrative-problem-title':   'Non sempre ci sono una pipetta e un banco.',
+        'narrative-problem-body-1':  'La maggior parte dei test diagnostici presuppone un laboratorio: un tecnico, una pipetta, un banco. La diagnostica point-of-care elimina tutti e tre &mdash; &egrave; il dispositivo stesso a dover gestire correttamente i liquidi, senza supervisione, ovunque si trovi il paziente.',
+        'narrative-problem-body-2':  'I requisiti sono volutamente severi: dosare almeno cinque liquidi diversi, da 5&nbsp;&micro;L a 1000&nbsp;&micro;L, con accuratezza e ripetibilit&agrave; entro il &plusmn;10% &mdash; e ogni parte a contatto con il liquido deve essere lavabile o monouso, senza versamenti e senza contatto con l&rsquo;operatore. Non &egrave; un problema di chimica. &Egrave; un problema di progettazione meccanica, ed &egrave; il problema al centro di questa tesi.',
+        'narrative-device-title':    'Sei moduli, un compito ciascuno.',
+        'narrative-device-body':     'Storage contiene i liquidi e ne monitora il livello. Pump dosa ciascun liquido per spostamento dei rulli. Nozzle scuote una goccia con brevi impulsi. Alignment sposta il rack dei campioni sotto gli ugelli. Software &amp; Electronics &egrave; il cervello e il bus, sigillato lontano da tutto ci&ograve; che &egrave; bagnato. UI &egrave; dove si imposta un protocollo &mdash; su un laptop, caricato da scheda SD &mdash; e da dove si segue l&rsquo;esecuzione.',
+        'narrative-device-link':     'Vedi l&rsquo;architettura completa',
+        'narrative-legend-liquid':   'Flusso liquido',
+        'narrative-legend-data':     'Flusso dati',
+        'module-storage':            'Storage',
+        'module-pump':                'Pump',
+        'module-nozzle':              'Nozzle',
+        'module-alignment':          'Alignment',
+        'module-ui':                  'UI',
+        'module-software-electronics': 'Software &amp; Electronics',
+        'narrative-proof-title':     'Non &egrave; uno schema. Funziona davvero.',
+        'narrative-proof-body':      'Questa &egrave; la testa pompante di proto-02 &mdash; lo stesso meccanismo a quattro rulli dell&rsquo;animazione qui sopra, che gira e dosa per davvero.',
+        'narrative-proof-caption':   'Testa pompante proto-02, in dosaggio &mdash; clip verticale, senza audio.',
+        'narrative-journey-title':   'Ogni prototipo &egrave; un errore corretto.',
+        'narrative-journey-body':    'Proto-01 dosava circa un terzo in meno del target &mdash; uno scarto reale e misurato. Proto-02 corregge la geometria del rotore che lo causava, e ci&ograve; che proto-02 sbaglier&agrave; former&agrave; la versione successiva. Niente di tutto questo procede in linea retta.',
+        'narrative-journey-link':    'Esplora il percorso dei prototipi',
         'section-label-tools':      'Calcolatori',
         'section-desc-tools':       'Risolutori computazionali sviluppati per il processo di progettazione — inserisci i parametri e ottieni le risposte.',
         'section-label-guides':     'Guide',
