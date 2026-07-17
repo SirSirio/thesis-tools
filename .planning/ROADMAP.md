@@ -241,7 +241,7 @@ Plans:
 
 **Depends on:** Phase 6.1 (complete). Builds on the 2026-07-13 homepage redesign quick task (fixed glass nav, hero meta chips, numbered sections, icon-tile cards with mouse spotlight, IntersectionObserver reveals, full EN/IT i18n) — that pass restyled the directory; this phase changes what the page *is about*.
 
-**Requirements**: TBD at discuss-phase.
+**Requirements**: No formal phase REQ-IDs. The trackable set is CONTEXT.md decisions **D-01…D-20** (see `07-CONTEXT.md`), plus the existing i18n contract **LANG-01…LANG-05** from `REQUIREMENTS.md`, which D-18 forbids regressing.
 
 **Scope notes:**
 
@@ -256,6 +256,20 @@ Plans:
   3. Video: hosting (repo-committed vs external), size budget for the USB/Pages constraint, autoplay/muted/poster behaviour.
   4. Whether the landing page becomes the thesis' front door for a QR-code/print audience (affects first-paint weight).
 
-**Success Criteria** (what must be TRUE): TBD at discuss-phase.
+**Success Criteria** (what must be TRUE):
 
-**Plans:** Not planned yet
+1. A visitor who has never heard of the project lands and meets motive, object, and evidence — problem, device, proof, journey — before reaching any calculator (D-13).
+2. The hero animates on load with a hand-built, geometrically real proto-02 rotor (4 rollers, R≈19.7 mm) and a travelling liquid packet; no animation runtime, no gsap, no CDN (D-01, D-05, D-06).
+3. The pump-head video autoplays muted on scroll into view and pauses on exit; under `prefers-reduced-motion` it stays a static poster with a play button (D-11).
+4. The five resource sections are three — Tools (5 cards), Roadmap, Presentations — with exactly 3 numbered eyebrows, all below the fold (D-14, D-17).
+5. All 8 tool destinations remain reachable; EN/IT key sets are identical with no orphans; no horizontal scroll at 1280px or 375px (LANG-01…LANG-05).
+6. `assets/style.css` is byte-identical; the `.bg-blobs` suppression is landing-page-only and every other page keeps its blobs (D-07).
+7. Geist-Bold is vendored locally, subsetted, and ships with its SIL OFL 1.1 license; the committed video is 1–3 MB with no audio and the 9.9 MB master stays untracked (D-10, D-20).
+
+**Plans:** 4 plans in 4 waves
+
+Plans:
+- [ ] 07-01-PLAN.md — Prepare assets: re-encode the pump-head clip, extract its poster, vendor + subset Geist with its OFL license
+- [ ] 07-02-PLAN.md — Rebuild the hero: suppress blobs, wire the Geist headline, hand-build the animated proto-02 rotor
+- [ ] 07-03-PLAN.md — Insert the narrative: problem, device (six-module graphic), proof (portrait video), journey
+- [ ] 07-04-PLAN.md — Collapse five resource sections to three, apply Sirio's copy edits, prove the invariants
