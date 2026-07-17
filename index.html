@@ -951,7 +951,7 @@
         <path class="hero-vessel" d="M ${dstX0} ${shoulderBottom} L ${dstCx} ${eppTipY} L ${dstX1} ${shoulderBottom} Z" />
         <rect class="hero-vessel" x="${dstX0}" y="${shoulderTop}" width="${dstX1 - dstX0}" height="${shoulderBottom - shoulderTop}" rx="4" />
         <path class="hero-vessel-liquid" d="M ${f(dstCx - halfWidthAtLiqY)} ${f(liqY)} L ${f(dstCx + halfWidthAtLiqY)} ${f(liqY)} L ${dstCx} ${eppTipY} Z" />
-        <rect class="hero-cap-flap" x="${hinge.x - capFlapLen}" y="${hinge.y - 4}" width="${capFlapLen}" height="8" rx="3" transform="rotate(45 ${hinge.x} ${hinge.y})" />
+        <rect class="hero-cap-flap" x="${hinge.x - capFlapLen}" y="${hinge.y - 4}" width="${capFlapLen}" height="8" rx="3" transform="rotate(135 ${hinge.x} ${hinge.y})" />
         <circle class="hero-cap-hinge" cx="${hinge.x}" cy="${hinge.y}" r="2.4" />`;
 
       // Needle: short, rigid, straight — visually distinct from the
@@ -1010,23 +1010,20 @@
     // ONE timeline drives the rotor rotation and the slug highlight's
     // stroke-dashoffset.
     //
-    // Direction (Rework 3): the wrap sits on TOP and liquid flows
-    // inlet(left) -> outlet(right), so the roller carrying the pinch
-    // must sweep LEFT -> TOP -> RIGHT across the wrap. In this file's
-    // angle parameterization (buildHeroRotor: ang=-90 top, 0 right, 90
-    // bottom, 180 left; position = cx + R·cos(ang), cy + R·sin(ang)),
-    // the wrap's left endpoint is ang=180 and its right endpoint is
-    // ang=360 -- so "left -> top -> right" is ang INCREASING through
-    // 180 -> 270 -> 360. A positive CSS/GSAP `rotation` increases a
-    // point's effective ang in this exact sense: rotating the point at
-    // ang=180 (i.e. offset (-R,0) from centre) by a small positive
-    // angle moves it to (-R·cosθ, -R·sinθ) ≈ (-R, -Rθ) for small θ --
-    // y DECREASES, i.e. the point moves toward the TOP. So a positive
-    // rotation (ROTOR_SIGN = +1 below) is the physically correct,
-    // clockwise-on-screen direction Sirio asked for. ROTOR_SIGN is the
-    // single source of truth for both the rotation tween and the
-    // slug's dashoffset tween, so the two can never disagree with each
-    // other even if this sign is ever revisited.
+    // Direction (Rework 4): rotor spin and liquid flow are driven by
+    // two INDEPENDENT constants, ROTOR_SIGN and FLOW_SIGN. Rework 3 had
+    // ROTOR_SIGN drive both, which meant reversing the spin silently
+    // reversed the flow as well (liquid ran needle -> Falcon). Keep them
+    // separate: liquid must always advance Falcon -> needle.
+    //
+    // Note for future work: with the wrap on TOP, a roller physically
+    // pushes fluid in the direction it sweeps across the wrap. A
+    // counter-clockwise rotor sweeps right -> top -> left, which in a
+    // real pump would drive fluid right -> left. The rotor direction
+    // and the flow direction shown here are therefore set for visual
+    // preference and are not mutually consistent as physics. Revisit
+    // together (flip ROTOR_SIGN to +1) if the motif is ever presented
+    // as a physical claim rather than a decorative motif.
     //
     // Sync spec (derived numerically at runtime from the real,
     // DOM-measured tube geometry -- not eyeballed):
@@ -1058,7 +1055,11 @@
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const ROTOR_SIGN = 1; // +1 = clockwise on screen -- see derivation above
+      // Rotation and flow directions are set independently and must not
+      // be re-coupled: FLOW_SIGN keeps the liquid running Falcon -> needle
+      // (left -> right) regardless of which way ROTOR_SIGN spins the rotor.
+      const ROTOR_SIGN = -1; // -1 = counter-clockwise on screen
+      const FLOW_SIGN = 1;   // +1 = liquid advances inlet(Falcon) -> outlet(needle)
       const T = 4; // rotor period, seconds
       const circumference = 2 * Math.PI * geo.Rpx;
       const spacing = circumference / 4;
@@ -1076,7 +1077,7 @@
 
       const tl = gsap.timeline({ repeat: -1, defaults: { ease: 'none' }, paused: true });
       tl.fromTo(rotorGroupEl, { rotation: 0 }, { rotation: ROTOR_SIGN * 360, duration: T, transformOrigin: '50% 50%' }, 0);
-      tl.fromTo(slugEl, { strokeDashoffset: dashOffset0 }, { strokeDashoffset: dashOffset0 - ROTOR_SIGN * circumference, duration: T }, 0);
+      tl.fromTo(slugEl, { strokeDashoffset: dashOffset0 }, { strokeDashoffset: dashOffset0 - FLOW_SIGN * circumference, duration: T }, 0);
 
       // Droplet release(s), timed so a drop detaches when a slug
       // reaches the needle tip. The loop condition itself guarantees
