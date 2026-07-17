@@ -356,6 +356,37 @@
     .narrative-cta .narrative-body { max-width: 560px; margin: 0 auto; }
     .narrative-cta .narrative-link { justify-content: center; }
 
+    /* Six-module device schema (D-16) — new, simplified, non-interactive.
+       Colours reused exactly from the System Architecture Explorer's
+       liquid/data vocabulary (#4a90d9 solid liquid, #3ec06b dashed data)
+       so the two diagrams read as the same visual language one hop apart. */
+    .module-box {
+      fill: rgba(255, 255, 255, 0.04);
+      stroke: rgba(255, 107, 43, 0.28);
+      stroke-width: 1.4;
+    }
+    .module-label {
+      fill: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      text-anchor: middle;
+    }
+    .module-flow-liquid { stroke: #4a90d9; stroke-width: 2.4; fill: none; }
+    .module-flow-data { stroke: #3ec06b; stroke-width: 1.4; stroke-dasharray: 5 4; fill: none; }
+
+    /* Portrait pump-head clip (540x960, 9:16, D-09/D-10) — constrained by
+       HEIGHT, never a 16:9 aspect-ratio rule (RESEARCH Pitfall 2). */
+    .narrative-video {
+      display: block;
+      max-height: 70vh;
+      width: auto;
+      max-width: 100%;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+    }
+
     /* ── Editorial section headers ──────────────────────────── */
     .resources-sections section + section { margin-top: 72px; }
     .section-head {
@@ -573,7 +604,7 @@
 <p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-proof-body">This is proto-02&rsquo;s pump head &mdash; the same four-roller mechanism the animation above is drawn from, actually turning and dispensing.</p>
 </div>
 <div class="narrative-video-wrap reveal" style="--rd: 0.16s;">
-<!-- <video> element wired in Task 2 (D-08/D-09/D-11) -->
+<video id="pump-head-video" class="narrative-video" src="prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/pump-head-web.mp4" poster="prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/pump-head-poster.jpg" muted loop playsinline preload="metadata" aria-label="Proto-02 pump head, dispensing"></video>
 <p class="narrative-caption" data-i18n="narrative-proof-caption">Proto-02 pump head, dispensing &mdash; portrait clip, sound off.</p>
 </div>
 </section>
@@ -857,8 +888,6 @@
       try { localStorage.setItem('lang', lang); } catch(e) {}
     }
 
-    applyLang(currentLang);
-
     document.querySelectorAll('.lang-opt').forEach(btn => {
       btn.addEventListener('click', () => applyLang(btn.dataset.lang));
     });
@@ -994,6 +1023,84 @@
     const heroRotorEl = document.getElementById('hero-rotor');
     if (heroRotorEl) heroRotorEl.innerHTML = buildHeroRotor();
 
+    // ── Six-module device schema (D-16) ───────────────────────────
+    // NEW, purpose-built, simplified graphic — NOT a port of the
+    // System Architecture Explorer's schema-drawing function: no
+    // per-module hardware-payload chips, no pin/cost/BOM data, no
+    // interactivity. Same template-string SVG technique as
+    // buildHeroRotor()/rotor-solver's buildFigure() — built once,
+    // assigned via innerHTML, viewBox + width:100% + max-width so it
+    // never causes horizontal scroll at 375px (LANG-05). Spatial
+    // layout carries no meaning (matching the source tool's own
+    // framing) — only the drawn connectivity does: a solid blue
+    // liquid path Storage -> Pump -> Nozzle -> Alignment, and a
+    // dashed green data path from Software & Electronics to every
+    // other module, reusing the explorer's exact flow colours
+    // (#4a90d9 liquid, #3ec06b data) as an established vocabulary one
+    // hop away. Module <text> labels carry data-i18n so a language
+    // switch after the graphic is built still updates them (D-18) —
+    // applyLang(currentLang) is called once, below, after both this
+    // and the hero rotor are injected into the DOM.
+    function buildModuleSchema() {
+      const boxes = [
+        { key: 'storage',   x: 20,  y: 30,  w: 135, h: 64, labelKey: 'module-storage' },
+        { key: 'pump',      x: 175, y: 30,  w: 135, h: 64, labelKey: 'module-pump' },
+        { key: 'nozzle',    x: 330, y: 30,  w: 135, h: 64, labelKey: 'module-nozzle' },
+        { key: 'alignment', x: 485, y: 30,  w: 135, h: 64, labelKey: 'module-alignment' },
+        { key: 'ui',        x: 125, y: 190, w: 180, h: 64, labelKey: 'module-ui' },
+        { key: 'software',  x: 335, y: 190, w: 180, h: 64, labelKey: 'module-software-electronics' },
+      ];
+      const byKey = k => boxes.find(b => b.key === k);
+      const cx = b => b.x + b.w / 2;
+      const cy = b => b.y + b.h / 2;
+
+      let boxesSvg = '';
+      boxes.forEach(b => {
+        boxesSvg += `<rect class="module-box" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="10" />`;
+        boxesSvg += `<text class="module-label" x="${cx(b)}" y="${cy(b) + 5}" data-i18n="${b.labelKey}">${LANG.en[b.labelKey]}</text>`;
+      });
+
+      // Liquid flow (solid blue, D-16): Storage -> Pump -> Nozzle -> Alignment
+      let liquidSvg = '';
+      [['storage', 'pump'], ['pump', 'nozzle'], ['nozzle', 'alignment']].forEach(([a, b]) => {
+        const A = byKey(a), B = byKey(b);
+        const y = A.y + A.h / 2;
+        liquidSvg += `<line class="module-flow-liquid" x1="${A.x + A.w}" y1="${y}" x2="${B.x - 4}" y2="${y}" marker-end="url(#mod-liquid-arrow)" />`;
+      });
+
+      // Data flow (dashed green, D-16): Software & Electronics -> every other module
+      const se = byKey('software');
+      let dataSvg = '';
+      ['storage', 'pump', 'nozzle', 'alignment'].forEach(k => {
+        const T = byKey(k);
+        dataSvg += `<line class="module-flow-data" x1="${cx(se)}" y1="${se.y}" x2="${cx(T)}" y2="${T.y + T.h + 4}" marker-end="url(#mod-data-arrow)" />`;
+      });
+      const ui = byKey('ui');
+      dataSvg += `<line class="module-flow-data" x1="${se.x}" y1="${cy(se)}" x2="${ui.x + ui.w + 4}" y2="${cy(ui)}" marker-end="url(#mod-data-arrow)" />`;
+
+      return `<svg viewBox="0 0 640 280" width="100%" style="max-width:560px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Six device modules: Storage, Pump, Nozzle, and Alignment carry the liquid path; Software and Electronics sends data to every module">
+        <defs>
+          <marker id="mod-liquid-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#4a90d9" />
+          </marker>
+          <marker id="mod-data-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2,1 L8,5 L2,9" fill="none" stroke="#3ec06b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+        </defs>
+        ${dataSvg}
+        ${liquidSvg}
+        ${boxesSvg}
+      </svg>`;
+    }
+
+    const moduleSchemaEl = document.getElementById('module-schema');
+    if (moduleSchemaEl) moduleSchemaEl.innerHTML = buildModuleSchema();
+
+    // Apply the current language once both SVG builders above have run,
+    // so the module graphic's data-i18n <text> labels are correct on
+    // first paint under a non-English stored preference (D-18).
+    applyLang(currentLang);
+
     // Mouse-tracking spotlight on cards
     document.querySelectorAll('.tool-card').forEach(card => {
       card.addEventListener('mousemove', e => {
@@ -1003,11 +1110,27 @@
       });
     });
 
-    // Scroll-triggered reveals
+    // Scroll-triggered reveals + pump-head video autoplay (D-11)
+    // Extends the ONE existing IntersectionObserver rather than
+    // constructing a second instance — branch on target identity so
+    // the reveal targets keep their one-shot unobserve-on-reveal
+    // semantics while the video gets repeated play/pause on every
+    // enter/exit, never unobserved. Under prefers-reduced-motion the
+    // video never autoplays and instead exposes native controls so it
+    // stays a static poster the visitor can start deliberately.
     const revealEls = document.querySelectorAll('.reveal');
+    const pumpVideo = document.getElementById('pump-head-video');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (pumpVideo && prefersReducedMotion) pumpVideo.setAttribute('controls', '');
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(entries => {
         entries.forEach(en => {
+          if (en.target === pumpVideo) {
+            if (prefersReducedMotion) return;
+            if (en.isIntersecting) en.target.play().catch(() => {});
+            else en.target.pause();
+            return;
+          }
           if (en.isIntersecting) {
             en.target.classList.add('in-view');
             io.unobserve(en.target);
@@ -1015,6 +1138,7 @@
         });
       }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
       revealEls.forEach(el => io.observe(el));
+      if (pumpVideo) io.observe(pumpVideo);
     } else {
       revealEls.forEach(el => el.classList.add('in-view'));
     }
