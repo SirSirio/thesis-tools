@@ -33,7 +33,7 @@ Interactive computational tools developed alongside master's thesis research on 
 
 ## Tech
 
-Static HTML, CSS, and vanilla JavaScript. No frameworks, no build tools, no external dependencies. Designed to run from a file system or a USB drive as well as GitHub Pages.
+Static HTML, CSS, and vanilla JavaScript. No frameworks, no build tools, no CDN, no install. The landing page vendors GSAP core locally to drive its hero motif. Designed to run from a file system or a USB drive as well as GitHub Pages.
 
 ---
 
