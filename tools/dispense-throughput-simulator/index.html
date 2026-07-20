@@ -446,8 +446,150 @@
     if (liquidCount > 1) { liquidCount--; updateLiquidRows(); }
   });
 
+  // ── Scheduling / timing engine (single source of truth for every downstream output) ──
+  // Each function is declared at the top level of this script, closing brace at column 0,
+  // so it can be extracted and verified in isolation (engine-harness.cjs).
+
+function computeDoseTimes(liquids, rollers, uLPerStroke, rpm) {
+  const strokesPerSec = (rpm / 60) * rollers;
+  return liquids.map(v => Math.ceil(v / uLPerStroke) / strokesPerSec);
+}
+
+function groupDispenseTime(activeDoseTimes, K) {
+  // LPT (Longest-Processing-Time-first): sort descending with a stable
+  // original-index tiebreaker (RESEARCH Pitfall 3), then chunk into
+  // sequential groups of size <=K and sum each group's maximum.
+  const indexed = activeDoseTimes.map((t, i) => ({ t, i }));
+  indexed.sort((a, b) => (b.t - a.t) || (a.i - b.i));
+  let total = 0;
+  for (let i = 0; i < indexed.length; i += K) {
+    let groupMax = -Infinity;
+    for (let j = i; j < Math.min(i + K, indexed.length); j++) {
+      if (indexed[j].t > groupMax) groupMax = indexed[j].t;
+    }
+    total += groupMax;
+  }
+  return total;
+}
+
+function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRackChanges) {
+  // Unified fill/steady/drain cycle loop (RESEARCH): totalCycles = M + N - 1
+  // (the literal-additive fill+M+drain reading over-counts by N-1 cycles) —
+  // the three phases emerge from i = c - j + 1, active iff 1<=i<=M.
+  const totalCycles = M + N - 1;
+  const cycles = [];
+  let total = 0;
+  let bottleneckIndex = 0;
+  for (let k = 1; k < N; k++) {
+    if (doseTimes[k] > doseTimes[bottleneckIndex]) bottleneckIndex = k;
+  }
+  for (let c = 1; c <= totalCycles; c++) {
+    const activeStations = [];
+    for (let j = 1; j <= N; j++) {
+      const i = c - j + 1;
+      if (i >= 1 && i <= M) activeStations.push(j);
+    }
+    const activeTimes = activeStations.map(j => doseTimes[j - 1]);
+    const dispensePhase = activeTimes.length ? groupDispenseTime(activeTimes, K) : 0;
+    const cycleTime = dispensePhase + (activeTimes.length ? sampleShift : 0);
+    cycles.push({ cycle: c, activeStations, dispensePhase, cycleTime });
+    total += cycleTime;
+  }
+  total += numRackChanges * rackChangeSec; // flat additive overhead, doesn't interrupt the pipeline
+  const samplesPerHour = total > 0 ? (M / total) * 3600 : 0;
+  return {
+    cycles,
+    totalRunTime: total,
+    bottleneck: { index: bottleneckIndex, doseTime: doseTimes[bottleneckIndex] },
+    samplesPerHour
+  };
+}
+
+  function recompute() {
+    const warnings = [];
+
+    // ── Liquids (clamp volume>=0, never NaN) ──
+    const liquids = [];
+    for (let i = 0; i < liquidCount; i++) {
+      let v = parseFloat(document.getElementById('vol' + i).value);
+      if (isNaN(v) || v < 0) v = 0;
+      liquids.push(v);
+    }
+    const totalVolume = liquids.reduce((a, b) => a + b, 0);
+    const overDose = totalVolume >= 2000; // D-02
+
+    // ── Global flow params (clamp to sane minimums — Pitfall 4 / T-08-01) ──
+    let rollers = parseFloat(document.getElementById('rollers').value);
+    if (isNaN(rollers) || rollers < 1) { rollers = 1; warnings.push('Rollers clamped to a minimum of 1.'); }
+    let uLPerStroke = parseFloat(document.getElementById('uLPerStroke').value);
+    if (isNaN(uLPerStroke) || uLPerStroke <= 0) { uLPerStroke = 0.01; warnings.push('µL/stroke clamped to a small positive minimum.'); }
+    let rpm = parseFloat(document.getElementById('rpm').value);
+    if (isNaN(rpm) || rpm < 1) { rpm = 1; warnings.push('Pump speed clamped to a minimum of 1 RPM.'); }
+
+    // ── Concurrency slider (1..N) ──
+    const concKInput = document.getElementById('concK');
+    concKInput.max = liquidCount;
+    let K = parseInt(concKInput.value, 10);
+    if (isNaN(K) || K < 1) K = 1;
+    if (K > liquidCount) K = liquidCount;
+    concKInput.value = K;
+    setRangeFill(concKInput);
+    const concKV = document.getElementById('concKV');
+    if (concKV) concKV.textContent = K;
+    updateSliderEndpoints(liquidCount);
+
+    // Mode toggle is read for future use but is numerically inert at fixed K
+    // under global flow params (RESEARCH: A1/A2 lockstep-vs-independent math) —
+    // do NOT invent a lockstep penalty here; Plan 08-02 adds the teaching copy.
+    const mode = document.getElementById('mode').value;
+
+    // ── Engine ──
+    const doseTimes = computeDoseTimes(liquids, rollers, uLPerStroke, rpm);
+    const result = simulateSchedule(doseTimes, liquidCount, SAMPLES, K, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1);
+
+    window.__sim = { liquids, rollers, uLPerStroke, rpm, K, mode, doseTimes, result, overDose, totalVolume };
+
+    // ── D-02 total-dose warning ("show, don't hide" — outputs still computed) ──
+    const doseWarningEl = document.getElementById('doseWarning');
+    if (doseWarningEl) {
+      if (overDose) {
+        doseWarningEl.textContent = 'Total dose ' + totalVolume.toFixed(1) + ' µL has reached the 2000 µL line envelope — outputs below are still computed and shown.';
+        doseWarningEl.style.display = 'block';
+      } else {
+        doseWarningEl.textContent = '';
+        doseWarningEl.style.display = 'none';
+      }
+    }
+
+    // ── Degenerate-input warnings ──
+    const warningsEl = document.getElementById('warnings');
+    if (warningsEl) {
+      if (warnings.length) {
+        warningsEl.textContent = warnings.join(' ');
+        warningsEl.style.display = 'block';
+      } else {
+        warningsEl.textContent = '';
+        warningsEl.style.display = 'none';
+      }
+    }
+
+    // ── Metrics placeholder (Plan 08-02 replaces this with the four headline cards) ──
+    const metricsEl = document.getElementById('metrics');
+    if (metricsEl) {
+      metricsEl.textContent = 'Total run time: ' + result.totalRunTime.toFixed(2) + ' s';
+    }
+  }
+
+  ['rollers', 'uLPerStroke', 'rpm', 'concK'].forEach(id =>
+    document.getElementById(id).addEventListener('input', recompute));
+  for (let i = 0; i < 6; i++) {
+    document.getElementById('vol' + i).addEventListener('input', recompute);
+  }
+  document.getElementById('mode').addEventListener('change', recompute);
+
   renderConstantChips();
   updateLiquidRows();
+  recompute();
 </script>
 
 </body>
