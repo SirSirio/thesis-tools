@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 Phase: 08 (dispense-choreography-throughput-simulator-tool-interactive-) — EXECUTING
 Plan: 4 of 4
 Status: Phase complete — ready for verification
-Last activity: 2026-07-20 — Completed quick task 260720-l0e: Arduino Nano added as a design option (N2-nano-i2c/485) + missing-variant sweep
+Last activity: 2026-07-20 — Completed quick task 260720-pvc: confidence pills re-rated on the datasheet audit + OVERRUN rows dimmed/sunk + thesis-ready bibliography
 
 Progress: [█████████░] 93%
 
