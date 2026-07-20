@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dispense Choreography &amp; Throughput Simulator — Thesis Tools</title>
+<link rel="stylesheet" href="../../assets/style.css" />
+<style>
+  /* ── Tool page layout (rotor-solver / thesis-timeline precedent) ──── */
+  .tool-nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.82rem;
+  }
+  .tool-nav a {
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: letter-spacing 0.2s ease, color 0.2s ease;
+  }
+  .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
+  .tool-nav span { color: var(--text-muted); }
+
+  .tool-main {
+    position: relative;
+    z-index: 1;
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 60px 32px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .tool-header { margin-bottom: 8px; }
+  .tool-header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 16px 0 14px;
+    background: linear-gradient(130deg, #ffffff 35%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .tool-header p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    max-width: 720px;
+  }
+
+  /* ── Glass panel ─────────────────────────────────────────────── */
+  .glass-panel {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,107,43,0.15);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  .panel-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  /* ── Controls grid ───────────────────────────────────────────── */
+  .ctrl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px 28px;
+  }
+  .cg {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cg label {
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .cg .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cg .v {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 30px;
+    text-align: right;
+  }
+
+  .cg input[type=number] {
+    width: 90px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,107,43,0.25);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .cg input[type=number]:focus { border-color: var(--accent); }
+  .cg .unit {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  select {
+    font-size: 0.88rem;
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,107,43,0.25);
+    background: rgba(15,10,10,0.7);
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  select:focus { border-color: var(--accent); }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to right,
+      var(--accent) 0%,
+      var(--accent) var(--fill, 0%),
+      rgba(255,255,255,0.12) var(--fill, 0%),
+      rgba(255,255,255,0.12) 100%
+    );
+    outline: none;
+    cursor: pointer;
+    min-width: 80px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(255,107,43,0.55);
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.15s;
+  }
+  input[type=range]:hover::-webkit-slider-thumb {
+    box-shadow: 0 0 18px rgba(255,107,43,0.8);
+    transform: scale(1.15);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    box-shadow: 0 0 10px rgba(255,107,43,0.55);
+    cursor: pointer;
+  }
+
+  /* ── Liquids sub-panel ───────────────────────────────────────── */
+  .liquid-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .liquid-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .liquid-label {
+    font-size: 0.85rem;
+    color: var(--text);
+    min-width: 84px;
+  }
+  .liquid-row-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .btn-ghost {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,107,43,0.3);
+    background: rgba(255,107,43,0.08);
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+  }
+  .btn-ghost:hover:not(:disabled) { background: rgba(255,107,43,0.18); border-color: var(--accent); }
+  .btn-ghost:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── Concurrency slider endpoints ────────────────────────────── */
+  .slider-endpoints {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    gap: 12px;
+  }
+  .slider-endpoints span:last-child { text-align: right; }
+
+  /* ── Fixed-constant chips (D-08) ─────────────────────────────── */
+  .const-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .chip {
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 6px 14px;
+  }
+
+  /* ── Feasibility / warning states (rotor-solver "show don't hide" precedent) ── */
+  .warn-box {
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: #e8a020;
+    background: rgba(232,160,32,0.08);
+    border: 1px solid rgba(232,160,32,0.28);
+    border-radius: 10px;
+    padding: 10px 14px;
+    line-height: 1.6;
+  }
+  .ok { color: #3ecf8e; font-weight: 600; }
+  .no { color: #e85d5d; font-weight: 600; }
+  .warn { color: #e8a020; font-weight: 600; }
+
+  /* ── Metrics / Gantt / Rack animation placeholders (Plan 08-02) ── */
+  #metrics, #gantt, #rackAnim {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    min-height: 1.4em;
+  }
+
+  /* ── Responsive ───────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .tool-main { padding: 40px 16px 60px; }
+    .tool-nav { padding: 14px 16px; }
+    .glass-panel { padding: 20px 18px; }
+    .liquid-label { min-width: 70px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<nav class="tool-nav" aria-label="Breadcrumb">
+  <a href="../../index.html">← All tools</a>
+  <span>Dispense Choreography &amp; Throughput Simulator</span>
+</nav>
+
+<main class="tool-main">
+  <header class="tool-header animate-in" style="--delay: 0s;">
+    <span class="site-label">Design Tool &middot; Peristaltic Dispensing Line</span>
+    <h1>Dispense Choreography &amp; Throughput Simulator</h1>
+    <p>Configure a 6-nozzle linear indexing line that dispenses a liquid cocktail into a 32-sample rack
+      (8 samples &times; 4 racks), then sweep concurrency from fully serial (A1) to fully parallel (A2) to see
+      whether the pump architecture actually needs independent per-motor rates — the empirical answer to
+      <b>U5</b>.</p>
+  </header>
+
+  <section class="glass-panel animate-in" style="--delay: 0.12s;" id="configPanel">
+    <p class="panel-title">Configuration</p>
+
+    <div class="ctrl">
+      <div class="cg" style="grid-column: 1 / -1;">
+        <label>Liquids (up to 6, per-liquid volume in µL) — line length N = liquid count</label>
+        <div class="liquid-rows" id="liquidRows">
+          <div class="liquid-row" id="liquidRow0">
+            <span class="liquid-label">Liquid 1</span>
+            <input type="number" id="vol0" min="0" step="1" value="600" /> <span class="unit">µL</span>
+          </div>
+          <div class="liquid-row" id="liquidRow1">
+            <span class="liquid-label">Liquid 2</span>
+            <input type="number" id="vol1" min="0" step="1" value="200" /> <span class="unit">µL</span>
+          </div>
+          <div class="liquid-row" id="liquidRow2">
+            <span class="liquid-label">Liquid 3</span>
+            <input type="number" id="vol2" min="0" step="1" value="175" /> <span class="unit">µL</span>
+          </div>
+          <div class="liquid-row" id="liquidRow3">
+            <span class="liquid-label">Liquid 4</span>
+            <input type="number" id="vol3" min="0" step="1" value="25" /> <span class="unit">µL</span>
+          </div>
+          <div class="liquid-row" id="liquidRow4" style="display:none;">
+            <span class="liquid-label">Liquid 5</span>
+            <input type="number" id="vol4" min="0" step="1" value="100" /> <span class="unit">µL</span>
+          </div>
+          <div class="liquid-row" id="liquidRow5" style="display:none;">
+            <span class="liquid-label">Liquid 6</span>
+            <input type="number" id="vol5" min="0" step="1" value="100" /> <span class="unit">µL</span>
+          </div>
+        </div>
+        <div class="liquid-row-actions">
+          <button type="button" id="removeLiquidBtn" class="btn-ghost">&minus; Remove liquid</button>
+          <button type="button" id="addLiquidBtn" class="btn-ghost">+ Add liquid</button>
+        </div>
+        <div id="doseWarning" class="warn-box" style="display:none;"></div>
+      </div>
+
+      <div class="cg">
+        <label>Rollers</label>
+        <div class="input-row"><input type="number" id="rollers" min="1" step="1" value="4" /></div>
+      </div>
+      <div class="cg">
+        <label>&micro;L / stroke</label>
+        <div class="input-row"><input type="number" id="uLPerStroke" min="0.01" step="0.5" value="5" /></div>
+      </div>
+      <div class="cg">
+        <label>Pump speed</label>
+        <div class="input-row"><input type="number" id="rpm" min="1" step="1" value="180" /> <span class="unit">RPM</span></div>
+      </div>
+
+      <div class="cg" style="grid-column: 1 / -1;">
+        <label>Concurrency K (1 = serial &hellip; N = full parallel)</label>
+        <div class="input-row">
+          <input type="range" id="concK" min="1" max="4" step="1" value="1" />
+          <span class="v" id="concKV">1</span>
+        </div>
+        <div class="slider-endpoints">
+          <span id="concEndpointA1">1 = A1 (serial / shared bus)</span>
+          <span id="concEndpointA2">4 = A2 (full parallel)</span>
+        </div>
+      </div>
+
+      <div class="cg">
+        <label>Control mode</label>
+        <select id="mode">
+          <option value="a1">Lockstep / shared-bus (A1)</option>
+          <option value="a2">Independent-rate (A2)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="const-chips">
+      <span class="chip" id="chipSampleShift">Sample shift 1 s</span>
+      <span class="chip" id="chipRackChange">Rack change 5 s</span>
+      <span class="chip" id="chipRacks">4 racks</span>
+      <span class="chip" id="chipSamples">32 samples</span>
+    </div>
+    <div id="warnings" class="warn-box" style="display:none;"></div>
+  </section>
+
+  <section class="glass-panel animate-in" style="--delay: 0.22s;">
+    <p class="panel-title">Metrics</p>
+    <div id="metrics"></div>
+  </section>
+
+  <section class="glass-panel animate-in" style="--delay: 0.32s;">
+    <p class="panel-title">Timeline</p>
+    <div id="gantt"></div>
+  </section>
+
+  <section class="glass-panel animate-in" style="--delay: 0.37s;">
+    <p class="panel-title">Rack animation</p>
+    <div id="rackAnim"></div>
+  </section>
+</main>
+
+<script>
+  // ── Fixed timing constants (D-08) — declared at script scope, not user-editable ──
+  const SAMPLE_SHIFT = 1;   // seconds — sample-stage index-move time
+  const RACK_CHANGE   = 5;  // seconds — rack-change overhead per changeover
+  const RACKS         = 4;  // fixed rack count for the batch
+  const SAMPLES       = 32; // fixed total samples (8/rack x 4 racks)
+
+  // ── Liquid row count state (N = liquidCount, 1..6) ──
+  let liquidCount = 4;
+
+  function setRangeFill(el) {
+    const pct = ((+el.value - +el.min) / (+el.max - +el.min)) * 100;
+    el.style.setProperty('--fill', pct + '%');
+  }
+
+  function updateSliderEndpoints(n) {
+    const a1El = document.getElementById('concEndpointA1');
+    const a2El = document.getElementById('concEndpointA2');
+    if (a1El) a1El.textContent = '1 = A1 (serial / shared bus)';
+    if (a2El) a2El.textContent = n + ' = A2 (full parallel)';
+  }
+
+  function renderConstantChips() {
+    const shiftEl   = document.getElementById('chipSampleShift');
+    const rackEl    = document.getElementById('chipRackChange');
+    const racksEl   = document.getElementById('chipRacks');
+    const samplesEl = document.getElementById('chipSamples');
+    if (shiftEl)   shiftEl.textContent   = 'Sample shift ' + SAMPLE_SHIFT + ' s';
+    if (rackEl)    rackEl.textContent    = 'Rack change ' + RACK_CHANGE + ' s';
+    if (racksEl)   racksEl.textContent   = RACKS + ' racks';
+    if (samplesEl) samplesEl.textContent = SAMPLES + ' samples';
+  }
+
+  function updateLiquidRows() {
+    for (let i = 0; i < 6; i++) {
+      const row = document.getElementById('liquidRow' + i);
+      if (row) row.style.display = i < liquidCount ? '' : 'none';
+    }
+    const concKInput = document.getElementById('concK');
+    concKInput.max = liquidCount;
+    if (+concKInput.value > liquidCount) concKInput.value = liquidCount;
+    setRangeFill(concKInput);
+    const concKV = document.getElementById('concKV');
+    if (concKV) concKV.textContent = concKInput.value;
+    updateSliderEndpoints(liquidCount);
+    document.getElementById('addLiquidBtn').disabled = liquidCount >= 6;
+    document.getElementById('removeLiquidBtn').disabled = liquidCount <= 1;
+    if (typeof recompute === 'function') recompute();
+  }
+
+  document.getElementById('addLiquidBtn').addEventListener('click', () => {
+    if (liquidCount < 6) { liquidCount++; updateLiquidRows(); }
+  });
+  document.getElementById('removeLiquidBtn').addEventListener('click', () => {
+    if (liquidCount > 1) { liquidCount--; updateLiquidRows(); }
+  });
+
+  renderConstantChips();
+  updateLiquidRows();
+</script>
+
+</body>
+</html>
