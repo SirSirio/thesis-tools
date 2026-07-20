@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 Phase: 07 (thesis-showcase-landing-page) — EXECUTING
 Plan: 4 of 4
 Status: Phase complete — ready for verification
-Last activity: 2026-07-20 — Completed quick task 260720-a4x (architecture-explorer Phase 6.1 UI adjustments)
+Last activity: 2026-07-20 — Completed quick task 260720-msp (architecture-explorer microstepping pin control + pin-figure research round)
 
 Progress: [█████████░] 93%
 
@@ -174,6 +174,7 @@ Recent decisions affecting current work:
 | 2026-07-13 | prototype journey cards ride the curve (260713-o8z): `alignNodesToPath()` samples the real `.journey-path` (`getPointAtLength`, 240 pts) at load/resize and sets each `.proto-node`'s `left` so the card centre lands on the SVG S-curve at its own vertical middle — was a straight `left:50%` column. Clamped against stage overflow; clears inline `left` on mobile (≤640px static stack). Verified ≤1px centre-to-curve error at 929/1440px, no horizontal scroll | `prototypes/index.html`, `prototypes/SPEC.md` |
 | 2026-07-13 | proto-02 page restructure (20260713-proto-02-page-restructure): TOC card with auto-expanding links; collapsible version panels (design / v2.1 / v2.2, current open); head schematic rebuilt as hatched cross-section with CL + mirrored ghost + A–A locator inset; print-model intro (educated-guess framing) + annotated visual equation; figures repositioned + capped 540px; 0.085 mm play marked estimate; creep/DFM paragraph simplified (plastic = expedient, metal final) | `prototypes/index.html`, `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md` |
 | 2026-07-20 | architecture-explorer Phase 6.1 adjustments (260720-a4x): module-schema SVG font enlarged (titles 12.5→15, chips 9.5→12 with taller pills, barrier/legend 10→12) — verified no overflow; component-prices `<details>` boxed (glass card + hover cue) so it clearly reads as expandable; page-flow cleanup — divider pills renumbered to a consistent Part 1–4 spine and the per-variant diagram demoted to a muted "Selected-variant view" companion under the matrix, with more separation between top-level parts. Style tokens untouched | `tools/system-architecture-explorer/index.html`, `tools/system-architecture-explorer/SPEC.md` |
+| 2026-07-20 | architecture-explorer Microstepping pin control + research round (260720-msp): new **Pin budget → Microstepping** control (`msMode`, default `fixed`); `dynamic` adds +3 (shared M0/M1/M2 bus) only to brain-wired dumb drivers (S1-\*/D2-\*/ESPINT-dumb), smart/offloaded unaffected; OVERRUN readout now shows "by N" deficit. Research round verified all 8 pin figures vs primary sources — key correction: the model already assumed *fixed* microstepping, so the S1/D2 overrun is driven by 6-driver ENABLE/STEP-DIR fan-out, not microstepping. Default `fixed` reproduces every prior number | `tools/system-architecture-explorer/index.html`, `tools/system-architecture-explorer/SPEC.md`, `.planning/quick/260720-msp-microstepping-pin-control/` |
 
 ## Session Continuity
 
