@@ -460,17 +460,6 @@
     }
     .tool-card--wide .card-link { white-space: nowrap; }
 
-    /* Deliberate asymmetry for the merged 5-card Tools grid (D-04,
-       D-14): rather than let 5 cards fall into a 3+2 orphan row or
-       pad to a filler 6th card, the richest-scoped tool spans two
-       grid tracks so the grid reads as an intentional composition,
-       not a leftover. Reverts to a single column at 600px alongside
-       the rest of .tools-grid (assets/style.css). */
-    .tool-card--feature { grid-column: span 2; }
-    @media (max-width: 600px) {
-      .tool-card--feature { grid-column: span 1; }
-    }
-
     /* ── Scroll-triggered reveals (gated on .js) ────────────── */
     .js .reveal {
       opacity: 0;
@@ -647,7 +636,7 @@
 </div>
 <span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
 </a>
-<a href="tools/system-architecture-explorer/index.html" class="tool-card tool-card--feature reveal" style="--rd: 0.34s;">
+<a href="tools/system-architecture-explorer/index.html" class="tool-card reveal" style="--rd: 0.34s;">
 <div class="card-icon" aria-hidden="true">🔌</div>
 <div class="card-body">
 <h2 class="card-title" data-i18n="card-title-sysarch">System Architecture Explorer</h2>

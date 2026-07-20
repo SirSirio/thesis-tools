@@ -221,6 +221,24 @@
   }
   .slider-endpoints span:last-child { text-align: right; }
 
+  /* Concurrency K is the pivotal parameter — emphasise its label and keep the
+     slider itself short and centred so a small drag maps to a meaningful change. */
+  .cg-concurrency label {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+  .cg-concurrency .input-row,
+  .cg-concurrency .slider-endpoints {
+    max-width: 440px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cg-concurrency .input-row { padding-top: 4px; }
+
   /* ── Fixed-constant chips (D-08) ─────────────────────────────── */
   .const-chips {
     display: flex;
@@ -391,8 +409,16 @@
     0%   { transform: translateX(0); }
     100% { transform: translateX(var(--travel, -440px)); }
   }
+  /* Dispense pulse on the nozzle drops — one pulse per index step (0.75 s ×8 = 6 s),
+     so there is visible "liquid" activity synced to the rack indexing. */
+  .rack-drops ellipse { animation: drip 0.75s ease-in-out infinite; }
+  @keyframes drip {
+    0%, 100% { opacity: 0.25; }
+    45%      { opacity: 0.95; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .rack-track { animation: none; }
+    .rack-drops ellipse { animation: none; opacity: 0.85; }
   }
   .rack-caption {
     margin-top: 10px;
@@ -485,7 +511,7 @@
         <div class="input-row"><input type="number" id="rpm" min="1" step="1" value="180" /> <span class="unit">RPM</span></div>
       </div>
 
-      <div class="cg" style="grid-column: 1 / -1;">
+      <div class="cg cg-concurrency" style="grid-column: 1 / -1;">
         <label>Concurrency K (1 = serial &hellip; N = full parallel)</label>
         <div class="input-row">
           <input type="range" id="concK" min="1" max="4" step="1" value="1" />
@@ -503,10 +529,11 @@
           <option value="a1">Lockstep / shared-bus (A1)</option>
           <option value="a2">Independent-rate (A2)</option>
         </select>
-        <p class="mode-note" id="modeNote">Lockstep (A1) and independent (A2) take the same time here because every
-          pump is configured at the same rate — A1's real cost only appears when a protocol needs pumps at
-          genuinely different rates. The A1-vs-A2 verdict below always compares the concurrency slider's two
-          endpoints (K=1 vs K=N), independent of this toggle.</p>
+        <p class="mode-note" id="modeNote">Illustrative in v1: lockstep (A1) and independent (A2) take the same time
+          here because every pump shares one global rate, so a group always finishes with its slowest member. A2's
+          advantage only appears once pumps can run at genuinely different rates (a planned per-pump-rate mode,
+          editable under A2 and locked under A1). The <em>serial vs parallel</em> verdict below is set purely by the
+          concurrency slider's two endpoints (K=1 vs K=N) and is independent of this toggle.</p>
       </div>
     </div>
 
@@ -737,7 +764,7 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
       '<div class="summary">' +
         '<div class="mc"><div class="l">Total run time</div><div class="n">' + totalLabel + '</div><div class="sub">' + totalRaw + '</div></div>' +
         '<div class="mc"><div class="l">Bottleneck station</div><div class="n">' + bottleneckLabel + '</div><div class="sub">' + bottleneckSub + '</div></div>' +
-        '<div class="mc"><div class="l">A1 vs A2 delta</div><div class="n">' + deltaLabel + '</div><div class="sub">' + deltaSub + '</div></div>' +
+        '<div class="mc"><div class="l">Serial vs parallel (time saved)</div><div class="n">' + deltaLabel + '</div><div class="sub">' + deltaSub + '</div></div>' +
         '<div class="mc"><div class="l">Throughput (K=' + K + ')</div><div class="n">' + throughputLabel + '</div><div class="sub">' + throughputSub + '</div></div>' +
       '</div>';
   }
@@ -745,6 +772,11 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
   function wireGanttTooltips() {
     const tt = document.getElementById('ganttTip');
     if (!tt) return;
+    // The Gantt lives inside a .glass-panel whose backdrop-filter makes it the
+    // containing block for position:fixed descendants — that offsets the
+    // viewport-based clientX/clientY placement so the tip flies to the edge.
+    // Reparent the tip to <body> so fixed positioning is truly viewport-relative.
+    if (tt.parentNode !== document.body) document.body.appendChild(tt);
     function showTip(e) {
       const b = e.currentTarget;
       tt.innerHTML =
@@ -867,14 +899,22 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     let wellsSvg = '';
     for (let w = 0; w < totalWells; w++) {
       const x = marginX + w * wellSpacing;
-      wellsSvg += '<circle cx="' + x + '" cy="' + wellY + '" r="' + wellR + '" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.18)"/>';
+      // Colour each well by its position within one 8-well period. This keeps the
+      // steps(8) shift landing on an identically-coloured well (seamless loop) while
+      // making the indexing motion legible — identical grey circles slid by one
+      // spacing look static, which read as "the animation is broken". Illustrative
+      // only (the caption says so); wells are not tied to real dispensed volumes.
+      const c = LIQUID_COLORS[(w % periodWells) % LIQUID_COLORS.length];
+      wellsSvg += '<circle cx="' + x + '" cy="' + wellY + '" r="' + wellR +
+        '" fill="' + c.from + '" fill-opacity="0.4" stroke="' + c.to +
+        '" stroke-opacity="0.75" stroke-width="1.5"/>';
     }
 
     return '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrative rack-indexing schematic">' +
       defsSvg +
       '<g class="rack-track" style="--travel:-' + (periodWells * wellSpacing) + 'px">' + wellsSvg + '</g>' +
       '<line x1="' + (marginX - wellR - 8) + '" y1="' + wellY + '" x2="' + (width - marginX + wellR + 8) + '" y2="' + wellY + '" stroke="rgba(255,255,255,0.08)"/>' +
-      nozzlesSvg + dropsSvg +
+      nozzlesSvg + '<g class="rack-drops">' + dropsSvg + '</g>' +
       '</svg>';
   }
 
