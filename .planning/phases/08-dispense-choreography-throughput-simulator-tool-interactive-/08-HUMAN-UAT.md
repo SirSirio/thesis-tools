@@ -1,5 +1,5 @@
 ---
-status: partial
+status: passed
 phase: 08-dispense-choreography-throughput-simulator-tool-interactive-
 source: [08-VERIFICATION.md]
 started: 2026-07-20T00:00:00Z
@@ -8,7 +8,12 @@ updated: 2026-07-20T00:00:00Z
 
 ## Current Test
 
-[awaiting user re-confirmation of fixes to tests 4–6]
+[complete — user approved phase 8 on 2026-07-20 after multiple review iterations]
+
+Tests 1–4 and 6 confirmed by the user. Test 5 (rack animation) was iterated
+several times and shipped; a further refinement to the user's preferred K-tubes
+state model is captured as a follow-up todo (2026-07-20-dispense-sim-animation-
+k-tubes-state-model) rather than blocking the phase.
 
 ## Tests
 
