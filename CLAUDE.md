@@ -51,10 +51,13 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   │   ├── peristaltic_occlusion_model.html   Source prototype (unstyled) — do not serve
 │   │   ├── stadium_model_documentation.md     Source documentation
 │   │   └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
-│   └── system-architecture-explorer/
-│       ├── index.html      System Architecture Explorer — whole-device architecture page: six-module hardware schema, design-direction gallery, driver/MCU/bus variant matrix (promoted from prototypes/System-Architecture/)
-│       ├── SPEC.md         Tool spec — module schema, design directions, component prices, variant BOMs, comms-layer/power-rail model, assumptions
-│       └── PIN-BUDGET-ANALYSIS.md  Permanent pin-budget cross-check — per-hardware signal map, GPIO-count + peripheral-instance ceilings, every overrun variant worked pin-by-pin
+│   ├── system-architecture-explorer/
+│   │   ├── index.html      System Architecture Explorer — whole-device architecture page: six-module hardware schema, design-direction gallery, driver/MCU/bus variant matrix (promoted from prototypes/System-Architecture/)
+│   │   ├── SPEC.md         Tool spec — module schema, design directions, component prices, variant BOMs, comms-layer/power-rail model, assumptions
+│   │   └── PIN-BUDGET-ANALYSIS.md  Permanent pin-budget cross-check — per-hardware signal map, GPIO-count + peripheral-instance ceilings, every overrun variant worked pin-by-pin
+│   └── dispense-throughput-simulator/
+│       ├── index.html      Dispense Choreography & Throughput Simulator — configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line (32-sample rack); concurrency slider with A1/A2 endpoint markers, lockstep/independent mode toggle, row-per-station Gantt, bottleneck + A1-vs-A2 delta + throughput headline metrics, illustrative rack animation
+│       └── SPEC.md         Tool spec — liquid/flow inputs, scheduling formulas (dose-time, LPT grouping, fill/steady/drain cycle count), rack-change convention, benchmark, assumptions
 ├── prototypes/
 │   ├── index.html              Prototype Design Space — animated journey page
 │   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
