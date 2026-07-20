@@ -9,7 +9,7 @@ The site grows incrementally as the thesis generates new design decisions needin
 **Goal:** Ship a self-contained tool at `tools/dispense-throughput-simulator/` that schedules a 6-nozzle cocktail-pipeline indexing line (up to 6 liquids, 32-sample rack) at a chosen concurrency (1..N, A1 lockstep vs A2 independent endpoints) and reports total run time, a row-per-station Gantt with the bottleneck highlighted, and the A1-vs-A2 time-saved verdict — reproducing the pinned benchmark (serial 16.67 s/sample, pipelined ceiling 10 s, full totals 583.33 s @ K=1 vs 376.67 s @ K=4) to answer U5 (does the architecture need per-motor independent rates) empirically.
 **Requirements**: No formal REQ-IDs — the trackable set is CONTEXT.md decisions D-01…D-12 plus faithful benchmark reproduction.
 **Depends on:** Phase 7
-**Plans:** 1/4 plans executed
+**Plans:** 2/4 plans executed
 
 Plans:
 
@@ -19,7 +19,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — same file)*
 
-- [ ] 08-02-PLAN.md — Outputs & visualization: four D-11 metric cards, row-per-station steady-state Gantt (bottleneck highlight, no scroll), illustrative rack-indexing animation
+- [x] 08-02-PLAN.md — Outputs & visualization: four D-11 metric cards, row-per-station steady-state Gantt (bottleneck highlight, no scroll), illustrative rack-indexing animation
 
 **Wave 3** *(blocked on Wave 2; disjoint files, parallel)*
 

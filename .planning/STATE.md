@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-07-20T12:17:08.968Z"
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-07-20T12:30:26.604Z"
 last_activity: 2026-07-20
 progress:
   total_phases: 9
   completed_phases: 5
   total_plans: 32
-  completed_plans: 26
+  completed_plans: 27
   percent: 56
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 08 (dispense-choreography-throughput-simulator-tool-interactive-) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-20
 
@@ -71,6 +71,7 @@ Progress: [█████████░] 93%
 | Phase 07 P03 | 13min | 2 tasks | 1 files |
 | Phase 07 P04 | 15min | 3 tasks | 3 files |
 | Phase 08-dispense-choreography-throughput-simulator P01 | 12min | 2 tasks | 1 files |
+| Phase 08 P02 | 13min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -137,6 +138,9 @@ Recent decisions affecting current work:
 - [Phase ?]: 08-01: Adopted totalCycles = M + N - 1 (standard pipeline math) over the literal M + 2(N-1) reading of D-07's prose
 - [Phase ?]: 08-01: Mode toggle (a1/a2) wired but not applied as a numeric lockstep penalty at fixed K -- both modes are numerically identical under global flow params; Plan 08-02 owns the teaching copy
 - [Phase ?]: 08-01: LPT grouping (sort descending, chunk into groups of <=K, sum group maxima) resolves 1<K<N concurrency partitioning
+- [Phase 08-02]: 08-02: min-width Npx CSS converted to em units so the whole-file negative grep (added for the Gantt) doesn't false-positive on unrelated 08-01 slider/label affordances
+- [Phase 08-02]: 08-02: stationOffsetsForCycle() mirrors groupDispenseTime()'s LPT sort/chunk rule to expose per-station Gantt-bar offsets without touching the engine
+- [Phase 08-02]: 08-02: Tasks 1-3 committed as one commit (68f4368) since metrics/Gantt/rack-anim CSS and recompute() wiring were implemented as one coherent, tightly-coupled edit pass
 
 ### Pending Todos
 
@@ -187,7 +191,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-20T12:17:08.957Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-07-20T12:30:26.594Z
+Stopped at: Completed 08-02-PLAN.md
 Resume file: 
 None
