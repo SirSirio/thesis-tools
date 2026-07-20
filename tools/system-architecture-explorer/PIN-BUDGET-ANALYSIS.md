@@ -23,7 +23,7 @@ column and a **Peripheral controllers** line in every expanded row.
 ```
 pins_used = screen(A) + sensors + bus(B) + drivers(C) + microstep + vibration
 fits when: pins_used ≤ usable_GPIO
-usable_GPIO: bare ESP32 = 15 · integrated 2.4" (espscreen) = 9 · integrated 3.2" (espscreen32) = 3
+usable_GPIO: bare ESP32 (DOIT 30-pin) = 16 · integrated 2.4" (ESP32-2432S024) = 3 · integrated 3.2" (ESP32-2432S032R) = 3   [per-brain, audited 2026-07-20]
 ```
 
 | Term | Pins | Source of the number |
@@ -39,20 +39,21 @@ usable_GPIO: bare ESP32 = 15 · integrated 2.4" (espscreen) = 9 · integrated 3.
 
 ## 2. Ceiling #1 — usable GPIO (what the tool computes)
 
-`esp32.gpioUsable = 15` is the conservative end of the realistic range for an ESP32-WROOM-32:
+`esp32.gpioUsable = 16` is the audited safe-output count for the DOIT 30-pin ESP32-WROOM-32:
 
 - 33 GPIO exist on the module, but **6–11 are the SPI flash** (gone) and **34/35/36/39 are
   input-only** (no output, no pull-up).
-- The safe, output-capable, non-strapping set is GPIO 4, 13, 14, 16, 17, 18, 19, 21, 22, 23, 25,
-  26, 27, 32, 33 ≈ **15**. (GPIO 5 is output-capable but a strapping pin, so it is excluded to be
-  safe; including it and the more delicate strapping pins 0/2/12/15 would reach ~18–20.)
+- The safe, output-capable set is GPIO 4, 5, 13, 14, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32,
+  33 = **16** (GPIO5 is a strapping pin but reliable as an output; TX0/RX0 excluded). The more
+  delicate strapping pins 0/2/12/15 would push it to ~18–20 if used with care.
 - Input-only pins are **not wasted** — a touch-IRQ, a driver FAULT line, or an ADC1 probe can live
   on them. But STEP/DIR/EN/CS outputs cannot, which is why the usable count for *this* system (heavy
   on outputs) sits at the low end.
 
-Integrated boards: `espscreen` (2.4") exposes **9** free IO after its onboard display/touch/SD;
-`espscreen32` (3.2") exposes only **3** — enough to be a pure brain over a 2-pin I²C link, never to
-fuse pump control.
+Integrated boards: `espscreen` (2.4″, ESP32-2432S024) exposes only **3** free GPIO (21/22/35, 35
+input-only) after its onboard display/touch/SD — corrected 2026-07-20 from an erroneous 9; `espscreen32`
+(3.2″) exposes **3** (22/27/35). Both are enough only to be a pure brain over a 2-pin I²C link, never
+to fuse pump control.
 
 ---
 
@@ -93,14 +94,15 @@ pins less than the tool shows. Documented as pessimistic-safe, not corrected.
 
 | Variant | screen | sensors | bus | drivers | vib | **used** | usable | **deficit** | Dominant cause |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
-| **S1-i2c** | 8 | 0 | 2 | 8 | 1 | **19** | 15 | **+4** | 6×ENABLE driver fan-out |
-| **S1-485** | 8 | 2 | 3 | 8 | 1 | **22** | 15 | **+7** | driver fan-out + RS-485 + dedicated sensor I²C |
-| **D2-i2c** | 8 | 0 | 2 | 12 | 1 | **23** | 15 | **+8** | per-motor STEP/DIR ×6 |
-| **D2-485** | 8 | 2 | 3 | 12 | 1 | **26** | 15 | **+11** | per-motor STEP/DIR + RS-485 + sensor I²C |
-| **T9-fused-485** | 8 | 2 | 3 | 4 | 1 | **18** | 15 | **+3** | external screen (8) + RS-485 + sensor I²C — *plus* the UART-instance trap in §3 |
-| **T51-485** | 8 | 2 | 3 | 4 | 1 | **18** | 15 | **+3** | same shape as T9-485 (TMC5160 SPI driver) |
-| **T51-72-485** | 8 | 2 | 3 | 4 | 1 | **18** | 15 | **+3** | same shape (3× TMC5072) |
-| **ESPINT-dumb-i2c** | 0 | 0 | 2 | 8 | 1 | **11** | 9 | **+2** | driver fan-out on a 9-IO integrated board |
+| **S1-i2c** | 8 | 0 | 2 | 8 | 1 | **19** | 16 | **+3** | 6×ENABLE driver fan-out |
+| **S1-485** | 8 | 2 | 3 | 8 | 1 | **22** | 16 | **+6** | driver fan-out + RS-485 + dedicated sensor I²C |
+| **D2-i2c** | 8 | 0 | 2 | 12 | 1 | **23** | 16 | **+7** | per-motor STEP/DIR ×6 |
+| **D2-485** | 8 | 2 | 3 | 12 | 1 | **26** | 16 | **+10** | per-motor STEP/DIR + RS-485 + sensor I²C |
+| **T9-fused-485** | 8 | 2 | 3 | 4 | 1 | **18** | 16 | **+2** | external screen (8) + RS-485 + sensor I²C — *plus* the UART-instance trap in §3 |
+| **T51-485** | 8 | 2 | 3 | 4 | 1 | **18** | 16 | **+2** | same shape as T9-485 (TMC5160 SPI driver) |
+| **T51-72-485** | 8 | 2 | 3 | 4 | 1 | **18** | 16 | **+2** | same shape (3× TMC5072) |
+| **ESPINT-fused-i2c** | 0 | 0 | 2 | 4 | 1 | **7** | 3 | **+4** | 3-free-pin integrated board can't fuse — even a smart driver overruns |
+| **ESPINT-dumb-i2c** | 0 | 0 | 2 | 8 | 1 | **11** | 3 | **+8** | driver fan-out on a 3-free-pin integrated board |
 
 **Reading the two failure families:**
 
@@ -108,16 +110,19 @@ pins less than the tool shows. Documented as pessimistic-safe, not corrected.
    STEP/DIR/ENABLE out to six physical DRV8825s. Fixed vs dynamic microstepping barely moves this;
    the fix is a smart driver (self-steps over 4 shared UART pins) or offloading to a pump node.
 2. **Smart/motion + RS-485 on a bare ESP32 (T9-485, T51-485):** here the driver is cheap (4), but
-   **external screen (8) + RS-485 (3) + a dedicated sensor I²C (2)** tip an 18 over 15. Every one of
-   these has an I²C-bus sibling that fits (`T9-fused-i2c` = 15) or an integrated-board sibling
-   (`ESPINT-fused-i2c` = 7 used, 2 free) that fits — the overrun is specifically the
-   *external-screen + RS-485* pairing, not the driver.
+   **external screen (8) + RS-485 (3) + a dedicated sensor I²C (2)** tip an 18 over 16. The fix is the
+   I²C-bus sibling (`T9-fused-i2c` = 15/16, 1 free) — the overrun is specifically the *external-screen
+   + RS-485* pairing, not the driver. (An integrated board is **not** an escape here: with only 3 free
+   pins it can't host RS-485 + drivers at all — it can only be a pure I²C brain.)
 
-**Variants that fit (for contrast):** `T9-fused-i2c` (15/15, 0 free), `ESPINT-fused-i2c` (2 free),
-`P6-rp-i2c` (4 free — RP2040 node absorbs all driver wiring), `N2-nano-i2c` (**11/15, 4 free**) and
-`N2-nano-485` (**14/15, 1 free**) — a single Arduino Nano node absorbs the DRV8825 fan-out at
-2-concurrent — all printer-board rows (sockets absorb it), and the distributed rows (per-pump nodes).
-The pattern: **fitting means the six-driver fan-out is paid by something other than the brain.**
+**Variants that fit (for contrast):** `T9-fused-i2c` (15/16, 1 free), `ESPINT32-brain-i2c` (3/3, 0
+free — 3.2″ integrated board as a *pure brain* over I²C), `P6-rp-i2c` (RP2040 node absorbs all driver
+wiring), `N2-nano-i2c` (**11/16, 5 free**) and `N2-nano-485` (**14/16, 2 free**) — a single Arduino
+Nano node absorbs the DRV8825 fan-out at 2-concurrent — all printer-board rows (sockets absorb it),
+and the distributed rows (per-pump nodes). The pattern: **fitting means the six-driver fan-out is paid
+by something other than the brain** — and, for the integrated boards, that the brain does *nothing but*
+talk I²C to that something. (`ESPINT-fused-i2c` no longer fits — see the table above; the 3-free-pin
+board cannot fuse.)
 
 ### The Nano-node DRV8825 rows (`N2-nano-*`) — worked
 
@@ -208,7 +213,9 @@ reference. "MCU pins" = signals the ESP32 must actually spend (shared SPI/I²C l
 
 | Component | Role | MCU-side signals | Pins | Tool figure | Verdict |
 |---|---|---|---|---|---|
-| **ESP32-WROOM-32** (DOIT DevKit v1, **30-pin**) | brain | — | 25 GPIO broken out; **4 input-only** (34/35/36/39), **5 strapping** (0/2/5/12/15), flash 6–11 not exposed → **≈16 safe output pins** | `gpioUsable 15` | ✅ **verified, conservative** — 15 = ~16 safe outputs − 1 for the TX0/RX0 console |
+| **ESP32-WROOM-32** (DOIT DevKit v1, **30-pin**) | brain | — | 25 GPIO broken out; **4 input-only** (34/35/36/39), **5 strapping** (0/2/5/12/15), flash 6–11 not exposed → **16 safe output pins** | `gpioUsable 16` | ✅ **verified** — 16 = the safe output-capable set (GPIO5 the one strapping pin kept) |
+| **ESP32-2432S024** (2.4″ CYD, integrated) | brain+screen | — | only **3** GPIO broken out: 21, 22, 35 (35 input-only, 21 = backlight) | `gpioUsable 3` (was 9) | ✅ **verified, corrected** — onboard screen consumes the rest; pure-brain-over-I²C only |
+| **ESP32-2432S032R** (3.2″ CYD, integrated) | brain+screen | — | only **3** GPIO free: 22, 27, 35 (35 input-only) | `gpioUsable 3` | ✅ **verified** — pure-brain-over-I²C only |
 | **ILI9341 + XPT2046** (owned 3.2″ SPI TFT+touch) | screen (A) | SCK·MOSI·MISO (shared bus) + CS·DC·RST + T_CS·T_IRQ | **8** (min **6** if RST tied to reset & T_IRQ polled) | `SCREEN_PINS.spi 8` | ✅ **verified, conservative**; SCK/MOSI/MISO are a shareable SPI bus |
 | **LM75(A)** temp sensor | sensors | SDA·SCL (+ OS unused) | 0 (shares I²C) | `sensors 0/+2` | ✅ **verified** — addr **0x48** (A0–A2=GND) |
 | **MPR121** touch/level | sensors | SDA·SCL (+ IRQ optional) | 0 (shares LM75's I²C) | `sensors +0` | ✅ **verified** — addr **0x5A**, no clash with 0x48 |
@@ -226,8 +233,9 @@ inputs could reasonably be re-rated:
 
 - `BUS_PINS` (I²C 2 / RS-485 3 / CAN 4) — MAX485 and MCP2515 confirmed → the Layer-B assumption is
   now **verified** (CAN conservatively high).
-- `esp32.gpioUsable = 15` — confirmed against the specific DOIT 30-pin board (~16 safe outputs) →
-  `gpioConf` could move Medium → **High**.
+- `esp32.gpioUsable` — set to the audited **16** (safe output-capable set on the DOIT 30-pin);
+  `gpioConf` raised Medium → **High**. Integrated boards corrected to their audited free-GPIO counts
+  (2.4″ 9→3, 3.2″ 3), which makes the fused-on-integrated variants correctly overrun.
 - The remaining genuine unknown keeping any single count at Medium is **TMC2209 single-wire UART**
   (Open Q#2) and the fact that no variant has had a *full physical pin-assignment* built yet.
 
@@ -240,13 +248,19 @@ honestly reflecting their one open figure.
 **The GPIO ceiling is per-brain, not a global number.** The feasibility gate is `brain.gpioUsable`
 for whichever brain the row actually uses — it is already MCU-specific:
 
-| Brain (the row's controller) | Ceiling | Basis |
+| Brain (the row's controller) | Ceiling | Basis (audited 2026-07-20) |
 |---|:--:|---|
-| Bare ESP32 (DOIT DevKit v1, 30-pin) | **15** | 25 GPIO exposed − 4 input-only − 5 strapping ≈ 16 safe outputs; 15 = conservative floor (console freed) |
-| Integrated 2.4″ (ESP32-2432S024) | **9** | free IO after the onboard display/touch/SD |
-| Integrated 3.2″ (ESP32-2432S032R) | **3** | only GPIO 22, 27, 35 free after onboard peripherals |
+| Bare ESP32 (DOIT DevKit v1, 30-pin) | **16** | the safe output-capable set: GPIO 4,5,13,14,16–19,21–23,25–27,32,33 (25 exposed − flash 6–11 − input-only 34–39 − TX0/RX0; GPIO5 the one strapping pin kept). ~20 if 0/2/12/15 used with care |
+| Integrated 2.4″ (ESP32-2432S024) | **3** | only GPIO 21, 22, 35 broken out (35 input-only, 21 = backlight) → ~1–2 usable outputs. Corrected from an erroneous 9 |
+| Integrated 3.2″ (ESP32-2432S032R) | **3** | only GPIO 22, 27, 35 free after onboard display/touch/SD (35 input-only) |
 
-Every *bare-ESP32* row shares 15 because they genuinely use the **same** brain — that is correct, not
+Both integrated boards land at **3** free pins — only enough to be a *pure brain over a 2-pin I²C bus*
+to a separate pump controller; **neither can fuse pump control** (ESPINT-fused-i2c overruns). This is
+the direct consequence of the onboard screen already consuming almost every GPIO — and because you
+never attach a *second* screen, the external-screen Layer-A cost is **0** for these boards, which the
+model already reflects (`Screen (A) = 0` for integrated brains).
+
+Every *bare-ESP32* row shares 16 because they genuinely use the **same** brain — that is correct, not
 a shortcut. **Node MCUs (RP2040/STM32/Pro-Mini) never enter this ceiling:** the budget measures the
 *brain's* pins, and the node is exactly what offloads the driver wiring off the brain (`pinsC → 0`).
 The node's own pin budget (does an RP2040 have enough pins for 6 DRV8825s? — yes, 26 GPIO) is a
@@ -307,6 +321,12 @@ noted. All accessed **20 July 2026**.
      Reference: Which GPIO pins should you use?" [Online]. Available:
      https://randomnerdtutorials.com/esp32-doit-devkit-v1-board-pinout-30-gpios-copy/ ·
      https://randomnerdtutorials.com/esp32-pinout-reference-gpios/
+
+[10a] espboards.dev, "CYD ESP32-2432S024 Development Board Pinout" (2.4″ — 3 free GPIO: 21/22/35);
+      Random Nerd Tutorials / ESP32s.com, "Cheap Yellow Display (CYD) Pinout" (2.8″/3.2″ — free
+      GPIO 22/27/35, 35 input-only). [Online]. Available:
+      https://www.espboards.dev/esp32/cyd-esp32-2432s024/ ·
+      https://randomnerdtutorials.com/esp32-cheap-yellow-display-cyd-pinout-esp32-2432s028r/
 
 [11] Espressif Systems, "GPIO Matrix and Pin Mux — Arduino-ESP32 documentation." [Online]. Available:
      https://docs.espressif.com/projects/arduino-esp32/en/latest/tutorials/io_mux.html

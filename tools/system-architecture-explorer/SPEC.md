@@ -255,7 +255,7 @@ confidence), and a `uiNote` describing GUI-fluidity implications:
 | STM32 Blue Pill | 30 | Medium | 20 KB SRAM | None | 20 KB is tight beyond step generation, but this MCU never drives the screen — non-issue for GUI fluidity |
 | Arduino Pro-Mini | 18 | Medium | 2 KB SRAM | None | Not a brain candidate — per-pump-node role only, never drives the screen |
 | Arduino Nano | 18 | Medium | 2 KB SRAM | None | Alignment node, or a ≤2-concurrent DRV8825 pump node (`N2-nano-*`, capped by its 2 hardware timers) — never drives the screen |
-| ESP32-2432S024 (integrated) | 9 | **High** | 520 KB SRAM | None (32 Mbit flash) | No PSRAM: single-buffered UI comfortable. Integrated display eliminates all Layer-A wiring — the 9 free IO already accounts for the onboard screen + touch |
+| ESP32-2432S024 (2.4" integrated) | 3 | **High** | 520 KB SRAM | None (32 Mbit flash) | Only 3 free GPIO (21, 22, 35 — 35 input-only, 21 backlight) after the onboard display/touch/SD; corrected 2026-07-20 from an erroneous 9. Integrated display costs 0 extra Layer-A pins (no second screen). Like the 3.2" board, realistically a pure brain over I²C only — cannot fuse pump control |
 | ESP32-2432S032R (3.2" integrated) | 3 | **High** | 520 KB SRAM | None (4 MB flash) | Only 3 free GPIO (22, 27, 35-input-only) after the onboard display/touch/SD. Can ONLY be a pure brain over a 2-pin I²C bus to a separate pump controller — cannot fuse pump control. Same 240×320 as the owned screen; ST7789 not ILI9341 (cosmetic under LVGL) |
 
 **Framebuffer arithmetic (once, per 06-RESEARCH.md):** 320×240 @ 16-bit colour ≈ 150 KB; a
@@ -300,10 +300,13 @@ Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · La
 | **ESPINT-dumb-i2c** | 1 | DRV8825 | I²C | STEP/DIR shared+EN | ★☆☆☆☆ | espscreen, drv8825×6, carrier, psu60 |
 | **ESPINT32-brain-i2c** | 6 | DRV8825 | I²C | STEP/DIR ×6 (on node) | ★★★☆☆ | espscreen32, rp2040, drv8825×6, carrier, psu150 |
 
-The `ESPINT-*` rows are the integrated-screen variants added under D-10. `ESPINT-fused-i2c` and
-`ESPINT-dumb-i2c` (bitbyg ESP32-2432S024, 2.4", 9 free IO) are a deliberate contrast pair:
-the fused smart-driver build fits the 9 free IO, the dumb build does **not** even at single
-concurrency — both shown rather than cherry-picking the flattering pairing, per D-11's honesty.
+The `ESPINT-*` rows are the integrated-screen variants added under D-10. On the corrected pin count
+(ESP32-2432S024 = **3** free GPIO, audited 2026-07-20), **neither** `ESPINT-fused-i2c` nor
+`ESPINT-dumb-i2c` fits — both overrun, because a 3-free-pin board cannot fuse pump control at all
+(the onboard screen has already consumed almost every GPIO). This is the honest result: the 2.4"
+and 3.2" integrated boards are viable **only** as a pure brain over a 2-pin I²C bus to a separate
+pump node (e.g. `ESPINT32-brain-i2c`, which fits at 3). The earlier "fused smart build fits the 9
+free IO" framing was based on the over-estimated 9 and no longer holds.
 
 `ESPINT32-brain-i2c` adds the **3.2" integrated board (ESP32-2432S032R)** — the size/resolution
 match to the owned screen. Its defining constraint is **only 3 free GPIO**: it spends 2 on the
@@ -478,12 +481,14 @@ SPI verified; external-screen variants only), and the brain's own `gpioConf` (**
 after the 2026-07-20 DOIT 30-pin audit). Net effect: most rows read High; the fused-TMC2209-on-brain
 rows read Medium, honestly reflecting their one open figure.
 
-`esp32.gpioUsable = 15` is a **per-brain** ceiling (`brain.gpioUsable` — bare ESP32 15, integrated
-2.4″ 9, integrated 3.2″ 3; the ceiling is keyed to whichever brain the variant uses, never a global
-constant). The `15` is a deliberately conservative floor: the DOIT 30-pin audit found ~16 safe
-output pins (up to ~20 using strapping pins with care), so a bare-ESP32 variant reading "OVERRUN by
-1–2" may still be buildable. Kept at 15 pending a decision to raise it to the audited 16 or expose a
-strict/with-strapping toggle. Full per-component audit + bibliography: `PIN-BUDGET-ANALYSIS.md` §7.
+The ceiling is **per-brain**, not a global constant — `brain.gpioUsable`, keyed to whichever brain the
+variant uses, each set to its **audited** free-GPIO count (2026-07-20): bare ESP32 (DOIT 30-pin) =
+**16** (the safe output-capable set), integrated 2.4″ (ESP32-2432S024) = **3** (corrected from an
+erroneous 9), integrated 3.2″ (ESP32-2432S032R) = **3**. Both integrated boards land at 3 because the
+onboard screen already consumes almost every GPIO — the direct, correct expression of "the screen took
+the pins" — so they can only be pure brains over a 2-pin I²C bus (`Screen (A) = 0`, since no second
+screen is attached). Bare-ESP32 headroom extends to ~20 if the delicate strapping pins are used with
+care. Full per-component audit + bibliography: `PIN-BUDGET-ANALYSIS.md` §7.
 
 ---
 
