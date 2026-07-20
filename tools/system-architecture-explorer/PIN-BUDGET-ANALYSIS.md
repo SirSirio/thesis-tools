@@ -5,6 +5,13 @@ This is the permanent, checkable record of *why* each variant fits or overruns, 
 signal map every pin figure is fetched from, and the deeper peripheral-instance limit a raw pin
 **count** cannot see. Last verified **2026-07-20**.
 
+> **Verification log — 2026-07-20:** a full **component-by-component datasheet pinout audit** was
+> completed (§7 below). Every pin figure in the tool was cross-checked against the manufacturer
+> datasheet / module reference for each part (ESP32 DOIT DevKit v1 30-pin, ILI9341+XPT2046, LM75,
+> MPR121, MAX485, MCP2515, DRV8825, TMC2209, TMC5160, IRF520). **Result: no figure is wrong;
+> several are deliberately conservative** (screen 8 could be 6; CAN 4 could be 2 on a shared SPI
+> bus). This is what the confidence pill's inputs should now be re-rated against — see §7's closing note.
+
 The tool computes **both** ceilings: `pinsOf(v)` the GPIO count (#1), and `periphOf(v)` the
 hardware-controller demand (#2). Ceiling #2 is flagged per-row — a ⚠ UART 3/3 pill on the pin
 column and a **Peripheral controllers** line in every expanded row.
@@ -160,6 +167,41 @@ for this system**:
 
 ---
 
+## 7. Component pinout audit (datasheet-verified 2026-07-20)
+
+Every component that contributes to the pin budget, checked against its datasheet / module
+reference. "MCU pins" = signals the ESP32 must actually spend (shared SPI/I²C lines counted once).
+
+| Component | Role | MCU-side signals | Pins | Tool figure | Verdict |
+|---|---|---|---|---|---|
+| **ESP32-WROOM-32** (DOIT DevKit v1, **30-pin**) | brain | — | 25 GPIO broken out; **4 input-only** (34/35/36/39), **5 strapping** (0/2/5/12/15), flash 6–11 not exposed → **≈16 safe output pins** | `gpioUsable 15` | ✅ **verified, conservative** — 15 = ~16 safe outputs − 1 for the TX0/RX0 console |
+| **ILI9341 + XPT2046** (owned 3.2″ SPI TFT+touch) | screen (A) | SCK·MOSI·MISO (shared bus) + CS·DC·RST + T_CS·T_IRQ | **8** (min **6** if RST tied to reset & T_IRQ polled) | `SCREEN_PINS.spi 8` | ✅ **verified, conservative**; SCK/MOSI/MISO are a shareable SPI bus |
+| **LM75(A)** temp sensor | sensors | SDA·SCL (+ OS unused) | 0 (shares I²C) | `sensors 0/+2` | ✅ **verified** — addr **0x48** (A0–A2=GND) |
+| **MPR121** touch/level | sensors | SDA·SCL (+ IRQ optional) | 0 (shares LM75's I²C) | `sensors +0` | ✅ **verified** — addr **0x5A**, no clash with 0x48 |
+| **MAX485** RS-485 transceiver | bus (B) | RO→RX · DI→TX · DE+RE (tied) | **3** | `BUS_PINS['RS-485'] 3` | ✅ **verified, exact** |
+| **MCP2515** CAN controller | bus (B) | SCK·SI·SO (shared SPI) + CS + INT | **4** standalone / **2** if SPI shared | `BUS_PINS['CAN'] 4` | ✅ **verified, conservative** — 4 assumes a private SPI bus; sharing the screen's → CS+INT = 2 |
+| **DRV8825** dumb driver | drivers (C) | STEP·DIR·EN (M0/M1/M2 jumpered, RST/SLP tied) | 3/motor + shared; S1 = 8, D2 = 12 | `pinsC 8 / 12` | ✅ **verified** — microstep jumpered = 0 MCU pins (matches the Microstepping control) |
+| **TMC2209** smart driver | drivers (C) | PDN_UART (1-wire, ≤4/line via MS1/MS2 addr) | 2/line → 6 drivers = **4** | `pinsC 4` | ✅ **verified**; single-wire half-duplex could halve it (SPEC Open Q#2) |
+| **TMC5160 / TMC5072** motion driver | drivers (C) | SCK·SDI·SDO (shared) + CSN, daisy-chain | **4** | `pinsC 4 (T51-*)` | ✅ **verified** — SPI motion mode, chainable |
+| **IRF520** MOSFET module | vibration | SIG (PWM); VCC optional | **1** | `+1 vibration` | ✅ **verified, exact** |
+
+**What the audit changes:** nothing in the arithmetic — every figure held. What it changes is the
+**basis of confidence**. Before today the Layer-B/Layer-C figures and the GPIO ceiling were tagged
+`Medium (ASSUMED — standard wiring)`; they are now **datasheet-sourced**. On that basis the pill's
+inputs could reasonably be re-rated:
+
+- `BUS_PINS` (I²C 2 / RS-485 3 / CAN 4) — MAX485 and MCP2515 confirmed → the Layer-B assumption is
+  now **verified** (CAN conservatively high).
+- `esp32.gpioUsable = 15` — confirmed against the specific DOIT 30-pin board (~16 safe outputs) →
+  `gpioConf` could move Medium → **High**.
+- The remaining genuine unknown keeping any single count at Medium is **TMC2209 single-wire UART**
+  (Open Q#2) and the fact that no variant has had a *full physical pin-assignment* built yet.
+
+Re-rating the tool's confidence pills to reflect this audit is a **separate edit, not yet made** —
+it changes displayed verdicts, so it awaits sign-off.
+
+---
+
 ## Sources
 
 - [ESP32 GPIO matrix & pin mux — Espressif/Arduino-ESP32 docs](https://docs.espressif.com/projects/arduino-esp32/en/latest/tutorials/io_mux.html)
@@ -168,3 +210,14 @@ for this system**:
 - [Why avoid ADC2 with Wi-Fi — ESP-IDF ADC docs](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/adc.html)
 - [TMC2209 ≤4 drivers per UART line — janelia-arduino/TMC2209](https://github.com/janelia-arduino/TMC2209)
 - In-repo: `06-RESEARCH.md` §pin-budget (S1 = 2 shared STEP/DIR + 6×ENABLE = 8) · `SPEC.md` §Pin-budget model
+
+**Component pinout audit sources (§7, 2026-07-20):**
+- [DOIT ESP32 DevKit v1 30-pin pinout — CIRCUITSTATE](https://www.circuitstate.com/pinouts/doit-esp32-devkit-v1-wifi-development-board-pinout-diagram-and-reference/) · [Random Nerd Tutorials 30-GPIO](https://randomnerdtutorials.com/esp32-doit-devkit-v1-board-pinout-30-gpios-copy/)
+- [ILI9341 + XPT2046 SPI wiring — ControllersTech](https://controllerstech.com/ili9341-arduino-touchscreen-tutorial/) · [Bodmer/TFT_eSPI](https://github.com/Bodmer/TFT_eSPI)
+- [LM75A datasheet — NXP](https://www.nxp.com/docs/en/data-sheet/LM75A.pdf)
+- [MPR121 datasheet — NXP/Freescale](https://www.nxp.com/docs/en/fact-sheet/MPR121FS.pdf)
+- [MAX485 datasheet — Analog Devices/Maxim](https://dratek.cz/docs/produkty/1/1075/max485.pdf)
+- [MCP2515 datasheet — Microchip](https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Controller-with-SPI-20001801J.pdf)
+- [DRV8825 datasheet — Texas Instruments](https://www.ti.com/lit/ds/symlink/drv8825.pdf)
+- [TMC5160 datasheet — Analog Devices](https://www.analog.com/media/en/technical-documentation/data-sheets/TMC5160A_datasheet_rev1.17.pdf)
+- [IRF520 MOSFET module reference — ProtoSupplies](https://protosupplies.com/product/irf520-n-ch-mosfet-module/)
