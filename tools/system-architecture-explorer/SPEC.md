@@ -9,7 +9,7 @@
 ## Purpose
 
 Prices and compares the pump-system control electronics — which brain (MCU), which stepper
-driver, and which system bus — across 20 candidate architectures ("variants"). For each variant
+driver, and which system bus — across 22 candidate architectures ("variants"). For each variant
 it computes: total cost (editable component prices, live), a design-complexity rating, a
 pin-budget feasibility check against the brain's usable GPIO, and a live SVG system diagram
 showing the three communication layers and the power block. It is the promoted, canonical version
@@ -76,7 +76,7 @@ flow-rate-through-viscosity change, not container-volume change.
 
 ## Design directions (D-06/D-07/D-08/D-09/D-10)
 
-Between the module schema and the theory section, a four-card gallery groups the 20 variants into
+Between the module schema and the theory section, a four-card gallery groups the 22 variants into
 four curated "device personalities." Each direction is **derived**, not stored — `directionOf(v)`
 classifies a variant from its existing `topoClassOf(v)` (fused/satellite/distributed/printer) and
 `intBrainKey(v)` (integrated-screen board or not) fields, so a future variant added to `VARIANTS`
@@ -87,9 +87,9 @@ is classified automatically with no new per-variant field to remember to set.
 | `modular` | Distributed Modules | `topoClassOf(v) === 'distributed'` | `P6-dist-485`, `P6-dist-can` (2) |
 | `allinone` | All-in-One | integrated-screen board AND `topoClassOf(v) === 'fused'` | `ESPINT-fused-i2c`, `ESPINT-dumb-i2c` (2) |
 | `console` | Console | discrete screen AND `topoClassOf(v) === 'fused'` | `S1-i2c`, `S1-485`, `D2-i2c`, `D2-485`, `T9-fused-i2c`, `T9-fused-485`, `T51-485`, `T51-72-485` (8) |
-| `panelnode` | Panel + Node | everything else (`satellite` or `printer` topology) | `P6-rp-i2c`, `P6-rp-485`, `P6-stm-485`, `T9-node-485`, `ESPINT32-brain-i2c`, `B-ramps-drv`, `B-skr-drv`, `B-skr-tmc` (8) |
+| `panelnode` | Panel + Node | everything else (`satellite` or `printer` topology) | `N2-nano-i2c`, `N2-nano-485`, `P6-rp-i2c`, `P6-rp-485`, `P6-stm-485`, `T9-node-485`, `ESPINT32-brain-i2c`, `B-ramps-drv`, `B-skr-drv`, `B-skr-tmc` (10) |
 
-2 + 2 + 8 + 8 = 20 — every variant resolves to exactly one direction, no unclassified bucket.
+2 + 2 + 8 + 10 = 22 — every variant resolves to exactly one direction, no unclassified bucket.
 `directionOf(v)` checks `distributed` first in an ordered if-chain (mirroring `topoClassOf(v)`'s
 own shape) so it can never be shadowed by the fused-vs-not-fused branches below it.
 
@@ -254,7 +254,7 @@ confidence), and a `uiNote` describing GUI-fluidity implications:
 | RP2040 (Pico) | 26 | Medium | 264 KB SRAM | None | Never drives the screen in any variant (pump-node co-processor only) — RAM is not a GUI concern here |
 | STM32 Blue Pill | 30 | Medium | 20 KB SRAM | None | 20 KB is tight beyond step generation, but this MCU never drives the screen — non-issue for GUI fluidity |
 | Arduino Pro-Mini | 18 | Medium | 2 KB SRAM | None | Not a brain candidate — per-pump-node role only, never drives the screen |
-| Arduino Nano | 18 | Medium | 2 KB SRAM | None | Alignment/small-node role only, never drives the screen |
+| Arduino Nano | 18 | Medium | 2 KB SRAM | None | Alignment node, or a ≤2-concurrent DRV8825 pump node (`N2-nano-*`, capped by its 2 hardware timers) — never drives the screen |
 | ESP32-2432S024 (integrated) | 9 | **High** | 520 KB SRAM | None (32 Mbit flash) | No PSRAM: single-buffered UI comfortable. Integrated display eliminates all Layer-A wiring — the 9 free IO already accounts for the onboard screen + touch |
 | ESP32-2432S032R (3.2" integrated) | 3 | **High** | 520 KB SRAM | None (4 MB flash) | Only 3 free GPIO (22, 27, 35-input-only) after the onboard display/touch/SD. Can ONLY be a pure brain over a 2-pin I²C bus to a separate pump controller — cannot fuse pump control. Same 240×320 as the owned screen; ST7789 not ILI9341 (cosmetic under LVGL) |
 
@@ -269,7 +269,7 @@ an oversight.
 
 ---
 
-## Variant BOMs (20 total)
+## Variant BOMs (22 total)
 
 Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · Layer C link description
 · complexity (★, 1–5 scale, half-stars shown) · BOM (`bom` object, component→qty). Full BOM detail
@@ -284,6 +284,8 @@ Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · La
 | P6-rp-i2c | 6 | DRV8825 | I²C | STEP/DIR ×6 | ★★★☆☆ | esp32, rp2040, drv8825×6, carrier, psu150 |
 | P6-rp-485 | 6 | DRV8825 | RS-485 | STEP/DIR ×6 | ★★★☆☆ | esp32, rp2040, drv8825×6, carrier, psu150, max485×3 |
 | P6-stm-485 | 6 | DRV8825 | RS-485 | STEP/DIR ×6 (timers) | ★★★☆☆ | esp32, stm32, drv8825×6, carrier, psu150, max485×3 |
+| N2-nano-i2c | 2 | DRV8825 | I²C | STEP/DIR ×6 (on Nano node) | ★★½☆☆ | esp32, nano, drv8825×6, carrier, psu60 |
+| N2-nano-485 | 2 | DRV8825 | RS-485 | STEP/DIR ×6 (on Nano node) | ★★½☆☆ | esp32, nano, drv8825×6, carrier, psu60, max485×3 |
 | P6-dist-485 | 6 | DRV8825 | RS-485 | STEP/DIR, 1/node | ★★★★½ | esp32, promini×6, drv8825×6, psu150, max485×8 |
 | P6-dist-can | 6 | DRV8825 | CAN | STEP/DIR, 1/node | ★★★★½ | esp32, promini×6, drv8825×6, psu150, mcp2515×8 |
 | T9-fused-i2c | 6 | TMC2209 | I²C | UART (self-steps) | ★★☆☆☆ | esp32, tmc2209×6, carrier, psu150 |
@@ -434,7 +436,7 @@ rather than assuming. See Open Questions for the resolution record.
 |---|:--:|---|
 | DRV8825, shared step-bus + per-driver ENABLE | 8 | S1-*, ESPINT-dumb-i2c |
 | DRV8825, per-motor STEP/DIR ×6 | 12 | D2-* |
-| Dedicated pump-node MCU or printer-board socket absorbs the wiring | 0 | P6-*, T9-node-485, B-ramps-*, B-skr-* |
+| Dedicated pump-node MCU or printer-board socket absorbs the wiring | 0 | N2-nano-*, P6-*, T9-node-485, B-ramps-*, B-skr-* |
 | TMC2209 UART, shared segments | 4 | T9-fused-*, ESPINT-fused-i2c |
 | TMC5160/TMC5072 SPI daisy-chain | 4 | T51-* |
 
@@ -468,13 +470,20 @@ see `.planning/quick/*-verify-pin-calculations/*-RESEARCH.md`.
 
 A variant's readout is `${free} free` when `used ≤ avail`, or an `OVERRUN` badge when
 `used > avail`. Both are paired with a confidence pill from `pinConfidenceOf(v)` — the **worst**
-of: the Medium/ASSUMED tier covering the Layer-B/Layer-C tables, the screen-interface confidence
-(`INTERFACE_CONF[interfaceMode]` — now always High, since SPI is verified and fixed;
-external-screen variants only), and the brain's own `gpioConf`. `esp32.gpioUsable`
-is deliberately set to 15 (the upper end of the 10–15 "realistically usable" range cited in
-06-RESEARCH.md) so the result set is genuinely mixed — S1/D2 always overrun even at SPI;
-T9-fused-*/T51-*/P6-rp-i2c sit right at the SPI/parallel borderline; printer-board variants
-comfortably fit — rather than an uninformative all-pass or all-fail set.
+of: Layer-B bus pins (**High** — datasheet-verified in the §7 audit), Layer-C driver wiring
+(**High** for DRV8825/TMC5160; **Medium** only for TMC2209 variants that wire the UART on the brain,
+`dk='smart' && pinsC>0`, whose pin count still rides the unresolved single-wire-vs-full-duplex UART
+question — SPEC Open Q#2), the screen-interface confidence (`INTERFACE_CONF[interfaceMode]` — High,
+SPI verified; external-screen variants only), and the brain's own `gpioConf` (**esp32 now High**
+after the 2026-07-20 DOIT 30-pin audit). Net effect: most rows read High; the fused-TMC2209-on-brain
+rows read Medium, honestly reflecting their one open figure.
+
+`esp32.gpioUsable = 15` is a **per-brain** ceiling (`brain.gpioUsable` — bare ESP32 15, integrated
+2.4″ 9, integrated 3.2″ 3; the ceiling is keyed to whichever brain the variant uses, never a global
+constant). The `15` is a deliberately conservative floor: the DOIT 30-pin audit found ~16 safe
+output pins (up to ~20 using strapping pins with care), so a bare-ESP32 variant reading "OVERRUN by
+1–2" may still be buildable. Kept at 15 pending a decision to raise it to the audited 16 or expose a
+strict/with-strapping toggle. Full per-component audit + bibliography: `PIN-BUDGET-ANALYSIS.md` §7.
 
 ---
 
@@ -555,7 +564,7 @@ data field):
 | Class | Trigger | Node count on Layer B | Variants |
 |---|---|:--:|---|
 | `fused` | brain IS the pump controller (no extra MCU) | 2 (brain + alignment) | 10 variants: S1-*, D2-*, T9-fused-*, T51-*, ESPINT-* |
-| `satellite` | one dedicated pump-node MCU (rp2040/stm32/nano) | 3 | P6-rp-*, P6-stm-485, T9-node-485 |
+| `satellite` | one dedicated pump-node MCU (rp2040/stm32/nano) | 3 | N2-nano-*, P6-rp-*, P6-stm-485, T9-node-485 |
 | `distributed` | six independent per-pump nodes (Pro-Mini ×6) | 8 | P6-dist-485, P6-dist-can |
 | `printer` | a printer board (RAMPS/SKR) with driver sockets | 3 | B-ramps-drv, B-skr-drv, B-skr-tmc |
 
@@ -719,7 +728,7 @@ audit trail (fixed components, open questions, raw exploration) and point back h
 duplicating content:
 
 - [`prototypes/System-Architecture/ARCHITECTURE.md`](../../prototypes/System-Architecture/ARCHITECTURE.md) — system-level electronics/comms decision record; fixed components (touchscreen, LM75), points to this tool's `#matrix`/`#theory` anchors
-- [`prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`](../../prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md) — the seven-concept pump-control menu this tool's 20 variants supersede/extend; the driver-vs-MCU "mental model" section is trimmed to a pointer at this tool's `#theory` anchor
+- [`prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`](../../prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md) — the seven-concept pump-control menu this tool's 22 variants supersede/extend; the driver-vs-MCU "mental model" section is trimmed to a pointer at this tool's `#theory` anchor
 - [`prototypes/System-Architecture/SOLUTION-MATRIX.md`](../../prototypes/System-Architecture/SOLUTION-MATRIX.md) — the original static matrix (17 rows); trimmed to a human-readable snapshot explicitly marked as a reference view, not the source of truth (D-08)
 
 The concurrency question this tool prices but does not answer (U5) is owned by

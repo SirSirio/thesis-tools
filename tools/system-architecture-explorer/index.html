@@ -410,6 +410,12 @@
   #matrix tr.vrow{cursor:pointer}
   #matrix tr.vrow:hover{background:rgba(255,107,43,.06)}
   #matrix tr.vrow.selected{background:rgba(255,107,43,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  /* Infeasible (pin-OVERRUN) rows recede: dimmed + normal-weight, and always sorted below the
+     feasible ones. Full strength on hover or once actively expanded, so they stay inspectable. */
+  #matrix tr.vrow.infeasible{opacity:.42}
+  #matrix tr.vrow.infeasible td b{font-weight:400}
+  #matrix tr.vrow.infeasible:hover{opacity:.8}
+  #matrix tr.vrow.infeasible.selected{opacity:1}
   #matrix .cost{font-weight:700;color:var(--accent);white-space:nowrap}
   #matrix td.plain-col,#matrix th.plain-col{min-width:210px;max-width:320px}
   #matrix td.plain-col{vertical-align:top}
@@ -980,8 +986,8 @@
 const DEFAULTS = {
   esp32:{label:'ESP32 dev board', role:'brain / fused controller', eur:9.05, confidence:'High',
     source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg "DOIT ESP32 30P IOT Mainboard", 67.50 DKK — cheapest bare-ESP32 brain in the catalogue'},
-    gpioUsable:15, gpioConf:'Medium', ram:'520 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
-    uiNote:'No PSRAM: a single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight.'},
+    gpioUsable:15, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
+    uiNote:'No PSRAM: a single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight. GPIO: 15 is a conservative floor — the DOIT 30-pin exposes ~16 safe output pins (up to ~20 using strapping pins carefully); datasheet-audited 2026-07-20 (PIN-BUDGET-ANALYSIS.md §7).'},
   rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4, confidence:'Low',
     source:{note:'⚠ NOT STOCKED at bitbyg — no bare Raspberry Pi Pico / RP2040 board in the catalogue (nearest: LiLyGo T-PicoC3, 123.75 DKK, a different RP2040+ESP32-C3 combo). Price is an unsourced estimate; needs a second vendor.'},
     gpioUsable:26, gpioConf:'Medium', ram:'264 KB SRAM', ramConf:'Low', psram:'None', psramConf:'Low',
@@ -1142,6 +1148,10 @@ const VARIANTS = [
     bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'Cheapest TRUE 6-parallel while keeping DRV8825.'},
   {id:'P6-stm-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (timers)', cx:3, pinsC:0,
     bom:{esp32:1,stm32:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'STM32 timers instead of RP2040 PIO; a bit cheaper, steeper toolchain.'},
+  {id:'N2-nano-i2c', at:2, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6 (on Nano node)', cx:2.5, pinsC:0,
+    bom:{esp32:1,nano:1,drv8825:6,carrier:1,psu60:1}, note:'A single Arduino Nano node drives all 6 DRV8825; its 2 hardware timers run 2 pumps at once — matches U5=2. Offloads the driver fan-out off the ESP32 so the pin budget fits (11/15). All-bitbyg, uses parts already owned; small 60 W PSU (2-concurrent).'},
+  {id:'N2-nano-485', at:2, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (on Nano node)', cx:2.5, pinsC:0,
+    bom:{esp32:1,nano:1,drv8825:6,carrier:1,psu60:1,max485:3}, note:'Same Nano-node offload on a robust RS-485 bus (3 nodes: brain + alignment + pump). Fully-bitbyg-sourceable 2-concurrent build; fits the pin budget (14/15).'},
   {id:'P6-dist-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR, 1/node', cx:4.5, pinsC:0,
     bom:{esp32:1,promini:6,drv8825:6,psu150:1,max485:8}, note:'One MCU per pump = hot-swap modules. 8 nodes on RS-485.'},
   {id:'P6-dist-can', at:6, driver:'DRV8825', dk:'dumb', b:'CAN', c:'STEP/DIR, 1/node', cx:4.5, pinsC:0,
@@ -1292,9 +1302,15 @@ function pinsOf(v){
 function pinConfidenceOf(v){
   const intKey = intBrainKey(v);
   const brain = COMP[intKey || 'esp32'] || {};
-  const levels = ['Medium'];              // Layer-B/Layer-C figures are ASSUMED/Medium per RESEARCH
-  if (!intKey) levels.push(INTERFACE_CONF[interfaceMode] || 'Low');
-  levels.push(brain.gpioConf || 'Low');
+  /* Post-audit (2026-07-20, PIN-BUDGET-ANALYSIS.md §7): every budget-contributing part was checked
+     against its datasheet. Layer-B bus pins (MAX485/MCP2515/I²C) are now verified → High; the brain's
+     usable-GPIO count is datasheet-sourced to the DOIT 30-pin (gpioConf → High). The one remaining
+     live unknown is the TMC2209 brain-wired UART pin count (full-duplex vs single-wire, SPEC Open Q#2),
+     so smart-driver variants that wire the UART on the brain keep a Medium; DRV8825/TMC5160 wiring is verified. */
+  const layerC = (v.dk === 'smart' && (v.pinsC || 0) > 0) ? 'Medium' : 'High';
+  const levels = ['High', layerC];          // Layer-B (verified) · Layer-C (verified except TMC2209-on-brain)
+  if (!intKey) levels.push(INTERFACE_CONF[interfaceMode] || 'Low');   // external screen SPI = High
+  levels.push(brain.gpioConf || 'Low');     // esp32 now High after the 30-pin audit
   return worstConf(...levels);
 }
 
@@ -1360,8 +1376,8 @@ function topoClassOf(v){
      console   — intBrainKey(v) falsy AND topoClassOf(v)==='fused' (discrete screen,
                  one bare ESP32 doing everything)                                      — 8 rows
      panelnode — everything else: a screen-facing brain + a dedicated pump/printer node
-                 ('satellite' or 'printer' topology, either screen style)              — 8 rows
-   2+2+8+8 = 20 — every variant resolves to exactly one direction, no unclassified bucket. */
+                 ('satellite' or 'printer' topology, either screen style)              — 10 rows
+   2+2+8+10 = 22 — every variant resolves to exactly one direction, no unclassified bucket. */
 function directionOf(v){
   if (topoClassOf(v)==='distributed') return 'modular';
   if (intBrainKey(v) && topoClassOf(v)==='fused') return 'allinone';
@@ -2054,10 +2070,13 @@ function selectVariant(v){
 
 /* ---------- render matrix ---------- */
 function renderMatrix(){
-  const rows=VARIANTS.map(v=>({v, cost:costOf(v)}))
+  const rows=VARIANTS.map(v=>({v, cost:costOf(v), over:pinsOf(v).overrun}))
     .filter(o=> o.cost<=maxPrice && o.v.cx<=maxCx && o.v.at>=minCon
       && (!selectedDirection || directionOf(o.v)===selectedDirection))
     .sort((a,b)=>{
+      /* Feasibility is the primary key, always: pin-OVERRUN (unfeasible) rows sink below the
+         feasible ones regardless of the active sort, so what you'd actually consider stays on top. */
+      if(a.over!==b.over) return a.over?1:-1;
       if(sortKey==='direction'){
         return DIRECTIONS[directionOf(a.v)].name.localeCompare(DIRECTIONS[directionOf(b.v)].name)*sortDir;
       }
@@ -2080,7 +2099,7 @@ function renderMatrix(){
     const pinCell = (p.overrun
       ? `<span class="pill bad">OVERRUN</span> <span class="muted" title="pins short of the brain's usable GPIO">by ${p.used - p.avail}</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
       : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`) + perFlag;
-    const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
+    const tr=document.createElement('tr'); tr.className='vrow'+(p.overrun?' infeasible':''); tr.dataset.vid=v.id;
     tr.innerHTML=`<td><b>${v.id}</b></td>
       <td>${directionPill(v)}</td>
       <td class="plain-col">${plainBullets(v)}</td>

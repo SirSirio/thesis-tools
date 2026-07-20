@@ -114,9 +114,43 @@ pins less than the tool shows. Documented as pessimistic-safe, not corrected.
    *external-screen + RS-485* pairing, not the driver.
 
 **Variants that fit (for contrast):** `T9-fused-i2c` (15/15, 0 free), `ESPINT-fused-i2c` (2 free),
-`P6-rp-i2c` (4 free — RP2040 node absorbs all driver wiring), all printer-board rows (sockets
-absorb it), and the distributed rows (per-pump nodes). The pattern: **fitting means the six-driver
-fan-out is paid by something other than the brain.**
+`P6-rp-i2c` (4 free — RP2040 node absorbs all driver wiring), `N2-nano-i2c` (**11/15, 4 free**) and
+`N2-nano-485` (**14/15, 1 free**) — a single Arduino Nano node absorbs the DRV8825 fan-out at
+2-concurrent — all printer-board rows (sockets absorb it), and the distributed rows (per-pump nodes).
+The pattern: **fitting means the six-driver fan-out is paid by something other than the brain.**
+
+### The Nano-node DRV8825 rows (`N2-nano-*`) — worked
+
+The only *dumb-driver* rows that fit a bare-ESP32 brain do so by offloading the six DRV8825s to a
+**single Arduino Nano** pump-node (`topoClassOf → satellite`, so `pinsC = 0` — the brain sees the
+node, not the drivers). The Nano itself holds the fan-out (6× STEP/DIR on its ~16 free GPIO after
+the I²C/RS-485 bus), and its **2 usable hardware timers cap it at ~2 clean concurrent step trains** —
+which is exactly the validated `U5 = 2`, so the timer limit is not a constraint here. Brain-side budget:
+
+| Variant | screen | sensors | bus | drivers | vib | used | usable | free | periph |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
+| `N2-nano-i2c` | 8 | 0 | 2 | 0 | 1 | **11** | 15 | +4 | 0 UART / 1 I²C / 1 SPI — clean |
+| `N2-nano-485` | 8 | 2 | 3 | 0 | 1 | **14** | 15 | +1 | 1 UART / 1 I²C / 1 SPI — clean |
+
+Both are **all-bitbyg-sourceable** (ESP32 + Nano + DRV8825 + MAX485 all stocked) and run on the
+**60 W** PSU (2-concurrent), making `N2-nano-i2c` the cheapest *fully-single-vendor* build that
+still fits the pin budget — and the one that reuses hardware already in-house (1 Nano + DRV8825s).
+
+### Where the Nano fits across the system (role sweep)
+
+The Nano is an ATmega328 (16 MHz, ~20 GPIO, 3 timers / 2 usable for stepping, no display-grade RAM).
+That fixes exactly where it belongs and where it does not:
+
+| Role | Viable? | Why |
+|---|:--:|---|
+| **Alignment node** (2× 28BYJ-48 over ULN2003) | ✅ existing | Trivial one-node job; already the modelled alignment MCU. |
+| **Pump node, ≤2 concurrent DRV8825** | ✅ **added** (`N2-nano-*`) | 2 hardware timers → 2 clean trains = U5; holds the 6-driver fan-out off the brain. |
+| **Pump node, TMC2209** | ✅ existing (`T9-node-485`) | Drivers self-step over UART; the Nano just relays targets. |
+| **Pump node, true 6-parallel** | ⚠️ marginal | Only 2 hardware timers; 6 independent trains need RP2040 PIO / STM32 timers (`P6-rp/stm`). Moot at U5=2. |
+| **System brain / GUI host** | ❌ excluded | Cannot render the ILI9341 GUI + hold system logic — ESP32-class required (stated in the tool). |
+
+So the Nano earns two represented pump roles (dumb ≤2, or TMC2209 relay) plus the alignment node —
+it is **not** absent from the option space; it is just correctly barred from the brain seat.
 
 ### The six ENABLE lines are deliberate (battery power-gating)
 
@@ -197,27 +231,93 @@ inputs could reasonably be re-rated:
 - The remaining genuine unknown keeping any single count at Medium is **TMC2209 single-wire UART**
   (Open Q#2) and the fact that no variant has had a *full physical pin-assignment* built yet.
 
-Re-rating the tool's confidence pills to reflect this audit is a **separate edit, not yet made** —
-it changes displayed verdicts, so it awaits sign-off.
+**Applied 2026-07-20:** the tool's confidence pills were re-rated on this basis — Layer-B bus pins and
+`esp32.gpioConf` moved Medium → **High**; `pinConfidenceOf` now rates Layer-C wiring High **except**
+TMC2209 variants that wire the UART on the brain (`dk='smart' && pinsC>0`), which stay **Medium**
+pending the single-wire-UART resolution. So most rows now read High; the fused-TMC rows read Medium —
+honestly reflecting their one open figure.
+
+**The GPIO ceiling is per-brain, not a global number.** The feasibility gate is `brain.gpioUsable`
+for whichever brain the row actually uses — it is already MCU-specific:
+
+| Brain (the row's controller) | Ceiling | Basis |
+|---|:--:|---|
+| Bare ESP32 (DOIT DevKit v1, 30-pin) | **15** | 25 GPIO exposed − 4 input-only − 5 strapping ≈ 16 safe outputs; 15 = conservative floor (console freed) |
+| Integrated 2.4″ (ESP32-2432S024) | **9** | free IO after the onboard display/touch/SD |
+| Integrated 3.2″ (ESP32-2432S032R) | **3** | only GPIO 22, 27, 35 free after onboard peripherals |
+
+Every *bare-ESP32* row shares 15 because they genuinely use the **same** brain — that is correct, not
+a shortcut. **Node MCUs (RP2040/STM32/Pro-Mini) never enter this ceiling:** the budget measures the
+*brain's* pins, and the node is exactly what offloads the driver wiring off the brain (`pinsC → 0`).
+The node's own pin budget (does an RP2040 have enough pins for 6 DRV8825s? — yes, 26 GPIO) is a
+separate check the tool does **not** yet run; non-binding in practice, logged as a known gap.
+
+The audited bare-ESP32 headroom is **~16 safe outputs** (up to **~20** using strapping pins with
+care), so `15` is a deliberately conservative floor — a bare-ESP32 variant reading "OVERRUN by 1–2"
+may still be buildable with careful assignment. The value is **left at 15** pending a decision on
+whether to raise it to the audited 16 (or expose a "strict / with-strapping" toggle); its confidence
+is now High because the *count method* is datasheet-sourced.
 
 ---
 
-## Sources
+## Bibliography (thesis-ready)
 
-- [ESP32 GPIO matrix & pin mux — Espressif/Arduino-ESP32 docs](https://docs.espressif.com/projects/arduino-esp32/en/latest/tutorials/io_mux.html)
-- [ESP32 datasheet v5.2 (peripheral counts) — Espressif](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf)
-- [ESP32 pinout / input-only / strapping — Random Nerd Tutorials](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/)
-- [Why avoid ADC2 with Wi-Fi — ESP-IDF ADC docs](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/adc.html)
-- [TMC2209 ≤4 drivers per UART line — janelia-arduino/TMC2209](https://github.com/janelia-arduino/TMC2209)
-- In-repo: `06-RESEARCH.md` §pin-budget (S1 = 2 shared STEP/DIR + 6×ENABLE = 8) · `SPEC.md` §Pin-budget model
+Citations for the component pinout audit (§7) and the pin-budget model, in a numbered style ready to
+lift into a thesis reference list. Each carries the live link and the access date. Manufacturer names
+and titles are the stable citation elements; where a reseller-hosted copy was the retrieved file it is
+noted. All accessed **20 July 2026**.
 
-**Component pinout audit sources (§7, 2026-07-20):**
-- [DOIT ESP32 DevKit v1 30-pin pinout — CIRCUITSTATE](https://www.circuitstate.com/pinouts/doit-esp32-devkit-v1-wifi-development-board-pinout-diagram-and-reference/) · [Random Nerd Tutorials 30-GPIO](https://randomnerdtutorials.com/esp32-doit-devkit-v1-board-pinout-30-gpios-copy/)
-- [ILI9341 + XPT2046 SPI wiring — ControllersTech](https://controllerstech.com/ili9341-arduino-touchscreen-tutorial/) · [Bodmer/TFT_eSPI](https://github.com/Bodmer/TFT_eSPI)
-- [LM75A datasheet — NXP](https://www.nxp.com/docs/en/data-sheet/LM75A.pdf)
-- [MPR121 datasheet — NXP/Freescale](https://www.nxp.com/docs/en/fact-sheet/MPR121FS.pdf)
-- [MAX485 datasheet — Analog Devices/Maxim](https://dratek.cz/docs/produkty/1/1075/max485.pdf)
-- [MCP2515 datasheet — Microchip](https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Controller-with-SPI-20001801J.pdf)
-- [DRV8825 datasheet — Texas Instruments](https://www.ti.com/lit/ds/symlink/drv8825.pdf)
-- [TMC5160 datasheet — Analog Devices](https://www.analog.com/media/en/technical-documentation/data-sheets/TMC5160A_datasheet_rev1.17.pdf)
-- [IRF520 MOSFET module reference — ProtoSupplies](https://protosupplies.com/product/irf520-n-ch-mosfet-module/)
+**Primary datasheets**
+
+[1] Espressif Systems, *ESP32 Series Datasheet*, v5.2, 2024. [Online]. Available:
+    https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf
+
+[2] Texas Instruments, *DRV8825 Stepper Motor Controller IC*, datasheet, Rev. F, 2014. [Online].
+    Available: https://www.ti.com/lit/ds/symlink/drv8825.pdf
+
+[3] Analog Devices (Trinamic), *TMC5160/TMC5160A — Universal high voltage controller/driver for two-phase
+    stepper motors*, datasheet, Rev. 1.17. [Online]. Available:
+    https://www.analog.com/media/en/technical-documentation/data-sheets/TMC5160A_datasheet_rev1.17.pdf
+
+[4] Analog Devices (Trinamic), *TMC2209 — Stepper driver for 2-phase bipolar motors, UART/STEP-DIR*,
+    datasheet. UART addressing (MS1/MS2 = up to 4 nodes per one-wire bus) corroborated by the
+    janelia-arduino/TMC2209 library. [Online]. Available: https://github.com/janelia-arduino/TMC2209
+
+[5] Microchip Technology, *MCP2515 — Stand-Alone CAN Controller with SPI Interface*, datasheet,
+    DS20001801J. [Online]. Available:
+    https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Controller-with-SPI-20001801J.pdf
+
+[6] Maxim Integrated (now Analog Devices), *MAX481/MAX483/MAX485/MAX487–MAX491 — Low-Power,
+    Slew-Rate-Limited RS-485/RS-422 Transceivers*, datasheet. [Online]. Available (hosted copy):
+    https://dratek.cz/docs/produkty/1/1075/max485.pdf
+
+[7] NXP Semiconductors, *LM75A — Digital temperature sensor and thermal watchdog*, product data sheet.
+    [Online]. Available: https://www.nxp.com/docs/en/data-sheet/LM75A.pdf
+
+[8] Freescale Semiconductor (now NXP), *MPR121 — Proximity Capacitive Touch Sensor Controller*,
+    datasheet, Rev. 4, Feb. 2013. [Online]. Available: https://www.nxp.com/docs/en/fact-sheet/MPR121FS.pdf
+
+**Board, module & application references**
+
+[9]  CIRCUITSTATE Electronics, "DOIT ESP32 DevKit V1 Wi-Fi Development Board — Pinout Diagram &
+     Arduino Reference." [Online]. Available:
+     https://www.circuitstate.com/pinouts/doit-esp32-devkit-v1-wifi-development-board-pinout-diagram-and-reference/
+
+[10] Random Nerd Tutorials, "ESP32 DOIT DevKit V1 Board — Pinout (30 GPIOs)" and "ESP32 Pinout
+     Reference: Which GPIO pins should you use?" [Online]. Available:
+     https://randomnerdtutorials.com/esp32-doit-devkit-v1-board-pinout-30-gpios-copy/ ·
+     https://randomnerdtutorials.com/esp32-pinout-reference-gpios/
+
+[11] Espressif Systems, "GPIO Matrix and Pin Mux — Arduino-ESP32 documentation." [Online]. Available:
+     https://docs.espressif.com/projects/arduino-esp32/en/latest/tutorials/io_mux.html
+
+[12] ControllersTech, "ILI9341 + XPT2046 Touch: Wiring, Calibration & UI"; and B. Siegel (Bodmer),
+     *TFT_eSPI* Arduino library. [Online]. Available:
+     https://controllerstech.com/ili9341-arduino-touchscreen-tutorial/ · https://github.com/Bodmer/TFT_eSPI
+
+[13] ProtoSupplies, "IRF520 N-Ch MOSFET Module" (SIG/VCC/GND + Vin/OUT wiring reference). [Online].
+     Available: https://protosupplies.com/product/irf520-n-ch-mosfet-module/
+
+**In-repo**
+
+[14] `06-RESEARCH.md` §pin-budget (S1 = 2 shared STEP/DIR + 6×ENABLE = 8) · `SPEC.md` §Pin-budget model.
