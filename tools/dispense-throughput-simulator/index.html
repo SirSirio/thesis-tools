@@ -506,6 +506,38 @@
     line-height: 1.55;
     margin-bottom: 20px;
   }
+  .cmp-racks {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .rack-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,107,43,0.28);
+    background: rgba(255,107,43,0.05);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.12s;
+    line-height: 1.2;
+  }
+  .rack-btn:hover { background: rgba(255,107,43,0.16); border-color: var(--accent); transform: translateY(-1px); }
+  .rack-btn.active { background: var(--accent); border-color: var(--accent); color: #16110f; }
+  .rack-btn .rb-n { font-size: 0.82rem; font-weight: 700; }
+  .rack-btn .rb-sub { font-size: 0.68rem; opacity: 0.75; }
+  .cmp-batchline {
+    font-size: 0.78rem;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .cmp-batchline b { color: var(--accent); }
+
   .cmp-group { margin-bottom: 22px; }
   .cmp-group-head {
     display: flex;
@@ -720,6 +752,13 @@
     <p class="cmp-intro">How three representative dispensing loads respond to <b>1, 2, and 6 pumps in parallel</b>,
       at the current system settings (rollers, µL/stroke, and the shared pump speed — <b>fixed clock</b>, every
       pump at the same rate). Change those settings above to see how a different pump system copes with each load.</p>
+    <div class="cmp-racks" id="cmpRacks">
+      <span class="presets-label">Batch size</span>
+      <button type="button" class="rack-btn" data-racks="1"><span class="rb-n">1 rack</span><span class="rb-sub">8 samples</span></button>
+      <button type="button" class="rack-btn" data-racks="2"><span class="rb-n">2 racks</span><span class="rb-sub">16 samples</span></button>
+      <button type="button" class="rack-btn" data-racks="3"><span class="rb-n">3 racks</span><span class="rb-sub">24 samples</span></button>
+      <button type="button" class="rack-btn active" data-racks="4"><span class="rb-n">4 racks</span><span class="rb-sub">32 samples</span></button>
+    </div>
     <div id="benchmarkCompare"></div>
   </section>
 </main>
@@ -733,6 +772,8 @@
 
   // ── Liquid row count state (N = liquidCount, 1..6) ──
   let liquidCount = 4;
+  // ── Benchmark-comparison batch size (racks × 8 samples), 1..4 racks ──
+  let cmpRacks = 4;
 
   function setRangeFill(el) {
     const pct = ((+el.value - +el.min) / (+el.max - +el.min)) * 100;
@@ -1079,15 +1120,29 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
         '</g>';
     }
 
+    // Layer height fractions ∝ volume, but floored so a tiny dose (e.g. the 5 µL
+    // in the heavy set) still shows as a visible band instead of a sub-pixel
+    // sliver hidden under the full tube. Floored shares are renormalised to
+    // exactly fill the cavity (Σ = 1).
+    const MIN_FRAC = 0.07;
+    let layerFracs;
+    if (N * MIN_FRAC >= 1) {
+      layerFracs = liquids.map(function () { return 1 / N; });
+    } else {
+      const raw = liquids.map(function (v) { return sumV > 0 ? v / sumV : 1 / N; });
+      const remain = 1 - N * MIN_FRAC;
+      layerFracs = raw.map(function (r) { return MIN_FRAC + remain * r; });
+    }
+
     // ── moving rack of 8 tubes (translated as a group) ──
     let tubes = '';
     for (let i = 0; i < TUBES; i++) {
       const cx = i * S;                              // local x; the rack <g> is translated
-      // Stacked liquid layers (liquid 1 at the tip/bottom), heights ∝ volume.
+      // Stacked liquid layers (liquid 1 at the tip/bottom), heights ∝ volume (floored).
       let layers = '';
       let yb = tipY;
       for (let kk = 1; kk <= N; kk++) {
-        const frac = sumV > 0 ? (liquids[kk - 1] / sumV) : (1 / N);
+        const frac = layerFracs[kk - 1];
         const yt = yb - frac * (tipY - shoulderBottom);
         const wt = widthAt(yt) / 2, wb = widthAt(yb) / 2;
         const col = LIQUID_COLORS[(kk - 1) % LIQUID_COLORS.length];
@@ -1118,24 +1173,27 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
         nozzles +
       '</svg>';
 
-    const caption = 'Illustrative — an 8-tube rack (1 of 4) indexes left under the ' + N + ' fixed nozzle' + (N > 1 ? 's' : '') +
-      '; each tube builds the cocktail layer by layer as it passes each nozzle (layer height ∝ dose volume). Not a timing-accurate playback.';
+    const caption = 'Illustrative — one 8-tube rack indexes left under the ' + N + ' fixed nozzle' + (N > 1 ? 's' : '') +
+      '; each tube builds the cocktail layer by layer as it passes each nozzle (layer height ∝ dose volume). Nozzles fire in groups sized by the concurrency K set above. Not a timing-accurate playback.';
     return { svg: svg, N: N, S: S, bankX0: bankX0, caption: caption };
   }
 
   // Rebuild only when the layer picture changes (N or volumes) — the K slider
   // must NOT restart the loop. A JS stepper drives the slide (transform attribute,
   // rAF tween) and the per-layer fill reveal (CSS .filled transition).
-  const rackAnim = { timer: null, raf: null, sig: null };
+  const rackAnim = { timer: null, raf: null, sig: null, waveTimers: [] };
   function renderRackAnim(sim) {
     const el = document.getElementById('rackAnim');
     if (!el) return;
     const N = sim.liquids.length;
+    // K is read live by the running stepper, so it is NOT part of the sig — a
+    // concurrency change adjusts the grouping without rebuilding/restarting.
     const sig = N + '|' + sim.liquids.join(',');
     if (rackAnim.sig === sig && el.firstElementChild) return;
     rackAnim.sig = sig;
-    if (rackAnim.timer) { clearInterval(rackAnim.timer); rackAnim.timer = null; }
+    if (rackAnim.timer) { clearTimeout(rackAnim.timer); rackAnim.timer = null; }
     if (rackAnim.raf) { cancelAnimationFrame(rackAnim.raf); rackAnim.raf = null; }
+    rackAnim.waveTimers.forEach(clearTimeout); rackAnim.waveTimers = [];
     const built = buildRackSvg(N, sim.liquids.slice());
     el.innerHTML = '<div class="rack-anim-wrap">' + built.svg + '</div>' +
       '<p class="rack-caption">' + built.caption + '</p>';
@@ -1149,75 +1207,78 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     const txFor = (k) => bankX0 + (N - k) * S;       // tube i lands under column i+N-k
     const sMax = N + TUBES + 1;                      // enough steps for all 8 tubes to fill + exit
 
-    function setLayers(k) {
-      for (let i = 0; i < TUBES; i++) {
-        const L = Math.max(0, Math.min(N, k - i));   // layers tube i has received by step k
-        for (let kk = 1; kk <= N; kk++) {
-          const p = document.getElementById('L' + i + '_' + kk);
-          if (p) p.classList.toggle('filled', kk <= L);
-        }
-      }
-    }
-
-    // A drop only shows under nozzle column c when a real tube (0..7) is beneath
-    // it this step, and re-triggers its one-shot fall in sync with the fill.
-    function clearDrops() {
-      for (let c = 0; c < N; c++) {
-        const d = document.getElementById('drop' + c);
-        if (d) d.classList.remove('dispensing');
-      }
-    }
-    function pulseDrops(k) {
-      for (let c = 0; c < N; c++) {
-        const d = document.getElementById('drop' + c);
-        if (!d) continue;
-        const tubeI = c - N + k;                      // which rack tube sits under column c now
-        d.classList.remove('dispensing');
-        if (tubeI >= 0 && tubeI < TUBES) { void d.getBoundingClientRect(); d.classList.add('dispensing'); }
-      }
-    }
+    const el = (id) => document.getElementById(id);
+    function clearDrops() { for (let c = 0; c < N; c++) { const d = el('drop' + c); if (d) d.classList.remove('dispensing'); } }
+    function clearLayers() { for (let i = 0; i < TUBES; i++) for (let kk = 1; kk <= N; kk++) { const p = el('L' + i + '_' + kk); if (p) p.classList.remove('filled'); } }
+    function revealLayer(tubeI, kk) { const p = el('L' + tubeI + '_' + kk); if (p) p.classList.add('filled'); }
+    function pulseDrop(c) { const d = el('drop' + c); if (!d) return; d.classList.remove('dispensing'); void d.getBoundingClientRect(); d.classList.add('dispensing'); }
 
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
-      // Static representative frame: rack mid-way, a filling gradient across it.
       const kk = Math.round(sMax / 2);
       rackG.setAttribute('transform', 'translate(' + txFor(kk) + ',0)');
-      setLayers(kk);
+      for (let i = 0; i < TUBES; i++) { const L = Math.max(0, Math.min(N, kk - i)); for (let x = 1; x <= L; x++) revealLayer(i, x); }
       return;
     }
 
+    const SLIDE = 470, WAVE_GAP = 300, TAIL = 340, RESET_PAUSE = 620;
     let k = 0, curX = txFor(0);
     rackG.setAttribute('transform', 'translate(' + curX + ',0)');
-    setLayers(0);
 
-    const SLIDE = 520, CYCLE = 1160;                 // slide, then pause for the fill
-    function tween(toX) {
-      const from = curX, start = performance.now();
+    function schedule(delay) { rackAnim.timer = setTimeout(tick, delay); }
+
+    // Reveal the fills for the tubes now under nozzles, but respect concurrency K:
+    // only K pumps run at once, so nozzles fire in waves of K (longest dose first,
+    // mirroring the LPT engine grouping). Returns the total dispense-phase duration.
+    function dispensePhase(step) {
+      const sim = window.__sim || {};
+      const K = Math.max(1, Math.min(N, sim.K || N));
+      const dt = sim.doseTimes || [];
+      const active = [];
+      for (let c = 0; c < N; c++) {
+        const tubeI = c - N + step;                  // rack tube under column c this step
+        if (tubeI >= 0 && tubeI < TUBES) {
+          const liq = N - c;                         // liquid (1-based) at column c
+          active.push({ c: c, tubeI: tubeI, liq: liq, dose: dt[liq - 1] || 0 });
+        }
+      }
+      if (!active.length) return TAIL;
+      active.sort(function (a, b) { return b.dose - a.dose; });
+      const waves = [];
+      for (let i = 0; i < active.length; i += K) waves.push(active.slice(i, i + K));
+      waves.forEach(function (wave, w) {
+        const t = setTimeout(function () {
+          clearDrops();                              // only the current wave's pumps run
+          wave.forEach(function (a) { pulseDrop(a.c); revealLayer(a.tubeI, a.liq); });
+        }, w * WAVE_GAP);
+        rackAnim.waveTimers.push(t);
+      });
+      return waves.length * WAVE_GAP + TAIL;
+    }
+
+    function tick() {
+      rackAnim.waveTimers.forEach(clearTimeout); rackAnim.waveTimers = [];
+      clearDrops();
+      k++;
+      if (k > sMax) {                                // loop: fresh empty rack
+        k = 0; curX = txFor(0); clearLayers();
+        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+        schedule(RESET_PAUSE);
+        return;
+      }
+      const from = curX, start = performance.now(), toX = txFor(k);
       function frame(now) {
         const t = Math.min(1, (now - start) / SLIDE);
         const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // easeInOutQuad
         curX = from + (toX - from) * e;
         rackG.setAttribute('transform', 'translate(' + curX + ',0)');
         if (t < 1) { rackAnim.raf = requestAnimationFrame(frame); }
-        else { rackAnim.raf = null; setLayers(k); pulseDrops(k); }  // fill + drip after arriving
+        else { rackAnim.raf = null; schedule(dispensePhase(k)); }  // fill in waves, then next step
       }
       rackAnim.raf = requestAnimationFrame(frame);
     }
 
-    rackAnim.timer = setInterval(function () {
-      clearDrops();                                  // drops vanish during the slide
-      k++;
-      if (k > sMax) {                                // seamless-ish loop: fresh empty rack
-        k = 0; curX = txFor(0);
-        for (let i = 0; i < TUBES; i++) for (let kk = 1; kk <= N; kk++) {
-          const p = document.getElementById('L' + i + '_' + kk);
-          if (p) p.classList.remove('filled');
-        }
-        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
-        return;
-      }
-      tween(txFor(k));
-    }, CYCLE);
+    schedule(SLIDE);
   }
 
   function recompute() {
@@ -1320,15 +1381,18 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     const host = document.getElementById('benchmarkCompare');
     if (!host) return;
 
+    const samplesCmp = cmpRacks * 8;                 // chosen batch (8 samples/rack)
+    const rackChangesCmp = cmpRacks - 1;
+
     // compute rows, and the global max total run time for a shared bar scale
     let maxTotal = 0;
     const rows = BENCHMARKS.map(function (b) {
       const N = b.vols.length;
       const dt = computeDoseTimes(b.vols, rollers, uLPerStroke, sharedRpm);
-      const serial = simulateSchedule(dt, N, SAMPLES, 1, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1).totalRunTime;
+      const serial = simulateSchedule(dt, N, samplesCmp, 1, SAMPLE_SHIFT, RACK_CHANGE, rackChangesCmp).totalRunTime;
       const cells = CMP_KS.map(function (K) {
         const kEff = Math.min(K, N);
-        const r = simulateSchedule(dt, N, SAMPLES, kEff, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1);
+        const r = simulateSchedule(dt, N, samplesCmp, kEff, SAMPLE_SHIFT, RACK_CHANGE, rackChangesCmp);
         if (r.totalRunTime > maxTotal) maxTotal = r.totalRunTime;
         return {
           K: K, kEff: kEff, capped: kEff < K,
@@ -1387,7 +1451,9 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     });
 
     const anyCapped = rows.some(function (r) { return r.cells.some(function (c) { return c.capped; }); });
-    host.innerHTML = bars +
+    const batchLine = '<p class="cmp-batchline">Batch: <b>' + cmpRacks + ' rack' + (cmpRacks > 1 ? 's' : '') +
+      ' × 8 = ' + samplesCmp + ' samples</b> · ' + (rackChangesCmp) + ' rack change' + (rackChangesCmp === 1 ? '' : 's') + '</p>';
+    host.innerHTML = batchLine + bars +
       '<div class="cmp-table-wrap"><table class="cmp-table"><thead>' + thead + '</thead><tbody>' + tbody + '</tbody></table></div>' +
       (anyCapped ? '<p class="cmp-note">* Pumps beyond a benchmark’s liquid count add nothing — the value is full parallel (capped at that benchmark’s N). Each cell: total run time · throughput · time saved vs serial.</p>'
                  : '<p class="cmp-note">Each cell: total run time · throughput · time saved vs serial.</p>');
@@ -1453,6 +1519,13 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
   document.getElementById('mode').addEventListener('change', () => { applyModeUI(); recompute(); });
   document.querySelectorAll('.preset-btn').forEach(function (btn) {
     btn.addEventListener('click', function () { applyPreset(btn.dataset.preset); });
+  });
+  document.querySelectorAll('#cmpRacks .rack-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      cmpRacks = parseInt(btn.dataset.racks, 10);
+      document.querySelectorAll('#cmpRacks .rack-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      recompute(); // re-renders the comparison at the new batch size
+    });
   });
 
   renderConstantChips();
