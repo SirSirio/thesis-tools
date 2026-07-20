@@ -5,8 +5,9 @@ This is the permanent, checkable record of *why* each variant fits or overruns, 
 signal map every pin figure is fetched from, and the deeper peripheral-instance limit a raw pin
 **count** cannot see. Last verified **2026-07-20**.
 
-The tool's `pinsOf(v)` computes ceiling #1 below (the GPIO count). Ceiling #2 (peripheral
-instances) is **documented here but not yet computed by the tool** — see Known limitations.
+The tool computes **both** ceilings: `pinsOf(v)` the GPIO count (#1), and `periphOf(v)` the
+hardware-controller demand (#2). Ceiling #2 is flagged per-row — a ⚠ UART 3/3 pill on the pin
+column and a **Peripheral controllers** line in every expanded row.
 
 ---
 
@@ -48,7 +49,7 @@ fuse pump control.
 
 ---
 
-## 3. Ceiling #2 — peripheral instances (documented, not yet computed)
+## 3. Ceiling #2 — peripheral instances (computed by `periphOf(v)`)
 
 A pin count cannot see that the ESP32 has a limited number of each *controller*:
 
@@ -110,6 +111,25 @@ pins less than the tool shows. Documented as pessimistic-safe, not corrected.
 absorb it), and the distributed rows (per-pump nodes). The pattern: **fitting means the six-driver
 fan-out is paid by something other than the brain.**
 
+### The six ENABLE lines are deliberate (battery power-gating)
+
+The 6×ENABLE fan-out that makes the dumb-driver rows overrun on count is a **design requirement,
+not waste**. This is a battery-powered device: switching each DRV8825's ENABLE (active-low) in
+software gates that motor's current draw, so idle pumps draw ~0. Independent ENABLE per driver is
+therefore wanted — the pin cost is bought on purpose.
+
+Two consequences worth recording:
+
+- **ENABLE is cheap on ceiling #2.** ENABLE lines are plain GPIO — they cost the count (ceiling #1)
+  but **zero** peripheral controllers (ceiling #2). The very thing that sinks S1/D2 on pins is free
+  on controllers.
+- **A smart driver gives the same power-gating without the pins.** TMC2209 exposes software
+  enable/disable and per-driver run/hold current over the shared UART (`IRUN`/`IHOLD`, and `TOFF=0`
+  to disable) — set by register, no GPIO spent. So the fused-TMC path keeps the battery benefit
+  (per-motor current control, idle pumps drawing hold-current or nothing) while spending 4 shared
+  UART pins instead of 6+ ENABLE GPIO. For a battery device this is the strongest single argument
+  for TMC2209 over DRV8825.
+
 ---
 
 ## 5. Digital vs analog — the honest answer
@@ -128,9 +148,10 @@ for this system**:
 
 ## 6. Known limitations of the current model (logged for cross-check)
 
-1. **Peripheral-instance ceiling (§3) is not computed.** The tool checks the GPIO count only. The
-   UART-contention on `T9-fused-485` is real and currently only caught by this document. *Next step
-   if wanted:* add a `periphOf(v)` check (UART/I²C/SPI demand vs 3/2/2) and a second badge.
+1. **Peripheral-instance ceiling (§3) — now computed** by `periphOf(v)` (added 2026-07-20). Models
+   UART/I²C/SPI controller demand vs 3/2/2, flags `T9-fused-485` as UART-tight. Assumes SPI-sharing
+   (CAN MCP2515 and TMC5160 chains ride the screen's SPI controller) and does not yet model RMT/MCPWM
+   step-generation channel limits (8 RMT / 2 MCPWM — ample for 6 step trains, so non-binding).
 2. **RST/SLP wiring** for DRV8825 is folded into the `8`/`12` figures as an assumption, not itemised.
 3. **CAN SPI-sharing** is modelled pessimistically (+4 as a standalone bus; a shared screen-SPI bus
    would be ~2–3 less).

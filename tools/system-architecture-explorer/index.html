@@ -741,16 +741,26 @@
       digital-vs-analog split barely matters here: every sensor is digital I²C, so the one analog
       gotcha — ADC2 going dead whenever Wi-Fi is on — only applies if you later add an analog probe,
       and even then ADC1 (GPIO 32–39) stays free.</p>
-      <p><b>What the count does <u>not</u> cover — the real "TX for two things" trap.</b> A pin
-      count cannot see that the ESP32 has only <b>3 UARTs, 2 I²C, 2 usable SPI</b> controllers. Six
-      TMC2209s can't share one UART line (their address field is 2 bits = 4 drivers max), so
-      six need <b>two</b> UART lines; add an RS-485 system bus and the programming/debug console and
-      you are asking for four UARTs from a chip that has three. So <b>T9-fused-485</b> passes the pin
-      count yet hits a <i>peripheral-instance</i> ceiling the column can't show — resolvable (bit-bang
-      one TMC line on SoftwareSerial, or drop the console), but a real build-time constraint.
-      <b>T9-fused-i2c</b> sidesteps it entirely: an I²C system bus spends no UART, leaving both spare
-      UARTs for the two TMC lines. This second ceiling, the full per-component signal map, and every
-      overrun variant worked out pin-by-pin live in
+      <p><b>What the count does <u>not</u> cover — the real "TX for two things" trap, now checked
+      per row.</b> A pin count cannot see that the ESP32 has only <b>3 UARTs, 2 I²C, 2 usable SPI</b>
+      controllers. Six TMC2209s can't share one UART line (their address field is 2 bits = 4 drivers
+      max), so six need <b>two</b> UART lines; add an RS-485 system bus and the programming/debug
+      console and you are asking for four UARTs from a chip that has three. The matrix now runs this
+      second check on every variant: expand any row to see its <b>Peripheral controllers</b> line
+      (UART/I²C/SPI demand vs 3/2/2), and a <span class="pill conf-medium">⚠&nbsp;UART&nbsp;3/3</span>
+      flag rides the pin column when a build spends every UART. Only <b>T9-fused-485</b> lights it up
+      — it passes nothing to spare — while <b>T9-fused-i2c</b> stays clean: an I²C system bus spends
+      no UART, leaving both spare UARTs for the two TMC lines. Resolvable (bit-bang one TMC line on
+      SoftwareSerial, or drop the console after flashing), but a real build-time constraint the count
+      alone would miss.</p>
+      <p><b>A note on ENABLE — the fan-out is deliberate, not waste.</b> The six ENABLE lines that
+      make the dumb-driver rows overrun are a <i>feature</i> for a battery device: switching each
+      DRV8825's ENABLE in software gates that motor's current draw, so idle pumps draw nothing. Worth
+      knowing that a smart driver gives the <i>same</i> per-motor power control over the shared UART —
+      TMC2209 disables a driver and sets its run/hold current (<code>IRUN</code>/<code>IHOLD</code>,
+      <code>TOFF</code>) by register, no GPIO spent — so the fused-TMC path keeps the battery benefit
+      without the six-pin cost. The full per-component signal map, both ceilings, and every overrun
+      variant worked pin-by-pin live in
       <a href="PIN-BUDGET-ANALYSIS.md" style="color:var(--accent);">PIN-BUDGET-ANALYSIS.md ↗</a> —
       the permanent cross-check reference for this section.</p>
     </details>
@@ -1265,6 +1275,38 @@ function pinConfidenceOf(v){
   if (!intKey) levels.push(INTERFACE_CONF[interfaceMode] || 'Low');
   levels.push(brain.gpioConf || 'Low');
   return worstConf(...levels);
+}
+
+/* ---------- peripheral-instance budget (ceiling #2) ----------
+   pinsOf() answers "are there enough pins?"; periphOf() answers the deeper "can each function
+   reach a controller without two things fighting over one?". The ESP32's GPIO matrix routes
+   almost any digital function to almost any pin, so the binding limit is not the pin — it is the
+   fixed stock of hardware controllers: 3 UART · 2 I²C · 2 usable SPI. The one that actually bites
+   is UART: six TMC2209s need two UART lines (2-bit MS1/MS2 address = 4 drivers/line) and an RS-485
+   bus needs a third, leaving none for the programming/debug console. See PIN-BUDGET-ANALYSIS.md §3. */
+const PERIPH = { uart: 3, i2c: 2, spi: 2 };
+function periphOf(v){
+  const intKey = intBrainKey(v);
+  let uart = 0, i2c = 0, spi = 0;
+  const reasons = [];
+
+  spi += 1;                                     // screen (Layer A) — one SPI controller, ext or onboard
+  if (!intKey && v.b !== 'I²C') i2c += 1;        // LM75+MPR121 on one I²C (ext-screen brains; shares the bus when it too is I²C)
+
+  if (v.b === 'I²C') i2c += 1;                                        // sensors + system bus on one I²C controller
+  else if (v.b === 'RS-485') { uart += 1; reasons.push('RS-485 bus → 1 UART'); }
+  else if (v.b === 'USB/UART' || v.b === 'USB/UART/CAN') { uart += 1; reasons.push('printer-board link → 1 UART'); }
+  // CAN (MCP2515) shares the screen's SPI controller (own CS) → +0 controllers.
+
+  if ((v.pinsC || 0) > 0) {                       // only the driver wiring the BRAIN owns
+    if (v.dk === 'smart') { uart += 2; reasons.push('6× TMC2209 → 2 UART lines (≤4/line)'); }
+    // motion (TMC5160/5072) daisy-chains on the screen's SPI controller → +0
+    // dumb (DRV8825) STEP/DIR/ENABLE are plain GPIO + RMT/timers → no controller
+  }
+
+  const conflict = uart > PERIPH.uart || i2c > PERIPH.i2c || spi > PERIPH.spi;
+  const tight = !conflict && uart === PERIPH.uart;   // all UARTs on data — none left for the console
+  return { uart, i2c, spi, conflict, tight, reasons };
 }
 
 /* ---------- live system diagram (D-01/D-02/D-03) ----------
@@ -2008,9 +2050,15 @@ function renderMatrix(){
   rows.forEach(o=>{
     const v=o.v, dc = v.dk==='dumb'?'drv-dumb':v.dk==='smart'?'drv-smart':'drv-motion';
     const p = pinsOf(v), pc = pinConfidenceOf(v);
-    const pinCell = p.overrun
+    const per = periphOf(v);
+    const perFlag = per.conflict
+      ? ` <span class="pill bad" title="Needs more hardware controllers than the ESP32 has (3 UART / 2 I²C / 2 SPI) — see the expanded row">⚠ bus</span>`
+      : per.tight
+      ? ` <span class="pill conf-medium" title="All 3 UARTs spent on data (2 TMC lines + RS-485) — none left for the debug console. See the expanded row.">⚠ UART 3/3</span>`
+      : '';
+    const pinCell = (p.overrun
       ? `<span class="pill bad">OVERRUN</span> <span class="muted" title="pins short of the brain's usable GPIO">by ${p.used - p.avail}</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
-      : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
+      : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`) + perFlag;
     const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
     tr.innerHTML=`<td><b>${v.id}</b></td>
       <td>${directionPill(v)}</td>
@@ -2080,7 +2128,18 @@ function bomHtml(v){
       <span class="pill ${confClass(brain.psramConf)}">${brain.psramConf}</span> ·
       GPIO usable: ${brain.gpioUsable} <span class="pill ${confClass(brain.gpioConf)}">${brain.gpioConf}</span><br>
       ${brain.uiNote}</p>` : '';
-  return `<b>${v.note}</b>${brainInfo}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th><th>Price confidence</th></tr></thead>
+  /* Ceiling #2 — every solution's hardware-controller demand vs the ESP32's 3 UART / 2 I²C / 2 SPI.
+     This is the check a pin count can't do; it flags the "TX for two things" trap (PIN-BUDGET-ANALYSIS.md §3). */
+  const per = periphOf(v);
+  const perTag = per.conflict ? `<span class="pill bad">controller conflict</span>`
+    : per.tight ? `<span class="pill conf-medium">tight — no spare UART</span>`
+    : `<span class="pill conf-high">fits</span>`;
+  const perWhy = per.reasons.length ? ` <span class="muted">— ${per.reasons.join(' · ')}</span>` : '';
+  const perInfo = `<p class="muted" style="margin:6px 0 0;font-size:12.5px">
+      <b>Peripheral controllers</b> (ESP32 = 3 UART · 2 I²C · 2 SPI):
+      UART ${per.uart}/3 · I²C ${per.i2c}/2 · SPI ${per.spi}/2 &nbsp;${perTag}${perWhy}
+      ${per.tight ? '<br>All three UARTs are spent on data — none left for the USB debug console. Feasible: flash then disconnect the console, bit-bang one TMC line on SoftwareSerial, or use the I²C-bus sibling, which spends no UART.' : ''}</p>`;
+  return `<b>${v.note}</b>${brainInfo}${perInfo}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th><th>Price confidence</th></tr></thead>
     <tbody>${lines}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th class="cost">€${sum.toFixed(1)}</th>
     <th><span class="pill ${confClass(bomWorstConf(v))}">${bomWorstConf(v)}</span></th></tr></tfoot></table>`;
 }
