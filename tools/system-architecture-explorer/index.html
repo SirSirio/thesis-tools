@@ -362,6 +362,47 @@
   #matrix .hidden{display:none}
   #matrix .badge{font-size:11px;color:var(--text-muted);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:1px 5px}
   #matrix .note{border-left:3px solid var(--accent);background:rgba(255,107,43,.06);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13.5px}
+
+  /* ── Comms-layers callout ─────────────────────────────────────
+     Was one inline wall of text with A/B/C run together on mid-dots. Now a
+     definition list: each layer on its own row (letter tag + link name, then its
+     description), with the cross-cutting notes (brain / shared / pins-free) split
+     into a hairline-separated list below. Lives inside the existing .note callout
+     shell — same accent left border, denser internal rhythm. */
+  #matrix .comms-note{padding:14px 16px}
+  #matrix .comms-note-title{
+    margin:0 0 12px; font-size:0.72rem; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--accent);
+  }
+  #matrix .comms-layers{
+    display:grid; grid-template-columns:max-content 1fr; gap:10px 16px;
+    margin:0; align-items:baseline;
+  }
+  #matrix .comms-layers dt{
+    font-weight:600; color:var(--text); white-space:nowrap; line-height:1.5;
+  }
+  #matrix .comms-layers dd{margin:0; color:var(--text-muted); line-height:1.55}
+  #matrix .layer-tag{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; margin-right:9px; border-radius:6px;
+    background:rgba(255,107,43,.14); border:1px solid rgba(255,107,43,.30);
+    color:var(--accent); font-weight:700; font-size:12px; vertical-align:baseline;
+  }
+  #matrix .comms-notes{
+    list-style:none; margin:14px 0 0; padding:14px 0 0;
+    border-top:1px solid rgba(255,255,255,.08);
+    display:flex; flex-direction:column; gap:6px;
+    font-size:0.94em; color:var(--text-muted); line-height:1.55;
+  }
+  #matrix .comms-notes li{position:relative; padding-left:16px}
+  #matrix .comms-notes li::before{
+    content:''; position:absolute; left:2px; top:.62em;
+    width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:.65;
+  }
+  @media(max-width:560px){
+    #matrix .comms-layers{grid-template-columns:1fr; gap:4px 0}
+    #matrix .comms-layers dd{margin:0 0 8px}
+  }
   #matrix .reset{background:transparent;border:1px solid var(--glass-border);color:var(--accent);border-radius:7px;padding:6px 12px;cursor:pointer;font:inherit}
   #matrix .reset:hover{background:rgba(255,107,43,.1)}
   @media(max-width:640px){#matrix .hide-sm{display:none}}
@@ -574,16 +615,25 @@
 
   <div id="matrix" class="animate-in" style="--delay:0.18s">
 
-    <div class="sae-card note">
-      <b>Three comms layers:</b> <b>A</b> brain↔screen = SPI, 8 pins (ILI9341; owned board
-      inspected and confirmed SPI — <span class="pill conf-high">High</span> confidence, settled,
-      not a variable) — except the integrated-screen variants, where it's built in ·
-      <b>B</b> brain↔modules = <i>system bus</i> (I²C / RS-485 / CAN — the open choice) ·
-      <b>C</b> pump-MCU↔drivers = set by the driver (STEP/DIR wires · UART · SPI).
-      Brain = <b>ESP32</b>-class everywhere (bare ESP32 or an integrated ESP32+screen board).
-      Alignment module (2× 28BYJ-48) is its own node = part of the <b>shared</b> block,
-      constant across all rows. <b>Pins free</b> flags whether a variant actually fits the
-      brain's usable GPIO — see the pin-budget column below.
+    <div class="sae-card note comms-note">
+      <p class="comms-note-title">Three comms layers</p>
+      <dl class="comms-layers">
+        <dt><span class="layer-tag">A</span> brain&nbsp;↔&nbsp;screen</dt>
+        <dd>SPI, 8 pins (ILI9341 — owned board, inspected and confirmed SPI:
+          <span class="pill conf-high">High</span> confidence, settled, not a variable).
+          Built in on the integrated-screen variants.</dd>
+
+        <dt><span class="layer-tag">B</span> brain&nbsp;↔&nbsp;modules</dt>
+        <dd><i>System bus</i> — I²C / RS-485 / CAN (the open choice).</dd>
+
+        <dt><span class="layer-tag">C</span> pump-MCU&nbsp;↔&nbsp;drivers</dt>
+        <dd>Set by the driver: STEP/DIR wires · UART · SPI.</dd>
+      </dl>
+      <ul class="comms-notes">
+        <li><b>Brain</b> is ESP32-class everywhere — a bare ESP32, or an integrated ESP32+screen board.</li>
+        <li><b>Alignment module</b> (2× 28BYJ-48) is its own node, part of the <b>shared</b> block — constant across all rows.</li>
+        <li><b>Pins free</b> flags whether a variant actually fits the brain's usable GPIO (see the pin-budget column below).</li>
+      </ul>
     </div>
 
     <!-- ===================== CONTROLS =====================
