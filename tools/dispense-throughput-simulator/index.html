@@ -583,7 +583,7 @@
   .cmp-bar-label .t { font-weight: 700; }
   .cmp-bar-label .sub { color: var(--text-muted); font-size: 0.72rem; }
   .cmp-bar-label .saved { color: #6cd67a; font-weight: 600; }
-  .cmp-table-wrap { margin-top: 18px; }
+  .cmp-table-wrap { margin-top: 18px; overflow-x: auto; }
   .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
   .cmp-table th, .cmp-table td {
     padding: 8px 10px;
@@ -1434,10 +1434,10 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
         '</div>';
     });
 
-    // exact-number table
+    // exact-number table — K columns + a "2 → 6 pumps" reference column
     let thead = '<tr><th>Benchmark</th>';
     CMP_KS.forEach(function (K) { thead += '<th>' + K + (K === 1 ? ' pump' : ' pumps') + '</th>'; });
-    thead += '</tr>';
+    thead += '<th>2 → 6 pumps</th></tr>';
     let tbody = '';
     rows.forEach(function (row) {
       tbody += '<tr><td><span class="t">' + row.b.name + '</span></td>';
@@ -1447,6 +1447,12 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
           (c.K === 1 ? '<span class="sub">baseline</span>' : '<span class="saved">−' + c.saved.toFixed(0) + '% vs serial</span>') +
           '</td>';
       });
+      // reference: marginal benefit of going from 2 → 6 pumps
+      const t2 = row.cells[1].total, t6 = row.cells[2].total;
+      const gain = t2 - t6, gainPct = t2 > 0 ? gain / t2 * 100 : 0;
+      tbody += '<td>' + (gain > 0.05
+        ? '<span class="t saved">−' + fmtMinSec(gain) + '</span><br><span class="saved">−' + gainPct.toFixed(0) + '% faster</span>'
+        : '<span class="sub">no gain</span><br><span class="sub">(≤ ' + row.N + ' liquids)</span>') + '</td>';
       tbody += '</tr>';
     });
 
@@ -1455,8 +1461,8 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
       ' × 8 = ' + samplesCmp + ' samples</b> · ' + (rackChangesCmp) + ' rack change' + (rackChangesCmp === 1 ? '' : 's') + '</p>';
     host.innerHTML = batchLine + bars +
       '<div class="cmp-table-wrap"><table class="cmp-table"><thead>' + thead + '</thead><tbody>' + tbody + '</tbody></table></div>' +
-      (anyCapped ? '<p class="cmp-note">* Pumps beyond a benchmark’s liquid count add nothing — the value is full parallel (capped at that benchmark’s N). Each cell: total run time · throughput · time saved vs serial.</p>'
-                 : '<p class="cmp-note">Each cell: total run time · throughput · time saved vs serial.</p>');
+      '<p class="cmp-note">Each cell: total run time · throughput · time saved vs serial. The <b>2 → 6 pumps</b> column is the extra time saved by going from 2 to 6 pumps — small means diminishing returns.' +
+      (anyCapped ? ' * Pumps beyond a benchmark’s liquid count add nothing (capped at that benchmark’s N), so its 2 → 6 gain is zero.' : '') + '</p>';
   }
 
   // Enable/disable + sync the per-pump speed fields to the control mode.
