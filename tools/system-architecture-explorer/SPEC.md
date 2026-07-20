@@ -18,7 +18,7 @@ of the cost/complexity matrix originally built in `prototypes/System-Architectur
 
 ---
 
-## Whole-device module schema (Part 00 — D-01/D-02/D-03/D-04/D-05)
+## Whole-device module schema (Part 1 — D-01/D-02/D-03/D-04/D-05)
 
 Above the cost/complexity matrix, the tool draws a static SVG (`buildSchema()`) of the six
 hardware modules that make up the whole device — the **hardware-requirements baseline** (D-04)
@@ -328,8 +328,8 @@ block" is toggled on. Shared-block cost double-counting is guarded for integrate
 Every variant is built from the same three communication links; only their implementation changes
 row to row.
 
-The page's Part 01 renders this reasoning as three **collapsible folds** (`.theory-section.sae-fold`),
-**closed by default** — the page's spine is Part 00 schema → directions gallery → matrix, and the
+The page's Part 3 renders this reasoning as three **collapsible folds** (`.theory-section.sae-fold`),
+**closed by default** — the page's spine is Part 1 schema → Part 2 directions gallery → Part 4 matrix, and the
 theory is reference material opened on demand. Each fold's prose is written in the `DIRECTIONS`
 vocabulary so the funnel stays continuous: Layer A is where **All-in-One** splits from **Console** /
 **Panel + Node** (integrated board absorbs the link entirely); Layer B is why **Distributed Modules**
