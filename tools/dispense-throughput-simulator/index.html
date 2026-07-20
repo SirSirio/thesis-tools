@@ -1227,6 +1227,20 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
 
     function schedule(delay) { rackAnim.timer = setTimeout(tick, delay); }
 
+    // rAF tween of the rack's transform from the current x to toX over SLIDE ms.
+    function slide(toX, onDone) {
+      const from = curX, start = performance.now();
+      function frame(now) {
+        const t = Math.min(1, (now - start) / SLIDE);
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // easeInOutQuad
+        curX = from + (toX - from) * e;
+        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+        if (t < 1) { rackAnim.raf = requestAnimationFrame(frame); }
+        else { rackAnim.raf = null; if (onDone) onDone(); }
+      }
+      rackAnim.raf = requestAnimationFrame(frame);
+    }
+
     // Reveal the fills for the tubes now under nozzles, but respect concurrency K:
     // only K pumps run at once, so nozzles fire in waves of K (longest dose first,
     // mirroring the LPT engine grouping). Returns the total dispense-phase duration.
@@ -1262,37 +1276,33 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     // seeded instantly; the current round's top layer animates. Returns the
     // dispense-phase duration so the caller can schedule the next step.
     function warmStart() {
-      k = N; curX = txFor(N);
-      rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+      rackAnim.waveTimers.forEach(clearTimeout); rackAnim.waveTimers = [];
+      clearDrops();
+      k = N;
       clearLayers();
       for (let i = 0; i < TUBES; i++) {
         const L = Math.max(0, Math.min(N, k - i));
-        for (let x = 1; x < L; x++) revealLayer(i, x);  // seed all but the top layer
+        for (let x = 1; x < L; x++) revealLayer(i, x);  // seed all but the current round's top layer
       }
-      return dispensePhase(k);                          // animate this round (all N, K-waved)
+      // Begin one step to the RIGHT — samples NOT yet aligned with the nozzles —
+      // then slide them under the bank before the first dispense round.
+      curX = txFor(N) + S;
+      rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+      slide(txFor(N), function () { rackAnim.timer = setTimeout(tick, dispensePhase(k)); });
     }
 
     function tick() {
       rackAnim.waveTimers.forEach(clearTimeout); rackAnim.waveTimers = [];
       clearDrops();
       k++;
-      if (k > loopEnd) {                               // loop: brief pause, then a fresh full rack
-        rackAnim.timer = setTimeout(function () { rackAnim.timer = setTimeout(tick, warmStart()); }, RESET_PAUSE);
+      if (k > loopEnd) {                               // loop: brief pause, then a fresh rack slides in
+        rackAnim.timer = setTimeout(warmStart, RESET_PAUSE);
         return;
       }
-      const from = curX, start = performance.now(), toX = txFor(k);
-      function frame(now) {
-        const t = Math.min(1, (now - start) / SLIDE);
-        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // easeInOutQuad
-        curX = from + (toX - from) * e;
-        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
-        if (t < 1) { rackAnim.raf = requestAnimationFrame(frame); }
-        else { rackAnim.raf = null; schedule(dispensePhase(k)); }  // fill in waves, then next step
-      }
-      rackAnim.raf = requestAnimationFrame(frame);
+      slide(txFor(k), function () { rackAnim.timer = setTimeout(tick, dispensePhase(k)); });  // index, then fill in waves
     }
 
-    rackAnim.timer = setTimeout(tick, warmStart());    // kick off with the bank already full
+    warmStart();                                       // kick off: rack slides in, then dispenses
   }
 
   function recompute() {
