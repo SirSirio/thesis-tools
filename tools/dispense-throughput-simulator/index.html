@@ -99,7 +99,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--accent);
-    min-width: 30px;
+    min-width: 2.1em;
     text-align: right;
   }
 
@@ -150,7 +150,7 @@
     );
     outline: none;
     cursor: pointer;
-    min-width: 80px;
+    min-width: 5em;
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -188,7 +188,7 @@
   .liquid-label {
     font-size: 0.85rem;
     color: var(--text);
-    min-width: 84px;
+    min-width: 6.2em;
   }
   .liquid-row-actions {
     display: flex;
@@ -253,11 +253,153 @@
   .no { color: #e85d5d; font-weight: 600; }
   .warn { color: #e8a020; font-weight: 600; }
 
-  /* ── Metrics / Gantt / Rack animation placeholders (Plan 08-02) ── */
+  /* ── Metrics / Gantt / Rack animation base ──────────────────── */
   #metrics, #gantt, #rackAnim {
     font-size: 0.9rem;
     color: var(--text-muted);
     min-height: 1.4em;
+  }
+
+  /* ── Mode-toggle teaching copy (D-04) ───────────────────────── */
+  .mode-note {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  /* ── D-11 headline metric cards ─────────────────────────────── */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+  }
+  .mc {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,107,43,0.15);
+    border-radius: 12px;
+    padding: 14px 18px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: border-color 0.25s;
+  }
+  .mc:hover { border-color: rgba(255,107,43,0.35); }
+  .mc .l {
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .mc .n {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+  }
+  .mc .sub {
+    margin-top: 5px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* ── D-09/D-10 row-per-station Gantt ─────────────────────────── */
+  .timeline {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 34px;
+  }
+  .row-label {
+    width: clamp(70px, 22vw, 130px);
+    flex: none;
+    padding-right: 10px;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .row-bottleneck .row-label { color: var(--accent); font-weight: 600; }
+  .row-track {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    background: rgba(255,255,255,0.025);
+    border-radius: 6px;
+  }
+  .bar {
+    position: absolute;
+    top: 6px;
+    height: 22px;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    transition: transform 0.15s ease, filter 0.15s ease;
+    cursor: default;
+  }
+  .bar:hover { transform: translateY(-1px); filter: brightness(1.12); z-index: 3; }
+  .bar.active {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 1px rgba(255,107,43,0.4), 0 0 14px rgba(255,107,43,0.4);
+  }
+  .gantt-caption {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .tt {
+    position: fixed;
+    z-index: 100;
+    max-width: 260px;
+    padding: 10px 12px;
+    background: rgba(16,14,18,0.96);
+    border: 1px solid rgba(255,107,43,0.35);
+    border-radius: 11px;
+    box-shadow: 0 16px 44px rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.14s ease, transform 0.14s ease;
+    font-size: 0.78rem;
+  }
+  .tt.show { opacity: 1; transform: none; }
+  .tt .tt-title { font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .tt .tt-row { color: var(--text-muted); line-height: 1.5; }
+  .tt .tt-row b { color: var(--text); font-weight: 600; }
+
+  /* ── D-12 illustrative rack-indexing animation ───────────────── */
+  .rack-anim-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+    padding: 8px 0;
+  }
+  .rack-anim-wrap svg { display: block; width: 100%; height: auto; }
+  .rack-track { animation: indexStep 6s steps(8, end) infinite; }
+  @keyframes indexStep {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(var(--travel, -440px)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rack-track { animation: none; }
+  }
+  .rack-caption {
+    margin-top: 10px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
   }
 
   /* ── Responsive ───────────────────────────────────────────────── */
@@ -265,7 +407,7 @@
     .tool-main { padding: 40px 16px 60px; }
     .tool-nav { padding: 14px 16px; }
     .glass-panel { padding: 20px 18px; }
-    .liquid-label { min-width: 70px; font-size: 0.8rem; }
+    .liquid-label { min-width: 5.5em; font-size: 0.8rem; }
   }
 </style>
 </head>
@@ -361,6 +503,10 @@
           <option value="a1">Lockstep / shared-bus (A1)</option>
           <option value="a2">Independent-rate (A2)</option>
         </select>
+        <p class="mode-note" id="modeNote">Lockstep (A1) and independent (A2) take the same time here because every
+          pump is configured at the same rate — A1's real cost only appears when a protocol needs pumps at
+          genuinely different rates. The A1-vs-A2 verdict below always compares the concurrency slider's two
+          endpoints (K=1 vs K=N), independent of this toggle.</p>
       </div>
     </div>
 
@@ -381,6 +527,7 @@
   <section class="glass-panel animate-in" style="--delay: 0.32s;">
     <p class="panel-title">Timeline</p>
     <div id="gantt"></div>
+    <div class="tt" id="ganttTip" role="tooltip"></div>
   </section>
 
   <section class="glass-panel animate-in" style="--delay: 0.37s;">
@@ -505,6 +652,245 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
   };
 }
 
+  // ── Rendering support (Plan 08-02) ──────────────────────────────
+  // Everything below reads from the single simulateSchedule() engine output
+  // (window.__sim) — no second, independently-derived total-time formula.
+
+  // Per-liquid colour palette shared by the Gantt bars and the rack-animation drops.
+  const LIQUID_COLORS = [
+    { from: '#ff8c42', to: '#e83535' },
+    { from: '#43b9c9', to: '#2b7bd6' },
+    { from: '#b06cf0', to: '#7b52e0' },
+    { from: '#6cd67a', to: '#2f9e52' },
+    { from: '#ffd27a', to: '#e8a020' },
+    { from: '#ff6bcb', to: '#c93d8e' }
+  ];
+  function liquidGradientCss(i) {
+    const c = LIQUID_COLORS[i % LIQUID_COLORS.length];
+    return 'linear-gradient(135deg, ' + c.from + ', ' + c.to + ')';
+  }
+
+  function fmtMinSec(totalSeconds) {
+    if (!isFinite(totalSeconds)) return '—';
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds - m * 60;
+    return m + 'm ' + s.toFixed(1) + 's';
+  }
+
+  // Mirrors groupDispenseTime()'s exact LPT sort/chunk rule (same tiebreak),
+  // but returns each station's own start/end offset within the dispense
+  // phase instead of only the group-max total — needed to place per-station
+  // Gantt bars. This does not change the engine's total-time computation.
+  function stationOffsetsForCycle(activeStations, doseTimesArr, K) {
+    const items = activeStations.map((j, i) => ({ j: j, t: doseTimesArr[j - 1], i: i }));
+    items.sort((a, b) => (b.t - a.t) || (a.i - b.i));
+    const offsets = {};
+    let cursor = 0;
+    for (let i = 0; i < items.length; i += K) {
+      const group = items.slice(i, i + K);
+      let groupMax = 0;
+      for (let g = 0; g < group.length; g++) if (group[g].t > groupMax) groupMax = group[g].t;
+      for (let g = 0; g < group.length; g++) offsets[group[g].j] = { start: cursor, end: cursor + group[g].t };
+      cursor += groupMax;
+    }
+    return offsets;
+  }
+
+  function renderMetrics(sim) {
+    const metricsEl = document.getElementById('metrics');
+    if (!metricsEl) return;
+    const liquids = sim.liquids, doseTimes = sim.doseTimes, K = sim.K, result = sim.result;
+    const N = liquids.length;
+
+    // (1) Total run time (D-11.1) — read straight off the engine's own total.
+    const totalSec = result.totalRunTime;
+    const totalLabel = fmtMinSec(totalSec);
+    const totalRaw = isFinite(totalSec) ? totalSec.toFixed(2) + ' s' : '—';
+
+    // (2) Bottleneck station (D-11.2) — read off the engine's bottleneck index.
+    const bIdx = result.bottleneck.index;
+    const bVol = liquids[bIdx];
+    const bDose = result.bottleneck.doseTime;
+    const bottleneckLabel = isFinite(bDose) && bVol !== undefined
+      ? bVol.toFixed(0) + ' µL to ' + bDose.toFixed(1) + ' s'
+      : '—';
+    const bottleneckSub = 'Station ' + (bIdx + 1) + ' of ' + N;
+
+    // (3) A1 vs A2 delta (D-11.3) — the two pinned SLIDER ENDPOINTS (K=1, K=N),
+    // independent of the mode toggle's current position (RESEARCH finding).
+    const rSerial = simulateSchedule(doseTimes, N, SAMPLES, 1, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1);
+    const rParallel = simulateSchedule(doseTimes, N, SAMPLES, N, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1);
+    const delta = rSerial.totalRunTime - rParallel.totalRunTime;
+    const deltaPct = rSerial.totalRunTime > 0 ? (delta / rSerial.totalRunTime) * 100 : 0;
+    const deltaLabel = isFinite(delta) ? delta.toFixed(2) + ' s saved' : '—';
+    const deltaSub = isFinite(delta)
+      ? '(≈' + deltaPct.toFixed(0) + '%) — serial ' + rSerial.totalRunTime.toFixed(1) +
+        's vs parallel ' + rParallel.totalRunTime.toFixed(1) + 's'
+      : '';
+
+    // (4) Throughput (D-11.4) — at the CURRENT concurrency K.
+    const perSample = totalSec / SAMPLES;
+    const throughputLabel = isFinite(perSample) ? perSample.toFixed(2) + ' s/sample' : '—';
+    const throughputSub = isFinite(result.samplesPerHour) ? result.samplesPerHour.toFixed(1) + ' samples/hr' : '';
+
+    metricsEl.innerHTML =
+      '<div class="summary">' +
+        '<div class="mc"><div class="l">Total run time</div><div class="n">' + totalLabel + '</div><div class="sub">' + totalRaw + '</div></div>' +
+        '<div class="mc"><div class="l">Bottleneck station</div><div class="n">' + bottleneckLabel + '</div><div class="sub">' + bottleneckSub + '</div></div>' +
+        '<div class="mc"><div class="l">A1 vs A2 delta</div><div class="n">' + deltaLabel + '</div><div class="sub">' + deltaSub + '</div></div>' +
+        '<div class="mc"><div class="l">Throughput (K=' + K + ')</div><div class="n">' + throughputLabel + '</div><div class="sub">' + throughputSub + '</div></div>' +
+      '</div>';
+  }
+
+  function wireGanttTooltips() {
+    const tt = document.getElementById('ganttTip');
+    if (!tt) return;
+    function showTip(e) {
+      const b = e.currentTarget;
+      tt.innerHTML =
+        '<div class="tt-title">' + b.dataset.station + '</div>' +
+        '<div class="tt-row">Liquid: <b>' + b.dataset.liquid + '</b></div>' +
+        '<div class="tt-row">Dose time: <b>' + b.dataset.dose + '</b></div>' +
+        '<div class="tt-row">Cycle: <b>' + b.dataset.cycle + '</b></div>';
+      tt.classList.add('show');
+      moveTip(e);
+    }
+    function moveTip(e) {
+      const pad = 14;
+      let x = e.clientX + pad, y = e.clientY + pad;
+      const r = tt.getBoundingClientRect();
+      if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - pad;
+      if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - pad;
+      tt.style.left = x + 'px'; tt.style.top = y + 'px';
+    }
+    function hideTip() { tt.classList.remove('show'); }
+    document.querySelectorAll('#gantt .bar').forEach(function (b) {
+      b.addEventListener('mouseenter', showTip);
+      b.addEventListener('mousemove', moveTip);
+      b.addEventListener('mouseleave', hideTip);
+    });
+  }
+
+  function renderGantt(sim) {
+    const ganttEl = document.getElementById('gantt');
+    if (!ganttEl) return;
+    const liquids = sim.liquids, doseTimes = sim.doseTimes, K = sim.K, result = sim.result;
+    const N = liquids.length;
+    const cycles = result.cycles;
+
+    // T-08-03 mitigation: show, don't hide — an inline notice instead of a blank/NaN Gantt.
+    if (!cycles || !cycles.length || !isFinite(result.totalRunTime)) {
+      ganttEl.innerHTML = '<p class="warn-box" style="display:block">Timeline unavailable for the current inputs.</p>';
+      return;
+    }
+
+    // Absolute elapsed-seconds timestamp at the START of each cycle (prefix sum).
+    let elapsed = 0;
+    const cycleStarts = cycles.map(function (c) { const s = elapsed; elapsed += c.cycleTime; return s; });
+
+    // Steady-state window (D-10, Pitfall 5): start at cycle N (first fully-occupied
+    // cycle), render a few full-occupancy cycles, excluding fill (1..N-1) and drain.
+    const winStartCycle = Math.min(N, cycles[cycles.length - 1].cycle);
+    const winEndCycle = Math.min(N + 2, SAMPLES);
+    const winStartIdx = cycles.findIndex(function (c) { return c.cycle === winStartCycle; });
+    const winEndIdx = cycles.findIndex(function (c) { return c.cycle === winEndCycle; });
+    if (winStartIdx === -1 || winEndIdx === -1) { ganttEl.innerHTML = ''; return; }
+
+    const windowStart = cycleStarts[winStartIdx];
+    const windowEnd = cycleStarts[winEndIdx] + cycles[winEndIdx].cycleTime;
+    const pct = function (t) { return ((t - windowStart) / (windowEnd - windowStart)) * 100; };
+
+    // Bucket bars by station (row), computing each station's actual start/end
+    // offset within its cycle via the LPT grouping breakdown above.
+    const stationBars = [];
+    for (let s = 0; s < N; s++) stationBars.push([]);
+    for (let idx = winStartIdx; idx <= winEndIdx; idx++) {
+      const c = cycles[idx];
+      const cycleStart = cycleStarts[idx];
+      const offsets = stationOffsetsForCycle(c.activeStations, doseTimes, K);
+      c.activeStations.forEach(function (j) {
+        const off = offsets[j];
+        stationBars[j - 1].push({ cycle: c.cycle, start: cycleStart + off.start, end: cycleStart + off.end });
+      });
+    }
+
+    const bottleneckIdx = result.bottleneck.index;
+    let rowsHtml = '';
+    for (let j = 0; j < N; j++) {
+      const isBottleneck = j === bottleneckIdx;
+      const barsHtml = stationBars[j].map(function (b) {
+        const left = Math.max(0, pct(b.start));
+        const right = Math.min(100, pct(b.end));
+        const width = Math.max(0.6, right - left);
+        return '<div class="bar' + (isBottleneck ? ' active' : '') + '" style="left:' + left + '%;width:' + width +
+          '%;background:' + liquidGradientCss(j) + '" data-station="Station ' + (j + 1) + '" data-liquid="' +
+          liquids[j].toFixed(0) + ' µL" data-dose="' + doseTimes[j].toFixed(2) + ' s" data-cycle="' + b.cycle + '"></div>';
+      }).join('');
+      rowsHtml += '<div class="row' + (isBottleneck ? ' row-bottleneck' : '') + '">' +
+        '<div class="row-label">Station ' + (j + 1) + ' — ' + liquids[j].toFixed(0) + ' µL' + (isBottleneck ? ' ★' : '') + '</div>' +
+        '<div class="row-track">' + barsHtml + '</div></div>';
+    }
+
+    ganttEl.innerHTML = '<div class="timeline">' + rowsHtml + '</div>' +
+      '<p class="gantt-caption">Steady-state window (cycles ' + winStartCycle + '–' + winEndCycle + ' of ' +
+      cycles.length + ') — idle gaps are grouping/index-move overhead. Full fill+steady+drain totals are shown ' +
+      'in the cards above.</p>';
+
+    wireGanttTooltips();
+  }
+
+  // Illustrative rack-indexing SVG (D-12) — string-concat builder (rotor-solver
+  // buildFigure() precedent), hand-built, no library. Two periods of 8 wells so
+  // the CSS steps() loop resets on an identical-looking frame (seamless loop).
+  function buildRackSvg(N) {
+    const width = 520, height = 170;
+    const nozzleY = 34, wellY = 128, wellR = 15, wellSpacing = 55, periodWells = 8;
+    const totalWells = periodWells * 2;
+    const marginX = 60;
+    const usableWidth = width - marginX * 2;
+    const nozzleSpacing = N > 1 ? usableWidth / (N - 1) : 0;
+
+    let defsSvg = '<defs>';
+    let nozzlesSvg = '';
+    let dropsSvg = '';
+    for (let i = 0; i < N; i++) {
+      const x = N > 1 ? marginX + i * nozzleSpacing : width / 2;
+      const c = LIQUID_COLORS[i % LIQUID_COLORS.length];
+      defsSvg += '<linearGradient id="dropGrad' + i + '" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="' + c.from + '"/><stop offset="100%" stop-color="' + c.to + '"/></linearGradient>';
+      nozzlesSvg += '<g><rect x="' + (x - 5) + '" y="' + (nozzleY - 22) + '" width="10" height="20" rx="2" fill="#3a3430" stroke="rgba(255,255,255,0.15)"/>' +
+        '<polygon points="' + (x - 7) + ',' + (nozzleY - 2) + ' ' + (x + 7) + ',' + (nozzleY - 2) + ' ' + x + ',' + (nozzleY + 8) + '" fill="#5a5048"/></g>';
+      dropsSvg += '<ellipse cx="' + x + '" cy="' + (nozzleY + 22) + '" rx="5" ry="7" fill="url(#dropGrad' + i + ')" opacity="0.85"/>';
+    }
+    defsSvg += '</defs>';
+
+    let wellsSvg = '';
+    for (let w = 0; w < totalWells; w++) {
+      const x = marginX + w * wellSpacing;
+      wellsSvg += '<circle cx="' + x + '" cy="' + wellY + '" r="' + wellR + '" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.18)"/>';
+    }
+
+    return '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrative rack-indexing schematic">' +
+      defsSvg +
+      '<g class="rack-track" style="--travel:-' + (periodWells * wellSpacing) + 'px">' + wellsSvg + '</g>' +
+      '<line x1="' + (marginX - wellR - 8) + '" y1="' + wellY + '" x2="' + (width - marginX + wellR + 8) + '" y2="' + wellY + '" stroke="rgba(255,255,255,0.08)"/>' +
+      nozzlesSvg + dropsSvg +
+      '</svg>';
+  }
+
+  // Decoupled from simulateSchedule timing (D-12) — only rebuilt when the
+  // station count changes, so typing in a volume field doesn't restart the loop.
+  let lastRackN = null;
+  function renderRackAnim(sim) {
+    const el = document.getElementById('rackAnim');
+    if (!el) return;
+    const N = sim.liquids.length;
+    if (lastRackN === N && el.firstElementChild) return;
+    lastRackN = N;
+    el.innerHTML = '<div class="rack-anim-wrap">' + buildRackSvg(N) + '</div>' +
+      '<p class="rack-caption">Illustrative — conveys how the line indexes; not a timing-accurate playback.</p>';
+  }
+
   function recompute() {
     const warnings = [];
 
@@ -573,11 +959,11 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
       }
     }
 
-    // ── Metrics placeholder (Plan 08-02 replaces this with the four headline cards) ──
-    const metricsEl = document.getElementById('metrics');
-    if (metricsEl) {
-      metricsEl.textContent = 'Total run time: ' + result.totalRunTime.toFixed(2) + ' s';
-    }
+    // ── Render the four D-11 metric cards, the D-09/D-10 Gantt, and the D-12
+    // rack animation — all reading from the single window.__sim engine object.
+    renderMetrics(window.__sim);
+    renderGantt(window.__sim);
+    renderRackAnim(window.__sim);
   }
 
   ['rollers', 'uLPerStroke', 'rpm', 'concK'].forEach(id =>
