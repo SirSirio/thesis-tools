@@ -4,6 +4,25 @@
 
 The site grows incrementally as the thesis generates new design decisions needing computational support. New phases are added when a Proto 1 decision demands a tool — the backlog in `ROADMAP.md` (repo root) lists candidates but they are not pre-committed phases.
 
+### Phase 8: Dispense Choreography & Throughput Simulator tool — interactive tool to set number of pumps acting simultaneously, assign liquids/volumes to nozzles, set pump flow params (rollers, uL/stroke, RPM) and sample-stage move time, then schedule a linear nozzle/sample indexing line (6 nozzles, 8 samples/rack x 4 racks) and output total run time, per-station timeline, and bottleneck; purpose is to decide U5 concurrency empirically
+
+**Goal:** Ship a self-contained tool at `tools/dispense-throughput-simulator/` that schedules a 6-nozzle cocktail-pipeline indexing line (up to 6 liquids, 32-sample rack) at a chosen concurrency (1..N, A1 lockstep vs A2 independent endpoints) and reports total run time, a row-per-station Gantt with the bottleneck highlighted, and the A1-vs-A2 time-saved verdict — reproducing the pinned benchmark (serial 16.67 s/sample, pipelined ceiling 10 s, full totals 583.33 s @ K=1 vs 376.67 s @ K=4) to answer U5 (does the architecture need per-motor independent rates) empirically.
+**Requirements**: No formal REQ-IDs — the trackable set is CONTEXT.md decisions D-01…D-12 plus faithful benchmark reproduction.
+**Depends on:** Phase 7
+**Plans:** 4 plans in 3 waves
+
+Plans:
+
+**Wave 1**
+- [ ] 08-01-PLAN.md — Engine + shell: tool page scaffold, input panel (liquids/flow params/concurrency slider/mode toggle/constants), and the benchmark-faithful simulateSchedule scheduling engine
+
+**Wave 2** *(blocked on Wave 1 — same file)*
+- [ ] 08-02-PLAN.md — Outputs & visualization: four D-11 metric cards, row-per-station steady-state Gantt (bottleneck highlight, no scroll), illustrative rack-indexing animation
+
+**Wave 3** *(blocked on Wave 2; disjoint files, parallel)*
+- [ ] 08-03-PLAN.md — Canonical SPEC.md (inputs, scheduling formulas, benchmark, assumption footnotes)
+- [ ] 08-04-PLAN.md — Integration/chrome: landing-page card (EN+IT), README row, repo-root ROADMAP row, CLAUDE.md folder structure
+
 ## Shipped
 
 | What | Notes |

@@ -398,17 +398,19 @@ Not applicable in the usual "library X replaced library Y" sense — there is no
 
 ## Open Questions
 
-1. **Does D-07's "fill + 32 + drain" wording mean literally `32+2(N-1)` cycles, or is `32+(N-1)` (standard pipeline math) an acceptable reading?**
+> **All three resolved during planning (Phase 8 plans, 2026-07-20)** — the plans hardcode a single reading for each, so nothing is left for the executor to guess. Markers added per plan-checker audit-trail convention.
+
+1. **(RESOLVED — adopted `32+(N-1)`, footnoted in SPEC.md; 08-01 Task 2 hardcodes `totalCycles = M + N - 1` with a grep guard against the `2*(N-1)` reading)** **Does D-07's "fill + 32 + drain" wording mean literally `32+2(N-1)` cycles, or is `32+(N-1)` (standard pipeline math) an acceptable reading?**
    - What we know: the two PINNED benchmark numbers (16.67s serial-sum, 10s pipelined-max) are steady-state per-cycle figures and are unaffected either way.
    - What's unclear: the exact total-cycle-count formula for the full wall-clock total (D-07/D-11.1).
    - Recommendation: adopt `32+(N-1)` (mathematically correct, worked out in full above) with a one-line SPEC.md footnote; only escalate to the user if exact literal wording matters more than mathematical correctness for the thesis write-up.
 
-2. **Should the A1/A2 mode toggle ever carry independent numeric weight (via optional per-liquid rate override), or is it purely explanatory given the global-params default?**
+2. **(RESOLVED — explanatory-only for v1; 08-02 Task 1 computes the D-11.3 delta from the K=1 vs K=N slider endpoints, mode toggle carries teaching copy, no per-liquid override built)** **Should the A1/A2 mode toggle ever carry independent numeric weight (via optional per-liquid rate override), or is it purely explanatory given the global-params default?**
    - What we know: CONTEXT.md's Deferred Ideas explicitly name per-liquid flow tuning as a "later enhancement... unless trivially free."
    - What's unclear: whether "trivially free" is met by a simple per-station RPM override field, or whether that's scope creep for this phase.
    - Recommendation: ship the explanatory-only version for v1 (Option 1 above); treat the override as an explicit future-phase candidate, not something to half-build here.
 
-3. **Does the tool need any persisted state (localStorage), matching system-architecture-explorer's D-06 precedent?**
+3. **(RESOLVED — no persistence for v1; no plan introduces a localStorage mechanism)** **Does the tool need any persisted state (localStorage), matching system-architecture-explorer's D-06 precedent?**
    - What we know: CONTEXT.md's 12 decisions never mention persistence; thesis-timeline (the closest structural analog) has none ("read-only visualization — no inputs, no persistence") but that tool also has no inputs, unlike phase 8.
    - What's unclear: whether losing all input state on reload is acceptable for a tool this interactive.
    - Recommendation: default to no persistence for v1 (simplest, matches the absence of any CONTEXT.md decision calling for it); flag as a cheap addable-later enhancement if Sirio wants it (the system-architecture-explorer precedent, `06-01-PLAN.md`, shows the pattern is already proven in this codebase if needed).
