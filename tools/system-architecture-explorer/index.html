@@ -95,6 +95,53 @@
   }
   .theory-section p:last-child { margin-bottom: 0; }
 
+  /* ── Pin-budget formula + ledger visual (Part 3) ───────────── */
+  .pin-formula{
+    margin:6px 0 18px; padding:14px 16px; border-radius:10px;
+    background:rgba(255,255,255,.03); border:1px solid var(--glass-border);
+    text-align:center; font-size:1.02rem; line-height:2.1; letter-spacing:.01em;
+  }
+  .pin-formula .eq{ font-weight:600; }
+  .pin-formula .op{ color:var(--text-muted); margin:0 .32em; font-weight:400; }
+  .pin-formula .t-scr{color:var(--accent)} .pin-formula .t-sen{color:var(--text-muted)}
+  .pin-formula .t-bus{color:var(--blue)} .pin-formula .t-drv{color:var(--warn)}
+  .pin-formula .t-ms{color:var(--accent-2)} .pin-formula .t-vib{color:var(--ok)}
+  .pin-formula .avail{ display:block; margin-top:6px; font-size:.86rem; color:var(--text-muted); letter-spacing:.02em; }
+  .pin-formula .avail b{ color:var(--text); }
+
+  .pin-ledger{ margin:18px 0 8px; }
+  .pl-head{ font-size:.82rem; color:var(--text-muted); margin-bottom:26px; }
+  .pl-head b{ color:var(--text); }
+  .pl-track{
+    position:relative; display:flex; height:38px; width:100%;
+    border-radius:7px; overflow:hidden; background:rgba(255,255,255,.03);
+  }
+  .pl-seg{
+    display:flex; align-items:center; justify-content:center; min-width:0;
+    font-size:11.5px; font-weight:600; color:#0a0a0c; white-space:nowrap;
+    border-right:1px solid rgba(10,10,12,.35);
+  }
+  .pl-seg span{ overflow:hidden; text-overflow:ellipsis; padding:0 2px; }
+  .pl-screen{background:var(--accent)} .pl-bus{background:var(--blue)}
+  .pl-drv{background:var(--warn)} .pl-vib{background:var(--ok)}
+  .pl-ms{background:var(--accent-2)}
+  /* red overflow zone sitting behind the segments that spill past the GPIO ceiling */
+  .pl-over{
+    position:absolute; top:0; bottom:0; right:0;
+    background:repeating-linear-gradient(45deg,rgba(232,53,53,.30),rgba(232,53,53,.30) 6px,rgba(232,53,53,.14) 6px,rgba(232,53,53,.14) 12px);
+    pointer-events:none;
+  }
+  .pl-ceiling{ position:absolute; top:-4px; bottom:-4px; width:0; border-left:2px dashed var(--text); }
+  .pl-ceiling span{
+    position:absolute; top:-20px; left:50%; transform:translateX(-50%);
+    font-size:10.5px; color:var(--text); white-space:nowrap; letter-spacing:.02em;
+  }
+  .pl-caption{ margin-top:26px; font-size:.86rem; color:var(--text-muted); }
+  .pl-bad{ color:var(--accent-2); font-weight:700; }
+  .pl-legend{ display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; font-size:12px; color:var(--text-muted); }
+  .pl-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .pl-legend i{ width:11px; height:11px; border-radius:3px; display:inline-block; }
+
   /* ── Collapsible fold ─────────────────────────────────────────
      Shared by the Part 01 theory sections and the component-price
      table. Adapted from prototypes/index.html's .ver-panel <details>
@@ -607,6 +654,105 @@
       which owns the decision between replicated-pump control layers A1 (shared step bus, serial)
       and A2 (independent per-motor control, parallel). This tool prices what each answer to U5
       actually costs; it does not answer U5 itself.</p>
+    </details>
+    <details class="theory-section sae-fold">
+      <summary>
+        <span class="fold-title">The Pin Budget — What Drains the GPIO</span>
+        <span class="fold-note">The formula behind the free / OVERRUN column, and the deeper limit a count can't see</span>
+      </summary>
+      <p>The last matrix column is a running sum: add up every pin the brain must spend, and
+      compare it to the pins that brain actually has. A variant that needs more than it has is
+      flagged <b>OVERRUN</b> — it cannot be built on a single brain as wired.</p>
+
+      <div class="pin-formula">
+        <span class="eq">pins&nbsp;used
+          <span class="op">=</span><span class="t-scr">screen&nbsp;(A)</span>
+          <span class="op">+</span><span class="t-sen">sensors</span>
+          <span class="op">+</span><span class="t-bus">bus&nbsp;(B)</span>
+          <span class="op">+</span><span class="t-drv">drivers&nbsp;(C)</span>
+          <span class="op">+</span><span class="t-ms">microstep</span>
+          <span class="op">+</span><span class="t-vib">vibration</span>
+        </span>
+        <span class="avail">a variant <b>fits</b> when pins&nbsp;used ≤ <b>usable&nbsp;GPIO</b>
+          &nbsp;·&nbsp; bare&nbsp;ESP32 = <b>15</b> &nbsp;·&nbsp; integrated&nbsp;2.4″ = <b>9</b> &nbsp;·&nbsp; integrated&nbsp;3.2″ = <b>3</b></span>
+      </div>
+
+      <div class="pin-ledger">
+        <div class="pl-head">Worked example — <b>S1-i2c</b> (bare ESP32, dumb DRV8825, I²C):
+          &nbsp;8 <span style="color:var(--text-muted)">+ 0</span> + 2 + 8 <span style="color:var(--text-muted)">+ 0</span> + 1 = <b>19 used</b> vs 15 usable</div>
+        <div class="pl-track" role="img" aria-label="Pin ledger for S1-i2c: 8 screen, 2 bus, 8 drivers, 1 vibration = 19 pins used, against a 15-pin usable-GPIO ceiling — overrun by 4.">
+          <div class="pl-over" style="left:78.9%"></div>
+          <div class="pl-seg pl-screen" style="width:42.1%"><span>Screen 8</span></div>
+          <div class="pl-seg pl-bus" style="width:10.5%"><span>Bus 2</span></div>
+          <div class="pl-seg pl-drv" style="width:42.1%"><span>Drivers 8</span></div>
+          <div class="pl-seg pl-vib" style="width:5.3%"><span>1</span></div>
+          <div class="pl-ceiling" style="left:78.9%"><span>usable GPIO = 15</span></div>
+        </div>
+        <div class="pl-legend">
+          <span><i style="background:var(--accent)"></i>Screen A — SPI + touch (8)</span>
+          <span><i style="background:var(--blue)"></i>Bus B — I²C·RS-485·CAN (2–4)</span>
+          <span><i style="background:var(--warn)"></i>Drivers C — DRV8825 fan-out (8–12)</span>
+          <span><i style="background:var(--ok)"></i>Vibration PWM (1)</span>
+          <span><i style="background:var(--accent-2)"></i>Microstep — dynamic only (+3)</span>
+        </div>
+        <div class="pl-caption">The dashed line is the ESP32's usable GPIO. Everything in the hatched
+          zone past it is the deficit: <b class="pl-bad">OVERRUN by 4</b>. Note what actually spills over
+          — not microstepping, but the <b>drivers</b> block: six DRV8825s each needing their own ENABLE
+          line off one brain. That single term is why the fused-dumb rows can't fit.</div>
+      </div>
+
+      <p>Where each term comes from — every figure is fetched from the hardware, not assumed:</p>
+      <table style="margin:4px 0 6px; width:100%; border-collapse:collapse; font-size:13px">
+        <thead><tr style="text-align:left; color:var(--accent)">
+          <th style="padding:4px 8px">Block</th><th style="padding:4px 8px">Signals</th>
+          <th style="padding:4px 8px">Pins</th><th style="padding:4px 8px">Why</th></tr></thead>
+        <tbody style="color:var(--text)">
+          <tr><td style="padding:4px 8px"><b style="color:var(--accent)">Screen (A)</b></td>
+            <td style="padding:4px 8px">SCK·MOSI·MISO·CS·DC·RST·T_CS·T_IRQ</td><td style="padding:4px 8px">8</td>
+            <td style="padding:4px 8px">Owned ILI9341 over SPI, touch inspected 2026-07-15. Integrated boards fold this into their free-IO count (0 here).</td></tr>
+          <tr><td style="padding:4px 8px"><b style="color:var(--text-muted)">Sensors</b></td>
+            <td style="padding:4px 8px">SDA·SCL (LM75 + MPR121)</td><td style="padding:4px 8px">0 / +2</td>
+            <td style="padding:4px 8px">Ride the I²C system bus when the bus <i>is</i> I²C (0); a dedicated I²C pair otherwise (+2). MPR121 shares LM75's bus — no extra pins.</td></tr>
+          <tr><td style="padding:4px 8px"><b style="color:var(--blue)">Bus (B)</b></td>
+            <td style="padding:4px 8px">I²C 2 · RS-485 3 · CAN 4</td><td style="padding:4px 8px">2–4</td>
+            <td style="padding:4px 8px">The brain's own attachment to the module bus, paid once (not per node).</td></tr>
+          <tr><td style="padding:4px 8px"><b style="color:var(--warn)">Drivers (C)</b></td>
+            <td style="padding:4px 8px">DRV8825 STEP·DIR·ENABLE… / TMC2209 UART</td><td style="padding:4px 8px">0 · 4 · 8 · 12</td>
+            <td style="padding:4px 8px">DRV8825 shared step-bus + 6×ENABLE = 8, or per-motor STEP/DIR = 12; TMC2209 = 4 (shared UART); 0 when a pump-node MCU or printer socket absorbs the wiring.</td></tr>
+          <tr><td style="padding:4px 8px"><b style="color:var(--accent-2)">Microstep</b></td>
+            <td style="padding:4px 8px">M0·M1·M2</td><td style="padding:4px 8px">0 / +3</td>
+            <td style="padding:4px 8px">Jumpered (fixed) = 0; a shared MCU bus (dynamic) = +3. Set by the Microstepping control.</td></tr>
+          <tr><td style="padding:4px 8px"><b style="color:var(--ok)">Vibration</b></td>
+            <td style="padding:4px 8px">PWM</td><td style="padding:4px 8px">1</td>
+            <td style="padding:4px 8px">One LEDC-capable GPIO for the mixing/anti-clog motor's MOSFET. Fixed on every variant.</td></tr>
+        </tbody>
+      </table>
+
+      <p><b>Is it just a count? No — there is a second, deeper limit.</b> The question you should
+      worry about is not only "are there enough pins?" but "can each function actually reach a pin
+      without two things fighting over it?" On the ESP32 the answer splits cleanly:</p>
+      <p><b>What the count already covers.</b> The ESP32 routes almost every digital function
+      (SPI, I²C, UART, PWM) through an internal <b>GPIO matrix</b> — unlike an Arduino, a peripheral
+      is <i>not</i> nailed to a fixed pin, so any free output-capable GPIO will do. That is exactly
+      why a raw count is a fair first-order test: if the pins exist, the routing almost always
+      follows. The only pins that break this are the four <b>input-only</b> ones (GPIO 34/35/36/39 —
+      no output, no pull-up: fine for a touch-IRQ or a FAULT line, useless for STEP/DIR/CS), the
+      flash pins (6–11, gone), and the strapping pins (0/2/5/12/15, usable with boot caveats). The
+      digital-vs-analog split barely matters here: every sensor is digital I²C, so the one analog
+      gotcha — ADC2 going dead whenever Wi-Fi is on — only applies if you later add an analog probe,
+      and even then ADC1 (GPIO 32–39) stays free.</p>
+      <p><b>What the count does <u>not</u> cover — the real "TX for two things" trap.</b> A pin
+      count cannot see that the ESP32 has only <b>3 UARTs, 2 I²C, 2 usable SPI</b> controllers. Six
+      TMC2209s can't share one UART line (their address field is 2 bits = 4 drivers max), so
+      six need <b>two</b> UART lines; add an RS-485 system bus and the programming/debug console and
+      you are asking for four UARTs from a chip that has three. So <b>T9-fused-485</b> passes the pin
+      count yet hits a <i>peripheral-instance</i> ceiling the column can't show — resolvable (bit-bang
+      one TMC line on SoftwareSerial, or drop the console), but a real build-time constraint.
+      <b>T9-fused-i2c</b> sidesteps it entirely: an I²C system bus spends no UART, leaving both spare
+      UARTs for the two TMC lines. This second ceiling, the full per-component signal map, and every
+      overrun variant worked out pin-by-pin live in
+      <a href="PIN-BUDGET-ANALYSIS.md" style="color:var(--accent);">PIN-BUDGET-ANALYSIS.md ↗</a> —
+      the permanent cross-check reference for this section.</p>
     </details>
   </div>
 

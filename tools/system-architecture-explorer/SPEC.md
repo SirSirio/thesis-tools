@@ -364,6 +364,13 @@ the brain (or a dedicated pump-node MCU) to generate every step pulse.
 
 ## Pin-budget model (D-09)
 
+> **Deep cross-check:** `PIN-BUDGET-ANALYSIS.md` (co-located) is the permanent reference — the full
+> per-hardware signal map, both ceilings (GPIO count **and** peripheral-instance limits), the
+> digital/analog reality, and every overrun variant worked pin-by-pin. `pinsOf(v)` computes the GPIO
+> count only; the peripheral-instance ceiling (3 UART / 2 I²C / 2 SPI, e.g. the `T9-fused-485` UART
+> contention) is documented there and surfaced in the tool's Part-3 "Pin Budget" section but not yet
+> computed. Mirrored in `index.html` Part 3.
+
 `pinsOf(v)` mirrors `costOf(v)`'s aggregation shape — same Σ(fixed + per-variant loads) pattern,
 applied to GPIO pins instead of euros — against the variant's brain (`espscreen` if present, else
 `esp32`) usable-GPIO count (`gpioUsable`).
@@ -693,6 +700,12 @@ the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current
    estimate. **Resolution:** measure the part directly (bench multimeter, stall-current test) once
    it is ordered from bitbyg, and update the Power-rail model's arithmetic with the measured
    value.
+6. **Peripheral-instance ceiling not computed.** `pinsOf(v)` checks GPIO *count* only. The ESP32 has
+   3 UART / 2 I²C / 2 usable SPI controllers, and six TMC2209s need two UART lines (2-bit address =
+   4 drivers/line) — so `T9-fused-485` (2 TMC UART + RS-485 UART + console = 4 UARTs) hits a
+   controller limit a pin count can't see. Fully worked in `PIN-BUDGET-ANALYSIS.md` §3 and surfaced
+   in the tool's Part-3 "Pin Budget" section. **Resolution if wanted:** add a `periphOf(v)` demand
+   check (UART/I²C/SPI vs 3/2/2) and a second badge. Non-blocking — `T9-fused-i2c` sidesteps it.
 
 ---
 

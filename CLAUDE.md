@@ -53,7 +53,8 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   │   └── Peristaltic roller occlusion & displaced-volume model - Description.md  Source notes
 │   └── system-architecture-explorer/
 │       ├── index.html      System Architecture Explorer — whole-device architecture page: six-module hardware schema, design-direction gallery, driver/MCU/bus variant matrix (promoted from prototypes/System-Architecture/)
-│       └── SPEC.md         Tool spec — module schema, design directions, component prices, variant BOMs, comms-layer/power-rail model, assumptions
+│       ├── SPEC.md         Tool spec — module schema, design directions, component prices, variant BOMs, comms-layer/power-rail model, assumptions
+│       └── PIN-BUDGET-ANALYSIS.md  Permanent pin-budget cross-check — per-hardware signal map, GPIO-count + peripheral-instance ceilings, every overrun variant worked pin-by-pin
 ├── prototypes/
 │   ├── index.html              Prototype Design Space — animated journey page
 │   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
