@@ -183,12 +183,35 @@
   .liquid-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
   .liquid-label {
     font-size: 0.85rem;
     color: var(--text);
-    min-width: 6.2em;
+    min-width: 5.2em;
+  }
+  .liquid-row .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex: none;
+    box-shadow: 0 0 6px rgba(0,0,0,0.4);
+  }
+  .liquid-row .pump-rpm { width: 76px; }
+  /* Per-pump speed is only editable in A2 (independent). In A1 the pumps share
+     one rate, so the per-pump fields are locked + dimmed and mirror the shared
+     Pump speed field. */
+  .pump-rpm:disabled,
+  #rpm:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: rgba(255,255,255,0.1);
+  }
+  .rows-hint {
+    margin-top: 10px;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.5;
   }
   .liquid-row-actions {
     display: flex;
@@ -395,30 +418,37 @@
   .tt .tt-row { color: var(--text-muted); line-height: 1.5; }
   .tt .tt-row b { color: var(--text); font-weight: 600; }
 
-  /* ── D-12 illustrative rack-indexing animation ───────────────── */
+  /* ── D-12 rack-indexing / tube-filling animation ─────────────── */
   .rack-anim-wrap {
     width: 100%;
     overflow: hidden;
     border-radius: 12px;
     background: rgba(255,255,255,0.02);
-    padding: 8px 0;
+    padding: 10px 0;
   }
   .rack-anim-wrap svg { display: block; width: 100%; height: auto; }
-  .rack-track { animation: indexStep 6s steps(8, end) infinite; }
-  @keyframes indexStep {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(var(--travel, -440px)); }
+  /* Each liquid layer grows up from its own base when the tube reaches the
+     nozzle (the visible "filling" event). transform-box:fill-box makes the
+     scaleY origin the layer's own bottom edge regardless of the rack transform. */
+  .tube-layer {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transform: scaleY(0);
+    opacity: 0;
   }
-  /* Dispense pulse on the nozzle drops — one pulse per index step (0.75 s ×8 = 6 s),
-     so there is visible "liquid" activity synced to the rack indexing. */
-  .rack-drops ellipse { animation: drip 0.75s ease-in-out infinite; }
+  .tube-layer.filled {
+    transform: scaleY(1);
+    opacity: 1;
+    transition: transform 0.38s cubic-bezier(0.22,0.61,0.36,1), opacity 0.22s ease-out;
+  }
+  .nozzle-drop { animation: drip 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0; }
   @keyframes drip {
-    0%, 100% { opacity: 0.25; }
-    45%      { opacity: 0.95; }
+    0%, 100% { opacity: 0.15; transform: scaleY(0.7); }
+    45%      { opacity: 0.9;  transform: scaleY(1.15); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .rack-track { animation: none; }
-    .rack-drops ellipse { animation: none; opacity: 0.85; }
+    .nozzle-drop { animation: none; opacity: 0.65; }
+    .tube-layer.filled { transition: none; }
   }
   .rack-caption {
     margin-top: 10px;
@@ -464,33 +494,46 @@
 
     <div class="ctrl">
       <div class="cg" style="grid-column: 1 / -1;">
-        <label>Liquids (up to 6, per-liquid volume in µL) — line length N = liquid count</label>
+        <label>Liquids (up to 6) — volume per liquid, and per-pump speed — line length N = liquid count</label>
         <div class="liquid-rows" id="liquidRows">
           <div class="liquid-row" id="liquidRow0">
+            <span class="dot" id="dot0" aria-hidden="true"></span>
             <span class="liquid-label">Liquid 1</span>
             <input type="number" id="vol0" min="0" step="1" value="600" /> <span class="unit">µL</span>
+            <input type="number" class="pump-rpm" id="rpm0" min="1" step="1" value="180" /> <span class="unit">RPM</span>
           </div>
           <div class="liquid-row" id="liquidRow1">
+            <span class="dot" id="dot1" aria-hidden="true"></span>
             <span class="liquid-label">Liquid 2</span>
             <input type="number" id="vol1" min="0" step="1" value="200" /> <span class="unit">µL</span>
+            <input type="number" class="pump-rpm" id="rpm1" min="1" step="1" value="180" /> <span class="unit">RPM</span>
           </div>
           <div class="liquid-row" id="liquidRow2">
+            <span class="dot" id="dot2" aria-hidden="true"></span>
             <span class="liquid-label">Liquid 3</span>
             <input type="number" id="vol2" min="0" step="1" value="175" /> <span class="unit">µL</span>
+            <input type="number" class="pump-rpm" id="rpm2" min="1" step="1" value="180" /> <span class="unit">RPM</span>
           </div>
           <div class="liquid-row" id="liquidRow3">
+            <span class="dot" id="dot3" aria-hidden="true"></span>
             <span class="liquid-label">Liquid 4</span>
             <input type="number" id="vol3" min="0" step="1" value="25" /> <span class="unit">µL</span>
+            <input type="number" class="pump-rpm" id="rpm3" min="1" step="1" value="180" /> <span class="unit">RPM</span>
           </div>
           <div class="liquid-row" id="liquidRow4" style="display:none;">
+            <span class="dot" id="dot4" aria-hidden="true"></span>
             <span class="liquid-label">Liquid 5</span>
             <input type="number" id="vol4" min="0" step="1" value="100" /> <span class="unit">µL</span>
+            <input type="number" class="pump-rpm" id="rpm4" min="1" step="1" value="180" /> <span class="unit">RPM</span>
           </div>
           <div class="liquid-row" id="liquidRow5" style="display:none;">
+            <span class="dot" id="dot5" aria-hidden="true"></span>
             <span class="liquid-label">Liquid 6</span>
             <input type="number" id="vol5" min="0" step="1" value="100" /> <span class="unit">µL</span>
+            <input type="number" class="pump-rpm" id="rpm5" min="1" step="1" value="180" /> <span class="unit">RPM</span>
           </div>
         </div>
+        <p class="rows-hint" id="rowsHint"></p>
         <div class="liquid-row-actions">
           <button type="button" id="removeLiquidBtn" class="btn-ghost">&minus; Remove liquid</button>
           <button type="button" id="addLiquidBtn" class="btn-ghost">+ Add liquid</button>
@@ -507,7 +550,7 @@
         <div class="input-row"><input type="number" id="uLPerStroke" min="0.01" step="0.5" value="5" /></div>
       </div>
       <div class="cg">
-        <label>Pump speed</label>
+        <label id="rpmLabel">Pump speed (shared)</label>
         <div class="input-row"><input type="number" id="rpm" min="1" step="1" value="180" /> <span class="unit">RPM</span></div>
       </div>
 
@@ -518,8 +561,8 @@
           <span class="v" id="concKV">1</span>
         </div>
         <div class="slider-endpoints">
-          <span id="concEndpointA1">1 = A1 (serial / shared bus)</span>
-          <span id="concEndpointA2">4 = A2 (full parallel)</span>
+          <span id="concEndpointA1">K=1 · serial (one pump at a time)</span>
+          <span id="concEndpointA2">K=4 · full parallel</span>
         </div>
       </div>
 
@@ -529,11 +572,7 @@
           <option value="a1">Lockstep / shared-bus (A1)</option>
           <option value="a2">Independent-rate (A2)</option>
         </select>
-        <p class="mode-note" id="modeNote">Illustrative in v1: lockstep (A1) and independent (A2) take the same time
-          here because every pump shares one global rate, so a group always finishes with its slowest member. A2's
-          advantage only appears once pumps can run at genuinely different rates (a planned per-pump-rate mode,
-          editable under A2 and locked under A1). The <em>serial vs parallel</em> verdict below is set purely by the
-          concurrency slider's two endpoints (K=1 vs K=N) and is independent of this toggle.</p>
+        <p class="mode-note" id="modeNote"></p>
       </div>
     </div>
 
@@ -581,8 +620,8 @@
   function updateSliderEndpoints(n) {
     const a1El = document.getElementById('concEndpointA1');
     const a2El = document.getElementById('concEndpointA2');
-    if (a1El) a1El.textContent = '1 = A1 (serial / shared bus)';
-    if (a2El) a2El.textContent = n + ' = A2 (full parallel)';
+    if (a1El) a1El.textContent = 'K=1 · serial (one pump at a time)';
+    if (a2El) a2El.textContent = 'K=' + n + ' · full parallel';
   }
 
   function renderConstantChips() {
@@ -625,8 +664,16 @@
   // so it can be extracted and verified in isolation (engine-harness.cjs).
 
 function computeDoseTimes(liquids, rollers, uLPerStroke, rpm) {
-  const strokesPerSec = (rpm / 60) * rollers;
-  return liquids.map(v => Math.ceil(v / uLPerStroke) / strokesPerSec);
+  // rpm may be a single global speed (number) or a per-pump array (one entry
+  // per liquid). A scalar applies one shared rate to every pump — the A1
+  // (lockstep) case and the benchmark of record. An array applies each pump's
+  // own rate — the A2 (independent-rate) case, where a faster pump finishes
+  // its dose sooner and stops being the group's limiter.
+  return liquids.map(function (v, i) {
+    const r = Array.isArray(rpm) ? rpm[i] : rpm;
+    const strokesPerSec = (r / 60) * rollers;
+    return Math.ceil(v / uLPerStroke) / strokesPerSec;
+  });
 }
 
 function groupDispenseTime(activeDoseTimes, K) {
@@ -871,64 +918,157 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     wireGanttTooltips();
   }
 
-  // Illustrative rack-indexing SVG (D-12) — string-concat builder (rotor-solver
-  // buildFigure() precedent), hand-built, no library. Two periods of 8 wells so
-  // the CSS steps() loop resets on an identical-looking frame (seamless loop).
-  function buildRackSvg(N) {
-    const width = 520, height = 170;
-    const nozzleY = 34, wellY = 128, wellR = 15, wellSpacing = 55, periodWells = 8;
-    const totalWells = periodWells * 2;
-    const marginX = 60;
-    const usableWidth = width - marginX * 2;
-    const nozzleSpacing = N > 1 ? usableWidth / (N - 1) : 0;
+  // Rack-indexing / tube-filling schematic (D-12) — hand-built inline SVG, no
+  // library. A rack of 8 1.5 ml Eppendorf-style tubes (same tube idiom as the
+  // landing-page hero) indexes under N FIXED nozzles (nozzle spacing = sample
+  // spacing). Each tube builds the cocktail layer by layer as it passes each
+  // nozzle; layer heights are proportional to the real dose volumes. Illustrative
+  // (indexing/filling read), not a timing-accurate playback.
+  const TUBES = 8;
+  function buildRackSvg(N, liquids) {
+    const W = 560, H = 210, S = 66;
+    const bankX0 = (W - (N - 1) * S) / 2;            // x of leftmost nozzle (column 0)
+    const nozzleTipY = 42, dropY = 52, capY = 60;
+    const shoulderTop = 66, shoulderBottom = 80, tipY = 168;
+    const tubeW = 30, half = tubeW / 2;
+    const widthAt = (y) => Math.max(2, tubeW * (tipY - y) / (tipY - shoulderBottom));
+    const sumV = liquids.reduce((a, b) => a + b, 0);
+    const wall = 'stroke="rgba(255,255,255,0.34)" stroke-width="1.4"';
 
-    let defsSvg = '<defs>';
-    let nozzlesSvg = '';
-    let dropsSvg = '';
-    for (let i = 0; i < N; i++) {
-      const x = N > 1 ? marginX + i * nozzleSpacing : width / 2;
-      const c = LIQUID_COLORS[i % LIQUID_COLORS.length];
-      defsSvg += '<linearGradient id="dropGrad' + i + '" x1="0" y1="0" x2="0" y2="1">' +
-        '<stop offset="0%" stop-color="' + c.from + '"/><stop offset="100%" stop-color="' + c.to + '"/></linearGradient>';
-      nozzlesSvg += '<g><rect x="' + (x - 5) + '" y="' + (nozzleY - 22) + '" width="10" height="20" rx="2" fill="#3a3430" stroke="rgba(255,255,255,0.15)"/>' +
-        '<polygon points="' + (x - 7) + ',' + (nozzleY - 2) + ' ' + (x + 7) + ',' + (nozzleY - 2) + ' ' + x + ',' + (nozzleY + 8) + '" fill="#5a5048"/></g>';
-      dropsSvg += '<ellipse cx="' + x + '" cy="' + (nozzleY + 22) + '" rx="5" ry="7" fill="url(#dropGrad' + i + ')" opacity="0.85"/>';
-    }
-    defsSvg += '</defs>';
-
-    let wellsSvg = '';
-    for (let w = 0; w < totalWells; w++) {
-      const x = marginX + w * wellSpacing;
-      // Colour each well by its position within one 8-well period. This keeps the
-      // steps(8) shift landing on an identically-coloured well (seamless loop) while
-      // making the indexing motion legible — identical grey circles slid by one
-      // spacing look static, which read as "the animation is broken". Illustrative
-      // only (the caption says so); wells are not tied to real dispensed volumes.
-      const c = LIQUID_COLORS[(w % periodWells) % LIQUID_COLORS.length];
-      wellsSvg += '<circle cx="' + x + '" cy="' + wellY + '" r="' + wellR +
-        '" fill="' + c.from + '" fill-opacity="0.4" stroke="' + c.to +
-        '" stroke-opacity="0.75" stroke-width="1.5"/>';
+    // ── fixed nozzle bank (nozzle at column c dispenses liquid N-c, so a tube
+    //    moving left meets liquid 1 first → liquid 1 is the bottom layer) ──
+    let nozzles = '';
+    for (let c = 0; c < N; c++) {
+      const x = bankX0 + c * S;
+      const col = LIQUID_COLORS[((N - c) - 1) % LIQUID_COLORS.length];
+      nozzles +=
+        '<g>' +
+          '<rect x="' + (x - 6) + '" y="' + (nozzleTipY - 30) + '" width="12" height="24" rx="2" fill="#3a3430" stroke="rgba(255,255,255,0.18)"/>' +
+          '<polygon points="' + (x - 8) + ',' + (nozzleTipY - 6) + ' ' + (x + 8) + ',' + (nozzleTipY - 6) + ' ' + x + ',' + (nozzleTipY + 6) + '" fill="' + col.to + '"/>' +
+          '<ellipse class="nozzle-drop" cx="' + x + '" cy="' + dropY + '" rx="4.5" ry="6.5" fill="' + col.from + '"/>' +
+        '</g>';
     }
 
-    return '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrative rack-indexing schematic">' +
-      defsSvg +
-      '<g class="rack-track" style="--travel:-' + (periodWells * wellSpacing) + 'px">' + wellsSvg + '</g>' +
-      '<line x1="' + (marginX - wellR - 8) + '" y1="' + wellY + '" x2="' + (width - marginX + wellR + 8) + '" y2="' + wellY + '" stroke="rgba(255,255,255,0.08)"/>' +
-      nozzlesSvg + '<g class="rack-drops">' + dropsSvg + '</g>' +
+    // ── moving rack of 8 tubes (translated as a group) ──
+    let tubes = '';
+    for (let i = 0; i < TUBES; i++) {
+      const cx = i * S;                              // local x; the rack <g> is translated
+      // Stacked liquid layers (liquid 1 at the tip/bottom), heights ∝ volume.
+      let layers = '';
+      let yb = tipY;
+      for (let kk = 1; kk <= N; kk++) {
+        const frac = sumV > 0 ? (liquids[kk - 1] / sumV) : (1 / N);
+        const yt = yb - frac * (tipY - shoulderBottom);
+        const wt = widthAt(yt) / 2, wb = widthAt(yb) / 2;
+        const col = LIQUID_COLORS[(kk - 1) % LIQUID_COLORS.length];
+        layers += '<polygon class="tube-layer" id="L' + i + '_' + kk + '" points="' +
+          (cx - wt) + ',' + yt + ' ' + (cx + wt) + ',' + yt + ' ' +
+          (cx + wb) + ',' + yb + ' ' + (cx - wb) + ',' + yb +
+          '" fill="' + col.from + '" fill-opacity="0.92"/>';
+        yb = yt;
+      }
+      tubes +=
+        '<g>' +
+          // faint glass body behind the liquid
+          '<path d="M ' + (cx - half) + ' ' + shoulderBottom + ' L ' + cx + ' ' + tipY + ' L ' + (cx + half) + ' ' + shoulderBottom + ' Z" fill="rgba(255,255,255,0.03)"/>' +
+          '<rect x="' + (cx - half) + '" y="' + shoulderTop + '" width="' + tubeW + '" height="' + (shoulderBottom - shoulderTop) + '" rx="3" fill="rgba(255,255,255,0.03)"/>' +
+          layers +
+          // outline on top (Eppendorf idiom: shoulder rect + tapered cone + open snap lid)
+          '<path d="M ' + (cx - half) + ' ' + shoulderBottom + ' L ' + cx + ' ' + tipY + ' L ' + (cx + half) + ' ' + shoulderBottom + '" fill="none" ' + wall + '/>' +
+          '<rect x="' + (cx - half) + '" y="' + shoulderTop + '" width="' + tubeW + '" height="' + (shoulderBottom - shoulderTop) + '" rx="3" fill="none" ' + wall + '/>' +
+          '<rect x="' + (cx - half) + '" y="' + capY + '" width="' + tubeW + '" height="5" rx="2.5" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.25)" transform="rotate(-18 ' + (cx - half) + ' ' + capY + ')"/>' +
+        '</g>';
+    }
+
+    const svg =
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" preserveAspectRatio="xMidYMid meet" role="img" ' +
+        'aria-label="A rack of 8 sample tubes indexes under the ' + N + ' fixed nozzles, each tube filling with stacked liquid layers">' +
+        '<line x1="8" y1="' + (tipY + 8) + '" x2="' + (W - 8) + '" y2="' + (tipY + 8) + '" stroke="rgba(255,255,255,0.1)"/>' +
+        '<g id="rackGroup" class="rack-group">' + tubes + '</g>' +
+        nozzles +
       '</svg>';
+
+    const caption = 'Illustrative — an 8-tube rack (1 of 4) indexes left under the ' + N + ' fixed nozzle' + (N > 1 ? 's' : '') +
+      '; each tube builds the cocktail layer by layer as it passes each nozzle (layer height ∝ dose volume). Not a timing-accurate playback.';
+    return { svg: svg, N: N, S: S, bankX0: bankX0, caption: caption };
   }
 
-  // Decoupled from simulateSchedule timing (D-12) — only rebuilt when the
-  // station count changes, so typing in a volume field doesn't restart the loop.
-  let lastRackN = null;
+  // Rebuild only when the layer picture changes (N or volumes) — the K slider
+  // must NOT restart the loop. A JS stepper drives the slide (transform attribute,
+  // rAF tween) and the per-layer fill reveal (CSS .filled transition).
+  const rackAnim = { timer: null, raf: null, sig: null };
   function renderRackAnim(sim) {
     const el = document.getElementById('rackAnim');
     if (!el) return;
     const N = sim.liquids.length;
-    if (lastRackN === N && el.firstElementChild) return;
-    lastRackN = N;
-    el.innerHTML = '<div class="rack-anim-wrap">' + buildRackSvg(N) + '</div>' +
-      '<p class="rack-caption">Illustrative — conveys how the line indexes; not a timing-accurate playback.</p>';
+    const sig = N + '|' + sim.liquids.join(',');
+    if (rackAnim.sig === sig && el.firstElementChild) return;
+    rackAnim.sig = sig;
+    if (rackAnim.timer) { clearInterval(rackAnim.timer); rackAnim.timer = null; }
+    if (rackAnim.raf) { cancelAnimationFrame(rackAnim.raf); rackAnim.raf = null; }
+    const built = buildRackSvg(N, sim.liquids.slice());
+    el.innerHTML = '<div class="rack-anim-wrap">' + built.svg + '</div>' +
+      '<p class="rack-caption">' + built.caption + '</p>';
+    startRackAnim(built);
+  }
+
+  function startRackAnim(meta) {
+    const rackG = document.getElementById('rackGroup');
+    if (!rackG) return;
+    const N = meta.N, S = meta.S, bankX0 = meta.bankX0;
+    const txFor = (k) => bankX0 + (N - k) * S;       // tube i lands under column i+N-k
+    const sMax = N + TUBES + 1;                      // enough steps for all 8 tubes to fill + exit
+
+    function setLayers(k) {
+      for (let i = 0; i < TUBES; i++) {
+        const L = Math.max(0, Math.min(N, k - i));   // layers tube i has received by step k
+        for (let kk = 1; kk <= N; kk++) {
+          const p = document.getElementById('L' + i + '_' + kk);
+          if (p) p.classList.toggle('filled', kk <= L);
+        }
+      }
+    }
+
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      // Static representative frame: rack mid-way, a filling gradient across it.
+      const kk = Math.round(sMax / 2);
+      rackG.setAttribute('transform', 'translate(' + txFor(kk) + ',0)');
+      setLayers(kk);
+      return;
+    }
+
+    let k = 0, curX = txFor(0);
+    rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+    setLayers(0);
+
+    const SLIDE = 520, CYCLE = 1160;                 // slide, then pause for the fill
+    function tween(toX) {
+      const from = curX, start = performance.now();
+      function frame(now) {
+        const t = Math.min(1, (now - start) / SLIDE);
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // easeInOutQuad
+        curX = from + (toX - from) * e;
+        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+        if (t < 1) { rackAnim.raf = requestAnimationFrame(frame); }
+        else { rackAnim.raf = null; setLayers(k); }  // reveal the new layer after arriving
+      }
+      rackAnim.raf = requestAnimationFrame(frame);
+    }
+
+    rackAnim.timer = setInterval(function () {
+      k++;
+      if (k > sMax) {                                // seamless-ish loop: fresh empty rack
+        k = 0; curX = txFor(0);
+        for (let i = 0; i < TUBES; i++) for (let kk = 1; kk <= N; kk++) {
+          const p = document.getElementById('L' + i + '_' + kk);
+          if (p) p.classList.remove('filled');
+        }
+        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+        return;
+      }
+      tween(txFor(k));
+    }, CYCLE);
   }
 
   function recompute() {
@@ -964,16 +1104,30 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     if (concKV) concKV.textContent = K;
     updateSliderEndpoints(liquidCount);
 
-    // Mode toggle is read for future use but is numerically inert at fixed K
-    // under global flow params (RESEARCH: A1/A2 lockstep-vs-independent math) —
-    // do NOT invent a lockstep penalty here; Plan 08-02 adds the teaching copy.
+    // ── Control mode (A1 lockstep vs A2 independent-rate) ──
     const mode = document.getElementById('mode').value;
+    // Per-pump speeds: in A1 every pump shares the global rate (scalar → the
+    // benchmark of record); in A2 each pump runs its own rate (array). A faster
+    // pump finishes its dose sooner, so A1 and A2 genuinely diverge at interior K.
+    const perPumpRpm = [];
+    let rpmForEngine;
+    if (mode === 'a2') {
+      for (let i = 0; i < liquidCount; i++) {
+        let r = parseFloat(document.getElementById('rpm' + i).value);
+        if (isNaN(r) || r < 1) { r = 1; warnings.push('Pump ' + (i + 1) + ' speed clamped to a minimum of 1 RPM.'); }
+        perPumpRpm.push(r);
+      }
+      rpmForEngine = perPumpRpm;              // array → each pump its own rate
+    } else {
+      for (let i = 0; i < liquidCount; i++) perPumpRpm.push(rpm);
+      rpmForEngine = rpm;                     // scalar → one shared rate (lockstep)
+    }
 
     // ── Engine ──
-    const doseTimes = computeDoseTimes(liquids, rollers, uLPerStroke, rpm);
+    const doseTimes = computeDoseTimes(liquids, rollers, uLPerStroke, rpmForEngine);
     const result = simulateSchedule(doseTimes, liquidCount, SAMPLES, K, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1);
 
-    window.__sim = { liquids, rollers, uLPerStroke, rpm, K, mode, doseTimes, result, overDose, totalVolume };
+    window.__sim = { liquids, rollers, uLPerStroke, rpm, perPumpRpm, K, mode, doseTimes, result, overDose, totalVolume };
 
     // ── D-02 total-dose warning ("show, don't hide" — outputs still computed) ──
     const doseWarningEl = document.getElementById('doseWarning');
@@ -1006,14 +1160,50 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     renderRackAnim(window.__sim);
   }
 
-  ['rollers', 'uLPerStroke', 'rpm', 'concK'].forEach(id =>
+  // Enable/disable + sync the per-pump speed fields to the control mode.
+  // A1 (lockstep): per-pump fields locked + dimmed, mirroring the shared speed.
+  // A2 (independent): per-pump fields editable; the shared field is dimmed.
+  function applyModeUI() {
+    const mode = document.getElementById('mode').value;
+    const a2 = mode === 'a2';
+    const globalRpmEl = document.getElementById('rpm');
+    globalRpmEl.disabled = a2;
+    const rpmLabel = document.getElementById('rpmLabel');
+    if (rpmLabel) rpmLabel.textContent = a2 ? 'Pump speed (shared — A2 uses per-pump)' : 'Pump speed (shared)';
+    for (let i = 0; i < 6; i++) {
+      const el = document.getElementById('rpm' + i);
+      el.disabled = !a2;
+      if (!a2) el.value = globalRpmEl.value; // keep locked fields honest in A1
+    }
+    const note = document.getElementById('modeNote');
+    if (note) note.textContent = a2
+      ? 'Independent (A2): each pump runs its own speed — edit the per-liquid RPM fields above. A faster pump finishes its dose early instead of waiting for the group’s slowest member, so A2 can beat A1 at interior concurrency K.'
+      : 'Lockstep (A1): every pump shares one speed, so the per-pump RPM fields are locked to the shared value. A group always finishes with its slowest member. Switch to A2 to set independent per-pump speeds.';
+    const hint = document.getElementById('rowsHint');
+    if (hint) hint.textContent = a2
+      ? 'A2 active — per-pump RPM is editable per liquid.'
+      : 'A1 active — per-pump RPM is locked to the shared Pump speed. Switch Control mode to A2 to edit each pump.';
+  }
+
+  function colorDots() {
+    for (let i = 0; i < 6; i++) {
+      const d = document.getElementById('dot' + i);
+      if (d) d.style.background = liquidGradientCss(i);
+    }
+  }
+
+  ['rollers', 'uLPerStroke', 'concK'].forEach(id =>
     document.getElementById(id).addEventListener('input', recompute));
+  document.getElementById('rpm').addEventListener('input', () => { applyModeUI(); recompute(); });
   for (let i = 0; i < 6; i++) {
     document.getElementById('vol' + i).addEventListener('input', recompute);
+    document.getElementById('rpm' + i).addEventListener('input', recompute);
   }
-  document.getElementById('mode').addEventListener('change', recompute);
+  document.getElementById('mode').addEventListener('change', () => { applyModeUI(); recompute(); });
 
   renderConstantChips();
+  colorDots();
+  applyModeUI();
   updateLiquidRows();
   recompute();
 </script>

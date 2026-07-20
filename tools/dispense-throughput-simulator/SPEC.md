@@ -25,9 +25,12 @@ Configures a 6-nozzle linear indexing line dispensing a liquid cocktail into a 3
 | Liquid count (N, line length) | `addLiquidBtn` / `removeLiquidBtn` | button pair | 1–6 | 4 |
 | Rollers | `rollers` | number | ≥ 1 (clamped) | 4 |
 | µL / stroke | `uLPerStroke` | number | > 0 (clamped to ≥ 0.01) | 5 |
-| Pump speed | `rpm` | number | ≥ 1 RPM (clamped) | 180 RPM |
+| Pump speed (shared) | `rpm` | number | ≥ 1 RPM (clamped) | 180 RPM |
+| Per-pump speed | `rpm0`…`rpm5` | number | ≥ 1 RPM (clamped) | 180 RPM each |
 | Concurrency K | `concK` | range | 1 … N (max tracks liquid count) | 1 |
 | Control mode | `mode` | select | `a1` (lockstep / shared-bus) / `a2` (independent-rate) | `a1` |
+
+**Control-mode gating (D-04, revised):** In **A1 (lockstep)** every pump shares one rate — the `rpm0`…`rpm5` fields are disabled + dimmed and mirror the shared `rpm` value, and the engine receives a scalar rate (the benchmark of record). In **A2 (independent)** the per-pump `rpm0`…`rpm5` fields are editable and the shared `rpm` field is dimmed; the engine receives a per-pump rate array. Rollers and µL/stroke stay global in both modes.
 
 **Fixed constants** (declared at script scope, not user-editable — displayed as read-only chips `chipSampleShift`/`chipRackChange`/`chipRacks`/`chipSamples`):
 
@@ -47,9 +50,12 @@ Total-dose warning threshold: total volume across all active liquid rows ≥ 200
 ### Flow-rate derivation (per rotor-solver's flow-math precedent)
 
 ```
-strokesPerSec = (rpm / 60) × rollers
+rate_i        = rpm_i in A2 (per-pump array) ; the shared rpm in A1 (scalar, all pumps equal)
+strokesPerSec = (rate_i / 60) × rollers
 doseTime_i    = ceil(V_i / uLPerStroke) / strokesPerSec        — stroke-quantized dose time per liquid/station
 ```
+
+`computeDoseTimes(liquids, rollers, uLPerStroke, rpm)` accepts `rpm` as a **scalar** (A1 — one shared rate for every pump; reproduces the benchmark) or an **array** (A2 — each pump its own rate). Under A2 a faster pump finishes its dose sooner and, when it was the group's limiter at a given K, lowers the total — this is what makes A1 and A2 diverge at interior concurrency (they are identical only when all per-pump rates are equal).
 
 ### Concurrency grouping (LPT — Longest-Processing-Time-first)
 
@@ -88,12 +94,12 @@ Four headline metric cards (D-11), all read from one `simulateSchedule()` return
 
 1. **Total run time** — `result.totalRunTime` (fill + steady + drain + rack changes), shown as `m s` and raw seconds.
 2. **Bottleneck station** — the station with `max(doseTime_i)`; reports its liquid volume, dose time, and station index.
-3. **A1 vs A2 delta** — `simulateSchedule` re-run at the two pinned slider **endpoints** `K=1` (A1) and `K=N` (A2), independent of the current `K` slider position and independent of the `mode` toggle's current value; reports the seconds saved and the percentage.
+3. **Serial vs parallel (time saved)** — `simulateSchedule` re-run at the two pinned slider **endpoints** `K=1` (serial) and `K=N` (full parallel) using the current dose times, independent of the live `K` slider position; reports the seconds saved and the percentage. Named "serial vs parallel" to avoid colliding with the A1/A2 control-mode toggle, which is a separate control.
 4. **Throughput** — at the live `K`: `totalRunTime / SAMPLES` (s/sample) and `samplesPerHour = (SAMPLES / totalRunTime) × 3600`.
 
 **Timeline (D-09/D-10):** a row-per-station HTML/CSS Gantt over an explicit steady-state window (cycles `N` through `min(N+2, SAMPLES)`), each station's per-cycle start/end offset computed by `stationOffsetsForCycle()` (mirrors `groupDispenseTime()`'s exact LPT sort/chunk rule). Bottleneck row/bars highlighted; hover tooltips show station, liquid, dose time, cycle. Fixed to a percentage-of-window layout (`width:100%`, no `min-width`, no horizontal-scroll wrapper) so the chart never triggers this site's no-horizontal-scroll rule.
 
-**Rack animation (D-12):** an illustrative, hand-built inline SVG (nozzle row + two-period 16-well rack strip) animated by a single CSS `@keyframes`/`steps(8, end)` rule, decoupled from the engine's real timing — conveys how the line indexes, not a timing-accurate playback. Rebuilt only when station count `N` changes, guarded by `prefers-reduced-motion`.
+**Rack animation (D-12):** an illustrative, hand-built inline SVG showing a rack of **8 sample tubes** (1.5 ml Eppendorf-style — the same tube idiom as the landing-page hero) indexing left under the **N fixed nozzles** (nozzle spacing = sample spacing). Each tube builds the cocktail **layer by layer** as it passes each nozzle — one stacked, per-liquid coloured band per station, band **height ∝ that liquid's dose volume**; liquid 1 (first nozzle met) is the bottom layer. Driven by a small JS stepper: the rack slide is a `requestAnimationFrame` tween of the group's `transform` attribute, and each layer's "fill" is a CSS `.filled` `scaleY` transition (grows from its own base via `transform-box: fill-box`). Illustrative (indexing + fill read), not a timing-accurate playback. Rebuilt only when `N` or the volumes change (not on `K` changes); `prefers-reduced-motion` renders a static representative frame with no motion.
 
 ---
 
@@ -121,8 +127,8 @@ Interior concurrency values (dispense-phase only, before the +1 s index move, sa
 - **Fill/steady/drain cycle count reads as `32+(N-1)`, not the literal `32+2(N-1)`.** A literal three-term reading of "fill (N−1 lead-in cycles) + 32 sample cycles + drain (N−1)" over-counts by `N-1` cycles versus standard pipeline math. The tool implements the single unified loop (`i = c - j + 1`, active iff `1<=i<=32`), which produces exactly `32+(N-1)` total cycles as an emergent property, matching textbook pipeline theory. The two per-cycle benchmark numbers (16.6667 s serial, 10 s pipelined ceiling) are unaffected either way — only the full wall-clock totals depend on this reading.
 - **Rack changes: 3× (not 4×) the 5 s overhead.** A rack change is the swap-out action between a finished rack and the next one; rack 1 is already loaded before the run starts, so there is no changeover preceding it. `numRackChanges = RACKS - 1 = 3`, giving 15 s total rack-change overhead in the full totals above.
 - **Rack changes are flat additive overhead**, not pipeline-interrupting — they are added once to the total after the cycle loop completes, rather than pausing/resetting the simulation mid-stream. A pipeline-interrupting model would require a materially more complex per-rack partial-drain-then-refill simulation not clearly implied by the source decision text.
-- **Flow parameters (rollers, µL/stroke, RPM) are global** across every station/liquid — every pump is modelled at the same configured rate, rather than exposing a per-liquid rate override.
-- **A1 (lockstep) and A2 (independent-rate) are numerically identical at any fixed K, given global flow parameters.** In lockstep, a group of K pumps stepping together completes when the slowest member reaches its own stroke count (`max(doseTime)` in the group); in independent mode each pump runs its own rate, but since every pump's configured rate is the same global rate, the completion time is again `max(doseTime)` — the two modes compute the exact same formula. This is not a bug: the A1-vs-A2 headline delta is carried entirely by the concurrency slider's two endpoints (K=1 vs K=N), not by the mode toggle, which the CONTEXT decisions pin as explicit endpoint markers on that same slider. The mode-toggle UI carries static teaching copy explaining this rather than silently doing nothing; A1's real cost only appears once a protocol needs pumps running at genuinely different rates, which is out of scope for this tool's v1.
+- **Rollers and µL/stroke are global** across every station/liquid. **Pump speed (RPM) is global in A1 and per-pump in A2** — the A2 case is the per-liquid rate override that answers U5 (does the architecture need independent per-motor rates).
+- **A1 (lockstep) and A2 (independent-rate) diverge via per-pump rates.** In A1 every pump shares one rate, so a group of K pumps stepping together always finishes with its slowest member (`max(doseTime)` in the group) — identical to the original single-rate model and the benchmark of record. In A2 each pump runs its own rate: a pump that finishes early no longer limits its group, so the total drops at interior K (e.g. speeding only the 600 µL bottleneck pump to 360 RPM cuts its 10 s dose to 5 s and the K=1 total from 583 s to 423 s). The two modes coincide **only** when every per-pump rate equals the shared rate — which is why the default (all pumps 180 RPM) reproduces the benchmark under either mode. The "serial vs parallel" headline delta is independent of this toggle: it always compares the concurrency slider's two endpoints (K=1 vs K=N) at the current dose times.
 
 ---
 

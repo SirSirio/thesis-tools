@@ -58,6 +58,21 @@ if (MODE === 'core') {
   process.exit(0);
 }
 
+// --- per-pump rates (A2 independent-rate) ---
+// computeDoseTimes accepts a scalar rpm (A1 lockstep — all pumps share the
+// rate; the benchmark above) OR an array (A2 — each pump its own rate). A
+// faster pump must shorten its own dose and, when it was the group limiter,
+// cut the total. This locks in the per-pump behaviour added for the A1/A2 toggle.
+const dtScalar = api.computeDoseTimes([600, 200, 175, 25], 4, 5, 180);
+const dtArray = api.computeDoseTimes([600, 200, 175, 25], 4, 5, [180, 180, 180, 180]);
+assert(near(dtScalar[0], dtArray[0]) && near(dtScalar[3], dtArray[3]),
+  'scalar rpm and all-equal array rpm must agree (A1 == A2 at equal rates)');
+const dtFast = api.computeDoseTimes([600, 200, 175, 25], 4, 5, [360, 180, 180, 180]);
+assert(near(dtFast[0], 5), 'pump 1 at 360 RPM should halve its dose to 5 s, got ' + dtFast[0]);
+const k2Equal = api.simulateSchedule(dtScalar, 4, 32, 2, 1, 5, 3).totalRunTime;
+const k2Fast = api.simulateSchedule(dtFast, 4, 32, 2, 1, 5, 3).totalRunTime;
+assert(k2Fast < k2Equal, 'A2 with a faster bottleneck pump must beat A1 at K=2 (' + k2Fast + ' < ' + k2Equal + ')');
+
 // --- metrics (delta + throughput) ---
 if (MODE === 'metrics') {
   const delta = t1 - t4;

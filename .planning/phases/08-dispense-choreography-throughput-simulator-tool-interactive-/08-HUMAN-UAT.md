@@ -29,8 +29,8 @@ expected: N station rows over the steady-state window, bottleneck row highlighte
 result: ISSUE FOUND → FIXED (pending user re-confirm). Tooltip appeared far from the cursor because #ganttTip was inside a .glass-panel whose backdrop-filter became the containing block for position:fixed. Fix: reparent #ganttTip to <body>. Verified in-browser — tooltip now sits 13/15 px (= pad) from the hovered bar; no horizontal scroll at 1280px.
 
 ### 5. Rack animation loops correctly and respects reduced motion
-expected: Wells index in a discrete snap-pause-snap seamless loop; static under reduced motion; no console errors/network requests.
-result: ISSUE FOUND → FIXED (pending user re-confirm). Motion was invisible because every well was an identical grey circle (sliding by one spacing looked static). Fix: colour wells on an 8-well period (keeps the steps(8) loop seamless) + add a dispense pulse on the nozzle drops. Verified in-browser — 16 coloured wells, --travel -440px, indexStep animation active; reduced-motion guard extended to the drops.
+expected: Rack indexes under the nozzles; tubes fill; static under reduced motion; no console errors/network requests.
+result: REDESIGNED (2nd iteration, pending user re-confirm). The colour-changing wells ("traffic light") were scrapped. New animation: a rack of 8 1.5 ml Eppendorf-style tubes (landing-page tube idiom) indexes left under N fixed nozzles (nozzle spacing = sample spacing); each tube builds the cocktail layer by layer as it passes each nozzle, with stacked per-liquid bands whose heights ∝ dose volume. JS stepper drives the slide (rAF transform tween) + per-layer CSS fill reveal. Verified in-browser: 8 tubes, 32 layers at N=4, rack transform advances, layers fill 1→6 over time, 0 console errors, reduced-motion renders a static frame.
 
 ### 6. Landing-page card renders correctly in EN and IT
 expected: Card in the Tools grid with a unique ⏱ icon, links to the tool, text switches EN↔IT, no horizontal scroll; no orphan row.
@@ -47,6 +47,13 @@ blocked: 0
 
 ## Gaps
 
-Three visual issues found during UAT (tests 4, 5, 6) were fixed in commit
-`6e5bb6b` and verified in-browser via Playwright. They remain marked `pending`
-until the user re-confirms them visually. No blocking gaps remain.
+Iteration 1 (`6e5bb6b`): tests 4, 5, 6 visual issues fixed + verified in-browser.
+
+Iteration 2 (this commit): on user feedback the rack animation was fully
+redesigned (8 Eppendorf tubes, layered fill ∝ volume, indexing under fixed
+nozzles — see test 5), and the A1/A2 control-mode toggle was made **functional**
+via per-pump RPM (locked+dimmed under A1, editable under A2; engine + SPEC +
+harness updated). Default (all 180 RPM) still reproduces the pinned benchmark;
+harness core+metrics+per-pump assertions pass. All verified in-browser (0 console
+errors). Tests 4, 5, 6 remain `pending` until the user re-confirms visually. No
+blocking gaps remain.
