@@ -30,6 +30,8 @@ Configures a 6-nozzle linear indexing line dispensing a liquid cocktail into a 3
 | Concurrency K | `concK` | range | 1 … N (max tracks liquid count) | 1 |
 | Control mode | `mode` | select | `a1` (lockstep / shared-bus) / `a2` (independent-rate) | `a1` |
 
+**Quick-load presets:** three named benchmark loads, buttons in the config panel, ordered light → PANPOC → heavy: **Light dispensing** (100/25 µL), **PANPOC** (300/5/300/50 µL — the realistic point-of-care middle case), **Heavy dispensing** (1000/300/120/50/25/5 µL). A preset sets N + volumes and resets per-pump RPM to the shared speed; rollers/µL-stroke/mode are left as-is so the load is evaluated under the current system. The on-load default remains the original benchmark of record (600/200/175/25 µL), the verification anchor.
+
 **Control-mode gating (D-04, revised):** In **A1 (lockstep)** every pump shares one rate — the `rpm0`…`rpm5` fields are disabled + dimmed and mirror the shared `rpm` value, and the engine receives a scalar rate (the benchmark of record). In **A2 (independent)** the per-pump `rpm0`…`rpm5` fields are editable and the shared `rpm` field is dimmed; the engine receives a per-pump rate array. Rollers and µL/stroke stay global in both modes.
 
 **Fixed constants** (declared at script scope, not user-editable — displayed as read-only chips `chipSampleShift`/`chipRackChange`/`chipRacks`/`chipSamples`):
@@ -102,6 +104,8 @@ Four headline metric cards (D-11), all read from one `simulateSchedule()` return
 **Rack animation (D-12):** an illustrative, hand-built inline SVG showing a rack of **8 sample tubes** (1.5 ml Eppendorf-style — the same tube idiom as the landing-page hero) indexing left under the **N fixed nozzles** (nozzle spacing = sample spacing). Each tube builds the cocktail **layer by layer** as it passes each nozzle — one stacked, per-liquid coloured band per station, band **height ∝ that liquid's dose volume**; liquid 1 (first nozzle met) is the bottom layer. Driven by a small JS stepper: the rack slide is a `requestAnimationFrame` tween of the group's `transform` attribute, and each layer's "fill" is a CSS `.filled` `scaleY` transition (grows from its own base via `transform-box: fill-box`). Illustrative (indexing + fill read), not a timing-accurate playback. Rebuilt only when `N` or the volumes change (not on `K` changes); `prefers-reduced-motion` renders a static representative frame with no motion.
 
 ---
+
+**Benchmark comparison (added):** a dedicated section evaluating the three named benchmarks (Light / PANPOC / Heavy) at **1, 2, and 6 pumps in parallel**, using the current system settings (rollers, µL/stroke, and the shared pump speed) at a **fixed clock** — every pump at the same rate, independent of the A1/A2 toggle. "6 pumps" clamps to a benchmark's liquid count where it has fewer (Light→2, PANPOC→4). Three KPIs per cell: **total run time**, **throughput** (samples/hr), and **% time saved vs serial** (the K=1 baseline). Rendered as grouped horizontal bars (bar length ∝ run time, on one shared scale, coloured per benchmark) plus an exact-number table beneath. Changing the system settings re-computes all three loads live, so the section shows how a given pump system copes across light/typical/heavy dispensing.
 
 ## Known values at the current design point (benchmark)
 

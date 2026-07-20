@@ -123,17 +123,26 @@
 
   select {
     font-size: 0.88rem;
-    padding: 7px 10px;
-    border-radius: 8px;
+    padding: 10px 40px 10px 14px;
+    border-radius: 12px;
     border: 1px solid rgba(255,107,43,0.25);
-    background: rgba(15,10,10,0.7);
+    background-color: rgba(15,10,10,0.7);
+    /* custom chevron replaces the native OS arrow (the "Windows 95" look) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ff6b2b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
     color: var(--text);
     outline: none;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
-  select:focus { border-color: var(--accent); }
+  select:hover { border-color: rgba(255,107,43,0.5); }
+  select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,43,0.15); }
+  select option { background: #16110f; color: var(--text); }
 
   input[type=range] {
     -webkit-appearance: none;
@@ -441,13 +450,17 @@
     opacity: 1;
     transition: transform 0.38s cubic-bezier(0.22,0.61,0.36,1), opacity 0.22s ease-out;
   }
-  .nozzle-drop { animation: drip 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0; }
-  @keyframes drip {
-    0%, 100% { opacity: 0.15; transform: scaleY(0.7); }
-    45%      { opacity: 0.9;  transform: scaleY(1.15); }
+  /* A nozzle drop only appears while a tube is actually beneath it, and falls
+     in time with that tube's fill (the stepper toggles .dispensing per step). */
+  .nozzle-drop { opacity: 0; transform-box: fill-box; transform-origin: 50% 0; }
+  .nozzle-drop.dispensing { animation: dripOnce 0.62s ease-out; }
+  @keyframes dripOnce {
+    0%   { opacity: 0;    transform: translateY(0) scaleY(0.5); }
+    35%  { opacity: 0.95; transform: translateY(2px) scaleY(1.1); }
+    100% { opacity: 0;    transform: translateY(9px) scaleY(0.7); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .nozzle-drop { animation: none; opacity: 0.65; }
+    .nozzle-drop.dispensing { animation: none; }
     .tube-layer.filled { transition: none; }
   }
   .rack-caption {
@@ -457,6 +470,100 @@
     font-style: italic;
     line-height: 1.5;
   }
+
+  /* ── Quick-load presets ──────────────────────────────────────── */
+  .presets {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .presets-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .preset-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,107,43,0.3);
+    background: rgba(255,107,43,0.06);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.12s;
+  }
+  .preset-btn:hover { background: rgba(255,107,43,0.16); border-color: var(--accent); transform: translateY(-1px); }
+  .preset-btn.active { background: var(--accent); border-color: var(--accent); color: #16110f; }
+
+  /* ── Benchmark comparison ────────────────────────────────────── */
+  .cmp-intro {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+  .cmp-group { margin-bottom: 22px; }
+  .cmp-group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .cmp-swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+  .cmp-group-name { font-size: 0.92rem; font-weight: 700; color: var(--text); }
+  .cmp-group-sub { font-size: 0.74rem; color: var(--text-muted); }
+  .cmp-row {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 7px;
+  }
+  .cmp-row-k { font-size: 0.78rem; color: var(--text-muted); text-align: right; }
+  .cmp-bar-track {
+    position: relative;
+    height: 30px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .cmp-bar-fill {
+    height: 100%;
+    border-radius: 7px;
+    min-width: 2px;
+    transition: width 0.4s ease;
+  }
+  .cmp-bar-label {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    font-size: 0.78rem;
+    color: var(--text);
+    pointer-events: none;
+  }
+  .cmp-bar-label .t { font-weight: 700; }
+  .cmp-bar-label .sub { color: var(--text-muted); font-size: 0.72rem; }
+  .cmp-bar-label .saved { color: #6cd67a; font-weight: 600; }
+  .cmp-table-wrap { margin-top: 18px; }
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .cmp-table th, .cmp-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: top;
+  }
+  .cmp-table th { color: var(--text-muted); font-weight: 600; letter-spacing: 0.03em; }
+  .cmp-table td .t { font-weight: 700; color: var(--text); }
+  .cmp-table td .sub { color: var(--text-muted); }
+  .cmp-table td .saved { color: #6cd67a; }
+  .cmp-note { font-size: 0.74rem; color: var(--text-muted); font-style: italic; margin-top: 12px; line-height: 1.5; }
 
   /* ── Responsive ───────────────────────────────────────────────── */
   @media (max-width: 600px) {
@@ -491,6 +598,13 @@
 
   <section class="glass-panel animate-in" style="--delay: 0.12s;" id="configPanel">
     <p class="panel-title">Configuration</p>
+
+    <div class="presets">
+      <span class="presets-label">Quick load</span>
+      <button type="button" class="preset-btn" data-preset="light">Light dispensing</button>
+      <button type="button" class="preset-btn" data-preset="panpoc">PANPOC</button>
+      <button type="button" class="preset-btn" data-preset="heavy">Heavy dispensing</button>
+    </div>
 
     <div class="ctrl">
       <div class="cg" style="grid-column: 1 / -1;">
@@ -599,6 +713,14 @@
   <section class="glass-panel animate-in" style="--delay: 0.37s;">
     <p class="panel-title">Rack animation</p>
     <div id="rackAnim"></div>
+  </section>
+
+  <section class="glass-panel animate-in" style="--delay: 0.42s;">
+    <p class="panel-title">Benchmark comparison</p>
+    <p class="cmp-intro">How three representative dispensing loads respond to <b>1, 2, and 6 pumps in parallel</b>,
+      at the current system settings (rollers, µL/stroke, and the shared pump speed — <b>fixed clock</b>, every
+      pump at the same rate). Change those settings above to see how a different pump system copes with each load.</p>
+    <div id="benchmarkCompare"></div>
   </section>
 </main>
 
@@ -743,6 +865,14 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     const c = LIQUID_COLORS[i % LIQUID_COLORS.length];
     return 'linear-gradient(135deg, ' + c.from + ', ' + c.to + ')';
   }
+
+  // Named dispensing benchmarks (quick-load presets + comparison rows), ordered
+  // light → panpoc → heavy. PANPOC is the real middle-field point of care case.
+  const BENCHMARKS = [
+    { key: 'light',  name: 'Light dispensing',  vols: [100, 25],                    color: { from: '#43b9c9', to: '#2b7bd6' } },
+    { key: 'panpoc', name: 'PANPOC',            vols: [300, 5, 300, 50],            color: { from: '#ff8c42', to: '#e83535' } },
+    { key: 'heavy',  name: 'Heavy dispensing',  vols: [1000, 300, 120, 50, 25, 5],  color: { from: '#e85d5d', to: '#c02525' } }
+  ];
 
   function fmtMinSec(totalSeconds) {
     if (!isFinite(totalSeconds)) return '—';
@@ -945,7 +1075,7 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
         '<g>' +
           '<rect x="' + (x - 6) + '" y="' + (nozzleTipY - 30) + '" width="12" height="24" rx="2" fill="#3a3430" stroke="rgba(255,255,255,0.18)"/>' +
           '<polygon points="' + (x - 8) + ',' + (nozzleTipY - 6) + ' ' + (x + 8) + ',' + (nozzleTipY - 6) + ' ' + x + ',' + (nozzleTipY + 6) + '" fill="' + col.to + '"/>' +
-          '<ellipse class="nozzle-drop" cx="' + x + '" cy="' + dropY + '" rx="4.5" ry="6.5" fill="' + col.from + '"/>' +
+          '<ellipse class="nozzle-drop" id="drop' + c + '" cx="' + x + '" cy="' + dropY + '" rx="4.5" ry="6.5" fill="' + col.from + '"/>' +
         '</g>';
     }
 
@@ -1029,6 +1159,24 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
       }
     }
 
+    // A drop only shows under nozzle column c when a real tube (0..7) is beneath
+    // it this step, and re-triggers its one-shot fall in sync with the fill.
+    function clearDrops() {
+      for (let c = 0; c < N; c++) {
+        const d = document.getElementById('drop' + c);
+        if (d) d.classList.remove('dispensing');
+      }
+    }
+    function pulseDrops(k) {
+      for (let c = 0; c < N; c++) {
+        const d = document.getElementById('drop' + c);
+        if (!d) continue;
+        const tubeI = c - N + k;                      // which rack tube sits under column c now
+        d.classList.remove('dispensing');
+        if (tubeI >= 0 && tubeI < TUBES) { void d.getBoundingClientRect(); d.classList.add('dispensing'); }
+      }
+    }
+
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
       // Static representative frame: rack mid-way, a filling gradient across it.
@@ -1051,12 +1199,13 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
         curX = from + (toX - from) * e;
         rackG.setAttribute('transform', 'translate(' + curX + ',0)');
         if (t < 1) { rackAnim.raf = requestAnimationFrame(frame); }
-        else { rackAnim.raf = null; setLayers(k); }  // reveal the new layer after arriving
+        else { rackAnim.raf = null; setLayers(k); pulseDrops(k); }  // fill + drip after arriving
       }
       rackAnim.raf = requestAnimationFrame(frame);
     }
 
     rackAnim.timer = setInterval(function () {
+      clearDrops();                                  // drops vanish during the slide
       k++;
       if (k > sMax) {                                // seamless-ish loop: fresh empty rack
         k = 0; curX = txFor(0);
@@ -1158,6 +1307,90 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     renderMetrics(window.__sim);
     renderGantt(window.__sim);
     renderRackAnim(window.__sim);
+    // Benchmark comparison uses the current SYSTEM (rollers/µL-stroke/shared rpm)
+    // at a fixed clock (all pumps equal), independent of the A1/A2 toggle.
+    renderComparison(rollers, uLPerStroke, rpm);
+  }
+
+  // Compare the three named benchmarks at 1 / 2 / 6 pumps in parallel, using the
+  // current system settings at a fixed clock (shared rate for every pump). KPIs:
+  // total run time, throughput (samples/hr), and % time saved vs serial.
+  const CMP_KS = [1, 2, 6];
+  function renderComparison(rollers, uLPerStroke, sharedRpm) {
+    const host = document.getElementById('benchmarkCompare');
+    if (!host) return;
+
+    // compute rows, and the global max total run time for a shared bar scale
+    let maxTotal = 0;
+    const rows = BENCHMARKS.map(function (b) {
+      const N = b.vols.length;
+      const dt = computeDoseTimes(b.vols, rollers, uLPerStroke, sharedRpm);
+      const serial = simulateSchedule(dt, N, SAMPLES, 1, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1).totalRunTime;
+      const cells = CMP_KS.map(function (K) {
+        const kEff = Math.min(K, N);
+        const r = simulateSchedule(dt, N, SAMPLES, kEff, SAMPLE_SHIFT, RACK_CHANGE, RACKS - 1);
+        if (r.totalRunTime > maxTotal) maxTotal = r.totalRunTime;
+        return {
+          K: K, kEff: kEff, capped: kEff < K,
+          total: r.totalRunTime,
+          sph: r.samplesPerHour,
+          saved: serial > 0 ? (serial - r.totalRunTime) / serial * 100 : 0
+        };
+      });
+      return { b: b, N: N, cells: cells };
+    });
+
+    // bar groups
+    let bars = '';
+    rows.forEach(function (row) {
+      const grad = 'linear-gradient(90deg, ' + row.b.color.from + ', ' + row.b.color.to + ')';
+      let rowsHtml = '';
+      row.cells.forEach(function (c) {
+        const w = maxTotal > 0 ? (c.total / maxTotal) * 100 : 0;
+        const savedTxt = c.K === 1 ? '<span class="sub">baseline</span>'
+          : '<span class="saved">−' + c.saved.toFixed(0) + '%</span>';
+        rowsHtml +=
+          '<div class="cmp-row">' +
+            '<div class="cmp-row-k">' + c.K + (c.K === 1 ? ' pump' : ' pumps') + (c.capped ? ' *' : '') + '</div>' +
+            '<div class="cmp-bar-track">' +
+              '<div class="cmp-bar-fill" style="width:' + w + '%;background:' + grad + ';opacity:' + (c.K === 1 ? 0.95 : c.K === 2 ? 0.8 : 0.65) + '"></div>' +
+              '<div class="cmp-bar-label"><span class="t">' + fmtMinSec(c.total) + '</span>' +
+                '<span class="sub">' + c.sph.toFixed(0) + '/hr</span>' + savedTxt + '</div>' +
+            '</div>' +
+          '</div>';
+      });
+      bars +=
+        '<div class="cmp-group">' +
+          '<div class="cmp-group-head">' +
+            '<span class="cmp-swatch" style="background:' + grad + '"></span>' +
+            '<span class="cmp-group-name">' + row.b.name + '</span>' +
+            '<span class="cmp-group-sub">' + row.N + ' liquid' + (row.N > 1 ? 's' : '') + ' · ' +
+              row.b.vols.join('/') + ' µL</span>' +
+          '</div>' + rowsHtml +
+        '</div>';
+    });
+
+    // exact-number table
+    let thead = '<tr><th>Benchmark</th>';
+    CMP_KS.forEach(function (K) { thead += '<th>' + K + (K === 1 ? ' pump' : ' pumps') + '</th>'; });
+    thead += '</tr>';
+    let tbody = '';
+    rows.forEach(function (row) {
+      tbody += '<tr><td><span class="t">' + row.b.name + '</span></td>';
+      row.cells.forEach(function (c) {
+        tbody += '<td><span class="t">' + fmtMinSec(c.total) + '</span><br>' +
+          '<span class="sub">' + c.sph.toFixed(0) + ' /hr</span><br>' +
+          (c.K === 1 ? '<span class="sub">baseline</span>' : '<span class="saved">−' + c.saved.toFixed(0) + '% vs serial</span>') +
+          '</td>';
+      });
+      tbody += '</tr>';
+    });
+
+    const anyCapped = rows.some(function (r) { return r.cells.some(function (c) { return c.capped; }); });
+    host.innerHTML = bars +
+      '<div class="cmp-table-wrap"><table class="cmp-table"><thead>' + thead + '</thead><tbody>' + tbody + '</tbody></table></div>' +
+      (anyCapped ? '<p class="cmp-note">* Pumps beyond a benchmark’s liquid count add nothing — the value is full parallel (capped at that benchmark’s N). Each cell: total run time · throughput · time saved vs serial.</p>'
+                 : '<p class="cmp-note">Each cell: total run time · throughput · time saved vs serial.</p>');
   }
 
   // Enable/disable + sync the per-pump speed fields to the control mode.
@@ -1192,6 +1425,24 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     }
   }
 
+  // Quick-load a named benchmark into the control panel: sets N + volumes and
+  // resets per-pump RPM to the shared speed (leaves rollers/µL-stroke/mode as-is
+  // so the user compares the load under their current system).
+  function applyPreset(key) {
+    const b = BENCHMARKS.find(function (x) { return x.key === key; });
+    if (!b) return;
+    liquidCount = b.vols.length;
+    const shared = document.getElementById('rpm').value;
+    for (let i = 0; i < 6; i++) {
+      if (i < b.vols.length) document.getElementById('vol' + i).value = b.vols[i];
+      document.getElementById('rpm' + i).value = shared;
+    }
+    document.querySelectorAll('.preset-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.preset === key);
+    });
+    updateLiquidRows(); // shows/hides rows, fixes K max, then recompute()
+  }
+
   ['rollers', 'uLPerStroke', 'concK'].forEach(id =>
     document.getElementById(id).addEventListener('input', recompute));
   document.getElementById('rpm').addEventListener('input', () => { applyModeUI(); recompute(); });
@@ -1200,6 +1451,9 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     document.getElementById('rpm' + i).addEventListener('input', recompute);
   }
   document.getElementById('mode').addEventListener('change', () => { applyModeUI(); recompute(); });
+  document.querySelectorAll('.preset-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { applyPreset(btn.dataset.preset); });
+  });
 
   renderConstantChips();
   colorDots();
