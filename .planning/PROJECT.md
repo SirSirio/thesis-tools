@@ -72,4 +72,4 @@ A thesis companion site where each tool is developed on demand — when a design
 | Voltage-dependent speed derating on torque/FoS (min(1, f_max/SP)) | DRV8825 chopper can't reach rated current above inductive ceiling; derating makes FoS physically accurate | ✓ Added post-Phase 1 |
 
 ---
-*Last updated: 2026-06-24 after Phase 5 — HTML Presentation Decks*
+*Last updated: 2026-07-20 after Phase 8 — Dispense Choreography & Throughput Simulator (shipped `tools/dispense-throughput-simulator/`; answers U5 concurrency empirically).*

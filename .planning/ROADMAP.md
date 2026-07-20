@@ -212,6 +212,9 @@ Plans:
 | 4. Prototype Design Space | 2/2 | Complete   | 2026-06-15 |
 | 5. HTML Presentation Decks | 5/5 | Complete   | 2026-06-24 |
 | 6. System Architecture Explorer | 6/6 | Complete    | 2026-07-15 |
+| 6.1 Architecture Refinement | — | Complete | 2026-07-16 |
+| 7. Thesis Showcase Landing Page | — | Complete | 2026-07-17 |
+| 8. Dispense Choreography & Throughput Simulator | 4/4 | Complete | 2026-07-20 |
 
 ### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
 
