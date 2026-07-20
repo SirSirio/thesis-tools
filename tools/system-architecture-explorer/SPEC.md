@@ -379,6 +379,9 @@ used  = (brainKey !== 'espscreen')
         + v.pinsC                                        // Layer C: driver-link pins on the brain (0 if a
                                                            //   dedicated pump-node MCU or printer-board
                                                            //   socket absorbs the wiring instead)
+        + msPins                                         // +3 only when msMode='dynamic' AND v.dk='dumb'
+                                                           //   AND v.pinsC>0 (shared M0/M1/M2 bus on the
+                                                           //   brain-wired dumb drivers); 0 otherwise
         + 1                                              // vibration-motor PWM pin (any LEDC-capable GPIO,
                                                            //   fixed, every variant — D-13)
 free    = avail - used
@@ -431,6 +434,28 @@ rather than assuming. See Open Questions for the resolution record.
 The same physical component (e.g. 6× DRV8825) costs a different pin count depending on wiring
 topology (S1 shared+EN = 8 vs D2 per-motor = 12) — this is why `pinsC` is an explicit per-variant
 field mirroring the `bom` qty-map pattern, rather than derived generically from driver name alone.
+
+**These `pinsC` values assume jumpered (fixed) microstepping** — M0/M1/M2 tied to VCC/GND for a
+fixed resolution, costing 0 MCU pins (06-RESEARCH.md decomposes S1 as `2 shared STEP/DIR + 6×ENABLE
+= 8`, with no microstep lines). This is exposed as the **Microstepping** control (`msMode`, default
+`fixed`):
+
+| `msMode` | Effect | Applies to |
+|---|---|---|
+| `fixed` (default) | +0 — M0/M1/M2 jumpered; every shipped number unchanged | — |
+| `dynamic` | **+3** — a shared M0/M1/M2 bus for runtime-selectable resolution (3 pins total, not per-driver: all pumps run one resolution) | dumb-driver variants with `pinsC > 0` (S1-\*, D2-\*, ESPINT-dumb-i2c) |
+
+Smart/motion drivers (TMC2209/TMC5160/TMC5072) set microstepping over their own UART/SPI link, so
+`dynamic` adds nothing to them; offloaded dumb variants (`pinsC = 0`) pay the microstep bus on the
+pump node, not the brain, so they are unaffected too. The takeaway the control makes visible: the
+S1/D2 overrun is driven by ENABLE/STEP-DIR fan-out to six physical drivers, **not** by microstepping
+wiring — the model was already generous on microstepping, and `dynamic` only makes the tight rows
+tighter.
+
+**Verification (2026-07-20):** the four load-bearing pin figures were re-checked against primary
+sources — ESP32-WROOM-32 usable GPIO (15, conservative end of the safe non-strapping set), DRV8825
+M0/M1/M2 jumper-vs-MCU wiring, TMC2209 ≤4-drivers-per-UART, and SPI screen 8-pin count. All confirmed;
+see `.planning/quick/*-verify-pin-calculations/*-RESEARCH.md`.
 
 ### OVERRUN rule
 

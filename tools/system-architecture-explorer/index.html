@@ -539,6 +539,15 @@
       layer that decides whether a separate pump node needs to exist at all — the subject of the
       next section, and the reason <b>Panel + Node</b> is a distinct direction rather than a
       variation on Console.</p>
+      <p>One assumption inside Layer C is worth making explicit, because it silently sets the
+      pin budget: the dumb-driver pin counts (S1 = 2 shared STEP/DIR + 6×ENABLE = 8) assume
+      <b>microstepping is jumpered</b> — M0/M1/M2 tied to a fixed resolution, costing zero MCU
+      pins. That is the realistic build for a pump that runs one resolution, so it is the default
+      of the <b>Microstepping</b> control in Controls. Switching it to <i>dynamic</i> (runtime-selectable
+      resolution) adds a shared 3-line M0/M1/M2 bus to the brain-wired dumb variants — which makes
+      the tightest ones worse, not better. The real driver of the S1/D2 overrun is not microstepping
+      at all; it is fanning ENABLE (or STEP/DIR) out to six physical drivers on one brain — exactly
+      what a smart driver or a dedicated pump node removes.</p>
     </details>
     <details class="theory-section sae-fold">
       <summary>
@@ -666,6 +675,19 @@
             <label for="convDkk">DKK converter <span class="muted">(scratchpad)</span></label>
             <div class="conv"><input type="number" id="convDkk" placeholder="DKK" step="1">
               <span>=</span><b id="convEur" style="color:var(--accent)">– €</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ctl-group">
+        <h3 class="ctl-group-title">Pin budget <span class="ctl-group-hint">— the Layer-C wiring assumption behind the free / OVERRUN column</span></h3>
+        <div class="controls">
+          <div class="ctl">
+            <label for="fMicro">Microstepping <span class="muted">(DRV8825 dumb drivers)</span></label>
+            <select id="fMicro">
+              <option value="fixed">Fixed — jumpered mode (0 MCU pins)</option>
+              <option value="dynamic">Dynamic — MCU-selected (+3 shared M0/M1/M2)</option>
+            </select>
           </div>
         </div>
       </section>
@@ -979,6 +1001,15 @@ const VARIANTS = [
 
 /* ---------- state ---------- */
 let rate=DEFAULT_RATE, includeShared=false, includePsu=true, maxPrice=400, maxCx=5, minCon=0;
+/* Layer-C microstepping wiring (D-09 follow-up). The pinsC figures below are derived for
+   JUMPERED microstepping — M0/M1/M2 tied to VCC/GND for a fixed resolution, costing 0 MCU
+   pins (06-RESEARCH.md §pin-budget: S1 = 2 shared STEP/DIR + 6×ENABLE = 8, no microstep
+   lines). 'fixed' is therefore the default and leaves every shipped number unchanged. 'dynamic'
+   models runtime-selectable resolution: a SHARED 3-line M0/M1/M2 bus (all pumps run one
+   resolution, so it is 3 pins total, not per-driver), added only to dumb-driver variants whose
+   drivers are wired on the brain (pinsC > 0). Smart/motion drivers set microstepping over their
+   own UART/SPI link, and offloaded variants (pinsC = 0) pay it on the node — neither is affected. */
+let msMode='fixed';   // 'fixed' | 'dynamic'
 let selectedDirection=null; // D-08/D-12: null = no filter; else a DIRECTIONS key
 let sortKey='cost', sortDir=1;
 let selectedVariantId=null; // D-02: selection = click a matrix row; the diagram's ONLY control
@@ -1068,6 +1099,11 @@ function pinsOf(v){
   }
   used += BUS_PINS[v.b] || 0;
   used += v.pinsC || 0;
+  /* Dynamic (MCU-selected) microstepping adds a shared 3-line M0/M1/M2 bus, but only where the
+     brain itself wires the dumb drivers (pinsC > 0). Smart/motion drivers configure microstepping
+     over UART/SPI (no extra pins); offloaded dumb variants pay it on the pump node, not the brain. */
+  const msPins = (msMode === 'dynamic' && v.dk === 'dumb' && (v.pinsC || 0) > 0) ? 3 : 0;
+  used += msPins;
   used += 1;   // vibration motor PWM pin (vibDriver, LEDC-capable GPIO) — fixed, every variant
   const free = avail - used;
   return { used, avail, free, overrun: used > avail };
@@ -1827,7 +1863,7 @@ function renderMatrix(){
     const v=o.v, dc = v.dk==='dumb'?'drv-dumb':v.dk==='smart'?'drv-smart':'drv-motion';
     const p = pinsOf(v), pc = pinConfidenceOf(v);
     const pinCell = p.overrun
-      ? `<span class="pill bad">OVERRUN</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
+      ? `<span class="pill bad">OVERRUN</span> <span class="muted" title="pins short of the brain's usable GPIO">by ${p.used - p.avail}</span> <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`
       : `${p.free} free <span class="pill ${confClass(pc)}" title="pin-budget confidence">${pc}</span>`;
     const tr=document.createElement('tr'); tr.className='vrow'; tr.dataset.vid=v.id;
     tr.innerHTML=`<td><b>${v.id}</b></td>
@@ -1917,6 +1953,9 @@ document.getElementById('fPsu').addEventListener('change',e=>{includePsu=e.targe
 document.getElementById('fPrice').addEventListener('input',e=>{maxPrice=+e.target.value; document.getElementById('maxPriceLbl').textContent=maxPrice; renderMatrix();});
 document.getElementById('fCx').addEventListener('change',e=>{maxCx=+e.target.value; renderMatrix();});
 document.getElementById('fCon').addEventListener('change',e=>{minCon=+e.target.value; renderMatrix();});
+/* Pin-budget assumption, not a filter and not a cost — its own group. Changing it only ever
+   moves the free/OVERRUN column, so a plain renderMatrix() is enough. */
+document.getElementById('fMicro').addEventListener('change',e=>{msMode=e.target.value; renderMatrix();});
 document.getElementById('fDir').addEventListener('change',e=>{ setDirection(e.target.value==='any'?null:e.target.value); });
 
 /* "Clear filters" only ever touches the FILTER group — the cost-model selects are a different
@@ -1968,6 +2007,7 @@ maxPrice = +document.getElementById('fPrice').value;
 document.getElementById('maxPriceLbl').textContent = maxPrice;
 maxCx = +document.getElementById('fCx').value;
 minCon = +document.getElementById('fCon').value;
+msMode = document.getElementById('fMicro').value;   // WR-04: same DOM-restore guard as the selects above
 document.getElementById('schemaSvg').innerHTML = buildSchema(); // static — rendered once, never rebuilt by renderMatrix() (T-06.1-06)
 wireSchemaInteractivity();
 populateDirectionSelect();
