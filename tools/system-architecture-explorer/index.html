@@ -142,6 +142,21 @@
   .pl-legend span{ display:inline-flex; align-items:center; gap:6px; }
   .pl-legend i{ width:11px; height:11px; border-radius:3px; display:inline-block; }
 
+  /* ── Expanded-row mini tables: pin budget + peripheral controllers ── */
+  #matrix table.pin-mini{ width:100%; max-width:540px; border-collapse:collapse; font-size:12.5px; margin:4px 0 10px; }
+  #matrix table.pin-mini td:first-child, #matrix table.pin-mini th:first-child{ white-space:nowrap; }
+  #matrix table.pin-mini caption{ text-align:left; color:var(--accent); font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.07em; padding:8px 0 4px; }
+  #matrix table.pin-mini td, #matrix table.pin-mini th{ padding:3px 8px; border:0; border-bottom:1px solid var(--glass-border); }
+  #matrix table.pin-mini th{ text-align:left; color:var(--text-muted); font-weight:600; }
+  #matrix table.pin-mini td.n{ text-align:right; font-variant-numeric:tabular-nums; font-weight:600; width:44px; }
+  #matrix table.pin-mini td.note{ color:var(--text-muted); font-weight:400; }
+  #matrix table.pin-mini tr.sum td{ font-weight:700; border-bottom:0; }
+  #matrix table.pin-mini tr.sum.top td{ border-top:2px solid var(--glass-border); }
+  #matrix table.pin-mini tr.result td{ font-weight:700; }
+  #matrix table.pin-mini td.over{ color:var(--accent-2); }
+  #matrix table.pin-mini td.ok-r{ color:var(--ok); }
+
   /* ── Collapsible fold ─────────────────────────────────────────
      Shared by the Part 01 theory sections and the component-price
      table. Adapted from prototypes/index.html's .ver-panel <details>
@@ -1248,21 +1263,27 @@ function pinsOf(v){
   const brainKey = intKey || 'esp32';
   const brain = COMP[brainKey] || {};
   const avail = brain.gpioUsable || 0;
+  /* Build the per-term breakdown as the single source of truth: the matrix column and the
+     expanded-row "Pin budget" table both read `terms`, so the two can never drift (260720-pbc). */
+  const terms = [];
   let used = 0;
+  const add = (label, pins, note) => { terms.push({ label, pins, note }); used += pins; };
   if (!intKey) {
-    used += SCREEN_PINS[interfaceMode];
-    used += (v.b === 'I²C') ? 0 : 2;   // LM75 onboard temp sensor — MPR121 shares this same I²C attachment, +0 pins
+    add('Screen (A)', SCREEN_PINS[interfaceMode], 'ILI9341 SPI + touch');
+    add('Sensors', (v.b === 'I²C') ? 0 : 2, (v.b === 'I²C') ? 'LM75+MPR121 share the I²C bus' : 'LM75+MPR121 dedicated I²C pair');
+  } else {
+    add('Screen (A)', 0, 'onboard — already in the free-IO count');
   }
-  used += BUS_PINS[v.b] || 0;
-  used += v.pinsC || 0;
+  add('Bus (B)', BUS_PINS[v.b] || 0, `${v.b} attachment`);
+  add('Drivers (C)', v.pinsC || 0, v.c);
   /* Dynamic (MCU-selected) microstepping adds a shared 3-line M0/M1/M2 bus, but only where the
      brain itself wires the dumb drivers (pinsC > 0). Smart/motion drivers configure microstepping
      over UART/SPI (no extra pins); offloaded dumb variants pay it on the pump node, not the brain. */
   const msPins = (msMode === 'dynamic' && v.dk === 'dumb' && (v.pinsC || 0) > 0) ? 3 : 0;
-  used += msPins;
-  used += 1;   // vibration motor PWM pin (vibDriver, LEDC-capable GPIO) — fixed, every variant
+  add('Microstep', msPins, msMode === 'dynamic' ? 'shared M0/M1/M2 bus (dynamic)' : 'jumpered in hardware (fixed)');
+  add('Vibration', 1, 'PWM (LEDC), fixed on every variant');
   const free = avail - used;
-  return { used, avail, free, overrun: used > avail };
+  return { used, avail, free, overrun: used > avail, terms };
 }
 
 /* The confidence carried by a variant's pin readout is the WORST (lowest) of its inputs —
@@ -2128,18 +2149,41 @@ function bomHtml(v){
       <span class="pill ${confClass(brain.psramConf)}">${brain.psramConf}</span> ·
       GPIO usable: ${brain.gpioUsable} <span class="pill ${confClass(brain.gpioConf)}">${brain.gpioConf}</span><br>
       ${brain.uiNote}</p>` : '';
-  /* Ceiling #2 — every solution's hardware-controller demand vs the ESP32's 3 UART / 2 I²C / 2 SPI.
-     This is the check a pin count can't do; it flags the "TX for two things" trap (PIN-BUDGET-ANALYSIS.md §3). */
+  /* Ceiling #1 breakdown — the per-term table so an OVERRUN row shows its own cause. Reads
+     pinsOf(v).terms, the same computation that produces the Pins-free column (can't drift). */
+  const pb = pinsOf(v);
+  const pinRows = pb.terms.map(t =>
+    `<tr><td>${t.label}</td><td class="n">${t.pins}</td><td class="note">${t.note || ''}</td></tr>`).join('');
+  const resultCells = pb.overrun
+    ? `<td class="n over">−${pb.used - pb.avail}</td><td class="over">OVERRUN by ${pb.used - pb.avail}</td>`
+    : `<td class="n ok-r">${pb.free}</td><td class="ok-r">${pb.free} free</td>`;
+  const pinTable = `<table class="pin-mini"><caption>Pin budget — where every GPIO goes (ceiling #1)</caption>
+    <tbody>${pinRows}
+      <tr class="sum top"><td>Pins used</td><td class="n">${pb.used}</td><td class="note"></td></tr>
+      <tr class="sum"><td>Usable GPIO — ${brain ? brain.label : 'ESP32'}</td><td class="n">${pb.avail}</td><td class="note"></td></tr>
+      <tr class="result">${resultCells}<td class="note">used − usable</td></tr>
+    </tbody></table>`;
+
+  /* Ceiling #2 breakdown — hardware-controller demand vs the ESP32's 3 UART / 2 I²C / 2 SPI, row by
+     row. The check a pin count can't do; flags the "TX for two things" trap (PIN-BUDGET-ANALYSIS.md §3). */
   const per = periphOf(v);
-  const perTag = per.conflict ? `<span class="pill bad">controller conflict</span>`
-    : per.tight ? `<span class="pill conf-medium">tight — no spare UART</span>`
+  const perStatus = per.conflict ? `<span class="pill bad">conflict</span>`
+    : per.tight ? `<span class="pill conf-medium">tight</span>`
     : `<span class="pill conf-high">fits</span>`;
-  const perWhy = per.reasons.length ? ` <span class="muted">— ${per.reasons.join(' · ')}</span>` : '';
-  const perInfo = `<p class="muted" style="margin:6px 0 0;font-size:12.5px">
-      <b>Peripheral controllers</b> (ESP32 = 3 UART · 2 I²C · 2 SPI):
-      UART ${per.uart}/3 · I²C ${per.i2c}/2 · SPI ${per.spi}/2 &nbsp;${perTag}${perWhy}
-      ${per.tight ? '<br>All three UARTs are spent on data — none left for the USB debug console. Feasible: flash then disconnect the console, bit-bang one TMC line on SoftwareSerial, or use the I²C-bus sibling, which spends no UART.' : ''}</p>`;
-  return `<b>${v.note}</b>${brainInfo}${perInfo}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th><th>Price confidence</th></tr></thead>
+  const perRow = (name, used2, have) => {
+    const over = used2 > have, full = !over && used2 === have;
+    return `<tr><td>${name}</td><td class="n${over ? ' over' : ''}">${used2}</td><td class="n note">${have}</td>
+      <td class="note">${over ? 'over budget' : full ? 'full — none spare' : 'ok'}</td></tr>`;
+  };
+  const perWhy = per.reasons.length ? per.reasons.join(' · ') : 'nothing contends for a controller';
+  const perTable = `<table class="pin-mini"><caption>Peripheral controllers — the limit a count can't see (ceiling #2)</caption>
+    <thead><tr><th>Controller</th><th class="n">used</th><th class="n">have</th><th>${perStatus}</th></tr></thead>
+    <tbody>${perRow('UART', per.uart, PERIPH.uart)}${perRow('I²C', per.i2c, PERIPH.i2c)}${perRow('SPI', per.spi, PERIPH.spi)}
+      <tr class="sum"><td colspan="4" class="note" style="font-weight:400">${perWhy}</td></tr></tbody></table>`;
+  const perNote = per.tight
+    ? `<p class="muted" style="margin:-4px 0 8px;font-size:12px">All three UARTs spent on data — none left for the USB debug console. Feasible: flash then disconnect it, bit-bang one TMC line on SoftwareSerial, or use the I²C-bus sibling (spends no UART).</p>` : '';
+
+  return `<b>${v.note}</b>${brainInfo}${pinTable}${perTable}${perNote}<table style="margin-top:6px"><thead><tr><th>Component</th><th>Qty</th><th>€/ea</th><th>Line</th><th>Price confidence</th></tr></thead>
     <tbody>${lines}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th class="cost">€${sum.toFixed(1)}</th>
     <th><span class="pill ${confClass(bomWorstConf(v))}">${bomWorstConf(v)}</span></th></tr></tfoot></table>`;
 }
