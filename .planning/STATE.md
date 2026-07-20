@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-last_updated: "2026-07-17T14:54:20.101Z"
-last_activity: 2026-07-17
+last_updated: "2026-07-20T00:00:00.000Z"
+last_activity: 2026-07-20
 progress:
   total_phases: 9
   completed_phases: 5
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 Phase: 07 (thesis-showcase-landing-page) — EXECUTING
 Plan: 4 of 4
 Status: Phase complete — ready for verification
-Last activity: 2026-07-17
+Last activity: 2026-07-20 — Completed quick task 260720-a4x (architecture-explorer Phase 6.1 UI adjustments)
 
 Progress: [█████████░] 93%
 
@@ -173,6 +173,7 @@ Recent decisions affecting current work:
 | 2026-07-13 | homepage redesign (260713-o6s): fixed glass top nav with segmented EN/IT switch; hero meta chips; numbered section headers with hairline rules; icon-tile cards with mouse spotlight + hover hairline; wide horizontal cards for single-item sections; IntersectionObserver scroll reveals; background grid overlay; inline SVG favicon; full EN/IT i18n coverage (all cards/sections now translate, was ~half); `assets/style.css` untouched. Retires backlog item "Redesign and restructure landing page for many tools" | `index.html` |
 | 2026-07-13 | prototype journey cards ride the curve (260713-o8z): `alignNodesToPath()` samples the real `.journey-path` (`getPointAtLength`, 240 pts) at load/resize and sets each `.proto-node`'s `left` so the card centre lands on the SVG S-curve at its own vertical middle — was a straight `left:50%` column. Clamped against stage overflow; clears inline `left` on mobile (≤640px static stack). Verified ≤1px centre-to-curve error at 929/1440px, no horizontal scroll | `prototypes/index.html`, `prototypes/SPEC.md` |
 | 2026-07-13 | proto-02 page restructure (20260713-proto-02-page-restructure): TOC card with auto-expanding links; collapsible version panels (design / v2.1 / v2.2, current open); head schematic rebuilt as hatched cross-section with CL + mirrored ghost + A–A locator inset; print-model intro (educated-guess framing) + annotated visual equation; figures repositioned + capped 540px; 0.085 mm play marked estimate; creep/DFM paragraph simplified (plastic = expedient, metal final) | `prototypes/index.html`, `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/PROTOTYPE.md` |
+| 2026-07-20 | architecture-explorer Phase 6.1 adjustments (260720-a4x): module-schema SVG font enlarged (titles 12.5→15, chips 9.5→12 with taller pills, barrier/legend 10→12) — verified no overflow; component-prices `<details>` boxed (glass card + hover cue) so it clearly reads as expandable; page-flow cleanup — divider pills renumbered to a consistent Part 1–4 spine and the per-variant diagram demoted to a muted "Selected-variant view" companion under the matrix, with more separation between top-level parts. Style tokens untouched | `tools/system-architecture-explorer/index.html`, `tools/system-architecture-explorer/SPEC.md` |
 
 ## Session Continuity
 
