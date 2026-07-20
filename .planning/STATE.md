@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 08-03-PLAN.md
-last_updated: "2026-07-20T12:36:11.007Z"
+status: verifying
+stopped_at: Completed 08-04-PLAN.md
+last_updated: "2026-07-20T12:41:43.714Z"
 last_activity: 2026-07-20
 progress:
   total_phases: 9
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 32
-  completed_plans: 28
-  percent: 56
+  completed_plans: 29
+  percent: 67
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 
 Phase: 08 (dispense-choreography-throughput-simulator-tool-interactive-) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-20
 
 Progress: [█████████░] 93%
@@ -73,6 +73,7 @@ Progress: [█████████░] 93%
 | Phase 08-dispense-choreography-throughput-simulator P01 | 12min | 2 tasks | 1 files |
 | Phase 08 P02 | 13min | 3 tasks | 1 files |
 | Phase 08 P03 | 6min | 1 tasks | 1 files |
+| Phase 08 P04 | 7min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -143,6 +144,7 @@ Recent decisions affecting current work:
 - [Phase 08-02]: 08-02: stationOffsetsForCycle() mirrors groupDispenseTime()'s LPT sort/chunk rule to expose per-station Gantt-bar offsets without touching the engine
 - [Phase 08-02]: 08-02: Tasks 1-3 committed as one commit (68f4368) since metrics/Gantt/rack-anim CSS and recompute() wiring were implemented as one coherent, tightly-coupled edit pass
 - [Phase 08-03]: SPEC.md documents the resolved-assumption footnotes (32+(N-1) cycle reading, 3x rack-change convention, flat-additive rack changes, global flow params, A1/A2 fixed-K numerical equality) as permanent record — No new modelling decisions made -- purely documentation of prior-plan (08-01/08-02) choices, matching CLAUDE.md's tool-spec standard
+- [Phase ?]: Landing-page card icon set to timer glyph (U+23F1), placed as terminal Tools-grid card with --rd: 0.5s; CLAUDE.md's system-architecture-explorer tree entry changed from a terminal connector to a mid-list one to append dispense-throughput-simulator as the new last block
 
 ### Pending Todos
 
@@ -193,7 +195,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-20T12:36:10.997Z
-Stopped at: Completed 08-03-PLAN.md
+Last session: 2026-07-20T12:41:43.701Z
+Stopped at: Completed 08-04-PLAN.md
 Resume file: 
 None
