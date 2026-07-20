@@ -1213,17 +1213,17 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
     function revealLayer(tubeI, kk) { const p = el('L' + tubeI + '_' + kk); if (p) p.classList.add('filled'); }
     function pulseDrop(c) { const d = el('drop' + c); if (!d) return; d.classList.remove('dispensing'); void d.getBoundingClientRect(); d.classList.add('dispensing'); }
 
+    const SLIDE = 470, WAVE_GAP = 300, TAIL = 340, RESET_PAUSE = 640;
+    const loopEnd = TUBES;                            // last index step with the bank still full
+    let k = N, curX = txFor(N);
+
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
-      const kk = Math.round(sMax / 2);
-      rackG.setAttribute('transform', 'translate(' + txFor(kk) + ',0)');
-      for (let i = 0; i < TUBES; i++) { const L = Math.max(0, Math.min(N, kk - i)); for (let x = 1; x <= L; x++) revealLayer(i, x); }
+      // Static full-bank frame: a staircase of fills, no motion.
+      rackG.setAttribute('transform', 'translate(' + txFor(N) + ',0)');
+      for (let i = 0; i < TUBES; i++) { const L = Math.max(0, Math.min(N, N - i)); for (let x = 1; x <= L; x++) revealLayer(i, x); }
       return;
     }
-
-    const SLIDE = 470, WAVE_GAP = 300, TAIL = 340, RESET_PAUSE = 620;
-    let k = 0, curX = txFor(0);
-    rackG.setAttribute('transform', 'translate(' + curX + ',0)');
 
     function schedule(delay) { rackAnim.timer = setTimeout(tick, delay); }
 
@@ -1256,14 +1256,28 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
       return waves.length * WAVE_GAP + TAIL;
     }
 
+    // Warm start: the bank begins already full, so every active nozzle dispenses
+    // together from the first round (matching the Gantt's steady-state view of N
+    // liquids at once) instead of a slow one-at-a-time fill ramp. Prior layers are
+    // seeded instantly; the current round's top layer animates. Returns the
+    // dispense-phase duration so the caller can schedule the next step.
+    function warmStart() {
+      k = N; curX = txFor(N);
+      rackG.setAttribute('transform', 'translate(' + curX + ',0)');
+      clearLayers();
+      for (let i = 0; i < TUBES; i++) {
+        const L = Math.max(0, Math.min(N, k - i));
+        for (let x = 1; x < L; x++) revealLayer(i, x);  // seed all but the top layer
+      }
+      return dispensePhase(k);                          // animate this round (all N, K-waved)
+    }
+
     function tick() {
       rackAnim.waveTimers.forEach(clearTimeout); rackAnim.waveTimers = [];
       clearDrops();
       k++;
-      if (k > sMax) {                                // loop: fresh empty rack
-        k = 0; curX = txFor(0); clearLayers();
-        rackG.setAttribute('transform', 'translate(' + curX + ',0)');
-        schedule(RESET_PAUSE);
+      if (k > loopEnd) {                               // loop: brief pause, then a fresh full rack
+        rackAnim.timer = setTimeout(function () { rackAnim.timer = setTimeout(tick, warmStart()); }, RESET_PAUSE);
         return;
       }
       const from = curX, start = performance.now(), toX = txFor(k);
@@ -1278,7 +1292,7 @@ function simulateSchedule(doseTimes, N, M, K, sampleShift, rackChangeSec, numRac
       rackAnim.raf = requestAnimationFrame(frame);
     }
 
-    schedule(SLIDE);
+    rackAnim.timer = setTimeout(tick, warmStart());    // kick off with the bank already full
   }
 
   function recompute() {
