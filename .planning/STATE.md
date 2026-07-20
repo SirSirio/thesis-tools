@@ -3,14 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-20T11:57:45.248Z"
-last_activity: 2026-07-20 -- Phase 08 planning complete
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-07-20T12:17:08.968Z"
+last_activity: 2026-07-20
 progress:
-  total_phases: 10
+  total_phases: 9
   completed_phases: 5
   total_plans: 32
-  completed_plans: 25
-  percent: 50
+  completed_plans: 26
+  percent: 56
 ---
 
 # Project State
@@ -20,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 07 — thesis-showcase-landing-page
+**Current focus:** Phase 08 — dispense-choreography-throughput-simulator-tool-interactive-
 
 ## Current Position
 
-Phase: 07 (thesis-showcase-landing-page) — EXECUTING
-Plan: 4 of 4
+Phase: 08 (dispense-choreography-throughput-simulator-tool-interactive-) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-07-20 -- Phase 08 planning complete
+Last activity: 2026-07-20
 
 Progress: [█████████░] 93%
 
@@ -69,6 +70,7 @@ Progress: [█████████░] 93%
 | Phase 07 P02 | 50min | 2 tasks | 1 files |
 | Phase 07 P03 | 13min | 2 tasks | 1 files |
 | Phase 07 P04 | 15min | 3 tasks | 3 files |
+| Phase 08-dispense-choreography-throughput-simulator P01 | 12min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -132,6 +134,9 @@ Recent decisions affecting current work:
 - [Phase 07]: 07-04: Re-verified Tasks 1-3 (resource-section collapse, invariant checker, CLAUDE.md doc pass) as already committed from a prior session rather than redoing them
 - [Phase 07]: 07-04: Sirio approved the finished landing page and explicitly confirmed the vendored GSAP exception (D-01/D-03 amendment) is justified and should be kept
 - [Phase 07]: 07-04: README.md's Tech section 'no external dependencies' claim corrected post-approval -- now notes the locally-vendored GSAP core, no other change
+- [Phase ?]: 08-01: Adopted totalCycles = M + N - 1 (standard pipeline math) over the literal M + 2(N-1) reading of D-07's prose
+- [Phase ?]: 08-01: Mode toggle (a1/a2) wired but not applied as a numeric lockstep penalty at fixed K -- both modes are numerically identical under global flow params; Plan 08-02 owns the teaching copy
+- [Phase ?]: 08-01: LPT grouping (sort descending, chunk into groups of <=K, sum group maxima) resolves 1<K<N concurrency partitioning
 
 ### Pending Todos
 
@@ -182,7 +187,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-20T11:19:25.515Z
-Stopped at: Phase 8 context gathered
+Last session: 2026-07-20T12:17:08.957Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: 
-.planning/phases/08-dispense-choreography-throughput-simulator-tool-interactive-/08-CONTEXT.md
+None
