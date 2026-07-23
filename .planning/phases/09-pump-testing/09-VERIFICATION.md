@@ -1,9 +1,10 @@
 ---
 phase: 09-pump-testing
 verified: 2026-07-23T18:00:00Z
-status: human_needed
+status: passed
 score: 15/15 must-haves verified
 overrides_applied: 0
+human_verification_resolved: "Both items resolved by fixes rather than deferred — WR-01 (missing KaTeX fonts/) fixed in commit 8506986 by vendoring the 20-file woff2 set; WR-02 (mobile padding asymmetry) fixed in commit 9d8f8c4 by extending the 640px breakpoint to .map-card and .layer2-card. See 09-HUMAN-UAT.md (status: resolved)."
 human_verification:
   - test: "Open tools/pump-testing/index.html in a browser (via serve.bat, not file:// / not Live Preview) and visually confirm all 9 math-block KaTeX formulas (Formulas A.1-A.4, CV, trueness, root-N scaling, variance-split) render as typeset math, not raw LaTeX source or broken glyphs."
     expected: "Formulas render with correct fraction bars, square roots, subscripts/superscripts, in KaTeX's serif math font (or a readable fallback, given the missing katex/fonts/ directory — see WR-01 below)."
