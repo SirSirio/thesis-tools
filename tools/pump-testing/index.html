@@ -1056,6 +1056,81 @@
           </ol>
         </div>
       </div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>The deviation table &mdash; ISO 23783-2 requires | We do | Justification</h3>
+          <p>Deviations are documented, not hidden &mdash; a stronger methods position than pretending to a
+            compliance we do not have. Every row below cross-links to the top-layer section it departs
+            from.</p>
+          <div class="table-wrap">
+            <table class="spec-table">
+              <caption>Adapted from TEST-PROTOCOL.md &sect;7.</caption>
+              <thead>
+                <tr><th>ISO 23783-2 requires</th><th>We do</th><th>Justification</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Balance 0.001 mg @ 5 &micro;L, <a href="#balance-requirements">Table 3</a></td>
+                  <td>0.1 mg</td>
+                  <td>Slope method + same-scale pipette comparison sidestep absolute low-volume accuracy
+                    (&sect;2.2).</td>
+                </tr>
+                <tr>
+                  <td>&ge;10 evaporation blanks, <a href="#method-gravimetric">D.5.2</a></td>
+                  <td>3&ndash;5 blanks/session, fast weigh</td>
+                  <td>Cheap, saves the low-volume data; fast-tare limits evaporation.</td>
+                </tr>
+                <tr>
+                  <td>Pre-rinse tube &ge;5&times;, <a href="#method-gravimetric">&sect;6.3</a></td>
+                  <td><b>Keep</b></td>
+                  <td>Free; fixes the run-to-run non-stationarity seen on 2026-07-16.</td>
+                </tr>
+                <tr>
+                  <td>Thermal equilibrium 2 h, log T/RH/P, <a href="#method-gravimetric">&sect;6.3, Table
+                    D.1</a></td>
+                  <td>Note room temp start/end</td>
+                  <td>Enough to flag drift at prototype scale.</td>
+                </tr>
+                <tr>
+                  <td>Z-factor density + buoyancy, <a href="#mass-to-volume">Annex A</a></td>
+                  <td>Assume 1.00 mg/&micro;L</td>
+                  <td>&lt;0.3% vs a 5% budget &mdash; negligible, documented.</td>
+                </tr>
+                <tr>
+                  <td>n=10, <a href="#replicates">Part 3 / ISO 8655 convention</a></td>
+                  <td>n = 3 / 5 / 10 by volume</td>
+                  <td>Prototype means, not certification; stated as such.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>Condensed design rationale</h3>
+          <details class="rationale-details">
+            <summary>Why these volumes, this speed sweep, and these replicate counts (TEST-PROTOCOL.md
+              &sect;3&ndash;5)</summary>
+            <div class="rationale-body theory-section">
+              <ul>
+                <li><b>Volumes (1 / 100 / 300 strokes).</b> Sized by stroke count so the <i>delivered</i>
+                  volume lands &ge;200 &micro;L on the compliance map even at the pessimistic
+                  ~3 &micro;L/stroke figure &mdash; giving &ge;2 compliant points for the slope.</li>
+                <li><b>Speed sweep (60 / 120 / 180, +240 rpm).</b> Probes tube-<b>refill</b> limitation
+                  &mdash; a dynamic deficit invisible to calipers, and the prime remaining suspect for the
+                  &minus;41% once step-loss is ruled out (E7).</li>
+                <li><b>Replicates (n=3/5/10 by volume).</b> Go where the scatter is real signal, not where
+                  the scale is coarse &mdash; replicates fight randomness, not <b>resolution</b>. At
+                  5 &micro;L the scatter is scale-dominated, so more low-volume reps buy little for the pump
+                  CV.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
     </div><!-- /layer2-stack -->
   </section>
 
