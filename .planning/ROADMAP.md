@@ -45,7 +45,7 @@ Plans:
 - [x] **Phase 7: Thesis Showcase Landing Page** - Turn `index.html` from a tool directory into a thesis showcase: project introduction, video/media, and motion above the fold, with the tool grid demoted to one section among several
  (completed 2026-07-17)
 - [x] **Phase 8: Dispense Choreography & Throughput Simulator** - Configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line, answering the concurrency question empirically (completed 2026-07-20)
-- [ ] **Phase 9: Pump Testing** - A `tools/pump-testing/` page pairing the market-grade ISO 23783-2 gravimetric qualification protocol with the actual prototype test protocol and its justified deviations
+- [x] **Phase 9: Pump Testing** - A `tools/pump-testing/` page pairing the market-grade ISO 23783-2 gravimetric qualification protocol with the actual prototype test protocol and its justified deviations (completed 2026-07-23)
 
 ## Phase Details
 
@@ -218,7 +218,7 @@ Plans:
 | 6.1 Architecture Refinement | — | Complete | 2026-07-16 |
 | 7. Thesis Showcase Landing Page | — | Complete | 2026-07-17 |
 | 8. Dispense Choreography & Throughput Simulator | 4/4 | Complete | 2026-07-20 |
-| 9. Pump Testing | 5/6 | In Progress|  |
+| 9. Pump Testing | 6/6 | Complete   | 2026-07-23 |
 
 ### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
 
@@ -320,7 +320,7 @@ A new `tools/pump-testing/` page documenting how a market-grade dispensing-accur
 **Goal:** Ship a self-contained, document-first, QR-citable protocol page at `tools/pump-testing/index.html` (+ co-located `SPEC.md`) presenting BOTH layers: (top) the market-grade dispensing-accuracy qualification protocol — ISO 23783-2 Annex D gravimetric method as the applicable test method and ISO 8655 pipette-equivalence as the analogical benchmark, deep accuracy metrology core with the other go-to-market dimensions mapped lighter — and (bottom) the actual proto-02 v2.3 test protocol + justified deviations (the ISO-requirement | prototype-reality | justification table, the 0.1 mg-balance workarounds, the pipette head-to-head, honest scope), authored from the user-supplied TEST-PROTOCOL.md. No calculator, no live computation (the live results calculator stays deferred to a future phase).
 **Requirements**: D-01, D-02, D-03, D-04 (CONTEXT.md decisions — no formal REQ-IDs govern this phase)
 **Depends on:** Phase 8
-**Plans:** 5/6 plans executed
+**Plans:** 6/6 plans complete
 
 Plans:
 **Wave 1**
@@ -333,4 +333,4 @@ Plans:
 - [x] 09-05-PLAN.md — Integration chrome (landing-page card EN+IT, README row, repo-root ROADMAP row, CLAUDE.md folder-structure entry)
 - [x] 09-06-PLAN.md — Layer-2 bottom section: actual proto-02 v2.3 protocol + justified deviations (two-axis model, 0.1 mg-balance workarounds, ISO-requirement | prototype-reality | justification table cross-linked to top layer, pipette head-to-head, honest scope) — authored from user-supplied TEST-PROTOCOL.md
 **Wave 5** *(blocked on Wave 4 — SPEC documents the finished page incl. Layer 2)*
-- [ ] 09-04-PLAN.md — Co-located SPEC.md (purpose, normative values, formulas, standards, assumptions, BOTH layers, still-deferred live-calculator scope)
+- [x] 09-04-PLAN.md — Co-located SPEC.md (purpose, normative values, formulas, standards, assumptions, BOTH layers, still-deferred live-calculator scope)
