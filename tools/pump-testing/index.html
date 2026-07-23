@@ -1131,6 +1131,70 @@
           </details>
         </div>
       </div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>The pipette head-to-head &mdash; the thesis point</h3>
+          <p>The device exists to replace a <b>human pipetting by hand</b>, so the fair benchmark is the human
+            it replaces, not ISO perfection. The argument:</p>
+          <ol>
+            <li>Accuracy (mean) is calibratable &mdash; a low mean is not a real defect.</li>
+            <li>Precision (CV) is <b>not</b> calibratable &mdash; it is the true, honest quality of the
+              mechanism.</li>
+            <li>Therefore: if the pump's CV at 5 &micro;L is &le; the manual-pipette CV at 5 &micro;L, the
+              device is more consistent than the person it replaces, on the one metric that <b>cannot be
+              faked</b> &mdash; even if its mean needs calibration.</li>
+          </ol>
+          <p><b>Why it is valid on a coarse balance:</b> both pump and pipette are weighed on the <i>same</i>
+            0.1 mg balance, same vessel, same fast-tare method, interleaved (pump, pipette, pump,
+            pipette&hellip;) so any drift hits both equally &mdash; the scale's systematic error cancels in
+            the comparison.</p>
+          <p><b>Guards that keep it honest:</b> the ~0.1 mg floor sits under <i>both</i> CVs &mdash; the
+            50 &micro;L pipette point checks separability (if both come out ~3% they may be
+            indistinguishable, both measuring the scale; if they separate cleanly there, the 5 &micro;L
+            comparison is real). Framed as "vs manual pipetting under matched conditions," and backed by the
+            <b>ISO 8655</b> benchmark &mdash; a good pipette holds CV &asymp; <b>1.5&ndash;3%</b> at
+            5 &micro;L (see the top layer's own <a href="#trueness-precision">Section 6 trueness &amp;
+            precision benchmark</a>) &mdash; n=10 each, so the claim does not rest solely on one person's
+            hand. Reasoned engineering judgment, not apology.</p>
+        </div>
+      </div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>Honest scope &mdash; what this campaign can and cannot claim</h3>
+          <div class="scope-grid">
+            <div class="scope-col can">
+              <h4>Can claim</h4>
+              <ul>
+                <li>Characterise per-stroke volume and its speed/volume dependence to good precision on the
+                  mean.</li>
+                <li>Locate the operating point and retro-explain the &minus;41%.</li>
+                <li>Show head-to-head whether the pump's precision at the operating dose is
+                  comparable-to-or-better-than manual pipetting.</li>
+              </ul>
+            </div>
+            <div class="scope-col cannot">
+              <h4>Cannot claim (state before an examiner does)</h4>
+              <ul>
+                <li><b>Certify CV &le; 5%.</b> At n=10 the CV carries ~&plusmn;25% uncertainty; a defensible
+                  pass needs the Stage-2 <b>n ~ 30</b> deep-dive. Until then: report "CV &asymp; X%,
+                  prototype estimate," not "meets &le;5%."</li>
+                <li><b>Prove the design</b> &mdash; only this build: single build, single tube, single
+                  session, no cross-build reproducibility.</li>
+                <li><b>Directly measure single-dose precision</b> &mdash; it is inferred via &radic;N,
+                  assuming independent strokes, guarded by the CV-vs-volume plateau test.</li>
+                <li><b>Speak to real-use conditions</b> &mdash; water only, no backpressure, downstream
+                  needle, or real reagent.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="callout callout--info">Two-stage strategy: <b>Stage 1</b> (this build) screens and finds
+            the operating point; <b>Stage 2</b> spends the replicate budget (n ~ 30) at the winning condition
+            to claim &le;5%, and its lasting output is a fixed, reusable reference protocol for future pump
+            versions.</p>
+        </div>
+      </div>
     </div><!-- /layer2-stack -->
   </section>
 
