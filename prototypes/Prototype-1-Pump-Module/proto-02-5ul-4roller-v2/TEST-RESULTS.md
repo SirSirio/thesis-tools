@@ -58,6 +58,33 @@ Benchmark set: **manual pipetting ≈ 0.15–0.27 % CV at 50 µL** (tip fixed, p
 
 ---
 
-## R2 — Pump factorial
+## R2 — Evaporation rate (session correction constant)
 
-*Pending — to be filled from [`pump-campaign-runsheet-with-240.csv`](pump-campaign-runsheet-with-240.csv).*
+**Date:** 2026-07-23 · **Method:** water in the weigh boat, tared, mass loss recorded over a fixed exposure time (ISO 23783-2 D.5.2 blank principle).
+
+| Exposure (s) | Loss (mg) | | Exposure | Loss |
+|---|---|---|---|---|
+| 30 | 2.7 | | 45 | 5.0 |
+| 30 | 3.4 | | 60 | 6.2 |
+| 45 | 5.7 | | 60 | 7.0 |
+| 45 | 5.4 | | | |
+
+**Linear fit:** loss = **E · t**, with **E = 0.118 mg/s (7.1 mg/min)**, intercept −0.27 mg (≈ 0 — loss is proportional to exposure, as it should be). `[Certain]`
+
+**Why it matters — correction magnitude vs volume:**
+
+| Dose | Handling | Evap loss | % of dose |
+|------|----------|-----------|-----------|
+| 5 µL (1 stroke) | ~20 s | 2.4 mg | **~47 %** ⚠ |
+| ~400 µL (100 str) | ~30 s | 3.5 mg | ~0.9 % |
+| ~1200 µL (300 str) | ~40 s | 4.7 mg | **~0.4 %** |
+
+**Correction applied to every reading:** `m_corrected = measured_mass_g·1000 + E · duration_s` (mg), using the per-replicate `duration_s`. Negligible at high volume, dominant at 1 stroke → **reinforces that the single-stroke absolute value stays indicative; the trustworthy per-stroke comes from the high-volume slope.** `[Certain]`
+
+*(The R1 pipette 5 µL readings were **not** evaporation-corrected, so they carry an additional low bias on top of the scale floor — irrelevant to that section's conclusion since 5 µL was floor-limited regardless.)*
+
+---
+
+## R3 — Pump factorial
+
+*Pending — 76 replicates captured in `Tests/Peristaltic Gap 1.52 V2.23/2026.07.23 - 1 - New tube 0.51 ID/` (per-replicate JSON: `measured_mass_g`, `duration_s`, `strokes`, `speed_rpm`). To be analysed per the spec below.*
