@@ -525,8 +525,52 @@
   <section id="replicates" class="animate-in" style="--delay: 0.26s;">
     <div class="part-label"><span class="num">05</span><h2>Replicates &amp; statistical convention</h2></div>
     <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-02 (n=10 / three-test-point ISO 8655 convention applied to Annex D) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-02.</p>
+      <div class="theory-section">
+        <h3>The dual frame in action: Annex D leaves count open, ISO 8655 closes it</h3>
+        <p>ISO 23783-2 Annex D.5.3(g) itself does not fix a replicate count &mdash; it instructs to
+          "<b>perform as many measurements as required</b>," a specification-level matter it delegates onward
+          (the same ISO 23783-3 gap named in <a href="#reporting-uncertainty">Section 7</a>). The operative
+          replicate convention actually used in this protocol comes from <b>ISO 8655</b>: a minimum of
+          <b>ten measurements</b> (<b>n=10</b>) per volume, repeated at <b>three test points</b> &mdash;
+          <b>100%</b>, <b>50%</b>, and <b>10%</b> of the nominal delivered volume. This is exactly the dual-frame
+          division of labor from <a href="#framing">Section 1</a> in practice: the <i>method</i> (how to weigh)
+          is Annex D; the <i>replicate convention</i> (how many measurements, at what points) is ISO 8655.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Trueness and precision, defined</h3>
+        <div class="math-block">$$e_T \;=\; \frac{\bar{V} - V_0}{V_0}\times 100\%$$</div>
+        <p><b>Trueness</b> (systematic error, <i>e_T</i>) compares the mean delivered volume <i>&#772;V</i> over
+          <i>n</i> replicates against the nominal target volume <i>V<sub>0</sub></i>.</p>
+        <div class="math-block">$$CV \;=\; \frac{s}{\bar{V}}\times 100\%$$</div>
+        <p><b>Precision</b> is expressed as the <b>coefficient of variation (CV)</b> &mdash; the sample standard
+          deviation <i>s</i> across the replicate set, normalised by the mean <i>&#772;V</i>. Both figures are
+          computed per test point (100%/50%/10% of nominal), never pooled across points.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Batch-mean vs stroke-to-stroke CV &mdash; not the same measurement</h3>
+        <p>Pinning the <b>mean</b> delivered volume with a small replicate count is metrologically a different
+          task from characterising <b>single-dose CV</b>. A batch of, say, three 200-stroke deliveries pins the
+          mean tightly (averaging suppresses per-stroke noise) but says little about how much any <i>one</i>
+          stroke varies from the next &mdash; the quantity the ISO 8655 n=10 single-dose convention is actually
+          designed to characterise. This distinction matters twice over: it is the metrologically correct way
+          to read a trueness/CV result, and it is exactly the split the bottom layer's actual test rigs are
+          built around (batch-mean rig vs stroke-to-stroke-CV rig) &mdash; see
+          <a href="#prototype-protocol-slot">Section 10</a>.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Prerequisite: the evaporation blank</h3>
+        <p>Before any of the n=10/three-point replicate measurements begin, the <b>&ge;10 blank measurement
+          cycles</b> required by Annex D.5.2 (<a href="#method-gravimetric">Section 2</a>) must already have
+          characterised the vessel's evaporation rate under the actual test conditions &mdash; otherwise
+          evaporation loss during the weighing interval would be misread as dispensing error and would
+          contaminate both the trueness and the CV figures computed here.</p>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 23783-2 Annex D.5.3(g) (replicate count left open); ISO 8655
+        (n=10 / 100%-50%-10% test-point convention, 2022 revision).</p>
     </div>
   </section>
 
