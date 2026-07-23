@@ -42,7 +42,8 @@ Plans:
 
 - [x] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/` (completed 2026-07-15)
 - [x] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs (completed 2026-07-16)
-- [x] **Phase 7: Thesis Showcase Landing Page** - Turn `index.html` from a tool directory into a thesis showcase: project introduction, video/media, and motion above the fold, with the tool grid demoted to one section among several (completed 2026-07-17)
+- [x] **Phase 7: Thesis Showcase Landing Page** - Turn `index.html` from a tool directory into a thesis showcase: project introduction, video/media, and motion above the fold, with the tool grid demoted to one section among several
+ (completed 2026-07-17)
 - [x] **Phase 8: Dispense Choreography & Throughput Simulator** - Configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line, answering the concurrency question empirically (completed 2026-07-20)
 - [ ] **Phase 9: Pump Testing** - A `tools/pump-testing/` page pairing the market-grade ISO 23783-2 gravimetric qualification protocol with the actual prototype test protocol and its justified deviations
 
@@ -316,11 +317,18 @@ Plans:
 
 A new `tools/pump-testing/` page documenting how a market-grade dispensing-accuracy qualification of the peristaltic pump should be run — the righteous protocol (ISO 23783-2 single-channel gravimetric method with full specs: balance readability, environmental controls, evaporation handling, replicate counts, mass→volume conversion, and reporting rules, plus alternate methods where they apply) — and, below it, the actual prototype test protocol used, with the logical justification for each deviation from the restrictive ISO requirements given prototype-stage hardware limits.
 
-**Goal:** [To be planned — run /gsd:discuss-phase 9]
-**Requirements**: TBD
+**Goal:** Ship a self-contained, document-first, QR-citable protocol page at `tools/pump-testing/index.html` (+ co-located `SPEC.md`) presenting the top-layer market-grade dispensing-accuracy qualification protocol — ISO 23783-2 Annex D gravimetric method as the applicable test method and ISO 8655 pipette-equivalence as the analogical benchmark, deep accuracy metrology core with the other go-to-market dimensions mapped lighter — and leaving a clean, clearly-labeled, un-populated slot for the deferred bottom-layer prototype protocol (D-04). No calculator, no live computation.
+**Requirements**: D-01, D-02, D-03, D-04 (CONTEXT.md decisions — no formal REQ-IDs govern this phase)
 **Depends on:** Phase 8
-**Plans:** 0 plans
+**Plans:** 5 plans
 
 Plans:
-
-- [ ] TBD (run /gsd-plan-phase 9 to break down)
+**Wave 1**
+- [ ] 09-01-PLAN.md — Page shell + local KaTeX vendoring + Sections 1-3 (dual-frame framing, Annex D gravimetric method, Table 3 balance requirements)
+**Wave 2**
+- [ ] 09-02-PLAN.md — Deep metrological core: Sections 4-7 (Annex A Z-factor formulas, n=10 three-point convention, trueness/precision with [unverified] tagging, reporting/uncertainty)
+**Wave 3**
+- [ ] 09-03-PLAN.md — Sections 8-10 (alternate-methods comparison + GRM/trumpet rejections, lighter go-to-market map, deferred bottom-layer slot)
+**Wave 4**
+- [ ] 09-04-PLAN.md — Co-located SPEC.md (purpose, normative values, formulas, standards, assumptions, deferred scope)
+- [ ] 09-05-PLAN.md — Integration chrome (landing-page card EN+IT, README row, repo-root ROADMAP row, CLAUDE.md folder-structure entry)
