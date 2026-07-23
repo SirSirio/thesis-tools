@@ -9,7 +9,7 @@
 ## Purpose
 
 Prices and compares the pump-system control electronics — which brain (MCU), which stepper
-driver, and which system bus — across 22 candidate architectures ("variants"). For each variant
+driver, and which system bus — across 25 candidate architectures ("variants"). For each variant
 it computes: total cost (editable component prices, live), a design-complexity rating, a
 pin-budget feasibility check against the brain's usable GPIO, and a live SVG system diagram
 showing the three communication layers and the power block. It is the promoted, canonical version
@@ -74,9 +74,82 @@ flow-rate-through-viscosity change, not container-volume change.
 
 ---
 
+## Part 5 — Architecture Decision & Recommendation (thesis synthesis)
+
+A static, prose-and-table section at the bottom of the page (`id="decision"`, after the
+selected-variant diagram, before `</main>`) that synthesises this tool and the Dispense Throughput
+Simulator into a single recommendation written to be copied into the thesis. It is **narrative, not
+computed** — the numbers are quoted from the two tools' engines, not re-derived live — so its
+figures must be re-checked whenever a `DEFAULTS` price, a BOM, `pinsOf()`, or the simulator's model
+changes.
+
+Structure (each an `.dec-block`; styles scoped under `#decision`):
+
+1. **Decision framework & fixed premises** — the three settled givens: portable single-enclosure →
+   I²C bus; priorities ordered feasibility > cost > run-time; shared step rate (volumes metered by
+   step count, no independent-rate control needed).
+2. **Step 1 — Concurrency** — PANPOC throughput table (K=1 399.3 s, K=2 245.2 s / −38.6 %, K=6
+   220.8 s / −44.7 %); K=2 captures ~86 % of the max saving → adopted operating point.
+3. **Step 2 — Feasibility** — opens by motivating the **ESP32-class brain** (GPIO + headroom for a
+   GUI, plus built-in Wi-Fi/Bluetooth, at low cost) and frames the real question as *single controller
+   vs. helper*. Notes the six-driver fan-out is **independent of concurrency** (all six must be
+   addressable even at K=2). Pin-fit table: `N2-nano-i2c` 12/16, `P6-rp-i2c` 12/16, `T9-fused-i2c`
+   16/16 (zero spare) fit; `S1-i2c` 20/16 and `D2-i2c` 24/16 overrun (screen 8 + SD 1 leave no room to
+   fan six dumb drivers off a bare ESP32). States explicitly that overrunning designs are excluded
+   from further consideration.
+4. **Step 3 — Cost** — sourced-price table (ctrl / whole-system): `N2-nano-i2c` €81.24 / €234.91 (K=2
+   baseline) · `SC6-exp-i2c` €92.46 / €237.42 · `SC6-rp-i2c` €93.30 / €238.26 · **`SC6-s3exp-i2c`
+   €103.34 / €248.30** · `T9-fused-i2c` €107.71 / €261.38. Carries an **"On the prices" note** (not a
+   price-sensitivity caveat): the tool costs
+   builds against the project's primary vendor (bitbyg, a Danish reseller — fast shipping, higher unit
+   cost) and is reusable by entering cheaper direct-import prices; absolute costs shift with vendor and
+   market, but the tool's structure is vendor-independent. It is a general instrument proven on this
+   prototype case.
+5. **Motion, priming & calibration** — volume = step-count × µL/step (speed-independent); one shared
+   trapezoidal ramp for all pumps, brute stop OK (peristaltic self-braking); priming/calibration run
+   one pump at a time via per-motor ENABLE, calibration compensated in step count not speed.
+6. **Recommendation — presented as two builds:**
+   - **Final design: `SC6-s3exp-i2c`** (6-at-once, €103.34 / €248.30). A single **ESP32-S3-Nano**
+     brain, no co-processor: all six pumps on one shared STEP/DIR clock with per-pump ENABLE on
+     **direct GPIO**, and one MCP23017 I²C expander carrying only the slow alignment motors + homing
+     switches. Rationale: shared-clock already makes 6-parallel ~free (SC6-rp ≈ N2-nano ±€3), so the
+     goal becomes fewest MCUs + smoothest UI. One MCU deletes an entire inter-processor protocol (the
+     biggest firmware cost on a one-person thesis); the S3's larger pin count is what keeps the
+     dose-critical ENABLE lines on real GPIO (deterministic + can kill pumps if I²C hangs) instead of
+     behind the expander; and its LX7 core + octal PSRAM serve the GUI. Chosen over `SC6-exp-i2c`
+     (€237.42, dose-critical ENABLE behind a full 16/16 expander) and `SC6-rp-i2c` (€238.26, two MCUs)
+     — the ~€10 premium buys single-firmware simplicity, GPIO-level fault tolerance, and UI headroom.
+   - **Prototype build:** DOIT ESP32 (€9.05, bought regardless) + the **two Arduino Nanos already
+     in-house**, same shared-clock firmware. Validates the one unproven behaviour — ENABLE-gated dose
+     accuracy — on owned hardware; start with just 2 DRV8825s + the 72 W supply since it is a per-pump
+     property. Migration to the final design is a board swap (2 Nanos → 1 S3) + firmware port.
+   - **Flagged experiment (both builds):** bench-verify ENABLE-gating dose accuracy; secondary:
+     confirm the S3-Nano pinout vs the manufacturer diagram (final design is at 20/21).
+7. **References** — 11-entry bibliography ([1] this tool · [2] throughput simulator · [3]
+   PIN-BUDGET-ANALYSIS · [4] multi-liquid architecture study · [5] ESP32 datasheet · [6] DRV8825 ·
+   [7] TMC2209 · [8] NEMA17 42BYGHW811 · [9] Graham 1969, LPT bound · [10] Acarnley, stepper
+   pull-in/ramps · [11] bitbyg catalogue).
+
+**Consistency pass (2026-07-20).** Adding Part 5 surfaced page-wide inconsistencies that were then
+fixed so Part 5 does not contradict the rest of the tool:
+- Part 3's driver/concurrency folds asserted `T9-fused-i2c` is the cheapest row and "full concurrency
+  is the cheap end" — true only at the shipped €3.50 TMC placeholder, and it cited the now-infeasible
+  `S1-i2c`. Rewritten to the **price-honest, price-independent** claim: a smart driver deletes the
+  co-processor (structural fact), but whether it is *cheaper* depends on vendor pricing, and the
+  primary vendor stocks no Trinamic driver — so the sourced build is dumb-driver based.
+- **GSD `U`-number abbreviations removed from all user-facing prose** (Part 3 "U5 Concurrency Axis"
+  fold → "The Concurrency Axis"; the `N2-nano-i2c` variant note's "matches U5=2"), since a thesis
+  reader has no way to decode them.
+- **Stale integrated-board pin counts corrected**: the `ESPINT-*` variant notes and a `pinsOf()`
+  comment claimed "9 free IO" for the ESP32-2432S024; the audited figure is **3**, and both fused
+  integrated-board variants overrun — the notes now say so. Nano-node notes updated `/15`→`/16` to
+  match the audited `esp32.gpioUsable = 16`.
+
+---
+
 ## Design directions (D-06/D-07/D-08/D-09/D-10)
 
-Between the module schema and the theory section, a four-card gallery groups the 22 variants into
+Between the module schema and the theory section, a four-card gallery groups the 25 variants into
 four curated "device personalities." Each direction is **derived**, not stored — `directionOf(v)`
 classifies a variant from its existing `topoClassOf(v)` (fused/satellite/distributed/printer) and
 `intBrainKey(v)` (integrated-screen board or not) fields, so a future variant added to `VARIANTS`
@@ -86,10 +159,10 @@ is classified automatically with no new per-variant field to remember to set.
 |---|---|---|---|
 | `modular` | Distributed Modules | `topoClassOf(v) === 'distributed'` | `P6-dist-485`, `P6-dist-can` (2) |
 | `allinone` | All-in-One | integrated-screen board AND `topoClassOf(v) === 'fused'` | `ESPINT-fused-i2c`, `ESPINT-dumb-i2c` (2) |
-| `console` | Console | discrete screen AND `topoClassOf(v) === 'fused'` | `S1-i2c`, `S1-485`, `D2-i2c`, `D2-485`, `T9-fused-i2c`, `T9-fused-485`, `T51-485`, `T51-72-485` (8) |
-| `panelnode` | Panel + Node | everything else (`satellite` or `printer` topology) | `N2-nano-i2c`, `N2-nano-485`, `P6-rp-i2c`, `P6-rp-485`, `P6-stm-485`, `T9-node-485`, `ESPINT32-brain-i2c`, `B-ramps-drv`, `B-skr-drv`, `B-skr-tmc` (10) |
+| `console` | Console | discrete screen AND `topoClassOf(v) === 'fused'` | `S1-i2c`, `S1-485`, `D2-i2c`, `D2-485`, `SC6-exp-i2c`, `SC6-s3exp-i2c`, `T9-fused-i2c`, `T9-fused-485`, `T51-485`, `T51-72-485` (10) |
+| `panelnode` | Panel + Node | everything else (`satellite` or `printer` topology) | `N2-nano-i2c`, `N2-nano-485`, `P6-rp-i2c`, `P6-rp-485`, `P6-stm-485`, `SC6-rp-i2c`, `T9-node-485`, `ESPINT32-brain-i2c`, `B-ramps-drv`, `B-skr-drv`, `B-skr-tmc` (11) |
 
-2 + 2 + 8 + 10 = 22 — every variant resolves to exactly one direction, no unclassified bucket.
+2 + 2 + 10 + 11 = 25 — every variant resolves to exactly one direction, no unclassified bucket.
 `directionOf(v)` checks `distributed` first in an ordered if-chain (mirroring `topoClassOf(v)`'s
 own shape) so it can never be shadowed by the fused-vs-not-fused branches below it.
 
@@ -137,6 +210,7 @@ DKK figures are the vendor's listed incl.-VAT prices; € = DKK × 0.134.
 | Component | Role | Default € | Source | Confidence |
 |---|---|:--:|---|:--:|
 | ESP32 dev board | brain / fused controller | 9.05 | bitbyg "DOIT ESP32 30P IOT Mainboard", 67.50 DKK | **High** |
+| ESP32-S3-Nano (ESP32-S3R8) | brain / single-MCU controller | 19.93 | bitbyg "ESP32-S3-Nano Development Board", 148.75 DKK — LX7, 8 MB octal PSRAM, ~21 usable GPIO | **High** (price); GPIO count Medium |
 | RP2040 (Pico) | 6-parallel node (PIO) | 4.0 | ⚠ **NOT STOCKED** at bitbyg — no bare Pico/RP2040 board (nearest: LiLyGo T-PicoC3 123.75 DKK, a different RP2040+ESP32-C3 combo). Unsourced estimate | Low |
 | STM32 Blue Pill | 6-parallel node (timers) | 13.23 | bitbyg "STM32F103C8T6 ARM STM32 System Development Board", 98.75 DKK | **High** |
 | Arduino Pro-Mini | per-pump node | 7.37 | bitbyg "Pro Mini 5V", 55.00 DKK (3.3V same price) | **High** |
@@ -154,7 +228,9 @@ DKK figures are the vendor's listed incl.-VAT prices; € = DKK × 0.134.
 | Driver carrier PCB | 6 driver sockets | 4.0 | ⚠ **NOT STOCKED** at bitbyg — no CNC shield / multi-driver carrier. Unsourced estimate (or fabricate custom) | Low |
 | PSU 24V ~60W | 1–2 motors at once | 18.26 | bitbyg "24V 3A Transformer 72W", 136.25 DKK — 72 W not 60 W, near-equivalent substitution | Medium |
 | PSU 24V ~150W | all-6 at once | 31.66 | bitbyg "12V-24V 200W-600W" PSU from 236.25 DKK (200 W variant) — nearest ≥150 W, near-equivalent | Medium |
+| MCP23017 I²C I/O expander | 16 I/O for 0 brain pins | 6.53 | bitbyg "MCP23017, 16-Bit I/O Expander med I2C Interface", 48.75 DKK — in stock (verified 2026-07-21) | **High** |
 | **Shared block (constant, all variants when "whole-system" toggled on):** | | | | |
+| Micro switch, roller lever ×2 | rack homing endstops | 2.01 (×2) | bitbyg "Micro Switch med Rulle", 15.00 DKK. SPDT, 1 MCU pin each. Plain-lever version (10.00 DKK) is electrically identical; roller chosen for wear under repeated rack strikes | **High** |
 | ILI9341 3.2" touch screen (owned) | screen | 23.32 | bitbyg, 174 DKK — inspected, confirmed SPI (8 pins) | **High** |
 | NEMA17 pump stepper ×6 | pump motor | 14.41 (×6) | bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked (others 116–161 DKK) | **High** |
 | 28BYJ-48 12V + ULN2003 ×2 | alignment motor ×2 | 5.86 (×2) | bitbyg bundle: 28BYJ-48 25.00 + "Stepmotor Driver Board ULN2003" 18.75 = 43.75 DKK — 12V winding is the researched choice (D-15) | **High** |
@@ -250,8 +326,9 @@ confidence), and a `uiNote` describing GUI-fluidity implications:
 
 | Brain | Usable GPIO | Confidence | RAM | PSRAM | UI-fluidity note |
 |---|:--:|:--:|---|---|---|
-| ESP32 dev board | 15 | Medium | 520 KB SRAM | None | No PSRAM: single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight |
-| RP2040 (Pico) | 26 | Medium | 264 KB SRAM | None | Never drives the screen in any variant (pump-node co-processor only) — RAM is not a GUI concern here |
+| ESP32 dev board (DOIT 30-pin) | 16 | **High** | 520 KB SRAM | None | No PSRAM: single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight. Audited 2026-07-20 (§7) |
+| **ESP32-S3-Nano (ESP32-S3R8)** | **21** | Medium | 512 KB SRAM | **8 MB octal** | Best brain here for a smooth GUI — faster LX7 core for LVGL compositing + fast octal PSRAM for buffers/assets. 22 header pins − A2/GPIO3 strapping ≈ 21; octal-PSRAM pins (33–37) and USB (19/20) are off-header, so PSRAM costs 0 header pins. ⚠ vendor-stated, not datasheet-audited — verify vs Waveshare pinout (final design sits at 20/21) |
+| RP2040 (Pico) | 26 | Medium | 264 KB SRAM | None | Pump-node co-processor only; never drives the screen — RAM is not a GUI concern here |
 | STM32 Blue Pill | 30 | Medium | 20 KB SRAM | None | 20 KB is tight beyond step generation, but this MCU never drives the screen — non-issue for GUI fluidity |
 | Arduino Pro-Mini | 18 | Medium | 2 KB SRAM | None | Not a brain candidate — per-pump-node role only, never drives the screen |
 | Arduino Nano | 18 | Medium | 2 KB SRAM | None | Alignment node, or a ≤2-concurrent DRV8825 pump node (`N2-nano-*`, capped by its 2 hardware timers) — never drives the screen |
@@ -269,7 +346,7 @@ an oversight.
 
 ---
 
-## Variant BOMs (22 total)
+## Variant BOMs (25 total)
 
 Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · Layer C link description
 · complexity (★, 1–5 scale, half-stars shown) · BOM (`bom` object, component→qty). Full BOM detail
@@ -282,6 +359,9 @@ Each row: `id` · concurrency (`at once`) · driver · comms bus (Layer B) · La
 | D2-i2c | 2 | DRV8825 | I²C | STEP/DIR per-motor | ★★☆☆☆ | esp32, drv8825×6, carrier, psu60 |
 | D2-485 | 2 | DRV8825 | RS-485 | STEP/DIR per-motor | ★★☆☆☆ | esp32, drv8825×6, carrier, psu60, max485×2 |
 | P6-rp-i2c | 6 | DRV8825 | I²C | STEP/DIR ×6 | ★★★☆☆ | esp32, rp2040, drv8825×6, carrier, psu150 |
+| **SC6-rp-i2c** | 6 | DRV8825 | I²C | shared STEP/DIR + 6×EN (on RP2040 node) | ★★★☆☆ | esp32, rp2040, drv8825×6, carrier, psu150 · `absorbsAlign` |
+| **SC6-exp-i2c** | 6 | DRV8825 | I²C | shared STEP/DIR + 6×EN via I²C expander | ★★½☆☆ | esp32, gpioExp, drv8825×6, carrier, psu150 · `absorbsAlign` |
+| **SC6-s3exp-i2c** | 6 | DRV8825 | I²C | shared STEP/DIR + 6×EN on GPIO, alignment on I²C expander | ★★½☆☆ | esp32s3, gpioExp, drv8825×6, carrier, psu150 · `absorbsAlign` |
 | P6-rp-485 | 6 | DRV8825 | RS-485 | STEP/DIR ×6 | ★★★☆☆ | esp32, rp2040, drv8825×6, carrier, psu150, max485×3 |
 | P6-stm-485 | 6 | DRV8825 | RS-485 | STEP/DIR ×6 (timers) | ★★★☆☆ | esp32, stm32, drv8825×6, carrier, psu150, max485×3 |
 | N2-nano-i2c | 2 | DRV8825 | I²C | STEP/DIR ×6 (on Nano node) | ★★½☆☆ | esp32, nano, drv8825×6, carrier, psu60 |
@@ -384,6 +464,12 @@ applied to GPIO pins instead of euros — against the variant's brain (`espscree
 avail = brain.gpioUsable
 used  = (brainKey !== 'espscreen')
           ? SCREEN_PINS[interfaceMode]                 // Layer A, skipped for integrated boards
+            + SD_PINS                                   // +1: SD card chip-select. Rides the screen's
+                                                           //   SPI bus (SCK/MOSI/MISO already paid by
+                                                           //   Layer A), so only its select line costs
+                                                           //   a pin. Skipped for integrated boards,
+                                                           //   whose onboard SD is already inside their
+                                                           //   audited free-GPIO count. (Added 2026-07-21)
             + (v.b === 'I²C' ? 0 : 2)                   // LM75 onboard temp sensor: shares I²C bus, else +2
                                                            //   (MPR121 rides this SAME I²C attachment — +0 pins)
           : 0
@@ -617,12 +703,19 @@ The **"Screen interface (Layer A)"** control was removed once D-09 resolved (see
   estimates pending a second vendor. Per-component confidence tags, not a blanket percentage, are
   the source of truth for price certainty.
 - `costOf(v) = Σ(COMP[k].eur × qty)` over `v.bom`, plus `SHARED_BOM` (6× NEMA17, the ILI9341
-  screen, the alignment Nano, 2× 28BYJ-48 + ULN2003, the vibration motor, the IRF520 driver, the
-  MPR121, and the two buck converters ≈ **€149.65** total) when "include shared block" is toggled
-  to whole-system cost. Controller-electronics-only view (default) excludes the shared block.
-- **Double-count guard:** an `espscreen`-based variant already prices its own integrated display as
-  part of the brain component — `costOf()`/`bomHtml()` skip the `SHARED_BOM` screen line for
-  those two variants so the display is never billed twice.
+  screen, the alignment Nano, 2× 28BYJ-48 + ULN2003, **2× homing micro switch**, the vibration motor,
+  the IRF520 driver, the MPR121, and the two buck converters ≈ **€153.67** total) when "include shared
+  block" is toggled to whole-system cost. Controller-electronics-only view (default) excludes it.
+- **`skipShared(v,k)` — one rule, three readers.** `costOf()`, `bomWorstConf()` and `bomHtml()` all
+  route their `SHARED_BOM` membership test through this single function, so the three can never
+  describe different sets of parts. It encodes exactly two exclusions:
+  - `screen` — an `espscreen` variant already prices its integrated display inside `v.bom` (the D-10
+    double-count guard; the display is never billed twice).
+  - `nano` — the shared *alignment* node. A variant flagged **`absorbsAlign: true`** drives the two
+    28BYJ-48s from its own pump node or I/O expander, so no separate alignment MCU is bought
+    (shared block → **€144.96**). The diagram mirrors this: `alignNodeCount` drops to 0 and the
+    alignment box is replaced by an "alignment folded into the pump node" caption, so the SVG never
+    draws a board the BOM does not buy.
 - **PSU toggle (`includePsu`, default on).** The supply stays in each variant's own `v.bom` rather
   than the shared block, because its size is a per-variant *consequence*: 1–2-at-once rows take
   `psu60` (€18.26), 6-at-once rows are forced up to `psu150` (€31.66). Setting Power supply to
@@ -698,10 +791,15 @@ the tool. **Bump `PRICES_VERSION` whenever a `DEFAULTS` price changes.** Current
    single-wire half-duplex UART mode (which would roughly halve the pin cost) or standard
    full-duplex TX/RX per segment is not confirmed against the Trinamic datasheet. Documented as
    **ASSUMED**, non-blocking for this phase.
-3. **Bare ESP32-S3 as a brain candidate.** bitbyg's enumerated 12-product ESP32 catalogue has no
-   bare ESP32-S3 (only an S3 board bundled with Ethernet + camera). Not added as a `DEFAULTS`
-   entry — would require sourcing outside bitbyg, contradicting D-11's "lean toward what bitbyg
-   stocks" guidance. Non-blocking.
+3. **Bare ESP32-S3 as a brain candidate — RESOLVED 2026-07-22, now stocked and added.** An earlier
+   read of bitbyg's catalogue found no bare ESP32-S3. bitbyg now stocks the **ESP32-S3-Nano
+   (ESP32-S3R8)** at 148.75 DKK (≈ €19.93), so it is added as the `esp32s3` `DEFAULTS` brain
+   (gpioUsable 21, Medium; 8 MB octal PSRAM) and used by the recommended `SC6-s3exp-i2c` variant.
+   The S3's larger pin count is what enables the single-MCU final design. One caveat stands: the
+   21-usable-GPIO figure is vendor-stated + strapping-adjusted, **not** a full datasheet audit like
+   the DOIT's 16 — the Waveshare pinout should be confirmed before a build that sits near the ceiling
+   (`SC6-s3exp-i2c` is at 20/21). Octal-PSRAM pins (GPIO33–37) and USB (19/20) are not on the header,
+   so PSRAM costs 0 header pins — unlike a WROVER, which loses GPIO16/17.
 4. **Storage container material — blocks validating capacitive level sensing.** The MPR121-based
    level-crossing sensing in the Storage module (see New components above) requires
    non-conductive (plastic/glass) containers; the actual container material has not been specified
@@ -733,7 +831,7 @@ audit trail (fixed components, open questions, raw exploration) and point back h
 duplicating content:
 
 - [`prototypes/System-Architecture/ARCHITECTURE.md`](../../prototypes/System-Architecture/ARCHITECTURE.md) — system-level electronics/comms decision record; fixed components (touchscreen, LM75), points to this tool's `#matrix`/`#theory` anchors
-- [`prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`](../../prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md) — the seven-concept pump-control menu this tool's 22 variants supersede/extend; the driver-vs-MCU "mental model" section is trimmed to a pointer at this tool's `#theory` anchor
+- [`prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md`](../../prototypes/System-Architecture/PUMP-CONTROL-CONCEPTS.md) — the seven-concept pump-control menu this tool's 25 variants supersede/extend; the driver-vs-MCU "mental model" section is trimmed to a pointer at this tool's `#theory` anchor
 - [`prototypes/System-Architecture/SOLUTION-MATRIX.md`](../../prototypes/System-Architecture/SOLUTION-MATRIX.md) — the original static matrix (17 rows); trimmed to a human-readable snapshot explicitly marked as a reference view, not the source of truth (D-08)
 
 The concurrency question this tool prices but does not answer (U5) is owned by

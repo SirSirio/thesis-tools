@@ -21,14 +21,15 @@ column and a **Peripheral controllers** line in every expanded row.
 ## 1. The formula
 
 ```
-pins_used = screen(A) + sensors + bus(B) + drivers(C) + microstep + vibration
+pins_used = screen(A) + SD + sensors + bus(B) + drivers(C) + microstep + vibration
 fits when: pins_used ≤ usable_GPIO
-usable_GPIO: bare ESP32 (DOIT 30-pin) = 16 · integrated 2.4" (ESP32-2432S024) = 3 · integrated 3.2" (ESP32-2432S032R) = 3   [per-brain, audited 2026-07-20]
+usable_GPIO: bare ESP32 (DOIT 30-pin) = 16 · ESP32-S3-Nano = 21 (vendor-stated, not audited) · integrated 2.4" (ESP32-2432S024) = 3 · integrated 3.2" (ESP32-2432S032R) = 3   [per-brain; ESP32 audited 2026-07-20, S3 added 2026-07-22]
 ```
 
 | Term | Pins | Source of the number |
 |---|---|---|
 | **screen (A)** | 8 (bare) / 0 (integrated) | ILI9341 SPI: SCK·MOSI·MISO·CS + DC·RST + touch T_CS·T_IRQ. Owned board inspected 2026-07-15. Integrated boards fold the display into their free-IO count. |
+| **SD** | 1 (bare) / 0 (integrated) | The UI module's SD card (protocol authored on a laptop, loaded from SD). Rides the screen's existing SPI bus — SCK/MOSI/MISO are already paid for by Layer A — so it costs only its own **chip-select**. Integrated boards' onboard SD is already inside their audited free-GPIO count. *Added 2026-07-21: previously missing from the model, which under-counted every bare-brain variant by 1.* |
 | **sensors** | 0 (I²C bus) / +2 | LM75 temp + MPR121 touch/level, both I²C. Ride the system bus when it is I²C (0 extra); a dedicated SDA/SCL pair otherwise (+2). MPR121 (0x5A) shares LM75's bus (0x48) — no extra pins. |
 | **bus (B)** | I²C 2 · RS-485 3 · CAN 4 · USB/UART 2 | Brain's own attachment to the module bus, paid once (not per node). |
 | **drivers (C)** | 0 · 4 · 8 · 12 | DRV8825 shared step-bus + 6×ENABLE = 8; DRV8825 per-motor STEP/DIR = 12; TMC2209 shared UART = 4; TMC5160/5072 SPI = 4; **0** when a pump-node MCU or printer-board socket absorbs the wiring. |
@@ -90,19 +91,22 @@ pins less than the tool shows. Documented as pessimistic-safe, not corrected.
 
 ## 4. Every overrun variant, worked pin-by-pin (fixed microstepping, the default)
 
-`used = screen + sensors + bus + drivers + vibration` · deficit = used − usable.
+`used = screen + SD + sensors + bus + drivers + vibration` · deficit = used − usable.
 
-| Variant | screen | sensors | bus | drivers | vib | **used** | usable | **deficit** | Dominant cause |
-|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
-| **S1-i2c** | 8 | 0 | 2 | 8 | 1 | **19** | 16 | **+3** | 6×ENABLE driver fan-out |
-| **S1-485** | 8 | 2 | 3 | 8 | 1 | **22** | 16 | **+6** | driver fan-out + RS-485 + dedicated sensor I²C |
-| **D2-i2c** | 8 | 0 | 2 | 12 | 1 | **23** | 16 | **+7** | per-motor STEP/DIR ×6 |
-| **D2-485** | 8 | 2 | 3 | 12 | 1 | **26** | 16 | **+10** | per-motor STEP/DIR + RS-485 + sensor I²C |
-| **T9-fused-485** | 8 | 2 | 3 | 4 | 1 | **18** | 16 | **+2** | external screen (8) + RS-485 + sensor I²C — *plus* the UART-instance trap in §3 |
-| **T51-485** | 8 | 2 | 3 | 4 | 1 | **18** | 16 | **+2** | same shape as T9-485 (TMC5160 SPI driver) |
-| **T51-72-485** | 8 | 2 | 3 | 4 | 1 | **18** | 16 | **+2** | same shape (3× TMC5072) |
-| **ESPINT-fused-i2c** | 0 | 0 | 2 | 4 | 1 | **7** | 3 | **+4** | 3-free-pin integrated board can't fuse — even a smart driver overruns |
-| **ESPINT-dumb-i2c** | 0 | 0 | 2 | 8 | 1 | **11** | 3 | **+8** | driver fan-out on a 3-free-pin integrated board |
+| Variant | screen | SD | sensors | bus | drivers | vib | **used** | usable | **deficit** | Dominant cause |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
+| **S1-i2c** | 8 | 1 | 0 | 2 | 8 | 1 | **20** | 16 | **+4** | 6×ENABLE driver fan-out |
+| **S1-485** | 8 | 1 | 2 | 3 | 8 | 1 | **23** | 16 | **+7** | driver fan-out + RS-485 + dedicated sensor I²C |
+| **D2-i2c** | 8 | 1 | 0 | 2 | 12 | 1 | **24** | 16 | **+8** | per-motor STEP/DIR ×6 |
+| **D2-485** | 8 | 1 | 2 | 3 | 12 | 1 | **27** | 16 | **+11** | per-motor STEP/DIR + RS-485 + sensor I²C |
+| **T9-fused-485** | 8 | 1 | 2 | 3 | 4 | 1 | **19** | 16 | **+3** | external screen (8) + RS-485 + sensor I²C — *plus* the UART-instance trap in §3 |
+| **T51-485** | 8 | 1 | 2 | 3 | 4 | 1 | **19** | 16 | **+3** | same shape as T9-485 (TMC5160 SPI driver) |
+| **T51-72-485** | 8 | 1 | 2 | 3 | 4 | 1 | **19** | 16 | **+3** | same shape (3× TMC5072) |
+| **ESPINT-fused-i2c** | 0 | 0 | 0 | 2 | 4 | 1 | **7** | 3 | **+4** | 3-free-pin integrated board can't fuse — even a smart driver overruns |
+| **ESPINT-dumb-i2c** | 0 | 0 | 0 | 2 | 8 | 1 | **11** | 3 | **+8** | driver fan-out on a 3-free-pin integrated board |
+
+*(SD column added 2026-07-21 — see §1. It shifts every bare-brain deficit by +1; no variant changes
+its fit/overrun verdict, but `T9-fused-i2c` moves from 15/16 to **16/16 — exactly full, zero spare**.)*
 
 **Reading the two failure families:**
 
@@ -130,12 +134,39 @@ The only *dumb-driver* rows that fit a bare-ESP32 brain do so by offloading the 
 **single Arduino Nano** pump-node (`topoClassOf → satellite`, so `pinsC = 0` — the brain sees the
 node, not the drivers). The Nano itself holds the fan-out (6× STEP/DIR on its ~16 free GPIO after
 the I²C/RS-485 bus), and its **2 usable hardware timers cap it at ~2 clean concurrent step trains** —
-which is exactly the validated `U5 = 2`, so the timer limit is not a constraint here. Brain-side budget:
+which is exactly the chosen 2-at-once operating point, so the timer limit is not a constraint here.
+Brain-side budget:
 
-| Variant | screen | sensors | bus | drivers | vib | used | usable | free | periph |
-|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
-| `N2-nano-i2c` | 8 | 0 | 2 | 0 | 1 | **11** | 15 | +4 | 0 UART / 1 I²C / 1 SPI — clean |
-| `N2-nano-485` | 8 | 2 | 3 | 0 | 1 | **14** | 15 | +1 | 1 UART / 1 I²C / 1 SPI — clean |
+| Variant | screen | SD | sensors | bus | drivers | vib | used | usable | free | periph |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
+| `N2-nano-i2c` | 8 | 1 | 0 | 2 | 0 | 1 | **12** | 16 | +4 | 0 UART / 1 I²C / 1 SPI — clean |
+| `N2-nano-485` | 8 | 1 | 2 | 3 | 0 | 1 | **15** | 16 | +1 | 1 UART / 1 I²C / 1 SPI — clean |
+
+### The shared-clock rows (`SC6-*`) — worked
+
+Added 2026-07-21. Both rest on one operating decision: **every pump runs at the same rate**, so all
+six drivers share a *single* STEP/DIR clock and each pump drops out via its own ENABLE when it
+reaches its dose. That removes the need for six independent step trains — the reason a dumb-driver
+6-parallel build normally needs a co-processor. Both also **absorb the alignment motors**
+(`absorbsAlign`), so the separate alignment Nano disappears from the shared block.
+
+| Variant | screen | SD | sensors | bus | drivers | vib | used | usable | free | where the wide stuff went |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|---|
+| `SC6-s3exp-i2c` | 8 | 1 | 0 | 2 | **8** | 1 | **20** | **21** | +1 | ENABLE ×6 stay on the S3's own GPIO (with STEP/DIR = 8); MCP23017 carries only 8 ULN2003 + 2 homing = 10 of 16 (+6) |
+| `SC6-rp-i2c` | 8 | 1 | 0 | 2 | 0 | 1 | **12** | 16 | +4 | RP2040 node: 1 STEP + 1 DIR + 6 EN (8) + 2× ULN2003 (8) + 2 homing (2) + I²C (2) = ~20 of its 26 GPIO |
+| `SC6-exp-i2c` | 8 | 1 | 0 | 2 | **2** | 1 | **14** | 16 | +2 | MCP23017 on the existing I²C bus: 6 EN + 8 ULN2003 + 2 homing = **16 of 16 — exactly full** |
+
+**On the second ceiling (the expander).** `pinsOf()` computes brain GPIO only, so for the two
+expander rows the binding limit is recorded here, not in the tool:
+- `SC6-exp-i2c` — brain has 2 spare, but the **expander is 16/16, exactly full**. The dose-critical
+  ENABLE lines are among what it carries, behind the I²C bus.
+- `SC6-s3exp-i2c` — the S3's larger pin count keeps ENABLE on **direct GPIO**; the expander drops to
+  10/16 (**+6 spare**), and only the slow, jitter-tolerant alignment/homing ride it. Brain is the
+  binding ceiling at 20/21. This is why the S3 build is preferred: dose-critical signals deterministic,
+  both sides with headroom. The 21-usable figure is vendor-stated (verify vs Waveshare pinout).
+
+Neither the ENABLE-gating dose accuracy nor I²C-paced alignment stepping is bench-validated yet on any
+of the three shared-clock rows — that is the flagged first experiment.
 
 Both are **all-bitbyg-sourceable** (ESP32 + Nano + DRV8825 + MAX485 all stocked) and run on the
 **60 W** PSU (2-concurrent), making `N2-nano-i2c` the cheapest *fully-single-vendor* build that

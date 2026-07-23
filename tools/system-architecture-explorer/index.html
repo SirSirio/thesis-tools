@@ -106,6 +106,7 @@
   .pin-formula .t-scr{color:var(--accent)} .pin-formula .t-sen{color:var(--text-muted)}
   .pin-formula .t-bus{color:var(--blue)} .pin-formula .t-drv{color:var(--warn)}
   .pin-formula .t-ms{color:var(--accent-2)} .pin-formula .t-vib{color:var(--ok)}
+  .pin-formula .t-sd{color:#c9793d}
   .pin-formula .avail{ display:block; margin-top:6px; font-size:.86rem; color:var(--text-muted); letter-spacing:.02em; }
   .pin-formula .avail b{ color:var(--text); }
 
@@ -124,6 +125,7 @@
   .pl-seg span{ overflow:hidden; text-overflow:ellipsis; padding:0 2px; }
   .pl-screen{background:var(--accent)} .pl-bus{background:var(--blue)}
   .pl-drv{background:var(--warn)} .pl-vib{background:var(--ok)}
+  .pl-sd{background:#c9793d}
   .pl-ms{background:var(--accent-2)}
   /* red overflow zone sitting behind the segments that spill past the GPIO ceiling */
   .pl-over{
@@ -156,6 +158,40 @@
   #matrix table.pin-mini tr.result td{ font-weight:700; }
   #matrix table.pin-mini td.over{ color:var(--accent-2); }
   #matrix table.pin-mini td.ok-r{ color:var(--ok); }
+
+  /* ── Part 5 — Architecture decision synthesis (thesis summary) ───── */
+  #decision .theory-card{ gap:30px; }
+  #decision .dec-block h3{
+    font-size:0.80rem; font-weight:700; letter-spacing:0.11em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:12px;
+  }
+  #decision p{ font-size:0.93rem; color:var(--text); line-height:1.78; margin-bottom:10px; }
+  #decision p:last-child{ margin-bottom:0; }
+  #decision ul.dec-givens{ list-style:none; margin:6px 0 2px; padding:0; display:flex; flex-direction:column; gap:11px; }
+  #decision ul.dec-givens li{ position:relative; padding-left:22px; font-size:0.92rem; color:var(--text); line-height:1.7; }
+  #decision ul.dec-givens li::before{ content:"▸"; position:absolute; left:2px; color:var(--accent); }
+  #decision .dec-table-wrap{ overflow-x:auto; margin:8px 0 2px; }
+  #decision table.dec-table{ width:100%; border-collapse:collapse; font-size:0.86rem; min-width:520px; }
+  #decision table.dec-table caption{ text-align:left; color:var(--text-muted); font-size:0.82rem; padding:0 0 10px; line-height:1.6; }
+  #decision table.dec-table th, #decision table.dec-table td{ padding:8px 12px; border-bottom:1px solid var(--glass-border); text-align:left; vertical-align:top; }
+  #decision table.dec-table thead th{ color:var(--text-muted); font-weight:600; font-size:0.76rem; text-transform:uppercase; letter-spacing:0.05em; }
+  #decision table.dec-table td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  #decision table.dec-table tr.pick td{ background:rgba(255,107,43,0.06); }
+  #decision table.dec-table td.yes{ color:var(--ok); font-weight:600; white-space:nowrap; }
+  #decision table.dec-table td.no{ color:var(--accent-2); font-weight:600; white-space:nowrap; }
+  #decision .dec-note{ font-size:0.84rem; color:var(--text-muted); line-height:1.72; margin-top:10px;
+    padding:12px 14px; border-left:2px solid var(--warn); background:rgba(224,165,60,0.06); border-radius:0 8px 8px 0; }
+  #decision .dec-rec{
+    border:1px solid rgba(255,107,43,0.28); border-left:3px solid var(--accent);
+    background:rgba(255,107,43,0.05); border-radius:12px; padding:20px 22px;
+  }
+  #decision .dec-rec .verdict{ font-size:1.0rem; font-weight:600; color:var(--text); margin-bottom:12px; line-height:1.6; }
+  #decision .dec-rec .verdict b{ color:var(--accent); }
+  #decision ol.dec-refs{ margin:4px 0 0; padding-left:0; list-style:none; counter-reset:ref; }
+  #decision ol.dec-refs li{ counter-increment:ref; position:relative; padding-left:34px; margin-bottom:11px; font-size:0.85rem; color:var(--text-muted); line-height:1.65; }
+  #decision ol.dec-refs li::before{ content:"[" counter(ref) "]"; position:absolute; left:0; color:var(--accent); font-variant-numeric:tabular-nums; }
+  #decision ol.dec-refs a{ color:var(--accent); word-break:break-word; }
+  #decision sup.ref{ color:var(--accent); font-size:0.7em; font-weight:600; margin-left:1px; }
 
   /* ── Collapsible fold ─────────────────────────────────────────
      Shared by the Part 01 theory sections and the component-price
@@ -569,7 +605,7 @@
     What separates the four directions above, and why the matrix below is laid out the way it is:
     the three communication layers each direction answers differently, why the stepper driver —
     not the brain MCU — is what actually buys concurrency, and the concurrency axis that sets
-    complexity and the power budget but, on the sourced prices, <i>not</i> the cost floor.
+    complexity and the power budget, while its effect on cost depends on how the steps are generated.
     Expand a section to read it.
   </p>
   <div class="theory-card animate-in" id="theory" style="--delay:0.135s">
@@ -639,11 +675,13 @@
       <b>T9-fused-i2c</b> and <b>T9-fused-485</b> rows run all six pumps with no separate
       pump-node MCU at all. TMC2209 is also silent, runs cooler, and supports sensorless
       homing — practical bonuses that come free with the same chip.</p>
-      <p>Since a driver is bought either way, the smart part is the better buy twice over: on the
-      sourced prices in the table below it is <i>cheaper</i> per driver than the DRV8825, and it
-      buys full parallel capability outright, which makes the "which MCU" question almost
-      irrelevant. That is the insight the matrix is built to make visible: driver family, not
-      brain choice, is what actually buys (or avoids) concurrency.</p>
+      <p>Since a driver is bought either way, the smart driver's advantage is structural: it buys
+      full parallel capability outright and keeps the MCU fused, with no co-processor — which makes
+      the "which MCU" question almost irrelevant. Whether it is also the <i>cheaper</i> route depends
+      on the driver's price at the chosen vendor; on this project's primary vendor no Trinamic driver
+      is stocked, so the dumb-driver builds are the ones actually sourced (see the recommendation in
+      Part 5). The durable insight the matrix makes visible is that driver family, not brain choice,
+      is what actually buys (or avoids) concurrency.</p>
       <p>Read the gallery through that lens and it collapses into one question. <b>Panel + Node</b>
       and <b>Distributed Modules</b> spend boards, wiring and enclosure complexity to buy
       step-generation the brain cannot supply — a bill that a smart driver simply deletes. They
@@ -652,29 +690,29 @@
     </details>
     <details class="theory-section sae-fold">
       <summary>
-        <span class="fold-title">The U5 Concurrency Axis</span>
-        <span class="fold-note">Sets complexity and the power budget — but not, it turns out, cost</span>
+        <span class="fold-title">The Concurrency Axis</span>
+        <span class="fold-note">Sets complexity and the power budget; its effect on cost depends on the driver</span>
       </summary>
       <p>Reading the matrix by concurrency shows one axis dominates the <i>physical</i> design:
       <b>how many pumps must move at the exact same instant.</b> Rows at 1–2 concurrent (S1*, D2*)
       sit at ★–★★ complexity on a 60&nbsp;W PSU. Committing to true 6-parallel moves every row to
       a 150&nbsp;W PSU and at least ★★☆☆ complexity, regardless of which driver or bus is chosen —
       concurrency, not driver family, sets the floor <i>complexity</i> and the power budget.</p>
-      <p>Cost is the exception, and it is the more interesting result: 6-parallel does <b>not</b>
-      set a cost floor. The cheapest 6-parallel row (<b>T9-fused-i2c</b>) undercuts the cheapest
-      single-pump row (<b>S1-i2c</b>) outright, because TMC2209 drivers save more than the larger
-      PSU costs. Full concurrency is the cheap end of this matrix, not the expensive end — the
-      expensive rows are the ones that buy concurrency with dedicated pump-node MCUs instead.</p>
+      <p>Cost, by contrast, is <b>not</b> fixed by concurrency alone — it is set by how the extra
+      step-generation is provided. Because a smart driver can deliver six-parallel with no
+      co-processor at all, whether full concurrency is cheap or expensive depends chiefly on driver
+      family and on what each part actually costs at the chosen vendor (the prices on this page are
+      editable for exactly that reason). The rows that buy concurrency with a dedicated pump-node MCU
+      sit at the expensive end regardless.</p>
       <p>That is because parallelism is not just a firmware problem: six motors moving at once
       draw roughly six times the peak current of one, which means a larger PSU, more heat,
       thicker wiring, and more EMI — a real penalty for a portable point-of-care device, on top of
       whatever the step-generation solution costs.</p>
       <p>This question — does the dispensing protocol actually need liquids moved independently or
-      simultaneously — is tracked as open unknown <b>U5</b> in the
+      simultaneously — is examined in the companion
       <a href="../../prototypes/Prototype-1-Pump-Module/multi-liquid-architecture/ARCHITECTURE-DECISION.md" style="color:var(--accent);">multi-liquid architecture study ↗</a>,
-      which owns the decision between replicated-pump control layers A1 (shared step bus, serial)
-      and A2 (independent per-motor control, parallel). This tool prices what each answer to U5
-      actually costs; it does not answer U5 itself.</p>
+      which owns the decision between a shared-step-bus serial layout and independent per-motor
+      parallel control. This tool prices what each answer costs; it does not settle the choice itself.</p>
     </details>
     <details class="theory-section sae-fold">
       <summary>
@@ -688,6 +726,7 @@
       <div class="pin-formula">
         <span class="eq">pins&nbsp;used
           <span class="op">=</span><span class="t-scr">screen&nbsp;(A)</span>
+          <span class="op">+</span><span class="t-sd">SD</span>
           <span class="op">+</span><span class="t-sen">sensors</span>
           <span class="op">+</span><span class="t-bus">bus&nbsp;(B)</span>
           <span class="op">+</span><span class="t-drv">drivers&nbsp;(C)</span>
@@ -695,22 +734,24 @@
           <span class="op">+</span><span class="t-vib">vibration</span>
         </span>
         <span class="avail">a variant <b>fits</b> when pins&nbsp;used ≤ <b>usable&nbsp;GPIO</b>
-          &nbsp;·&nbsp; bare&nbsp;ESP32 = <b>15</b> &nbsp;·&nbsp; integrated&nbsp;2.4″ = <b>9</b> &nbsp;·&nbsp; integrated&nbsp;3.2″ = <b>3</b></span>
+          &nbsp;·&nbsp; bare&nbsp;ESP32 = <b>16</b> &nbsp;·&nbsp; integrated&nbsp;2.4″ = <b>3</b> &nbsp;·&nbsp; integrated&nbsp;3.2″ = <b>3</b></span>
       </div>
 
       <div class="pin-ledger">
         <div class="pl-head">Worked example — <b>S1-i2c</b> (bare ESP32, dumb DRV8825, I²C):
-          &nbsp;8 <span style="color:var(--text-muted)">+ 0</span> + 2 + 8 <span style="color:var(--text-muted)">+ 0</span> + 1 = <b>19 used</b> vs 15 usable</div>
-        <div class="pl-track" role="img" aria-label="Pin ledger for S1-i2c: 8 screen, 2 bus, 8 drivers, 1 vibration = 19 pins used, against a 15-pin usable-GPIO ceiling — overrun by 4.">
-          <div class="pl-over" style="left:78.9%"></div>
-          <div class="pl-seg pl-screen" style="width:42.1%"><span>Screen 8</span></div>
-          <div class="pl-seg pl-bus" style="width:10.5%"><span>Bus 2</span></div>
-          <div class="pl-seg pl-drv" style="width:42.1%"><span>Drivers 8</span></div>
-          <div class="pl-seg pl-vib" style="width:5.3%"><span>1</span></div>
-          <div class="pl-ceiling" style="left:78.9%"><span>usable GPIO = 15</span></div>
+          &nbsp;8 + 1 <span style="color:var(--text-muted)">+ 0</span> + 2 + 8 <span style="color:var(--text-muted)">+ 0</span> + 1 = <b>20 used</b> vs 16 usable</div>
+        <div class="pl-track" role="img" aria-label="Pin ledger for S1-i2c: 8 screen, 1 SD chip-select, 2 bus, 8 drivers, 1 vibration = 20 pins used, against a 16-pin usable-GPIO ceiling — overrun by 4.">
+          <div class="pl-over" style="left:80%"></div>
+          <div class="pl-seg pl-screen" style="width:40%"><span>Screen 8</span></div>
+          <div class="pl-seg pl-sd" style="width:5%"><span>1</span></div>
+          <div class="pl-seg pl-bus" style="width:10%"><span>Bus 2</span></div>
+          <div class="pl-seg pl-drv" style="width:40%"><span>Drivers 8</span></div>
+          <div class="pl-seg pl-vib" style="width:5%"><span>1</span></div>
+          <div class="pl-ceiling" style="left:80%"><span>usable GPIO = 16</span></div>
         </div>
         <div class="pl-legend">
           <span><i style="background:var(--accent)"></i>Screen A — SPI + touch (8)</span>
+          <span><i style="background:#c9793d"></i>SD card — chip-select (1)</span>
           <span><i style="background:var(--blue)"></i>Bus B — I²C·RS-485·CAN (2–4)</span>
           <span><i style="background:var(--warn)"></i>Drivers C — DRV8825 fan-out (8–12)</span>
           <span><i style="background:var(--ok)"></i>Vibration PWM (1)</span>
@@ -950,9 +991,11 @@
         <tbody id="matrixBody"></tbody>
       </table>
     </div>
-    <p class="sub" style="margin-top:14px">Shared block ≈ €149.65 (6× NEMA17 €86.46 · ILI9341 screen €23.32 ·
-      alignment Nano €8.71 · 2× 28BYJ-48+ULN2003 €11.72 · vibration motor €2.35 · IRF520 driver €1.84 ·
-      MPR121 €6.37 · 12V buck €3.18 · 5V buck €5.70). Most shared-block prices are bitbyg-sourced
+    <p class="sub" style="margin-top:14px">Shared block ≈ €153.67 (6× NEMA17 €86.46 · ILI9341 screen €23.32 ·
+      alignment Nano €8.71 · 2× 28BYJ-48+ULN2003 €11.72 · 2× homing micro switch €4.02 · vibration motor €2.35 ·
+      IRF520 driver €1.84 · MPR121 €6.37 · 12V buck €3.18 · 5V buck €5.70). The <b>SC6-*</b> shared-clock rows
+      fold the alignment motors onto their own node, so they drop the €8.71 alignment Nano → €144.96.
+      Most shared-block prices are bitbyg-sourced
       <span class="pill conf-high">High</span> confidence — unstocked/unverified parts carry ⚠ notes in the
       Source column above.</p>
 
@@ -974,6 +1017,261 @@
     <div id="diagram" aria-hidden="true"></div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════
+       PART 5 — ARCHITECTURE DECISION & RECOMMENDATION (thesis synthesis)
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.24s">
+    <span class="num">Part 5</span>
+    <h2>Architecture Decision &amp; Recommendation</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.255s">
+    A synthesis of the two companion tools — this Explorer (cost and pin budget) and the
+    <a href="../dispense-throughput-simulator/index.html" style="color:var(--accent);">Dispense&nbsp;Throughput&nbsp;Simulator ↗</a>
+    (run time) — into a single defensible recommendation. Every candidate architecture in the matrix
+    above was weighed on its own trade-offs; the reasoning below proceeds through three ordered
+    filters — <b>feasibility</b>, then <b>cost</b>, then <b>run time</b> — reflecting the design
+    priority that a portable point-of-care instrument must first be <i>buildable</i>, then
+    <i>affordable</i>, and only then <i>fast</i>. Concurrency is examined first, because it frames
+    everything after it: if full parallelisation could be had for essentially the same price and
+    complexity, the extra capability would be free and the choice obvious — so it is worth
+    establishing up front how much parallelism is actually worth paying for.
+  </p>
+
+  <div class="theory-card animate-in" id="decision" style="--delay:0.27s">
+
+    <div class="dec-block">
+      <h3>Decision framework &amp; fixed premises</h3>
+      <p>Three premises are treated as settled for this device and constrain the search before any
+      variant is compared:</p>
+      <ul class="dec-givens">
+        <li>The device is a <b>portable, single sealed-enclosure</b> point-of-care instrument, so all
+        six modules share one small housing. <b>I²C is therefore the appropriate system bus</b>;
+        RS-485 and CAN earn their additional cost only across physically separated nodes, which this
+        device does not have, and are out of scope here.<sup class="ref">[1]</sup></li>
+        <li>Selection priorities, in order: <b>(i)&nbsp;feasibility</b> — the build must be realisable
+        and its parts sourceable; a single controller is preferred, but a small helper co-processor is
+        acceptable where the pin budget requires one; <b>(ii)&nbsp;unit cost</b>, weighted explicitly
+        above speed; <b>(iii)&nbsp;throughput</b>.</li>
+        <li>All pumps run a <b>single shared step rate</b>. Differing per-liquid volumes are metered by
+        <b>step count</b>, not by independent pump speeds, which removes any requirement for
+        independent-rate motor control and, with it, an entire axis of driver complexity.</li>
+      </ul>
+    </div>
+
+    <div class="dec-block">
+      <h3>Step 1 — Concurrency: how much parallelism is worth buying</h3>
+      <p>The throughput simulator sweeps concurrency <i>K</i> (the number of pumps dispensing at
+      once) from serial to fully parallel.<sup class="ref">[2]</sup> Under the realistic point-of-care
+      load (PANPOC: 300/5/300/50&nbsp;µL, 32 samples) the saving relative to serial operation shows
+      strong diminishing returns:</p>
+      <div class="dec-table-wrap">
+        <table class="dec-table">
+          <caption>PANPOC load, 32 samples, fixed clock — total run time and saving vs. serial (K=1).</caption>
+          <thead><tr><th>Concurrency</th><th>Total run time</th><th>Saving vs. serial</th></tr></thead>
+          <tbody>
+            <tr><td>K = 1 (serial)</td><td class="n">399.3 s</td><td class="n">—</td></tr>
+            <tr class="pick"><td>K = 2</td><td class="n">245.2 s</td><td class="n">−38.6 %</td></tr>
+            <tr><td>K = 6 (full)</td><td class="n">220.8 s</td><td class="n">−44.7 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>K = 2 captures ~86 % of the maximum attainable saving.</b> The residual is bounded by a
+      single high-volume station whose dose time floors the per-sample cycle, so concurrency beyond
+      <i>K</i>&nbsp;≈&nbsp;2 buys little time the bottleneck will permit. This does not, on its own,
+      rule out full parallelism — if six-at-once turns out to be equally cheap and feasible, the extra
+      headroom is worth taking; Step&nbsp;1 only establishes that <i>time alone</i> does not justify
+      paying much for it, leaving that verdict to the cost and feasibility steps. On time economics
+      alone, then, <b>K&nbsp;=&nbsp;2 would be the sensible ceiling</b> — and that is where this analysis
+      first landed. <b>Step&nbsp;3 overturns it:</b> once the pumps are allowed to share a single step
+      clock, full six-at-once costs only about <b>€3 more</b> on a ~€235 device — comfortably inside
+      "take the free headroom." Whether the protocol genuinely requires simultaneous rather than serial
+      dispensing is examined in the companion multi-liquid architecture study.<sup class="ref">[4]</sup></p>
+    </div>
+
+    <div class="dec-block">
+      <h3>Step 2 — Feasibility: can one controller do it, or is a helper needed?</h3>
+      <p>The controller must drive all six pumps — one stepper driver each — while also rendering the
+      touchscreen GUI, talking to the other modules over the system bus, and offering wireless
+      connectivity for loading protocols and firmware. That combination points to an <b>ESP32-class
+      brain</b> rather than a bare Arduino: it pairs ample GPIO and processing headroom to host a GUI
+      with built-in Wi-Fi/Bluetooth, at a low unit cost.<sup class="ref">[5]</sup> The open question is
+      whether that single ESP32 can <i>also</i> generate the step signals for all six drivers, or
+      whether a helper is required.</p>
+      <p>The owned ILI9341 touchscreen is wired SPI and already commits 8 of the ESP32's 16 usable
+      GPIO, plus 1 more for the SD card's chip-select (it rides the screen's SPI bus, so it costs only
+      its own select line) — 9 of 16 spent before a single pump is
+      connected.<sup class="ref">[1][5]</sup> Once that is spent, fanning STEP/DIR or ENABLE lines out to six
+      discrete dumb drivers<sup class="ref">[6]</sup> overruns the pin budget — so a single-brain
+      dumb-driver build cannot be wired as one board.<sup class="ref">[3]</sup> This is independent of
+      concurrency: all six drivers must be individually addressable even when only two move at once, so
+      the six-way fan-out is unavoidable regardless of <i>K</i>. Two routes restore feasibility:
+      <b>offload</b> the six-driver fan-out to a small helper MCU (a co-processor pump-node), or use a
+      <b>smart driver</b> whose single shared UART replaces the wide parallel wiring.<sup class="ref">[7]</sup>
+      Designs that still overrun after this — the fused dumb-driver rows — are not buildable on the
+      chosen brain and are excluded from further consideration.</p>
+      <p><b>A third route, which the shared-rate premise unlocks.</b> Because every pump runs at the
+      same rate, all six drivers can share a <i>single</i> STEP/DIR clock, each pump dropping out via
+      its own ENABLE line the moment it reaches its dose. That removes the need for six independent
+      step trains — the very thing that normally forces a co-processor onto a dumb-driver 6-parallel
+      build — and it is generated by a hardware timer peripheral, so it keeps ticking regardless of what
+      the CPU is doing. What is left is six ENABLE lines plus the two alignment motors, and how those
+      are placed is what separates the three shared-clock builds:</p>
+      <ul class="dec-givens">
+        <li><b>SC6-rp-i2c</b> — one small RP2040 node carries everything (six ENABLE + two alignment
+        motors), replacing the two Arduino Nanos with a single cheaper board.</li>
+        <li><b>SC6-exp-i2c</b> — no helper MCU at all: a €6.53 MCP23017 I²C expander carries the ENABLE
+        and alignment lines. Cheapest, but it puts the <i>dose-critical</i> ENABLE lines behind the I²C
+        bus and fills the expander to 16/16.</li>
+        <li><b>SC6-s3exp-i2c</b> — an <b>ESP32-S3-Nano</b> brain, whose larger pin count keeps the six
+        ENABLE lines on <i>direct GPIO</i> while only the slow alignment/homing ride the expander. One
+        MCU, dose-critical signals deterministic, and the faster core the GUI wants.</li>
+      </ul>
+      <p>All three absorb the two alignment motors, removing the separate alignment node entirely.</p>
+      <div class="dec-table-wrap">
+        <table class="dec-table">
+          <caption>Brain GPIO used vs. usable (per-brain ceiling; fixed microstepping). The S3-Nano's ceiling is 21, every other row's is 16. Full worked derivation in the pin-budget cross-check.<sup class="ref">[3]</sup></caption>
+          <thead><tr><th>Variant</th><th>Topology</th><th>K</th><th>Pins used / usable</th><th>Fits?</th></tr></thead>
+          <tbody>
+            <tr class="pick"><td>SC6-s3exp-i2c</td><td>Shared clock, single MCU (S3) + expander</td><td class="n">6</td><td class="n">20 / 21</td><td class="yes">✓ fits (1 spare)</td></tr>
+            <tr><td>SC6-rp-i2c</td><td>Shared clock + RP2040 node</td><td class="n">6</td><td class="n">12 / 16</td><td class="yes">✓ fits (4 spare)</td></tr>
+            <tr><td>SC6-exp-i2c</td><td>Shared clock, fused ESP32 + expander</td><td class="n">6</td><td class="n">14 / 16</td><td class="yes">✓ fits (2 spare)</td></tr>
+            <tr><td>N2-nano-i2c</td><td>Dumb + Nano node</td><td class="n">2</td><td class="n">12 / 16</td><td class="yes">✓ fits (4 spare)</td></tr>
+            <tr><td>T9-fused-i2c</td><td>Smart, fused</td><td class="n">6</td><td class="n">16 / 16</td><td class="yes">✓ fits (0 spare)</td></tr>
+            <tr><td>S1-i2c / D2-i2c</td><td>Dumb, fused (no offload)</td><td class="n">1–2</td><td class="n">20–24 / 16</td><td class="no">✗ overrun</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dec-block">
+      <h3>Step 3 — Cost at the operating point</h3>
+      <p>Costs are computed by this tool's own engine from the component prices entered into it; the
+      figures below use the prices sourced for this prototype.<sup class="ref">[1][11]</sup> The
+      whole-system column adds the fixed shared block (six NEMA17 pumps, the owned screen, alignment
+      motors and their two homing micro switches, nozzle and sensing modules, and the two buck rails)
+      ≈ €153.67 — or €144.96 for the shared-clock rows, which absorb the alignment motors and so do not
+      buy the separate alignment Nano:</p>
+      <div class="dec-table-wrap">
+        <table class="dec-table">
+          <caption>Sourced-price comparison of the feasible I²C builds. Controller-only excludes the shared block. Ordered by whole-system cost. All six move at once except the K=2 baseline.</caption>
+          <thead><tr><th>Variant</th><th>K</th><th>Controller-only</th><th>Whole-system</th></tr></thead>
+          <tbody>
+            <tr><td>N2-nano-i2c — dumb, Nano node <i>(K=2 baseline)</i></td><td class="n">2</td><td class="n">€81.24</td><td class="n">€234.91</td></tr>
+            <tr><td>SC6-exp-i2c — shared clock, fused ESP32 + expander</td><td class="n">6</td><td class="n">€92.46</td><td class="n">€237.42</td></tr>
+            <tr><td>SC6-rp-i2c — shared clock, RP2040 node</td><td class="n">6</td><td class="n">€93.30</td><td class="n">€238.26</td></tr>
+            <tr class="pick"><td>SC6-s3exp-i2c — shared clock, single MCU (S3) + expander</td><td class="n">6</td><td class="n">€103.34</td><td class="n">€248.30</td></tr>
+            <tr><td>T9-fused-i2c — smart, fused</td><td class="n">6</td><td class="n">€107.71</td><td class="n">€261.38</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dec-note"><b>On the prices.</b> This tool costs each build against the components
+      actually stocked by the project's primary vendor (bitbyg.dk) — a Danish reseller chosen for fast
+      shipping, at the price of higher unit costs than direct import. The same tool is reusable for any
+      other sourcing: entering figures from cheaper direct (e.g. Chinese) suppliers simply re-ranks the
+      identical builds. Absolute costs will therefore shift with the vendor and with market fluctuation,
+      and would be revisited for a production run — but the structure the tool imposes (feasibility,
+      concurrency, driver family, cost) is vendor-independent. Having guided this prototype's
+      architecture, it stands as a general instrument, proven on this specific case, for re-costing the
+      design under different suppliers or future price changes.</p>
+    </div>
+
+    <div class="dec-block">
+      <h3>Motion profile, priming &amp; calibration</h3>
+      <p><b>Velocity profile.</b> Dispensed volume equals <i>step&nbsp;count × µL/step</i> and is
+      independent of pump speed; an acceleration ramp exists solely to guarantee that no steps are
+      lost near the motor's start/stop (pull-in) rate.<sup class="ref">[8][10]</sup> Because all pumps
+      share one clock and identical hardware, a <b>single trapezoidal ramp covers every active pump at
+      once</b> — accelerate together, cruise, each pump disables at its own target step count, then
+      decelerate. A brute stop is acceptable: peristaltic occlusion is self-braking and the stepper's
+      holding torque resists coasting, so the ramp matters chiefly on start.</p>
+      <p><b>Priming and calibration.</b> Both run one pump at a time — the simplest case for every
+      candidate, being a single-pump subset of the concurrent schedule. They rely only on <b>per-motor
+      ENABLE addressing</b>, the same mechanism that lets a pump drop out of a concurrent group when it
+      reaches its dose. Calibration derives each pump's true µL/step and is applied as a per-pump
+      <i>step-count</i> correction — never a speed change — which keeps it consistent with the
+      shared-rate premise.</p>
+    </div>
+
+    <div class="dec-block dec-rec">
+      <h3>Recommendation — the final design</h3>
+      <p class="verdict"><b>SC6-s3exp-i2c</b> — a single <b>ESP32-S3-Nano</b> brain, no co-processor,
+      running all six pumps from one shared STEP/DIR clock with per-pump ENABLE on direct GPIO, and a
+      single <b>MCP23017</b> I²C expander carrying only the alignment motors and homing switches
+      (€103.34 controller / €248.30 whole-system, all six dispensing at once).</p>
+      <p>Two premises make this the answer rather than a compromise. First, because the pumps share one
+      rate, a single hardware-timer clock drives all six — so <b>full six-at-once parallelism is
+      essentially free</b>: the shared-clock RP2040 build (SC6-rp-i2c) costs only ~€3 more than the K=2
+      Nano baseline while improving point-of-care run time from −38.6&nbsp;% to −44.7&nbsp;% vs serial.
+      With parallelism no longer a cost question, the design goal becomes <b>the fewest processors and
+      the smoothest interface</b>.</p>
+      <p>Second, <b>one MCU beats two.</b> A second processor is not just a chip — it is a second
+      firmware, a second toolchain, and an inter-processor command protocol to design, implement and
+      debug (framing, timeouts, retries, aborts). For a one-person thesis that is the single largest
+      firmware cost, and collapsing to one MCU deletes it outright. The classic ESP32 cannot fuse the
+      whole system — the six ENABLE lines would have to go behind the I²C expander — but the
+      <b>ESP32-S3-Nano's larger pin count is exactly what removes that compromise</b>: the six
+      <i>dose-critical</i> ENABLE lines stay on <b>direct GPIO</b> (single-instruction, deterministic,
+      and able to disable the pumps even if the I²C bus hangs — a fault-tolerance property the
+      expander-only build cannot offer), while only the slow, jitter-tolerant loads — the two alignment
+      motors, the homing switches, and any future dynamic microstepping — ride the MCP23017. The brain
+      sits at 20&nbsp;/&nbsp;21 pins (3 spare if the screen is wired to 6 pins), the expander at
+      10&nbsp;/&nbsp;16 (6 spare). As a bonus, the S3's faster LX7 core and octal PSRAM are the best
+      brain here for the smooth GUI the instrument is meant to have.</p>
+      <p><b>Why not the two cheaper shared-clock builds.</b> <b>SC6-exp-i2c</b> (fused ESP32 +
+      expander, €237.42) is €10.88 cheaper but forces the dose-critical ENABLE lines onto the I²C
+      expander and fills it to 16&nbsp;/&nbsp;16 with no headroom. <b>SC6-rp-i2c</b> (ESP32 + RP2040
+      node, €238.26) is a clean, sourceable two-MCU build — but it is two MCUs, which is the very cost
+      the S3 was chosen to avoid. The S3 design's ~€10 premium buys a single firmware, the
+      dose-critical signals on real GPIO, and the UI headroom — the best-value trade for this project.</p>
+      <h3 style="margin-top:26px">Recommendation — the build for prototyping</h3>
+      <p class="verdict"><b>DOIT ESP32 (30-pin) + the two Arduino Nanos already in-house</b>, running the
+      same shared-clock firmware — a bench rig to validate the design before committing to the S3.</p>
+      <p>The final design carries exactly one unproven behaviour: <b>does a DRV8825 stop precisely on
+      its step count when ENABLE is dropped mid-clock?</b> That is a per-pump property, so it does not
+      need the full build to test. The prototype needs only a brain (the DOIT ESP32 at €9.05, which the
+      project must buy regardless), the Nanos already owned, and — to start — <b>two DRV8825s and the
+      72&nbsp;W supply</b>: run both on one shared clock, drop one ENABLE early, and confirm its dosed
+      volume matches its step count while the other keeps running. Scale to six only once it holds.
+      Migrating to the final design is then a board swap (two Nanos → one S3-Nano) and a firmware port;
+      the control scheme is identical, so what the prototype proves carries straight over.</p>
+      <p><b>The open item, either way</b>, is that ENABLE-gating dose-accuracy check — the one
+      experiment that de-risks the whole shared-clock family. A secondary item is confirming the
+      ESP32-S3-Nano's pinout against the manufacturer diagram, since the final design sits one pin from
+      its usable ceiling and the 21-pin figure is vendor-stated rather than datasheet-audited.</p>
+    </div>
+
+    <div class="dec-block">
+      <h3>References</h3>
+      <ol class="dec-refs">
+        <li>S. V. Feltrin, <i>System Architecture Explorer</i> (this page). Cost, pin-budget and
+        comms-layer model; figures computed by its <code>costOf()</code> and <code>pinsOf()</code> engine.</li>
+        <li>S. V. Feltrin, <i>Dispense Choreography &amp; Throughput Simulator</i>,
+        <a href="../dispense-throughput-simulator/index.html">tools/dispense-throughput-simulator/</a>.
+        LPT pipeline throughput model; source of the concurrency figures in Step&nbsp;1.</li>
+        <li>S. V. Feltrin, <i>Pin-Budget Analysis</i>,
+        <a href="PIN-BUDGET-ANALYSIS.md">PIN-BUDGET-ANALYSIS.md</a> (co-located). Per-hardware GPIO
+        signal map, both GPIO-count and peripheral-instance ceilings, and a datasheet-verified pinout audit.</li>
+        <li>S. V. Feltrin, <i>Multi-Liquid Architecture Decision</i> — the simultaneous-vs-serial dispensing study,
+        <a href="../../prototypes/Prototype-1-Pump-Module/multi-liquid-architecture/ARCHITECTURE-DECISION.md">prototypes/…/ARCHITECTURE-DECISION.md</a>.</li>
+        <li>Espressif Systems, <i>ESP32 Series Datasheet</i>. Usable-GPIO enumeration (strapping,
+        flash and input-only pins excluded).</li>
+        <li>Texas Instruments, <i>DRV8825 Stepper Motor Controller IC</i>, datasheet. STEP/DIR
+        interface and M0–M2 microstep-select pins.</li>
+        <li>Analog Devices (Trinamic), <i>TMC2209 Datasheet</i>. Single-wire UART interface and
+        on-chip step-pulse generation (velocity mode).</li>
+        <li>Wantai, <i>NEMA17 42BYGHW811 Stepper Motor</i> specification (1.8°/step, 200 steps/rev).</li>
+        <li>R. L. Graham, "Bounds on Multiprocessing Timing Anomalies," <i>SIAM Journal on Applied
+        Mathematics</i>, vol. 17, no. 2, pp. 416–429, 1969. Longest-Processing-Time (LPT) list-scheduling
+        bound underlying the throughput grouping.</li>
+        <li>P. P. Acarnley, <i>Stepping Motors: A Guide to Theory and Practice</i>, 4th ed., IET, 2002.
+        Start/stop (pull-in) rate and the role of acceleration ramps in avoiding step loss.</li>
+        <li><i>bitbyg.dk</i> electronic-components catalogue (prices retrieved 2026-07-16). Vendor
+        source for all high-confidence BOM prices.</li>
+      </ol>
+    </div>
+
+  </div><!-- /#decision -->
+
 </main>
 
 <footer class="site-footer">
@@ -988,6 +1286,10 @@ const DEFAULTS = {
     source:{url:'https://bitbyg.dk/produkt-tag/esp32/', note:'bitbyg "DOIT ESP32 30P IOT Mainboard", 67.50 DKK — cheapest bare-ESP32 brain in the catalogue'},
     gpioUsable:16, gpioConf:'High', ram:'520 KB SRAM', ramConf:'Medium', psram:'None', psramConf:'High',
     uiNote:'No PSRAM: a single-buffered, redraw-on-demand UI is comfortable; full-screen animated transitions are tight. GPIO: 16 = the safe output-capable set on the DOIT 30-pin (GPIO 4,5,13,14,16–19,21–23,25–27,32,33), after removing flash (6–11), input-only (34–39) and TX0/RX0; GPIO5 is the one strapping pin included. Up to ~20 if the delicate strapping pins (0/2/12/15) are used with care. Datasheet-audited 2026-07-20 (PIN-BUDGET-ANALYSIS.md §7).'},
+  esp32s3:{label:'ESP32-S3-Nano (ESP32-S3R8)', role:'brain — single-MCU controller', eur:19.93, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/esp32-s3-nano-development-board-esp32-s3r8/', note:'bitbyg "ESP32-S3-Nano Development Board (ESP32-S3R8)", 148.75 DKK — dual-core Xtensa LX7 @ 240 MHz, 512 KB SRAM + 8 MB octal PSRAM, 16 MB flash, onboard ceramic antenna, USB-C, Nano form factor.'},
+    gpioUsable:21, gpioConf:'Medium', ram:'512 KB SRAM', ramConf:'Medium', psram:'8 MB (octal)', psramConf:'High',
+    uiNote:'The best brain here for a smooth GUI: a faster LX7 core does LVGL compositing/anti-aliasing quicker than the classic ESP32\'s LX6, and its OCTAL PSRAM is fast enough to actually hold buffers/assets (unlike WROVER quad-PSRAM). GPIO: 22 broken out on the Nano footprint, MINUS the A2/GPIO3 strapping pin → ~21 conservatively usable. The octal-PSRAM pins (GPIO33–37) and USB (19/20) are NOT on the header, so PSRAM costs 0 header pins — the opposite of a WROVER. ⚠ 21 is vendor-stated + strapping-adjusted, NOT a full datasheet audit like the DOIT\'s 16; verify against Waveshare\'s pinout before committing a build that sits near the ceiling. The owned ILI9341 screen can drop 8→6 pins (RST tied to reset, T_IRQ polled) for extra margin.'},
   rp2040:{label:'RP2040 (Pico)', role:'6-parallel node (PIO)', eur:4, confidence:'Low',
     source:{note:'⚠ NOT STOCKED at bitbyg — no bare Raspberry Pi Pico / RP2040 board in the catalogue (nearest: LiLyGo T-PicoC3, 123.75 DKK, a different RP2040+ESP32-C3 combo). Price is an unsourced estimate; needs a second vendor.'},
     gpioUsable:26, gpioConf:'Medium', ram:'264 KB SRAM', ramConf:'Low', psram:'None', psramConf:'Low',
@@ -1032,6 +1334,8 @@ const DEFAULTS = {
     source:{url:'https://bitbyg.dk/shop/ramps-1-6-control-board/', note:'bitbyg bundle: "ArduinoTech MEGA2560 R3" 173.75 DKK + "Ramper 1.6 Kontroltavle" 98.75 DKK = 272.50 DKK'}},
   carrier:{label:'Driver carrier PCB', role:'6 driver sockets', eur:4, confidence:'Low',
     source:{note:'⚠ NOT STOCKED at bitbyg — no CNC shield / multi-driver carrier board in the catalogue. Unsourced estimate (or fabricate a custom PCB).'}},
+  gpioExp:{label:'MCP23017 I²C I/O expander', role:'16 I/O for 0 extra brain pins', eur:6.53, confidence:'High',
+    source:{url:'https://bitbyg.dk/?s=MCP23017&post_type=product', note:'bitbyg "MCP23017, 16-Bit I/O Expander med I2C Interface", 48.75 DKK — in stock (verified 2026-07-21 via catalogue search; linked to the search because the product-page slug was not captured). Rides the existing I²C bus, so 16 extra I/O cost 0 additional brain GPIO — this is what lets a fused ESP32 gate six driver ENABLE lines with no pump-node MCU.'}},
   psu60:{label:'PSU 24V ~60W', role:'1–2 motors at once', eur:18.26, confidence:'Medium',
     source:{url:'https://bitbyg.dk/shop/24v-3a-transformer-72w-power-supply-adapter/', note:'bitbyg "24V 3A Transformer 72W", 136.25 DKK — nearest stocked unit; 72 W not 60 W, so this is a near-equivalent substitution'}},
   psu150:{label:'PSU 24V ~150W', role:'all-6 at once', eur:31.66, confidence:'Medium',
@@ -1043,6 +1347,8 @@ const DEFAULTS = {
     source:{url:'https://bitbyg.dk/shop/stepper-motor-nema17-42byghw811/', note:'bitbyg "Steppermotor NEMA17 42BYGHW811", 107.50 DKK — cheapest stocked NEMA17 (others 116–161 DKK)'}},
   align28byj:{label:'28BYJ-48 12V + ULN2003', role:'alignment motor ×2', eur:5.86, shared:1, confidence:'High',
     source:{url:'https://bitbyg.dk/shop/step-gear-motor-28byj-48-5v-4-fase-5-ledning-dc-5v-12v/', note:'bitbyg bundle: 28BYJ-48 motor 25.00 DKK + "Stepmotor Driver Board ULN2003" 18.75 DKK = 43.75 DKK. 12V variant researched (D-15): same price as 5V on the same listing dropdown, but ~60 mA/phase (200 Ω winding) vs ~83 mA/phase and ≥34.3 mN·m vs ≥29.4 mN·m pull-in torque — strictly better, no cost penalty.'}},
+  limitSwitch:{label:'Micro switch (roller lever)', role:'rack homing endstop ×2', eur:2.01, shared:1, confidence:'High',
+    source:{url:'https://bitbyg.dk/shop/micro-switch-med-rulle/', note:'bitbyg "Micro Switch med Rulle", 15.00 DKK. SPDT (COM/NO/NC), 5A 125–250V AC, 20×10×5 mm — 1 MCU pin each (COM to GND, NO to an input with pull-up). Roller lever chosen over the plain-lever "Micro Switch" (10.00 DKK, electrically identical) because a rack repeatedly striking a plain lever wears it faster. The alignment stage needs a zero reference, so 2 are fixed shared hardware. Their pins live on whichever node drives alignment — NOT on the brain — so they cost 0 brain GPIO in pinsOf().'}},
   vibMotor:{label:'3V micro motor (RD520PA)', role:'nozzle vibration motor', eur:2.35, shared:1, confidence:'High',
     source:{url:'https://bitbyg.dk/shop/3v-micro-motor-for-diy/', note:'bitbyg, 17.50 DKK. ⚠ No datasheet is locatable for this model — its rated/stall current is unsourced, so any current figure used elsewhere is an estimate pending measurement.'}},
   vibDriver:{label:'IRF520 MOSFET driver module', role:'vibration motor PWM switch', eur:1.84, shared:1, confidence:'High',
@@ -1120,6 +1426,12 @@ function applyAllProvenance(){ for(const k in COMP) applyProvenance(k); }
    budget. Add future integrated boards here so pin/diagram/BOM logic picks them up. */
 function intBrainKey(v){ return v.bom.espscreen32 ? 'espscreen32' : v.bom.espscreen ? 'espscreen' : null; }
 
+/* brainKeyOf(v): the DEFAULTS key of whichever brain the variant uses — an integrated
+   board if present, else esp32s3 for the S3-Nano rows, else the classic esp32. pinsOf() reads
+   its gpioUsable from here, so a variant on a higher-pin brain (S3 = 21) is budgeted against the
+   right ceiling, not the DOIT's 16. */
+function brainKeyOf(v){ return intBrainKey(v) || (v.bom.esp32s3 ? 'esp32s3' : 'esp32'); }
+
 /* The PSU stays in each variant's own bom rather than the shared block, because its size is a
    per-variant consequence: 1–2-at-once rows take the ~60 W supply, 6-at-once rows are forced up
    to ~150 W. The "Include PSU" control excludes these keys from the cost maths without moving
@@ -1127,7 +1439,20 @@ function intBrainKey(v){ return v.bom.espscreen32 ? 'espscreen32' : v.bom.espscr
 const PSU_KEYS = new Set(['psu60','psu150']);
 
 /* shared block BOM (added when "whole-system") */
-const SHARED_BOM = {stepperNema:6, screen:1, nano:1, align28byj:2, vibMotor:1, vibDriver:1, capTouch:1, buck12:1, buck5:1};
+const SHARED_BOM = {stepperNema:6, screen:1, nano:1, align28byj:2, limitSwitch:2, vibMotor:1, vibDriver:1, capTouch:1, buck12:1, buck5:1};
+
+/* skipShared(v,k): the ONE rule for which SHARED_BOM lines a variant does not pay for, read by
+   costOf / bomWorstConf / bomHtml alike so the three can never describe different sets of parts.
+   Two cases exist:
+     screen — an integrated brain+screen board already prices its display inside v.bom (D-10).
+     nano   — the shared *alignment* node. A variant flagged `absorbsAlign` drives the two
+              28BYJ-48s from its own pump node (or I/O expander), so no separate alignment MCU
+              exists to buy. Its homing switches move with it and still cost 0 brain GPIO. */
+function skipShared(v, k){
+  if (k === 'screen' && intBrainKey(v)) return true;
+  if (k === 'nano'   && v.absorbsAlign) return true;
+  return false;
+}
 
 /* ---------- the variants ----------
    pinsC = Layer-C driver-link pins spent on the variant's brain MCU (D-09). 0 when a
@@ -1144,14 +1469,27 @@ const VARIANTS = [
     bom:{esp32:1,drv8825:6,carrier:1,psu60:1,max485:2}, note:'Cheapest sane default: 2-at-once, DRV8825, RS-485.'},
   {id:'P6-rp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6', cx:3, pinsC:0,
     bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1}, note:'RP2040 PIO makes 6 clean trains. I²C only if one small box.'},
+  /* ── Shared-clock rows (SC6-*) ────────────────────────────────────────────────
+     Both exploit ONE decision: every pump runs at the SAME rate, so all six share a single
+     STEP/DIR clock and each simply drops out via its own ENABLE when it reaches its dose.
+     That removes the need for six independent step trains — the whole reason a dumb-driver
+     6-parallel build normally needs a co-processor. Both also absorb the alignment motors
+     into their own node/expander (`absorbsAlign`), so the shared alignment Nano is not bought.
+     `at:6` because all six really do move at once → psu150 (6× peak motor current). */
+  {id:'SC6-rp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'shared STEP/DIR + 6×EN (on RP2040 node)', cx:3, pinsC:0, absorbsAlign:true,
+    bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1}, note:'Shared-clock: one RP2040 node runs BOTH the six pumps (1 shared STEP/DIR + 6 ENABLE = 8 pins) AND the two 28BYJ-48 alignment motors (2× ULN2003 = 8) plus 2 homing switches — ~20 of its 26 GPIO. Replaces the two separate Nanos with one cheaper board (€7.37 vs 2× €8.71) and needs no six-train PIO trickery. Conventional, low-risk.'},
+  {id:'SC6-exp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'shared STEP/DIR + 6×EN via I²C expander', cx:2.5, pinsC:2, absorbsAlign:true,
+    bom:{esp32:1,gpioExp:1,drv8825:6,carrier:1,psu150:1}, note:'Shared-clock, fully fused: NO helper MCU at all. The ESP32 emits the single STEP/DIR clock (2 pins) and an MCP23017 on the existing I²C bus supplies the rest — 6 driver ENABLE + 8 ULN2003 alignment lines + 2 homing switches = 16 of its 16 I/O, i.e. exactly full, no expansion room. ⚠ Not bench-validated: the ENABLE-gating step accuracy and I²C-paced alignment stepping both need testing before this is trusted.'},
+  {id:'SC6-s3exp-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'shared STEP/DIR + 6×EN on direct GPIO, alignment on I²C expander', cx:2.5, pinsC:8, absorbsAlign:true,
+    bom:{esp32s3:1,gpioExp:1,drv8825:6,carrier:1,psu150:1}, note:'RECOMMENDED FINAL DESIGN. Single MCU (ESP32-S3-Nano), no co-processor. The S3\'s larger pin count keeps the six DOSE-CRITICAL ENABLE lines on direct GPIO — deterministic, and able to kill the pumps even if the I²C bus hangs — while only the slow, non-critical loads (2× ULN2003 alignment, 2 homing switches, and any dynamic microstepping) sit on the MCP23017 expander. Brain 20/21 (1 spare; 3 with a 6-pin screen), expander 10/16 (6 spare). One firmware, one toolchain, no inter-processor protocol — plus the faster core + octal PSRAM the smooth GUI wants. ⚠ ENABLE-gating dose accuracy still needs a bench check; S3 pin count is vendor-stated (verify vs Waveshare pinout).'},
   {id:'P6-rp-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6', cx:3, pinsC:0,
     bom:{esp32:1,rp2040:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'Cheapest TRUE 6-parallel while keeping DRV8825.'},
   {id:'P6-stm-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (timers)', cx:3, pinsC:0,
     bom:{esp32:1,stm32:1,drv8825:6,carrier:1,psu150:1,max485:3}, note:'STM32 timers instead of RP2040 PIO; a bit cheaper, steeper toolchain.'},
   {id:'N2-nano-i2c', at:2, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6 (on Nano node)', cx:2.5, pinsC:0,
-    bom:{esp32:1,nano:1,drv8825:6,carrier:1,psu60:1}, note:'A single Arduino Nano node drives all 6 DRV8825; its 2 hardware timers run 2 pumps at once — matches U5=2. Offloads the driver fan-out off the ESP32 so the pin budget fits (11/15). All-bitbyg, uses parts already owned; small 60 W PSU (2-concurrent).'},
+    bom:{esp32:1,nano:1,drv8825:6,carrier:1,psu60:1}, note:'A single Arduino Nano node drives all 6 DRV8825; its 2 hardware timers run 2 pumps at once — the 2-at-once operating point. Offloads the driver fan-out off the ESP32 so the pin budget fits (11/16). All-bitbyg, uses parts already owned; small 60 W PSU (2-concurrent).'},
   {id:'N2-nano-485', at:2, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR ×6 (on Nano node)', cx:2.5, pinsC:0,
-    bom:{esp32:1,nano:1,drv8825:6,carrier:1,psu60:1,max485:3}, note:'Same Nano-node offload on a robust RS-485 bus (3 nodes: brain + alignment + pump). Fully-bitbyg-sourceable 2-concurrent build; fits the pin budget (14/15).'},
+    bom:{esp32:1,nano:1,drv8825:6,carrier:1,psu60:1,max485:3}, note:'Same Nano-node offload on a robust RS-485 bus (3 nodes: brain + alignment + pump). Fully-bitbyg-sourceable 2-concurrent build; fits the pin budget (14/16).'},
   {id:'P6-dist-485', at:6, driver:'DRV8825', dk:'dumb', b:'RS-485', c:'STEP/DIR, 1/node', cx:4.5, pinsC:0,
     bom:{esp32:1,promini:6,drv8825:6,psu150:1,max485:8}, note:'One MCU per pump = hot-swap modules. 8 nodes on RS-485.'},
   {id:'P6-dist-can', at:6, driver:'DRV8825', dk:'dumb', b:'CAN', c:'STEP/DIR, 1/node', cx:4.5, pinsC:0,
@@ -1173,9 +1511,9 @@ const VARIANTS = [
   {id:'B-skr-tmc', at:6, driver:'TMC2209', dk:'smart', b:'USB/UART/CAN', c:'UART sockets', cx:3.5, pinsC:0,
     bom:{esp32:1,skr:1,tmc2209:6,psu150:1,max485:2}, note:'Printer board populated with silent TMC2209s.'},
   {id:'ESPINT-fused-i2c', at:6, driver:'TMC2209', dk:'smart', b:'I²C', c:'UART (self-steps)', cx:2, pinsC:4,
-    bom:{espscreen:1,tmc2209:6,carrier:1,psu150:1}, note:'One-part brain+screen (bitbyg ESP32-2432S024, 9 IO). Smart driver keeps the pin budget comfortable — fits within the 9 free IO.'},
+    bom:{espscreen:1,tmc2209:6,carrier:1,psu150:1}, note:'One-part brain+screen (bitbyg ESP32-2432S024). Audited free-GPIO is only 3 (the onboard screen/touch/SD consume the rest), so even a smart driver\'s UART plus the bus and vibration pins overrun — a 3-free-pin board cannot fuse pump control. Kept for contrast.'},
   {id:'ESPINT-dumb-i2c', at:1, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR shared+EN', cx:1, pinsC:8,
-    bom:{espscreen:1,drv8825:6,carrier:1,psu60:1}, note:'Same one-part integrated brain+screen, but a dumb driver — even single-concurrency STEP/DIR+EN wiring does not fit the 9 free IO. Shown for contrast (D-11 honesty: not every integrated-screen pairing is feasible).'},
+    bom:{espscreen:1,drv8825:6,carrier:1,psu60:1}, note:'Same one-part integrated brain+screen, but a dumb driver — with only 3 free GPIO, even single-concurrency STEP/DIR+EN wiring overruns badly. Shown for contrast (D-11 honesty: not every integrated-screen pairing is feasible).'},
   {id:'ESPINT32-brain-i2c', at:6, driver:'DRV8825', dk:'dumb', b:'I²C', c:'STEP/DIR ×6 (on node)', cx:3, pinsC:0,
     bom:{espscreen32:1,rp2040:1,drv8825:6,carrier:1,psu150:1}, note:'3.2" integrated board (ESP32-2432S032R — matches the owned screen size/res) as a PURE brain: only 3 free GPIO, so it spends 2 on the I²C bus and cannot fuse pump control. I²C out to an RP2040 pump node that drives 6 DRV8825. The only architecture the 3.2" integrated board actually supports — compare its whole-system cost against P6-rp-i2c (bare ESP32 brain + the owned discrete screen).'},
 ];
@@ -1244,6 +1582,13 @@ function populateDirectionSelect(){
    The parallel figure is retained only so the written counterfactual in Part 01 / SPEC stays
    checkable against a real number; it is no longer reachable from the UI. */
 const SCREEN_PINS = { spi: 8, parallel: 13 };
+
+/* SD_PINS: the UI module's SD card (the dispensing protocol is authored on a laptop and loaded
+   from SD) rides the screen's existing SPI bus — SCK/MOSI/MISO are already paid for by Layer A —
+   so it costs exactly ONE additional pin: its own chip-select. Constant on every bare-brain
+   variant, and skipped for the integrated boards, whose onboard SD is already inside their
+   audited free-GPIO count (same rule as the screen). */
+const SD_PINS = 1;
 const INTERFACE_CONF = { spi: 'High', parallel: 'Low' };  // spi verified on the owned board; parallel = hypothetical
 /* FIXED at 'spi' — no longer a control. The owned board was physically inspected and confirmed
    SPI on 2026-07-15 (D-09), so this is a settled fact, and Controls is for live decisions only.
@@ -1258,8 +1603,10 @@ const BUS_PINS = { 'I²C':2, 'RS-485':3, 'CAN':4, 'USB/UART':2, 'USB/UART/CAN':2
 
 /* pinsOf(v): mirrors costOf(v)'s aggregation shape, applied to GPIO instead of euros.
    avail = the variant's brain usable-GPIO (esp32, or espscreen for the integrated board).
-   used  = Layer A (screen+touch, fixed — skipped for espscreen: the 9 free IO already
-           accounts for the onboard display) + LM75/MPR121 shared I²C (LM75 shares the
+   used  = Layer A (screen+touch, fixed — skipped for espscreen: the 3 free GPIO already
+           account for the onboard display) + the SD card's chip-select (1, riding the
+           screen's SPI bus; likewise skipped for espscreen, whose onboard SD is already
+           inside its free-GPIO count) + LM75/MPR121 shared I²C (LM75 shares the
            I²C bus if the system bus is I²C, else +2 dedicated pins, skipped for espscreen,
            which has no LM75; the MPR121 capacitive touch controller rides the SAME
            physical I²C attachment LM75 already pays for — its default address 0x5A does
@@ -1270,7 +1617,7 @@ const BUS_PINS = { 'I²C':2, 'RS-485':3, 'CAN':4, 'USB/UART':2, 'USB/UART/CAN':2
            every variant (D-13: the vibration motor is fixed shared hardware). */
 function pinsOf(v){
   const intKey = intBrainKey(v);
-  const brainKey = intKey || 'esp32';
+  const brainKey = brainKeyOf(v);   // esp32 · esp32s3 · espscreen(32) — budgets against the right ceiling
   const brain = COMP[brainKey] || {};
   const avail = brain.gpioUsable || 0;
   /* Build the per-term breakdown as the single source of truth: the matrix column and the
@@ -1280,9 +1627,11 @@ function pinsOf(v){
   const add = (label, pins, note) => { terms.push({ label, pins, note }); used += pins; };
   if (!intKey) {
     add('Screen (A)', SCREEN_PINS[interfaceMode], 'ILI9341 SPI + touch');
+    add('SD card', SD_PINS, 'chip-select; shares the screen’s SPI bus');
     add('Sensors', (v.b === 'I²C') ? 0 : 2, (v.b === 'I²C') ? 'LM75+MPR121 share the I²C bus' : 'LM75+MPR121 dedicated I²C pair');
   } else {
     add('Screen (A)', 0, 'onboard — already in the free-IO count');
+    add('SD card', 0, 'onboard — already in the free-IO count');
   }
   add('Bus (B)', BUS_PINS[v.b] || 0, `${v.b} attachment`);
   add('Drivers (C)', v.pinsC || 0, v.c);
@@ -1762,7 +2111,7 @@ function buildDiagram(v){
     const screenBox = {x:80,y:42,w:150,h:56};
     brainBox = {x:330,y:42,w:170,h:56};
     s += BOX(screenBox.x,screenBox.y,screenBox.w,screenBox.h,'ILI9341 screen','3.2″ touch (owned)');
-    s += BOX(brainBox.x,brainBox.y,brainBox.w,brainBox.h,'ESP32','brain / controller',
+    s += BOX(brainBox.x,brainBox.y,brainBox.w,brainBox.h, v.bom.esp32s3 ? 'ESP32-S3' : 'ESP32','brain / controller',
       {stroke: overrunStroke || 'rgba(255,107,43,0.5)'});
     const midY = screenBox.y+screenBox.h/2;
     s += LINE(screenBox.x+screenBox.w, midY, brainBox.x, midY, {stroke:acc, w:1.6, arrow:true});
@@ -1778,15 +2127,25 @@ function buildDiagram(v){
   const busY=170;
   s += T(20,140,'Layer B — System Bus',{anchor:'start',size:12.5,weight:700,color:acc});
   const pumpNodeCount = cls==='fused' ? 0 : cls==='distributed' ? 6 : 1;
-  const nodeCount = 2 + pumpNodeCount; // brain + alignment node + pump node(s)
+  /* A variant that absorbs alignment into its own node/expander has NO separate alignment MCU,
+     so it must not be counted (or drawn) as a bus node — otherwise the diagram shows a board
+     the BOM does not buy. Mirrors skipShared()'s `nano` rule. */
+  const alignNodeCount = v.absorbsAlign ? 0 : 1;
+  const nodeCount = 1 + alignNodeCount + pumpNodeCount; // brain + alignment node? + pump node(s)
   s += LINE(60,busY,820,busY,{stroke:blue,w:2});
   s += T(440,busY-12, `${v.b} bus · ${nodeCount} nodes`, {size:11.5, color:blue, weight:600});
   s += LINE(brainCX, brainBox.y+brainBox.h, brainCX, busY, {stroke:mut});
 
-  /* alignment node — its own MCU, constant across every variant */
+  /* alignment node — its own MCU on every variant EXCEPT the shared-clock rows, which fold the
+     two 28BYJ-48s onto the pump node (SC6-rp) or the I²C expander (SC6-exp). */
   const alignBox = {x:650,y:190,w:170,h:48};
-  s += BOX(alignBox.x,alignBox.y,alignBox.w,alignBox.h,'Alignment node','2× 28BYJ-48 + ULN2003 (constant)');
-  s += LINE(alignBox.x+alignBox.w/2, busY, alignBox.x+alignBox.w/2, alignBox.y, {stroke:mut});
+  if (!v.absorbsAlign) {
+    s += BOX(alignBox.x,alignBox.y,alignBox.w,alignBox.h,'Alignment node','2× 28BYJ-48 + ULN2003 (constant)');
+    s += LINE(alignBox.x+alignBox.w/2, busY, alignBox.x+alignBox.w/2, alignBox.y, {stroke:mut});
+  } else {
+    s += T(alignBox.x+alignBox.w/2, alignBox.y+26, 'alignment folded into the pump node',
+      {size:10, color:mut, style:'italic'});
+  }
 
   /* pump-controller node(s), class-dependent; `sources` = Layer-C fan-out anchor point(s) */
   let sources = [];
@@ -1913,9 +2272,7 @@ function costOf(v){
     sum += (COMP[k]?.eur||0)*v.bom[k];
   }
   if(includeShared) for(const k in SHARED_BOM){
-    /* An integrated brain+screen variant (D-10) already prices its screen as part of the
-       brain component — do not double-count the shared-block screen line for it. */
-    if(k==='screen' && intBrainKey(v)) continue;
+    if(skipShared(v,k)) continue;   /* integrated screen already in v.bom; alignment Nano absorbed */
     sum += (COMP[k]?.eur||0)*SHARED_BOM[k];
   }
   return sum;
@@ -2133,7 +2490,7 @@ function renderMatrix(){
 function bomWorstConf(v){
   const keys = Object.keys(v.bom).filter(k => includePsu || !PSU_KEYS.has(k));
   if(includeShared) for(const k in SHARED_BOM){
-    if(k==='screen' && intBrainKey(v)) continue;
+    if(skipShared(v,k)) continue;
     keys.push(k);
   }
   return worstConf(...keys.map(k => COMP[k]?.confidence));
@@ -2157,11 +2514,11 @@ function bomHtml(v){
   }
   if(includeShared){ lines+=`<tr><td colspan="5" class="muted">— shared system block —</td></tr>`;
     for(const k in SHARED_BOM){
-      if(k==='screen' && intBrainKey(v)) continue; /* integrated screen already in the bom above */
+      if(skipShared(v,k)) continue; /* integrated screen already in the bom above; alignment Nano absorbed */
       lines+=add(k,SHARED_BOM[k]);
     }
   }
-  const brainKey = intBrainKey(v) || 'esp32';
+  const brainKey = brainKeyOf(v);
   const brain = COMP[brainKey];
   const brainInfo = (brain && brain.ram) ? `<p class="muted" style="margin:8px 0 0;font-size:12.5px">
       <b>${brain.label}</b> — RAM: ${brain.ram} · PSRAM: ${brain.psram}
