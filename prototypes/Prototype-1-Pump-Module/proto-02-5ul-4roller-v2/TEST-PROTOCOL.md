@@ -2,7 +2,7 @@
 
 **Device under test:** proto-02 v2.3 head, 5 µL 4-roller peristaltic pump (single bearing per roller, gap 1.52 mm measured, concentric).
 **Purpose of this document:** record *why* the test campaign is designed the way it is — not just the run sheet, but the reasoning behind every choice (volumes, speeds, replicate counts, the pipette comparison), what the data will look like, and — honestly — what it can and cannot prove.
-**Run sheets:** [`pump-campaign-runsheet.csv`](pump-campaign-runsheet.csv) (pump, 9 conditions / 61 dispenses) · [`test-campaign-runsheet.csv`](test-campaign-runsheet.csv) (full campaign incl. blanks + pipette).
+**Run sheets:** [`pump-campaign-runsheet-with-240.csv`](pump-campaign-runsheet-with-240.csv) — the **extensive** sweep being run (11 conditions / 76 dispenses, incl. 240 rpm) · [`pump-campaign-runsheet.csv`](pump-campaign-runsheet.csv) — the core 9-condition subset (no 240). The **pipette** and **evaporation-blank** runs are manual (not a CSV) — see §9.
 
 > Confidence tags used throughout: `[Certain]` (follows from measurement/definition), `[Likely]` (well-supported inference), `[Guessing]` (hypothesis to be tested).
 
@@ -186,7 +186,7 @@ This connects to the project's reframe that the **test system is itself a thesis
 
 ## 9. The run sheet (Stage 1)
 
-Pump factorial — [`pump-campaign-runsheet.csv`](pump-campaign-runsheet.csv). Microstep = 4 (1/4) is a **constant, not a factor** (E7: volume independent of microstep). Delivered volumes assume ~3–5 µL/stroke.
+Pump factorial — running the **extensive** sheet [`pump-campaign-runsheet-with-240.csv`](pump-campaign-runsheet-with-240.csv) (incl. 240 rpm). Microstep = 4 (1/4) is a **constant, not a factor** (E7: volume independent of microstep). Delivered volumes assume ~3–5 µL/stroke.
 
 ```
                 SPEED →
@@ -200,7 +200,9 @@ Pump factorial — [`pump-campaign-runsheet.csv`](pump-campaign-runsheet.csv). M
    9 conditions · 61 dispenses  (11 · 76 with 240 rpm)
 ```
 
-**Non-pump runs** (in `test-campaign-runsheet.csv`): evaporation blanks (≥3/session), pipette 5 µL ×10 + 50 µL ×5.
+**Non-pump runs** — manual, done in the same session, no separate CSV:
+- **Evaporation blanks:** ≥3–5 per session (tare → run one delivery cycle to waste → reweigh → average = the correction added back to every net mass).
+- **Pipette head-to-head:** **5 µL × 10**, interleaved 1:1 with the pump's 1-stroke @ 120 rpm cell — then **50 µL × 5** as the floor check (§6). Same balance, boat, and fast-tare method as the pump.
 
 **Controls (mandatory):**
 - **Randomise** execution order — prevent tube-wear / drift aliasing onto speed or volume.
