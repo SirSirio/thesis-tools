@@ -835,9 +835,58 @@
        ══════════════════════════════════════════════════════════ -->
   <section id="go-to-market" class="animate-in" style="--delay: 0.42s;">
     <div class="part-label"><span class="num">09</span><h2>Go-to-market map</h2></div>
-    <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-03 (safety/reliability map, ISO 10993, ISO 13485, CLIA, ISO 22870/15189) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-03.</p>
+    <div class="map-card">
+      <p class="map-lead">Dispensing accuracy (Sections 2&ndash;7) is one axis of market readiness. What
+        follows is what full market-readiness also demands beyond it &mdash; mapped structurally and lighter
+        than the metrological core above, per this tool's depth allocation (D-03): not omitted, not treated at
+        equal depth.</p>
+
+      <div class="map-grid">
+        <div class="map-item">
+          <span class="map-kicker">Safety / reliability / lifetime</span>
+          <p><b>What would be assessed</b>, not a single named deep standard: failure-mode analysis of the
+            drive train and fluidic path, long-run repeatability drift, seal/tube fatigue life, and electrical
+            safety of the driving electronics. This stays a structural map rather than a standards deep-dive,
+            consistent with the lighter depth allocation for this section.</p>
+        </div>
+
+        <div class="map-item">
+          <span class="map-kicker">Biocompatibility &mdash; ISO 10993</span>
+          <p>The fluid-path materials (tube, connectors) that contact the dispensed liquid need a
+            biological-evaluation justification under the <b>ISO 10993</b> series (-1 general principles, -5
+            cytotoxicity). This device's actual contact type is <b>external-communicating, limited-duration,
+            non-blood-contact</b> &mdash; a reagent/water aliquoting fluid path, not a blood-contact device
+            &mdash; so the applicable endpoints are narrower (cytotoxicity/irritation) than the full
+            blood-contact hemocompatibility panel (ISO 10993-4). The tool does not imply the device needs
+            testing it does not need.</p>
+        </div>
+
+        <div class="map-item">
+          <span class="map-kicker">QMS / regulatory pathway &mdash; ISO 13485</span>
+          <p>A medical-device quality management system per <b>ISO 13485</b> would be required <b>only if
+            productized</b> &mdash; not for a thesis prototype. Mapped here as "what market entry would
+            require," not as a present-tense compliance claim.</p>
+        </div>
+
+        <div class="map-item">
+          <span class="map-kicker">CLIA waiver bar (US, field-deployable POC)</span>
+          <p>The US <b>CLIA</b> Certificate-of-Waiver criteria &mdash; "simple, accurate, low risk of erroneous
+            or harmful result, usable by untrained operators" &mdash; frame the device's point-of-care intent
+            directly. A real waiver requires robust clinical data in practice; this is used here as a framing
+            device, not a claim of waiver status.</p>
+        </div>
+
+        <div class="map-item">
+          <span class="map-kicker">POCT quality &amp; competence &mdash; ISO 22870 / ISO 15189</span>
+          <p><b>ISO 22870</b> (point-of-care testing quality/competence) defers its technical limits to
+            <b>ISO 15189</b>. Both are procedural/competence framing &mdash; no dispensing-accuracy numbers
+            live here; that metrology stays in Sections 2&ndash;7.</p>
+        </div>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 10993 series (biocompatibility, contact-type scoping); ISO
+        13485 (QMS/regulatory pathway); CLIA Certificate-of-Waiver criteria; ISO 22870 / ISO 15189 (POCT
+        quality/competence framing).</p>
     </div>
   </section>
 
