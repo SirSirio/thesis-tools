@@ -200,6 +200,50 @@
     border-radius: 5px; padding: 1px 7px; white-space: nowrap;
   }
 
+  /* ── Verdict badges (alternate-methods comparison table) ─────── */
+  .verdict-badge {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.02em; padding: 2px 9px; border-radius: 5px;
+    white-space: nowrap;
+  }
+  .verdict-yes {
+    color: #7fd858; background: rgba(127,216,88,0.10); border: 1px solid rgba(127,216,88,0.3);
+  }
+  .verdict-no {
+    color: #e07a7a; background: rgba(224,122,122,0.10); border: 1px solid rgba(224,122,122,0.3);
+  }
+
+  /* ── Go-to-market lighter map card (D-03 depth allocation) ────── */
+  /* Deliberately less "deep" than .theory-card: no accent left-bar,
+     dimmer neutral border, no accent-colored headings. */
+  .map-card {
+    background: rgba(255,255,255,0.015);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-left: 3px solid rgba(255,255,255,0.14);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .map-lead {
+    font-size: 0.90rem; color: var(--text-muted); line-height: 1.7; font-style: italic;
+  }
+  .map-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .map-item {
+    border-radius: 10px; padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .map-item .map-kicker {
+    font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 700; margin-bottom: 6px; display: block;
+  }
+  .map-item p { font-size: 0.86rem; color: var(--text); line-height: 1.62; margin: 0; }
+
   /* ── Stub placeholder (unauthored sections, filled by later plans) ── */
   .stub-note {
     font-size: 0.88rem; color: var(--text-muted); font-style: italic;
@@ -671,8 +715,118 @@
   <section id="alternate-methods" class="animate-in" style="--delay: 0.38s;">
     <div class="part-label"><span class="num">08</span><h2>Alternate methods</h2></div>
     <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-03 (comparison table + why-gravimetric rationale) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-03.</p>
+      <div class="theory-section">
+        <h3>Why gravimetric, not the alternatives</h3>
+        <p>ISO 23783-2 defines several measurement methods beyond the single-channel gravimetric procedure
+          adopted in <a href="#method-gravimetric">Section 2</a>. Almost all of them assume a different device
+          shape than this pump: a <b>microplate-format, multi-well liquid handler</b> dispensing into 96- or
+          384-well plates. This pump has <b>one outlet</b>, delivers by <b>contact</b> into a vessel (a
+          submerged/contact tube discharge, not a free-flying droplet or jet), and handles arbitrary liquids
+          (ISO 3696 grade 3 water for calibration, arbitrary reagents in use). Single-channel gravimetric
+          (<b>Annex D</b>) is not merely the best-fitting method for this device shape &mdash; among the
+          methods ISO 23783-2 actually defines, it is close to the <b>only</b> fit.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Methods comparison</h3>
+        <div class="table-wrap">
+          <table class="spec-table">
+            <caption>Trimmed from ISO 23783-2's own method overview (&sect;5), checked against this pump's
+              actual delivery mechanism &mdash; single-channel, contact, any-liquid.</caption>
+            <thead>
+              <tr><th>Method</th><th>Standard ref.</th><th>Volume range</th><th>Applicable?</th><th>Why / why not</th></tr>
+            </thead>
+            <tbody>
+              <tr class="row-compliant">
+                <td>Single-channel gravimetric</td><td>Annex D (&sect;5.3.1)</td>
+                <td>0.5&ndash;1000&nbsp;&micro;L (banded)</td>
+                <td><span class="verdict-badge verdict-yes">Adopt</span></td>
+                <td>Matches contact, single-channel, any-liquid delivery exactly &mdash; the core method (see
+                  <a href="#method-gravimetric">Section 2</a>).</td>
+              </tr>
+              <tr>
+                <td>Gravimetric regression (GRM)</td><td>Annex E (&sect;5.3.2)</td>
+                <td>~0.005&ndash;100&nbsp;&micro;L (range stated inconsistently within the standard itself)</td>
+                <td><span class="verdict-badge verdict-no">Not applicable</span></td>
+                <td>Explicitly restricted to <b>non-contact</b> liquid delivery devices that deliver the
+                  volume as <b>free flying droplets or jets</b> &mdash; this pump discharges via a
+                  contact/submerged tube outlet, not a free-flying droplet, so GRM does not apply.</td>
+              </tr>
+              <tr>
+                <td>Dual-dye ratiometric photometric</td><td>Annex B (&sect;5.2.1)</td>
+                <td>0.01&ndash;350&nbsp;&micro;L (96/384-well)</td>
+                <td><span class="verdict-badge verdict-no">No</span></td>
+                <td>Requires a 96/384-well microplate reader &mdash; plate-format multi-well liquid handlers
+                  only.</td>
+              </tr>
+              <tr>
+                <td>Single-dye photometric</td><td>Annex C (&sect;5.2.2)</td>
+                <td>0.25&ndash;100&nbsp;&micro;L (96/384-well)</td>
+                <td><span class="verdict-badge verdict-no">No</span></td>
+                <td>Same plate-format mismatch as the dual-dye method.</td>
+              </tr>
+              <tr>
+                <td>Fluorescence</td><td>Annex H (&sect;5.2.3)</td>
+                <td>&lt;15&nbsp;nL (384/1536-well)</td>
+                <td><span class="verdict-badge verdict-no">No</span></td>
+                <td>Sub-nanolitre, plate-format, non-contact droplet devices only.</td>
+              </tr>
+              <tr>
+                <td>Photometric/gravimetric hybrid</td><td>Annex F (&sect;5.4)</td>
+                <td>1&ndash;300&nbsp;&micro;L</td>
+                <td><span class="verdict-badge verdict-no">No</span></td>
+                <td>Plate-format; requires a chromophore-doped test liquid.</td>
+              </tr>
+              <tr>
+                <td>Optical image analysis &mdash; droplets</td><td>Annex G (&sect;5.5.1)</td>
+                <td>Free-flying droplets &lt;5&nbsp;&micro;L</td>
+                <td><span class="verdict-badge verdict-no">No</span></td>
+                <td>Non-contact droplet imaging &mdash; conceptually adjacent to proto-02's pendant-drop
+                  problem, but not applicable to a submerged-outlet delivery.</td>
+              </tr>
+              <tr>
+                <td>Optical image analysis &mdash; capillaries</td><td>Annex I (&sect;5.5.2)</td>
+                <td>0.1&ndash;1000&nbsp;&micro;L</td>
+                <td><span class="verdict-badge verdict-no">No</span></td>
+                <td>Requires calibrated capillary geometry and a flatbed scanner &mdash; a different apparatus
+                  class.</td>
+              </tr>
+              <tr>
+                <td>Titrimetric</td><td>ISO 8655-7 (not in ISO 23783-2)</td>
+                <td>Not extracted &mdash; <span class="tag-unverified">unverified</span></td>
+                <td><span class="verdict-badge verdict-no">Mention only</span></td>
+                <td>A non-gravimetric alternative in the ISO 8655 family for piston-operated apparatus; its
+                  applicability to a peristaltic (non-piston) pump was not independently verified.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="theory-section">
+        <h3>The slope method is not the ISO GRM</h3>
+        <p>proto-02's own <b>&ldquo;slope method&rdquo;</b> (fit delivered volume against stroke count across
+          ISO-compliant test points, then extrapolate the single-stroke volume) is inspired by the same
+          linear-regression logic as ISO 23783-2's gravimetric regression method &mdash; but it is <b>not</b>
+          the ISO GRM procedure and must not be labeled as such. GRM (Annex E) is a normatively-defined method
+          restricted to non-contact, free-flying-droplet devices; the slope method is a defensible
+          <i>engineering workaround</i> for this prototype's sub-balance-resolution single-stroke volume,
+          documented in the bottom layer (<a href="#prototype-protocol-slot">Section 10</a>), not a
+          normatively-recognized alternate method in its own right.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Considered and rejected: IEC 60601-2-24 trumpet curves</h3>
+        <p>Infusion-pump <b>trumpet curves</b> (IEC 60601-2-24) were weighed as a possible accuracy frame and
+          rejected. Trumpet curves characterise <b>continuous or near-continuous flow-rate accuracy</b> across
+          increasingly long observation windows (minutes to hours) &mdash; the natural frame for an IV
+          infusion pump's flow rate. This pump delivers <b>discrete ~5&nbsp;&micro;L strokes</b>, not a
+          continuous flow to be windowed; the trumpet-curve frame is mismatched to a discrete-stroke device
+          and was correctly set aside rather than force-fit.</p>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 23783-2 &sect;5 (method overview, Annexes B/C/D/E/F/G/H/I);
+        ISO 8655-7 (titrimetric, existence only); IEC 60601-2-24 (trumpet curves, considered and rejected).</p>
     </div>
   </section>
 
