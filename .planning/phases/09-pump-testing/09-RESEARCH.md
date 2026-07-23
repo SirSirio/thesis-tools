@@ -225,9 +225,11 @@ Ordering that puts the deep metrological core first (per D-03) and the mapped di
 | A3 | Titrimetric method (ISO 8655-7) applicability to a peristaltic (non-piston) pump | RQ-2, alternates table | Low risk if only mentioned as "exists in the ISO 8655 family" without claiming direct applicability to this device, as recommended |
 | A4 | ISO 10993 endpoint scoping (external-communicating, limited-duration, non-blood-contact — narrower than full hemocompatibility panel) | RQ-3, biocompatibility row | Medium — if the actual fluid path design changes (e.g. a future blood-adjacent application), the endpoint scope would need re-evaluation; flagged explicitly rather than silently assumed |
 
-## Open Questions
+## Open Questions (RESOLVED — handling convention set; no plan revision needed)
 
-1. **Exact ISO 8655-2:2022 Table 1 values.**
+Each item below carries an actionable handling convention (adopted by the Phase 9 plans, chiefly 09-02): quote nothing unverifiable as fact — tag `[unverified — obtain via DTU library]` or omit, and name gaps honestly rather than paraphrase unheld standard content.
+
+1. **RESOLVED: Exact ISO 8655-2:2022 Table 1 values.** Handling → tag `[unverified]` or omit; describe only the confirmed structure.
    - What we know: the table exists, gives limits at three test points (10/50/100% of nominal), for both systematic and random error, tightening toward larger volumes.
    - What's unclear: the actual percentages at 1/5/10 µL.
    - Recommendation: either mark as `[unverified — obtain via DTU library]` inline in the tool, or omit specific numbers entirely and describe only the confirmed structure. Do not use the previously-circulated "training knowledge" approximate numbers as if confirmed.
