@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-23T13:46:49.610Z"
+last_updated: "2026-07-23T13:54:53.314Z"
 last_activity: 2026-07-23
 progress:
   total_phases: 11
   completed_phases: 6
   total_plans: 38
-  completed_plans: 30
+  completed_plans: 31
   percent: 55
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 09 (pump-testing) — EXECUTING
-Plan: 2 of 6
+Plan: 3 of 6
 Status: Ready to execute
 Last activity: 2026-07-23
 
-Progress: [████████░░] 81%
+Progress: [████████░░] 84%
 
 ## Performance Metrics
 
@@ -74,6 +74,7 @@ Progress: [████████░░] 81%
 | Phase 08 P03 | 6min | 1 tasks | 1 files |
 | Phase 08 P04 | 7min | 2 tasks | 4 files |
 | Phase 09-pump-testing P01 | 15min | 3 tasks | 4 files |
+| Phase 09 P02 | 20min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -149,6 +150,8 @@ Recent decisions affecting current work:
 - [Phase 09-01]: KaTeX loaded local-only (no CDN primary), deviating from displaced-volume-model's CDN-primary/local-fallback pattern, per this plan's explicit offline-first requirement
 - [Phase 09-01]: English-only page (no EN/IT toggle), matching the peristaltic-roller-displaced-volume-model precedent for dense, table-heavy thesis content
 - [Phase 09-01]: Stub section pattern (heading + anchor id + italic stub-note naming the owning plan) used for Sections 4-10, so plans 09-02/09-03/09-06 fill them without restructuring
+- [Phase ?]: 09-02: Table A.1 excerpt values self-derived from Formulas A.1-A.3 (CIPM ideal-gas approx) rather than transcribed from the standard's certified grid, captioned as illustrative
+- [Phase ?]: 09-02: ISO 8655-2:2022 exact permissible-error percentages omitted entirely, tagged [unverified - obtain via DTU library]; ISO 23783-2 Table 1's 1.4%/0.6% kept visually separate as method-uncertainty with an explicit category-error warning
 
 ### Pending Todos
 
@@ -205,7 +208,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-23T13:46:49.590Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-07-23T13:54:53.298Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: 
 None
