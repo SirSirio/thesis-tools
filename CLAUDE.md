@@ -55,9 +55,13 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   │   ├── index.html      System Architecture Explorer — whole-device architecture page: six-module hardware schema, design-direction gallery, driver/MCU/bus variant matrix (promoted from prototypes/System-Architecture/)
 │   │   ├── SPEC.md         Tool spec — module schema, design directions, component prices, variant BOMs, comms-layer/power-rail model, assumptions
 │   │   └── PIN-BUDGET-ANALYSIS.md  Permanent pin-budget cross-check — per-hardware signal map, GPIO-count + peripheral-instance ceilings, every overrun variant worked pin-by-pin, and a datasheet-verified component pinout audit (§7)
-│   └── dispense-throughput-simulator/
-│       ├── index.html      Dispense Choreography & Throughput Simulator — configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line (32-sample rack); concurrency slider with A1/A2 endpoint markers, lockstep/independent mode toggle, row-per-station Gantt, bottleneck + A1-vs-A2 delta + throughput headline metrics, illustrative rack animation
-│       └── SPEC.md         Tool spec — liquid/flow inputs, scheduling formulas (dose-time, LPT grouping, fill/steady/drain cycle count), rack-change convention, benchmark, assumptions
+│   ├── dispense-throughput-simulator/
+│   │   ├── index.html      Dispense Choreography & Throughput Simulator — configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line (32-sample rack); concurrency slider with A1/A2 endpoint markers, lockstep/independent mode toggle, row-per-station Gantt, bottleneck + A1-vs-A2 delta + throughput headline metrics, illustrative rack animation
+│   │   └── SPEC.md         Tool spec — liquid/flow inputs, scheduling formulas (dose-time, LPT grouping, fill/steady/drain cycle count), rack-change convention, benchmark, assumptions
+│   └── pump-testing/
+│       ├── index.html      Pump Testing Protocol — document-first, two-layer dispensing-accuracy qualification page: top layer market-grade ISO 23783-2 gravimetric method + ISO 8655 pipette-equivalence benchmark (deep accuracy core + lighter go-to-market map, D-03), bottom layer the actual proto-02 test protocol + justified deviations (D-04). No calculator (D-01)
+│       ├── SPEC.md         Tool spec — protocol structure, formulas (mass→volume Z-factor, CV, uncertainty), balance/environment constants, deviation-table sources, assumptions
+│       └── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js), copied from the displaced-volume-model precedent
 ├── prototypes/
 │   ├── index.html              Prototype Design Space — animated journey page
 │   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
@@ -109,6 +113,8 @@ Dark glassmorphic theme. See `assets/style.css` for all tokens.
 - **Animations:** `fade-up` entrance with staggered `--delay`, hover lift + glow on cards. The landing page's hero motif additionally uses locally-vendored **GSAP core** (`assets/gsap/gsap.min.js`, no plugins, no CDN) to drive one synchronized animation timeline (rotor rotation + liquid-slug highlight) — a D-01/D-03 exception approved specifically for that motif; every other page's motion stays hand-built CSS/SVG.
 
 Each tool page links back to `../../index.html` via a `← All tools` nav bar and shares the blobs + animate-in pattern from the landing page.
+
+`tools/pump-testing/` is a document-first, no-calculator (D-01) exception to the "enter your parameters and get answers" tool pattern: a citable, two-layer protocol page — top layer the market-grade dispensing-accuracy qualification (deep ISO 23783-2 gravimetric + ISO 8655 pipette-equivalence core, lighter go-to-market map, D-03), bottom layer the actual proto-02 test protocol and its justified deviations from the ideal. No interactive calculator or planner is built for this tool.
 
 ---
 
