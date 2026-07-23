@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-23T14:01:32.684Z"
+last_updated: "2026-07-23T14:12:21.631Z"
 last_activity: 2026-07-23
 progress:
   total_phases: 11
   completed_phases: 6
   total_plans: 38
-  completed_plans: 32
+  completed_plans: 33
   percent: 55
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 09 (pump-testing) — EXECUTING
-Plan: 4 of 6
+Plan: 5 of 6
 Status: Ready to execute
 Last activity: 2026-07-23
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -76,6 +76,7 @@ Progress: [█████████░] 86%
 | Phase 09-pump-testing P01 | 15min | 3 tasks | 4 files |
 | Phase 09 P02 | 20min | 3 tasks | 1 files |
 | Phase 09 P03 | 15min | 2 tasks | 1 files |
+| Phase 09 P06 | 20min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -156,6 +157,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 09-03]: Section 8's methods comparison table reuses the existing .spec-table/.table-wrap shell rather than a new table class, for visual consistency with Table 3/Table D.1/Table A.1
 - [Phase ?]: [Phase 09-03]: New .map-card family deliberately omits accent left-bar and accent-colored headings that .theory-card uses, so Section 9's lighter D-03 depth allocation is visually legible, not just implied by shorter prose
 - [Phase ?]: [Phase 09-03]: Titrimetric (ISO 8655-7) kept as a 'mention only' row with an unverified-applicability tag rather than omitted, per RESEARCH.md RQ-2 guidance
+- [Phase 09-06]: Layer 2 uses a distinct violet accent CSS family (.layer2-card) rather than reusing Layer 1's orange .theory-card or Section 9's neutral .map-card — so the two-layer structure the user asked to preserve literally is visually legible without reading prose
+- [Phase 09-06]: Deviation table's six rows and top-layer cross-links transcribed directly from the user-supplied TEST-PROTOCOL.md section 7 — honors D-04's superseded note that this document is now the primary source for the bottom layer
 
 ### Pending Todos
 
@@ -212,7 +215,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-23T14:01:32.666Z
-Stopped at: Completed 09-03-PLAN.md
+Last session: 2026-07-23T14:12:21.611Z
+Stopped at: Completed 09-06-PLAN.md
 Resume file: 
 None
