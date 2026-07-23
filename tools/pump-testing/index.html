@@ -178,6 +178,28 @@
   }
   .callout a { color: var(--accent); }
 
+  /* ── KaTeX display blocks ─────────────────────────────────────── */
+  .math-block {
+    text-align: center; margin: 1.1em 0;
+    overflow-x: auto; overflow-y: hidden;
+    padding: 4px 0;
+  }
+  .const-list {
+    list-style: none; margin: 4px 0 4px 0.2em;
+    display: flex; flex-direction: column; gap: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .const-list li { font-size: 0.90rem; }
+  .const-list b { color: var(--accent); font-weight: 600; }
+
+  /* ── Unverified-value tag ─────────────────────────────────────── */
+  .tag-unverified {
+    display: inline-block; font-size: 0.74rem; font-weight: 700;
+    letter-spacing: 0.03em; color: #e0a53c;
+    background: rgba(224,165,60,0.10); border: 1px solid rgba(224,165,60,0.3);
+    border-radius: 5px; padding: 1px 7px; white-space: nowrap;
+  }
+
   /* ── Stub placeholder (unauthored sections, filled by later plans) ── */
   .stub-note {
     font-size: 0.88rem; color: var(--text-muted); font-style: italic;
@@ -408,8 +430,92 @@
   <section id="mass-to-volume" class="animate-in" style="--delay: 0.22s;">
     <div class="part-label"><span class="num">04</span><h2>Mass &rarr; volume conversion &mdash; ISO 23783-2 Annex A</h2></div>
     <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-02 (Z-factor formulas, Tanaka formula, Table A.1 excerpt) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-02.</p>
+      <div class="theory-section">
+        <h3>Self-contained within Annex A &mdash; not ISO 8655-6</h3>
+        <p>Every gravimetric measurement yields a <b>mass</b>, not a volume. Converting the weighed mass gain
+          into a delivered volume requires a correction (the <b>Z-factor</b>) for the density of the test
+          liquid at test temperature and the buoyancy of air on both the liquid and the calibration weight
+          used to verify the balance. <b>ISO 23783-2 Annex A is self-contained</b> for this conversion &mdash;
+          it defines the buoyancy formula, the air-density formula, and the water-density formula directly. An
+          earlier working assumption in this project's planning stated the Z-factor basis was <b>ISO 8655-6</b>;
+          the primary-source read corrects this: <b>Annex A does not delegate the Z-factor calculation to ISO
+          8655-6</b> &mdash; ISO 23783-2 §6.1 Note 2 cross-references ISO 8655-6 only for the balance
+          <i>hardware</i> requirements behind Table 3 (<a href="#balance-requirements">Section 3</a>), not for
+          this mass&rarr;volume arithmetic.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Formula A.1 &mdash; general volume-from-mass (buoyancy-corrected)</h3>
+        <div class="math-block">$$V_L \;=\; (m_L - m_E)\cdot\frac{1}{\rho_L}\cdot\frac{1-\dfrac{\rho_A}{\rho_B}}{1-\dfrac{\rho_A}{\rho_L}}$$</div>
+        <ul class="const-list">
+          <li><b>V_L</b> &mdash; delivered liquid volume at test temperature</li>
+          <li><b>m_L, m_E</b> &mdash; loaded and empty (tare) vessel mass</li>
+          <li><b>&rho;_L</b> &mdash; test-liquid density at test temperature (Formula A.3, for water)</li>
+          <li><b>&rho;_A</b> &mdash; air density (Formula A.2)</li>
+          <li><b>&rho;_B</b> &mdash; calibration-weight density &mdash; <b>Note 2: 8.0 g/mL for the stainless-steel
+            weights</b> used to verify the balance</li>
+        </ul>
+      </div>
+
+      <div class="theory-section">
+        <h3>Formula A.2 &mdash; air density (CIPM-2007 equation)</h3>
+        <div class="math-block">$$\rho_A \;=\; \rho_A(t_A,\, p,\, h_r) \qquad \text{CIPM-2007 air-density equation}$$</div>
+        <p>Air density is computed from air temperature <i>t_A</i>, barometric pressure <i>p</i>, and relative
+          humidity <i>h_r</i> via the internationally-adopted CIPM-2007 formula, valid over
+          <b>15&ndash;27&nbsp;&deg;C / 600&ndash;1100&nbsp;hPa / 20&ndash;80% RH</b> &mdash; a window that
+          comfortably covers Table D.1's 17&ndash;30&nbsp;&deg;C test-condition range
+          (<a href="#method-gravimetric">Section 2</a>).</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Formula A.3 &mdash; the Tanaka formula (pure-water density)</h3>
+        <div class="math-block">$$\rho_W \;=\; a_5\!\left[\,1 - \frac{(t_W+a_1)^2\,(t_W+a_2)}{a_3\,(t_W+a_4)}\right]$$</div>
+        <ul class="const-list">
+          <li><b>a<sub>1</sub></b> = &minus;3.983035 &deg;C</li>
+          <li><b>a<sub>2</sub></b> = 301.797 &deg;C</li>
+          <li><b>a<sub>3</sub></b> = 522528.9 &deg;C&sup2;</li>
+          <li><b>a<sub>4</sub></b> = 69.34881 &deg;C</li>
+          <li><b>a<sub>5</sub></b> = 0.999974950 g/mL</li>
+        </ul>
+        <p><i>t_W</i> is the water temperature in &deg;C. This is the same Tanaka reference-density formula used
+          throughout ISO 3696 grade-3-water gravimetric verification.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Formula A.4 &mdash; the practical shortcut</h3>
+        <div class="math-block">$$V_i \;=\; m_i \cdot Z$$</div>
+        <p>Once <i>Z</i> (in &micro;L/mg) is looked up for the test temperature and barometric pressure, every
+          subsequent mass reading <i>m_i</i> converts to a volume <i>V_i</i> by a single multiplication &mdash;
+          Table A.1 tabulates <i>Z</i> directly so this step never requires re-deriving Formulas A.1&ndash;A.3
+          by hand.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Table A.1 excerpt &mdash; Z correction factors for air-saturated distilled water (&micro;L/mg)</h3>
+        <div class="table-wrap">
+          <table class="spec-table">
+            <caption>Compact excerpt around the pump's expected 20&nbsp;&deg;C / ~1013&nbsp;hPa laboratory
+              condition. The full ISO 23783-2 Table A.1 spans <b>15.0&ndash;30.0&nbsp;&deg;C in 0.5&nbsp;&deg;C
+              steps</b> across seven barometric-pressure columns (800&ndash;1050&nbsp;hPa) &mdash; use Formula
+              A.4 as the general-purpose shortcut for any other temperature/pressure combination. Values below
+              are illustrative, derived here from Formulas A.1&ndash;A.3 using the CIPM ideal-gas air-density
+              approximation rather than transcribed from the standard's own certified grid; consult ISO
+              23783-2 Table A.1 directly for the certified figures used in an actual test report.</caption>
+            <thead>
+              <tr><th>Water temp.</th><th>950 hPa</th><th>1000 hPa</th><th>1013 hPa</th><th>1050 hPa</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>19.5 &deg;C</td><td class="n">1.00269</td><td class="n">1.00274</td><td class="n">1.00275</td><td class="n">1.00279</td></tr>
+              <tr class="row-compliant"><td>20.0 &deg;C</td><td class="n">1.00279</td><td class="n">1.00284</td><td class="n">1.00285</td><td class="n">1.00289</td></tr>
+              <tr><td>20.5 &deg;C</td><td class="n">1.00289</td><td class="n">1.00294</td><td class="n">1.00296</td><td class="n">1.00300</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 23783-2 Annex A directly (Formula A.1 buoyancy, Formula A.2
+        CIPM-2007 air density, Formula A.3 Tanaka water density, Formula A.4 shortcut, Table A.1 Z-factor
+        grid) &mdash; not ISO 8655-6.</p>
     </div>
   </section>
 
