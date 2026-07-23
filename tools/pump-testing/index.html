@@ -250,6 +250,69 @@
     line-height: 1.7;
   }
 
+  /* ── Layer 2 block (actual prototype protocol) — visually DISTINCT
+       from Layer 1's .theory-card: violet accent instead of orange,
+       so the reader can tell at a glance which layer they're reading. ── */
+  .layer2-stack { display: flex; flex-direction: column; gap: 22px; }
+  .layer2-banner {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    font-size: 0.86rem; font-weight: 700; letter-spacing: 0.01em;
+    color: #c3aef5;
+    background: rgba(155,127,224,0.08);
+    border: 1px solid rgba(155,127,224,0.32);
+    border-radius: 10px;
+    padding: 12px 20px;
+  }
+  .layer2-banner .layer2-tag {
+    background: rgba(155,127,224,0.22); border: 1px solid rgba(155,127,224,0.5);
+    border-radius: 100px; padding: 3px 11px; font-size: 0.68rem;
+    letter-spacing: 0.10em; text-transform: uppercase;
+  }
+  .layer2-card {
+    background: rgba(155,127,224,0.025);
+    border: 1px solid rgba(155,127,224,0.16);
+    border-left: 3px solid rgba(155,127,224,0.55);
+    border-radius: var(--radius);
+    padding: 30px 34px;
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .layer2-card .theory-section h3 { color: #c3aef5; }
+  .layer2-card table.spec-table tr.row-compliant td { background: rgba(155,127,224,0.10); }
+  .layer2-card table.spec-table tr.row-compliant td:first-child { border-left: 3px solid #9b7fe0; }
+
+  /* ── Honest scope: Can-claim / Cannot-claim columns ───────────── */
+  .scope-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .scope-col { border-radius: 12px; padding: 20px 22px; background: rgba(255,255,255,0.02); }
+  .scope-col.can { border: 1px solid rgba(127,216,88,0.25); border-left: 3px solid rgba(127,216,88,0.5); }
+  .scope-col.cannot { border: 1px solid rgba(224,122,122,0.25); border-left: 3px solid rgba(224,122,122,0.5); }
+  .scope-col h4 {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .scope-col.can h4 { color: #7fd858; }
+  .scope-col.cannot h4 { color: #e07a7a; }
+  .scope-col ul { margin: 0 0 0 1.1em; display: flex; flex-direction: column; gap: 8px; }
+  .scope-col li { font-size: 0.88rem; color: var(--text); line-height: 1.62; }
+
+  /* ── Expandable condensed rationale (details/summary — document-first, no form fields) ── */
+  .rationale-details {
+    border-radius: 10px; border: 1px solid rgba(155,127,224,0.18);
+    background: rgba(155,127,224,0.02); padding: 4px 20px;
+  }
+  .rationale-details summary {
+    cursor: pointer; font-size: 0.86rem; font-weight: 600; color: #c3aef5;
+    padding: 12px 0; list-style: none;
+  }
+  .rationale-details summary::-webkit-details-marker { display: none; }
+  .rationale-details summary::before { content: "▸ "; }
+  .rationale-details[open] summary::before { content: "▾ "; }
+  .rationale-details .rationale-body { padding-bottom: 16px; }
+
   @media (max-width: 640px) {
     .tool-nav { padding: 14px 16px; }
     .tool-main { padding: 40px 18px 70px; }
@@ -895,10 +958,105 @@
        ══════════════════════════════════════════════════════════ -->
   <section id="prototype-protocol-slot" class="animate-in" style="--delay: 0.46s;">
     <div class="part-label"><span class="num">10</span><h2>Actual prototype protocol &amp; deviations</h2></div>
-    <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-06 (Layer 2 — ISO-requirement | prototype-reality | justification table) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-06 (the actual prototype test protocol and its justified deviations from the layer above).</p>
-    </div>
+    <div class="layer2-stack">
+      <div class="layer2-banner"><span class="layer2-tag">Layer 2</span> The Actual Prototype Protocol and Justified Deviations</div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>Bridge from the layer above</h3>
+          <p>Sections 1&ndash;9 above are the <b>top layer</b> &mdash; the market-grade protocol as it
+            <i>should</i> be run if this pump went to market. What follows is the <b>bottom layer</b>: the
+            method actually used on <b>proto-02 v2.3</b>, and the reasoned justification for every deviation
+            from that restrictive ideal, given where the project actually stands &mdash; a single prototype
+            build, tested with a 0.1 mg balance two orders of magnitude coarser than the ideal requires. These
+            deviations are documented, not hidden: reasoned engineering judgment, not apology.</p>
+          <p>The measured baseline that motivates the whole design below: v2.3 delivered
+            <b>2.95 &micro;L/stroke at 180 rpm (&minus;41%)</b> against the 5 &micro;L target, and a
+            revolution-count check (E7) confirmed <b>no missed motor steps</b> at any speed, including 1/16
+            microstepping. So the deficit is <b>volumetric</b> &mdash; a real property of the pump to be
+            characterised &mdash; not a step-loss artefact.</p>
+        </div>
+      </div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>The two-axis model &mdash; accuracy vs. precision</h3>
+          <p>A pump has <b>two</b> performance axes, and they are not the same thing:</p>
+          <div class="table-wrap">
+            <table class="spec-table">
+              <thead>
+                <tr><th>Axis</th><th>Question</th><th>Metric</th><th>Calibratable after the fact?</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Accuracy</td>
+                  <td>Does it hit the target volume?</td>
+                  <td>mean &micro;L/stroke vs 5 &micro;L</td>
+                  <td><b>Yes</b> &mdash; a step-count multiplier. Off by 41%? Command 41% more steps.</td>
+                </tr>
+                <tr>
+                  <td>Precision</td>
+                  <td>Is it consistent stroke-to-stroke?</td>
+                  <td>CV = SD/mean (%)</td>
+                  <td><b>No</b> &mdash; random scatter cannot be calibrated away.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="math-block">$$CV \;=\; \frac{SD}{\bar{V}}\times 100\%$$</div>
+          <p><b>Accuracy is calibratable, precision is not.</b> Precision (CV &le; 5%, the pass gate) is
+            therefore the <b>fundamental figure of merit</b>; accuracy only needs to be <i>known</i>, not
+            perfect. A test that spends all its effort on the mean and skimps on the CV is testing the wrong
+            axis.</p>
+        </div>
+      </div>
+
+      <div class="layer2-card">
+        <div class="theory-section">
+          <h3>The binding constraint &mdash; a 0.1 mg balance</h3>
+          <p>Our balance reads to <b>0.1 mg (0.0001 g)</b>. This is the single most important limitation, and
+            every design choice below is shaped by it. Set against the top layer's own
+            <a href="#balance-requirements">Table 3 balance-requirement grades (Section 3)</a>:</p>
+          <div class="table-wrap">
+            <table class="spec-table">
+              <thead>
+                <tr><th>Delivered volume</th><th>Table 3 requires</th><th>Our 0.1 mg balance</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>&lt; 0.5 &micro;L</td><td class="n">0.0001 mg</td><td>not compliant</td></tr>
+                <tr><td>0.5&ndash;20 &micro;L</td><td class="n">0.001 mg</td><td>not compliant (100&times; too coarse)</td></tr>
+                <tr><td>20&ndash;200 &micro;L</td><td class="n">0.01 mg</td><td>not compliant (10&times; too coarse)</td></tr>
+                <tr class="row-compliant"><td>200&ndash;10,000 &micro;L</td><td class="n">0.1 mg</td><td>compliant</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Our balance is metrologically honest <b>only for deliveries &ge; 200 &micro;L</b>. A single
+            5 &micro;L dose = 5 mg; against a ~0.1 mg per-weighing noise floor that is a <b>~2&ndash;3% floor
+            on every single-dose reading</b> &mdash; which at 900 mg (a large collection) becomes ~0.01%,
+            invisible.</p>
+        </div>
+
+        <div class="theory-section">
+          <h3>Three tricks that make a coarse balance sufficient</h3>
+          <ol>
+            <li><b>Mean from the slope.</b> Fit <i>delivered = m&middot;strokes + b</i> using only the
+              <b>compliant (&ge;200 &micro;L)</b> points. The slope <i>m</i> = volume per stroke, at ISO
+              grade, with no micro-balance. The 5 &micro;L prediction is <i>m&middot;1 + b</i> &mdash; it
+              rides on the slope, not on a 5 mg reading.</li>
+            <li><b>Per-stroke CV via &radic;N (root-N scaling).</b> Measure the CV of a large collection (300
+              strokes) where the balance is clean, then scale back to the single stroke:
+              <div class="math-block">$$CV_{stroke} \;=\; CV_{collection}\times\sqrt{N}$$</div>
+              Precision measured where the scale is honest, scaled back to the single stroke &mdash; valid if
+              strokes are independent (the CV-vs-volume shape, &sect;5.3, reveals whether they are).</li>
+            <li><b>Same-instrument comparison (pipette).</b> Weigh the pump's 5 &micro;L and a calibrated
+              pipette's 5 &micro;L on the <i>same</i> balance, same method, interleaved. The scale's
+              systematic error biases both equally, so the <b>comparison</b> is valid even though neither
+              absolute number is ISO grade:
+              <div class="math-block">$$SD_{observed}^2 \;=\; SD_{pump}^2 \;+\; SD_{scale}^2$$</div></li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /layer2-stack -->
   </section>
 
 </main>
