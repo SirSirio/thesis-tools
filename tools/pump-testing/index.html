@@ -580,8 +580,40 @@
   <section id="trueness-precision" class="animate-in" style="--delay: 0.30s;">
     <div class="part-label"><span class="num">06</span><h2>Trueness &amp; precision &mdash; the pass/fail benchmark</h2></div>
     <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-02 (ISO 8655 pipette-grade CV/trueness vs ISO 23783-2 Table 1 method-uncertainty) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-02.</p>
+      <div class="theory-section">
+        <h3>ISO 8655-2:2022 &mdash; the pipette-grade benchmark structure</h3>
+        <p>The pass/fail benchmark this protocol borrows <i>by analogy</i> (<a href="#framing">Section 1</a>) is
+          ISO 8655-2:2022's permissible-error table. Its confirmed structure: two bounded error types
+          &mdash; a systematic-error (trueness) limit and a random-error (precision, CV) limit &mdash; specified
+          at each of the three test points (100%/50%/10% of nominal, <a href="#replicates">Section 5</a>), with
+          both limits <b>tightening toward larger volumes</b> (smaller deliveries are permitted a wider
+          relative tolerance).</p>
+        <p>The <b>exact percentage values</b> of ISO 8655-2:2022's permissible-error table at the pump's
+          ~5&nbsp;&micro;L stroke volume are <span class="tag-unverified">unverified &mdash; obtain via DTU
+          library</span>: the standard is paywalled and every attempt to retrieve the actual table this
+          research session hit a paywall, an access block, or returned figures that could not be traced to a
+          visible authoritative source. Only the confirmed structure above is stated as fact; no specific
+          percentage is quoted here as if it were verified.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>ISO 23783-2 Table 1 &mdash; method uncertainty, NOT a device spec</h3>
+        <p>ISO 23783-2's own Table 1 (&sect;5.1, overview of measurement methods) lists <b>1.4% systematic /
+          0.6% random</b> as the <i>typical error achievable by the single-channel gravimetric method itself</i>
+          at 0.5&ndash;20&nbsp;&micro;L, when correctly executed. This number describes how well the
+          <b>measurement method</b> can resolve a delivered volume &mdash; it is <b>not a device pass/fail
+          specification</b>, and it must never be read as one.</p>
+        <p class="callout callout--warn">Reading "the gravimetric method can resolve to 1.4%/0.6%" as "the
+          pump must be accurate to 1.4%/0.6%" would be a <b>category error</b>: one is a measurement-method
+          uncertainty budget for the test itself, the other would be a claim about the device under test. This
+          protocol keeps the two numbers in clearly separate boxes &mdash; the method-uncertainty figure above,
+          and the device benchmark (ISO 8655-2, unverified exact numbers) in the section above &mdash; and
+          never lets one substitute for the other.</p>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 8655-2:2022 permissible-error table (structure confirmed,
+        exact values <span class="tag-unverified">unverified</span>); ISO 23783-2 Table 1 (&sect;5.1, method
+        overview, 1.4%/0.6% at 0.5&ndash;20&nbsp;&micro;L).</p>
     </div>
   </section>
 
@@ -591,8 +623,45 @@
   <section id="reporting-uncertainty" class="animate-in" style="--delay: 0.34s;">
     <div class="part-label"><span class="num">07</span><h2>Reporting &amp; measurement uncertainty</h2></div>
     <div class="theory-card">
-      <!-- Scaffolded in Plan 09-01; authored in Plan 09-02 (ISO 23783-3 gap, EURAMET CG-19, GUM approach) -->
-      <p class="stub-note">Section content pending — authored in Plan 09-02.</p>
+      <div class="theory-section">
+        <h3>The honest gap: ISO 23783-3 is delegated, not held</h3>
+        <p>ISO 23783-2 &sect;9 (Reporting) states explicitly: "measurement results, traceability, and
+          measurement uncertainty shall be reported in accordance with <b>ISO 23783-3</b>." Part 2 &mdash; the
+          part this protocol is built on &mdash; does not itself specify how results, traceability, or
+          measurement uncertainty are to be reported; that entire specification/reporting layer belongs to Part
+          3. <b>ISO 23783-3 is not in this project's possession and its content is not verified here</b> &mdash;
+          this gap is named honestly rather than paraphrased, matching the same discipline applied to the
+          unverified ISO 8655-2 numbers in <a href="#trueness-precision">Section 6</a>.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Two approaches to measurement uncertainty (&sect;8.2)</h3>
+        <ul>
+          <li><b>Whole-system statistical approach</b> &mdash; estimate measurement uncertainty empirically
+            from precision/bias studies and interlaboratory comparisons of the complete measurement system,
+            without decomposing it into individual error sources.</li>
+          <li><b>Measurement-model (GUM) approach</b> &mdash; build an explicit model of every input quantity
+            (mass readings, density values, air buoyancy, balance calibration) and propagate each term's
+            uncertainty through the model, per <b>ISO/IEC Guide 98-3</b> (the "Guide to the Expression of
+            Uncertainty in Measurement," GUM).</li>
+        </ul>
+        <p>ISO 23783-2 &sect;D.7 additionally references <b>EURAMET CG-19</b> ("Guidelines on the Calibration of
+          Non-Automatic Weighing Instruments" family / gravimetric-procedure MSU guidance) as the specific
+          calibration-guide route for estimating measurement uncertainty in this gravimetric procedure.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Thermal-expansion correction &mdash; not applicable here</h3>
+        <p>ISO 23783-2 &sect;7 defines an optional thermal-expansion correction,
+          <i>V<sub>L,tc</sub> = V<sub>L</sub>&middot;[1&minus;&beta;(t<sub>T</sub>&minus;t<sub>ref</sub>)]</i>,
+          for devices with a known, manufacturer-stated thermal-expansion coefficient &beta;. This correction is
+          <b>not applicable</b> to the prototype: there is no calibrated &beta; for a 3D-printed pump housing,
+          so the correction term is omitted rather than guessed.</p>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 23783-2 &sect;9 (reporting delegated to Part 3, unavailable);
+        &sect;8.2 (whole-system statistical vs GUM/ISO IEC Guide 98-3 measurement-model approaches); &sect;D.7
+        (EURAMET CG-19); &sect;7 (thermal-expansion correction, not applicable).</p>
     </div>
   </section>
 
