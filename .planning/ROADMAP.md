@@ -43,6 +43,8 @@ Plans:
 - [x] **Phase 6: System Architecture Explorer** - Promote the ad-hoc electronics-architecture cost/complexity matrix into a first-class tool under `tools/`, leaving the decision records in `prototypes/System-Architecture/` (completed 2026-07-15)
 - [x] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs (completed 2026-07-16)
 - [x] **Phase 7: Thesis Showcase Landing Page** - Turn `index.html` from a tool directory into a thesis showcase: project introduction, video/media, and motion above the fold, with the tool grid demoted to one section among several (completed 2026-07-17)
+- [x] **Phase 8: Dispense Choreography & Throughput Simulator** - Configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line, answering the concurrency question empirically (completed 2026-07-20)
+- [ ] **Phase 9: Pump Testing** - A `tools/pump-testing/` page pairing the market-grade ISO 23783-2 gravimetric qualification protocol with the actual prototype test protocol and its justified deviations
 
 ## Phase Details
 
@@ -215,6 +217,7 @@ Plans:
 | 6.1 Architecture Refinement | — | Complete | 2026-07-16 |
 | 7. Thesis Showcase Landing Page | — | Complete | 2026-07-17 |
 | 8. Dispense Choreography & Throughput Simulator | 4/4 | Complete | 2026-07-20 |
+| 9. Pump Testing | 0/0 | Not planned | — |
 
 ### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
 
@@ -308,3 +311,16 @@ Plans:
 **Wave 4** *(blocked on Wave 3 completion)*
 
 - [x] 07-04-PLAN.md — Collapse five resource sections to three, apply Sirio's copy edits, prove the invariants
+
+### Phase 9: Pump Testing tool
+
+A new `tools/pump-testing/` page documenting how a market-grade dispensing-accuracy qualification of the peristaltic pump should be run — the righteous protocol (ISO 23783-2 single-channel gravimetric method with full specs: balance readability, environmental controls, evaporation handling, replicate counts, mass→volume conversion, and reporting rules, plus alternate methods where they apply) — and, below it, the actual prototype test protocol used, with the logical justification for each deviation from the restrictive ISO requirements given prototype-stage hardware limits.
+
+**Goal:** [To be planned — run /gsd:discuss-phase 9]
+**Requirements**: TBD
+**Depends on:** Phase 8
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run /gsd-plan-phase 9 to break down)
