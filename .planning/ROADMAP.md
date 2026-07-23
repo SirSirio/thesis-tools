@@ -317,18 +317,20 @@ Plans:
 
 A new `tools/pump-testing/` page documenting how a market-grade dispensing-accuracy qualification of the peristaltic pump should be run — the righteous protocol (ISO 23783-2 single-channel gravimetric method with full specs: balance readability, environmental controls, evaporation handling, replicate counts, mass→volume conversion, and reporting rules, plus alternate methods where they apply) — and, below it, the actual prototype test protocol used, with the logical justification for each deviation from the restrictive ISO requirements given prototype-stage hardware limits.
 
-**Goal:** Ship a self-contained, document-first, QR-citable protocol page at `tools/pump-testing/index.html` (+ co-located `SPEC.md`) presenting the top-layer market-grade dispensing-accuracy qualification protocol — ISO 23783-2 Annex D gravimetric method as the applicable test method and ISO 8655 pipette-equivalence as the analogical benchmark, deep accuracy metrology core with the other go-to-market dimensions mapped lighter — and leaving a clean, clearly-labeled, un-populated slot for the deferred bottom-layer prototype protocol (D-04). No calculator, no live computation.
+**Goal:** Ship a self-contained, document-first, QR-citable protocol page at `tools/pump-testing/index.html` (+ co-located `SPEC.md`) presenting BOTH layers: (top) the market-grade dispensing-accuracy qualification protocol — ISO 23783-2 Annex D gravimetric method as the applicable test method and ISO 8655 pipette-equivalence as the analogical benchmark, deep accuracy metrology core with the other go-to-market dimensions mapped lighter — and (bottom) the actual proto-02 v2.3 test protocol + justified deviations (the ISO-requirement | prototype-reality | justification table, the 0.1 mg-balance workarounds, the pipette head-to-head, honest scope), authored from the user-supplied TEST-PROTOCOL.md. No calculator, no live computation (the live results calculator stays deferred to a future phase).
 **Requirements**: D-01, D-02, D-03, D-04 (CONTEXT.md decisions — no formal REQ-IDs govern this phase)
 **Depends on:** Phase 8
-**Plans:** 5 plans
+**Plans:** 6 plans
 
 Plans:
 **Wave 1**
 - [ ] 09-01-PLAN.md — Page shell + local KaTeX vendoring + Sections 1-3 (dual-frame framing, Annex D gravimetric method, Table 3 balance requirements)
-**Wave 2**
+**Wave 2** *(blocked on Wave 1 — same file)*
 - [ ] 09-02-PLAN.md — Deep metrological core: Sections 4-7 (Annex A Z-factor formulas, n=10 three-point convention, trueness/precision with [unverified] tagging, reporting/uncertainty)
-**Wave 3**
-- [ ] 09-03-PLAN.md — Sections 8-10 (alternate-methods comparison + GRM/trumpet rejections, lighter go-to-market map, deferred bottom-layer slot)
-**Wave 4**
-- [ ] 09-04-PLAN.md — Co-located SPEC.md (purpose, normative values, formulas, standards, assumptions, deferred scope)
+**Wave 3** *(blocked on Wave 2 — same file)*
+- [ ] 09-03-PLAN.md — Top-layer Sections 8-9 (alternate-methods comparison + GRM/trumpet rejections, lighter go-to-market map)
+**Wave 4** *(blocked on Wave 3; disjoint files, parallel)*
 - [ ] 09-05-PLAN.md — Integration chrome (landing-page card EN+IT, README row, repo-root ROADMAP row, CLAUDE.md folder-structure entry)
+- [ ] 09-06-PLAN.md — Layer-2 bottom section: actual proto-02 v2.3 protocol + justified deviations (two-axis model, 0.1 mg-balance workarounds, ISO-requirement | prototype-reality | justification table cross-linked to top layer, pipette head-to-head, honest scope) — authored from user-supplied TEST-PROTOCOL.md
+**Wave 5** *(blocked on Wave 4 — SPEC documents the finished page incl. Layer 2)*
+- [ ] 09-04-PLAN.md — Co-located SPEC.md (purpose, normative values, formulas, standards, assumptions, BOTH layers, still-deferred live-calculator scope)
