@@ -12,10 +12,12 @@ Companion to [`TEST-PROTOCOL.md`](TEST-PROTOCOL.md) (method & rationale). This f
 
 ### R1.1 Raw data (delivered mass, g)
 
+Values are shown at the balance's full resolution — **4 decimal places (0.1 mg)**, exactly as read off the display.
+
 | # | 5 µL | 50 µL |
 |---|------|-------|
 | 1 | 0.0050 | 0.0491 |
-| 2 | **0.0500** ⚠ | 0.0494 |
+| 2 | 0.0050 | 0.0494 |
 | 3 | 0.0050 | 0.0494 |
 | 4 | 0.0048 | 0.0495 |
 | 5 | 0.0049 | 0.0494 |
@@ -25,13 +27,13 @@ Companion to [`TEST-PROTOCOL.md`](TEST-PROTOCOL.md) (method & rationale). This f
 | 9 | 0.0048 | 0.0495 |
 | 10 | 0.0049 | 0.0496 |
 
-⚠ **Row 2 of the 5 µL column = 0.0500 g is a 10× outlier** (50 mg = 50 µL). Almost certainly a transcription slip (`0.05` for `0.005`) or a single mis-shot. **Excluded from the statistics below — please confirm which it was.** With it included the CV is a meaningless 152 %.
+*(Row 2 of the 5 µL column was recorded as `0.0500` — a transcription typo for `0.0050`, corrected here; it is a normal reading, not an outlier.)*
 
 ### R1.2 Statistics
 
 | Series | n | Mean | SD | **CV** | Scale-limited? |
 |--------|---|------|-----|--------|----------------|
-| **5 µL** (outlier removed) | 9 | 4.90 µL | 0.071 µL | **1.44 %** | **YES** — see below |
+| **5 µL** (all) | 10 | 4.91 µL | 0.074 µL | **1.50 %** | **YES** — see below |
 | **50 µL** (all) | 10 | 49.42 µL | 0.132 µL | **0.27 %** | no |
 | 50 µL (minus 1st shot) | 9 | 49.46 µL | 0.073 µL | 0.15 % | no |
 
@@ -41,7 +43,7 @@ Companion to [`TEST-PROTOCOL.md`](TEST-PROTOCOL.md) (method & rationale). This f
 At 50 µL the delivered mass is ~494 balance counts, so resolution contributes only ~0.02 % — the scale is *not* limiting, and the measured **CV ≈ 0.27 %** (0.15 % excluding the first shot) is the pipette's genuine repeatability. **This is the human benchmark the pump must beat.** It is far better than the ISO 8655 nominal (1.5–3 % at 5 µL) because tip-to-tip variation is excluded and the tip was pre-wetted.
 
 **The 5 µL CV is NOT the pipette — it is the scale floor. [Certain]**
-The nine clean 5 µL readings take only **three distinct values** (4.8 / 4.9 / 5.0 mg) — adjacent 0.1 mg counts. So the "scatter" is the balance quantising, not the pipette varying. The pipette's *true* CV (from the 50 µL data, ~0.15–0.27 %) would need SD ≈ 0.01 mg at 5 µL to see — 10× below what a 0.1 mg balance can resolve. **The measured 1.44 % is an upper bound set by the instrument, not a pipette property.**
+All ten 5 µL readings take only **three distinct values** (4.8 / 4.9 / 5.0 mg) — adjacent 0.1 mg counts. So the "scatter" is the balance quantising, not the pipette varying. The pipette's *true* CV (from the 50 µL data, ~0.15–0.27 %) would need SD ≈ 0.01 mg at 5 µL to see — 10× below what a 0.1 mg balance can resolve. **The measured 1.50 % is an upper bound set by the instrument, not a pipette property.**
 
 > This is the whole premise of the protocol, confirmed with real data: **at 5 µL a 0.1 mg balance measures itself, not the device.** Precision must be read at higher volume (or via √N), never from single 5 µL weighings. It also means the **5 µL pump-vs-pipette head-to-head will likely be floor-limited on both sides** — if both land near ~1.4 %, they are indistinguishable, and the meaningful comparison is at the higher-volume / per-stroke level. `[Likely]`
 
