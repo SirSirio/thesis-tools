@@ -44,6 +44,7 @@ Plans:
 - [x] **Phase 6.1: Architecture Refinement** (INSERTED) - Full-system module schema (all 6 modules, not just pump control), visual design-direction gallery, design-type matrix column, bitbyg sourcing of the newly named parts, and consistency pass over the architecture docs (completed 2026-07-16)
 - [x] **Phase 7: Thesis Showcase Landing Page** - Turn `index.html` from a tool directory into a thesis showcase: project introduction, video/media, and motion above the fold, with the tool grid demoted to one section among several
  (completed 2026-07-17)
+
 - [x] **Phase 8: Dispense Choreography & Throughput Simulator** - Configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line, answering the concurrency question empirically (completed 2026-07-20)
 - [x] **Phase 9: Pump Testing** - A `tools/pump-testing/` page pairing the market-grade ISO 23783-2 gravimetric qualification protocol with the actual prototype test protocol and its justified deviations (completed 2026-07-23)
 
@@ -218,7 +219,7 @@ Plans:
 | 6.1 Architecture Refinement | — | Complete | 2026-07-16 |
 | 7. Thesis Showcase Landing Page | — | Complete | 2026-07-17 |
 | 8. Dispense Choreography & Throughput Simulator | 4/4 | Complete | 2026-07-20 |
-| 9. Pump Testing | 6/6 | Complete   | 2026-07-23 |
+| 9. Pump Testing | 6/6 | Complete    | 2026-07-23 |
 
 ### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
 
@@ -324,13 +325,22 @@ A new `tools/pump-testing/` page documenting how a market-grade dispensing-accur
 
 Plans:
 **Wave 1**
+
 - [x] 09-01-PLAN.md — Page shell + local KaTeX vendoring + Sections 1-3 (dual-frame framing, Annex D gravimetric method, Table 3 balance requirements)
+
 **Wave 2** *(blocked on Wave 1 — same file)*
+
 - [x] 09-02-PLAN.md — Deep metrological core: Sections 4-7 (Annex A Z-factor formulas, n=10 three-point convention, trueness/precision with [unverified] tagging, reporting/uncertainty)
+
 **Wave 3** *(blocked on Wave 2 — same file)*
+
 - [x] 09-03-PLAN.md — Top-layer Sections 8-9 (alternate-methods comparison + GRM/trumpet rejections, lighter go-to-market map)
+
 **Wave 4** *(blocked on Wave 3; disjoint files, parallel)*
+
 - [x] 09-05-PLAN.md — Integration chrome (landing-page card EN+IT, README row, repo-root ROADMAP row, CLAUDE.md folder-structure entry)
 - [x] 09-06-PLAN.md — Layer-2 bottom section: actual proto-02 v2.3 protocol + justified deviations (two-axis model, 0.1 mg-balance workarounds, ISO-requirement | prototype-reality | justification table cross-linked to top layer, pipette head-to-head, honest scope) — authored from user-supplied TEST-PROTOCOL.md
+
 **Wave 5** *(blocked on Wave 4 — SPEC documents the finished page incl. Layer 2)*
+
 - [x] 09-04-PLAN.md — Co-located SPEC.md (purpose, normative values, formulas, standards, assumptions, BOTH layers, still-deferred live-calculator scope)
