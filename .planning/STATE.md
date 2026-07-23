@@ -3,15 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 9 context gathered
-last_updated: "2026-07-23T13:34:31.881Z"
-last_activity: 2026-07-23 -- Phase 09 planning complete
+last_updated: "2026-07-23T13:46:49.610Z"
+last_activity: 2026-07-23
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 6
   total_plans: 38
-  completed_plans: 29
-  percent: 60
+  completed_plans: 30
+  percent: 55
 ---
 
 # Project State
@@ -21,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-30)
 
 **Core value:** Self-contained interactive design tools that support hardware decisions for Proto 1, usable offline from a USB drive and cited in the thesis with QR codes
-**Current focus:** Phase 08 — dispense-choreography-throughput-simulator-tool-interactive-
+**Current focus:** Phase 09 — pump-testing
 
 ## Current Position
 
-Phase: 08
-Plan: Not started
+Phase: 09 (pump-testing) — EXECUTING
+Plan: 2 of 6
 Status: Ready to execute
-Last activity: 2026-07-23 -- Phase 09 planning complete
+Last activity: 2026-07-23
 
-Progress: [█████████░] 93%
+Progress: [████████░░] 81%
 
 ## Performance Metrics
 
@@ -74,6 +73,7 @@ Progress: [█████████░] 93%
 | Phase 08 P02 | 13min | 3 tasks | 1 files |
 | Phase 08 P03 | 6min | 1 tasks | 1 files |
 | Phase 08 P04 | 7min | 2 tasks | 4 files |
+| Phase 09-pump-testing P01 | 15min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -146,6 +146,9 @@ Recent decisions affecting current work:
 - [Phase 08-02]: 08-02: Tasks 1-3 committed as one commit (68f4368) since metrics/Gantt/rack-anim CSS and recompute() wiring were implemented as one coherent, tightly-coupled edit pass
 - [Phase 08-03]: SPEC.md documents the resolved-assumption footnotes (32+(N-1) cycle reading, 3x rack-change convention, flat-additive rack changes, global flow params, A1/A2 fixed-K numerical equality) as permanent record — No new modelling decisions made -- purely documentation of prior-plan (08-01/08-02) choices, matching CLAUDE.md's tool-spec standard
 - [Phase ?]: Landing-page card icon set to timer glyph (U+23F1), placed as terminal Tools-grid card with --rd: 0.5s; CLAUDE.md's system-architecture-explorer tree entry changed from a terminal connector to a mid-list one to append dispense-throughput-simulator as the new last block
+- [Phase 09-01]: KaTeX loaded local-only (no CDN primary), deviating from displaced-volume-model's CDN-primary/local-fallback pattern, per this plan's explicit offline-first requirement
+- [Phase 09-01]: English-only page (no EN/IT toggle), matching the peristaltic-roller-displaced-volume-model precedent for dense, table-heavy thesis content
+- [Phase 09-01]: Stub section pattern (heading + anchor id + italic stub-note naming the owning plan) used for Sections 4-10, so plans 09-02/09-03/09-06 fill them without restructuring
 
 ### Pending Todos
 
@@ -202,7 +205,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-23T12:45:39.072Z
-Stopped at: Phase 9 context gathered
+Last session: 2026-07-23T13:46:49.590Z
+Stopped at: Completed 09-01-PLAN.md
 Resume file: 
-.planning/phases/09-pump-testing/09-CONTEXT.md
+None

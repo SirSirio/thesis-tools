@@ -218,7 +218,7 @@ Plans:
 | 6.1 Architecture Refinement | — | Complete | 2026-07-16 |
 | 7. Thesis Showcase Landing Page | — | Complete | 2026-07-17 |
 | 8. Dispense Choreography & Throughput Simulator | 4/4 | Complete | 2026-07-20 |
-| 9. Pump Testing | 0/0 | Not planned | — |
+| 9. Pump Testing | 1/6 | In Progress|  |
 
 ### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
 
@@ -320,11 +320,11 @@ A new `tools/pump-testing/` page documenting how a market-grade dispensing-accur
 **Goal:** Ship a self-contained, document-first, QR-citable protocol page at `tools/pump-testing/index.html` (+ co-located `SPEC.md`) presenting BOTH layers: (top) the market-grade dispensing-accuracy qualification protocol — ISO 23783-2 Annex D gravimetric method as the applicable test method and ISO 8655 pipette-equivalence as the analogical benchmark, deep accuracy metrology core with the other go-to-market dimensions mapped lighter — and (bottom) the actual proto-02 v2.3 test protocol + justified deviations (the ISO-requirement | prototype-reality | justification table, the 0.1 mg-balance workarounds, the pipette head-to-head, honest scope), authored from the user-supplied TEST-PROTOCOL.md. No calculator, no live computation (the live results calculator stays deferred to a future phase).
 **Requirements**: D-01, D-02, D-03, D-04 (CONTEXT.md decisions — no formal REQ-IDs govern this phase)
 **Depends on:** Phase 8
-**Plans:** 6 plans
+**Plans:** 1/6 plans executed
 
 Plans:
 **Wave 1**
-- [ ] 09-01-PLAN.md — Page shell + local KaTeX vendoring + Sections 1-3 (dual-frame framing, Annex D gravimetric method, Table 3 balance requirements)
+- [x] 09-01-PLAN.md — Page shell + local KaTeX vendoring + Sections 1-3 (dual-frame framing, Annex D gravimetric method, Table 3 balance requirements)
 **Wave 2** *(blocked on Wave 1 — same file)*
 - [ ] 09-02-PLAN.md — Deep metrological core: Sections 4-7 (Annex A Z-factor formulas, n=10 three-point convention, trueness/precision with [unverified] tagging, reporting/uncertainty)
 **Wave 3** *(blocked on Wave 2 — same file)*
