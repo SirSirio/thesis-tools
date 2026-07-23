@@ -1,0 +1,61 @@
+# Proto-02 v2.3 — Test Results Log
+
+Companion to [`TEST-PROTOCOL.md`](TEST-PROTOCOL.md) (method & rationale). This file records **measured data** as the campaign runs. Mass→volume uses 1 mg ≈ 1 µL for water (Z-factor ≈ 0.997 µL/mg at 25 °C → ~+0.3 %, below the noise, omitted per §7 deviations).
+
+> Tags: `[Certain]` (from the numbers) · `[Likely]` (supported inference) · `[Guessing]` (to confirm).
+
+---
+
+## R1 — Pipette reference (the human benchmark)
+
+**Date:** 2026-07-23 · **Setup:** two pipettes (one set to 5 µL, one to 50 µL); **the same tip was reused across all 10 shots of each** — so this is *pipette + technique repeatability* with **tip-to-tip variation excluded**, and the reuse pre-wets the tip after shot 1. Weighed on the 0.1 mg balance, same boat/method as the pump will use.
+
+### R1.1 Raw data (delivered mass, g)
+
+| # | 5 µL | 50 µL |
+|---|------|-------|
+| 1 | 0.0050 | 0.0491 |
+| 2 | **0.0500** ⚠ | 0.0494 |
+| 3 | 0.0050 | 0.0494 |
+| 4 | 0.0048 | 0.0495 |
+| 5 | 0.0049 | 0.0494 |
+| 6 | 0.0049 | 0.0494 |
+| 7 | 0.0049 | 0.0495 |
+| 8 | 0.0049 | 0.0494 |
+| 9 | 0.0048 | 0.0495 |
+| 10 | 0.0049 | 0.0496 |
+
+⚠ **Row 2 of the 5 µL column = 0.0500 g is a 10× outlier** (50 mg = 50 µL). Almost certainly a transcription slip (`0.05` for `0.005`) or a single mis-shot. **Excluded from the statistics below — please confirm which it was.** With it included the CV is a meaningless 152 %.
+
+### R1.2 Statistics
+
+| Series | n | Mean | SD | **CV** | Scale-limited? |
+|--------|---|------|-----|--------|----------------|
+| **5 µL** (outlier removed) | 9 | 4.90 µL | 0.071 µL | **1.44 %** | **YES** — see below |
+| **50 µL** (all) | 10 | 49.42 µL | 0.132 µL | **0.27 %** | no |
+| 50 µL (minus 1st shot) | 9 | 49.46 µL | 0.073 µL | 0.15 % | no |
+
+### R1.3 What this tells us
+
+**The 50 µL CV is real, and it is the benchmark. [Certain]**
+At 50 µL the delivered mass is ~494 balance counts, so resolution contributes only ~0.02 % — the scale is *not* limiting, and the measured **CV ≈ 0.27 %** (0.15 % excluding the first shot) is the pipette's genuine repeatability. **This is the human benchmark the pump must beat.** It is far better than the ISO 8655 nominal (1.5–3 % at 5 µL) because tip-to-tip variation is excluded and the tip was pre-wetted.
+
+**The 5 µL CV is NOT the pipette — it is the scale floor. [Certain]**
+The nine clean 5 µL readings take only **three distinct values** (4.8 / 4.9 / 5.0 mg) — adjacent 0.1 mg counts. So the "scatter" is the balance quantising, not the pipette varying. The pipette's *true* CV (from the 50 µL data, ~0.15–0.27 %) would need SD ≈ 0.01 mg at 5 µL to see — 10× below what a 0.1 mg balance can resolve. **The measured 1.44 % is an upper bound set by the instrument, not a pipette property.**
+
+> This is the whole premise of the protocol, confirmed with real data: **at 5 µL a 0.1 mg balance measures itself, not the device.** Precision must be read at higher volume (or via √N), never from single 5 µL weighings. It also means the **5 µL pump-vs-pipette head-to-head will likely be floor-limited on both sides** — if both land near ~1.4 %, they are indistinguishable, and the meaningful comparison is at the higher-volume / per-stroke level. `[Likely]`
+
+**First-shot effect is visible. [Likely]**
+The first 50 µL shot (49.1) sits ~0.3 mg below the rest, which then cluster tightly. Consistent with an **un-wetted tip on shot 1** — exactly why the protocol pre-wets ≥5× and discards a priming run. Real, small, and now evidenced in the data.
+
+**Accuracy:** 5 µL pipette delivers 4.90 µL (−2 %), 50 µL delivers 49.4 µL (−1.2 %) — both slightly low but consistent, within pipette tolerance. Irrelevant to the CV argument, and it cancels in the same-scale comparison anyway.
+
+### R1.4 Consequence for the pump comparison
+
+Benchmark set: **manual pipetting ≈ 0.15–0.27 % CV at 50 µL** (tip fixed, pre-wetted). The pump's precision — back-calculated to a comparable volume via √N from its high-volume runs — is what gets compared against this. The direct 5 µL head-to-head stays in the protocol (it is the operating dose and the scale-cancellation still holds *if* anything rises above the floor), but **R1 already tells us the honest comparison lives at the higher-volume level**, not at a single 5 µL weighing. `[Likely]`
+
+---
+
+## R2 — Pump factorial
+
+*Pending — to be filled from [`pump-campaign-runsheet-with-240.csv`](pump-campaign-runsheet-with-240.csv).*

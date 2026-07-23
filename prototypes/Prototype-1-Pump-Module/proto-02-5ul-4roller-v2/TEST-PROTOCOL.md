@@ -3,6 +3,7 @@
 **Device under test:** proto-02 v2.3 head, 5 µL 4-roller peristaltic pump (single bearing per roller, gap 1.52 mm measured, concentric).
 **Purpose of this document:** record *why* the test campaign is designed the way it is — not just the run sheet, but the reasoning behind every choice (volumes, speeds, replicate counts, the pipette comparison), what the data will look like, and — honestly — what it can and cannot prove.
 **Run sheets:** [`pump-campaign-runsheet-with-240.csv`](pump-campaign-runsheet-with-240.csv) — the **extensive** sweep being run (11 conditions / 76 dispenses, incl. 240 rpm) · [`pump-campaign-runsheet.csv`](pump-campaign-runsheet.csv) — the core 9-condition subset (no 240). The **pipette** and **evaporation-blank** runs are manual (not a CSV) — see §9.
+**Measured data:** recorded in [`TEST-RESULTS.md`](TEST-RESULTS.md).
 
 > Confidence tags used throughout: `[Certain]` (follows from measurement/definition), `[Likely]` (well-supported inference), `[Guessing]` (hypothesis to be tested).
 
