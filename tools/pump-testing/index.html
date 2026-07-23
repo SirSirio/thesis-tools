@@ -235,8 +235,63 @@
   <section id="framing" class="animate-in" style="--delay: 0.10s;">
     <div class="part-label"><span class="num">01</span><h2>Framing — two standards, two jobs</h2></div>
     <div class="theory-card">
-      <!-- Authored in Plan 09-01, Task 2 -->
-      <p class="stub-note">Section content pending — authored in Plan 09-01, Task 2.</p>
+      <div class="theory-section">
+        <h3>Two stacked layers</h3>
+        <p>This page documents a dispensing-accuracy qualification for the peristaltic pump as two stacked
+          layers. The layer you are reading now is the <b>top layer</b> — the market-grade "righteous"
+          protocol: how this qualification <i>should</i> be run if the pump went to market, grounded in the
+          applicable metrology standards. Sections 2&ndash;7 specify the dispensing-accuracy core in full depth;
+          Sections 8&ndash;9 map the surrounding methods landscape and the wider go-to-market picture more
+          lightly. The <b>bottom layer</b> — the actual method used on the prototype, with the reasoned
+          justification for each deviation from this restrictive ideal — lives in
+          <a href="#prototype-protocol-slot">Section 10, Actual prototype protocol &amp; deviations</a>. That
+          layer is authored separately (Plan 09-06); this plan establishes the top layer and the slot it
+          fills into.</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>The dual-frame verdict</h3>
+        <p>Which standard governs a qualification of a modular, point-of-care peristaltic dispensing pump is
+          not a single-standard question. Two standards apply, but they do two different jobs, and neither is
+          the other's substitute:</p>
+        <div class="dual-frame-grid">
+          <div class="frame-card">
+            <span class="frame-kicker">Test method</span>
+            <p><b>ISO 23783-2 Annex D</b> &mdash; the single-channel gravimetric procedure. The pump is,
+              literally, an automated liquid handling system (ALHS) by the standard's own scope statement
+              (&sect;1): "applicable to all ALHS&hellip; which perform liquid handling tasks without human
+              intervention." Annex D is written for exactly this device shape &mdash; one channel, any liquid,
+              contact delivery into a vessel &mdash; so it supplies <i>how to measure</i>: apparatus,
+              preparation, environmental control, evaporation handling, mass&rarr;volume conversion.</p>
+          </div>
+          <div class="frame-card">
+            <span class="frame-kicker">Performance benchmark</span>
+            <p><b>ISO 8655</b> (Parts 2 and 6) &mdash; the piston-operated-pipette accuracy/precision standard,
+              applied here <i>by analogy</i>, not by literal compliance claim (the pump is not a
+              piston-operated apparatus). The device's job is to replace a person pipetting by hand, so
+              pipette-grade trueness/CV is the natural "what good looks like" comparison &mdash; it supplies
+              <i>what counts as accurate</i>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="theory-section">
+        <h3>An honest correction: Part 2 does not set device tolerances</h3>
+        <p>ISO 23783-2 Part 2 is a <b>test method</b> standard, not a device specification. Its own Reporting
+          clause (&sect;9) states that "measurement results, traceability, and measurement uncertainty shall
+          be reported in accordance with <b>ISO 23783-3</b>" &mdash; the part of the family that would set
+          ALHS-native pass/fail tolerances. ISO 23783-3 is not in this project's possession and its content is
+          not verified here; that gap is named honestly rather than paraphrased (see
+          <a href="#reporting-uncertainty">Section 7</a>).</p>
+        <p>Table 1 of ISO 23783-2 (an overview of methods, &sect;5.1) lists <i>typical systematic/random error
+          figures achievable by the measurement method itself</i> &mdash; a measurement-uncertainty budget for
+          the test, not a specification for the device. Reading "the gravimetric method can resolve to 1.4%
+          systematic / 0.6% random at 0.5&ndash;20 &micro;L" as "the device must be accurate to 1.4%/0.6%" would
+          be a category error this protocol deliberately avoids (see <a href="#trueness-precision">Section
+          6</a> for where the method-uncertainty and device-benchmark numbers are kept clearly separate).
+          Because Part 2 supplies no device-level tolerance and Part 3 is unavailable, the "what good
+          performance looks like" number has to come from ISO 8655 instead &mdash; the benchmark frame above.</p>
+      </div>
     </div>
   </section>
 
@@ -246,8 +301,57 @@
   <section id="method-gravimetric" class="animate-in" style="--delay: 0.14s;">
     <div class="part-label"><span class="num">02</span><h2>Gravimetric test method &mdash; ISO 23783-2 Annex D</h2></div>
     <div class="theory-card">
-      <!-- Authored in Plan 09-01, Task 2 -->
-      <p class="stub-note">Section content pending — authored in Plan 09-01, Task 2.</p>
+      <div class="theory-section">
+        <h3>Apparatus &amp; test liquid</h3>
+        <p>The reference method is single-channel gravimetric weighing (<b>Annex D</b>): the pump delivers a
+          known number of strokes into a vessel resting on an analytical balance, and the mass gain is
+          converted to volume. The test liquid is <b>ISO 3696 grade 3 water</b> &mdash; the standard reference
+          liquid for gravimetric dispensing verification, chosen for its well-characterised, temperature-
+          dependent density (see the Tanaka formula in <a href="#mass-to-volume">Section 4</a>).</p>
+      </div>
+
+      <div class="theory-section">
+        <h3>Preparation (&sect;6.3)</h3>
+        <ul>
+          <li>Pre-rinse the delivery path <b>&ge;5&times;</b> to waste on every tip/tube change, before any
+            measurement cycle begins.</li>
+          <li>Bring the pump, test liquid, and balance to <b>thermal equilibrium (&plusmn;2&nbsp;&deg;C) for
+            &ge;2&nbsp;hours</b> before testing starts.</li>
+          <li>Allow the balance to settle for <b>&ge;6&nbsp;seconds</b> before reading each mass (&sect;6.1).</li>
+        </ul>
+      </div>
+
+      <div class="theory-section">
+        <h3>Environmental conditions &mdash; Table D.1</h3>
+        <div class="table-wrap">
+          <table class="spec-table">
+            <caption>ISO 23783-2 Annex D, Table D.1 &mdash; test conditions for the gravimetric method. These
+              are the gravimetric-method-specific refinement of &sect;6.3's general &plusmn;1&nbsp;&deg;C /
+              &plusmn;5% RH in-test tolerance.</caption>
+            <thead>
+              <tr><th>Environmental condition</th><th>Range</th><th>Permitted change during test</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Water temperature</td><td>17&nbsp;&deg;C &ndash; 30&nbsp;&deg;C</td><td>&le; 1&nbsp;&deg;C</td></tr>
+              <tr><td>Air temperature</td><td>17&nbsp;&deg;C &ndash; 30&nbsp;&deg;C</td><td>&le; 3&nbsp;&deg;C</td></tr>
+              <tr><td>Relative humidity</td><td>45% &ndash; 70%</td><td>&le; 10%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="theory-section">
+        <h3>Evaporation-blank workflow (&sect;D.5.2)</h3>
+        <p>Before any test-liquid measurements begin, the method requires <b>&ge;10 blank measurement
+          cycles</b> &mdash; empty dispense/weigh cycles run at the same cycle time as a real delivery &mdash;
+          to characterise the evaporation rate of the open vessel under the actual test conditions. This
+          blank baseline is subtracted from subsequent test-liquid measurements (formulas D.1&ndash;D.2) so
+          that evaporation loss during the weighing interval is not mistaken for a dispensing error.</p>
+      </div>
+
+      <p class="callout callout--info">Cites: ISO 23783-2 Annex D (single-channel gravimetric method), &sect;6.3
+        (general preparation), &sect;6.1 (balance settle time), Table D.1 (environmental conditions), &sect;D.5.2
+        (evaporation blank).</p>
     </div>
   </section>
 
