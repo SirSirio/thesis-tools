@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-23T14:12:21.631Z"
+last_updated: "2026-07-23T14:18:47.587Z"
 last_activity: 2026-07-23
 progress:
   total_phases: 11
   completed_phases: 6
   total_plans: 38
-  completed_plans: 33
+  completed_plans: 34
   percent: 55
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-05-30)
 ## Current Position
 
 Phase: 09 (pump-testing) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-07-23
 
-Progress: [█████████░] 89%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ Progress: [█████████░] 89%
 | Phase 09 P02 | 20min | 3 tasks | 1 files |
 | Phase 09 P03 | 15min | 2 tasks | 1 files |
 | Phase 09 P06 | 20min | 3 tasks | 1 files |
+| Phase 09 P05 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -159,6 +160,7 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 09-03]: Titrimetric (ISO 8655-7) kept as a 'mention only' row with an unverified-applicability tag rather than omitted, per RESEARCH.md RQ-2 guidance
 - [Phase 09-06]: Layer 2 uses a distinct violet accent CSS family (.layer2-card) rather than reusing Layer 1's orange .theory-card or Section 9's neutral .map-card — so the two-layer structure the user asked to preserve literally is visually legible without reading prose
 - [Phase 09-06]: Deviation table's six rows and top-layer cross-links transcribed directly from the user-supplied TEST-PROTOCOL.md section 7 — honors D-04's superseded note that this document is now the primary source for the bottom layer
+- [Phase ?]: [Phase 09-05]: Landing-page card icon set to balance glyph (U+2696); CLAUDE.md dispense-throughput-simulator tree connector changed terminal to mid-list to append tools/pump-testing/ as new last block, plus a closing-chrome paragraph naming the D-01/D-03 two-layer no-calculator framing
 
 ### Pending Todos
 
@@ -215,7 +217,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-23T14:12:21.611Z
-Stopped at: Completed 09-06-PLAN.md
+Last session: 2026-07-23T14:18:47.563Z
+Stopped at: Completed 09-05-PLAN.md
 Resume file: 
 None
