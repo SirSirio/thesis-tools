@@ -689,14 +689,14 @@
 
           <div class="proto-node" id="node-proto-02">
             <button class="proto-card" data-proto="proto-02">
-              <div class="proto-card-thumb-ph" aria-hidden="true">v2.3 printing</div>
+              <div class="proto-card-thumb-ph" aria-hidden="true">v2.3 tested ✅</div>
               <div class="proto-card-tag">Proto 02 · 2026</div>
               <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
-              <p class="proto-card-purpose">The first build meant to work to spec. v2.1 didn't seal (two stacked errors); v2.2 rebuilt the rotor to <strong>2R = 39.40</strong> and turned the printer into a calibrated model. v2.3 recomputes the head on that model and re-centres it on the shaft — printing now.</p>
+              <p class="proto-card-purpose">The first build that works to spec. v2.1 didn't seal; v2.2 rebuilt the rotor and turned the printer into a calibrated model; v2.3 spent both — gap <strong>1.52 measured</strong>, and the gravimetric campaign delivered <strong>4.56 µL/stroke, linear, with 100-stroke CV below the manual-pipette reference</strong>.</p>
               <div class="proto-card-kpi">
-                <span class="kpi-pill">rotor ✅ 2R 39.40</span>
-                <span class="kpi-pill">print model v2 ✓</span>
-                <span class="kpi-pill">v2.3 head → first seal</span>
+                <span class="kpi-pill">4.56 µL/stroke (−8.9 %)</span>
+                <span class="kpi-pill">CV 0.25 % vs pipette 0.27 %</span>
+                <span class="kpi-pill">180 rpm optimum</span>
               </div>
               <span class="proto-card-cta">Explore →</span>
             </button>
@@ -1029,8 +1029,8 @@
             <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor hits <strong style="color:#5fd08a">2R = 39.40 (R = 19.70)</strong>, play-free (single bearing/roller). First head printed 0.23 mm loose → drove the <strong>ring calibration → print model v2</strong>.</div>
           </div>
           <div style="flex:1.3; min-width:190px; padding:12px 16px; border-radius:10px; background:rgba(95,208,138,0.12); border:1px solid rgba(95,208,138,0.55);">
-            <div style="font-size:1.15rem; font-weight:800; color:#5fd08a;">v2.3 — calibrated head · printing</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">head recomputed on model v2 (arc R <strong>21.29</strong>) + <strong>re-centred on the shaft</strong> (apex fix) + dovetail corner relief. Print FIRM alone → measure gap + apex → results.</div>
+            <div style="font-size:1.15rem; font-weight:800; color:#5fd08a;">v2.3 — TESTED ✅ · 4.56 µL/stroke</div>
+            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">gap <strong style="color:#5fd08a">1.52 measured, concentric</strong> — model v2 validated on the part. Gravimetric campaign (76 reps): <strong style="color:#5fd08a">−8.9 % vs nominal, linear, CV 0.25 % @ 100 strokes</strong> — below the manual-pipette reference.</div>
           </div>
         </div>
 
@@ -1062,9 +1062,10 @@
               <a class="toc-link" href="#sec-calibration">⭐ Ring calibration → model v2</a>
             </div>
             <div class="toc-group toc-g23">
-              <div class="toc-group-label">v2.3 — calibrated head (printing)</div>
+              <div class="toc-group-label">v2.3 — tested ✅</div>
               <a class="toc-link" href="#sec-v23">The two fixes + corner relief</a>
               <a class="toc-link" href="#sec-v23-params">Head parameters (model v2)</a>
+              <a class="toc-link" href="#sec-v23-results">⭐ Gravimetric results — the qualification</a>
             </div>
           </div>
         </nav>
@@ -1880,7 +1881,7 @@
         <details class="ver-panel ver-23" open>
           <summary>
             <span class="ver-chip">v2.3</span>
-            <span class="ver-sum-note"><strong>The calibrated head — printing now.</strong> The head recomputed on print model v2 (gap fix) and re-centred on the shaft (apex fix), plus dovetail corner relief. The first head designed entirely against measured numbers.</span>
+            <span class="ver-sum-note"><strong>TESTED ✅ — the qualified build.</strong> Gap 1.52 measured and concentric; gravimetric campaign: <strong>4.56 µL/stroke (−8.9 %), linear, CV 0.25 % at 100 strokes — below the manual-pipette reference.</strong> The first head designed entirely against measured numbers, and the first to pass its test.</span>
           </summary>
           <div class="ver-body">
 
@@ -1922,7 +1923,7 @@
               <li><strong>The play experiment (bonus thesis result):</strong> the two rotors (0.085 mm play vs tight) differ in one variable — same head + tube on both isolates bearing clearance as a CV source. Predicted ≈ 3 %.</li>
             </ul>
           </div>
-          <div class="callout callout-note"><span class="callout-label">Status.</span> v2.3 is <strong>designed and printing</strong> — the numbers below are the as-designed set; the installed gap and apex will be measured on the print and recorded here as results.</div>
+          <div class="callout callout-good"><span class="callout-label">✅ As-built result — both fixes landed.</span> The printed head measured <strong>gap 1.52 at apex AND both sides</strong> (drill-bit gauges) after a final manual dovetail correction — concentric, on target, model v2 validated on the working part. The tube is squeezed with real occlusion (δ = 0.30) for the first time in the project. Full qualification below (<a href="#sec-v23-results" style="color:#5fd08a">gravimetric results</a>).</div>
         </section>
 
         <section class="detail-block" id="sec-v23-params">
@@ -1942,6 +1943,62 @@
             </tbody>
           </table>
           <div class="callout callout-good"><span class="callout-label">Forward-check.</span> CAD arc R 21.29 → through the inner rule → printed R 21.22 → <strong>gap = 21.22 − 19.70 = 1.52 ✓</strong> — the same value the head landed on out-of-sample in the ring validation. The CAD gap will read ≈ 1.53 (a derived artifact); only the printed gap is the target.</div>
+        </section>
+
+        <!-- ═══ v2.3 — GRAVIMETRIC QUALIFICATION ═══════════════════ -->
+        <section class="detail-block" id="sec-v23-results">
+          <h3 class="block-heading">⭐ Gravimetric results — the qualification (2026-07-23)</h3>
+          <p class="block-note"><strong>Method:</strong> gravimetric characterization adapted from <strong>ISO 23783-2:2023 Annex D</strong> at prototype scale — 76 automated replicates over <strong>3 volumes (1 / 100 / 300 strokes) × 4 speeds (60–240 rpm)</strong>, evaporation-corrected by dispense time (E = 0.118 mg/s, blank-calibrated), benchmarked against a calibrated manual pipette on the same balance and method. Steps verified complete at every speed and microstep (E7) before any volume was trusted. Full rationale → <a href="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/TEST-PROTOCOL.md" style="color:var(--accent)">TEST-PROTOCOL.md</a> · data record → <a href="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/TEST-RESULTS.md" style="color:var(--accent)">TEST-RESULTS.md</a>.</p>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-value">4.56 µL</div>
+              <div class="stat-label">per stroke (−8.9 % vs 5.0 nominal) — <strong>linear, no offset → calibratable</strong>: strokes = V / 4.56</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">CV 0.25 %</div>
+              <div class="stat-label">100-stroke delivery @ 180 rpm — <strong>below the manual-pipette reference (0.27 %)</strong></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">180 rpm</div>
+              <div class="stat-label">precision optimum — the assumed operating speed proved right; refill droop only −2.1 % over 60→240</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">≤ ~6 %</div>
+              <div class="stat-label">single-stroke CV — <strong>upper bound</strong>, not resolvable on a 0.1 mg balance; the flagged follow-up</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin:20px 0;">
+            <figure class="detail-figure" style="margin:0">
+              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/accuracy_vs_strokes.png" alt="Per-stroke delivered volume versus stroke count for each speed, converging on 4.56 microlitres" style="background:#fff" />
+              <figcaption><strong>Accuracy &amp; linearity.</strong> 100- and 300-stroke levels agree to &lt;0.5 % at every speed → linear, no fixed offset. The 60/120 rpm single-stroke points hint at a first-stroke deficit (indicative — balance floor); on target at 180.</figcaption>
+            </figure>
+            <figure class="detail-figure" style="margin:0">
+              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/per_stroke_vs_speed.png" alt="Per-stroke volume versus speed showing a two percent decrease from 60 to 240 rpm" style="background:#fff" />
+              <figcaption><strong>Refill.</strong> Mild −2.1 % droop 60→240 rpm, no knee — consistent with mildly incomplete tube refill; the pump is not refill-limited in its operating range.</figcaption>
+            </figure>
+            <figure class="detail-figure" style="margin:0">
+              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/cv_vs_speed.png" alt="Coefficient of variation versus speed with minimum at 180 rpm, pipette reference line at 0.27 percent" style="background:#fff" />
+              <figcaption><strong>Precision vs speed.</strong> Best near 180 rpm; the 100-stroke delivery (0.25 %) dips <em>below</em> the manual-pipette line — the pump meets the human benchmark for multi-stroke doses.</figcaption>
+            </figure>
+            <figure class="detail-figure" style="margin:0">
+              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/cv_vs_volume.png" alt="CV versus delivered volume on log-log axes following the one over square root of N line" style="background:#fff" />
+              <figcaption><strong>Error structure.</strong> Log–log slope −0.41 ≈ the ideal −0.5 (1/√N) → per-stroke variability is largely <em>random and self-averaging</em>, with at most a small systematic (roller) floor. Smallest-volume points are balance-limited (indicative).</figcaption>
+            </figure>
+          </div>
+
+          <div class="next-brief">
+            <h4>What the campaign established</h4>
+            <ul>
+              <li><strong>The −8.9 % deficit is geometric, not dynamic</strong> — speed moves the dose only ~2 %, so the shortfall lives in gap/occlusion. Feeds the displaced-volume model's effective <code>k</code> (E5). Correcting it is a step-count multiplier, not a redesign.</li>
+              <li><strong>The −41 % scare was an artifact</strong> — old unconditioned tube, non-stationary run, and a step-loss hypothesis that E7 refuted. Fresh pre-wetted tube + conditioning run → stationary, 4.56 µL/stroke.</li>
+              <li><strong>Evaporation is corrected, not ignored</strong> — blank-calibrated at 0.118 mg/s, applied over dispense time; &lt;0.7 % of delivered mass in every cell.</li>
+              <li><strong>Pipette benchmark done on the same instrument</strong> — 50 µL manual pipetting: CV 0.27 % (the honest human reference; the 5 µL pipette reading is the balance's floor, not the pipette's).</li>
+            </ul>
+          </div>
+
+          <div class="callout callout-warn"><span class="callout-label">Honest scope — what this does NOT prove.</span> Single build, single tube, water only, no backpressure. <strong>Single-5 µL-dose precision is bounded (≤ ~6 %), not measured</strong> — the √N estimate is inflated by run-to-run drift, and a 0.1 mg balance cannot resolve it directly; a finer balance or the ISO photometric route is the follow-up. The thesis claim is framed accordingly: <em>as a metered multi-stroke pump, v2.3 is accurate, pipette-class precise, and optimal at its design speed; as a single-dose device the accuracy holds but per-dose precision is bounded, not proven.</em></div>
         </section>
 
           </div>

@@ -1,0 +1,16 @@
+{
+  "campaign_id": "20260723_161956",
+  "status": "aborted",
+  "total_runs": 76,
+  "completed_runs": 9,
+  "failed_runs": 1,
+  "current_run": 10,
+  "started_iso": "2026-07-23T16:19:56.066178",
+  "updated_iso": "2026-07-23T16:28:01.811772",
+  "output_path": "D:\\03. DTU - Offline\\03. MASTER THESIS\\02. GitHub Thesis Tools Page\\prototypes\\Prototype-1-Pump-Module\\proto-02-5ul-4roller-v2\\Tests\\Peristaltic Gap 1.52 V2.23\\2026.07.23 - 0 - New tube 0.51 ID",
+  "last_log_line": "[run_campaign] run 10/76: row=7 rep=4 300str ms4 60.0rpm -> \u2014 \u2014 fault",
+  "faults": [
+    "[run 10/76] Timed out waiting for DONE after 60.0s"
+  ],
+  "awaiting_mass": null
+}

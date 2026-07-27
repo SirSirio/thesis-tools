@@ -92,19 +92,13 @@ Benchmark set: **manual pipetting ≈ 0.15–0.27 % CV at 50 µL** (tip fixed, p
 - **Evaporation:** exposure = **dispense time** (operator reads immediately, τ ≈ 0), `dispense_time = strokes × 200 / speed_steps_sec` (200 steps/stroke = ¼ rev at ms4, derived from the timing data). `m_corr = measured_g·1000 + E·dispense_time`, E = 0.118 mg/s (R2). **Not** the file `duration_s`, which includes breaks. Correction is < 0.7 % everywhere.
 - **Mass→volume:** ρ = 0.997 mg/µL.
 
-### R3.1 Excluded flyers (5 of 76)
+### R3.1 Data quality (1 exclusion of 76)
 
-| Cell | Dropped per-stroke (µL) | Likely cause |
-|------|-------------------------|--------------|
-| 1 str @ 120 | 41.1, 43.1, 0.0 | 41/43 = a large blob / wrong mass; 0.0 = missed dispense or un-tared |
-| 100 str @ 120 | 14.6 | ~3× high — a 300-stroke mass mis-logged under a 100-stroke run |
-| 100 str @ 180 | 14.6 | same |
-
-Rejection rule: per-stroke value > 25 % from the cell median. **Data-quality note:** these are gross mis-records, not pump behaviour — worth a look at the capture procedure (auto-log the mass, or a sanity range check).
+Four masses were initially mis-entered during capture (values from the wrong run logged into a cell) and were **corrected at the source** against the balance record. After correction, one replicate remains excluded: **1 str @ 120 rpm, rep 9 = 0.0000 g** (missed dispense or un-tared). Rejection rule: per-stroke value > 25 % from the cell median. **Lesson for the capture app:** an entry-time sanity check (mass within ~0.3–3× expected) would have caught all of these live.
 
 ### R3.2 Accuracy — the pump delivers ~91 % of nominal (the −41 % was the old tube)
 
-Per-stroke volume is **stable across volume and speed at ≈ 4.55 µL/stroke = 91 % of the 5 µL nominal.**
+Per-stroke volume is **stable across volume and speed at ≈ 4.56 µL/stroke = 91 % of the 5 µL nominal** (mean of the per-speed calibration slopes).
 
 | Speed | 1 str | 100 str | 300 str |
 |-------|-------|---------|---------|
@@ -147,10 +141,25 @@ The **multi-stroke delivery precision (~0.3–0.8 %) is pipette-class** — the 
 
 **On the single-stroke CV — read carefully.** The √N back-calc gives ~6 %, but it is an **upper bound, not the value.** The 300-stroke collection CV mixes averaged single-stroke randomness (which *does* fall as 1/√N) with **run-to-run drift** (tube hysteresis, temperature over the ~1 h session) that does *not*. So the true per-stroke CV sits **below** 6 % — a rough decomposition puts it nearer 3–4 %, but it **cannot be separated with this data** and the 0.1 mg balance cannot measure it directly. Honest statement: *single 5 µL dose precision is not directly measured; bounded above ~6 %, likely better.* `[Likely]`
 
-### R3.5 What this establishes
+### R3.5 What this establishes (final, corrected dataset)
 
-- ✅ **Accuracy:** ~4.55 µL/stroke, stable, 91 % of nominal → calibratable to target by step count. The −41 % scare was a tube/procedure artifact.
-- ✅ **Operating point:** **180 rpm** confirmed as the precision optimum with good throughput.
-- ✅ **Multi-stroke precision:** ~0.3 % CV — pipette-class, comfortably inside any dosing spec for doses of tens of strokes.
-- ⚠ **Single-stroke precision:** bounded ~6 %, likely 3–4 %, not directly resolvable on this balance — the one open question for a discrete single-dose device, flagged for a finer-balance or photometric follow-up.
-- ⚠ **5 mis-recorded masses** out of 76 → tighten the capture procedure.
+- ✅ **Accuracy:** **4.56 µL/stroke (−8.9 %)**, stable across volume and speed → linear, no fixed offset, calibratable to any target by pure step count (`strokes = V / 4.56`). The −41 % scare was a tube/procedure artifact.
+- ✅ **The deficit is geometric, not dynamic:** speed moves the dose only ~2 %, so the −8.9 % lives in gap/occlusion — input for the displaced-volume model's effective `k` (E5).
+- ✅ **Operating point:** **180 rpm** confirmed as the precision optimum with good throughput; mild −2.1 % refill droop 60→240 rpm, no knee.
+- ✅ **Multi-stroke precision is pipette-class:** 300-stroke CV **0.34 %**, and the 100-stroke delivery at 180 rpm reaches **0.25 % — below the manual-pipette reference (0.27 %)**. The device meets the human benchmark for multi-stroke doses.
+- ⚠ **Single-stroke precision:** bounded ≤ ~6 % (√N upper bound, inflated by run-to-run drift; likely 3–4 %), not directly resolvable on a 0.1 mg balance. Plus a suggestive **first-stroke deficit at 60/120 rpm** (on-target at 180). The open item for a discrete single-dose claim — finer balance or photometric follow-up.
+- ⚠ **Capture procedure:** 4 mis-entries corrected at source + 1 excluded zero → add an entry-time sanity check.
+
+### R3.6 Figures
+
+Publication figures exported to [`test-figures-v2.3/`](test-figures-v2.3/) (stable copy; source of truth remains `Tests/Peristaltic Gap 1.52 V2.23/.../export/figures/` with reviewed captions in `captions.md`):
+
+| File | Shows |
+|------|-------|
+| `accuracy_vs_strokes.png` | linearity + the 4.56 asymptote + low-speed first-stroke deficit |
+| `per_stroke_vs_speed.png` | the −2 % refill droop, 100/300-stroke series in agreement |
+| `cv_vs_speed.png` | precision optimum at 180 rpm; 100-str dips below the pipette line |
+| `cv_vs_volume.png` | log–log slope −0.41 ≈ 1/√N → variability is largely random, small roller floor at most |
+| `evaporation.png` | E = 0.118 mg/s blank calibration behind the correction |
+
+**One-line thesis framing:** *as a metered multi-stroke pump, proto-02 v2.3 is accurate (calibratable), pipette-class precise, and optimal at its design speed; as a single-5 µL-dose device the accuracy holds but per-dose precision is bounded, not proven.*

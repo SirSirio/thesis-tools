@@ -1,0 +1,11 @@
+# Suggested figure captions
+
+**accuracy_vs_strokes** — Per-stroke delivered volume versus stroke count (log axis) for each speed. Error bars are ±1 SD of the per-stroke volume; the dashed line is the mean calibration slope (4.56 µL), the dotted line the 5.0 µL nominal. The 100- and 300-stroke levels agree to <0.5 % at every speed — the pump is linear with no fixed offset. The 60 and 120 RPM single-stroke points sit below the asymptote, suggesting a first-stroke (priming) deficit at low speed; the 180 RPM single-stroke point is on target. Single-stroke values are indicative only: they sit at the balance's resolution floor (~2–3 % per reading) with n = 3–10.
+
+**per_stroke_vs_speed** — Per-stroke delivered volume versus pump speed at the compliant 100- and 300-stroke levels. Error bars are ±1 SD. Volume decreases by ~2 % from 60 to 240 RPM with no sharp knee — consistent with mildly incomplete tube refill at higher speed. The two stroke levels track each other, confirming the effect is speed-driven, not volume-driven.
+
+**cv_vs_speed** — Coefficient of variation of the delivered volume versus pump speed at the 100-stroke (n = 5) and 300-stroke (n = 10) levels; the dotted line is the reference manual pipette (0.27 % CV at 50 µL, same balance and method). Precision is best near 180 RPM, where the 100-stroke delivery (0.25 %) dips below the pipette reference — the pump matches manual-pipette repeatability for multi-stroke doses.
+
+**cv_vs_volume** — Coefficient of variation versus delivered volume (log–log), coloured by speed. The dashed line is the ideal 1/√N scaling (slope −0.5); the dotted line is the reference pipette. The fitted slope of −0.41 is close to −0.5, indicating largely random, self-averaging per-stroke variability with at most a small systematic (roller) component. The smallest-volume points (~5 µL) are balance-resolution-limited and indicative only; the compliant ≥100-stroke points carry the quantitative conclusion.
+
+**evaporation** — Independent evaporation calibration: mass loss versus open-boat exposure time with a linear fit giving the evaporation rate E = 0.118 mg/s used to correct every gravimetric reading. Exposure is the calculated dispensing time (mass read immediately after delivery), so the correction stays below 0.7 % of delivered mass in all cells.

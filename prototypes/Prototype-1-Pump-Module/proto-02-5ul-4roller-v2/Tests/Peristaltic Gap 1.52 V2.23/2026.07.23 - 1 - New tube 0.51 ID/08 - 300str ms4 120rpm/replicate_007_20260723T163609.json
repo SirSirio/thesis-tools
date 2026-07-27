@@ -1,0 +1,16 @@
+{
+  "run_number": 4,
+  "total_runs": 76,
+  "row_index": 8,
+  "replicate": 7,
+  "strokes": 300,
+  "micro": 4,
+  "speed_rpm": 120.0,
+  "speed_steps_sec": 1600,
+  "expected_ul_per_stroke": 5.0,
+  "expected_volume_ul": 1500.0,
+  "measured_mass_g": 1.3557,
+  "duration_s": 54.225351,
+  "t_start_iso": "2026-07-23T16:36:09.180079",
+  "t_end_iso": "2026-07-23T16:37:03.405430"
+}

@@ -1,0 +1,14 @@
+{
+  "campaign_id": "20260723_163427",
+  "status": "completed",
+  "total_runs": 76,
+  "completed_runs": 76,
+  "failed_runs": 0,
+  "current_run": 76,
+  "started_iso": "2026-07-23T16:34:27.720180",
+  "updated_iso": "2026-07-23T17:31:07.530041",
+  "output_path": "D:\\03. DTU - Offline\\03. MASTER THESIS\\02. GitHub Thesis Tools Page\\prototypes\\Prototype-1-Pump-Module\\proto-02-5ul-4roller-v2\\Tests\\Peristaltic Gap 1.52 V2.23\\2026.07.23 - 1 - New tube 0.51 ID",
+  "last_log_line": "[run_campaign] run 76/76: row=9 rep=5 300str ms4 180.0rpm -> 1.3633 g \u2014 ok",
+  "faults": [],
+  "awaiting_mass": null
+}

@@ -27,8 +27,8 @@ factor `k`.
 | Version | State | Where |
 |---------|-------|-------|
 | 🟥 **v2.1** | **BUILT — did not seal** (partial occlusion, diagnosed) | §11 |
-| 🟧 **v2.2** | **ROTOR DONE ✅ — head in design.** Rotor print #2 hits **2R = 39.40 (R = 19.70)**, on target, play-free (single bearing per roller). `NozzleComp` calibrated. Remaining: pump head — wall radius **21.41**, centre on shaft, clear the flange groove, enlarge gap access. **Print the FIRM head alone first** and measure the installed gap. | §11.7.11–15 |
-| ⬜ **v2.3** | future — first clean seal + gap sweep | — |
+| 🟧 **v2.2** | **BUILT — head printed 0.23 mm loose** with print model v1; triggered the ring calibration → model v2 | §11.9–11.10 |
+| 🟩 **v2.3** | **TESTED ✅ — the qualified build.** Head at model-v2 arc, gap **1.52 measured, concentric** (apex re-centred by dovetail correction). Gravimetric campaign (76 reps, 2026-07-23): **4.56 µL/stroke (−8.9 %), linear, no offset; best precision at 180 rpm; 100-stroke delivery CV 0.25 % — below the manual-pipette reference (0.27 %)**. Single-stroke CV bounded ≤ ~6 %. | §8, [`TEST-PROTOCOL.md`](TEST-PROTOCOL.md), [`TEST-RESULTS.md`](TEST-RESULTS.md) |
 
 ---
 
@@ -337,7 +337,12 @@ collection** — roughly 3× the entire signal. **The 200-stroke run measures th
 head is held by clamp friction, with no hard datum. Reinstall repeatability is unproven and the
 < 0.10 mm criterion is directly at risk.
 
-### 8.2 E2 point 1 — RESULT · 1.52 head @ 180 rpm (2026-07-16)
+### 8.2 E2 point 1 — RESULT · 1.52 head @ 180 rpm (2026-07-16) — SUPERSEDED
+
+> ⚠ **SUPERSEDED by the full campaign (2026-07-23, `TEST-RESULTS.md` R3).** The 2.95 µL/stroke
+> below came from an old, unconditioned tube in a non-stationary run. The final figure on a fresh,
+> pre-wetted tube is **4.56 µL/stroke (−8.9 %)**. Kept as the audit trail — including the step-loss
+> hypothesis, which E7 later **refuted** (no missed steps at any speed/microstep).
 
 Setup: 1.52 mm gap (measured, concentric — §11.9.5/§11.10), 180 rpm, 3 × 200 strokes
 ("1 mL command"), water, vials weighed empty then full. No conditioning run discarded.
@@ -1641,11 +1646,26 @@ constant hole-only corrections [2] and slope-only scale factors [5].
   rotor (PLA shrink + bearing play) and head seated too high. Decisions for 2.2: **fix the rotor**
   (tighten bearing pockets + shrink compensation → 2R ≈ 39.4) and **centre the head on the shaft**.
   Not yet pumped. Full detail → §11.
+- **v2.2 (built 2026-07)** — rotor validated (2R = 39.40, single bearing per roller); head printed
+  with print model v1 came out **0.23 mm loose** (§11.9.5) — the miss that triggered the **ring
+  calibration → print model v2** (§11.10, the per-surface-class two-line compensation).
+- **v2.3 (built + TESTED 2026-07-23)** — head reprinted per model v2 (arc R 21.29), gap **1.52
+  measured and concentric** after apex re-centring (dovetail stop corrected). E7 closed: **no
+  missed steps at any speed or microstep**. Gravimetric campaign (76 replicates, 3 volumes ×
+  4 speeds, evaporation-corrected): **4.56 µL/stroke (−8.9 % vs nominal), linear with no fixed
+  offset → calibratable by step count; −2.1 % refill droop 60→240 rpm; precision optimum at
+  180 rpm; 300-stroke CV 0.34 %, 100-stroke CV 0.25 % (below the 0.27 % manual-pipette
+  reference); single-stroke CV ≤ ~6 % (upper bound)**. Full method → `TEST-PROTOCOL.md`,
+  data + figures → `TEST-RESULTS.md`, `test-figures-v2.3/`.
 
 ---
 
-## 13. Test data (forward links → 03. CODING)
+## 13. Test data
 
-- Calibration / gap sweep: `03. CODING/manual-dispense-check/proto-02-5ul-4roller-v2/`
-  (to be created once the build is tested).
-- Reciprocal link: add a "Prototype: proto-02" line to the relevant `SESSION.md`.
+- **v2.3 gravimetric campaign (2026-07-23):** raw per-replicate JSON + app report →
+  `Tests/Peristaltic Gap 1.52 V2.23/2026.07.23 - 1 - New tube 0.51 ID/` (`gravimetric_report.html`,
+  `export/figures/`). Analysis record → [`TEST-RESULTS.md`](TEST-RESULTS.md) (R1 pipette reference,
+  R2 evaporation, R3 pump factorial). Method & rationale → [`TEST-PROTOCOL.md`](TEST-PROTOCOL.md).
+  Stable figure copies → `test-figures-v2.3/`.
+- Runner-side artifacts (firmware, capture app) live in `03. CODING`; reciprocal link: add a
+  "Prototype: proto-02" line to the relevant `SESSION.md`.

@@ -32,7 +32,7 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 | ID | Slug | Status | µL/stroke (target → measured) | Test data | Notes |
 |----|------|--------|-------------------------------|-----------|-------|
 | 01 | proto-01-5ul-4roller | Built, redesign pending | 5.0 → ≈3.4 (grav) | `03. CODING` (see PROTOTYPE-INDEX.md) | Under-dispenses ~32%; flow + gravimetric, see REPORT.md |
-| 02 | proto-02-5ul-4roller-v2 | 2.1 built, redesign to 2.2 pending | 5.0 → partial occlusion (not yet pumped) | (pending) | 2.1: measured 2R=39.04 (R=19.52) + non-concentric wall; two causes — undersized rotor (shrink + bearing play) + head seated ~0.45mm high. 2.2: fix rotor + centre head. See PROTOTYPE.md §11 |
+| 02 | proto-02-5ul-4roller-v2 | **v2.3 TESTED ✅** (2026-07-23) | 5.0 → **4.56 (grav, −8.9 %)** — linear, calibratable | `proto-02.../Tests/` + `TEST-RESULTS.md` | v2.1 didn't seal; v2.2 rotor validated (2R=39.40) + head 0.23 loose → ring calibration → print model v2; v2.3 gap 1.52 measured/concentric, 76-rep gravimetric campaign: best precision @180 rpm, 100-stroke CV 0.25 % (< pipette 0.27 %), single-stroke CV ≤~6 % bounded. Method: TEST-PROTOCOL.md (ISO 23783-2-adapted) |
 
 <!-- Add a row per pump prototype. Keep newest at the bottom. -->
 
