@@ -26,6 +26,23 @@ Plans:
 - [x] 08-03-PLAN.md — Canonical SPEC.md (inputs, scheduling formulas, benchmark, assumption footnotes)
 - [x] 08-04-PLAN.md — Integration/chrome: landing-page card (EN+IT), README row, repo-root ROADMAP row, CLAUDE.md folder structure
 
+### Phase 10: Prototype Design Space - Alignment Module Thread and Detail Subpage Split
+
+**Goal:** Turn the Prototype Design Space from a single-module page into a multi-module one. Add a second, parallel journey thread for the Alignment Module beside the existing pump thread, each in its own accent colour family (pump stays orange/red; alignment gets a violet/indigo family, precedent `tools/pump-testing/` Layer 2). De-singularize the journey-stage markup and JS so N threads coexist. Split the monolithic detail views out of `prototypes/index.html` into proper per-prototype subpages so the page scales from now on. Publish an `align-01` subpage documenting the V2.1 homing-microswitch build.
+**Requirements**: TBD
+**Depends on:** Phase 9
+**Plans:** 0 plans
+
+Scope:
+- Second journey thread (Alignment Module) with its own accent colour tokens
+- Journey stage + JS de-singularized: per-thread path, nodes, IntersectionObserver, `alignNodesToPath()`
+- Detail views extracted from `prototypes/index.html` into per-prototype subpages
+- New `align-01` detail subpage from `prototypes/Prototype-2-Alignment-Module/PROTOTYPE.md` (V2.1 homing)
+- Registry + docs sync: `prototypes/SPEC.md`, `prototypes/PROTOTYPES.md`, `README.md`, `CLAUDE.md`
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 10 to break down)
+
 ## Shipped
 
 | What | Notes |
