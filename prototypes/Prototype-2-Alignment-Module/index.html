@@ -41,6 +41,46 @@
     .homing-fig { max-width: 620px; margin-left: auto; margin-right: auto; }
     .homing-fig svg text { font-family: var(--font); }
 
+    /* Part dividers. This module has ONE build, V2, plus an add-on: V2.1 is the
+       homing switch bolted onto it and the bench session that qualified it — not
+       a second prototype. The page is grouped to say exactly that. */
+    .part-rule {
+      margin: 64px 0 28px;
+      padding-top: 26px;
+      border-top: 1px solid var(--p-border);
+      scroll-margin-top: 88px;
+    }
+    .part-rule:first-of-type { margin-top: 40px; }
+    .part-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--p-accent-soft);
+      border: 1px solid var(--p-edge);
+      background: var(--p-tint);
+      border-radius: 999px;
+      padding: 4px 12px;
+      margin-bottom: 12px;
+    }
+    .part-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .part-note {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 620px;
+    }
+    @media (max-width: 640px) {
+      .part-rule { margin-top: 48px; }
+      .part-title { font-size: 1.25rem; }
+    }
+
     /* The header animation must not leave content invisible when the browser
        is told to suppress motion (assets/style.css has no such guard). */
     @media (prefers-reduced-motion: reduce) {
@@ -130,13 +170,13 @@
           <a class="toc-link" href="#sec-targets">Targets &amp; pass criteria</a>
         </div>
         <div class="toc-group toc-group--accent">
-          <div class="toc-group-label">As built</div>
+          <div class="toc-group-label">V2 &mdash; the stage</div>
           <a class="toc-link" href="#sec-mechanism">Mechanism &amp; resolution</a>
-          <a class="toc-link" href="#sec-homing">Homing &mdash; the microswitch</a>
-          <a class="toc-link" href="#sec-electronics">Electronics &amp; control path</a>
         </div>
         <div class="toc-group toc-group--pass">
-          <div class="toc-group-label">Measured</div>
+          <div class="toc-group-label">V2.1 &mdash; homing add-on</div>
+          <a class="toc-link" href="#sec-homing">Homing &mdash; the microswitch</a>
+          <a class="toc-link" href="#sec-electronics">Electronics &amp; control path</a>
           <a class="toc-link" href="#sec-motion">Motion performance</a>
           <a class="toc-link" href="#sec-validation">Bench validation</a>
         </div>
@@ -154,6 +194,13 @@
     </nav>
 
     <!-- ── 1. Purpose ─────────────────────────────────────────────────── -->
+    <div class="part-rule" id="part-module">
+      <span class="part-tag">The module</span>
+      <div class="part-title">What this thing is for</div>
+      <p class="part-note">What the stage does, why it is laid out the way it is, and what it
+        has to achieve to count as working.</p>
+    </div>
+
     <section class="detail-block" id="sec-purpose">
       <h2 class="block-heading">What it does</h2>
       <p class="block-note">
@@ -253,8 +300,17 @@
     </section>
 
     <!-- ── 4. Mechanism as built ──────────────────────────────────────── -->
+    <div class="part-rule" id="part-v2">
+      <span class="part-tag">V2 &middot; built 2026-06-25</span>
+      <div class="part-title">The stage as built</div>
+      <p class="part-note">The rack-and-pinion mechanism, the resolution it gives, and the
+        direction convention. This is the whole physical build. It indexes reliably, but it
+        is <strong>open-loop</strong> — it counts steps from wherever it happens to be at
+        power-up, and has no way to find a reference by itself.</p>
+    </div>
+
     <section class="detail-block" id="sec-mechanism">
-      <h2 class="block-heading">Mechanism as built (V2.1)</h2>
+      <h2 class="block-heading">Mechanism &amp; resolution</h2>
       <p>
         A horizontal rack-and-pinion stage. The tube rack rides the moving carriage; the motor and pinion
         sit on a fixed bracket above the rail, engaging a toothed rack moulded into the carriage.
@@ -329,8 +385,18 @@
     </section>
 
     <!-- ── 5. Homing ──────────────────────────────────────────────────── -->
+    <div class="part-rule" id="part-v21">
+      <span class="part-tag">V2.1 &middot; added 2026-07-30, tested 2026-07-31</span>
+      <div class="part-title">Adding homing — and proving it</div>
+      <p class="part-note"><strong>Not a redesign.</strong> The mechanism above is unchanged;
+        V2.1 is a microswitch bolted to the left end of the rail, the wiring behind it, the
+        firmware that uses it — and the bench session that qualified the result. It is what
+        closes the open-loop gap: the stage can now find its own zero. Everything from here
+        to the bench results belongs to that add-on.</p>
+    </div>
+
     <section class="detail-block" id="sec-homing">
-      <h2 class="block-heading">Homing &mdash; the microswitch (new in V2.1)</h2>
+      <h2 class="block-heading">Homing &mdash; the microswitch</h2>
 
       <h3 class="block-subheading">Why an endstop at all</h3>
       <p>
@@ -856,6 +922,13 @@
     </section>
 
     <!-- ── 9. Open questions & risks ──────────────────────────────────── -->
+    <div class="part-rule" id="part-standing">
+      <span class="part-tag">Where it stands</span>
+      <div class="part-title">What is still open</div>
+      <p class="part-note">The unmet criterion, the untested ideas, the values nobody has
+        measured yet, and what happens next.</p>
+    </div>
+
     <section class="detail-block" id="sec-risks">
       <h2 class="block-heading">Open questions &amp; risks</h2>
 
