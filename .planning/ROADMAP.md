@@ -31,7 +31,8 @@ Plans:
 **Goal:** Turn the Prototype Design Space from a single-module page into a multi-module one. Add a second, parallel journey thread for the Alignment Module beside the existing pump thread, each in its own accent colour family (pump stays orange/red; alignment gets a violet/indigo family, precedent `tools/pump-testing/` Layer 2). De-singularize the journey-stage markup and JS so N threads coexist. Split the monolithic detail views out of `prototypes/index.html` into proper per-prototype subpages so the page scales from now on. Publish an `align-01` subpage documenting the V2.1 homing-microswitch build.
 **Requirements**: TBD
 **Depends on:** Phase 9
-**Plans:** 0 plans
+**Plans:** 6/6 complete
+**Status:** Complete (2026-07-31) — see `10-VERIFICATION.md`
 
 Scope:
 - Second journey thread (Alignment Module) with its own accent colour tokens
@@ -41,7 +42,12 @@ Scope:
 - Registry + docs sync: `prototypes/SPEC.md`, `prototypes/PROTOTYPES.md`, `README.md`, `CLAUDE.md`
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 10 to break down)
+- [x] 10-01 — shared `assets/prototype-page.css` (917 lines)
+- [x] 10-02 — proto-01 subpage (396 lines)
+- [x] 10-03 — proto-02 subpage (1197 lines)
+- [x] 10-04 — alignment module subpage (1085 lines, new content)
+- [x] 10-05 — two-thread journey page (2210 → 532 lines)
+- [x] 10-06 — registry + documentation sync
 
 ## Shipped
 
@@ -64,6 +70,7 @@ Plans:
 
 - [x] **Phase 8: Dispense Choreography & Throughput Simulator** - Configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line, answering the concurrency question empirically (completed 2026-07-20)
 - [x] **Phase 9: Pump Testing** - A `tools/pump-testing/` page pairing the market-grade ISO 23783-2 gravimetric qualification protocol with the actual prototype test protocol and its justified deviations (completed 2026-07-23)
+- [x] **Phase 10: Prototype Design Space — Alignment Module Thread and Detail Subpage Split** - Second parallel journey thread for the Alignment Module in its own violet accent family, journey stage and JS de-singularized for N threads, detail views split into co-located per-prototype subpages, new alignment subpage for the V2.1 homing build (completed 2026-07-31)
 
 ## Phase Details
 
@@ -237,6 +244,7 @@ Plans:
 | 7. Thesis Showcase Landing Page | — | Complete | 2026-07-17 |
 | 8. Dispense Choreography & Throughput Simulator | 4/4 | Complete | 2026-07-20 |
 | 9. Pump Testing | 6/6 | Complete    | 2026-07-23 |
+| 10. Prototype Design Space — Alignment Module Thread and Detail Subpage Split | 6/6 | Complete | 2026-07-31 |
 
 ### Phase 06.1: Architecture refinement: full-system module schema, design-direction gallery, design-type matrix column (INSERTED)
 
