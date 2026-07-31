@@ -289,6 +289,80 @@
       .proto-card-thumb, .proto-card-thumb-ph { width: 64px; height: 64px; }
       .thread + .thread { padding-top: 40px; }
     }
+
+    /* ── Parallel threads (≥ 1000px) ──────────────────────────────
+       Both modules descend the page side by side, so you see the two
+       tracks develop together instead of reading one then the other.
+
+       Breakpoint is set by the card, not by a round number. Cards are
+       min(380px, 74%) of their column; 74% is the widest that keeps a
+       card clear of alignNodesToPath()'s edge clamp, because the curve
+       only reaches x = 39.4%..60.6% of the stage, so anything past
+       ~78% would pin to the edge and fall off its own curve.
+       Holding a 320px card floor (the width at which the purpose text
+       beside the thumb still runs ~28 characters) gives
+       0.74 · (vw − 64 − 48)/2 ≥ 320  →  vw ≥ 977px. Rounded to 1000px:
+       the card measures 328px there, and 291px one step below — the
+       ravine this breakpoint exists to avoid.
+       Below 1000px everything falls back to the stacked layout, and
+       the ≤640px rules are untouched.                                */
+    @media (min-width: 1000px) {
+      /* assets/style.css caps main at 1000px with a 32px gutter, and
+         .journey-view adds a second 32px gutter on top. Two columns need
+         the room back: widen main and drop the inner gutter (main's own
+         32px still keeps the content off the viewport edge). Scoped to
+         this breakpoint, so the stacked layout keeps the shared defaults. */
+      main { max-width: 1400px; }
+      .journey-view {
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* row 1 page header · row 2 thread heads · row 3 stages */
+        grid-template-rows: auto auto auto;
+        column-gap: 48px;
+      }
+      .journey-header { grid-column: 1 / -1; grid-row: 1; }
+
+      /* Each thread spans the head row and the stage row, and borrows them
+         as a subgrid — so both heads share one row and are the same height,
+         which puts both curves' start at the same y. Without subgrid this
+         degrades to naturally-sized heads; the layout still holds. */
+      .thread {
+        grid-row: 2 / span 2;
+        display: grid;
+        grid-template-rows: subgrid;
+      }
+      .thread--pump  { grid-column: 1; }
+      .thread--align { grid-column: 2; }
+      .thread + .thread { margin-top: 0; padding-top: 0; border-top: none; }
+
+      /* One shared stage height for both threads — that is what makes the
+         two tracks read as parallel. Each still spreads its own nodes over
+         it, so the alignment thread's 4 nodes simply sit further apart than
+         the pump thread's 5.
+         Sized off the tallest card (proto-02, 481px at the narrowest
+         two-column width): the pump's 20% node spacing has to clear it,
+         so 0.20 · 2900 = 580px leaves ~100px between cards at 1000px and
+         more above that. */
+      .thread { --stage-h: 2900px; }
+
+      /* The alignment thread carries 3 nodes to the pump's 5. Holding it to the
+         same 2900px left ~690px of curve trailing past its last card with
+         nothing on it. Both columns still START at the same y — which is the
+         point of the parallel layout — but this track finishes sooner, which is
+         the honest picture: it is the younger module with fewer milestones. */
+      .thread--align { --stage-h: 2300px; }
+
+      /* Cards were sized for a full-width stage; a half-width column needs
+         them narrower. Padding and thumb shrink with them so the purpose
+         paragraph beside the floated thumb does not become a ravine. */
+      .proto-node { width: min(380px, 74%); }
+      .proto-card, .proto-card-ghost { padding: 24px 22px; }
+      .proto-card-thumb, .proto-card-thumb-ph { width: 72px; height: 72px; margin: 0 0 10px 14px; }
+      .thread-sub { max-width: none; }
+    }
   </style>
 </head>
 <body>
@@ -402,44 +476,33 @@
 
       <div class="journey-stage">
         <div class="stage-inner">
+          <!-- Mirror of the pump curve (x → 600 − x): side by side the two
+               threads swing opposite ways and read as two strands of one
+               project rather than a copy-paste. Pump's d is unchanged. -->
           <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
             <path class="journey-path"
-              d="M 300 40 C 520 140, 80 300, 300 440 C 520 580, 80 740, 300 880"
+              d="M 300 40 C 80 140, 520 300, 300 440 C 80 580, 520 740, 300 880"
               pathLength="1"/>
           </svg>
 
           <div class="nodes-layer">
             <div class="proto-node" style="--node-top:1%">
               <a class="proto-card" href="Prototype-2-Alignment-Module/index.html">
-                <div class="proto-card-thumb-ph" aria-hidden="true">V2 ✅</div>
-                <div class="proto-card-tag">V2 · built 2026-06-25</div>
-                <h3 class="proto-card-title">Rack indexing stage</h3>
-                <p class="proto-card-purpose">A rack-and-pinion stage that carries a custom 8-tube rack under the nozzle. Motor and pusher sit <strong>above</strong> the rail, so gravity — not a seal — keeps spilled liquid away from the parts that are hard to clean. Indexes reliably, but open-loop: it counts steps from wherever it happens to be.</p>
+                <div class="proto-card-thumb-ph" aria-hidden="true">V2.1 ✅</div>
+                <div class="proto-card-tag">V2 · built 2026-06-25 · V2.1 tested 2026-07-31</div>
+                <h3 class="proto-card-title">Rack indexing stage, with homing</h3>
+                <p class="proto-card-purpose">A rack-and-pinion stage that carries a custom 8-tube rack under the nozzle. Motor and pusher sit <strong>above</strong> the rail, so gravity — not a seal — keeps spilled liquid away from the parts that are hard to clean. <strong>V2.1 bolts on a roller-lever endstop</strong> — wired so a severed cable reads as “at the switch” and halts the axis rather than driving it into a hard stop — plus three-pass homing. The stage stops counting steps from wherever it happens to be and finds its own zero.</p>
                 <div class="proto-card-kpi">
                   <span class="kpi-pill">8 tube positions · 22 mm pitch</span>
-                  <span class="kpi-pill">pinion Ø 12.80 mm</span>
+                  <span class="kpi-pill">repeatable zero no worse than 0.03 mm</span>
+                  <span class="kpi-pill">22 s full home, from 110 s</span>
                   <span class="kpi-pill kpi-warn">~140 mm stroke — 14 mm short of 154</span>
                 </div>
                 <span class="proto-card-cta">Explore →</span>
               </a>
             </div>
 
-            <div class="proto-node" style="--node-top:26%">
-              <a class="proto-card" href="Prototype-2-Alignment-Module/index.html#sec-homing">
-                <div class="proto-card-thumb-ph" aria-hidden="true">V2.1 ✅</div>
-                <div class="proto-card-tag">V2.1 · bench-validated 2026-07-31</div>
-                <h3 class="proto-card-title">Homing — the stage learns where zero is</h3>
-                <p class="proto-card-purpose">A roller-lever endstop, wired so that a <strong>severed cable reads as “at the switch”</strong> and halts the axis instead of driving it into a hard stop, plus a three-pass homing sequence that is fast where speed is free and slow only where the zero is actually made. Axis 1 measured on the bench; axis 2 never wired.</p>
-                <div class="proto-card-kpi">
-                  <span class="kpi-pill">repeatable zero no worse than 0.03 mm</span>
-                  <span class="kpi-pill">102 half-steps/mm</span>
-                  <span class="kpi-pill">22 s full home, from 110 s</span>
-                </div>
-                <span class="proto-card-cta">Explore →</span>
-              </a>
-            </div>
-
-            <div class="proto-node" style="--node-top:51%">
+            <div class="proto-node" style="--node-top:38%">
               <div class="proto-card-ghost" aria-disabled="true">
                 <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
                 <div class="proto-card-tag">V3 · planned</div>
@@ -449,7 +512,7 @@
               </div>
             </div>
 
-            <div class="proto-node" style="--node-top:76%">
+            <div class="proto-node" style="--node-top:74%">
               <div class="proto-card-ghost" aria-disabled="true">
                 <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
                 <div class="proto-card-tag">V4 · planned</div>
