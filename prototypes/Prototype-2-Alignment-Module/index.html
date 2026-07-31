@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alignment Module · rack indexing stage — Prototype Design Space</title>
+  <meta name="description" content="Prototype 2 — the alignment module: a rack-and-pinion sample-indexing stage with a homing microswitch, three-pass homing, and bench-validated repeatability." />
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/prototype-page.css" />
+  <style>
+    /* Page-specific only — everything else comes from prototype-page.css. */
+
+    /* Inline console commands and firmware-facing identifiers. */
+    .cmd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85em;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 5px;
+      padding: 1px 6px;
+    }
+
+    /* Pass / not-met / gap markers used in the criteria and results tables.
+       Green and red are literal on purpose: on this page --p-accent-2 is blue,
+       and a blue "not met" would read as information rather than a problem. */
+    .flag { font-weight: 700; letter-spacing: 0.02em; }
+    .flag-met   { color: #5fd08a; }
+    .flag-unmet { color: #e83535; }
+    .flag-gap {
+      color: var(--text-muted);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.28);
+      font-weight: 700;
+    }
+
+    /* assets/style.css zeroes every margin, so a <p> that follows bare text
+       inside a callout would butt straight against it. */
+    .callout > p { margin-top: 10px; }
+
+    /* Homing sequence diagram wrapper. The shared sheet already makes any svg
+       inside .detail-figure width:100%; height:auto — this only caps it. */
+    .homing-fig { max-width: 620px; margin-left: auto; margin-right: auto; }
+    .homing-fig svg text { font-family: var(--font); }
+
+    /* The header animation must not leave content invisible when the browser
+       is told to suppress motion (assets/style.css has no such guard). */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-in { opacity: 1; transform: none; animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+</div>
+
+<nav class="tool-nav">
+  <a class="nav-back" href="../index.html">&larr; Prototype Design Space</a>
+  <span class="nav-title">Alignment Module &middot; rack indexing stage</span>
+</nav>
+
+<main class="proto-page proto-page--align">
+  <a class="proto-back" href="../index.html">&larr; Back to journey</a>
+
+  <header class="proto-page-header animate-in" style="--delay:0s">
+    <div class="proto-page-eyebrow">Prototype 2 &middot; Alignment Module</div>
+    <h1 class="proto-page-title">Sample-rack indexing stage &mdash; rack, pinion, and a switch that knows where zero is</h1>
+    <div class="proto-status">
+      <span class="status-chip status-chip--tested">V2 built</span>
+      <span class="status-chip status-chip--tested">V2.1 bench-validated</span>
+      <span class="status-chip status-chip--warn">Stroke ~14 mm short &mdash; only unmet criterion</span>
+      <span class="status-chip status-chip--planned">Axis 2 never wired</span>
+    </div>
+    <p class="proto-page-summary">
+      The alignment module hosts the samples and indexes them under the dispensing nozzle. It does
+      <em>not</em> move the dispensing head &mdash; it moves the samples. V2 proved the mechanism;
+      V2.1 added a homing microswitch and the firmware that uses it, which is what turns an
+      open-loop stage into one that knows where it is.
+    </p>
+    <p class="proto-page-meta">
+      V2 built 2026-06-25 &middot; homing added 2026-07-30 &middot; bench-validated 2026-07-31, axis 1 only.
+      Every number on this page comes from
+      <a class="tool-link" href="PROTOTYPE.md">PROTOTYPE.md</a>, the design-side record for this module.
+    </p>
+  </header>
+
+  <div class="proto-page-body">
+
+    <!-- ── Hero photograph + headline numbers ─────────────────────────── -->
+    <section class="detail-block animate-in" id="sec-overview" style="--delay:0.08s">
+      <figure class="detail-figure">
+        <img src="AlignmentModuelHomingV2.1.png"
+             width="2560" height="1441" loading="lazy" decoding="async"
+             alt="The alignment module on the bench: a horizontal printed rail with a roller-lever microswitch at its left end, a 28BYJ-48 stepper on a bracket above driving a white pinion into a printed rack, and an eight-position tube rack riding the moving carriage." />
+        <figcaption>
+          V2.1 on the bench: the roller-lever microswitch at the left end of the rail (wire exiting left),
+          the 28BYJ-48 on its bracket above with the white pinion engaging the printed rack, and the
+          8-position tube rack on the moving carriage.
+        </figcaption>
+      </figure>
+
+      <div class="stats-row">
+        <div class="stat-card stat-good">
+          <div class="stat-value">&le; 0.03 mm</div>
+          <div class="stat-label">Repeatable zero &mdash; the defensible claim, see the honest limit below</div>
+        </div>
+        <div class="stat-card stat-good">
+          <div class="stat-value">22 s</div>
+          <div class="stat-label">Full 132 mm home, down from 110 s, with no step loss</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">102.0 /mm</div>
+          <div class="stat-label">Half-steps per millimetre &mdash; calculated and measured agree exactly</div>
+        </div>
+        <div class="stat-card stat-warn">
+          <div class="stat-value">~140 mm</div>
+          <div class="stat-label">Available stroke against the 154 mm the 8-position pattern needs</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Contents ───────────────────────────────────────────────────── -->
+    <nav class="proto-toc animate-in" aria-label="Page contents" style="--delay:0.14s">
+      <div class="toc-title">Contents &mdash; click to jump</div>
+      <div class="toc-grid">
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">The module</div>
+          <a class="toc-link" href="#sec-purpose">What it does</a>
+          <a class="toc-link" href="#sec-priorities">Design priorities</a>
+          <a class="toc-link" href="#sec-targets">Targets &amp; pass criteria</a>
+        </div>
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">As built</div>
+          <a class="toc-link" href="#sec-mechanism">Mechanism &amp; resolution</a>
+          <a class="toc-link" href="#sec-homing">Homing &mdash; the microswitch</a>
+          <a class="toc-link" href="#sec-electronics">Electronics &amp; control path</a>
+        </div>
+        <div class="toc-group toc-group--pass">
+          <div class="toc-group-label">Measured</div>
+          <a class="toc-link" href="#sec-motion">Motion performance</a>
+          <a class="toc-link" href="#sec-validation">Bench validation</a>
+        </div>
+        <div class="toc-group toc-group--fail">
+          <div class="toc-group-label">Open</div>
+          <a class="toc-link" href="#sec-risks">Open questions &amp; risks</a>
+          <a class="toc-link" href="#sec-next">Next steps</a>
+        </div>
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">Record</div>
+          <a class="toc-link" href="#sec-versions">Version log</a>
+          <a class="toc-link" href="#sec-sources">Source documents</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── 1. Purpose ─────────────────────────────────────────────────── -->
+    <section class="detail-block" id="sec-purpose">
+      <h2 class="block-heading">What it does</h2>
+      <p class="block-note">
+        One of the core mechanical subsystems of the modular point-of-care liquid dispenser. Four jobs:
+      </p>
+      <ul>
+        <li><strong>Hosts the samples.</strong> Samples arrive in microcentrifuge tubes (1.5 or 2 mL),
+          stored in a custom-made rack of 8.</li>
+        <li><strong>Makes room for the tube opener.</strong> The wide spacing between sample positions
+          exists specifically so Pulkit's tube-opener mechanism can fit.</li>
+        <li><strong>Eases transport.</strong> The rack holds the samples together, so a whole set can be
+          moved and loaded at once.</li>
+        <li><strong>Indexes under the nozzle.</strong> The stage moves the rack so each tube can be
+          placed, in turn, under the dispensing module that delivers the liquid.</li>
+      </ul>
+      <div class="callout callout-note">
+        <span class="callout-label">The distinction that shapes the design.</span>
+        The module does not move the dispensing head. It moves the samples. Everything downstream &mdash;
+        the gravity-protected layout, the horizontal single axis, the vertical pusher &mdash; follows from that.
+      </div>
+    </section>
+
+    <!-- ── 3. Design priorities ───────────────────────────────────────── -->
+    <section class="detail-block" id="sec-priorities">
+      <h2 class="block-heading">Design priorities &mdash; the gravity-protected layout</h2>
+      <p>
+        The design was driven by three priorities: <strong>cleanliness</strong>, <strong>compactness</strong>,
+        and <strong>safety from cross-contamination</strong>. The layout in the photograph above is the
+        direct expression of the third.
+      </p>
+      <ul>
+        <li>The <strong>stepper motor</strong> &mdash; chosen for precision &mdash; and the <strong>pusher</strong>
+          are mounted on <strong>top</strong> of the assembly.</li>
+        <li>Mounting them up high keeps them <strong>safe from spillage</strong>: liquid travels
+          <strong>downward</strong>, not upward, so splashes and spills cannot reach the drive train.</li>
+        <li>The <strong>moving parts and the gear</strong> &mdash; the parts that are hard to clean &mdash;
+          are therefore inaccessible to liquid. <strong>Gravity acts as the protector</strong>, with no seal,
+          cover or consumable to maintain.</li>
+        <li>The <strong>pusher travels on the vertical axis</strong>, which lets the nozzle deliver and
+          dispense in a linear way.</li>
+      </ul>
+    </section>
+
+    <!-- ── 2. Targets & pass criteria ─────────────────────────────────── -->
+    <section class="detail-block" id="sec-targets">
+      <h2 class="block-heading">Targets &amp; pass criteria</h2>
+      <p class="block-note">
+        Six criteria. Five are met; one is not, and it is the one that drives the next mechanical revision.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Quantity</th><th>Target</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Positioning repeatability</strong></td>
+            <td>Sub-millimetre &mdash; the nozzle must land inside a tube mouth every time</td>
+            <td><span class="flag flag-met">MET</span> &mdash; <strong>&le; 0.03 mm</strong> measured, better
+              than needed by more than an order of magnitude</td>
+          </tr>
+          <tr>
+            <td><strong>Return to zero after a full pattern</strong></td>
+            <td>Land back on the same physical zero, with no cumulative drift</td>
+            <td><span class="flag flag-met">MET</span> &mdash; <strong>0.03&ndash;0.13 mm</strong> over three
+              132 mm round trips</td>
+          </tr>
+          <tr>
+            <td><strong>Usable stroke</strong></td>
+            <td>8 positions at 22 mm pitch = <strong>154 mm</strong> of travel</td>
+            <td><span class="flag flag-unmet">NOT MET</span> &mdash; the rail delivers <strong>~140 mm</strong>.
+              Six moves (132 mm) run cleanly; a seventh would push the rack off the pinion.
+              Mechanical redesign pending &mdash;
+              <a class="tool-link" href="#sec-risks">see the risks</a></td>
+          </tr>
+          <tr>
+            <td><strong>Indexing time</strong></td>
+            <td>Fast enough not to dominate the dispensing cycle</td>
+            <td><span class="flag flag-met">MET</span> &mdash; full-length home <strong>22 s</strong>, down from
+              110 s. A single 22 mm index step is <strong>~4 s</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Must not disturb the rest of the system</strong></td>
+            <td>Sharing the control bus with the liquid-level sensor must stall neither</td>
+            <td><span class="flag flag-met">MET</span> &mdash; verified under live sensor streaming</td>
+          </tr>
+          <tr>
+            <td><strong>Fail safe, not silently</strong></td>
+            <td>A broken or disconnected endstop must halt the axis, not drive it into a hard stop</td>
+            <td><span class="flag flag-met">MET</span> &mdash; verified by a severed-wire test</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">
+        All measured values are from the bench session of 2026-07-31 on axis 1 &mdash; the full results are
+        <a class="tool-link" href="#sec-validation">further down the page</a>.
+      </p>
+    </section>
+
+    <!-- ── 4. Mechanism as built ──────────────────────────────────────── -->
+    <section class="detail-block" id="sec-mechanism">
+      <h2 class="block-heading">Mechanism as built (V2.1)</h2>
+      <p>
+        A horizontal rack-and-pinion stage. The tube rack rides the moving carriage; the motor and pinion
+        sit on a fixed bracket above the rail, engaging a toothed rack moulded into the carriage.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Element</th><th>As built</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Drive</strong></td>
+            <td class="num">28BYJ-48 geared stepper, 12 V variant</td>
+            <td>Unipolar, with an internal reduction gearbox. Chosen for precision, and it holds position
+              with the coils off</td>
+          </tr>
+          <tr>
+            <td><strong>Transmission</strong></td>
+            <td>Rack and pinion, pinion <span class="num">&#8960; 12.80 mm</span></td>
+            <td>Printed rack integral to the carriage</td>
+          </tr>
+          <tr>
+            <td><strong>Guidance</strong></td>
+            <td>Printed linear rail + carriage</td>
+            <td>Single axis, horizontal</td>
+          </tr>
+          <tr>
+            <td><strong>Endstop</strong></td>
+            <td>Single-pole double-throw roller-lever microswitch, at the <strong>left</strong> end of the rail</td>
+            <td>New in V2.1 &mdash; <a class="tool-link" href="#sec-homing">see homing</a></td>
+          </tr>
+          <tr>
+            <td><strong>Payload</strong></td>
+            <td>Custom rack, <span class="num">8 tube positions</span>, 1.5 / 2 mL microcentrifuge tubes</td>
+            <td class="num">22 mm pitch</td>
+          </tr>
+          <tr>
+            <td><strong>Available stroke</strong></td>
+            <td class="num">~140 mm</td>
+            <td>Short of the 154 mm the 8-position pattern needs</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="block-subheading">Resolution &mdash; and why it is not a limitation</h3>
+      <p>
+        The motor delivers <strong>4096 half-steps per output revolution</strong>. One pinion revolution
+        advances the rack by its circumference, so the two together fix how many half-steps buy a millimetre:
+      </p>
+      <div class="calc-block">
+        &pi; &times; 12.80 mm            &nbsp;&asymp;&nbsp; <strong>40.2 mm</strong> of rack per revolution<br />
+        4096 half-steps &divide; 40.2 mm &nbsp;&asymp;&nbsp; 101.9 &nbsp;&rarr;&nbsp; <strong>102 half-steps per mm</strong><br />
+        1 half-step                      &nbsp;&asymp;&nbsp; <strong>0.0098 mm</strong> (~10 &micro;m)
+      </div>
+      <div class="callout callout-good">
+        <span class="callout-label">Measured and confirmed exact (2026-07-31).</span>
+        13&nbsp;464 half-steps commanded, <strong>132 mm</strong> measured against a rule &rarr;
+        <strong>102.0 half-steps/mm</strong>. The calculated figure and the physical one agree to the
+        precision of the measurement.
+      </div>
+      <p>
+        The driver is a Darlington array with no current control, so <strong>half-stepping is the finest
+        the drive can do</strong> &mdash; there is no microstepping available on this axis. At roughly
+        10 &micro;m per half-step, that is not a limitation for this application.
+      </p>
+
+      <h3 class="block-subheading">Direction convention</h3>
+      <p>
+        <strong>The endstop is on the left.</strong> Positive step counts move the carriage <strong>right</strong>,
+        away from the switch; negative counts move it <strong>left</strong>, toward the switch. This was
+        established physically on the bench, not assumed from the wiring.
+      </p>
+    </section>
+
+    <!-- ── 5. Homing ──────────────────────────────────────────────────── -->
+    <section class="detail-block" id="sec-homing">
+      <h2 class="block-heading">Homing &mdash; the microswitch (new in V2.1)</h2>
+
+      <h3 class="block-subheading">Why an endstop at all</h3>
+      <p>
+        Without one, the stage only knows <em>relative</em> position &mdash; it counts steps from wherever
+        it happened to be at power-up. Every dispensing sequence would need the operator to place the
+        carriage by hand first, and any missed step would silently corrupt every position afterwards with
+        no way to recover. The microswitch gives the axis a <strong>physical zero it can find by
+        itself</strong>, at boot and after any fault.
+      </p>
+
+      <h3 class="block-subheading">Switch choice and fail-safe wiring</h3>
+      <p>
+        The switch is single-pole double-throw &mdash; three terminals. The pair used is the one that reads
+        <strong>closed when the lever is at rest</strong>, the normally-closed pair, with the input's
+        internal pull-up enabled:
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Lever</th><th>Contact</th><th>Pin reads</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Free</td>
+            <td>Closed &rarr; pin pulled to ground</td>
+            <td class="num"><strong>LOW</strong></td>
+            <td>Not at endstop</td>
+          </tr>
+          <tr>
+            <td>Pressed</td>
+            <td>Open &rarr; pull-up wins</td>
+            <td class="num"><strong>HIGH</strong></td>
+            <td><strong>At endstop</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout callout-note">
+        <span class="callout-label">This polarity is deliberate.</span>
+        A severed, unplugged or broken endstop wire is electrically indistinguishable from &ldquo;pressed&rdquo;,
+        so the axis reads <em>at endstop</em> and homing halts immediately &mdash; rather than driving the
+        carriage into a hard stop while waiting for a signal that will never arrive. Normally-open wiring
+        would fail the other way, which is the dangerous direction.
+        <p>
+          There is <strong>no software inversion flag</strong>. A miswired switch is meant to surface as a
+          wrong reading and be fixed in the wiring, not silently corrected in firmware.
+        </p>
+      </div>
+
+      <h3 class="block-subheading">Debounce</h3>
+      <p>
+        A reading is trusted only after <strong>3 consecutive identical samples</strong> &mdash; roughly
+        <strong>15 ms</strong> of agreement at the control loop's sampling cadence, enough to reject
+        microswitch bounce. A bounce accepted on the fast approach would latch a zero several millimetres
+        early, and every later position would inherit that error.
+      </p>
+
+      <h3 class="block-subheading">The three-pass homing sequence</h3>
+      <p>
+        Homing is deliberately not a single move. It is fast where speed is free, and slow only where
+        precision is actually produced.
+      </p>
+
+      <figure class="detail-figure homing-fig">
+        <svg viewBox="0 0 520 250" role="img" aria-labelledby="homing-svg-title homing-svg-desc">
+          <title id="homing-svg-title">The three-pass homing sequence</title>
+          <desc id="homing-svg-desc">
+            The endstop switch sits at the left end of the rail and the tube-rack carriage starts to its
+            right. Pass one drives the carriage fast leftward until the switch trips. Pass two backs it
+            off a short distance to the right, 400 half-steps or about 3.9 millimetres. Pass three
+            re-approaches the switch slowly leftward, and the zero is set on that pass only.
+          </desc>
+
+          <defs>
+            <marker id="ah-soft" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="rgba(255,255,255,0.45)" />
+            </marker>
+            <marker id="ah-accent" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--p-accent)" />
+            </marker>
+          </defs>
+
+          <!-- rail -->
+          <line x1="40" y1="52" x2="492" y2="52"
+                stroke="rgba(255,255,255,0.10)" stroke-width="12" stroke-linecap="round" />
+
+          <!-- endstop switch at the left end -->
+          <rect x="26" y="34" width="20" height="34" rx="4"
+                fill="var(--p-tint)" stroke="var(--p-edge)" stroke-width="1.5" />
+          <text x="36" y="26" text-anchor="middle" font-size="12" fill="var(--p-accent-soft)">endstop</text>
+
+          <!-- carriage with the tube rack -->
+          <rect x="360" y="30" width="110" height="42" rx="7"
+                fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" />
+          <text x="415" y="56" text-anchor="middle" font-size="13" fill="#f0ece8">tube rack</text>
+
+          <!-- direction convention -->
+          <text x="26" y="90" font-size="11.5" fill="#7a7068">&larr; negative &middot; toward the switch</text>
+          <text x="492" y="90" text-anchor="end" font-size="11.5" fill="#7a7068">away from the switch &middot; positive &rarr;</text>
+
+          <!-- pass 1 -->
+          <text x="26" y="122" font-size="14" fill="#f0ece8">1 &middot; Fast approach &mdash; full-step</text>
+          <line x1="400" y1="138" x2="58" y2="138"
+                stroke="rgba(255,255,255,0.45)" stroke-width="3" marker-end="url(#ah-soft)" />
+
+          <!-- pass 2 -->
+          <text x="26" y="172" font-size="14" fill="#f0ece8">2 &middot; Back-off &mdash; 400 half-steps &asymp; 3.9 mm</text>
+          <line x1="58" y1="188" x2="168" y2="188"
+                stroke="rgba(255,255,255,0.45)" stroke-width="3" marker-end="url(#ah-soft)" />
+
+          <!-- pass 3 -->
+          <text x="26" y="220" font-size="14" fill="var(--p-accent-soft)">3 &middot; Slow re-approach &mdash; half-step, ~4&times; slower</text>
+          <line x1="168" y1="236" x2="60" y2="236"
+                stroke="var(--p-accent)" stroke-width="3" marker-end="url(#ah-accent)" />
+          <text x="200" y="240" font-size="12" fill="var(--p-accent)">zero is set here, and only here</text>
+        </svg>
+        <figcaption>
+          The three passes, drawn against the rail. Only the third one sets the zero.
+        </figcaption>
+      </figure>
+
+      <table class="param-table">
+        <thead>
+          <tr><th>Pass</th><th>Direction</th><th>Speed / mode</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 &mdash; Fast approach</strong></td>
+            <td>Toward the switch</td>
+            <td><strong>Full-step</strong>, fast</td>
+            <td>Pure travel. Nothing precise happens until the switch trips, so this pass buys torque and
+              halves the control traffic per mm</td>
+          </tr>
+          <tr>
+            <td><strong>2 &mdash; Back-off</strong></td>
+            <td>Away from the switch</td>
+            <td><strong>Full-step</strong>, a fixed
+              <span class="num">400 half-steps &asymp; 3.9 mm</span></td>
+            <td>Release the switch and clear the carriage from it</td>
+          </tr>
+          <tr>
+            <td><strong>3 &mdash; Slow re-approach</strong></td>
+            <td>Toward the switch</td>
+            <td><strong>Half-step</strong>, ~4&times; slower</td>
+            <td><strong>The only place the zero is set</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-note">
+        <span class="callout-label">Why the third pass exists.</span>
+        The repeatability of the zero is set by how far the carriage coasts past the trigger point between
+        two samples. On the fast pass that coast is several tenths of a millimetre; on the slow pass it is
+        a couple of half-steps. Approaching slowly and only <em>then</em> zeroing is what makes the zero
+        repeatable rather than merely present.
+        <p>
+          Starting with the lever already pressed is legal &mdash; the sequence falls through to the
+          back-off pass with no special case.
+        </p>
+      </div>
+
+      <h3 class="block-subheading">Fault behaviour</h3>
+      <p>Every failure mode stops the axis and reports, rather than continuing:</p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Condition</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>The fast approach exhausts its <strong>travel budget of
+              <span class="num">20&nbsp;000 half-steps (~196 mm)</span></strong> without finding the switch</td>
+            <td>Halt, coils de-energised, homed flag stays false, fault reported</td>
+          </tr>
+          <tr>
+            <td>The switch <strong>still reads triggered after the 3.9 mm back-off</strong>
+              &mdash; a stuck switch or a severed wire</td>
+            <td>Halt, fault reported</td>
+          </tr>
+          <tr>
+            <td>The slow re-approach exhausts its
+              <strong><span class="num">500 half-step</span> budget</strong> without re-triggering</td>
+            <td>Halt, fault reported</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">
+        The travel limit is counted <strong>in steps, not in wall-clock time</strong> &mdash; a slow axis is
+        not a faulty one, and a time-based limit would fault a healthy long move.
+      </p>
+      <div class="callout callout-warn">
+        <span class="callout-label">Gap &mdash; the travel-budget fault has never fired on hardware.</span>
+        The negative control for the first row of this table was not run. The path is code-reviewed only.
+        <a class="tool-link" href="#sec-risks">See the risks</a>.
+      </div>
+    </section>
+
+    <!-- ── 6. Electronics & control path ──────────────────────────────── -->
+    <section class="detail-block" id="sec-electronics">
+      <h2 class="block-heading">Electronics &amp; control path</h2>
+      <p>
+        The alignment axes sit <strong>behind a port expander on the shared serial bus</strong> and consume
+        <strong>zero controller pins</strong>. This was a deliberate architectural decision: the
+        controller's remaining pins are reserved for pumps 3&ndash;6, so alignment was routed through the
+        expander from day one, and a direct-pin draft was written and discarded for exactly that reason.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Element</th><th>As built</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Expander</strong></td>
+            <td>MCP23017 16-bit input/output expander at address <span class="cmd">0x20</span>, on the
+              shared I&sup2;C bus</td>
+          </tr>
+          <tr>
+            <td><strong>Pin usage</strong></td>
+            <td><strong>10 of 16</strong> &mdash; 4 coil lines per axis (8 total) plus 1 endstop input per
+              axis (2). <strong>Six spare</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Motor driver</strong></td>
+            <td>ULN2003 Darlington array board, one per axis</td>
+          </tr>
+          <tr>
+            <td><strong>Motor supply</strong></td>
+            <td><strong>12 V rail</strong> &mdash; the same rail the pumps and the controller board already
+              use, so alignment adds no converter</td>
+          </tr>
+          <tr>
+            <td><strong>Current</strong></td>
+            <td>&asymp; <span class="num">60 mA</span> per energised coil at 12 V
+              (~200 &Omega;/phase); &asymp; <span class="num">60&ndash;120 mA</span> per axis while
+              stepping. Well inside the driver's <span class="num">500 mA/channel</span> rating</td>
+          </tr>
+          <tr>
+            <td><strong>Endstop inputs</strong></td>
+            <td>Expander inputs with internal pull-ups enabled</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="block-subheading">Power-on safety is passive</h3>
+      <p>
+        Every controller pin is high-impedance until firmware drives it, and the expander is not
+        initialised until late in the boot sequence. What guarantees that no coil is energised in that
+        window is <strong>passive, not firmware</strong>: <strong>10 k&Omega; pull-downs on all eight
+        driver inputs</strong>, plus the expander's own reset state, in which all pins are inputs. A
+        <strong>100 nF</strong> decoupling capacitor across the expander's supply pins prevents
+        intermittent bus errors under motor load.
+      </p>
+
+      <h3 class="block-subheading">Coils park after every move</h3>
+      <p>
+        The coils are de-energised on <strong>every</strong> exit path &mdash; normal completion, fault,
+        abort, refusal, and start-up. A 28BYJ-48 left energised heats up, and the gearbox already holds
+        position without holding current. <strong>Parking is the thermal design, not politeness.</strong>
+      </p>
+
+      <h3 class="block-subheading">Interlocks</h3>
+      <ul>
+        <li><strong>One axis at a time.</strong> A second move while one is running is <em>refused</em>,
+          not queued.</li>
+        <li><strong>A move toward an already-triggered endstop stops on the switch, not on the step
+          count.</strong> Moves <em>away</em> from a triggered switch are never blocked &mdash; that is how
+          the operator recovers from a pressed switch.</li>
+        <li>The endstop is sampled <strong>before every single step</strong>, so the interlock reacts
+          within a burst of steps rather than between control-loop passes.</li>
+      </ul>
+
+      <h3 class="block-subheading">Console commands</h3>
+      <p class="block-note">Bench bring-up is driven from a serial console.</p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Command</th><th>Effect</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cmd">AXIS?</span></td>
+            <td>Status for both axes &mdash; expander present, homed flag, position in half-steps and mm,
+              live endstop reading, active mode, steps remaining, and the compiled-in constants</td>
+          </tr>
+          <tr>
+            <td><span class="cmd">AXIS &lt;1|2&gt; &lt;steps&gt;</span></td>
+            <td>Signed half-step move. Negative is toward the endstop, positive away from it. The magnitude
+              is clamped to the travel budget</td>
+          </tr>
+          <tr>
+            <td><span class="cmd">AXIS STOP</span></td>
+            <td>Abort the moving axis and park its coils</td>
+          </tr>
+          <tr>
+            <td><span class="cmd">HOME &lt;1|2&gt;</span></td>
+            <td>Run the three-pass homing sequence. On success the position zeroes and the homed flag sets</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── 7. Motion performance ──────────────────────────────────────── -->
+    <section class="detail-block" id="sec-motion">
+      <h2 class="block-heading">Motion performance &mdash; 110 s to 22 s</h2>
+      <p>
+        The first working version homed 132 mm in <strong>110 seconds</strong> &mdash; usable, but slow
+        enough to dominate a dispensing cycle. Three changes took it to <strong>22 seconds</strong>:
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Change</th><th>What it addressed</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Burst stepping</strong></td>
+            <td>The real ceiling was not the bus at all &mdash; it was the control loop's own cadence, which
+              stepped once per pass and then waited. Stepping a batch per pass amortises that overhead away</td>
+          </tr>
+          <tr>
+            <td><strong>Bus clock 100 &rarr; 400 kHz</strong></td>
+            <td>Per-step bus traffic &mdash; one coil write plus one endstop read &mdash; fell from
+              <span class="num">~700 &micro;s</span> to <span class="num">~175 &micro;s</span></td>
+          </tr>
+          <tr>
+            <td><strong>Full-stepping the travel passes</strong></td>
+            <td>Half the bus transactions per mm, and it lands only on the double-coil states, which produce
+              more torque</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="param-table">
+        <thead>
+          <tr>
+            <th>Metric</th><th>Original</th><th>After burst stepping</th><th>Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Homing travel, per half-step</td>
+            <td class="num">8.00 ms</td><td class="num">2.32 ms</td>
+            <td class="num"><strong>0.89 ms</strong> (9&times; faster)</td>
+          </tr>
+          <tr>
+            <td>Dispensing move, per half-step</td>
+            <td class="num">8.00 ms</td><td class="num">2.32 ms</td>
+            <td class="num"><strong>1.79 ms</strong> (4.5&times; faster)</td>
+          </tr>
+          <tr>
+            <td>Slow re-approach</td>
+            <td class="num">~25 ms</td><td class="num">~25 ms</td>
+            <td class="num"><strong>~24 ms</strong> &mdash; unchanged <em>by design</em></td>
+          </tr>
+          <tr>
+            <td><strong>Full 132 mm home</strong></td>
+            <td class="num"><strong>110 s</strong></td><td class="num">42 s</td>
+            <td class="num"><strong>22 s</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note"><strong>No steps were lost</strong> at the final settings.</p>
+
+      <h3 class="block-subheading">Where the remaining 22 s goes</h3>
+      <div class="bar-chart">
+        <div class="bar-label">Fast travel</div>
+        <div class="bar-wrap"><div class="bar bar-grav" style="width:54.5%"><span class="bar-val">12 s</span></div></div>
+        <div class="bar-label">Back-off</div>
+        <div class="bar-wrap"><div class="bar bar-cmd" style="width:1.4%"></div></div>
+        <div class="bar-label">Slow crawl</div>
+        <div class="bar-wrap"><div class="bar bar-flow" style="width:43.2%"><span class="bar-val">9.5 s</span></div></div>
+      </div>
+      <p class="table-note">
+        12 s of fast travel, 0.3 s of back-off (too short to draw), and 9.5 s of slow crawl.
+        Bars are scaled against the 22 s total.
+      </p>
+      <p>
+        The crawl exists only to re-cross the 3.9 mm back-off, so shortening the back-off cuts it almost
+        proportionally &mdash; but that needs one measurement first: <strong>how far the carriage must
+        actually retreat before the switch releases</strong>. That measurement has not been made.
+      </p>
+      <div class="callout callout-note">
+        <span class="callout-label">The floor is mechanical.</span>
+        This motor through this pinion runs out of usable speed around <strong>16&ndash;20 RPM</strong>, so a
+        full-length home cannot go much below <strong>~13 s</strong> without different gearing.
+      </div>
+    </section>
+
+    <!-- ── 8. Bench validation ────────────────────────────────────────── -->
+    <section class="detail-block" id="sec-validation">
+      <h2 class="block-heading">Bench validation &mdash; 2026-07-31, axis 1</h2>
+      <p class="block-note">
+        Hardware under test: one motor, one driver board, one microswitch.
+      </p>
+      <div class="callout callout-warn">
+        <span class="callout-label">Gap &mdash; axis 2 was never wired.</span>
+        It is a wiring duplicate of axis 1 on the next four expander pins, through the same code path, so
+        proving axis 1 proves the <em>design</em> &mdash; but not that particular motor, driver board or
+        switch. No endstop reading, no homing counts, no direction sense and no repeatability figure exist
+        for axis 2.
+      </div>
+
+      <table class="param-table">
+        <thead>
+          <tr><th>#</th><th>Question</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">a</td>
+            <td>Do the expander and the liquid-level sensor both answer on the shared bus?</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; both present. Adding the expander did not
+              disturb the sensor</td>
+          </tr>
+          <tr>
+            <td class="num">b</td>
+            <td>Does the endstop read correctly at rest and pressed?</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; lever free reads <em>free</em>; carriage
+              driven into the switch reads <em>at endstop</em></td>
+          </tr>
+          <tr>
+            <td class="num">c</td>
+            <td>Which way do positive steps move the carriage?</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; <strong>positive = right = away from the
+              switch</strong>; the switch is on the left</td>
+          </tr>
+          <tr>
+            <td class="num">d</td>
+            <td>Do the coils park after a move?</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; all four driver indicator lights off at rest</td>
+          </tr>
+          <tr>
+            <td class="num">e</td>
+            <td>Homing pass counts (fast / back-off / slow)</td>
+            <td><span class="flag flag-met">PASS</span> &mdash;
+              <strong><span class="num">1890 / 400 / 400</span></strong> half-steps</td>
+          </tr>
+          <tr>
+            <td class="num">f</td>
+            <td><strong>Homing repeatability</strong>, three runs from different offsets</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; spread <strong>2 half-steps
+              &asymp; 0.02 mm</strong>. Commanded <span class="num">800 / 1500 / 1100</span> &rarr; counted
+              <span class="num">800 / 1502 / 1100</span>.
+              <em>Read the limit on this figure below.</em></td>
+          </tr>
+          <tr>
+            <td class="num">g</td>
+            <td><strong>Return-to-zero accuracy</strong>, three 132 mm round trips at final speed</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; commanded
+              <strong><span class="num">13&nbsp;464</span></strong> out; homing counted
+              <span class="num">13&nbsp;470 / 13&nbsp;467 / 13&nbsp;477</span> back =
+              <strong><span class="num">+0.06 / +0.03 / +0.13 mm</span></strong>. <strong>No step loss</strong></td>
+          </tr>
+          <tr>
+            <td class="num">h</td>
+            <td>Shared-bus stress &mdash; home the axis while the liquid-level sensor streams</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; <strong>no stall</strong>. 75 sensor
+              readings, every one <span class="num">0.47&ndash;0.55 s</span> apart against a 500 ms target,
+              throughout all three homing passes. Homing landed <span class="num">0.05 mm</span> from
+              target. The step interval stretched <span class="num">8.00 &rarr; 8.11 ms</span>
+              (<strong>1.6 %</strong>). Re-verified twice more after the speed work</td>
+          </tr>
+          <tr>
+            <td class="num">i</td>
+            <td><strong>Severed-wire control</strong> &mdash; endstop unplugged, then home</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; correct fault reported; the carriage moved
+              <span class="num">3.9 mm</span> and stopped, in <span class="num">3.2 s</span></td>
+          </tr>
+          <tr>
+            <td class="num">j</td>
+            <td>Half-steps per mm against the calculated 102</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; <strong>exact</strong>.
+              <span class="num">13&nbsp;464</span> half-steps &rarr; <span class="num">132 mm</span>
+              measured = <strong><span class="num">102.0 /mm</span></strong></td>
+          </tr>
+          <tr>
+            <td class="num">k</td>
+            <td>Control loop alive, no resets during a move?</td>
+            <td><span class="flag flag-met">PASS</span> &mdash; the touchscreen kept rendering and responded
+              to taps throughout</td>
+          </tr>
+          <tr>
+            <td class="num">l</td>
+            <td><strong>Travel-budget fault</strong>, negative control</td>
+            <td><span class="flag flag-gap">NOT RUN</span> &mdash; skipped by operator decision;
+              <a class="tool-link" href="#sec-risks">see the risks</a></td>
+          </tr>
+          <tr>
+            <td class="num">m</td>
+            <td>Rail voltage under load; coil resistance of both motors</td>
+            <td><span class="flag flag-gap">NOT MEASURED</span> &mdash; needs a multimeter</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="block-subheading">The honest limit on the repeatability figure</h3>
+      <div class="callout callout-warn">
+        <span class="callout-label">The number is 0.03 mm, not 0.02 mm.</span>
+        The measured spread is 2 half-steps &asymp; 0.02 mm, but the debounce filter needs 3 consecutive
+        agreeing samples, which is about 3 half-steps of travel. <strong>The measurement is therefore
+        sitting at the resolution floor of the method.</strong> The defensible claim is
+        <strong>&ldquo;no worse than ~0.03 mm&rdquo;</strong>, not &ldquo;0.02 mm exactly&rdquo;. Either
+        way it is sub-millimetre by more than 30&times;.
+      </div>
+
+      <h3 class="block-subheading">A diagnostic that lied</h3>
+      <p>
+        Mid-session, the status command was found to report <strong>stale</strong> endstop readings: it
+        printed whatever the debounce filter had last latched, and the filter is only fed while an axis is
+        moving. At rest it reported the <em>previous move's</em> value. This was caught during the
+        severed-wire test &mdash; with the endstop physically disconnected, the status command reported
+        <em>free</em>, the exact opposite of the truth.
+      </p>
+      <p>
+        <strong>The hardware was behaving perfectly; the diagnostic was lying.</strong> It was fixed the
+        same day &mdash; the status command now takes a fresh debounced sample before printing.
+        <strong>Any endstop reading recorded before 2026-07-31 is invalid.</strong>
+      </p>
+
+      <h3 class="block-subheading">A discarded result</h3>
+      <p>
+        One mid-session set of round trips degraded badly and looked like a rack derailment. It was
+        <strong>contaminated</strong> &mdash; the rig was moved and the trigger touched mid-run &mdash; and
+        has been discarded in full. It survives only as the untested derailment-detection idea in the risks
+        below.
+      </p>
+    </section>
+
+    <!-- ── 9. Open questions & risks ──────────────────────────────────── -->
+    <section class="detail-block" id="sec-risks">
+      <h2 class="block-heading">Open questions &amp; risks</h2>
+
+      <div class="callout callout-warn">
+        <span class="callout-label">1 &mdash; The stroke is ~14 mm too short. This is the headline risk.</span>
+        The 8-position pattern needs <strong>7 moves &times; 22 mm = 154 mm</strong>; the rail provides
+        <strong>~140 mm</strong>. Six moves (132 mm) run cleanly and repeatably; a seventh would push the
+        rack off the pinion, so the full sequence was deliberately not attempted.
+        <p>
+          <strong>Decision: redesign the affected parts to a stroke greater than 170 mm.</strong> This is
+          <strong>mechanical only</strong> &mdash; the electronics, the firmware and the control logic are
+          unaffected by the geometry change, and the firmware travel budget is already set to 196 mm to
+          accommodate it.
+        </p>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-label">2 &mdash; Homing has no derailment check. Proposal, untested.</span>
+        If the rack jumps the pinion, the motor keeps stepping while the carriage does not move, and
+        nothing currently notices. A return-home whose fast-approach count disagrees with the commanded
+        outward travel would detect exactly that, cheaply, using numbers the firmware already has.
+        <strong>Recorded as an idea, not a finding</strong> &mdash; the one session that appeared to show it
+        was contaminated and discarded. It needs a deliberate test before anything relies on it.
+      </div>
+
+      <div class="callout callout-note">
+        <span class="callout-label">3 &mdash; The travel-budget fault has never fired on hardware.</span>
+        The negative control was skipped by operator decision: the budget is a firmware constant rather
+        than a property of the axis, and running it would have ground the carriage against a hard stop for
+        over a minute. The fault path is <strong>code-reviewed only</strong>. Re-scoping it needs the motor
+        decoupled from the rail.
+      </div>
+
+      <div class="callout callout-note">
+        <span class="callout-label">4 &mdash; Axis 2 has never been wired or energised.</span>
+        No endstop reading, no homing counts, no direction sense, no repeatability. Give it one status
+        check and one homing run the first time it is wired.
+      </div>
+
+      <div class="callout callout-note">
+        <span class="callout-label">5 &mdash; Unmeasured electrical values.</span>
+        Rail voltage at the driver under load, and the coil resistance of both motors, were not measured
+        &mdash; both need a multimeter. It is therefore confirmed <em>by behaviour, not by meter</em>, that
+        both motors are the 12 V variant.
+      </div>
+
+      <div class="callout callout-note">
+        <span class="callout-label">6 &mdash; How far the carriage must retreat before the switch releases.</span>
+        This is the one measurement blocking a shorter back-off, and with it the largest remaining
+        speed-up.
+      </div>
+    </section>
+
+    <!-- ── 10. Next steps ─────────────────────────────────────────────── -->
+    <section class="detail-block" id="sec-next">
+      <h2 class="block-heading">Next steps</h2>
+      <div class="next-brief">
+        <h4>Mechanical &mdash; V3</h4>
+        <ul>
+          <li><strong>Redesign the rail and carriage to a stroke greater than 170 mm</strong> so the full
+            8-position pattern fits with margin. Highest priority &mdash; it is the only unmet pass
+            criterion.</li>
+          <li>Wire and prove <strong>axis 2</strong>.</li>
+        </ul>
+
+        <h4>Functional &mdash; future perspective</h4>
+        <ul>
+          <li>Add an <strong>input queue</strong> and an <strong>output queue</strong> so the module can
+            hold and handle a queue of <strong>at least four racks</strong>.</li>
+          <li>Handle those racks <strong>automatically</strong>, for seamless, fast processing of a higher
+            throughput of samples.</li>
+        </ul>
+
+        <h4>Verification debt</h4>
+        <ul>
+          <li>Measure the <strong>switch release distance</strong>, then shorten the back-off.</li>
+          <li>Run the <strong>travel-budget negative control</strong> with the motor decoupled.</li>
+          <li>Meter the <strong>rail under load</strong> and the <strong>coil resistances</strong>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── 11. Version log ────────────────────────────────────────────── -->
+    <section class="detail-block" id="sec-versions">
+      <h2 class="block-heading">Version log</h2>
+
+      <details class="ver-panel ver-pass" open>
+        <summary>
+          <span class="ver-chip">V2</span>
+          <span class="ver-sum-note">Built 2026-06-25 &mdash; rack-and-pinion indexing stage. Open-loop:
+            no position reference.</span>
+        </summary>
+        <div class="ver-body">
+          <section class="detail-block">
+            <p>
+              Rack-and-pinion indexing stage with the gravity-protected layout &mdash; motor and pusher
+              mounted above the rail. Moves one rack at a time and does that job well. Open-loop: the
+              stage has no position reference of its own, so it can only count steps from wherever it
+              starts.
+            </p>
+          </section>
+        </div>
+      </details>
+
+      <details class="ver-panel ver-pass" open>
+        <summary>
+          <span class="ver-chip">V2.1</span>
+          <span class="ver-sum-note">Built 2026-07-30, bench-validated 2026-07-31 &mdash; homing microswitch
+            added; repeatable zero at &le; 0.03 mm and a 132 mm home in 22 s.</span>
+        </summary>
+        <div class="ver-body">
+          <section class="detail-block">
+            <p>
+              <strong>Homing microswitch added.</strong> A single-pole double-throw roller-lever endstop at
+              the left end of the rail, fail-safe normally-closed wiring, the three-pass homing sequence,
+              coil parking, and a step-counted travel limit. Driven through a port expander using zero
+              controller pins.
+            </p>
+            <p>
+              Repeatable zero measured at <strong>&le; 0.03 mm</strong>; the 132 mm home taken from
+              <strong>110 s to 22 s</strong> with no step loss; verified not to disturb the liquid-level
+              sensor sharing the bus. The session also exposed and fixed a stale-reading diagnostic bug,
+              and uncovered the stroke shortfall that drives the V3 redesign.
+            </p>
+          </section>
+        </div>
+      </details>
+
+      <details class="ver-panel ver-neutral">
+        <summary>
+          <span class="ver-chip">V3</span>
+          <span class="ver-sum-note">Not started &mdash; mechanical stroke redesign beyond 170 mm, second
+            axis, rack queueing.</span>
+        </summary>
+        <div class="ver-body">
+          <section class="detail-block">
+            <p>
+              Nothing has been built. The scope is set by the open risks: a stroke redesign beyond 170 mm,
+              wiring and proving the second axis, and the input/output rack queues.
+              <a class="tool-link" href="#sec-next">See next steps</a>.
+            </p>
+          </section>
+        </div>
+      </details>
+    </section>
+
+    <!-- ── 12. Source documents ───────────────────────────────────────── -->
+    <section class="detail-block" id="sec-sources">
+      <h2 class="block-heading">Source documents &amp; test data</h2>
+      <p class="block-note">
+        The electronics and firmware for this module live in the Arduino firmware repository, not in this
+        one. That repository is authoritative for anything about the built system; the record on this site
+        is the design-side view of it.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>What</th><th>Where</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>This page, in full, as the design-side record</td>
+            <td><a class="tool-link" href="PROTOTYPE.md">PROTOTYPE.md</a> &mdash; alongside this page</td>
+          </tr>
+          <tr>
+            <td>Wiring table, pin allocation, power tree, operator checklist, bench results</td>
+            <td>Firmware repository &rarr; the hardware architecture document, alignment-module section</td>
+          </tr>
+          <tr>
+            <td>Homing state machine, phase tables, every constant with its rationale</td>
+            <td>Firmware repository &rarr; the alignment bench source file</td>
+          </tr>
+          <tr>
+            <td>Session narrative &mdash; firmware written, bench session, speed work</td>
+            <td>Firmware repository &rarr; project log, entries 2026-07-30 and 2026-07-31</td>
+          </tr>
+          <tr>
+            <td>Why the 12 V motor variant, the rail-count trade-off, and the open question of whether
+              alignment runs at 5 V or 12 V in the ideal 24 V design</td>
+            <td>Firmware repository &rarr; the ideal-design document. <em>Counterfactual &mdash; it
+              describes nothing that is wired</em></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">
+        <strong>Precedence:</strong> where the hardware architecture document and the ideal-design document
+        disagree about the built system, the hardware document wins. Numbers on this page are taken from
+        the hardware document and the bench session, not from the ideal design.
+      </p>
+      <div class="callout callout-note">
+        <span class="callout-label">Media note.</span>
+        A video of V2 in motion exists and was used in the lab-meeting deck, but at roughly 36 MB it needs
+        re-encoding before it can be served on a web page. It is deliberately not linked here.
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // TOC: open any collapsed <details> ancestor before jumping.
+  document.querySelectorAll('.toc-link').forEach(a => {
+    a.addEventListener('click', () => {
+      const t = document.querySelector(a.getAttribute('href'));
+      let p = t && t.parentElement;
+      while (p) { if (p.tagName === 'DETAILS') p.open = true; p = p.parentElement; }
+    });
+  });
+
+  // Lightbox for the bench photograph.
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeLightbox = () => { lightbox.hidden = true; lightboxImg.src = ''; };
+  document.querySelectorAll('.detail-figure img, .figure-grid img, .fig-side img, .zoomable')
+    .forEach(img => img.addEventListener('click', () => {
+      lightboxImg.src = img.src; lightboxImg.alt = img.alt || ''; lightbox.hidden = false;
+    }));
+  lightbox.addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lightbox.hidden) closeLightbox(); });
+</script>
+</body>
+</html>
