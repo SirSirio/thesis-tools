@@ -17,6 +17,7 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   ├── style.css           Shared stylesheet — imported by every page
 │   ├── deck.css            Shared deck runtime (styles/transitions) — D-01 exception
 │   ├── deck.js             Shared deck runtime (state machine) — D-01 exception
+│   ├── prototype-page.css  Shared visual system for the prototype subpages — same D-01 exception as the deck runtime (three subpages, one system). Root class .proto-page; accent modifier .proto-page--align swaps orange → violet via eight --p-* properties
 │   ├── fonts/
 │   │   └── geist/
 │   │       ├── Geist-Bold.woff2  Vendored, subsetted Geist Bold — landing-page headline only (D-20)
@@ -63,23 +64,32 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │       ├── SPEC.md         Tool spec — protocol structure, formulas (mass→volume Z-factor, CV, uncertainty), balance/environment constants, deviation-table sources, assumptions
 │       └── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js), copied from the displaced-volume-model precedent
 ├── prototypes/
-│   ├── index.html              Prototype Design Space — animated journey page
-│   ├── SPEC.md                 Tool spec — content structure, animation technique, prototype registry
+│   ├── index.html              Prototype Design Space — journey index only, no detail views. Two module threads (pump = orange, alignment = violet), each with its own S-curve, node set, accent (--t-* properties) and IntersectionObserver. Cards link out to the subpages
+│   ├── SPEC.md                 Tool spec — thread model, subpage contract, animation technique, prototype registry
 │   ├── PROTOTYPES.md           Shallow prototype registry (scan before opening deep PROTOTYPE.md)
 │   ├── REQUIREMENTS-CRITERIA.md  Device requirements (binary) + weighted criteria — canonical concept-evaluation table
+│   ├── katex/                  KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js, fonts/) shared by both pump subpages
 │   ├── Prototype-1-Pump-Module/
 │   │   ├── proto-01-5ul-4roller/
-│   │   │   └── PROTOTYPE.md    Proto-01 deep detail — design params, test forward-links, version log
+│   │   │   ├── index.html      Proto-01 subpage — 5 µL 4-roller baseline
+│   │   │   ├── PROTOTYPE.md    Proto-01 deep detail — design params, test forward-links, version log
+│   │   │   └── Prototype1_*.{png,jpg}  CAD renders, real-build photos, geometry diagram, tool screenshots
 │   │   ├── proto-02-5ul-4roller-v2/
+│   │   │   ├── index.html            Proto-02 subpage — corrected geometry + gap sweep, v2.3 tested (uses ../../katex/)
 │   │   │   ├── PROTOTYPE.md          Proto-02 deep detail — corrected geometry + gap sweep
+│   │   │   ├── TEST-PROTOCOL.md      ISO 23783-2-adapted gravimetric method for this prototype
+│   │   │   ├── TEST-RESULTS.md       v2.3 gravimetric campaign results
 │   │   │   ├── pump-head-web.mp4     Re-encoded pump-head clip (H.264, portrait, ~1.7MB) — landing-page proof video
 │   │   │   └── pump-head-poster.jpg  Poster frame for the pump-head clip
 │   │   ├── Tube OD Thikness/
 │   │   │   └── tube-wall-thickness-analysis.md  Tube wall measurement & validation
 │   │   └── multi-liquid-architecture/
 │   │       └── ARCHITECTURE-DECISION.md  Multi-pump scaling study (A vs C) — not a proto-NN; feeds proto-04
-│   ├── Prototype-2-Alignment-Module/
-│   │   └── PROTOTYPE.md        Alignment module placeholder — design work to begin
+│   ├── Prototype-2-Alignment-Module/    Detail lives at MODULE ROOT — no proto-NN-<slug>/ subfolder for this module
+│   │   ├── index.html          Alignment module subpage (violet, .proto-page--align) — V2 stage + V2.1 homing, written from PROTOTYPE.md
+│   │   ├── PROTOTYPE.md        Alignment module deep detail — V2 rack-indexing stage, V2.1 bench-validated homing, open gaps
+│   │   ├── AlignmentModuelHomingV2.1.png  V2.1 bench photo — hero image of the subpage
+│   │   └── Alignment_Module_V2.mp4        V2 in motion, ~36 MB — deliberately NOT linked from any page; needs re-encoding first
 │   └── System-Architecture/
 │       ├── ARCHITECTURE.md         Fixed components, open questions, driver-vs-MCU verdict — trimmed to pointers into the tool's #theory
 │       ├── PUMP-CONTROL-CONCEPTS.md  Comms-layer reasoning — trimmed to pointers into the tool's #theory
@@ -111,6 +121,8 @@ Dark glassmorphic theme. See `assets/style.css` for all tokens.
 - **Text:** `#f0ece8` primary · `#7a7068` muted
 - **Font:** system-ui sans-serif stack (no CDN fonts) for body text everywhere. The landing page (`index.html`) only additionally vendors **Geist Bold** (self-hosted `@font-face`, subsetted, SIL OFL 1.1) for its `.site-title` headline — body text on the landing page stays `system-ui` like every other page.
 - **Animations:** `fade-up` entrance with staggered `--delay`, hover lift + glow on cards. The landing page's hero motif additionally uses locally-vendored **GSAP core** (`assets/gsap/gsap.min.js`, no plugins, no CDN) to drive one synchronized animation timeline (rotor rotation + liquid-slug highlight) — a D-01/D-03 exception approved specifically for that motif; every other page's motion stays hand-built CSS/SVG.
+
+- **Per-thread accent (prototype pages only):** the Prototype Design Space journey carries **two accent families** — the pump thread stays orange → red, the alignment thread is violet → indigo-blue (`#9b7fe0` → `#5a8fd8`, already proven on `tools/pump-testing/`). This is **scoped to those pages** and does **not** change the global accent: threads set `--t-*` properties on the thread wrapper, prototype subpages set `--p-*` properties on `.proto-page` (with `.proto-page--align` for violet). Never override the global `--accent` for this — the nav, the background blobs and every other page depend on it staying orange. Note `--glass-border` is itself orange-tinted, so a card that only swaps `--accent` still reads orange at its border.
 
 Each tool page links back to `../../index.html` via a `← All tools` nav bar and shares the blobs + animate-in pattern from the landing page.
 
@@ -155,7 +167,7 @@ tools/<tool-name>/
 
 **Rules:**
 - Tool-specific constants and formulas live in `SPEC.md` and inline in the tool's `<script>` — **not** in shared files
-- The shared resources between pages are `assets/style.css`, the presentation deck runtime (`assets/deck.css`, `assets/deck.js` — a sanctioned D-01 exception for reuse across one-shot decks), and now also `assets/fonts/` (vendored web fonts, precedent: `assets/fonts/geist/`) and `assets/gsap/gsap.min.js` (vendored GSAP core, referenced only by the landing page's hero motif, D-01/D-03 exception). `assets/fonts/` is a sanctioned shared-asset location going forward — future vendored fonts belong there, not in a tool-local folder
+- The shared resources between pages are `assets/style.css`, the presentation deck runtime (`assets/deck.css`, `assets/deck.js` — a sanctioned D-01 exception for reuse across one-shot decks), `assets/prototype-page.css` (shared visual system for the prototype subpages — sanctioned on exactly the deck-runtime precedent: three subpages sharing one system, so the CSS lives once rather than being copied three times), and `assets/fonts/` (vendored web fonts, precedent: `assets/fonts/geist/`) and `assets/gsap/gsap.min.js` (vendored GSAP core, referenced only by the landing page's hero motif, D-01/D-03 exception). `assets/fonts/` is a sanctioned shared-asset location going forward — future vendored fonts belong there, not in a tool-local folder
 - `SPEC.md` is the canonical reference; `.planning/phases/` context files point to it
 - Keep `SPEC.md` in sync when formulas or constants change
 

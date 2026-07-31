@@ -13,6 +13,12 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 - **Naming:** number + descriptive slug — `proto-NN-<descriptor>` (e.g.
   `proto-01-5ul-4roller`).
 - **One folder per prototype:** `prototypes/Prototype-N-<Module>/proto-NN-<slug>/PROTOTYPE.md`
+  — with one exception: the **alignment module** keeps its `PROTOTYPE.md` and its page at
+  **module root**, because its versions (V2, V2.1) are iterations of one machine rather
+  than a streak of separately-numbered builds. Each module's table below may also carry its
+  own column set; the schemas are deliberately allowed to differ.
+- **One page per prototype:** an `index.html` sits beside each `PROTOTYPE.md`, linked from
+  its card on the [Prototype Design Space](index.html) journey.
 - **Design lives here** (this `02. Tools` repo) because prototypes are *born*
   here — designed with the **peristaltic roller displaced-volume solver** and
   the **rotor solver**.
@@ -47,11 +53,21 @@ Open a `proto-NN-*/PROTOTYPE.md` only when you need the deep detail.
 
 ## Prototype-2-Alignment-Module
 
-| ID | Slug | Status | Notes |
-|----|------|--------|-------|
-| — | (none yet) | Not yet designed | Module folder created; design work to begin. |
+The stage that hosts the sample rack and indexes each tube under the dispensing nozzle —
+it moves the samples, not the dispensing head.
 
-<!-- Add a row per alignment prototype. Keep newest at the bottom. -->
+> **Where the detail lives:** at **module root**, not in a `proto-NN-<slug>/` subfolder.
+> Both versions below are documented in the single
+> `Prototype-2-Alignment-Module/PROTOTYPE.md`, and the page is
+> `Prototype-2-Alignment-Module/index.html`. Do not go looking for a `proto-03-*/` folder —
+> there isn't one. Versions are numbered in this module's own V2 / V2.1 scheme.
+
+| ID | Slug | Status | Key result | Notes |
+|----|------|--------|------------|-------|
+| V2 | *(module root)* | Built ✅ (2026-06-25) | Indexes one rack at a time, reliably | Rack-and-pinion stage, 28BYJ-48 geared stepper through a Ø12.80 mm pinion. Gravity-protected layout — motor and pusher mounted above the rail so spills cannot reach the drive train. Open-loop: no position reference, so the carriage had to be placed by hand at power-up |
+| V2.1 | *(module root)* | **Built ✅ (2026-07-30) · bench-validated ✅ (2026-07-31)** | Repeatable zero **no worse than ~0.03 mm**; 132 mm home in **22 s** (was 110 s), no step loss; **102.0 half-steps/mm** confirmed by measurement | Adds an SPDT roller-lever homing microswitch at the left end of the rail, wired fail-safe (a severed wire reads as *at endstop*), plus a three-pass homing sequence — fast approach, 3.9 mm back-off, slow re-approach that alone sets the zero. Driven through an I²C port expander using zero controller GPIO; verified not to disturb the liquid-level sensor sharing the bus. ⚠ **One unmet pass criterion:** usable stroke ~140 mm against the 154 mm the 8-position pattern needs — six moves run cleanly, a seventh would push the rack off the pinion. Mechanical redesign to >170 mm stroke is the V3 priority. Axis 2 has never been wired |
+
+<!-- Add a row per alignment prototype version. Keep newest at the bottom. -->
 
 ---
 
