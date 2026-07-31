@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prototype Design Space — Thesis Tools</title>
   <link rel="stylesheet" href="../assets/style.css" />
-  <link rel="stylesheet" href="katex/katex.min.css" />
+  <script>document.documentElement.classList.add('js');</script>
   <style>
     /* ── Nav bar ──────────────────────────────────────────────── */
     .tool-nav {
@@ -25,8 +25,8 @@
     .nav-back:hover { opacity: 0.75; }
     .nav-title { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.04em; }
 
-    /* ── View containers ──────────────────────────────────────── */
-    .journey-view, .detail-view {
+    /* ── View container ───────────────────────────────────────── */
+    .journey-view {
       position: relative;
       z-index: 1;
       max-width: 900px;
@@ -34,7 +34,7 @@
       padding: 60px 32px 100px;
     }
 
-    /* ── Journey header ───────────────────────────────────────── */
+    /* ── Page header ──────────────────────────────────────────── */
     .journey-header { margin-bottom: 60px; }
     .journey-title {
       font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -53,9 +53,60 @@
       max-width: 560px;
     }
 
+    /* ── Threads ──────────────────────────────────────────────────
+       One thread = one module = one curve + its own node set.
+       Every accent inside a thread reads its --t-* variables, never
+       the global --accent / --accent-2 / --glass-border (all orange).
+       --stage-h scales the stage to the thread's node count.        */
+    .thread {
+      --t-accent:      #ff6b2b;
+      --t-accent-2:    #e83535;
+      --t-accent-soft: #ffb08a;
+      --t-glow:        rgba(255, 107, 43, 0.25);
+      --t-border:      rgba(255, 107, 43, 0.18);
+      --t-path:        rgba(255, 107, 43, 0.25);
+      --stage-h:       2500px;
+      position: relative;
+    }
+    .thread--align {
+      --t-accent:      #9b7fe0;
+      --t-accent-2:    #5a8fd8;
+      --t-accent-soft: #c3aef5;
+      --t-glow:        rgba(155, 127, 224, 0.28);
+      --t-border:      rgba(155, 127, 224, 0.22);
+      --t-path:        rgba(155, 127, 224, 0.28);
+      --stage-h:       2000px;
+    }
+    .thread + .thread { margin-top: 40px; padding-top: 56px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+
+    .thread-head { margin-bottom: 36px; }
+    .thread-eyebrow {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--t-accent);
+      margin-bottom: 8px;
+    }
+    .thread-title {
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, var(--t-accent), var(--t-accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .thread-sub {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.6;
+      max-width: 620px;
+    }
+
     /* ── Journey stage (SVG + nodes) ──────────────────────────── */
     .journey-stage { position: relative; width: 100%; }
-    .stage-inner { position: relative; width: 100%; min-height: 2500px; }
+    .stage-inner { position: relative; width: 100%; min-height: var(--stage-h); }
     .journey-path-svg {
       position: absolute;
       top: 0;
@@ -65,41 +116,53 @@
       pointer-events: none;
       overflow: visible;
     }
-    .nodes-layer { position: relative; z-index: 1; width: 100%; min-height: 2500px; }
+    .nodes-layer { position: relative; z-index: 1; width: 100%; min-height: var(--stage-h); }
 
-    /* Node positioning (desktop) */
+    /* Node positioning: per-node custom property, so each thread
+       spaces its own nodes (no ID-keyed rules). */
     .proto-node {
       position: absolute;
       left: 50%;
+      top: var(--node-top, 0%);
       transform: translateX(-50%);
       width: clamp(260px, 55vw, 380px);
     }
-    /* Staggered down the winding path (one lobe per pair) */
-    #node-proto-01 { top: 1%; }
-    #node-proto-02 { top: 21%; }
-    #node-proto-03 { top: 41%; }
-    #node-proto-04 { top: 61%; }
-    #node-proto-05 { top: 81%; }
 
     /* Default: visible (covers reduced-motion and no-JS cases) */
     .proto-node { opacity: 1; }
-    /* Default path state (outside media query): always drawn */
-    .journey-path { stroke-dasharray: 1 0; }
+    /* Default path state: always drawn. Stroke colour comes from the
+       thread — never hard-coded on the SVG element. */
+    .journey-path {
+      fill: none;
+      stroke: var(--t-path);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 1 0;
+    }
 
+    /* The .js guard means a no-JS visitor never sees a hidden node —
+       nothing would ever add .is-visible for them. */
     @media (prefers-reduced-motion: no-preference) {
-      .journey-path {
+      .js .journey-path {
         stroke-dasharray: 0 1;
         transition: stroke-dasharray 1.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .journey-path.is-visible { stroke-dasharray: 1 0; }
+      .js .journey-path.is-visible { stroke-dasharray: 1 0; }
 
-      .proto-node {
+      .js .proto-node {
         opacity: 0;
         transform: translateX(-50%) scale(0.85);
         transition: opacity 0.45s ease, transform 0.45s ease;
         transition-delay: 1.5s;
       }
-      .proto-node.is-visible { opacity: 1; transform: translateX(-50%) scale(1); }
+      .js .proto-node.is-visible { opacity: 1; transform: translateX(-50%) scale(1); }
+      /* Keyboard focus must never land on an invisible card */
+      .js .proto-node:focus-within { opacity: 1; transform: translateX(-50%) scale(1); transition-delay: 0s; }
+    }
+
+    /* assets/style.css ships .animate-in at opacity:0 with no guard */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-in { opacity: 1; transform: none; animation: none; }
     }
 
     /* ── Proto summary card ───────────────────────────────────── */
@@ -109,7 +172,7 @@
       text-align: left;
       font-family: var(--font);
       background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--t-border);
       border-radius: var(--radius);
       padding: 24px 28px;
       cursor: pointer;
@@ -118,12 +181,17 @@
       -webkit-backdrop-filter: blur(24px);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .proto-card:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+    .proto-card:hover { border-color: var(--t-accent); box-shadow: 0 0 20px var(--t-glow); }
+    .proto-card:focus-visible {
+      outline: 2px solid var(--t-accent);
+      outline-offset: 3px;
+      border-color: var(--t-accent);
+    }
     .proto-card-tag {
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--accent);
+      color: var(--t-accent);
       margin-bottom: 8px;
     }
     .proto-card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
@@ -139,101 +207,12 @@
       padding: 4px 10px;
       border-radius: 20px;
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--t-border);
     }
-    .kpi-pill.kpi-warn { border-color: rgba(232, 53, 53, 0.5); color: var(--accent-2); }
-    .proto-card-cta { font-size: 0.8rem; color: var(--accent); font-weight: 500; }
-
-    /* ── Back button ──────────────────────────────────────────── */
-    .back-btn {
-      background: none;
-      border: 1px solid var(--glass-border);
-      border-radius: 8px;
-      color: var(--accent);
-      padding: 10px 20px;
-      cursor: pointer;
-      font-family: var(--font);
-      font-size: 0.85rem;
-      margin-bottom: 40px;
-      transition: border-color 0.2s;
-    }
-    .back-btn:hover { border-color: var(--accent); }
-
-    /* ── Detail header + blocks ───────────────────────────────── */
-    .detail-header { margin-bottom: 40px; }
-    .detail-tag {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .detail-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 700; letter-spacing: -0.02em; }
-
-    .detail-block { margin-bottom: 48px; }
-    .block-heading {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-    .detail-block p { font-size: 0.92rem; line-height: 1.65; color: var(--text); }
-    .block-note { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
-    .tool-link { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-
-    /* ── Parameter / method tables ────────────────────────────── */
-    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    .param-table th {
-      text-align: left;
-      color: var(--text-muted);
-      font-weight: 500;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--glass-border);
-    }
-    .param-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      line-height: 1.4;
-    }
-
-    /* ── Hero stat cards ──────────────────────────────────────── */
-    .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
-    .stat-card {
-      flex: 1;
-      min-width: 140px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-    .stat-card.stat-warn { border-color: rgba(232, 53, 53, 0.35); }
-    .stat-value { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
-    .stat-card.stat-warn .stat-value { color: var(--accent-2); }
-    .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3; }
-
-    /* ── CSS bar chart ────────────────────────────────────────── */
-    .bar-chart {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 8px 16px;
-      align-items: center;
-      margin: 20px 0 28px;
-    }
-    .bar-label { font-size: 0.8rem; color: var(--text-muted); text-align: right; }
-    .bar-wrap {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-      height: 34px;
-      overflow: hidden;
-    }
-    .bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; }
-    .bar-cmd { background: rgba(255, 255, 255, 0.15); }
-    .bar-grav { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
-    .bar-flow { background: linear-gradient(90deg, rgba(255, 107, 43, 0.4), rgba(232, 53, 53, 0.35)); }
-    .bar-val { font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; }
+    /* Semantic, not accent-following: a warning stays red on both threads
+       (on the violet thread --t-accent-2 is blue, which reads as information). */
+    .kpi-pill.kpi-warn { border-color: rgba(232, 53, 53, 0.5); color: #e83535; }
+    .proto-card-cta { font-size: 0.8rem; color: var(--t-accent); font-weight: 500; }
 
     /* ── Card thumbnail (real photo, circular node) ───────────── */
     .proto-card-thumb {
@@ -241,12 +220,12 @@
       height: 88px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 18px var(--accent-glow);
+      border: 2px solid var(--t-accent);
+      box-shadow: 0 0 18px var(--t-glow);
       float: right;
       margin: 0 0 12px 16px;
     }
-    /* Placeholder thumb — no photo yet (in-design prototype) */
+    /* Placeholder thumb — no photo carried onto this page */
     .proto-card-thumb-ph {
       width: 88px;
       height: 88px;
@@ -256,14 +235,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      text-align: center;
       font-size: 0.7rem;
       letter-spacing: 0.04em;
       color: var(--text-muted);
       background: repeating-linear-gradient(
         45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px,
         rgba(255,255,255,0.02) 6px, rgba(255,255,255,0.02) 12px);
-      border: 2px dashed var(--accent);
-      box-shadow: 0 0 14px var(--accent-glow);
+      border: 2px dashed var(--t-accent);
+      box-shadow: 0 0 14px var(--t-glow);
     }
 
     /* ── Ghost cards (planned, not yet started) ───────────────── */
@@ -273,7 +253,7 @@
       text-align: left;
       font-family: var(--font);
       background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed var(--glass-border);
+      border: 1px dashed var(--t-border);
       border-radius: var(--radius);
       padding: 24px 28px;
       color: var(--text);
@@ -289,332 +269,6 @@
     .proto-card-ghost .proto-card-tag { color: var(--text-muted); }
     .proto-card-ghost .proto-card-cta { color: var(--text-muted); }
 
-    /* ── Detail figures ───────────────────────────────────────── */
-    .detail-figure { margin: 20px 0 32px; }
-    .detail-figure img {
-      width: 100%;
-      border-radius: var(--radius);
-      border: 1px solid var(--glass-border);
-      display: block;
-      cursor: zoom-in;
-    }
-    .detail-figure figcaption,
-    .figure-grid figcaption {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 10px;
-      text-align: center;
-      line-height: 1.4;
-    }
-    .figure-compact { max-width: 540px; margin-left: auto; margin-right: auto; }
-    .figure-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 20px 0 32px;
-      align-items: start;
-    }
-    .figure-grid figure { margin: 0; }
-    .figure-grid img {
-      width: 100%;
-      height: auto;              /* show whole image, no side-cropping */
-      object-fit: contain;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius);
-      border: 1px solid var(--glass-border);
-      display: block;
-      cursor: zoom-in;
-    }
-
-    /* ── Lightbox (click image to enlarge) ────────────────────── */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px;
-      background: rgba(5, 5, 7, 0.92);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      cursor: zoom-out;
-    }
-    .lightbox[hidden] { display: none; }
-    .lightbox img {
-      max-width: 95vw;
-      max-height: 92vh;
-      border-radius: var(--radius);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6);
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 28px;
-      font-size: 2rem;
-      line-height: 1;
-      color: var(--text);
-      background: none;
-      border: none;
-      cursor: pointer;
-      opacity: 0.7;
-    }
-    .lightbox-close:hover { opacity: 1; }
-
-    /* ── KaTeX formula rows ───────────────────────────────────── */
-    .formula {
-      margin: 14px 0 18px;
-      padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--glass-border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      overflow-x: auto;
-    }
-    .formula .katex { font-size: 1.05em; }
-
-    /* ── Plain worked-calculation block (no KaTeX) ────────────── */
-    .calc-block {
-      margin: 14px 0 18px;
-      padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--glass-border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      overflow-x: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.83rem;
-      line-height: 1.85;
-      color: var(--text);
-    }
-    .calc-block strong { color: #f0ece8; }
-
-    /* ── Side-floated small figure ────────────────────────────── */
-    .fig-side {
-      float: right;
-      width: min(280px, 42%);
-      margin: 4px 0 14px 20px;
-    }
-    .fig-side img { width: 100%; border-radius: var(--radius); border: 1px solid var(--glass-border); display: block; cursor: zoom-in; }
-    .fig-side figcaption { font-size: 0.74rem; color: var(--text-muted); margin-top: 8px; text-align: center; line-height: 1.4; }
-    .clearfix::after { content: ""; display: table; clear: both; }
-    @media (max-width: 640px) { .fig-side { float: none; width: 100%; margin: 12px 0; } }
-
-    /* ── Calibration rule cards (the two takeaway formulas) ───── */
-    .rule-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 18px 0; }
-    .rule-card .model-eq { margin: 14px 0 6px; }
-    .rule-card .eq-note { max-width: 150px; }
-    .eq-plain .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.28); }
-    .eq-cadp  .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.35); }
-    .eq-s-ext .eq-chip { color: #ff9c66; background: rgba(255,107,43,0.10); border: 1px solid rgba(255,107,43,0.6); }
-    .eq-b-ext .eq-chip { color: #ff9c66; background: rgba(255,107,43,0.05); border: 1px dashed rgba(255,107,43,0.6); }
-    .eq-s-int .eq-chip { color: #8fc0f0; background: rgba(122,167,224,0.10); border: 1px solid rgba(122,167,224,0.6); }
-    .eq-b-int .eq-chip { color: #8fc0f0; background: rgba(122,167,224,0.05); border: 1px dashed rgba(122,167,224,0.6); }
-    .rule-card {
-      border-radius: 12px;
-      padding: 16px 18px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.85rem;
-      line-height: 1.9;
-      overflow-x: auto;
-    }
-    .rule-card .rc-tag {
-      font-family: var(--font);
-      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800;
-      margin-bottom: 2px;
-    }
-    .rule-card .rc-behavior {
-      font-family: var(--font);
-      font-size: 0.78rem; font-weight: 700; margin-bottom: 8px;
-    }
-    .rule-card .rc-main { font-size: 0.98rem; font-weight: 700; color: #f0ece8; }
-    .rule-card .rc-note { font-family: var(--font); font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
-    .rule-ext { background: rgba(255,107,43,0.08); border: 2px solid rgba(255,107,43,0.55); }
-    .rule-ext .rc-tag, .rule-ext .rc-behavior { color: var(--accent); }
-    .rule-int { background: rgba(122,167,224,0.08); border: 2px solid rgba(122,167,224,0.55); }
-    .rule-int .rc-tag, .rule-int .rc-behavior { color: #8fc0f0; }
-
-    /* ── Annotated model equation ─────────────────────────────── */
-    .model-eq {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: stretch;
-      justify-content: center;
-      gap: 10px;
-      margin: 24px 0 10px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    }
-    .model-eq .eq-grp { display: flex; align-items: flex-start; gap: 10px; }
-    .model-eq .eq-op {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      padding-top: 8px;
-    }
-    .model-eq .eq-term {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      max-width: 168px;
-    }
-    .model-eq .eq-chip {
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 0.01em;
-      padding: 10px 18px;
-      border-radius: 10px;
-      white-space: nowrap;
-    }
-    .model-eq .eq-note {
-      font-size: 0.72rem;
-      line-height: 1.45;
-      color: var(--text-muted);
-      text-align: center;
-      font-family: var(--font);
-    }
-    .eq-printed .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.25); }
-    .eq-cad     .eq-chip { color: #f0ece8; background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.35); }
-    .eq-k       .eq-chip { color: #ff9c66; background: rgba(255,107,43,0.10); border: 1px solid rgba(255,107,43,0.55); }
-    .eq-off     .eq-chip { color: #8fc0f0; background: rgba(120,175,240,0.10); border: 1px solid rgba(120,175,240,0.55); }
-    .model-eq-sign {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px 20px;
-      margin: 4px 0 20px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-    .model-eq-sign span strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-
-    /* ── Callouts ─────────────────────────────────────────────── */
-    .callout {
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin: 16px 0;
-      font-size: 0.88rem;
-      line-height: 1.6;
-      color: var(--text);
-    }
-    .callout-good { background: rgba(60, 200, 120, 0.08); border: 1px solid rgba(60, 200, 120, 0.32); }
-    .callout-warn { background: rgba(232, 53, 53, 0.08); border: 1px solid rgba(232, 53, 53, 0.32); }
-
-    /* ── Table of contents ────────────────────────────────────── */
-    .toc {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 20px 24px;
-      margin: 0 0 28px;
-    }
-    .toc-title {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .toc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 16px 24px;
-    }
-    .toc-group-label {
-      font-size: 0.82rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--glass-border);
-      color: var(--text);
-    }
-    .toc-g21 .toc-group-label { color: var(--accent-2); }
-    .toc-g22 .toc-group-label { color: var(--accent); }
-    .toc-g23 .toc-group-label { color: #5fd08a; }
-    .toc-link {
-      display: block;
-      font-size: 0.85rem;
-      line-height: 1.5;
-      padding: 3px 0 3px 10px;
-      border-left: 2px solid transparent;
-      color: var(--text);
-      text-decoration: none;
-      transition: color 0.15s, border-color 0.15s;
-    }
-    .toc-link:hover { color: var(--accent); border-left-color: var(--accent); }
-    .detail-block[id] { scroll-margin-top: 24px; }
-
-    /* ── Collapsible version panels ───────────────────────────── */
-    .ver-panel {
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.02);
-      margin: 0 0 18px;
-    }
-    .ver-panel[open] { background: rgba(255, 255, 255, 0.015); }
-    .ver-panel > summary {
-      list-style: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px 16px;
-      padding: 16px 20px;
-      user-select: none;
-    }
-    .ver-panel > summary::-webkit-details-marker { display: none; }
-    .ver-panel > summary::after {
-      content: '▸';
-      margin-left: auto;
-      color: var(--text-muted);
-      font-size: 1rem;
-      transition: transform 0.2s;
-    }
-    .ver-panel[open] > summary::after { transform: rotate(90deg); }
-    .ver-panel > summary:hover { background: rgba(255, 255, 255, 0.025); border-radius: 14px; }
-    .ver-chip {
-      font-weight: 800;
-      font-size: 1.02rem;
-      padding: 5px 14px;
-      border-radius: 8px;
-      white-space: nowrap;
-    }
-    .ver-design > summary .ver-chip { color: var(--text); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); }
-    .ver-21 > summary .ver-chip { color: var(--accent-2); background: rgba(232, 53, 53, 0.12); border: 1px solid rgba(232, 53, 53, 0.5); }
-    .ver-22 > summary .ver-chip { color: var(--accent); background: rgba(255, 107, 43, 0.12); border: 1px solid rgba(255, 107, 43, 0.5); }
-    .ver-23 > summary .ver-chip { color: #5fd08a; background: rgba(95, 208, 138, 0.12); border: 1px solid rgba(95, 208, 138, 0.5); }
-    .ver-sum-note { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; flex: 1; min-width: 180px; }
-    .ver-body { padding: 6px 22px 8px; border-top: 1px solid var(--glass-border); }
-    .ver-body > .detail-block:first-child { margin-top: 22px; }
-    .callout-note { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); }
-    .callout-label { font-weight: 600; }
-    .callout-good .callout-label { color: #5fd08a; }
-    .callout-warn .callout-label { color: var(--accent-2); }
-    .callout-note .callout-label { color: var(--accent); }
-
-    /* ── Next-prototype brief ─────────────────────────────────── */
-    .next-brief {
-      background: linear-gradient(135deg, rgba(255, 107, 43, 0.08), rgba(232, 53, 53, 0.05));
-      border: 1px solid rgba(255, 107, 43, 0.3);
-      border-radius: var(--radius);
-      padding: 24px 28px;
-      margin-top: 12px;
-    }
-    .next-brief h4 {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      margin: 18px 0 8px;
-    }
-    .next-brief h4:first-child { margin-top: 0; }
-    .next-brief ul { margin: 0 0 4px; padding-left: 20px; }
-    .next-brief li { font-size: 0.86rem; line-height: 1.6; margin-bottom: 5px; }
-    .next-brief li strong { color: var(--accent); }
-
     /* ── Mobile (≤ 640px) ─────────────────────────────────────── */
     @media (max-width: 640px) {
       .journey-path-svg { display: none; }
@@ -627,17 +281,13 @@
         margin: 0 0 24px;
         transition: none;
       }
-      .proto-node.is-visible { transform: none; }
-      .stats-row { flex-direction: column; }
-      .bar-chart { grid-template-columns: 90px 1fr; }
-      .journey-view, .detail-view { padding: 40px 20px 60px; }
+      .js .proto-node { opacity: 1; transform: none; transition: none; }
+      .js .proto-node.is-visible { transform: none; }
+      .journey-view { padding: 40px 20px 60px; }
       .tool-nav { padding: 16px 20px; }
-      .param-table { font-size: 0.82rem; }
-      .param-table th, .param-table td { padding: 8px 8px; }
-      .figure-grid { grid-template-columns: 1fr; }
-      .proto-card-thumb { width: 64px; height: 64px; }
-      .formula .katex { font-size: 0.95em; }
-      .next-brief { padding: 18px 18px; }
+      .proto-card, .proto-card-ghost { padding: 20px 18px; }
+      .proto-card-thumb, .proto-card-thumb-ph { width: 64px; height: 64px; }
+      .thread + .thread { padding-top: 40px; }
     }
   </style>
 </head>
@@ -650,1479 +300,226 @@
 </div>
 
 <nav class="tool-nav animate-in" style="--delay:0s">
-  <a class="nav-back" href="../index.html">← Resources</a>
+  <a class="nav-back" href="../index.html">← All tools</a>
   <span class="nav-title">Prototype Design Space</span>
 </nav>
 
 <main>
-  <!-- ── Journey view (default) ───────────────────────────────── -->
-  <section id="journey-view" class="journey-view">
+  <div class="journey-view">
     <div class="journey-header">
       <h1 class="journey-title">Prototype Design Space</h1>
-      <p class="journey-sub">A trail of hardware decisions — each prototype a question posed to the physics. Click a node to open its full story.</p>
+      <p class="journey-sub">Two hardware threads — the pump that meters the dose, and the stage that brings the samples to it. Each node is a build, and each build a question posed to the physics. Open a node for its full story.</p>
     </div>
 
-    <div class="journey-stage">
-      <div class="stage-inner">
-        <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
-          <path class="journey-path"
-            d="M 300 40 C 520 140, 80 300, 300 440 C 520 580, 80 740, 300 880"
-            pathLength="1"
-            fill="none" stroke="rgba(255,107,43,0.25)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+    <!-- ── Thread 1 · Pump module ────────────────────────────── -->
+    <section class="thread thread--pump" id="thread-pump" aria-labelledby="thread-pump-title">
+      <div class="thread-head">
+        <div class="thread-eyebrow">Prototype 1 · Module</div>
+        <h2 class="thread-title" id="thread-pump-title">Pump Module</h2>
+        <p class="thread-sub">The dispensing head — a 3D-printed peristaltic rotor that meters a few microlitres per stroke, with the liquid touching nothing but a disposable tube.</p>
+      </div>
 
-        <div class="nodes-layer">
-          <div class="proto-node" id="node-proto-01">
-            <button class="proto-card" data-proto="proto-01">
-              <img class="proto-card-thumb" src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Real_Closed.jpg" alt="Prototype 1, head closed" />
-              <div class="proto-card-tag">Proto 01 · 2026</div>
-              <h3 class="proto-card-title">5 µL 4-roller peristaltic</h3>
-              <p class="proto-card-purpose">First physical build — prove the concept, validate the model, learn before the next cycle. It pumps; the model holds; three fixable errors found.</p>
-              <div class="proto-card-kpi">
-                <span class="kpi-pill kpi-warn">−32 % under-dispense</span>
-                <span class="kpi-pill">CV 4.5 %</span>
-                <span class="kpi-pill">model ✓ ~11 %</span>
-              </div>
-              <span class="proto-card-cta">Explore →</span>
-            </button>
-          </div>
+      <div class="journey-stage">
+        <div class="stage-inner">
+          <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="journey-path"
+              d="M 300 40 C 520 140, 80 300, 300 440 C 520 580, 80 740, 300 880"
+              pathLength="1"/>
+          </svg>
 
-          <div class="proto-node" id="node-proto-02">
-            <button class="proto-card" data-proto="proto-02">
-              <div class="proto-card-thumb-ph" aria-hidden="true">v2.3 tested ✅</div>
-              <div class="proto-card-tag">Proto 02 · 2026</div>
-              <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
-              <p class="proto-card-purpose">The first build that works to spec. v2.1 didn't seal; v2.2 rebuilt the rotor and turned the printer into a calibrated model; v2.3 spent both — gap <strong>1.52 measured</strong>, and the gravimetric campaign delivered <strong>4.56 µL/stroke, linear, with 100-stroke CV below the manual-pipette reference</strong>.</p>
-              <div class="proto-card-kpi">
-                <span class="kpi-pill">4.56 µL/stroke (−8.9 %)</span>
-                <span class="kpi-pill">CV 0.25 % vs pipette 0.27 %</span>
-                <span class="kpi-pill">180 rpm optimum</span>
-              </div>
-              <span class="proto-card-cta">Explore →</span>
-            </button>
-          </div>
-
-          <div class="proto-node" id="node-proto-03">
-            <div class="proto-card-ghost" aria-disabled="true">
-              <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-              <div class="proto-card-tag">Proto 03 · planned</div>
-              <h3 class="proto-card-title">Precision &amp; calibration validation</h3>
-              <p class="proto-card-purpose">Stable CV, reliable step-count calibration, model validated across the volume range. Nothing built yet.</p>
-              <span class="proto-card-cta">Not started</span>
+          <div class="nodes-layer">
+            <div class="proto-node" style="--node-top:1%">
+              <a class="proto-card" href="Prototype-1-Pump-Module/proto-01-5ul-4roller/index.html">
+                <img class="proto-card-thumb" src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Real_Closed.jpg" alt="Prototype 1, head closed" />
+                <div class="proto-card-tag">Proto 01 · 2026</div>
+                <h3 class="proto-card-title">5 µL 4-roller peristaltic</h3>
+                <p class="proto-card-purpose">First physical build — prove the concept, validate the model, learn before the next cycle. It pumps; the model holds; three fixable errors found.</p>
+                <div class="proto-card-kpi">
+                  <span class="kpi-pill kpi-warn">−32 % under-dispense</span>
+                  <span class="kpi-pill">CV 4.5 %</span>
+                  <span class="kpi-pill">model ✓ ~11 %</span>
+                </div>
+                <span class="proto-card-cta">Explore →</span>
+              </a>
             </div>
-          </div>
 
-          <div class="proto-node" id="node-proto-04">
-            <div class="proto-card-ghost" aria-disabled="true">
-              <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-              <div class="proto-card-tag">Proto 04 · planned</div>
-              <h3 class="proto-card-title">Multi-liquid mechanism</h3>
-              <p class="proto-card-purpose">One motor, 5 liquids, a separate tube per liquid — without 5 motors (size/portability). Mechanism still open. Nothing built yet.</p>
-              <span class="proto-card-cta">Not started</span>
+            <div class="proto-node" style="--node-top:21%">
+              <a class="proto-card" href="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/index.html">
+                <div class="proto-card-thumb-ph" aria-hidden="true">v2.3 tested ✅</div>
+                <div class="proto-card-tag">Proto 02 · 2026</div>
+                <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
+                <p class="proto-card-purpose">The first build that works to spec. v2.1 didn't seal; v2.2 rebuilt the rotor and turned the printer into a calibrated model; v2.3 spent both — gap <strong>1.52 measured</strong>, and the gravimetric campaign delivered <strong>4.56 µL/stroke, linear, with 100-stroke CV below the manual-pipette reference</strong>.</p>
+                <div class="proto-card-kpi">
+                  <span class="kpi-pill">4.56 µL/stroke (−8.9 %)</span>
+                  <span class="kpi-pill">CV 0.25 % vs pipette 0.27 %</span>
+                  <span class="kpi-pill">180 rpm optimum</span>
+                </div>
+                <span class="proto-card-cta">Explore →</span>
+              </a>
             </div>
-          </div>
 
-          <div class="proto-node" id="node-proto-05">
-            <div class="proto-card-ghost" aria-disabled="true">
-              <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-              <div class="proto-card-tag">Proto 05 · planned</div>
-              <h3 class="proto-card-title">System integration</h3>
-              <p class="proto-card-purpose">Pump + multi-liquid mechanism + electronics in one dispensing-module enclosure. Nothing built yet.</p>
-              <span class="proto-card-cta">Not started</span>
+            <div class="proto-node" style="--node-top:41%">
+              <div class="proto-card-ghost" aria-disabled="true">
+                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+                <div class="proto-card-tag">Proto 03 · planned</div>
+                <h3 class="proto-card-title">Precision &amp; calibration validation</h3>
+                <p class="proto-card-purpose">Stable CV, reliable step-count calibration, model validated across the volume range. Nothing built yet.</p>
+                <span class="proto-card-cta">Not started</span>
+              </div>
+            </div>
+
+            <div class="proto-node" style="--node-top:61%">
+              <div class="proto-card-ghost" aria-disabled="true">
+                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+                <div class="proto-card-tag">Proto 04 · planned</div>
+                <h3 class="proto-card-title">Multi-liquid mechanism</h3>
+                <p class="proto-card-purpose">One motor, 5 liquids, a separate tube per liquid — without 5 motors (size/portability). Mechanism still open. Nothing built yet.</p>
+                <span class="proto-card-cta">Not started</span>
+              </div>
+            </div>
+
+            <div class="proto-node" style="--node-top:81%">
+              <div class="proto-card-ghost" aria-disabled="true">
+                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+                <div class="proto-card-tag">Proto 05 · planned</div>
+                <h3 class="proto-card-title">System integration</h3>
+                <p class="proto-card-purpose">Pump + multi-liquid mechanism + electronics in one dispensing-module enclosure. Nothing built yet.</p>
+                <span class="proto-card-cta">Not started</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ── Detail view (hidden on load) ─────────────────────────── -->
-  <section id="detail-view" class="detail-view" hidden>
-    <button class="back-btn" id="back-btn">← Back to journey</button>
-    <div id="detail-content" class="detail-content">
-
-      <div id="detail-proto-01" class="detail-section" hidden>
-        <div class="detail-header">
-          <div class="detail-tag">Proto 01 · Built 2026</div>
-          <h2 class="detail-title">5 µL 4-roller peristaltic — baseline</h2>
-        </div>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Purpose</h3>
-          <p class="block-note">The first physical build — its job was never to hit spec, but to learn. A minimum viable prototype with three goals:</p>
-          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
-            <li><strong>Prove the concept</strong> — can a peristaltic pump be built in this modular, 3D-printed, point-of-care form, and does it actually move liquid?</li>
-            <li><strong>Validate the model</strong> — is the geometry model I built correct, and does how I modelled the system match reality?</li>
-            <li><strong>Learn before committing</strong> — get a physical object in hand to extract as much information as possible before the next design cycle.</li>
-          </ul>
-          <p style="margin-top:14px">On all three it delivered: it pumps, the model predicts the messy reality to ~11 %, and it exposed three concrete, fixable design errors.</p>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Parts &amp; assembly — the physical build</h3>
-          <p class="block-note">Five components: four printed parts, the roller bearings, and the tube. <strong>proto-02 reuses the same set</strong> (edited, not redesigned) — so this is the canonical parts description for the whole pump line.</p>
-          <table class="param-table">
-            <thead><tr><th>Part</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><strong>NEMA17 motor holder</strong></td><td>L-bracket; a central bore passes the motor shaft (motor bolts to the back). The top edge has <strong>dovetail-female channels</strong> that guide the pump head straight down to a <strong>hard stop</strong> — the stop fixes seat depth and keeps the head off the rotor.</td></tr>
-              <tr><td><strong>Rotor</strong> (Main + Cover)</td><td>Disk on the shaft (keyed hole) holding the rollers in <strong>4 pockets at 90°</strong>; the cover caps them in. The radius to the <strong>bearing outer surface</strong> is the working roller radius <em>R</em>.</td></tr>
-              <tr><td><strong>Roller bearings — 8 × MR105ZZ</strong></td><td><strong>Two stacked per roller position</strong> (4 × 2 = 8). A single MR105ZZ (10 mm OD) isn't wide enough to span the tube, so they're doubled for contact width; radius <em>R<sub>r</sub></em> = 5 mm unchanged.</td></tr>
-              <tr><td><strong>Pump head</strong></td><td>Carries the semicircular <strong>180° occlusion wall</strong>; slides down the dovetail and bottoms on the hard stop. The arch wraps the <strong>top</strong> of the rotor — the tube routes up and over the top.</td></tr>
-              <tr><td><strong>Tube</strong></td><td><strong>Masterflex</strong> 2-stop microbore (Puri-Clear LL, 0.51 mm ID), bought through <a class="tool-link" href="https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12" target="_blank" rel="noopener">Darwin Microfluidics</a> — the reseller; the tube itself is Masterflex.</td></tr>
-            </tbody>
-          </table>
-          <div class="callout callout-note"><span class="callout-label">How it works.</span> Motor → shaft through the bore → rotor with its 8 bearings → pump head drops down the dovetail over the <strong>top</strong> of the rotor and bottoms on the stop → tube in the gap. The rotor spins; the rollers sweep the top 180° arc, each pressing the tube against the wall → peristaltic delivery. <strong>proto-01-specific:</strong> no head lock (it had to be held by hand) and <strong>no way to measure the installed gap</strong> — only the nominal CAD value was known.</div>
-        </section>
-
-        <figure class="detail-figure">
-          <div class="figure-grid">
-            <figure>
-              <img src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Render_Closed.png" alt="CAD render, head closed" />
-              <figcaption>CAD render — head closed</figcaption>
-            </figure>
-            <figure>
-              <img src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Render_Open.png" alt="CAD render, head open" />
-              <figcaption>CAD render — head open, channel visible</figcaption>
-            </figure>
-          </div>
-        </figure>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Parameters (as built) &amp; why each was chosen</h3>
-          <p class="block-note">Designed using the
-            <a class="tool-link" href="../tools/rotor-solver/index.html">Rotor Geometry Solver</a>
-            and the
-            <a class="tool-link" href="../tools/peristaltic-roller-displaced-volume-model/index.html">Displaced-Volume Model</a>.
-            The second tool outputs the arc compensation that is pasted into the first — so its inputs propagate into the physical rotor size.
-          </p>
-          <table class="param-table">
-            <thead><tr><th>Parameter</th><th>Value</th><th>Why this value</th></tr></thead>
-            <tbody>
-              <tr><td>Target volume / stroke</td><td>5.0 µL</td><td>Smallest aliquot the dispensing application targets</td></tr>
-              <tr><td>Roller count <em>N</em></td><td>4</td><td>Fewest hand-offs for discrete dosing (see below)</td></tr>
-              <tr><td>Rollers engaged <em>N<sub>c</sub></em> (entered)</td><td>1&nbsp;⚠</td><td>Mistake — a 180° arc with 4 rollers always has 2 engaged</td></tr>
-              <tr><td>Tube inner diameter <em>d</em></td><td>0.51 mm</td><td>Smallest 2-stop microbore that gives a workable rotor size</td></tr>
-              <tr><td>Tube wall <em>w</em></td><td>0.85 mm (est.)</td><td>From a similar tube (online) + caliper check — see below</td></tr>
-              <tr><td>Roller bearings</td><td>8 × MR105ZZ, 10 mm OD (<em>R<sub>r</sub></em> = 5 mm) — 2 stacked/roller</td><td>A single bearing isn't wide enough to span the tube → doubled for width</td></tr>
-              <tr><td>Interference <em>δ</em> (design)</td><td>0.20 mm</td><td>Mid of the 10–20 % × 2<em>w</em> occlusion band</td></tr>
-              <tr><td>Inflation factor <em>k</em></td><td>1.15</td><td>Compliant-tube correction (Klespitz &amp; Kovács 2022)</td></tr>
-              <tr><td>Rotor radius <em>R</em> (built)</td><td>17.70 mm</td><td>Solver output (carries the <em>N<sub>c</sub></em>=1 error)</td></tr>
-              <tr><td>Designed gap <em>G</em> (CAD)</td><td>1.75 mm&nbsp;⚠</td><td>Nominal only — never measured (no caliper access); should have been ≈1.50 mm</td></tr>
-              <tr><td>Loose-fit tolerance</td><td>0.25 mm&nbsp;⚠</td><td>Too loose → head wobble</td></tr>
-              <tr><td>Steps / stroke (firmware)</td><td>50</td><td>200 steps/rev ÷ 4 rollers</td></tr>
-            </tbody>
-          </table>
-
-          <p class="block-note" style="margin-top:8px">The tube is a <strong>Masterflex</strong> 2-stop Puri-Clear LL (0.51 mm ID), platinum-cured silicone microbore, bought through <a class="tool-link" href="https://darwin-microfluidics.com/products/2-stop-puri-clear-ll-pump-tubing-pack-of-12" target="_blank" rel="noopener">Darwin Microfluidics</a> (the reseller).</p>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Key decision — why 4 rollers</h4>
-          <p>Selected over higher counts despite continuous-flow practice (Cole-Parmer, Ismatec) recommending 8–10 rollers for low-flow accuracy below 5 mL/min. The distinction is <strong>operational mode</strong>: those recommendations target continuous metering, where more rollers reduce <em>pulsation</em>. This system does <strong>discrete stop-start aliquot dosing</strong>, where each roller hand-off (one releasing as the next engages) is an <em>error event</em> at the stop. Fewer rollers → fewer hand-offs per dispense → fewer stop-event errors — the opposite of the continuous-flow heuristic. A 4-roller pump completes ~one hand-off where an 8-roller pump completes ~two.</p>
-          <div class="callout callout-warn"><span class="callout-label">Honest caveat.</span> Proto-01's data can't yet <em>demonstrate</em> this — the −32 % systematic occlusion error swamps the hand-off signature. Proto-02 is the first build where the roller-count rationale becomes testable.</div>
-
-          <div class="figure-grid">
-            <figure>
-              <img src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Displaced_Volume_Tool.png" alt="Displaced-volume model inputs" />
-              <figcaption>Displaced-volume model at the proto-01 point</figcaption>
-            </figure>
-            <figure>
-              <img src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Geometry_Diagram.png" alt="Rotor geometry diagram, 4 rollers" />
-              <figcaption>Rotor geometry — 4-roller top view</figcaption>
-            </figure>
-          </div>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">The design calculation, worked</h3>
-          <p>The two tools run a six-step chain from tube mechanics to rotor size. Each step is described, then computed at the proto-01 design point.</p>
-
-          <p style="margin-top:18px"><strong>1. Lumen area <em>A</em>.</strong> The lumen is the open channel inside the tube that carries the liquid — a circle of diameter <em>d</em>. Its cross-sectional area sets how much volume a given length of swept tube holds:</p>
-          <div class="formula">\[ A = \pi\left(\tfrac{d}{2}\right)^2 = \pi\left(\tfrac{0.51}{2}\right)^2 = 0.2043\ \text{mm}^2 \]</div>
-          <p class="block-note">with <em>d</em> = 0.51 mm (tube inner diameter).</p>
-
-          <p style="margin-top:18px"><strong>2. Roller contact length <em>L<sub>c</sub></em>.</strong> When a roller of radius <em>R<sub>r</sub></em> presses a depth <em>δ</em> into the tube, it flattens a finite length along the flow axis. From the chord geometry of a cylinder pressed into a surface, the half-contact-width is \(\sqrt{2R_r\delta}\); doubling gives the full footprint, and the empirical factor <em>k</em> &gt; 1 lengthens it because a real compliant tube contacts over a longer span than rigid geometry predicts:</p>
-          <div class="formula">\[ L_c = k\cdot 2\sqrt{2R_r\delta} = 1.15\cdot 2\sqrt{2\cdot 5\cdot 0.20} = 3.253\ \text{mm} \]</div>
-          <p class="block-note">with <em>R<sub>r</sub></em> = 5 mm (roller radius), <em>δ</em> = 0.20 mm (design interference), <em>k</em> = 1.15.</p>
-
-          <p style="margin-top:18px"><strong>3. Arc compensation <em>ΔArc</em>.</strong> Along the contact length <em>L<sub>c</sub></em> the roller pinches the tube <em>shut</em>, so that segment of lumen holds no liquid and delivers nothing. The pure delivery arc (<em>vol</em>/<em>A</em>) assumes every mm of swept tube is full, so it over-counts by exactly this occluded length — the stroke must sweep an extra <em>L<sub>c</sub></em> per engaged roller to make up the shortfall. With <em>N<sub>c</sub></em> rollers engaged at once, the total compensation is their combined contact lengths:</p>
-          <div class="formula">\[ \Delta\text{Arc} = N_c\cdot L_c = 1\cdot 3.253 = 3.253\ \text{mm} \]</div>
-          <div class="callout callout-warn"><span class="callout-label">First error.</span> <em>N<sub>c</sub></em> was entered as <strong>1</strong>, but a 180° contact arc with 4 evenly-spaced rollers always has <strong>2</strong> engaged. This under-counts the compensation and feeds an undersized rotor into the next steps.</div>
-
-          <p style="margin-top:18px"><strong>4. Arc swept per roller <em>arc</em>.</strong> The arc each roller drags the tube through per stroke is the <em>useful</em> delivery arc (target volume ÷ lumen area) plus the compensation arc:</p>
-          <div class="formula">\[ \text{arc} = \frac{vol}{A} + \Delta\text{Arc} = \frac{5.0}{0.2043} + 3.253 = 27.73\ \text{mm} \]</div>
-          <p class="block-note">with <em>vol</em> = 5.0 µL (target volume per stroke).</p>
-
-          <p style="margin-top:18px"><strong>5. Gross swept volume <em>geomVol</em>.</strong> Multiplying the swept arc by the lumen area gives the gross geometric volume displaced per stroke:</p>
-          <div class="formula">\[ \text{geomVol} = \text{arc}\cdot A = 27.73\cdot 0.2043 = 5.66\ \mu\text{L} \]</div>
-          <div class="callout callout-note"><span class="callout-label">Is 5.66 µL out of place?</span> No — it is the <em>gross</em> sweep. The extra 0.66 µL is the delivery lost over the pinched-shut contact length (occluded tube delivers nothing); gross − compensation = 5.0 µL net. A valid reference, because that occlusion loss is real.</div>
-
-          <p style="margin-top:18px"><strong>6. Rotor radius <em>R</em>.</strong> The rotor is sized so its <em>N</em> evenly-spaced rollers each sweep this arc over the 180° contact zone. Setting the pitch-circle so the per-roller arc is delivered:</p>
-          <div class="formula">\[ R = \frac{N\cdot \text{arc}}{2\pi} = \frac{4\cdot 27.73}{2\pi} = 17.70\ \text{mm} \]</div>
-          <p class="block-note">with <em>N</em> = 4 rollers, rounded to 0.1 mm (Bambu P1S print resolution). This <em>R</em> = 17.70 mm is the rotor that was printed — so the <em>N<sub>c</sub></em>=1 error is now baked into the physical part.</p>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">What actually happened in the hardware</h3>
-          <p><strong>The gap was wrong — the tube was never occluded.</strong> The displaced-volume tool prescribes the gap as <em>G</em> = 2<em>w</em> − <em>δ</em> = 1.50 mm. The part was instead designed at <strong>1.75 mm</strong> (nominal CAD — proto-01 had <strong>no way to measure the installed gap</strong>). The tube only fully closes once the gap drops below the "walls-kiss" point, <em>G</em> = 2<em>w</em> = 1.70 mm. Since the nominal 1.75 mm &gt; 1.70 mm — and with no shim the tube was not squeezed and delivered nothing, so the <em>real</em> gap was inferably ≥ 2<em>w</em> too — <strong>the rollers never squeezed the tube shut</strong>. This is independent of the <em>N<sub>c</sub></em> error: the tool's gap output simply was not carried into the CAD.</p>
-          <p style="margin-top:12px"><strong>The paper-shim fix.</strong> To make it run, paper was folded into the groove so the tube sat proud and the rollers could reach it. Measuring the folded paper with a caliper (itself hard — it compresses): ≈1.0–1.1 mm light, ≈0.85 mm firm, ≈0.78 mm very hard. That raised the tube by ~0.8–1.1 mm, turning the effective gap into roughly 0.9–1.1 mm — an <em>effective</em> interference <em>δ<sub>eff</sub></em> ≈ 0.6–0.8 mm, a heavy over-squeeze. The actual delivery is measured next; the model is then checked against it.</p>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Results</h3>
-          <p class="block-note">Manual 1 mL open-loop calibration — two independent methods. Gravimetric is the absolute reference.</p>
-
-          <div class="stats-row">
-            <div class="stat-card stat-warn">
-              <div class="stat-value">3.39 µL</div>
-              <div class="stat-label">per stroke · gravimetric</div>
-            </div>
-            <div class="stat-card stat-warn">
-              <div class="stat-value">−32.2 %</div>
-              <div class="stat-label">under-dispense (1 mL command)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">4.5 %</div>
-              <div class="stat-label">CV gravimetric (n = 3)</div>
-            </div>
-          </div>
-
-          <div class="bar-chart" role="img" aria-label="Delivered volume comparison: 1000 µL commanded, 678 µL gravimetric, 600 µL flow">
-            <div class="bar-label">Commanded</div>
-            <div class="bar-wrap"><div class="bar bar-cmd" style="width:100%"><span class="bar-val">1000 µL</span></div></div>
-
-            <div class="bar-label">Gravimetric</div>
-            <div class="bar-wrap"><div class="bar bar-grav" style="width:67.8%"><span class="bar-val">678 µL</span></div></div>
-
-            <div class="bar-label">Flow sensor</div>
-            <div class="bar-wrap"><div class="bar bar-flow" style="width:60.0%"><span class="bar-val">600 µL</span></div></div>
-          </div>
-
-          <table class="param-table">
-            <thead>
-              <tr>
-                <th>Method</th><th>n</th><th>Mean delivered</th><th>CV</th><th>Implied µL/stroke</th><th>Error vs 1 mL</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Gravimetric</strong> · reference</td>
-                <td>3</td><td>678 µL</td><td>4.5 %</td><td>3.39</td><td>−32.2 %</td>
-              </tr>
-              <tr>
-                <td>Flow sensor</td>
-                <td>5</td><td>600 µL</td><td>17.6 %</td><td>3.00</td><td>−40.0 %</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="block-note" style="margin-top:12px">Flow reads ≈ 11.5 % below gravimetric (low-flow tails cut by zero threshold + sensor bias). Trust gravimetric for the absolute number; use flow for dynamics (ripple, priming).</p>
-
-          <figure class="detail-figure">
-            <img src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_FullCircuit_BWColoredRelevant.jpg" alt="Full circuit test setup" />
-            <figcaption>Full electronics / circuit test setup used for the calibration runs (motor, DRV8825, flow sensor)</figcaption>
-          </figure>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Discussion — does the model predict the result?</h3>
-          <p>Feeding the <em>actual</em> occlusion back through the model closes the loop. The built rotor sweeps <em>arc</em> = 27.73 mm; the net delivered volume is the gross sweep minus the <em>real</em> arc compensation, now using the firm-shim over-squeeze (<em>δ<sub>eff</sub></em> = 0.80 mm) and the <em>true</em> <em>N<sub>c</sub></em> = 2:</p>
-          <div class="formula">\[ L_c(0.80) = 1.15\cdot 2\sqrt{2\cdot 5\cdot 0.80} = 6.505\ \text{mm} \]</div>
-          <div class="formula">\[ \Delta\text{Arc} = N_c\cdot L_c = 2\cdot 6.505 = 13.01\ \text{mm} \]</div>
-          <div class="formula">\[ \text{net} = (\text{arc} - \Delta\text{Arc})\cdot A = (27.73 - 13.01)\cdot 0.2043 = 3.01\ \mu\text{L} \]</div>
-
-          <div class="callout callout-good"><span class="callout-label">Model validated.</span> Predicted <strong>3.01 µL</strong> (firm shim) vs measured <strong>3.39 µL</strong> (gravimetric). Back-solving the model from 3.39 gives an effective gap of <strong>1.11 mm</strong> — exactly the light-shim band that was measured. The first-order model brackets a hand-folded paper-shim experiment to <strong>~11 %</strong>: how the system was modelled is correct.</div>
-
-          <p class="block-note"><strong>Error budget (from the 5.0 µL intent):</strong></p>
-          <table class="param-table">
-            <thead><tr><th>Mechanism</th><th>Contribution</th><th>Confidence</th></tr></thead>
-            <tbody>
-              <tr><td>Gap 1.75 &gt; 1.70 mm → zero natural occlusion (needed the shim)</td><td>enabling failure</td><td>Certain</td></tr>
-              <tr><td>Shim over-compressed (δ<sub>eff</sub>≈0.6–0.8 vs 0.20) → arc wasted to deformation</td><td>−1.6 to −2.0 µL</td><td>Likely</td></tr>
-              <tr><td><em>N<sub>c</sub></em>=1 not 2 → rotor under-sized (R 17.7 vs 19.7 mm)</td><td>≈−0.67 µL</td><td>Certain</td></tr>
-              <tr><td>Paper thickness varies 0.78–1.1 mm across sections</td><td>drives the CV</td><td>Very likely</td></tr>
-            </tbody>
-          </table>
-          <p class="block-note" style="margin-top:12px">A <strong>systematic</strong> under-delivery (consistent, CV 4.5 %), not random noise — exactly what a fixed-geometry error looks like.</p>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Wall thickness — a real measurement problem</h3>
-          <p><em>w</em> is the highest-leverage input (it sets the gap via <em>G</em> = 2<em>w</em> − <em>δ</em>) and the hardest to pin down. The exact tube's datasheet doesn't cleanly state the wall, so the 0.85 mm value comes from an <strong>online check of a similar tube model</strong> (the precise dimensions of this one weren't published), then <strong>verified with a caliper</strong> — which roughly confirmed it, though the soft tube compresses under the jaws so the reading is unreliable. That the pump delivered anything before reliable shimming hints <em>w</em> may be slightly above 0.85 mm.</p>
-          <div class="callout callout-note"><span class="callout-label">Proto-02 action.</span> Measure <em>w</em> properly — <strong>preferred: cut a cross-section and image it under the microscope</strong> (a micrometer on the OD, then <em>w</em> = (OD − <em>d</em>)/2, is the fallback if one is available). A documented model limitation: a critical input that is both uncertain and hard to measure at sub-millimetre scale.</div>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Noise &amp; vibration test (firmware)</h3>
-          <p>Proto-01 was very noisy with strong vibration on the DRV8825 driver in <strong>full step</strong>. A purpose-built bench tool (<code>vibration_test.cpp</code>) allowed live sweeping of microstepping × speed over serial without re-flashing. On a DRV8825 there is no "smoothing library" — the levers are the acceleration ramp (already handled) and microstepping.</p>
-          <div class="stats-row" style="margin-top:20px">
-            <div class="stat-card">
-              <div class="stat-value">1/4</div>
-              <div class="stat-label">microstepping (chosen)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">2400 st/s</div>
-              <div class="stat-label">pulse rate</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">180 RPM</div>
-              <div class="stat-label">3.0 rev/s</div>
-            </div>
-          </div>
-          <p class="block-note" style="margin-top:12px">Bench-tested best noise-vs-torque compromise on the existing DRV8825 — quiet and smooth enough while keeping torque margin (1/4-step's torque penalty is small, so step-skip risk under the 2-roller load stays low). A silent TMC2209/2226 driver is the fallback if more silence is later needed, but it costs torque on this torque-hungry, open-loop pump. <strong>Finding: full step is the noise source; 1/4 step at ~180 RPM is the recommended operating point — free, no new parts.</strong></p>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">Issues observed</h3>
-          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px;">
-            <li><strong>Tube not squeezed enough</strong> — gap too wide; needed a paper shim to function at all (the headline mechanical failure).</li>
-            <li><strong>Under-delivery</strong> — ≈3.4 µL vs 5.0 µL target, −32 %.</li>
-            <li><strong>Pump head not fixed</strong> — had to be held down by hand during delivery; no locking mechanism.</li>
-            <li><strong>Wobble</strong> — 0.25 mm loose tolerance let the head move, and head position <em>is</em> the gap.</li>
-            <li><strong>Noisy / vibration</strong> — full-step DRV8825 (addressed above).</li>
-          </ul>
-          <figure class="detail-figure">
-            <img src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Real_Open.jpg" alt="Built pump, head open" />
-            <figcaption>The built pump, head open — rotor and rollers visible</figcaption>
-          </figure>
-        </section>
-
-        <section class="detail-block">
-          <h3 class="block-heading">→ Inputs for Proto-02</h3>
-          <p class="block-note">This is the design brief the next prototype carries forward.</p>
-          <div class="next-brief">
-            <h4>Geometry</h4>
-            <ul>
-              <li>Fix <strong>N<sub>c</sub> = 2</strong> in the displaced-volume model → re-derive ΔArc → <strong>rotor grows ~17.7 → ~19.7 mm</strong>.</li>
-              <li>Carry the tool's gap into CAD. Print a <strong>sweep of pump heads</strong> (G ≈ 1.35 / 1.50 / 1.65 mm) → maps gap → output and reveals the true <em>w</em>.</li>
-            </ul>
-            <h4>Tube installation (3 points)</h4>
-            <ul>
-              <li>Reposition holders so the tube sits under minimal stretch.</li>
-              <li>Tighten the holder holes so the tube won't pop out once seated.</li>
-              <li>Add a shield/retainer so the tube can't fall behind the rollers.</li>
-            </ul>
-            <h4>Head fixation &amp; fit</h4>
-            <ul>
-              <li>Add a <strong>positive lock</strong> (screw clamp, or cam/lever) — makes the gap repeatable and the head sweep measurable. Not optional.</li>
-              <li>Reduce loose-fit tolerance <strong>0.25 → ~0.10 mm</strong>, paired with the lock.</li>
-            </ul>
-            <h4>Firmware &amp; calibration</h4>
-            <ul>
-              <li>Adopt <strong>1/4 microstep @ ~2400 steps/s (180 RPM)</strong>; recalibrate steps/stroke.</li>
-              <li><strong>Measure <em>w</em> first</strong> (microscope cross-section), then <strong>don't change <em>k</em> yet</strong> — proto-01 mixes two error sources; back-calculate <em>k</em> from a clean proto-02 measurement.</li>
-            </ul>
-          </div>
-        </section>
+    <!-- ── Thread 2 · Alignment module ───────────────────────── -->
+    <section class="thread thread--align" id="thread-align" aria-labelledby="thread-align-title">
+      <div class="thread-head">
+        <div class="thread-eyebrow">Prototype 2 · Module</div>
+        <h2 class="thread-title" id="thread-align-title">Alignment Module</h2>
+        <p class="thread-sub">Hosts the sample rack and indexes each tube under the dispensing nozzle — it moves the samples, not the head.</p>
       </div>
 
-      <div id="detail-proto-02" class="detail-section" hidden>
-        <div class="detail-header">
-          <div class="detail-tag">Proto 02 · In design 2026</div>
-          <h2 class="detail-title">5 µL 4-roller peristaltic — corrected geometry + gap sweep</h2>
-        </div>
+      <div class="journey-stage">
+        <div class="stage-inner">
+          <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="journey-path"
+              d="M 300 40 C 520 140, 80 300, 300 440 C 520 580, 80 740, 300 880"
+              pathLength="1"/>
+          </svg>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;">
-          <div style="flex:1; min-width:150px; padding:12px 16px; border-radius:10px; background:rgba(232,53,53,0.12); border:1px solid rgba(232,53,53,0.5);">
-            <div style="font-size:1.15rem; font-weight:800; color:var(--accent-2);">v2.1</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">BUILT — didn't seal · diagnosed</div>
-          </div>
-          <div style="flex:1.2; min-width:180px; padding:12px 16px; border-radius:10px; background:rgba(255,107,43,0.14); border:1px solid var(--accent);">
-            <div style="font-size:1.15rem; font-weight:800; color:var(--accent);">v2.2 — rotor ✅ · model built</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">rotor hits <strong style="color:#5fd08a">2R = 39.40 (R = 19.70)</strong>, play-free (single bearing/roller). First head printed 0.23 mm loose → drove the <strong>ring calibration → print model v2</strong>.</div>
-          </div>
-          <div style="flex:1.3; min-width:190px; padding:12px 16px; border-radius:10px; background:rgba(95,208,138,0.12); border:1px solid rgba(95,208,138,0.55);">
-            <div style="font-size:1.15rem; font-weight:800; color:#5fd08a;">v2.3 — TESTED ✅ · 4.56 µL/stroke</div>
-            <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.4;">gap <strong style="color:#5fd08a">1.52 measured, concentric</strong> — model v2 validated on the part. Gravimetric campaign (76 reps): <strong style="color:#5fd08a">−8.9 % vs nominal, linear, CV 0.25 % @ 100 strokes</strong> — below the manual-pipette reference.</div>
-          </div>
-        </div>
-
-        <nav class="toc" aria-label="Page contents">
-          <div class="toc-title">Contents — click to jump (panels open automatically)</div>
-          <div class="toc-grid">
-            <div class="toc-group">
-              <div class="toc-group-label">The design (v2)</div>
-              <a class="toc-link" href="#sec-purpose">Purpose</a>
-              <a class="toc-link" href="#sec-parts">Parts &amp; assembly</a>
-              <a class="toc-link" href="#sec-targets">Targets &amp; pass criteria</a>
-              <a class="toc-link" href="#sec-parameters">Parameters as designed</a>
-              <a class="toc-link" href="#sec-gapsweep">The gap sweep</a>
-              <a class="toc-link" href="#sec-experiments">Planned experiments</a>
-              <a class="toc-link" href="#sec-tubewall">Tube wall measurement</a>
-              <a class="toc-link" href="#sec-risks">Open questions / risks</a>
+          <div class="nodes-layer">
+            <div class="proto-node" style="--node-top:1%">
+              <a class="proto-card" href="Prototype-2-Alignment-Module/index.html">
+                <div class="proto-card-thumb-ph" aria-hidden="true">V2 ✅</div>
+                <div class="proto-card-tag">V2 · built 2026-06-25</div>
+                <h3 class="proto-card-title">Rack indexing stage</h3>
+                <p class="proto-card-purpose">A rack-and-pinion stage that carries a custom 8-tube rack under the nozzle. Motor and pusher sit <strong>above</strong> the rail, so gravity — not a seal — keeps spilled liquid away from the parts that are hard to clean. Indexes reliably, but open-loop: it counts steps from wherever it happens to be.</p>
+                <div class="proto-card-kpi">
+                  <span class="kpi-pill">8 tube positions · 22 mm pitch</span>
+                  <span class="kpi-pill">pinion Ø 12.80 mm</span>
+                  <span class="kpi-pill kpi-warn">~140 mm stroke — 14 mm short of 154</span>
+                </div>
+                <span class="proto-card-cta">Explore →</span>
+              </a>
             </div>
-            <div class="toc-group toc-g21">
-              <div class="toc-group-label">v2.1 — built, didn't seal</div>
-              <a class="toc-link" href="#sec-v21">First print &amp; diagnosis</a>
-              <a class="toc-link" href="#sec-v21">→ Changes for 2.2</a>
+
+            <div class="proto-node" style="--node-top:26%">
+              <a class="proto-card" href="Prototype-2-Alignment-Module/index.html#sec-homing">
+                <div class="proto-card-thumb-ph" aria-hidden="true">V2.1 ✅</div>
+                <div class="proto-card-tag">V2.1 · bench-validated 2026-07-31</div>
+                <h3 class="proto-card-title">Homing — the stage learns where zero is</h3>
+                <p class="proto-card-purpose">A roller-lever endstop, wired so that a <strong>severed cable reads as “at the switch”</strong> and halts the axis instead of driving it into a hard stop, plus a three-pass homing sequence that is fast where speed is free and slow only where the zero is actually made. Axis 1 measured on the bench; axis 2 never wired.</p>
+                <div class="proto-card-kpi">
+                  <span class="kpi-pill">repeatable zero no worse than 0.03 mm</span>
+                  <span class="kpi-pill">102 half-steps/mm</span>
+                  <span class="kpi-pill">22 s full home, from 110 s</span>
+                </div>
+                <span class="proto-card-cta">Explore →</span>
+              </a>
             </div>
-            <div class="toc-group toc-g22">
-              <div class="toc-group-label">v2.2 — rotor done, model built</div>
-              <a class="toc-link" href="#sec-rebuild">Shrink calibration &amp; peg ladder</a>
-              <a class="toc-link" href="#sec-cone">The peg is a cone → single bearing</a>
-              <a class="toc-link" href="#sec-printmodel">Print model v1 (superseded)</a>
-              <a class="toc-link" href="#sec-head">First head — parameters &amp; the 0.23 miss</a>
-              <a class="toc-link" href="#sec-calibration">⭐ Ring calibration → model v2</a>
-            </div>
-            <div class="toc-group toc-g23">
-              <div class="toc-group-label">v2.3 — tested ✅</div>
-              <a class="toc-link" href="#sec-v23">The two fixes + corner relief</a>
-              <a class="toc-link" href="#sec-v23-params">Head parameters (model v2)</a>
-              <a class="toc-link" href="#sec-v23-results">⭐ Gravimetric results — the qualification</a>
-            </div>
-          </div>
-        </nav>
 
-        <details class="ver-panel ver-design">
-          <summary>
-            <span class="ver-chip">The design (v2)</span>
-            <span class="ver-sum-note">Corrected geometry (N<sub>c</sub> = 2, R = 19.7), the gap-sweep experiment, targets and the measured tube wall — the reference plan both builds execute against.</span>
-          </summary>
-          <div class="ver-body">
-
-        <section class="detail-block" id="sec-purpose">
-          <h3 class="block-heading">Purpose</h3>
-          <p class="block-note">The first build meant to <strong>actually work to spec</strong>. Proto-01 proved the concept and validated the model but carried three known, fixable errors and never occluded the tube without a paper shim. Proto-02:</p>
-          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
-            <li><strong>Hit a known, acceptable volume</strong> — ideally 5.0 µL/stroke, but a <em>consistent, known</em> volume is equally acceptable: the device spec is ±10 % / not more than ±10 µL over an accumulated dispense, so the binding requirement is <strong>low stroke-to-stroke CV</strong>, calibrated by step count — not a perfect mean.</li>
-            <li><strong>Fix the three proto-01 errors</strong> — N<sub>c</sub>, gap, head lock.</li>
-            <li><strong>Make the gap measurable</strong> — caliper-access slots read the real installed gap, not the nominal CAD value.</li>
-            <li><strong>Pin down <em>w</em> and <em>k</em></strong> — measure the tube wall before testing; back-calculate the inflation factor from clean post-fix data (proto-01 confounded two error sources).</li>
-            <li><strong>Understand gravimetric vs flow</strong> — with a solid build, investigate <em>why</em> the weighed mass reads higher than the integrated flow sensor.</li>
-          </ul>
-        </section>
-
-        <section class="detail-block" id="sec-parts">
-          <h3 class="block-heading">Parts &amp; assembly — what changed from proto-01</h3>
-          <p class="block-note">Four printed parts + 8 bearings + the tube. The full part-by-part breakdown and how it assembles lives in <strong>Proto 01</strong> (same set, reused) — proto-02 edits them as follows.</p>
-          <table class="param-table">
-            <thead><tr><th>Part</th><th>Change from proto-01</th></tr></thead>
-            <tbody>
-              <tr><td><strong>NEMA17 motor holder</strong></td><td><strong>Unchanged — reused as the fixed reference / datum</strong> (not reprinted).</td></tr>
-              <tr><td><strong>Rotor</strong> (Main + Cover)</td><td>Radius <em>R</em> recomputed <strong>17.7 → 19.7 mm</strong> (N<sub>c</sub> fix). <em>Planned for 2.2:</em> tighter bearing pockets + PLA-shrink compensation.</td></tr>
-              <tr><td><strong>Bearings</strong> (8 × MR105ZZ, 2/roller)</td><td>Unchanged.</td></tr>
-              <tr><td><strong>Pump head</strong></td><td><strong>Gap-sweep heads</strong> 1.52 / 1.62 / 1.72 mm; <strong>caliper-access slots</strong> added to read the installed gap; <strong>screw-clamp lock</strong> added; sliding fit 0.15–0.20 mm/side.</td></tr>
-              <tr><td><strong>Tube</strong> (Masterflex, via Darwin reseller)</td><td>Unchanged; wall <em>w</em> now <strong>measured</strong> 0.91 mm (was estimated 0.85).</td></tr>
-            </tbody>
-          </table>
-          <div class="callout callout-note"><span class="callout-label">The one datum that matters: the shaft.</span> It locates every part and can't be moved, so all geometry is referenced to the shaft centre. <strong>Installed gap = wall radius − R</strong>, and it should be <strong>uniform around the arc</strong> (wall concentric with the shaft). Non-uniformity means the wall isn't centred — the lens for reading Build 2.1.</div>
-        </section>
-
-        <section class="detail-block" id="sec-targets">
-          <h3 class="block-heading">Targets &amp; pass criteria</h3>
-          <table class="param-table">
-            <thead><tr><th>Quantity</th><th>Target</th><th>Note</th></tr></thead>
-            <tbody>
-              <tr><td>Mean volume / stroke</td><td>~5.0 µL (≥ ~4.5 ok)</td><td>Knowing it matters more than hitting exactly 5.0</td></tr>
-              <tr><td><strong>Stroke-to-stroke CV</strong></td><td><strong>≤ 5 %</strong> (stretch ≤ 3 %)</td><td>At CV 5 %, ±7 µL over 200 strokes (95 %) → inside the ±10 µL cap. <strong>The real pass gate.</strong></td></tr>
-              <tr><td>Mean known to</td><td>~±2 %</td><td>So step-count calibration lands inside ±10 % / ±10 µL</td></tr>
-              <tr><td>Head-lock gap repeatability</td><td>drift &lt; 0.10 mm / 10 reinstalls</td><td>More drift → the lock is the error source, not the gap</td></tr>
-            </tbody>
-          </table>
-          <div class="callout callout-note"><span class="callout-label">Benchmark.</span> The device replaces a person pipetting by hand, so a <strong>pipette</strong> is the fair comparator: ISO 8655 holds CV ≈ 1.5–3 % at 5 µL. Proto-01 was already CV 4.5 % despite its errors.</div>
-        </section>
-
-        <section class="detail-block" id="sec-parameters">
-          <h3 class="block-heading">Parameters — as designed</h3>
-          <p class="block-note">Recomputed with the
-            <a class="tool-link" href="../tools/rotor-solver/index.html">Rotor Geometry Solver</a>
-            and the
-            <a class="tool-link" href="../tools/peristaltic-roller-displaced-volume-model/index.html">Displaced-Volume Model</a>,
-            now with the corrected <em>N<sub>c</sub></em> = 2.</p>
-          <table class="param-table">
-            <thead><tr><th>Parameter</th><th>Value</th><th>Change from proto-01</th></tr></thead>
-            <tbody>
-              <tr><td>Rollers engaged <em>N<sub>c</sub></em></td><td>2</td><td><strong>Fixed</strong> (was 1)</td></tr>
-              <tr><td>Rotor radius <em>R</em></td><td>≈ 19.7 mm</td><td><strong>Recomputed</strong> (was 17.70)</td></tr>
-              <tr><td>Gap <em>G</em> — head sweep</td><td>1.52 / 1.62 / 1.72 mm (target installed)</td><td><strong>New</strong> — 3 heads at <em>δ</em> = 0.30/0.20/0.10, tested firm→loose</td></tr>
-              <tr><td>Head lock</td><td>screw clamp (provisional)</td><td><strong>New</strong> — easiest to test; final pick deferred</td></tr>
-              <tr><td>Loose-fit tolerance</td><td>0.15–0.20 mm/side</td><td>Sliding fit (was 0.25, briefly 0.10 — too tight for FDM); lock removes play</td></tr>
-              <tr><td>Tube wall <em>w</em></td><td><strong>0.91 mm</strong> (measured)</td><td>Microscope + caliper-OD + ISO/Ismatec standard converge</td></tr>
-              <tr><td>Walls-kiss 2<em>w</em> / OD</td><td>1.82 mm / 2.33 mm</td><td>Measured; sets gap <em>G</em> = 2<em>w</em> − <em>δ</em></td></tr>
-              <tr><td>Interference <em>δ</em> (nominal)</td><td>0.20 mm</td><td>Unchanged</td></tr>
-              <tr><td>Inflation factor <em>k</em></td><td>1.15 (provisional)</td><td><strong>Hold</strong> — back-calculate from clean data</td></tr>
-              <tr><td>Roller count <em>N</em></td><td>4</td><td>Unchanged — discrete-dosing rationale now testable</td></tr>
-              <tr><td>Microstepping / speed</td><td>1/4 step @ 2400 st/s (180 RPM)</td><td>Ported from proto-01 noise test</td></tr>
-              <tr><td>Steps / stroke</td><td>recalibrate to new <em>R</em></td><td>Re-derive for the larger rotor</td></tr>
-            </tbody>
-          </table>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Corrected geometry</h4>
-          <div class="formula">\[ L_c = k\cdot 2\sqrt{2R_r\delta} = 3.253\ \text{mm} \quad\Rightarrow\quad \Delta\text{Arc} = N_c\cdot L_c = 2\cdot 3.253 = 6.51\ \text{mm} \]</div>
-          <div class="formula">\[ \text{arc} = \frac{vol}{A} + \Delta\text{Arc} = 24.48 + 6.51 = 30.98\ \text{mm} \quad\Rightarrow\quad R = \frac{N\cdot\text{arc}}{2\pi} = 19.7\ \text{mm} \]</div>
-          <p class="block-note">The <em>N<sub>c</sub></em> = 2 correction grows the rotor 17.7 → 19.7 mm. This time the tool's gap prescription <em>G</em> = 2<em>w</em> − <em>δ</em> is carried into CAD (the proto-01 workflow failure was re-estimating it instead).</p>
-        </section>
-
-        <section class="detail-block" id="sec-gapsweep">
-          <h3 class="block-heading">The gap sweep — the key experiment</h3>
-          <p>The sweep tunes the <strong>interference</strong> <em>δ</em> = 2<em>w</em> − <em>G</em> — how far the gap squeezes past the measured walls-kiss (2<em>w</em> = 1.82 mm).</p>
-          <div class="callout callout-warn"><span class="callout-label">Delivery is leak-limited, not arc-limited (key correction from proto-01).</span> The displaced-volume model's arc-compensation term assumes the tube is <em>already fully sealed</em> — it only describes the over-squeezed side. <strong>Below the seal threshold the tube backflows, so a <em>looser</em> gap leaks <em>more</em> and delivers <em>less</em>.</strong> Delivery vs gap is therefore a <strong>hump</strong>: rising as you tighten (better seal), peaking at the <em>loosest gap that still fully seals</em>, then slowly declining if over-squeezed. <strong>The optimum is the top of the hump</strong> — and proto-02's job is to find it.</div>
-
-          <figure class="detail-figure">
-            <svg viewBox="0 0 560 280" role="img" aria-label="Delivery-versus-gap hump curve, with the two proto-01 operating points" style="width:100%;height:auto;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:var(--radius);font-family:var(--font);">
-              <!-- axes -->
-              <line x1="70" y1="28" x2="70" y2="232" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
-              <line x1="62" y1="232" x2="532" y2="232" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
-              <text x="64" y="22" fill="#7a7068" font-size="12">delivery</text>
-              <text x="530" y="252" fill="#7a7068" font-size="12" text-anchor="end">looser gap →</text>
-              <text x="80" y="252" fill="#7a7068" font-size="12">← tighter</text>
-              <!-- region labels -->
-              <text x="165" y="222" fill="#7a7068" font-size="11" text-anchor="middle">over-squeezed (sealed)</text>
-              <text x="445" y="140" fill="#7a7068" font-size="11" text-anchor="middle">leak zone</text>
-              <!-- hump curve -->
-              <path d="M 95 152 C 180 96, 250 72, 300 70 C 360 68, 435 178, 505 214" fill="none" stroke="#ff6b2b" stroke-width="3" stroke-linecap="round"/>
-              <!-- seal-point peak -->
-              <circle cx="300" cy="70" r="5" fill="#ff6b2b"/>
-              <text x="300" y="54" fill="#f0ece8" font-size="12" font-weight="600" text-anchor="middle">seal point — max delivery (proto-02 target)</text>
-              <!-- proto-01 + shim (over-squeezed, left of peak) -->
-              <circle cx="112" cy="145" r="5" fill="#e83535"/>
-              <text x="122" y="135" fill="#e83535" font-size="11.5">proto-01 + shim ≈ 3.4 µL</text>
-              <!-- proto-01 no shim (leak, far right) -->
-              <circle cx="495" cy="210" r="5" fill="#e83535"/>
-              <text x="487" y="200" fill="#e83535" font-size="11.5" text-anchor="end">proto-01, no shim ≈ 0</text>
-            </svg>
-            <figcaption>Delivery vs gap is a hump. proto-01 never sat at the peak: with <strong>no shim</strong> the gap was far too loose → leak zone, ≈ 0 delivered; with the <strong>hand shim</strong> it overshot into the over-squeezed zone → ≈ 3.4 µL, below the peak. proto-02 sweeps firm→loose to find the peak between them.</figcaption>
-          </figure>
-          <p>So the sweep is run <strong>firm → loose</strong>, hunting the peak:</p>
-          <table class="param-table">
-            <thead><tr><th>Order</th><th><em>δ</em></th><th>Target <em>G</em></th><th>Real expectation</th></tr></thead>
-            <tbody>
-              <tr><td><strong>1st (firm)</strong></td><td>0.30</td><td>1.52 mm</td><td>firmly sealed → real delivery; de-risks "does it pump"</td></tr>
-              <tr><td>2nd</td><td>0.20</td><td>1.62 mm</td><td>looser; if delivery <strong>rises</strong>, peak is here or looser</td></tr>
-              <tr><td>3rd</td><td>0.10</td><td>1.72 mm</td><td>likely <strong>leaks</strong> → delivery drops (≈ proto-01's marginal 1.75)</td></tr>
-            </tbody>
-          </table>
-          <p class="block-note">Read the trend: delivery climbs as you loosen <em>until it doesn't</em> — that turning point is the operating gap. If even 1.52 leaks → go firmer; if 1.72 still climbs → go looser. The fixed rotor (sized at <em>δ</em> = 0.20) makes this a clean single-variable sweep that characterizes <strong>both</strong> regimes.</p>
-          <div class="callout callout-note"><span class="callout-label">Measure the real gap.</span> Each head gets <strong>3 caliper-access slots across the 180° arc</strong> (apex + two sides) → records the true installed gap (never nominal) and reveals any clamp-bow / non-uniformity. The first (firm) head doubles as the <strong>calibration head</strong> for the FDM print offset.</div>
-        </section>
-
-        <section class="detail-block" id="sec-experiments">
-          <h3 class="block-heading">Planned experiments</h3>
-          <p class="block-note">Run order <strong>randomized</strong>; tube wear controlled (interleave heads or fresh tube section per head) — silicone hysteresis drifts <em>w<sub>eff</sub></em> with compression cycles and would otherwise confound the sweep. <strong>n = 10</strong> per condition (ISO 8655 minimum; n = 5 leaves the CV estimate ~±40 % uncertain).</p>
-          <table class="param-table">
-            <thead><tr><th>#</th><th>Experiment</th><th>n</th><th>Output</th></tr></thead>
-            <tbody>
-              <tr><td>E1 ✅</td><td>Wall thickness <em>w</em> — microscope + caliper OD + ISO standard</td><td>3 + OD</td><td><strong>Done: w = 0.91, 2w = 1.82, OD = 2.33</strong></td></tr>
-              <tr><td>E2</td><td>Gap sweep → volume, run <strong>firm→loose</strong> (gravimetric, record measured gap)</td><td>10 / head</td><td>Delivery-vs-gap hump; locate the peak = operating gap</td></tr>
-              <tr><td>E3</td><td>Precision (CV)</td><td>10 / head</td><td>CV per head — the pass gate</td></tr>
-              <tr><td>E4</td><td>Head-lock repeatability (caliper the 3 slots per reinstall)</td><td>10 reinstalls</td><td>Gap drift; arc bowing/asymmetry</td></tr>
-              <tr><td>E5</td><td>Back-calculate <em>k</em> (invert model from E1+E2)</td><td>—</td><td>Effective <em>k</em> for this tube</td></tr>
-              <tr><td>E6</td><td>Gravimetric vs flow (log flow during E2)</td><td>subset</td><td>Why flow under-reads — method finding</td></tr>
-              <tr><td>E7</td><td>Step-skip check at 1/4 step / 180 RPM under 2-roller load</td><td>—</td><td>Open-loop reliability</td></tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section class="detail-block" id="sec-tubewall">
-          <h3 class="block-heading">Tube wall thickness — measurement &amp; analysis</h3>
-          <p class="block-note">The gap is defined by <em>G = 2w − δ</em>, making the wall thickness <em>w</em> the highest-leverage input. Three independent lines of measurement were used to converge on a reliable value:</p>
-          <table class="param-table">
-            <thead><tr><th>Source</th><th><em>w</em></th><th><em>2w</em></th><th>OD</th></tr></thead>
-            <tbody>
-              <tr><td>Microscopy (ruler-calibrated)</td><td>0.896 mm</td><td>1.79 mm</td><td>2.30 mm</td></tr>
-              <tr><td><strong>Caliper (physical OD)</strong></td><td><strong>0.91 mm</strong></td><td><strong>1.82 mm</strong></td><td><strong>2.33 mm</strong></td></tr>
-              <tr><td><strong>ISO / manufacturer standard</strong></td><td><strong>0.91 mm</strong></td><td><strong>1.82 mm</strong></td><td><strong>2.33 mm</strong></td></tr>
-            </tbody>
-          </table>
-          <div class="callout callout-good"><span class="callout-label">Adopted result.</span> <strong>w = 0.91 mm · 2w = 1.82 mm · OD = 2.33 mm.</strong> The caliper reading and the ISO standard match exactly, and the optical microscopy corroborates within ~1.5 %.</div>
-          
-          <figure class="detail-figure">
-            <div class="figure-grid">
-              <figure>
-                <img src="Prototype-1-Pump-Module/Tube%20OD%20Thikness/Ruler.png" alt="Ruler calibration — 1 mm interval reads 976 px" />
-                <figcaption>Calibration: 1 mm interval reads 976 px → 976 px/mm</figcaption>
-              </figure>
-              <figure>
-                <img src="Prototype-1-Pump-Module/Tube%20OD%20Thikness/Wall%20Thikness.png" alt="Three radial wall measurements" />
-                <figcaption>Wall thickness: Mean 0.896 mm, CV 0.7 %</figcaption>
-              </figure>
-            </div>
-          </figure>
-        </section>
-
-        <section class="detail-block" id="sec-risks">
-          <h3 class="block-heading">Open questions / risks</h3>
-          <ul style="font-size:0.92rem; line-height:1.7; color:var(--text); padding-left:20px; margin:0;">
-            <li><strong>Seal threshold / leak regime (model limitation)</strong> — the arc-compensation model only holds once fully sealed; below the threshold the tube leaks and delivery drops as the gap opens (proto-01 lived here). The model needs a sealing/leak term — a genuine thesis finding.</li>
-            <li><strong>True <em>w</em></strong> — resolved (0.91 mm).</li>
-            <li><strong>Effective <em>k</em></strong> for this tube — provisional 1.15, confirmed only by E5 (sealed side only).</li>
-            <li><strong>Tube wear / hysteresis</strong> confounding the sweep if order isn't controlled.</li>
-            <li><strong>Backing-wall bowing</strong> under clamp load → non-uniform gap around the arc (E4 detects).</li>
-            <li><strong>System effects deferred</strong> — downstream backpressure + tubing dead volume will shift calibration in the assembled device; not tested at pump-only stage.</li>
-            <li><strong>Ambition note</strong> — at 5 µL, ±10 % = ±0.5 µL, which a single stroke won't hit open-loop; small commanded volumes rely on stroke-count averaging. State explicitly in the thesis.</li>
-          </ul>
-        </section>
-
-          </div>
-        </details>
-
-        <details class="ver-panel ver-21">
-          <summary>
-            <span class="ver-chip">v2.1</span>
-            <span class="ver-sum-note"><strong>BUILT — didn't seal.</strong> Rotor undersized (2R = 39.04) + head seated ~0.45 mm too high → apex open. Fully diagnosed; every fix carried into v2.2.</span>
-          </summary>
-          <div class="ver-body">
-
-        <section class="detail-block" id="sec-v21">
-          <h3 class="block-heading">First print, measurements &amp; diagnosis</h3>
-          <p class="block-note">First print of the <strong>firm head</strong> (nominal gap 1.52 mm) plus a reprinted rotor, measured against the reused proto-01 holder. Built and measured — <strong>not yet pumped</strong>. The design gap 1.52 is a <em>nominal − nominal</em> figure (wall radius 21.22 − R 19.70); what governs occlusion is the <strong>printed, installed gap measured from the shaft</strong>.</p>
-
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-value">39.04 mm</div>
-              <div class="stat-label">bearing–bearing (2R) measured → R = 19.52 · nominal 39.4 / 19.70</div>
-            </div>
-            <div class="stat-card stat-warn">
-              <div class="stat-value">~0.45 mm</div>
-              <div class="stat-label">head seated too high → wall not concentric with shaft</div>
-            </div>
-            <div class="stat-card stat-warn">
-              <div class="stat-value">apex open</div>
-              <div class="stat-label">top gap &gt; 2 mm → no occlusion → partial delivery</div>
-            </div>
-          </div>
-
-          <p class="block-note" style="margin-top:8px"><strong>Measurements (firm head).</strong> 2R is the precise anchor; the shaft→wall radii are the soft numbers (curved features, ±0.1+). The caliper-access holes get enlarged for 2.2 so the wall reads directly.</p>
-          <table class="param-table">
-            <thead><tr><th>Quantity</th><th>Nominal</th><th>Measured</th><th>Confidence</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Bearing–bearing (2R)</strong></td><td>39.4</td><td><strong>39.04</strong> (39.05 / 39.03)</td><td>High — easy, precise</td></tr>
-              <tr><td>→ Roller radius <em>R</em></td><td>19.70</td><td><strong>19.52</strong></td><td>High</td></tr>
-              <tr><td>Shaft → wall, apex (top)</td><td>21.22</td><td>21.74</td><td>Low — curved (±0.1+)</td></tr>
-              <tr><td>Shaft → wall, 0° / 180°</td><td>21.22</td><td>21.34 / 21.23</td><td>Low</td></tr>
-              <tr><td>Holder dovetail-female → shaft</td><td>—</td><td>25.72</td><td>±0.05–0.1</td></tr>
-              <tr><td>Dovetail hard-stop height from base</td><td>64.44</td><td>64.52</td><td>±~0.05</td></tr>
-            </tbody>
-          </table>
-
-          <p class="block-note" style="margin-top:8px"><strong>Installed gap = wall radius − R</strong> (with R = 19.52):</p>
-          <table class="param-table">
-            <thead><tr><th>Position</th><th>Gap</th><th>δ = 2w − G (2w = 1.82)</th><th>State</th></tr></thead>
-            <tbody>
-              <tr><td>Apex (top)</td><td><strong>2.22</strong></td><td>−0.40</td><td><strong>open — no occlusion</strong></td></tr>
-              <tr><td>0° left</td><td>1.82</td><td>0.00</td><td>knife-edge</td></tr>
-              <tr><td>180° right</td><td>1.71</td><td>+0.11</td><td>marginal seal</td></tr>
-            </tbody>
-          </table>
-          <p class="block-note">Two methods — caliper from the shaft centre vs an object probed into the gap — disagree ~0.2 mm on the absolute side gap but <strong>agree the apex is ~0.4–0.5 mm more open than the sides</strong>, so the relative apex-opening is the robust finding.</p>
-
-          <div class="callout callout-warn"><span class="callout-label">Two stacked causes.</span> <strong>(1) Rotor 2R undersized ~0.36 mm</strong> (R short ~0.18/side) → every gap ~0.18 mm too big, uniformly — from PLA shrink <em>plus</em> bearing-pocket play (which also makes R wander, a direct CV source). <strong>(2) Head seated ~0.45 mm too high</strong> → wall not concentric → the apex blows open. Only 0.08 mm of that is the dovetail stop printing high (64.52 vs 64.44); ~0.37 mm is an unexplained CAD/seat offset. <strong>Both must be fixed</strong> — centring the head alone, with the rotor still small, gives ≈ 1.77 mm uniform → δ ≈ 0.05 → barely seals.</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">→ Changes for 2.2</h4>
-          <div class="next-brief">
-            <h4>Rotor (fix first — it sets the datum)</h4>
-            <ul>
-              <li>Tighten the <strong>bearing pockets</strong> — less play pushes 2R back up <em>and</em> lowers σ<sub>G</sub> (a precision fix, not just sizing).</li>
-              <li><strong>PLA-shrink compensation</strong> so 2R returns to ~39.4 (R → 19.7), restoring the datum — the existing head radii then stay correct as-designed. Shrink scales with size → <strong>scale the model, don't add a fixed offset</strong>. The observed 0.36 mm = 0.91 % deficit is an <em>upper bound</em> (part is bearing play): tighten pockets first, then bracket the rotor at <strong>+0.4 / +0.6 / +0.8 %</strong> XY scale and pick the one landing 2R at 39.4 — or measure a calibration coupon for the factor directly. Don't apply the full 0.91 % <em>and</em> tighten pockets, or you'll overshoot.</li>
-            </ul>
-            <h4>Head</h4>
-            <ul>
-              <li><strong>Centre the wall on the shaft (in-plane)</strong> — close the ~0.45 mm too-high (resolve the CAD/seat offset) so the gap is uniform around the arc.</li>
-              <li><strong>Axial alignment (along the shaft)</strong> — the rotor sits ~1 mm proud of the head, so the rollers ride to one edge of the channel; register the two axially so the rollers sit centred on the tube. Independent of the in-plane centring.</li>
-              <li><strong>Enlarge the caliper-access holes</strong> so the installed wall radius reads directly.</li>
-            </ul>
-            <h4>Printer / precision</h4>
-            <ul>
-              <li><strong>0.2 mm nozzle</strong> (ordered, ~next week) for the bearing pockets — the 0.4 mm nozzle can't hit the 5 mm seat (prints 4.8 = play, or 5.2 = loose), and that play is a direct σ<sub>G</sub> source. Try the finer nozzle <strong>+ light sanding + PLA-shrink first</strong>; <strong>metal dowel-pin axles</strong> are the fallback if play persists.</li>
-            </ul>
-            <h4>Sequence &amp; notes</h4>
-            <ul>
-              <li>Fix + reprint + <strong>re-measure the rotor first</strong>, then build and centre the head against the corrected R — the two fixes are naturally sequential, not simultaneous.</li>
-              <li>R 19.52 vs 19.70 slightly lowers swept volume/stroke — fine, volume is calibrated by step count once it seals.</li>
-            </ul>
-          </div>
-          <p class="block-note" style="margin-top:12px">Parked for the thesis report (after 2.1): an FDM-vs-resin printer comparison (Bambu P1S vs Prusa SL1S SPEED) and a PLA-shrinkage note (typical 0.2–0.5 %; ~1 % is high-end).</p>
-        </section>
-
-          </div>
-        </details>
-
-        <details class="ver-panel ver-22">
-          <summary>
-            <span class="ver-chip">v2.2</span>
-            <span class="ver-sum-note"><strong>Rotor ✅ validated (2R = 39.40, play-free)</strong> · first head printed 0.23 mm loose → drove the <strong>ring calibration → print model v2</strong>. The datum + the model.</span>
-          </summary>
-          <div class="ver-body">
-
-        <section class="detail-block" id="sec-rebuild">
-          <h3 class="block-heading">Rotor-datum rebuild — materials &amp; shrink calibration</h3>
-          <p class="block-note">The v2.2 fixes are set (see <strong>→ Changes for 2.2</strong> above): rebuild the rotor to restore the datum, then centre and axially align the head. The gating part — the <strong>0.2 mm nozzle</strong> for the bearing pockets — <strong>arrived 2026-07-02</strong>, so the build is unblocked. This block records the filament and the shrink-calibration method.</p>
-
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-value">0.2 mm</div>
-              <div class="stat-label">nozzle arrived 2026-07-02 → bearing pockets (rotor)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">0.4 mm</div>
-              <div class="stat-label">nozzle for the shrink-calibration bars (faster; shrink <em>assumed</em> nozzle-independent — later revised, see the print model)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">~0.3–0.5 %</div>
-              <div class="stat-label">expected material shrink to scale into the rotor</div>
-            </div>
-          </div>
-
-          <p class="block-note" style="margin-top:8px"><strong>Filament — all v2.2 prints.</strong> 3DE MAX PLA "Cold White", 1.75 mm, 1 kg (<a href="https://3deksperten.dk/products/3de-max-cold-white-1-75mm" target="_blank" rel="noopener">3D Eksperten</a>).</p>
-          <table class="param-table">
-            <thead><tr><th>Property</th><th>Value</th></tr></thead>
-            <tbody>
-              <tr><td>Type / diameter</td><td>PLA · 1.75 mm, tolerance <strong>±0.05 mm</strong></td></tr>
-              <tr><td>Print (nozzle) temp</td><td><strong>215–230 °C</strong></td></tr>
-              <tr><td>Bed temp</td><td><strong>35–60 °C</strong></td></tr>
-              <tr><td>Density · HDT</td><td>1.23 g/cm³ · 55 °C</td></tr>
-              <tr><td>Tensile · elongation</td><td>42.6 MPa · 285.1 %</td></tr>
-              <tr><td>Flexural · flex modulus</td><td>64.8 MPa · 2353 MPa</td></tr>
-              <tr><td>Melt-flow index</td><td>2–5 g/10 min</td></tr>
-              <tr><td>RAL/Pantone · EAN</td><td>11-0602 TCX · 5711336018236</td></tr>
-            </tbody>
-          </table>
-
-          <div class="callout callout-note"><span class="callout-label">Shrink bars: print at 0.4 mm, not 0.2.</span> Using the MakerWorld <a href="https://makerworld.com/en/models/786685-filament-shrinkage-test-bar" target="_blank" rel="noopener">Filament Shrinkage Test Bar</a> (two 100 mm bars, X and Y). Thermal shrink is a <strong>material</strong> property — a percentage of length, essentially <strong>nozzle-independent over 100 mm</strong> — so 0.2 and 0.4 give the same shrink fraction well inside the ±0.2 % bracket, and 0.4 mm is much faster. The nozzle only matters for fine features (the 5 mm pockets), which the bars don't measure. Keep everything else identical to the rotor print — <strong>same spool, same nozzle temp, same bed temp, same plate/orientation</strong>.</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Shrink procedure</h4>
-          <div class="next-brief">
-            <ul>
-              <li>Print both bars @ <strong>0.4 mm</strong>, matched filament + temps to the rotor print.</li>
-              <li><strong>Let them fully cool</strong> before measuring — PLA keeps contracting for minutes after the print ends.</li>
-              <li>Caliper each bar at a few points, average; compute <code>f = (100 − measured) / measured</code> for <strong>X and Y separately</strong>.</li>
-              <li>If X and Y agree, apply a single XY scale <code>1 + f</code>; if they differ, per-axis scale.</li>
-              <li>Apply the coupon's <strong>material-shrink</strong> scale (~0.3–0.5 %) to the rotor — <strong>not</strong> the full 0.91 % v2.1 deficit (that includes bearing-pocket play, fixed separately), or 2R will overshoot 39.4.</li>
-            </ul>
-          </div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Results — shrink coupon (2026-07-02, 0.4 mm nozzle)</h4>
-          <p class="block-note">Bars printed at 100.00 mm nominal, 3DE MAX PLA "Cold White".</p>
-          <figure class="detail-figure figure-compact">
-            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/ShrinkTest10cm.jpg" alt="Two 100 mm PLA calibration bars, embossed 10cm, marked X and Y" />
-            <figcaption>The two 100 mm coupons, embossed <code>10cm</code> and marked <strong>X</strong> / <strong>Y</strong> for the axis each was printed along. Both cooled fully before calipering. <strong>This coupon design turned out to be flawed</strong> — see the print model below.</figcaption>
-          </figure>
-          <table class="param-table">
-            <thead><tr><th>Axis</th><th>Measured</th><th>Shrink <em>f</em></th><th>Compensation <em>1+f</em></th></tr></thead>
-            <tbody>
-              <tr><td><strong>X</strong></td><td><strong>99.74 mm</strong></td><td><strong>0.26 %</strong></td><td>×1.0026</td></tr>
-              <tr><td><strong>Y</strong></td><td><strong>99.82 mm</strong></td><td><strong>0.18 %</strong></td><td>×1.0018</td></tr>
-              <tr><td>mean</td><td>99.78 mm</td><td>0.22 %</td><td>×1.0022 ← applied</td></tr>
-            </tbody>
-          </table>
-
-          <div class="callout callout-good"><span class="callout-label">⭐ Key finding — play is ~4.5× the shrink.</span> <strong>Only the printed pitch circle shrinks — the bearings are steel.</strong> <em>R</em> = pitch radius (14.70 mm, printed) + bearing radius (5.00 mm, steel). So shrink acts on 14.70, not on 39.40: <code>2 × 14.70 × 0.0022 ≈ 0.065 mm</code>. The v2.1 deficit therefore splits <strong>0.36 mm = shrink ~0.065 (18 %) + bearing play ~0.30 (82 %)</strong> — about 0.15 mm of inward nesting per bearing. The measured PLA shrink is at the <em>low</em> end of the 0.2–0.5 % band, so the <strong>peg fit is the big lever</strong> and shrink comp is a small correction. It also retro-justifies the warning: applying the full 0.91 % would have over-scaled the rotor by ~0.3 mm.</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Results — bearing-peg fit ladder (0.2 mm nozzle)</h4>
-          <table class="param-table">
-            <thead><tr><th>Peg Ø (CAD)</th><th>Result</th></tr></thead>
-            <tbody>
-              <tr><td>&lt; 5.05 mm</td><td>a bit of <strong>play</strong></td></tr>
-              <tr><td><strong>5.05 mm</strong></td><td>✅ <strong>best fit — "just works"</strong> (snug, bearing inserts)</td></tr>
-              <tr><td>&gt; 5.05 mm</td><td><strong>difficult to insert</strong> the bearing</td></tr>
-            </tbody>
-          </table>
-          <p class="block-note">The window is narrow and 5.05 sits at its <strong>tight end</strong> — so anything that <em>grows</em> the peg risks a rotor that won't assemble.</p>
-          <figure class="detail-figure figure-compact">
-            <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/BearingPocketTest.jpg" alt="Printed fit-ladder bar with pegs at 4.90–5.10 mm; the MR105ZZ bearing is seated on the 5.05 mm peg" />
-            <figcaption>Fit ladder printed at 0.2 mm: pegs from 4.90 → 5.10 mm. The MR105ZZ bearing seats on the <strong>5.05 mm</strong> peg — the fit that "just works".</figcaption>
-          </figure>
-
-          <div class="callout callout-warn"><span class="callout-label">Rescaling rule — do NOT global-scale the rotor.</span> A global XY scale in the slicer would also scale the <strong>peg</strong> (5.05 → ~5.06), pushing the empirically-validated fit toward "can't insert". The peg is a fine feature <em>already compensated by the ladder</em> — it needs no shrink scale. Compensate the <strong>printed radial geometry only</strong>: pitch Ø 29.40 → <strong>29.46</strong> (×1.0022) in CAD, leaving the 10 mm steel bearing and the 5.05 mm peg untouched → <code>2R = 29.40 + 10 = 39.40 ✓</code>. Scaling the whole rotor instead would compensate the steel too and <strong>overshoot 2R by ~0.02 mm</strong>.</div>
-        </section>
-
-        <!-- ═══ ROTOR REBUILD — THE CONE ═══════════════════════════ -->
-        <section class="detail-block" id="sec-cone">
-          <h3 class="block-heading">The rotor took four prints — because the peg is a cone</h3>
-          <p class="block-note">The v2.2 rotor came out <strong>2R = 39.20</strong>, still 0.20 mm short. Two candidate causes demanded <em>opposite</em> fixes — residual <strong>play</strong> (must be removed mechanically; scaling would bury a CV source) or a <strong>dimensional offset</strong> (compensable by scale). Guessing wrong would have been worse than doing nothing, so the rotor was calipered <em>without</em> the bearings.</p>
-
-          <div class="callout callout-warn"><span class="callout-label">The peg is not a cylinder — it is a truncated cone.</span> The <strong>base is fat</strong> (press-fit even at 5.05) and the <strong>top is loose</strong>. With <strong>two stacked bearings</strong>, the bottom one is <em>located</em> and the top one is <em>free</em> — so the roller does not translate, it <strong>pivots about the bottom bearing and tilts inward</strong> (~0.6° over the 8 mm stack). Confirmed by measurement: <strong>2R across the top bearing read <em>lower</em> than across the bottom.</strong> A tilted roller breaks the line-contact assumption <em>and</em> acts like a screw thread that drives the tube sideways.</div>
-
-          <p class="block-note"><strong>A fit ladder cannot fix a cone</strong> — every rung is also a cone, so growing the peg only makes the base harder to press while the top stays loose. The fix was to stop using the bad half of it:</p>
-
-          <table class="param-table">
-            <thead><tr><th>&nbsp;</th><th>2 bearings (as built)</th><th>1 bearing (adopted)</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Bottom bearing</strong></td><td>located, tight</td><td>✅ located, tight</td></tr>
-              <tr><td><strong>Top bearing</strong></td><td>loose → pivots inward</td><td>✅ removed</td></tr>
-              <tr><td><strong>Radial play</strong></td><td>≈ 0.085 mm <em>(estimate*)</em></td><td>✅ none</td></tr>
-              <tr><td><strong>Skew</strong></td><td>~0.6°</td><td>✅ impossible — one bearing cannot pivot</td></tr>
-              <tr><td><strong>Tube walking</strong></td><td>driven by skew</td><td>✅ cause removed</td></tr>
-              <tr><td><strong>Roller width</strong> vs 2.33 mm tube</td><td>8 mm (over-specified)</td><td>4 mm — sufficient</td></tr>
-            </tbody>
-          </table>
-          <p class="block-note" style="font-size:0.78rem;">*The 0.085 mm play figure is an <strong>estimate</strong>, not a direct measurement — derived as bearing bore (5.000 mm) − caliper peg readings (~4.915 mm), and those peg readings were taken on the cone's narrow upper region. The <em>direction</em> and rough size are solid (the top bearing measurably tilted); the third decimal is not.</p>
-
-          <div class="callout callout-good"><span class="callout-label">Play gone → 39.20 became a <em>real</em> number.</span> With two bearings the caliper jaws could have been <strong>squeezing the play shut</strong>, so 39.20 was ambiguous. With a single bearing there is <strong>no play to squeeze</strong> — so the remaining 0.90 % pitch shortfall is a <strong>fixed, repeatable, compensable</strong> dimensional offset. <em>That</em> is what unlocked the print model below.</div>
-
-          <p class="block-note"><strong>Why plastic at all?</strong> The printed rotor is a deliberate choice, not a compromise discovered too late: it proves the pumping concept <em>fast and cheap</em>, and — just as valuable — it forces learning how to do precision engineering with one specific material and process (FDM PLA), errors included. It is not the endgame: plastic pins print slightly conical, and under the tube's constant inward push plastic also <strong>slowly deforms over time</strong> (creep) — so a printed peg would not hold its dimension over a long service life. <strong>The final pump will be machined in metal</strong>, where the pin is a ground steel dowel and neither problem exists. For the proof of concept, plastic with the compensations below is precise <em>enough</em>.</p>
-        </section>
-
-        <!-- ═══ THE PRINT MODEL ════════════════════════════════════ -->
-        <section class="detail-block" id="sec-printmodel">
-          <h3 class="block-heading">The print model v1 — two errors, not one (superseded)</h3>
-          <div class="callout callout-warn"><span class="callout-label">⚠ Superseded by the ring calibration below.</span> The head printed with this model came out <strong>0.23 mm loose</strong>. The ring calibration (<a href="#sec-calibration" style="color:var(--accent)">⭐ model v2</a>) found why: the symmetric-offset assumption and the transfer of solid-body shrink to bores were both wrong. This section stays as the audit trail of how the thinking evolved.</div>
-          <p class="block-note"><strong>Why build a model at all?</strong> Four prints missed their target, and the obvious loop — print, measure, nudge a number, reprint — is guesswork wearing a lab coat: it converges slowly and teaches nothing transferable. The alternative chosen here was to treat <strong>the printer itself as a system to characterize</strong>: measure how it transforms CAD dimensions into plastic, capture that transformation as a small model with its own data, and then <em>design against the model</em> — so every compensation parameter in Fusion comes from a measurement, not a hunch.</p>
-          <p class="block-note"><strong>Ambition check, stated honestly:</strong> this model is <em>not</em> claimed to be an accurate or general theory of FDM printing. It is an <strong>educated guess with data behind it</strong> — just enough model to aim the compensation at the right value on the first try, cheap to recalibrate when the process changes, and falsifiable by the very next print. That is all it needs to be.</p>
-          <p class="block-note">The core realization: <strong>a 3D print does not have <em>one</em> dimensional error, it has two</strong> — and they behave completely differently depending on <em>what kind of dimension</em> you are measuring.</p>
-
-          <div class="model-eq">
-            <span class="eq-grp"><span class="eq-term eq-printed"><span class="eq-chip">PRINTED</span><span class="eq-note">what the caliper reads on the real part</span></span></span>
-            <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-cad"><span class="eq-chip">CAD</span><span class="eq-note">what was drawn in Fusion</span></span></span>
-            <span class="eq-grp"><span class="eq-op">/</span><span class="eq-term eq-k"><span class="eq-chip">k</span><span class="eq-note"><strong>SCALE</strong> — the whole part prints uniformly smaller</span></span></span>
-            <span class="eq-grp"><span class="eq-op">±</span><span class="eq-term eq-off"><span class="eq-chip">SurfaceOffset</span><span class="eq-note"><strong>SHIFT</strong> — every surface moves by a fixed amount (the bead spreads)</span></span></span>
-          </div>
-          <div class="model-eq-sign">
-            <span><strong style="color:#ff6b2b">+</strong> on convex / outer surfaces</span>
-            <span><strong style="color:#e83535">−</strong> on concave / inner surfaces</span>
-            <span><strong style="color:#5fd08a">0</strong> on centre-to-centre distances</span>
-          </div>
-
-          <figure class="detail-figure">
-            <svg viewBox="0 0 760 300" role="img" aria-label="Schematic showing how the surface offset adds on convex surfaces, subtracts on concave surfaces, and cancels on centre-to-centre distances">
-              <rect x="0" y="0" width="760" height="300" fill="none"/>
-
-              <!-- ── Panel 1: CONVEX ── -->
-              <text x="130" y="26" fill="#ff6b2b" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">CONVEX / OUTER</text>
-              <text x="130" y="44" fill="#7a7068" font-size="11" text-anchor="middle">rotor flange · a peg</text>
-              <!-- CAD (dashed) -->
-              <rect x="70" y="70" width="120" height="80" fill="none" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
-              <!-- printed (solid, proud) -->
-              <rect x="62" y="70" width="136" height="80" fill="rgba(255,107,43,0.14)" stroke="#ff6b2b" stroke-width="2"/>
-              <!-- offset arrows -->
-              <line x1="70" y1="110" x2="62" y2="110" stroke="#ff6b2b" stroke-width="1.5" marker-end="url(#ar-o)"/>
-              <line x1="190" y1="110" x2="198" y2="110" stroke="#ff6b2b" stroke-width="1.5" marker-end="url(#ar-o)"/>
-              <text x="130" y="115" fill="#f0ece8" font-size="11" text-anchor="middle">bead spreads out</text>
-              <text x="130" y="180" fill="#ff6b2b" font-size="15" font-weight="700" text-anchor="middle">+ SurfaceOffset</text>
-              <text x="130" y="205" fill="#f0ece8" font-size="11.5" text-anchor="middle">prints <tspan font-weight="700">PROUD</tspan></text>
-              <text x="130" y="228" fill="#7a7068" font-size="10.5" text-anchor="middle">measured Ø is too BIG</text>
-
-              <!-- ── Panel 2: CONCAVE ── -->
-              <text x="380" y="26" fill="#e83535" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">CONCAVE / INNER</text>
-              <text x="380" y="44" fill="#7a7068" font-size="11" text-anchor="middle">the pump-head arc · a hole</text>
-              <!-- part body left + right (a slot) -->
-              <rect x="300" y="70" width="30" height="80" fill="rgba(232,53,53,0.14)" stroke="#e83535" stroke-width="2"/>
-              <rect x="430" y="70" width="30" height="80" fill="rgba(232,53,53,0.14)" stroke="#e83535" stroke-width="2"/>
-              <!-- CAD cavity walls (dashed) -->
-              <line x1="322" y1="66" x2="322" y2="154" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
-              <line x1="438" y1="66" x2="438" y2="154" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
-              <!-- offset arrows: material intrudes INTO cavity -->
-              <line x1="322" y1="110" x2="332" y2="110" stroke="#e83535" stroke-width="1.5" marker-end="url(#ar-r)"/>
-              <line x1="438" y1="110" x2="428" y2="110" stroke="#e83535" stroke-width="1.5" marker-end="url(#ar-r)"/>
-              <text x="380" y="115" fill="#f0ece8" font-size="11" text-anchor="middle">bead intrudes</text>
-              <text x="380" y="180" fill="#e83535" font-size="15" font-weight="700" text-anchor="middle">− SurfaceOffset</text>
-              <text x="380" y="205" fill="#f0ece8" font-size="11.5" text-anchor="middle">prints <tspan font-weight="700">SMALL</tspan></text>
-              <text x="380" y="228" fill="#7a7068" font-size="10.5" text-anchor="middle">the gap comes out TIGHT</text>
-
-              <!-- ── Panel 3: CENTRE-TO-CENTRE ── -->
-              <text x="630" y="26" fill="#5fd08a" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">CENTRE-TO-CENTRE</text>
-              <text x="630" y="44" fill="#7a7068" font-size="11" text-anchor="middle">the rotor pitch (2R)</text>
-              <!-- CAD circles dashed -->
-              <circle cx="570" cy="110" r="20" fill="none" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
-              <circle cx="690" cy="110" r="20" fill="none" stroke="#7a7068" stroke-width="1.5" stroke-dasharray="5 4"/>
-              <!-- printed circles proud -->
-              <circle cx="570" cy="110" r="26" fill="rgba(95,208,138,0.12)" stroke="#5fd08a" stroke-width="2"/>
-              <circle cx="690" cy="110" r="26" fill="rgba(95,208,138,0.12)" stroke="#5fd08a" stroke-width="2"/>
-              <!-- centres -->
-              <circle cx="570" cy="110" r="3" fill="#f0ece8"/>
-              <circle cx="690" cy="110" r="3" fill="#f0ece8"/>
-              <line x1="570" y1="110" x2="690" y2="110" stroke="#f0ece8" stroke-width="1.5"/>
-              <line x1="570" y1="86" x2="570" y2="60" stroke="#7a7068" stroke-width="1"/>
-              <line x1="690" y1="86" x2="690" y2="60" stroke="#7a7068" stroke-width="1"/>
-              <text x="630" y="180" fill="#5fd08a" font-size="15" font-weight="700" text-anchor="middle">offset = 0</text>
-              <text x="630" y="205" fill="#f0ece8" font-size="11.5" text-anchor="middle">it <tspan font-weight="700">CANCELS</tspan></text>
-              <text x="630" y="228" fill="#7a7068" font-size="10.5" text-anchor="middle">surfaces move, centres do not</text>
-
-              <!-- bottom rule + takeaway -->
-              <line x1="30" y1="252" x2="730" y2="252" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-              <text x="380" y="278" fill="#f0ece8" font-size="12.5" text-anchor="middle">A centre-to-centre span is <tspan fill="#5fd08a" font-weight="700">offset-immune</tspan> → it isolates <tspan font-style="italic" font-weight="700">k</tspan>. A convex surface <tspan fill="#ff6b2b" font-weight="700">is not</tspan> → given <tspan font-style="italic" font-weight="700">k</tspan>, it isolates the offset.</text>
-
-              <defs>
-                <marker id="ar-o" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6b2b"/></marker>
-                <marker id="ar-r" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#e83535"/></marker>
-              </defs>
-            </svg>
-            <figcaption>The offset's <strong>sign depends on the kind of dimension</strong>. This is the entire content of the model — and it is what makes it falsifiable: it <em>predicts</em> which dimensions carry which error.</figcaption>
-          </figure>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">Calibration — one part gave both constants</h4>
-          <p class="block-note">The rotor happened to carry <strong>a steel-referenced span</strong> (2R, across the bearings) <em>and</em> <strong>a plastic surface</strong> (the flange OD). That is exactly the pair the model needs — so a single print calibrated it completely.</p>
-
-          <table class="param-table">
-            <thead><tr><th>Constant</th><th>Value</th><th>Calibrated from</th><th>Why that dimension</th></tr></thead>
-            <tbody>
-              <tr><td><strong><em>k</em></strong> (scale)</td><td><strong>1.00906</strong></td><td>the rotor <strong>pitch</strong></td><td>Centre-to-centre → <strong>offset-immune</strong> → isolates the scale <em>cleanly</em>.</td></tr>
-              <tr><td><strong>SurfaceOffset</strong></td><td><strong>0.11 mm</strong></td><td>the rotor <strong>flange OD</strong></td><td>A convex plastic surface <strong>is</strong> offset-sensitive → given <em>k</em>, isolates the offset.</td></tr>
-            </tbody>
-          </table>
-
-          <div class="calc-block">
-            <div><strong>SCALE</strong> — from the pitch (offset-free):</div>
-            <div>printed pitch = 2R − 10.000 (steel, exact) = 39.20 − 10.00 = <strong>29.20</strong></div>
-            <div>CAD pitch = <strong>29.4647</strong> &nbsp;→&nbsp; <em>k</em> = 29.4647 / 29.20 = <strong>1.00906</strong></div>
-            <div style="margin-top:10px"><strong>OFFSET</strong> — from the flange (convex):</div>
-            <div>CAD flange Ø = <strong>42.665</strong> &nbsp;→&nbsp; scale-only prediction = 42.665 / 1.00906 = 42.282</div>
-            <div><strong>MEASURED = 42.50</strong> &nbsp;→&nbsp; 2 × offset = 0.218 &nbsp;→&nbsp; SurfaceOffset = <strong>0.11 mm</strong></div>
-          </div>
-
-          <div class="callout callout-good"><span class="callout-label">✅ The scale is validated.</span> The rescaled rotor was predicted to hit 2R = 39.40 and measured <strong>39.42 / 39.38 → mean 39.40, error 0.00</strong>. <em>R</em> = <strong>19.70 mm</strong> — the design value, recovered exactly. The 0.04 mm out-of-round was <em>also</em> predicted (X/Y shrink anisotropy under a single mean scale) and costs ~1.4 % worst case — periodic, not random, so it averages over a stroke.</div>
-
-          <div class="callout callout-warn"><span class="callout-label">The coupon design was flawed — and that is the real lesson.</span> A single 100 mm bar is measured between <strong>two convex faces</strong>, so it reports <code>100·s + 2·offset</code> — <strong>one equation, two unknowns.</strong> It <em>cannot</em> separate scale from offset. The apparent "0.22 % vs 0.90 % discrepancy" that sent us hunting for a phantom nozzle-shrink term was <strong>an artifact of the measurement, not a physical effect</strong>. <strong>The correct coupon: print two bars of <em>different lengths</em> at the same nozzle</strong> (e.g. 100 mm and 20 mm) → two equations, two unknowns → <em>s</em> and <em>offset</em> independently, from one print.</div>
-
-          <p class="block-note"><strong>Process lock.</strong> <em>k</em> and SurfaceOffset are calibrated for a <strong>process</strong>, not a material — valid only for the exact slicer profile that produced the rotor. Layer height, wall count, flow, speed, temperature, nozzle: change any one and the calibration is void. <strong>Adaptive layer height is off</strong> — it cannot help (the gap-critical arc is a <em>vertical</em> wall, so it has no stair-stepping at any layer height) and it would make SurfaceOffset <em>Z-dependent</em>, varying the gap along the roller's 4 mm contact band.</p>
-        </section>
-
-        <!-- ═══ PUMP HEAD v2.2 — PARAMETERS ════════════════════════ -->
-        <section class="detail-block" id="sec-head">
-          <h3 class="block-heading">Pump head v2.2 — the parameters, and how they are calculated</h3>
-          <p class="block-note">With the rotor fixed at <strong><em>R</em> = 19.70</strong> and the flange measured at <strong>42.50</strong>, every head dimension follows from the print model. The gap is set by a <strong>local pad at the roller width</strong> — not by the head's structural wall — and the schematic shows why that distinction matters.</p>
-
-          <figure class="detail-figure">
-            <svg viewBox="0 0 760 410" role="img" aria-label="Cross-section through the pump at one roller, right half only: rotor hub and flanges, single bearing, squeezed tube, the head's gap-setting pad reaching between the flanges, and the head base wall, with the gap and clearance dimensioned">
-              <defs>
-                <pattern id="hatchR" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                  <rect width="8" height="8" fill="rgba(255,107,43,0.06)"/>
-                  <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,107,43,0.5)" stroke-width="1.1"/>
-                </pattern>
-                <pattern id="hatchH" width="8" height="8" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
-                  <rect width="8" height="8" fill="rgba(122,167,224,0.06)"/>
-                  <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(122,167,224,0.5)" stroke-width="1.1"/>
-                </pattern>
-                <marker id="dmO" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#ff6b2b" stroke-width="1.4"/></marker>
-                <marker id="dmG" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#5fd08a" stroke-width="1.4"/></marker>
-                <marker id="dmB" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M8,1 L2,4 L8,7" fill="none" stroke="#7aa7e0" stroke-width="1.4"/></marker>
-              </defs>
-
-              <text x="420" y="24" fill="#7a7068" font-size="11" text-anchor="middle" letter-spacing="1">CROSS-SECTION AT ONE ROLLER — radial spacing exaggerated, not to scale</text>
-
-              <!-- ── locator inset: top view with the cut plane ── -->
-              <path d="M 58 53 A 42 42 0 0 1 58 137 Z" fill="rgba(255,255,255,0.07)"/>
-              <circle cx="58" cy="95" r="42" fill="none" stroke="#7aa7e0" stroke-width="1.6"/>
-              <circle cx="58" cy="95" r="26" fill="none" stroke="#ff6b2b" stroke-width="1.4"/>
-              <circle cx="78" cy="95" r="4.5" fill="#c8ccd4"/>
-              <circle cx="38" cy="95" r="4.5" fill="rgba(200,204,212,0.35)"/>
-              <circle cx="58" cy="75" r="4.5" fill="rgba(200,204,212,0.35)"/>
-              <circle cx="58" cy="115" r="4.5" fill="rgba(200,204,212,0.35)"/>
-              <line x1="58" y1="45" x2="58" y2="145" stroke="#f0ece8" stroke-width="1.2" stroke-dasharray="7 3"/>
-              <text x="58" y="40" fill="#f0ece8" font-size="9.5" text-anchor="middle" font-weight="700">A</text>
-              <text x="58" y="156" fill="#f0ece8" font-size="9.5" text-anchor="middle" font-weight="700">A</text>
-              <text x="58" y="172" fill="#7a7068" font-size="9.5" text-anchor="middle">top view — cut A–A,</text>
-              <text x="58" y="184" fill="#7a7068" font-size="9.5" text-anchor="middle">highlighted half drawn ↓</text>
-
-              <!-- ── centreline (rotor axis) + mirrored ghost ── -->
-              <line x1="150" y1="60" x2="150" y2="345" stroke="#f0ece8" stroke-width="1.2" stroke-dasharray="14 4 3 4" opacity="0.7"/>
-              <text x="150" y="50" fill="#f0ece8" font-size="10.5" text-anchor="middle" font-weight="700">CL — rotor axis</text>
-              <g opacity="0.14">
-                <rect x="105" y="92" width="45" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1"/>
-                <rect x="105" y="280" width="45" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1"/>
-                <rect x="105" y="120" width="45" height="160" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1"/>
-              </g>
-              <text x="128" y="200" fill="#7a7068" font-size="9.5" text-anchor="middle" transform="rotate(-90 128 200)">left half = mirror image</text>
-
-              <!-- ── ROTOR: hub + two flanges (printed PLA, hatched) ── -->
-              <rect x="150" y="120" width="105" height="160" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1.6"/>
-              <rect x="150" y="92" width="365" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1.6"/>
-              <rect x="150" y="280" width="365" height="28" fill="url(#hatchR)" stroke="#ff6b2b" stroke-width="1.6"/>
-              <text x="202" y="205" fill="#ff9c66" font-size="12" text-anchor="middle" font-weight="700">ROTOR</text>
-              <text x="202" y="221" fill="#7a7068" font-size="9.5" text-anchor="middle">(rotates)</text>
-              <text x="330" y="110" fill="#ff9c66" font-size="10.5" text-anchor="middle">flange — tip radius 21.25 (measured 42.50 / 2)</text>
-              <text x="330" y="299" fill="#ff9c66" font-size="10.5" text-anchor="middle">flange — the tube drops into the groove between them</text>
-
-              <!-- ── bearing (steel) on its peg ── -->
-              <rect x="255" y="158" width="85" height="84" fill="rgba(200,204,212,0.22)" stroke="#c8ccd4" stroke-width="1.6"/>
-              <text x="297" y="194" fill="#c8ccd4" font-size="10.5" text-anchor="middle" font-weight="700">bearing</text>
-              <text x="297" y="208" fill="#7a7068" font-size="9.5" text-anchor="middle">MR105ZZ · steel</text>
-              <text x="297" y="221" fill="#7a7068" font-size="9.5" text-anchor="middle">on its printed peg</text>
-
-              <!-- ── tube (cut across — runs into the page) ── -->
-              <ellipse cx="392" cy="200" rx="52" ry="40" fill="rgba(90,150,230,0.22)" stroke="#8fc0f0" stroke-width="2"/>
-              <text x="392" y="205" fill="#8fc0f0" font-size="11" text-anchor="middle" font-weight="700">TUBE</text>
-              <text x="392" y="258" fill="#7a7068" font-size="9.5" text-anchor="middle">squeezed · runs into the page</text>
-
-              <!-- ── HEAD: pad + base wall (printed PLA, hatched) ── -->
-              <rect x="445" y="142" width="145" height="116" fill="url(#hatchH)" stroke="#7aa7e0" stroke-width="1.6"/>
-              <rect x="590" y="70" width="60" height="260" fill="url(#hatchH)" stroke="#7aa7e0" stroke-width="1.6"/>
-              <text x="517" y="195" fill="#8fc0f0" font-size="12" text-anchor="middle" font-weight="700">PAD</text>
-              <text x="517" y="211" fill="#7a7068" font-size="9.5" text-anchor="middle">reaches between</text>
-              <text x="517" y="223" fill="#7a7068" font-size="9.5" text-anchor="middle">the flanges</text>
-              <text x="620" y="196" fill="#8fc0f0" font-size="11" text-anchor="middle" font-weight="700" transform="rotate(-90 620 196)">HEAD wall (static)</text>
-
-              <!-- ── top leaders: pad face + wall face ── -->
-              <line x1="445" y1="142" x2="445" y2="66" stroke="#5fd08a" stroke-width="1.2"/>
-              <text x="468" y="44" fill="#5fd08a" font-size="11.5" text-anchor="end" font-weight="700">PAD face = 21.22</text>
-              <text x="472" y="59" fill="#7a7068" font-size="9.5" text-anchor="end">0.03 inside the flange tip — only possible between the flanges</text>
-              <line x1="590" y1="70" x2="590" y2="52" stroke="#7aa7e0" stroke-width="1.2"/>
-              <text x="596" y="46" fill="#7aa7e0" font-size="11.5" text-anchor="start" font-weight="700">HEAD wall = 21.65</text>
-
-              <!-- ── clearance dim at the flange tip ── -->
-              <line x1="515" y1="106" x2="590" y2="106" stroke="#7aa7e0" stroke-width="1.4" marker-start="url(#dmB)" marker-end="url(#dmB)"/>
-              <text x="552" y="86" fill="#7aa7e0" font-size="10.5" text-anchor="middle" font-weight="700">0.40 clearance</text>
-
-              <!-- ── bottom dimension chain ── -->
-              <line x1="150" y1="352" x2="340" y2="352" stroke="#ff6b2b" stroke-width="1.4" marker-start="url(#dmO)" marker-end="url(#dmO)"/>
-              <line x1="340" y1="345" x2="340" y2="359" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-              <line x1="340" y1="352" x2="445" y2="352" stroke="#5fd08a" stroke-width="1.4" marker-start="url(#dmG)" marker-end="url(#dmG)"/>
-              <line x1="445" y1="345" x2="445" y2="359" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-              <text x="245" y="372" fill="#ff6b2b" font-size="11.5" text-anchor="middle" font-weight="700">R = 19.70</text>
-              <text x="392" y="372" fill="#5fd08a" font-size="11.5" text-anchor="middle" font-weight="700">GAP = 1.52</text>
-              <text x="380" y="396" fill="#7a7068" font-size="10.5" text-anchor="middle">the gap is the one number that sets the dose — 3.4 µL per mm of gap error</text>
-            </svg>
-            <figcaption><strong>Right half of the pump only</strong> — the drawing starts at the rotor axis (CL) and everything mirrors to the left, as the top-view inset shows. Solid hatched shapes are printed walls: <span style="color:#ff9c66">orange = rotor (rotates)</span>, <span style="color:#8fc0f0">blue = head (static)</span>. The key move: the <strong>PAD face (21.22) sits <em>inside</em> the flange tip (21.25)</strong> — legal only because the pad reaches <em>axially between</em> the flanges while the base wall passes <em>over</em> them. Two surfaces, two jobs: the <strong>pad</strong> sets the dose, the <strong>base wall</strong> retains the tube.</figcaption>
-          </figure>
-
-          <table class="param-table">
-            <thead><tr><th>Parameter</th><th>Expression</th><th>Value</th><th>What it is</th></tr></thead>
-            <tbody>
-              <tr><td><code>k</code></td><td><code>ShrinkComp * NozzleComp</code></td><td><strong>1.00901</strong></td><td>Combined <strong>scale</strong> multiplier. Any printed-plastic dimension is grown by <em>k</em> in CAD so it shrinks onto nominal.</td></tr>
-              <tr><td><code>SurfaceOffset</code></td><td><code>0.11 mm</code></td><td>0.11</td><td>The <strong>bead-spreading shift</strong>. Added to the target on <strong>concave</strong> surfaces (they print small), so the printed surface lands where intended.</td></tr>
-              <tr><td><code>HeadRotorClearance</code></td><td><code>0.40 mm</code></td><td>0.40</td><td><strong>As-printed</strong> radial clearance, head base wall → rotor flange OD. Spins freely; tight enough to keep the tube in the flange groove.</td></tr>
-              <tr><td><code>RotorFlangeDMeasured</code></td><td><code>42.50 mm</code></td><td>42.50</td><td><strong>MEASURED</strong> outer Ø of the <em>printed</em> rotor. Hard-typed from the caliper — the head must clear the rotor that <strong>exists</strong>, not the CAD one.</td></tr>
-              <tr><td><code>HeadBaseRadius</code></td><td><code>(RotorFlangeDMeasured/2 + HeadRotorClearance + SurfaceOffset) * k</code></td><td><strong>21.956</strong></td><td>CAD radius of the head's <strong>structural wall</strong> — the part that passes <em>over</em> the flanges.</td></tr>
-              <tr><td><code>HeadWallRadius</code></td><td><code>(PumpDiam/2 + GapPumpHeadRotor + SurfaceOffset) * k</code></td><td><strong>21.522</strong></td><td>CAD radius of the <strong>pad's inner arc</strong> — <strong>the gap-critical surface</strong>, living <em>between</em> the flanges.</td></tr>
-              <tr><td><code>PadExtrusion</code></td><td><code>HeadBaseRadius - HeadWallRadius</code></td><td><strong>0.434</strong></td><td>How far the pad extrudes inward from the base wall. <strong>⚠ Guard: below ~0.3 mm, <code>HeadRotorClearance</code> is too small.</strong></td></tr>
-            </tbody>
-          </table>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">The gap sweep</h4>
-          <table class="param-table">
-            <thead><tr><th>Head</th><th>Gap (as printed)</th><th>δ</th><th><code>HeadWallRadius</code> (CAD)</th><th><code>PadExtrusion</code></th></tr></thead>
-            <tbody>
-              <tr><td><strong>FIRM</strong></td><td><strong>1.52</strong></td><td>0.30</td><td><strong>21.52</strong></td><td><strong>0.43</strong> ← print this one <em>alone</em>, first</td></tr>
-              <tr><td>MID</td><td>1.62</td><td>0.20</td><td>21.62</td><td>0.33</td></tr>
-              <tr><td>LOOSE</td><td>1.72</td><td>0.10</td><td>21.72</td><td>0.23 ⚠ ≈1 line width</td></tr>
-            </tbody>
-          </table>
-
-          <div class="callout callout-warn"><span class="callout-label">The CAD gap reads 1.69, not 1.52 — and that is CORRECT.</span> Both parts are deliberately <strong>oversized in CAD</strong> so they shrink onto target, so the CAD gap is a <strong>derived artifact, not a target</strong>. Forward-check: rotor <code>19.8325 / 1.00901 = 19.700</code>; head <code>21.5220 / 1.00901 − 0.11 = 21.220</code> → <strong>printed gap = 1.520 ✓</strong>. Had the CAD been "corrected" to read 1.52, the part would print at <strong>1.35</strong> — 0.17 mm too tight → 0.58 µL → <strong>~12 % of a 5 µL stroke</strong>. The compensation is not cosmetic.</div>
-
-          <div class="callout callout-good"><span class="callout-label">What the FIRM head actually tests.</span> The scale <em>k</em> is validated. The offset is <strong>fitted on a convex surface</strong> and assumed equal-and-opposite on concave ones — the standard assumption, but slicers ship <em>separate</em> hole and contour compensation for a reason. So: print the FIRM head <strong>alone</strong>, then <strong>caliper the installed gap</strong> through the access slots (top + both sides). <strong>If it reads 1.52, the print model is validated in both directions</strong> and MID/LOOSE go straight to print. If it reads tighter, the concave offset is larger and earns its own constant. <strong>One head to learn the number, or three heads to learn it three times.</strong></div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">The as-printed result — measured, and 0.23 mm off</h4>
-          <p class="block-note">The FIRM head was printed and the installed gap measured — drill-bit shanks as go/no-go gauges at the sides (the reliable method), caliper pad-to-pad as a cross-check:</p>
-          <table class="param-table">
-            <thead><tr><th></th><th>Pad-arc Ø</th><th>Gap at the sides</th><th>Note</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Aimed</strong> — printed target</td><td><strong>42.44</strong></td><td><strong>1.52</strong></td><td>from the design above</td></tr>
-              <tr><td>Drawn in CAD (model v1 compensation)</td><td>43.044</td><td>1.69</td><td>derived artifact, not a target</td></tr>
-              <tr><td><strong>Measured</strong> — drill-bit gauges</td><td><strong>≈ 42.90</strong></td><td><strong>≈ 1.75</strong></td><td>right ~1.75 goes; left just over — best method</td></tr>
-              <tr><td>Measured — caliper pad-to-pad</td><td>42.80</td><td>1.70</td><td>tilts, hard to centre — weaker method</td></tr>
-              <tr><td><strong>Miss</strong></td><td><strong>+0.46 mm on Ø</strong></td><td><strong>+0.23 mm LOOSE</strong></td><td>≈ 0.8 µL on a 5 µL stroke</td></tr>
-            </tbody>
-          </table>
-          <div class="callout callout-warn"><span class="callout-label">This miss is the trigger for the next section.</span> Aimed at 1.52, got ≈ 1.75 — the <strong>third oversized print in a row</strong> (bearing pockets, first rotor, now the head). Rather than another guess-and-reprint cycle, the print model itself was put on trial: a dedicated calibration artifact (<a href="#sec-calibration" style="color:var(--accent)">⭐ ring calibration → model v2</a>) found why, and produced the corrected rule — <strong>next head: arc R = 21.29</strong>. Separately, the <strong>apex (top) gap read 2.33–2.50</strong>: an axial-seating effect (head sitting proud on its dovetail), <em>not</em> a radius error — parked as its own problem, one problem at a time.</div>
-        </section>
-
-        <!-- ═══ RING CALIBRATION → MODEL v2 ════════════════════════ -->
-        <section class="detail-block" id="sec-calibration">
-          <h3 class="block-heading">⭐ Printer calibration — ring artifact → two-line compensation (model v2)</h3>
-
-          <div class="clearfix">
-            <figure class="fig-side detail-figure" style="margin-top:0">
-              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/Calibration%20Circles.png" alt="Six printed concentric calibration rings of increasing diameter" />
-              <figcaption>The ring artifact: free concentric rings (not connected — webs would restrain the shrink being measured), printed with the same profile and spool as the pump parts.</figcaption>
-            </figure>
-
-            <p class="block-note"><strong>The goal is a calibration, not a physics model.</strong> After the head printed 0.23 mm loose — the third oversized part in a row — the guess-and-reprint loop was replaced by the standard approach: fit the printer's transfer function <code>printed = f(CAD)</code> on a test artifact, then <strong>invert it</strong> to answer the only question that matters: <em>what CAD value gives the printed value I want?</em> This is textbook <strong>linear calibration / inverse prediction</strong> [7], and purpose-built test artifacts for AM systems are standardized practice (ISO/ASTM 52902 [6], per-feature CAD compensation [5]). The ring coupon is a 52902-style artifact trimmed down to the two feature classes the pump actually uses. <strong>The method transfers to any printer — only the two fitted lines are specific</strong> to this machine, nozzle, filament and profile.</p>
-
-            <p class="block-note"><strong>Measurement:</strong> digital caliper, <strong>two perpendicular diameters per feature, averaged</strong> (a circle's diameter is direction-independent, so ring orientation doesn't matter). Bores with the knife edges, ODs with the flat jaws. The mid ring was printed <strong>in triplicate</strong> to measure print-to-print repeatability.</p>
-
-            <div class="callout callout-note"><span class="callout-label">Noise — two stacked sources, stated honestly.</span> (1) <strong>Printer repeatability</strong>, captured by the triplicate ring. (2) <strong>Measurement error, including deformation</strong>: the rings are thin plastic — measuring a <em>bore</em> pushes the ring outward (tends to over-read), measuring an <em>OD</em> squeezes it (tends to under-read), worst on the largest ring. Care was taken, but this can't be fully eliminated — a concrete example of why a measurement is never exact. The random part is absorbed into σ below; any small systematic part folds into the fitted intercepts, which is acceptable <em>for a calibration</em>, since future parts are measured the same way.</div>
-          </div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:24px 0 8px;">Raw data (mm)</h4>
-          <table class="param-table">
-            <thead><tr><th>Ring</th><th>Feature</th><th>Nominal</th><th>Read 1</th><th>Read 2</th><th>Mean</th><th>Deviation</th></tr></thead>
-            <tbody>
-              <tr><td>small</td><td>bore</td><td>22</td><td>21.81</td><td>21.87</td><td>21.84</td><td>−0.16</td></tr>
-              <tr><td>small</td><td>OD</td><td>28</td><td>27.88</td><td>27.90</td><td>27.89</td><td>−0.11</td></tr>
-              <tr><td>mid #1</td><td>bore</td><td>37</td><td>36.90</td><td>36.72</td><td>36.81</td><td>−0.19</td></tr>
-              <tr><td>mid #1</td><td>OD</td><td>43</td><td>42.81</td><td>42.83</td><td>42.82</td><td>−0.18</td></tr>
-              <tr><td>mid #2</td><td>bore</td><td>37</td><td>36.83</td><td>36.83</td><td>36.83</td><td>−0.17</td></tr>
-              <tr><td>mid #2</td><td>OD</td><td>43</td><td>42.76</td><td>42.79</td><td>42.78</td><td>−0.22</td></tr>
-              <tr><td>mid #3</td><td>bore</td><td>37</td><td>36.90</td><td>36.90</td><td>36.90</td><td>−0.10</td></tr>
-              <tr><td>mid #3</td><td>OD</td><td>43</td><td>42.77</td><td>42.77</td><td>42.77</td><td>−0.23</td></tr>
-              <tr><td>large</td><td>bore</td><td>82</td><td>81.95</td><td>81.91</td><td>81.93</td><td>−0.07</td></tr>
-              <tr><td>large</td><td>OD</td><td>88</td><td>87.47</td><td>87.53</td><td>87.50</td><td>−0.50</td></tr>
-            </tbody>
-          </table>
-          <p class="block-note">Triplicate spread → <strong>print-to-print σ ≈ 0.03–0.05 mm</strong>. That is the noise floor: differences smaller than 0.05 mm are not real and are not chased.</p>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">The data, plotted — one law per feature class</h4>
-
-          <figure class="detail-figure">
-            <svg viewBox="0 0 900 470" role="img" aria-label="Scatter plot of printed deviation from nominal versus nominal diameter. Outer diameters fall on a steep shrink line labeled prints smaller; bores lie on a nearly flat line labeled holds size; the measured pump-head arc lands on the bore line; the old model line misses everything." style="width:100%;height:auto;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border);border-radius:var(--radius);font-family:var(--font);">
-              <!-- grid -->
-              <g stroke="rgba(255,255,255,0.07)" stroke-width="1">
-                <line x1="64" y1="24" x2="820" y2="24"/><line x1="64" y1="118.75" x2="820" y2="118.75"/>
-                <line x1="64" y1="166.25" x2="820" y2="166.25"/><line x1="64" y1="213.75" x2="820" y2="213.75"/>
-                <line x1="64" y1="261.25" x2="820" y2="261.25"/><line x1="64" y1="308.75" x2="820" y2="308.75"/>
-                <line x1="64" y1="356.25" x2="820" y2="356.25"/><line x1="64" y1="403.75" x2="820" y2="403.75"/>
-              </g>
-              <line x1="64" y1="71.25" x2="820" y2="71.25" stroke="rgba(255,255,255,0.35)" stroke-width="1.6"/>
-              <text x="72" y="56" fill="#7a7068" font-size="10.5">↑ prints LARGER than drawn</text>
-              <text x="72" y="92" fill="#7a7068" font-size="10.5">↓ prints SMALLER than drawn</text>
-
-              <g fill="#7a7068" font-size="11" text-anchor="end">
-                <text x="56" y="28">+0.10</text><text x="56" y="75">0.00</text><text x="56" y="122">−0.10</text>
-                <text x="56" y="170">−0.20</text><text x="56" y="217">−0.30</text><text x="56" y="265">−0.40</text>
-                <text x="56" y="312">−0.50</text><text x="56" y="360">−0.60</text><text x="56" y="407">−0.70</text>
-              </g>
-              <text x="18" y="240" fill="#a8a099" font-size="11.5" transform="rotate(-90 18 240)" text-anchor="middle">printed − nominal (mm)</text>
-
-              <line x1="64" y1="418" x2="820" y2="418" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
-              <g fill="#7a7068" font-size="11" text-anchor="middle">
-                <text x="201.5" y="436">20</text><text x="339" y="436">40</text><text x="476.5" y="436">60</text>
-                <text x="614" y="436">80</text><text x="751.5" y="436">100</text>
-              </g>
-              <text x="442" y="460" fill="#a8a099" font-size="11.5" text-anchor="middle">nominal diameter (mm)</text>
-
-              <!-- old model v1 concave prediction (dashed, clipped at bottom) -->
-              <line x1="132.75" y1="218.3" x2="429.5" y2="404" stroke="#7a7068" stroke-width="2" stroke-dasharray="7 5"/>
-              <text x="298" y="330" fill="#7a7068" font-size="11" transform="rotate(23 298 330)">model v1 prediction for bores — falsified</text>
-
-              <!-- OUTER fit: dev = −0.0064638·N + 0.06775 -->
-              <line x1="132.75" y1="70.0" x2="785.9" y2="365.4" stroke="#ff6b2b" stroke-width="2"/>
-              <!-- INNER fit: dev = +0.0016377·N − 0.20837 -->
-              <line x1="132.75" y1="162.7" x2="785.9" y2="87.9" stroke="#7aa7e0" stroke-width="2"/>
-
-              <text x="792" y="80" fill="#7aa7e0" font-size="12" font-weight="700">INNER — bores</text>
-              <text x="792" y="95" fill="#a8a099" font-size="10">HOLDS SIZE,</text>
-              <text x="792" y="108" fill="#a8a099" font-size="10">intrudes 0.10/side</text>
-              <text x="792" y="358" fill="#ff6b2b" font-size="12" font-weight="700">OUTER — ODs</text>
-              <text x="792" y="373" fill="#a8a099" font-size="10">prints SMALLER,</text>
-              <text x="792" y="386" fill="#a8a099" font-size="10">∝ size (−0.65 %)</text>
-
-              <!-- OUTER points -->
-              <g fill="#ff6b2b" stroke="#0a0a0c" stroke-width="2">
-                <circle cx="254.4" cy="123.8" r="5.5"/>
-                <circle cx="356.4" cy="157" r="5.5"/><circle cx="356.4" cy="178.4" r="5.5"/><circle cx="356.4" cy="180.8" r="5.5"/>
-                <circle cx="662.4" cy="309" r="5.5"/>
-              </g>
-              <!-- INNER points -->
-              <g fill="#7aa7e0" stroke="#0a0a0c" stroke-width="2">
-                <circle cx="213.6" cy="147.5" r="5.5"/>
-                <circle cx="315.6" cy="161.8" r="5.5"/><circle cx="315.6" cy="152.3" r="5.5"/><circle cx="315.6" cy="119" r="5.5"/>
-                <circle cx="621.6" cy="104.8" r="5.5"/>
-              </g>
-
-              <!-- head validation -->
-              <path d="M 356.7 131.9 l 8 8 l -8 8 l -8 -8 Z" fill="#7aa7e0" stroke="#f0ece8" stroke-width="2"/>
-              <path d="M 356.7 179.4 l 8 8 l -8 8 l -8 -8 Z" fill="none" stroke="#7aa7e0" stroke-width="2.2"/>
-              <line x1="369" y1="134" x2="418" y2="98" stroke="#7a7068" stroke-width="0.9"/>
-              <text x="422" y="80" fill="#f0ece8" font-size="11.5" font-weight="650">pump-head arc — not used in the fit —</text>
-              <text x="422" y="94" fill="#f0ece8" font-size="11.5" font-weight="650">lands ON the inner line</text>
-              <text x="422" y="108" fill="#a8a099" font-size="10.5">predicted −0.14 · ◆ drill bits −0.14 · ◇ caliper −0.24</text>
-            </svg>
-            <figcaption>Deviation vs. nominal, per feature class. Each dot = one feature (mean of two ⊥ readings); the vertical scatter of the three Ø37/43 copies is the print noise. The two lines are the least-squares fits; the diamonds are the pump head, measured two ways.</figcaption>
-          </figure>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">The analysis, step by step — nothing more than the data supports</h4>
-          <div class="next-brief">
-            <ul>
-              <li><strong>1 · Split by feature class before fitting</strong> — internal and external features are known to behave differently ([2], [3], and every slicer's separate hole-compensation setting).</li>
-              <li><strong>2 · Plot first</strong> — the points fall on straight lines in both classes, so a two-parameter line is enough; no curvature term is justified.</li>
-              <li><strong>3 · Least-squares line per class</strong> — two parameters because there are two physical mechanisms: an error that <em>grows with size</em> (shrink → slope) and one that <em>doesn't</em> (bead geometry → intercept).</li>
-              <li><strong>4 · Judge by residuals</strong> — a <em>residual</em> is measured − predicted for each point: the leftover error, in mm. Residual SD: <strong>0.023 mm (outer) · 0.040 mm (inner)</strong> — the typical miss of each line.</li>
-              <li><strong>5 · Compare against repeatability</strong> — the triplicate gives σ ≈ 0.03–0.05 mm. Residuals ≈ σ → <strong>the lines capture everything measurable. Stop modeling.</strong></li>
-              <li><strong>6 · One hypothesis test</strong> — are the two slopes different? −0.0065 ± 0.0005 vs +0.0016 ± 0.0009: they differ by <strong>≈ 8 standard errors</strong>. Per-class compensation isn't a preference; the data forces it.</li>
-            </ul>
-          </div>
-
-          <div class="callout callout-note"><span class="callout-label">Why R² is reported but is NOT the headline number.</span> R² measures <em>how much of the variation in the data the line explains</em> compared to just using the average. The outer deviations swing −0.11 → −0.50 (large variation, mostly slope) → <strong>R² = 0.98</strong>. The inner class has a true slope of ≈ 0, so its deviations barely vary — what remains is mostly print noise, and no line can "explain" noise → <strong>R² = 0.54</strong>, <em>even though the inner fit predicts just as accurately</em> (residual SD 0.040 mm). <strong>When the correct answer is a flat line, R² is low by construction.</strong> A thermostat holding a room at 21 °C: the model "always 21.0" has R² ≈ 0 — and is accurate to a tenth of a degree. The honest accuracy metric is the residual SD against the repeatability σ.</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">⭐ The two rules — the takeaway of the whole exercise</h4>
-          <p class="block-note">Valid for: <strong>Bambu P1S · 0.2 mm nozzle · 3DE MAX PLA "Cold White" · this slicer profile.</strong> Recalibrate (20-minute reprint + refit) if any of those change.</p>
-
-          <div class="rule-cards">
-
-            <div class="rule-card rule-ext">
-              <div class="rc-tag">Model A — External · convex (ODs, outer surfaces)</div>
-              <div class="rc-behavior">prints SMALLER — proportional to size (−0.65 %) → the SCALE is the correction, keep it</div>
-              <div class="model-eq">
-                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">CAD</span><span class="eq-note">what to type into Fusion</span></span></span>
-                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-s-ext"><span class="eq-chip">1.0065</span><span class="eq-note"><strong>SCALE UP</strong> — undo the 0.65 % shrink</span></span></span>
-                <span class="eq-grp"><span class="eq-op">×</span><span class="eq-term eq-cadp"><span class="eq-chip">target</span><span class="eq-note">the printed dimension you want</span></span></span>
-                <span class="eq-grp"><span class="eq-op">−</span><span class="eq-term eq-b-ext"><span class="eq-chip">0.07</span><span class="eq-note">undo the bead spread (+0.034/side)</span></span></span>
+            <div class="proto-node" style="--node-top:51%">
+              <div class="proto-card-ghost" aria-disabled="true">
+                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+                <div class="proto-card-tag">V3 · planned</div>
+                <h3 class="proto-card-title">Long-stroke redesign + second axis</h3>
+                <p class="proto-card-purpose">Rail and carriage redesigned past 170 mm so the full 8-position pattern fits with margin — the only unmet pass criterion, and a purely mechanical change: the electronics and firmware already carry a 196 mm travel budget. Second axis wired and proved. Nothing built yet.</p>
+                <span class="proto-card-cta">Not started</span>
               </div>
-              <div class="rc-note">fitted model: <code>printed = 0.99354 · CAD + 0.068</code> · R² = 0.98 · residual SD 0.023 mm · the rule above is its exact algebraic inverse</div>
             </div>
 
-            <div class="rule-card rule-int">
-              <div class="rc-tag">Model B — Internal · concave (bores, arcs — THE GAP SURFACE)</div>
-              <div class="rc-behavior">HOLDS SIZE — no scaling at all: just give back the constant rim intrusion</div>
-              <div class="model-eq">
-                <span class="eq-grp"><span class="eq-term eq-plain"><span class="eq-chip">CAD</span><span class="eq-note">what to type into Fusion</span></span></span>
-                <span class="eq-grp"><span class="eq-op">=</span><span class="eq-term eq-cadp"><span class="eq-chip">target</span><span class="eq-note">the printed Ø you want — <strong>× 1, unscaled</strong></span></span></span>
-                <span class="eq-grp"><span class="eq-op">+</span><span class="eq-term eq-b-int"><span class="eq-chip">0.14</span><span class="eq-note">give back the constant undersize (mean of all bores)</span></span></span>
+            <div class="proto-node" style="--node-top:76%">
+              <div class="proto-card-ghost" aria-disabled="true">
+                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
+                <div class="proto-card-tag">V4 · planned</div>
+                <h3 class="proto-card-title">Rack queueing</h3>
+                <p class="proto-card-purpose">An input and an output queue holding at least four racks, handled automatically, so a run is not one rack at a time and the throughput ceiling stops being the operator. Nothing built yet.</p>
+                <span class="proto-card-cta">Not started</span>
               </div>
-              <div class="rc-note">fitted model: <code>printed = 1.00164 · CAD − 0.208</code> · R² = 0.54 (flat-line artifact — see above) · residual SD 0.040 mm<br>
-              <strong>Why +0.14 and not +0.21:</strong> the fitted slope 1.00164 is statistically ≈ 1 (1.9 SE), so it is dropped for daily use — but the +0.208 intercept <em>belongs to that slope</em>. Re-fit with the slope forced to exactly 1 and the constant becomes the mean deviation, <strong>+0.14</strong>. Never combine "+0.21" with "no scaling" — that mixes two different fits and overshoots ~0.07 mm. Both forms agree at the pump's working size (Ø ≈ 43 → head arc <strong>R = 21.29</strong> either way); valid over the calibrated range Ø 22–102.</div>
-            </div>
-
-          </div>
-
-          <p class="block-note">Retained and validated separately: <strong>rotor pitch (centre-to-centre) × 1.00906</strong> — it hit 2R = 39.40 exactly and offsets cancel on centre-to-centre spans. <strong>Prediction interval:</strong> a corrected feature lands within <strong>±0.08–0.10 mm on Ø (95 %)</strong> → ±0.04–0.05 mm on the gap → <strong>±0.15 µL ≈ 3 % of a 5 µL stroke</strong> — inside the CV budget, which is the sentence that ties this back to the pump.</p>
-
-          <div class="callout callout-good"><span class="callout-label">✅ Out-of-sample validation — the head itself.</span> The head was never used in the fits. Its CAD arc (Ø 43.044) through the inner rule → predicted printed <strong>Ø 42.91</strong> (dev −0.14). Measured: <strong>drill bits −0.14</strong> (0.01 off ✓), caliper cross-check −0.24 (the weaker method, known tilt). Both readings decisively reject model v1 (−0.60) and zero-error (0.00). <strong>Next head: arc R = 21.29 → printed gap 1.52.</strong></div>
-
-          <div class="callout callout-warn"><span class="callout-label">Post-mortem of model v1 — what the ±0.11 actually did.</span> v1 measured <strong>+0.11 (proud) on the convex flange</strong> and <em>assumed the mirror image</em>, −0.11 intrusion, for the concave arc — then applied the solid-body scale (×1.009) to everything. The rings decomposed the head's error: <strong>phantom shrink ≈ 0.45 mm (~97 %)</strong> — bores don't shrink — vs <strong>offset assumption ≈ 0.01 mm</strong>: the mirror assumption was nearly right (−0.104 measured vs −0.11 assumed). <em>The error was transferring solid-body shrink to bores, not the offset.</em> (And the interim diagnosis "the concave offset has the opposite sign" was itself wrong — two coupled unknowns can't be separated from one part. That's what the rings were for.)</div>
-
-          <div class="callout callout-note"><span class="callout-label">Reusing this on another printer.</span> Print the rings (≥3 sizes spanning your working range, one in triplicate) with the target profile → 2 ⊥ diameters per feature (~20 readings, 20 min) → fit the two lines (spreadsheet <code>SLOPE</code>/<code>INTERCEPT</code>) → check residual SD ≈ triplicate σ and that the slopes differ → invert into your two CAD rules. Valid until nozzle, material, or profile changes.</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin:28px 0 8px;">References</h4>
-          <ol style="font-size:0.8rem; line-height:1.7; color:var(--text-muted); padding-left:20px; margin:0;">
-            <li>Gebre, N.M., Cristofolini, I., Zago, M., Gallo, P. (2026). Influence of Geometry and Size on Precision and Accuracy in Fused Deposition Modeling (FDM) Additive Manufacturing. <em>Material Design &amp; Processing Communications</em>, 2026(1), 7177386. <a href="https://doi.org/10.1155/mdp2/7177386" target="_blank" rel="noopener">doi:10.1155/mdp2/7177386</a> — constant absolute undersize of curved features across sizes.</li>
-            <li>Grgić, I., Karakašić, M., Glavaš, H., Konjatić, P. (2023). Accuracy of FDM PLA Polymer 3D Printing Technology Based on Tolerance Fields. <em>Processes</em>, 11(10), 2810. <a href="https://doi.org/10.3390/pr11102810" target="_blank" rel="noopener">doi:10.3390/pr11102810</a> — holes needed +0.13 mm constant compensation; external surfaces none.</li>
-            <li>Kaveh, M., Badrossamay, M., Foroozmehr, E., Hemasian Etefagh, A. (2015). Optimization of the printing parameters affecting dimensional accuracy and internal cavity for HIPS material used in fused deposition modeling processes. <em>Journal of Materials Processing Technology</em>, 226, 280–286. <a href="https://doi.org/10.1016/j.jmatprotec.2015.07.012" target="_blank" rel="noopener">doi:10.1016/j.jmatprotec.2015.07.012</a> — internal cavities as a separate accuracy class.</li>
-            <li>Johar, M., Rosli, A.A., Shuib, R.K., Abdul Hamid, Z.A., Abdullah, M.K., Ku Ishak, K.M., Rusli, A. (2025). Dimensional stability of poly(lactic acid) (PLA) parts fabricated using fused deposition modelling (FDM). <em>Progress in Rubber, Plastics and Recycling Technology</em>, 41(2), 218–232. <a href="https://doi.org/10.1177/14777606241262882" target="_blank" rel="noopener">doi:10.1177/14777606241262882</a> — geometry-dependent shrinkage (thin vs thick).</li>
-            <li>Monzón, E., Bordón, P., Paz, R., Monzón, M. (2024). Dimensional Characterization and Hybrid Manufacturing of Copper Parts Obtained by Atomic Diffusion Additive Manufacturing, and CNC Machining. <em>Materials</em>, 17(6), 1437. <a href="https://doi.org/10.3390/ma17061437" target="_blank" rel="noopener">doi:10.3390/ma17061437</a> — per-feature CAD compensation from 52902 artifacts (method only; sinter process).</li>
-            <li>ISO/ASTM 52902:2023. Additive manufacturing — Test artefacts — Geometric capability assessment of additive manufacturing systems. <a href="https://www.iso.org/standard/79683.html" target="_blank" rel="noopener">iso.org/standard/79683</a></li>
-            <li>NIST/SEMATECH e-Handbook of Statistical Methods (NIST Handbook 151) — process modeling: calibration &amp; inverse prediction. <a href="https://www.itl.nist.gov/div898/handbook/" target="_blank" rel="noopener">itl.nist.gov/div898/handbook</a></li>
-            <li>Slicer practice — separate internal-feature compensation: SuperSlicer <code>hole_sizes_compensation</code> (<a href="https://github.com/prusa3d/PrusaSlicer/issues/4561" target="_blank" rel="noopener">PrusaSlicer #4561</a>); Cura "Hole Horizontal Expansion".</li>
-          </ol>
-        </section>
-
-          </div>
-        </details>
-
-        <!-- ═══ v2.3 — THE CALIBRATED HEAD ═════════════════════════ -->
-        <details class="ver-panel ver-23" open>
-          <summary>
-            <span class="ver-chip">v2.3</span>
-            <span class="ver-sum-note"><strong>TESTED ✅ — the qualified build.</strong> Gap 1.52 measured and concentric; gravimetric campaign: <strong>4.56 µL/stroke (−8.9 %), linear, CV 0.25 % at 100 strokes — below the manual-pipette reference.</strong> The first head designed entirely against measured numbers, and the first to pass its test.</span>
-          </summary>
-          <div class="ver-body">
-
-        <section class="detail-block" id="sec-v23">
-          <h3 class="block-heading">The calibrated head — two independent fixes, one print</h3>
-          <p class="block-note">v2.2 delivered a validated rotor <em>and</em> a calibrated printer (<a href="#sec-calibration" style="color:var(--accent)">model v2</a>). v2.3 is the first head that spends both: it fixes the <strong>gap</strong> (the 0.23 mm loose miss) with the ring-calibration radii, and the <strong>apex</strong> (the ~0.37 mm that was "unexplained" in v2.1) now that a measurement has pinned its cause. The two problems are independent — one is a radius, one is a seat position — so they get separate fixes on the same part.</p>
-
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-value">R = 21.29</div>
-              <div class="stat-label">pad-arc radius via model v2 (was 21.52) → printed gap <strong>1.52</strong></div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">−0.35 mm</div>
-              <div class="stat-label">seat drop — lower the head so the arc centres on the real shaft → apex closes</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">corner relief</div>
-              <div class="stat-label">round the male dovetail's bottom tips → seats deterministically, kills the press-and-it-moves wobble</div>
             </div>
           </div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:#5fd08a; margin:24px 0 8px;">Fix 1 — the gap: apply model v2, retire the old compensation</h4>
-          <p class="block-note">The v2.2 head printed 0.23 mm loose because model v1 applied a solid-body <em>scale</em> (<code>×k</code>) to a concave arc — bores barely scale. Model v2 replaces <code>k</code> and <code>SurfaceOffset</code> on the head with the <strong>inner rule</strong> (<code>CAD = (target + 0.208)/1.00164</code>). Both head radii drop ~0.23 mm — exactly the phantom shrink removed.</p>
-          <div class="callout callout-good"><span class="callout-label">Where <code>k</code> lives now.</span> The <strong>scale <code>k</code> = 1.00906 survives only on the rotor pitch</strong> — a centre-to-centre span, where it was validated to 2R = 39.40. It no longer touches the head: a concave arc is a different error regime, and conflating the two was the whole v1 mistake. <code>SurfaceOffset</code> is retired from the head (folded into the rule's intercept).</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:#5fd08a; margin:28px 0 8px;">Fix 2 — the apex: the "unexplained 0.37 mm" was a CAD offset</h4>
-          <p class="block-note">The head's arc must be centred on the shaft. v2.1's apex sat ~0.45 mm too high (0.08 mm dovetail stop + ~0.37 mm unexplained). A direct measurement closed it: from the shaft edges (23.58 &amp; 28.51 → centre <strong>26.05</strong>, and the 4.93 mm span confirms the 5 mm shaft), the real holder's dovetail → shaft is <strong>26.05 mm</strong>, but the head CAD assumed <strong>25.70</strong>. So the head built its arc centre 0.35 mm above the real shaft → the apex opens by ~0.35, the sides barely move (a vertical shift is second-order there). That is the 0.37 mm.</p>
-          <div class="callout callout-warn"><span class="callout-label">The lever is the seat, not the dovetail width.</span> A dovetail is a slide — its trapezoid registers the head <em>laterally</em> (play is already ~zero — leave it) and how deep it seats is set by the <strong>hard stop</strong>. So the fix <strong>lowers the seat by 0.35 mm</strong> (<code>SeatDrop = HolderDovetailToShaft − DovetailToArcCenter</code>), dropping the arc centre onto the shaft — <em>not</em> shrinking the dovetail. Parameterised off the measured <code>HolderDovetailToShaft</code> (like <code>RotorFlangeDMeasured</code>), so re-measuring the holder is a one-number change. A residual ~0.08 mm (the stop printing high) is left to <strong>measure on the print</strong> through the slots — not chased blind.</div>
-
-          <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:#5fd08a; margin:28px 0 8px;">Corner relief — a seating tweak, not a fit change</h4>
-          <p class="block-note">FDM rounds the female slot's internal corners, so a sharp male corner rides on point contact and props the head up — the "press harder and it shifts a bit" wobble. The dovetail <em>fits</em> are already nominal (male 18.97 / 19, female 27.95–28.08 / 28, lateral play ~zero), so this isn't a tolerance change: just <strong>relieve the male bottom tips</strong> so the flat faces seat, and <strong>keep the flat hard-stop face intact</strong> — it's the trustworthy vertical datum. Goal is to kill the force-dependence, not accommodate it with flex.</p>
-
-          <div class="next-brief">
-            <h4>Build order — print FIRM alone, then measure, then sweep</h4>
-            <ul>
-              <li><strong>Print the FIRM head only</strong> (arc R 21.29, gap target 1.52) with the seat drop, corner relief, and enlarged access slots.</li>
-              <li><strong>Measure through the slots before pumping</strong> — gap at apex + both sides. Gate: gap ≈ 1.52 ± 0.05 <em>and</em> apex ≈ sides ± 0.05 → both fixes land → print MID / LOOSE and run the firm→loose sweep. Apex still high → trim <code>HolderDovetailToShaft</code> by the residual. Uniformly off → feed the head back as a model-v2 datapoint.</li>
-              <li><strong>The play experiment (bonus thesis result):</strong> the two rotors (0.085 mm play vs tight) differ in one variable — same head + tube on both isolates bearing clearance as a CV source. Predicted ≈ 3 %.</li>
-            </ul>
-          </div>
-          <div class="callout callout-good"><span class="callout-label">✅ As-built result — both fixes landed.</span> The printed head measured <strong>gap 1.52 at apex AND both sides</strong> (drill-bit gauges) after a final manual dovetail correction — concentric, on target, model v2 validated on the working part. The tube is squeezed with real occlusion (δ = 0.30) for the first time in the project. Full qualification below (<a href="#sec-v23-results" style="color:#5fd08a">gravimetric results</a>).</div>
-        </section>
-
-        <section class="detail-block" id="sec-v23-params">
-          <h3 class="block-heading">Head parameters — recomputed on model v2</h3>
-          <p class="block-note">Every gap-setting dimension is now a formula referencing a named parameter — no literals. The two calibration constants (<code>InnerSlope</code>, <code>InnerIntercept</code>) and the measured <code>HolderDovetailToShaft</code> are the only things that change when the printer or holder changes.</p>
-          <table class="param-table">
-            <thead><tr><th>Parameter</th><th>Expression</th><th>Value</th><th>Change from v2.2 (model v1)</th></tr></thead>
-            <tbody>
-              <tr><td><code>InnerSlope</code></td><td><code>1.00164</code></td><td>1.00164</td><td><strong>New</strong> — model v2 concave slope (bore transfer function)</td></tr>
-              <tr><td><code>InnerIntercept</code></td><td><code>0.208 mm</code></td><td>0.208</td><td><strong>New</strong> — concave rim intrusion, on Ø (replaces <code>SurfaceOffset</code>)</td></tr>
-              <tr><td><code>HeadWallRadius</code></td><td><code>(PumpDiam + 2·GapPumpHeadRotor + InnerIntercept) / InnerSlope / 2</code></td><td><strong>21.29</strong></td><td>was <strong>21.52</strong> (<code>… + SurfaceOffset) · k</code>) → −0.23 phantom shrink removed</td></tr>
-              <tr><td><code>HeadBaseRadius</code></td><td><code>(RotorFlangeDMeasured + 2·HeadRotorClearance + InnerIntercept) / InnerSlope / 2</code></td><td><strong>21.72</strong></td><td>was <strong>21.96</strong> → same −0.23 correction</td></tr>
-              <tr><td><code>PadExtrusion</code></td><td><code>HeadBaseRadius − HeadWallRadius</code></td><td>0.43</td><td>unchanged — still &gt; 0.3 mm guard ✓</td></tr>
-              <tr><td><code>HolderDovetailToShaft</code></td><td><code>26.05 mm</code></td><td><strong>26.05</strong></td><td><strong>New · MEASURED</strong> — real holder dovetail → shaft (was assumed 25.70)</td></tr>
-              <tr><td><code>SeatDrop</code></td><td><code>HolderDovetailToShaft − DovetailToArcCenter</code></td><td><strong>0.35</strong></td><td><strong>New</strong> — how much lower the head seats → arc centres on the shaft</td></tr>
-              <tr><td><code>k</code></td><td><code>ShrinkComp · NozzleComp</code></td><td>1.00906</td><td><strong>Rotor pitch only</strong> — removed from the head radii</td></tr>
-            </tbody>
-          </table>
-          <div class="callout callout-good"><span class="callout-label">Forward-check.</span> CAD arc R 21.29 → through the inner rule → printed R 21.22 → <strong>gap = 21.22 − 19.70 = 1.52 ✓</strong> — the same value the head landed on out-of-sample in the ring validation. The CAD gap will read ≈ 1.53 (a derived artifact); only the printed gap is the target.</div>
-        </section>
-
-        <!-- ═══ v2.3 — GRAVIMETRIC QUALIFICATION ═══════════════════ -->
-        <section class="detail-block" id="sec-v23-results">
-          <h3 class="block-heading">⭐ Gravimetric results — the qualification (2026-07-23)</h3>
-          <p class="block-note"><strong>Method:</strong> gravimetric characterization adapted from <strong>ISO 23783-2:2023 Annex D</strong> at prototype scale — 76 automated replicates over <strong>3 volumes (1 / 100 / 300 strokes) × 4 speeds (60–240 rpm)</strong>, evaporation-corrected by dispense time (E = 0.118 mg/s, blank-calibrated), benchmarked against a calibrated manual pipette on the same balance and method. Steps verified complete at every speed and microstep (E7) before any volume was trusted. Full rationale → <a href="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/TEST-PROTOCOL.md" style="color:var(--accent)">TEST-PROTOCOL.md</a> · data record → <a href="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/TEST-RESULTS.md" style="color:var(--accent)">TEST-RESULTS.md</a>.</p>
-
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-value">4.56 µL</div>
-              <div class="stat-label">per stroke (−8.9 % vs 5.0 nominal) — <strong>linear, no offset → calibratable</strong>: strokes = V / 4.56</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">CV 0.25 %</div>
-              <div class="stat-label">100-stroke delivery @ 180 rpm — <strong>below the manual-pipette reference (0.27 %)</strong></div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">180 rpm</div>
-              <div class="stat-label">precision optimum — the assumed operating speed proved right; refill droop only −2.1 % over 60→240</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">≤ ~6 %</div>
-              <div class="stat-label">single-stroke CV — <strong>upper bound</strong>, not resolvable on a 0.1 mg balance; the flagged follow-up</div>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin:20px 0;">
-            <figure class="detail-figure" style="margin:0">
-              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/accuracy_vs_strokes.png" alt="Per-stroke delivered volume versus stroke count for each speed, converging on 4.56 microlitres" style="background:#fff" />
-              <figcaption><strong>Accuracy &amp; linearity.</strong> 100- and 300-stroke levels agree to &lt;0.5 % at every speed → linear, no fixed offset. The 60/120 rpm single-stroke points hint at a first-stroke deficit (indicative — balance floor); on target at 180.</figcaption>
-            </figure>
-            <figure class="detail-figure" style="margin:0">
-              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/per_stroke_vs_speed.png" alt="Per-stroke volume versus speed showing a two percent decrease from 60 to 240 rpm" style="background:#fff" />
-              <figcaption><strong>Refill.</strong> Mild −2.1 % droop 60→240 rpm, no knee — consistent with mildly incomplete tube refill; the pump is not refill-limited in its operating range.</figcaption>
-            </figure>
-            <figure class="detail-figure" style="margin:0">
-              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/cv_vs_speed.png" alt="Coefficient of variation versus speed with minimum at 180 rpm, pipette reference line at 0.27 percent" style="background:#fff" />
-              <figcaption><strong>Precision vs speed.</strong> Best near 180 rpm; the 100-stroke delivery (0.25 %) dips <em>below</em> the manual-pipette line — the pump meets the human benchmark for multi-stroke doses.</figcaption>
-            </figure>
-            <figure class="detail-figure" style="margin:0">
-              <img src="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/test-figures-v2.3/cv_vs_volume.png" alt="CV versus delivered volume on log-log axes following the one over square root of N line" style="background:#fff" />
-              <figcaption><strong>Error structure.</strong> Log–log slope −0.41 ≈ the ideal −0.5 (1/√N) → per-stroke variability is largely <em>random and self-averaging</em>, with at most a small systematic (roller) floor. Smallest-volume points are balance-limited (indicative).</figcaption>
-            </figure>
-          </div>
-
-          <div class="next-brief">
-            <h4>What the campaign established</h4>
-            <ul>
-              <li><strong>The −8.9 % deficit is geometric, not dynamic</strong> — speed moves the dose only ~2 %, so the shortfall lives in gap/occlusion. Feeds the displaced-volume model's effective <code>k</code> (E5). Correcting it is a step-count multiplier, not a redesign.</li>
-              <li><strong>The −41 % scare was an artifact</strong> — old unconditioned tube, non-stationary run, and a step-loss hypothesis that E7 refuted. Fresh pre-wetted tube + conditioning run → stationary, 4.56 µL/stroke.</li>
-              <li><strong>Evaporation is corrected, not ignored</strong> — blank-calibrated at 0.118 mg/s, applied over dispense time; &lt;0.7 % of delivered mass in every cell.</li>
-              <li><strong>Pipette benchmark done on the same instrument</strong> — 50 µL manual pipetting: CV 0.27 % (the honest human reference; the 5 µL pipette reading is the balance's floor, not the pipette's).</li>
-            </ul>
-          </div>
-
-          <div class="callout callout-warn"><span class="callout-label">Honest scope — what this does NOT prove.</span> Single build, single tube, water only, no backpressure. <strong>Single-5 µL-dose precision is bounded (≤ ~6 %), not measured</strong> — the √N estimate is inflated by run-to-run drift, and a 0.1 mg balance cannot resolve it directly; a finer balance or the ISO photometric route is the follow-up. The thesis claim is framed accordingly: <em>as a metered multi-stroke pump, v2.3 is accurate, pipette-class precise, and optimal at its design speed; as a single-dose device the accuracy holds but per-dose precision is bounded, not proven.</em></div>
-        </section>
-
-          </div>
-        </details>
+        </div>
       </div>
-
-    </div>
-  </section>
+    </section>
+  </div>
 </main>
 
-<!-- Lightbox overlay (click any figure to enlarge) -->
-<div class="lightbox" id="lightbox" hidden>
-  <button class="lightbox-close" id="lightbox-close" aria-label="Close">×</button>
-  <img id="lightbox-img" src="" alt="" />
-</div>
-
-<script defer src="katex/katex.min.js"></script>
-<script defer src="katex/auto-render.min.js"></script>
 <script>
-  // Render LaTeX once KaTeX + auto-render have loaded
-  window.addEventListener('load', () => {
-    if (window.renderMathInElement) {
-      renderMathInElement(document.body, {
-        delimiters: [
-          { left: '\\[', right: '\\]', display: true },
-          { left: '\\(', right: '\\)', display: false }
-        ],
-        throwOnError: false
-      });
-    }
-  });
-
-  // TOC — open the containing version panel before the browser jumps to the anchor
-  document.querySelectorAll('.toc-link').forEach(a => {
-    a.addEventListener('click', () => {
-      const t = document.querySelector(a.getAttribute('href'));
-      const d = t && t.closest('details');
-      if (d && !d.open) d.open = true;
-    });
-  });
-
-  // Lightbox — open on any detail figure image, close on overlay/✕/Esc
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-  function openLightbox(src, alt) {
-    lightboxImg.src = src; lightboxImg.alt = alt || '';
-    lightbox.hidden = false;
-  }
-  function closeLightbox() { lightbox.hidden = true; lightboxImg.src = ''; }
-  document.querySelectorAll('.detail-figure img, .figure-grid img').forEach(img => {
-    img.addEventListener('click', () => openLightbox(img.src, img.alt));
-  });
-  lightbox.addEventListener('click', closeLightbox);
-  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lightbox.hidden) closeLightbox(); });
-
-  // View swap — show detail for a given proto ID, hide journey
-  function showDetail(protoId) {
-    document.getElementById('journey-view').hidden = true;
-    document.getElementById('detail-view').hidden = false;
-    document.querySelectorAll('.detail-section').forEach(s => { s.hidden = true; });
-    const el = document.getElementById('detail-' + protoId);
-    if (el) el.hidden = false;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function showJourney() {
-    document.getElementById('detail-view').hidden = true;
-    document.getElementById('journey-view').hidden = false;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  document.getElementById('back-btn').addEventListener('click', showJourney);
-
-  document.querySelectorAll('.proto-card[data-proto]').forEach(btn => {
-    btn.addEventListener('click', () => showDetail(btn.dataset.proto));
-  });
-
-  // Path draw + node pop-in via IntersectionObserver
+  // Path draw + node pop-in. One observer per thread — a shared observer
+  // would reveal both threads the moment either one scrolled into view.
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const stage = document.querySelector('.stage-inner');
+  const threads = document.querySelectorAll('.thread');
 
-  if (!reducedMotion && stage) {
-    const obs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        document.querySelector('.journey-path')?.classList.add('is-visible');
-        document.querySelectorAll('.proto-node').forEach(n => n.classList.add('is-visible'));
-        obs.disconnect();
-      }
-    }, { threshold: 0.1 });
-    obs.observe(stage);
+  if (!reducedMotion) {
+    threads.forEach(thread => {
+      const stage = thread.querySelector('.stage-inner');
+      if (!stage) return;
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          // Scoped to this stage, not the document.
+          stage.querySelector('.journey-path')?.classList.add('is-visible');
+          stage.querySelectorAll('.proto-node').forEach(n => n.classList.add('is-visible'));
+          obs.disconnect();
+        }
+      }, { threshold: 0.1 });
+      obs.observe(stage);
+    });
   }
   // reducedMotion=true: CSS default (stroke-dasharray:1 0, opacity:1) already shows everything
 
-  // Node alignment — place each card's centre on the journey path.
+  // Node alignment — place each card's centre on its own thread's path.
   // The SVG is stretched with preserveAspectRatio="none", so viewBox units
   // map linearly to stage fractions: x/600 → width, y/900 → height.
-  const journeySvg = document.querySelector('.journey-path-svg');
-  const journeyPath = document.querySelector('.journey-path');
-
   function alignNodesToPath() {
-    if (!stage || !journeySvg || !journeyPath) return;
-    const nodes = document.querySelectorAll('.proto-node');
-    if (getComputedStyle(journeySvg).display === 'none') {
-      // Mobile stack (≤640px): nodes are static — clear inline offsets so
-      // they don't leak back when resizing up to desktop.
-      nodes.forEach(n => { n.style.left = ''; });
-      return;
-    }
-    const H = stage.offsetHeight;
-    const W = stage.offsetWidth;
-    if (!H || !W) return;
-    // pathLength="1" only rescales stroke dashes; getPointAtLength stays in user units
-    const total = journeyPath.getTotalLength();
-    const SAMPLES = 240;
-    const pts = [];
-    for (let i = 0; i <= SAMPLES; i++) pts.push(journeyPath.getPointAtLength(total * i / SAMPLES));
-    nodes.forEach(node => {
-      const ySvg = (node.offsetTop + node.offsetHeight / 2) / H * 900;
-      let best = pts[0];
-      for (const p of pts) { if (Math.abs(p.y - ySvg) < Math.abs(best.y - ySvg)) best = p; }
-      const halfPct = node.offsetWidth / 2 / W * 100;
-      const leftPct = Math.min(100 - halfPct, Math.max(halfPct, best.x / 600 * 100));
-      node.style.left = leftPct + '%';
+    threads.forEach(thread => {
+      const stage = thread.querySelector('.stage-inner');
+      const svg   = thread.querySelector('.journey-path-svg');
+      const path  = thread.querySelector('.journey-path');
+      if (!stage || !svg || !path) return;
+      const nodes = stage.querySelectorAll('.proto-node');
+      if (getComputedStyle(svg).display === 'none') {
+        // Mobile stack (≤640px): nodes are static — clear inline offsets so
+        // they don't leak back when resizing up to desktop.
+        nodes.forEach(n => { n.style.left = ''; });
+        return;
+      }
+      const H = stage.offsetHeight;
+      const W = stage.offsetWidth;
+      if (!H || !W) return;
+      // pathLength="1" only rescales stroke dashes; getPointAtLength stays in user units
+      const total = path.getTotalLength();
+      const SAMPLES = 240;
+      const pts = [];
+      for (let i = 0; i <= SAMPLES; i++) pts.push(path.getPointAtLength(total * i / SAMPLES));
+      nodes.forEach(node => {
+        const ySvg = (node.offsetTop + node.offsetHeight / 2) / H * 900;
+        let best = pts[0];
+        for (const p of pts) { if (Math.abs(p.y - ySvg) < Math.abs(best.y - ySvg)) best = p; }
+        const halfPct = node.offsetWidth / 2 / W * 100;
+        const leftPct = Math.min(100 - halfPct, Math.max(halfPct, best.x / 600 * 100));
+        node.style.left = leftPct + '%';
+      });
     });
   }
 
