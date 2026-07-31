@@ -313,6 +313,22 @@ main.proto-page,
   border-radius: 8px;
 }
 .table-scroll > .param-table { min-width: 520px; }
+
+/* Safety net. A table with enough columns stops wrapping and pushes the whole
+   document sideways, which is the one layout rule this project does not bend.
+   Below 700px any un-wrapped .param-table becomes its own scroll container, so
+   a table that was never hand-wrapped in .table-scroll still cannot overflow
+   the page. Applies only to tables NOT already inside a .table-scroll.        */
+@media (max-width: 700px) {
+  .detail-block > .param-table,
+  .ver-body > .param-table,
+  .proto-page-body > .param-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+}
 .table-note {
   font-size: 0.74rem;
   color: var(--text-muted);
@@ -387,6 +403,8 @@ main.proto-page,
 .detail-figure { margin: 20px 0 32px; }
 .detail-figure img {
   width: 100%;
+  height: auto;                 /* required: intrinsic width/height attrs would
+                                   otherwise be honoured as CSS and stretch the image */
   border-radius: var(--radius);
   border: 1px solid var(--p-border);
   display: block;
@@ -430,6 +448,7 @@ main.proto-page,
 }
 .fig-side img {
   width: 100%;
+  height: auto;
   border-radius: var(--radius);
   border: 1px solid var(--p-border);
   display: block;
