@@ -1,0 +1,917 @@
+/* ============================================================================
+   prototype-page.css — shared visual system for prototype detail subpages
+   ----------------------------------------------------------------------------
+   Sanctioned shared asset (precedent: assets/deck.css). Consumed by:
+     prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/index.html
+     prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/index.html
+     prototypes/Prototype-2-Alignment-Module/index.html
+
+   Extracted from the inline detail-view CSS of prototypes/index.html.
+   Journey-only rules (.journey-*, .stage-inner, .nodes-layer, .proto-node,
+   .proto-card*, .kpi-pill) were deliberately NOT extracted — they stay inline
+   in the journey page.
+
+   Load order on every subpage:
+     1. ../../../assets/style.css          (global tokens, blobs, fade-up)
+     2. ../../../assets/prototype-page.css (this file)
+     3. optional: katex/katex.min.css
+     4. optional: a small inline <style> for genuinely page-specific rules
+
+   Per-page accent: add .proto-page--align to the root for the violet/indigo
+   alignment-module family. Everything else inherits the pump orange.
+   ========================================================================== */
+
+
+/* ── 1. Per-page accent hook ──────────────────────────────────────────────
+   Eight variables. Anything that should follow the page accent takes one of
+   these — NEVER --accent / --accent-2 / --glass-border, all three of which
+   are globally orange in assets/style.css.                                  */
+
+:root {
+  --p-accent:      #ff6b2b;
+  --p-accent-2:    #e83535;
+  --p-accent-soft: #ffb08a;
+  --p-glow:        rgba(255, 107, 43, 0.25);
+  --p-border:      rgba(255, 107, 43, 0.18);
+  --p-tint:        rgba(255, 107, 43, 0.10);
+  --p-fill:        rgba(255, 107, 43, 0.38);
+  --p-edge:        rgba(255, 107, 43, 0.55);
+}
+
+.proto-page {
+  --p-accent:      #ff6b2b;
+  --p-accent-2:    #e83535;
+  --p-accent-soft: #ffb08a;
+  --p-glow:        rgba(255, 107, 43, 0.25);
+  --p-border:      rgba(255, 107, 43, 0.18);
+  --p-tint:        rgba(255, 107, 43, 0.10);
+  --p-fill:        rgba(255, 107, 43, 0.38);
+  --p-edge:        rgba(255, 107, 43, 0.55);
+}
+
+.proto-page--align {
+  --p-accent:      #9b7fe0;
+  --p-accent-2:    #5a8fd8;
+  --p-accent-soft: #c3aef5;
+  --p-glow:        rgba(155, 127, 224, 0.28);
+  --p-border:      rgba(155, 127, 224, 0.22);
+  --p-tint:        rgba(155, 127, 224, 0.12);
+  --p-fill:        rgba(155, 127, 224, 0.40);
+  --p-edge:        rgba(155, 127, 224, 0.55);
+}
+
+/* The sticky nav and the lightbox live OUTSIDE <main class="proto-page">, so
+   they cannot inherit the accent from it. This isolated rule lifts the accent
+   to <body> when an alignment page is present. Kept in its own rule block on
+   purpose: if :has() is unsupported the rule is simply dropped and the nav
+   falls back to orange — it cannot invalidate the two rules above.           */
+body:has(.proto-page--align) {
+  --p-accent:      #9b7fe0;
+  --p-accent-2:    #5a8fd8;
+  --p-accent-soft: #c3aef5;
+  --p-glow:        rgba(155, 127, 224, 0.28);
+  --p-border:      rgba(155, 127, 224, 0.22);
+  --p-tint:        rgba(155, 127, 224, 0.12);
+  --p-fill:        rgba(155, 127, 224, 0.40);
+  --p-edge:        rgba(155, 127, 224, 0.55);
+}
+
+
+/* ── 2. Nav bar ───────────────────────────────────────────────────────────
+   NOT present in assets/style.css (every tool page currently redefines it
+   inline). Carried here so the three subpages share one nav.                */
+
+.tool-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--p-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.nav-back {
+  color: var(--p-accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s ease, letter-spacing 0.22s ease;
+}
+.nav-back:hover { opacity: 0.75; letter-spacing: 0.06em; }
+.nav-title {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+
+/* ── 3. Page shell ────────────────────────────────────────────────────────
+   .proto-page is applied to <main>, so it must beat the `main` rule in
+   assets/style.css (max-width 1000px / padding 90px 32px 72px).             */
+
+main.proto-page,
+.proto-page {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 32px 100px;
+}
+
+/* Back link to the journey. Works as <a> or <button>. */
+.proto-back,
+.back-btn {
+  display: inline-block;
+  background: none;
+  border: 1px solid var(--p-border);
+  border-radius: 8px;
+  color: var(--p-accent);
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  line-height: 1.2;
+  margin-bottom: 40px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.proto-back:hover,
+.back-btn:hover { border-color: var(--p-accent); background: var(--p-tint); }
+
+/* Header block: eyebrow → title → status chips → one-line summary → meta */
+.proto-page-header { margin-bottom: 44px; }
+
+.proto-page-eyebrow,
+.detail-tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--p-accent);
+  margin-bottom: 10px;
+}
+
+.proto-page-title,
+.detail-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+}
+.proto-page-title {
+  background: linear-gradient(135deg, var(--p-accent), var(--p-accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.proto-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.status-chip {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+.status-chip--accent  { color: var(--p-accent-soft); background: var(--p-tint); border-color: var(--p-edge); }
+.status-chip--built,
+.status-chip--tested  { color: #5fd08a; background: rgba(95, 208, 138, 0.12); border-color: rgba(95, 208, 138, 0.5); }
+.status-chip--progress { color: var(--p-accent-soft); background: var(--p-tint); border-color: var(--p-edge); }
+.status-chip--warn    { color: #e83535; background: rgba(232, 53, 53, 0.12); border-color: rgba(232, 53, 53, 0.5); }
+.status-chip--planned {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+}
+
+.proto-page-summary {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin-top: 18px;
+}
+.proto-page-meta {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 12px;
+  opacity: 0.85;
+}
+
+/* Body wrapper — everything below the header. */
+.proto-page-body { position: relative; }
+
+/* Legacy wrapper carried over verbatim from the SPA detail views so proto-01
+   and proto-02 markup can be moved unchanged. New pages should not need it. */
+.detail-section { display: block; }
+.detail-header  { margin-bottom: 40px; }
+
+
+/* ── 4. Content blocks + prose ────────────────────────────────────────── */
+
+.detail-block { margin-bottom: 48px; }
+.detail-block[id] { scroll-margin-top: 88px; }   /* clears the sticky nav */
+
+.block-heading {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--p-accent);
+  margin-bottom: 16px;
+}
+.block-subheading {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 24px 0 10px;
+}
+
+.detail-block p {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text);
+  overflow-wrap: break-word;
+}
+.detail-block p + p { margin-top: 12px; }
+
+.block-note {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+.detail-block ul,
+.detail-block ol {
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+.detail-block li {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 5px;
+  overflow-wrap: break-word;
+}
+
+.tool-link {
+  color: var(--p-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.tool-link:hover { color: var(--p-accent-soft); }
+
+
+/* ── 5. Tables ────────────────────────────────────────────────────────────
+   Project rule: headers wrap before a table is allowed to scroll. Only wrap a
+   table in .table-scroll when it genuinely cannot wrap (many numeric columns);
+   the page body itself never scrolls sideways.                              */
+
+.param-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.param-table th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--p-border);
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.param-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
+.param-table tr:last-child td { border-bottom: none; }
+.param-table td strong { color: var(--text); }
+
+/* Numeric column helper — keeps values from wrapping mid-number. */
+.param-table .num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 0 8px;
+  border-radius: 8px;
+}
+.table-scroll > .param-table { min-width: 520px; }
+.table-note {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+
+/* ── 6. Hero stat cards ──────────────────────────────────────────────── */
+
+.stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--glass-bg);
+  border: 1px solid var(--p-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.stat-card.stat-warn { border-color: rgba(232, 53, 53, 0.35); }
+.stat-card.stat-good { border-color: rgba(95, 208, 138, 0.35); }
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+}
+.stat-card.stat-warn .stat-value { color: #e83535; }
+.stat-card.stat-good .stat-value { color: #5fd08a; }
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+
+/* ── 7. CSS bar chart ────────────────────────────────────────────────── */
+
+.bar-chart {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 8px 16px;
+  align-items: center;
+  margin: 20px 0 28px;
+}
+.bar-label { font-size: 0.8rem; color: var(--text-muted); text-align: right; }
+.bar-wrap {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  height: 34px;
+  overflow: hidden;
+}
+.bar {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  max-width: 100%;
+}
+.bar-cmd  { background: rgba(255, 255, 255, 0.15); }
+.bar-grav { background: linear-gradient(90deg, var(--p-accent), var(--p-accent-2)); }
+.bar-flow { background: linear-gradient(90deg, var(--p-fill), var(--p-glow)); }
+.bar-val  { font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; }
+
+
+/* ── 8. Figures ──────────────────────────────────────────────────────── */
+
+.detail-figure { margin: 20px 0 32px; }
+.detail-figure img {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--p-border);
+  display: block;
+  cursor: zoom-in;
+}
+.detail-figure figcaption,
+.figure-grid figcaption,
+.figure-caption {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+.figure-compact { max-width: 540px; margin-left: auto; margin-right: auto; }
+
+.figure-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0 32px;
+  align-items: start;
+}
+.figure-grid figure { margin: 0; }
+.figure-grid img {
+  width: 100%;
+  height: auto;                 /* show whole image, never side-crop */
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius);
+  border: 1px solid var(--p-border);
+  display: block;
+  cursor: zoom-in;
+}
+
+/* Side-floated small figure. */
+.fig-side {
+  float: right;
+  width: min(280px, 42%);
+  margin: 4px 0 14px 20px;
+}
+.fig-side img {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--p-border);
+  display: block;
+  cursor: zoom-in;
+}
+.fig-side figcaption {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.4;
+}
+.clearfix::after { content: ""; display: table; clear: both; }
+
+/* Explicit opt-in zoom hook for images that are not inside the three
+   figure wrappers above. */
+.zoomable { cursor: zoom-in; }
+
+/* Inline SVG schematics carried over from the proto-02 detail view. */
+.detail-figure svg,
+.detail-block > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+
+/* ── 9. Media (video) ────────────────────────────────────────────────────
+   Height-constrained, never an aspect-ratio rule — the pump-head clip is
+   portrait 9:16 (precedent: .narrative-video on the landing page).          */
+
+.detail-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0 32px;
+}
+.media-video {
+  display: block;
+  max-height: 70vh;
+  width: auto;
+  max-width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--p-border);
+  background: var(--glass-bg);
+}
+.media-video--wide { width: 100%; height: auto; max-height: none; }
+.media-caption {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.45;
+}
+
+
+/* ── 10. Lightbox ────────────────────────────────────────────────────────
+   Sits outside .proto-page (it is a fixed-position sibling of <main>).
+   JS contract: #lightbox, #lightbox-img, #lightbox-close.                   */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgba(5, 5, 7, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: zoom-out;
+}
+.lightbox[hidden] { display: none; }
+.lightbox img {
+  max-width: 95vw;
+  max-height: 92vh;
+  border-radius: var(--radius);
+  border: 1px solid var(--p-border);
+  box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6);
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.lightbox-close:hover { opacity: 1; }
+
+
+/* ── 11. Equations, formulas, worked calculations ────────────────────── */
+
+/* KaTeX formula row. */
+.formula {
+  margin: 14px 0 18px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--p-border);
+  border-left: 3px solid var(--p-accent);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.formula .katex { font-size: 1.05em; }
+
+/* Plain monospace worked calculation, no KaTeX. */
+.calc-block {
+  margin: 14px 0 18px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--p-border);
+  border-left: 3px solid var(--p-accent);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.83rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+.calc-block strong { color: #f0ece8; }
+
+/* Annotated model equation — a row of labelled chips. */
+.model-eq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.model-eq .eq-grp { display: flex; align-items: flex-start; gap: 10px; }
+.model-eq .eq-op {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-top: 8px;
+}
+.model-eq .eq-term {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 168px;
+}
+.model-eq .eq-chip {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  padding: 10px 18px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.model-eq .eq-note {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  text-align: center;
+  font-family: var(--font);
+  overflow-wrap: anywhere;
+}
+
+/* Chip families. Neutral / dashed-neutral chips are semantic (measured vs
+   modelled), the blue "internal" chips are semantic, the accent chips follow
+   the page accent. */
+.eq-printed .eq-chip { color: #f0ece8; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.25); }
+.eq-cad     .eq-chip { color: #f0ece8; background: rgba(255, 255, 255, 0.04); border: 1px dashed rgba(255, 255, 255, 0.35); }
+.eq-plain   .eq-chip { color: #f0ece8; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.28); }
+.eq-cadp    .eq-chip { color: #f0ece8; background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255, 255, 255, 0.35); }
+.eq-k       .eq-chip { color: var(--p-accent-soft); background: var(--p-tint); border: 1px solid var(--p-edge); }
+.eq-s-ext   .eq-chip { color: var(--p-accent-soft); background: var(--p-tint); border: 1px solid var(--p-edge); }
+.eq-b-ext   .eq-chip { color: var(--p-accent-soft); background: var(--p-tint); border: 1px dashed var(--p-edge); }
+.eq-off     .eq-chip { color: #8fc0f0; background: rgba(120, 175, 240, 0.10); border: 1px solid rgba(120, 175, 240, 0.55); }
+.eq-s-int   .eq-chip { color: #8fc0f0; background: rgba(122, 167, 224, 0.10); border: 1px solid rgba(122, 167, 224, 0.6); }
+.eq-b-int   .eq-chip { color: #8fc0f0; background: rgba(122, 167, 224, 0.05); border: 1px dashed rgba(122, 167, 224, 0.6); }
+
+.model-eq-sign {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+  margin: 4px 0 20px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.model-eq-sign span strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* Takeaway rule cards. */
+.rule-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 18px 0; }
+.rule-card {
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.9;
+  overflow-x: auto;
+}
+.rule-card .model-eq { margin: 14px 0 6px; }
+.rule-card .eq-note  { max-width: 150px; }
+.rule-card .rc-tag {
+  font-family: var(--font);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.rule-card .rc-behavior {
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.rule-card .rc-main { font-size: 0.98rem; font-weight: 700; color: #f0ece8; }
+.rule-card .rc-note {
+  font-family: var(--font);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.rule-ext { background: var(--p-tint); border: 2px solid var(--p-edge); }
+.rule-ext .rc-tag, .rule-ext .rc-behavior { color: var(--p-accent); }
+.rule-int { background: rgba(122, 167, 224, 0.08); border: 2px solid rgba(122, 167, 224, 0.55); }
+.rule-int .rc-tag, .rule-int .rc-behavior { color: #8fc0f0; }
+
+
+/* ── 12. Callouts ─────────────────────────────────────────────────────────
+   good = green, warn = red, note = page accent. good/warn keep literal
+   colours: on the violet page --p-accent-2 is blue, and a blue warning would
+   read as information, not as a problem.                                    */
+
+.callout {
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text);
+  overflow-wrap: break-word;
+}
+.callout-good { background: rgba(60, 200, 120, 0.08); border: 1px solid rgba(60, 200, 120, 0.32); }
+.callout-warn { background: rgba(232, 53, 53, 0.08);  border: 1px solid rgba(232, 53, 53, 0.32); }
+.callout-note { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--p-border); }
+
+.callout-label { font-weight: 600; }
+.callout-good .callout-label { color: #5fd08a; }
+.callout-warn .callout-label { color: #e83535; }
+.callout-note .callout-label { color: var(--p-accent); }
+
+.callout p + p { margin-top: 10px; }
+.callout ul, .callout ol { margin: 8px 0 0; padding-left: 20px; }
+.callout li { font-size: 0.86rem; line-height: 1.6; }
+
+
+/* ── 13. Table of contents ────────────────────────────────────────────────
+   .proto-toc is the preferred name; .toc is kept so the proto-02 markup
+   moves verbatim. JS contract: .toc-link clicks open any ancestor <details>
+   of the target before jumping.                                             */
+
+.proto-toc,
+.toc {
+  background: var(--glass-bg);
+  border: 1px solid var(--p-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 20px 24px;
+  margin: 0 0 28px;
+}
+.toc-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px 24px;
+}
+.toc-group-label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--p-border);
+  color: var(--text);
+}
+.toc-link {
+  display: block;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  padding: 3px 0 3px 10px;
+  border-left: 2px solid transparent;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+.toc-link:hover { color: var(--p-accent); border-left-color: var(--p-accent); }
+
+/* Group-label colour families. The semantic names are preferred; the numeric
+   aliases exist so proto-02's existing markup moves unchanged. */
+.toc-group--accent .toc-group-label { color: var(--p-accent); }
+.toc-group--fail   .toc-group-label,
+.toc-g21 .toc-group-label { color: #e83535; }
+.toc-group--mid    .toc-group-label,
+.toc-g22 .toc-group-label { color: #ff6b2b; }
+.toc-group--pass   .toc-group-label,
+.toc-g23 .toc-group-label { color: #5fd08a; }
+
+
+/* ── 14. Collapsible version panels ───────────────────────────────────── */
+
+.ver-panel {
+  border: 1px solid var(--p-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  margin: 0 0 18px;
+}
+.ver-panel[open] { background: rgba(255, 255, 255, 0.015); }
+.ver-panel > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  padding: 16px 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ver-panel > summary::-webkit-details-marker { display: none; }
+.ver-panel > summary::after {
+  content: '\25B8';
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+.ver-panel[open] > summary::after { transform: rotate(90deg); }
+.ver-panel > summary:hover { background: rgba(255, 255, 255, 0.025); border-radius: 14px; }
+
+.ver-chip {
+  font-weight: 800;
+  font-size: 1.02rem;
+  padding: 5px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.ver-sum-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  flex: 1;
+  min-width: 180px;
+}
+.ver-body { padding: 6px 22px 8px; border-top: 1px solid var(--p-border); }
+.ver-body > .detail-block:first-child { margin-top: 22px; }
+
+/* Version chip families. Semantic names preferred; the numeric aliases exist
+   so proto-02's existing markup moves unchanged. */
+.ver-design > summary .ver-chip,
+.ver-neutral > summary .ver-chip { color: var(--text); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.18); }
+.ver-accent > summary .ver-chip { color: var(--p-accent); background: var(--p-tint); border: 1px solid var(--p-edge); }
+.ver-fail > summary .ver-chip,
+.ver-21   > summary .ver-chip { color: #e83535; background: rgba(232, 53, 53, 0.12); border: 1px solid rgba(232, 53, 53, 0.5); }
+.ver-mid  > summary .ver-chip,
+.ver-22   > summary .ver-chip { color: #ff6b2b; background: rgba(255, 107, 43, 0.12); border: 1px solid rgba(255, 107, 43, 0.5); }
+.ver-pass > summary .ver-chip,
+.ver-23   > summary .ver-chip { color: #5fd08a; background: rgba(95, 208, 138, 0.12); border: 1px solid rgba(95, 208, 138, 0.5); }
+
+
+/* ── 15. Next-prototype brief ─────────────────────────────────────────── */
+
+.next-brief {
+  background: linear-gradient(135deg, var(--p-tint), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--p-glow);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-top: 12px;
+}
+.next-brief h4 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--p-accent);
+  margin: 18px 0 8px;
+}
+.next-brief h4:first-child { margin-top: 0; }
+.next-brief ul { margin: 0 0 4px; padding-left: 20px; }
+.next-brief li { font-size: 0.86rem; line-height: 1.6; margin-bottom: 5px; }
+.next-brief li strong { color: var(--p-accent); }
+
+
+/* ── 16. Motion ───────────────────────────────────────────────────────────
+   Everything above renders complete and readable with motion suppressed and
+   with JS disabled. Only entrance easing lives here.                        */
+
+@media (prefers-reduced-motion: no-preference) {
+  .proto-page-header,
+  .proto-page-body > .detail-block { animation-timing-function: cubic-bezier(0.22, 0.68, 0, 1); }
+  .ver-panel { transition: border-color 0.2s ease; }
+  .ver-panel[open] { border-color: var(--p-glow); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-back, .toc-link, .proto-back, .back-btn,
+  .ver-panel > summary::after, .tool-link { transition: none; }
+}
+
+
+/* ── 17. Responsive ───────────────────────────────────────────────────────
+   Target: no horizontal scroll at 320 / 640 / 1024 / 1440 px.               */
+
+@media (max-width: 900px) {
+  .rule-cards { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  main.proto-page,
+  .proto-page      { padding: 40px 20px 60px; }
+  .tool-nav        { padding: 16px 20px; }
+  .nav-title       { font-size: 0.78rem; }
+
+  .proto-page-header { margin-bottom: 32px; }
+  .proto-back, .back-btn { margin-bottom: 28px; }
+
+  .stats-row       { flex-direction: column; }
+  .bar-chart       { grid-template-columns: 90px 1fr; }
+  .param-table     { font-size: 0.82rem; }
+  .param-table th,
+  .param-table td  { padding: 8px 8px; }
+  .figure-grid     { grid-template-columns: 1fr; }
+  .fig-side        { float: none; width: 100%; margin: 12px 0; }
+  .formula .katex  { font-size: 0.95em; }
+  .next-brief      { padding: 18px 18px; }
+  .proto-toc, .toc { padding: 16px 18px; }
+  .toc-grid        { grid-template-columns: 1fr; gap: 14px; }
+  .ver-panel > summary { padding: 14px 16px; }
+  .ver-body        { padding: 6px 16px 8px; }
+  .detail-block    { margin-bottom: 36px; }
+}
+
+@media (max-width: 480px) {
+  .model-eq .eq-chip { font-size: 1rem; padding: 8px 12px; }
+  .model-eq .eq-term { max-width: 140px; }
+  .model-eq .eq-op   { font-size: 1.3rem; }
+  .rule-card .eq-note { max-width: 130px; }
+  .calc-block, .rule-card { font-size: 0.78rem; padding: 12px 14px; }
+  .status-chip     { font-size: 0.72rem; padding: 3px 10px; }
+  .ver-chip        { font-size: 0.94rem; padding: 4px 11px; }
+  .ver-sum-note    { min-width: 0; }
+}
+
+@media (max-width: 380px) {
+  main.proto-page,
+  .proto-page      { padding: 32px 14px 48px; }
+  .tool-nav        { padding: 14px 14px; }
+  .bar-chart       { grid-template-columns: 68px 1fr; gap: 6px 10px; }
+  .bar-label       { font-size: 0.72rem; }
+  .param-table     { font-size: 0.78rem; }
+  .param-table th,
+  .param-table td  { padding: 7px 6px; }
+  .stat-card       { padding: 16px 18px; min-width: 0; }
+  .stat-value      { font-size: 1.4rem; }
+  .next-brief      { padding: 16px 14px; }
+  .lightbox        { padding: 16px; }
+}
+
+
+/* ── 18. Print ───────────────────────────────────────────────────────── */
+
+@media print {
+  .tool-nav, .lightbox, .proto-back, .back-btn, .proto-toc, .toc { display: none !important; }
+  main.proto-page, .proto-page { max-width: none; padding: 0; }
+  .ver-body { display: block !important; }
+  .detail-block { break-inside: avoid; }
+}
