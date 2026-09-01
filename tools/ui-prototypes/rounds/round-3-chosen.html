@@ -1,0 +1,1217 @@
+<meta charset="utf-8">
+<title>Dispensing System — Operator UI v3</title>
+
+<style>
+  :root{
+    --ground:#F2F4F6; --panel:#FFFFFF; --bench:#22262C;
+    --ink:#13171C; --ink-soft:#5C6672; --ink-faint:#8B95A1;
+    --rule:#D5DAE0; --rule-soft:#E6EAEE;
+    --mark:#D6006E; --ok:#16663A; --warn:#8A5200; --bad:#A3231B;
+    --mono: ui-monospace,"Cascadia Mono","SF Mono",Consolas,monospace;
+    --sans: ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#101317; --panel:#191D23; --bench:#05070A;
+      --ink:#E9EDF1; --ink-soft:#98A3AF; --ink-faint:#6B7683;
+      --rule:#2B313A; --rule-soft:#23282F;
+      --mark:#FF3D93; --ok:#4FBE83; --warn:#D79B3C; --bad:#E4695F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#101317; --panel:#191D23; --bench:#05070A;
+    --ink:#E9EDF1; --ink-soft:#98A3AF; --ink-faint:#6B7683;
+    --rule:#2B313A; --rule-soft:#23282F;
+    --mark:#FF3D93; --ok:#4FBE83; --warn:#D79B3C; --bad:#E4695F;
+  }
+  @keyframes breathe{0%,100%{opacity:1}50%{opacity:.34}}
+  .breathe{animation:breathe 1.8s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){.breathe{animation:none}}
+  :focus-visible{outline:2px solid var(--mark);outline-offset:2px;border-radius:4px}
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+       font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 20px 70px}
+  .mast{border-bottom:2px solid var(--ink);padding-bottom:14px}
+  .mast .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+       text-transform:uppercase;color:var(--mark);margin:0 0 8px}
+  .mast h1{font-family:var(--mono);font-size:clamp(20px,3vw,29px);font-weight:700;
+       letter-spacing:-.02em;margin:0}
+  .mast .sub{color:var(--ink-soft);margin:8px 0 0;max-width:66ch}
+  .rig{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;margin-top:22px;align-items:start}
+  @media (max-width:900px){.rig{grid-template-columns:1fr}}
+  .stagewrap{background:var(--bench);border-radius:12px;padding:24px 18px 18px;
+       display:flex;flex-direction:column;align-items:center;gap:13px}
+  .bezel{padding:11px;background:#111417;border-radius:12px;box-shadow:0 0 0 1px #2A2F35 inset}
+  .device{position:relative;width:320px;height:240px;overflow:hidden;background:#fff}
+  .el{position:absolute;overflow:hidden}
+  .el.t{display:flex;white-space:pre}
+  .el.hit{cursor:pointer}
+  .el.hit:active{filter:brightness(.92)}
+  .sv{position:absolute;left:0;width:320px;overflow-y:auto;overflow-x:hidden}
+  .sv::-webkit-scrollbar{width:4px}
+  .sv::-webkit-scrollbar-thumb{background:#9AA5B1;border-radius:2px}
+  .sv::-webkit-scrollbar-track{background:transparent}
+  .ovl{position:absolute;inset:0;pointer-events:none}
+  .ovl div{position:absolute;box-sizing:border-box}
+  .tmark{border:1px dashed rgba(214,0,110,.85);background:rgba(214,0,110,.07)}
+  .tbad{border:1px solid rgba(214,0,110,1);background:rgba(214,0,110,.18)}
+  .glare{position:absolute;inset:0;pointer-events:none;
+       background:linear-gradient(118deg,rgba(255,255,255,.8) 0%,rgba(255,255,255,.42) 38%,rgba(255,255,255,.3) 100%)}
+  .crumbs{font-family:var(--mono);font-size:11px;color:#9AA5B1;letter-spacing:.05em;text-align:center}
+  .crumbs b{color:#E8ECF0}
+  .navrow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:560px}
+  .nb{font-family:var(--mono);font-size:10.5px;padding:5px 8px;border-radius:5px;cursor:pointer;
+      border:1px solid #333A42;background:#1A1E23;color:#9AA5B1}
+  .nb:hover{border-color:#5A646E;color:#E8ECF0}
+  .nb.on{background:#E8ECF0;color:#14181C;border-color:#E8ECF0;font-weight:700}
+  .side{display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:13px 14px}
+  .card h3{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+       color:var(--mark);margin:0 0 9px}
+  .kv{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:4px 0;
+      border-bottom:1px solid var(--rule-soft)}
+  .kv:last-child{border-bottom:0}
+  .kv span:first-child{color:var(--ink-soft)}
+  .kv span:last-child{font-family:var(--mono);font-weight:600;text-align:right}
+  .pass{color:var(--ok)} .fail{color:var(--bad)} .note{color:var(--warn)}
+  .toggles{display:flex;flex-wrap:wrap;gap:6px}
+  .tg{font-family:var(--mono);font-size:11px;padding:6px 10px;border:1px solid var(--rule);
+      background:var(--panel);color:var(--ink-soft);border-radius:6px;cursor:pointer}
+  .tg.on{background:var(--mark);border-color:var(--mark);color:#fff;font-weight:700}
+  .idea{font-size:13px;color:var(--ink-soft);margin:0}
+  h2.sec{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+      margin:40px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+  .tablewrap{overflow-x:auto;margin:0 0 18px}
+  table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule-soft);vertical-align:top;
+        font-variant-numeric:tabular-nums}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-soft);border-bottom:1px solid var(--rule)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--rule-soft);padding:1px 5px;border-radius:4px}
+  li{margin:5px 0;font-size:13.5px;color:var(--ink-soft)} li b{color:var(--ink)}
+</style>
+
+<!-- Mechanical edit (see ../SPEC.md): back-link to the prototype index. -->
+<nav style="max-width:1160px;margin:0 auto;padding:18px 20px 0"><a href="../index.html" style="font:12px/1 ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;letter-spacing:.08em;color:inherit;opacity:.55;text-decoration:none">&larr; All rounds</a></nav>
+
+<div class="wrap">
+<div class="mast">
+  <p class="eyebrow">Phase 3.1 · round 3 · the chosen design</p>
+  <h1>Operator UI — plain language, one screen model</h1>
+  <p class="sub">The guided home layout without the wizard: a persistent status bar, three
+  destinations, and levels always reachable. Jargon replaced with the words patient-facing devices
+  actually use. Every screen is clickable.</p>
+</div>
+
+<div class="rig">
+  <div class="stagewrap">
+    <div class="bezel"><div class="device" id="screen"><div class="ovl" id="ovl"></div>
+      <div class="glare" id="glare" style="display:none"></div></div></div>
+    <div class="crumbs" id="crumbs"></div>
+    <div class="navrow" id="jump"></div>
+  </div>
+  <div class="side">
+    <div class="card"><h3>View</h3>
+      <div class="toggles">
+        <button class="tg" data-t="touch">touch targets</button>
+        <button class="tg" data-t="q">RGB565</button>
+        <button class="tg" data-t="glare">sunlight</button>
+        <button class="tg" data-t="dark">device dark</button>
+        <button class="tg" data-t="reset">reset state</button>
+      </div></div>
+    <div class="card"><h3>Audit — this screen</h3><div id="audit"></div></div>
+    <div class="card"><h3>What this screen does</h3><p class="idea" id="cap"></p></div>
+  </div>
+</div>
+
+<h2 class="sec">Language — jargon replaced</h2>
+<div class="tablewrap"><table>
+  <tr><th>Was</th><th>Now</th><th>One line shown in the UI</th><th>Who says it</th></tr>
+  <tr><td><code>PRIME</code></td><td><b>Fill Tubing</b></td>
+      <td>“Pushes liquid through the tube until air is gone.”</td>
+      <td>Tandem t:slim X2 insulin pump — “Fill Tubing”, then “Fill Cannula”</td></tr>
+  <tr><td><code>HOMING</code></td><td><b>Reset Position</b></td>
+      <td>“Moves the parts back to their starting point.”</td>
+      <td>Robot vacuums name the outcome, not the mechanism. Prusa says “Auto Home”, which assumes 3D-printer literacy</td></tr>
+  <tr><td><code>PROTOCOL</code> / <code>PROTO</code></td><td><b>Recipe</b></td>
+      <td>“How much of each liquid goes into one tube.”</td>
+      <td>Bean-to-cup machines call a saved parameter set a recipe — and it is literally what this is</td></tr>
+</table></div>
+
+<h2 class="sec">Colour is never the only signal</h2>
+<ul>
+  <li><b>Channel palette is ColorBrewer Dark2</b>, a colour-blind-safe qualitative set:
+      <code>#1B9E77 #D95F02 #7570B3 #E7298A #66A61E #E6AB02</code>. Every swatch also carries its
+      <b>channel numeral</b>, which is the encoding that survives any colour vision deficiency —
+      WCAG 1.4.1 forbids colour as the sole differentiator, and ~8% of men have a deficiency.</li>
+  <li><b>Level status is a traffic light plus a word.</b> Under 15% red, 15–33% amber, above green.
+      Green/amber/red for consumable level is <b>common practice, not a standard</b> — IEC 60601-1-8
+      covers alarm priority and ISO 3864 covers safety signage; neither mandates this. Cite it as
+      convention.</li>
+  <li><b>Two different traffic lights, deliberately.</b> On Levels it measures the bottle against
+      itself. On the pre-run check it measures the bottle against <i>what this run needs</i> — green
+      enough, amber within 10%, red short. Red blocks the start.</li>
+</ul>
+
+<h2 class="sec">Recorded target-size exceptions</h2>
+<div class="tablewrap"><table>
+  <tr><th>Code</th><th>Where</th><th>Size</th><th>Why it is allowed</th></tr>
+  <tr><td><b>E1</b></td><td>The eight rack positions</td><td>38 × 88 px</td>
+      <td>Below 44 px on one axis, above the 24 px WCAG 2.2 AA floor, and 1.9× the area of a
+          compliant square. The drawn hole is the hit area, and ALL/NONE/INVERT make precise
+          tapping rare.</td></tr>
+  <tr><td><b>E2</b></td><td>Letter keyboard, renaming only</td><td>30 × 34 px</td>
+      <td>Ten keys cannot span 320 px at 44 px. Every phone keyboard is in the same position. Used
+          only for naming, never for a number that affects a dose — those go through the 64 × 44
+          numeric keypad.</td></tr>
+</table></div>
+</div>
+
+<script>
+/* ===================== TOKENS ===================== */
+const LIGHT={ink:"#10151A",ink2:"#3A4552",line:"#C3C9D0",bg:"#EDEFF2",card:"#FFFFFF",
+  sunk:"#E0E4E8",acc:"#0F4278",accInk:"#FFFFFF",ghost:"#414B58",dis:"#8E97A1",
+  ok:"#0E4D2B",okBg:"#E4F0E9",warn:"#6B3F00",warnBg:"#FBF0DE",
+  bad:"#8C1A13",badBg:"#FBE9E7",onBad:"#FFFFFF",onOk:"#FFFFFF",
+  live:"#7A2018",liveDim:"#F8E6E4",liveInk:"#7A2018"};
+const DARK={ink:"#F0F3F6",ink2:"#AAB4C0",line:"#39424D",bg:"#0B0E12",card:"#161B22",
+  sunk:"#1F262E",acc:"#6FB2F2",accInk:"#04121F",ghost:"#A8B2BE",dis:"#6A7480",
+  ok:"#5FD196",okBg:"#12271C",warn:"#E5AE4E",warnBg:"#2B2110",
+  bad:"#F79A92",badBg:"#2E1512",onBad:"#1A0603",onOk:"#04140C",
+  live:"#7E2118",liveDim:"#F8E6E4",liveInk:"#F79A92"};
+/* ColorBrewer Dark2 — colour-blind-safe qualitative set */
+const CH=["#1B9E77","#D95F02","#7570B3","#E7298A","#66A61E","#E6AB02"];
+const CHBG_L=["#DCEFE9","#FBE6D8","#E6E4F0","#FBE0EC","#E6F0DA","#FBF0D6"];
+const CHBG_D=["#0C2A22","#301709","#1D1B2C","#2E101F","#1A2610","#2B2409"];
+
+const IC={play:"M8 5v14l11-7z",drop:"M12 3c0 0 6 6.6 6 10.5A6 6 0 0 1 6 13.5C6 9.6 12 3 12 3z",
+  list:"M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01",
+  back:"M19 12H5M12 19l-7-7 7-7",check:"M20 6L9 17l-5-5",
+  alert:"M12 3l9.5 17h-19zM12 9.5v5M12 17.6v.01",pause:"M9 4v16M15 4v16",
+  stop:"M5 5h14v14H5z",retry:"M20.5 12a8.5 8.5 0 1 1-2.5-6M20.5 3v6h-6",
+  sun:"M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6zM12 1.5v2.6M12 19.9v2.6M1.5 12h2.6M19.9 12h2.6M4.6 4.6l1.9 1.9M17.5 17.5l1.9 1.9M19.4 4.6l-1.9 1.9M6.5 17.5l-1.9 1.9",
+  sd:"M7 2.5h8l4.5 4.5V21.5H7zM11 5.5v3M14 5.5v3",batt:"M2.5 8.5h15v7h-15zM19.5 11v2",
+  plus:"M12 5v14M5 12h14",edit:"M16.5 3.5l4 4L8 20H4v-4z",chev:"M9 5l7 7-7 7",
+  x:"M6 6l12 12M18 6L6 18",axis:"M3 12h18M17 8l4 4-4 4M7 16l-4-4 4-4",
+  gear:"M12 9.4a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2zM12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"};
+
+/* ===================== HELPERS ===================== */
+const R=(x,y,w,h,o={})=>({x,y,w,h,kind:"rect",...o});
+const X=(x,y,w,h,s,o={})=>({x,y,w,h,kind:"text",s,...o});
+const I=(x,y,s,p,c,o={})=>({x,y,w:s,h:s,kind:"icon",path:p,color:c,...o});
+const SVG=(x,y,w,h,svg,o={})=>({x,y,w,h,kind:"svg",svg,...o});
+function measure(s,size,weight){return Math.round(s.length*size*(weight>=700?.62:.56));}
+function lum(hex){const c=[1,3,5].map(i=>parseInt(hex.substr(i,2),16)/255)
+  .map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));
+  return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+/* ink that reads on a given channel swatch */
+const onCH=i=>lum(CH[i])>0.42?"#10151A":"#FFFFFF";
+
+function BAR(x,y,w,h,v,fill,trough,r){
+  r=r===undefined?h/2:r;
+  const out=[R(x,y,w,h,{fill:trough,radius:r})];
+  const fw=Math.max(0,Math.min(w,Math.round(w*v/100)));
+  if(fw>0) out.push(R(x,y,fw,h,{fill,radius:r}));
+  return out;
+}
+function BTN(x,y,w,h,label,o={}){
+  const T=o.T,tone=o.tone||"ghost";
+  let bg,fg,bd=null;
+  if(tone==="acc"){bg=T.acc;fg=T.accInk}
+  else if(tone==="bad"){bg=T.bad;fg=T.onBad}
+  else if(tone==="warn"){bg=T.warnBg;fg=T.warn;bd=T.warn}
+  else if(tone==="ok"){bg=T.ok;fg=T.onOk}
+  else if(tone==="flat"){bg=T.sunk;fg=T.ink;bd=T.line}
+  else{bg=T.card;fg=T.ink;bd=T.line}
+  if(o.off){bg=T.sunk;fg=T.dis;bd=T.line}
+  const els=[R(x,y,w,h,{fill:bg,border:bd,radius:6,touch:!o.off,exc:o.exc,
+    go:o.off?null:o.go,act:o.off?null:o.act})];
+  const size=o.size||14,weight=o.weight||700,ic=o.icon?24:0,gap=ic?8:0;
+  if(o.left){
+    const ix=x+12,tx=ix+ic+gap,tw=Math.max(10,w-(tx-x)-10);
+    if(ic) els.push(I(ix,y+Math.round((h-24)/2),24,IC[o.icon],fg));
+    if(o.sub){
+      els.push(X(tx,y+6,tw,19,label,{size,weight,color:fg}));
+      els.push(X(tx,y+h-22,tw,16,o.sub,{size:11,color:fg,opa:.8}));
+    } else els.push(X(tx,y,tw,h,label,{size,weight,color:fg,va:"c"}));
+  } else {
+    const lw=measure(label,size,weight);
+    if(ic){
+      const sx=x+Math.max(4,Math.round((w-(lw+ic+gap))/2));
+      els.push(I(sx,y+Math.round((h-24)/2),24,IC[o.icon],fg));
+      els.push(X(x+ic+gap+2,y,Math.max(10,w-ic-gap-4),h,label,
+        {size,weight,color:fg,va:"c",ha:"c",exempt:o.off}));
+    } else els.push(X(x+2,y,w-4,h,label,{size,weight,color:fg,va:"c",ha:"c",exempt:o.off}));
+  }
+  return els;
+}
+
+/* volume presentation — quantised to what the sensor can honestly support */
+const NOM=[40000,15000,4000,0],STEP=[1000,500,200,0],DEC=[0,1,1,0];
+const LOWL=["< 2 mL","< 1 mL","< 0.2 mL","—"];
+function volText(si,pct,sense){
+  if(sense==="nosensor") return {v:"—",sub:"no sensor",dim:true};
+  if(sense==="uncal")    return {v:"—",sub:"not set up",dim:true};
+  if(si===3)             return {v:"—",sub:"no bottle",dim:true};
+  const nom=NOM[si];
+  if(pct<=0) return {v:"EMPTY",sub:(nom/1000)+" mL bottle",low:true};
+  if(pct<5)  return {v:LOWL[si],sub:(nom/1000)+" mL bottle",low:true};
+  const q=Math.round(nom*pct/100/STEP[si])*STEP[si];
+  return {v:(q/1000).toFixed(DEC[si])+" mL",sub:(nom/1000)+" mL bottle"};
+}
+/* traffic light on the bottle itself: <15 red, 15-33 amber, else green */
+function lvlState(T,si,pct,sense){
+  if(sense!=="ok"||si===3) return {c:T.dis,w:"unknown"};
+  if(pct<15) return {c:T.bad,w:"low"};
+  if(pct<33) return {c:T.warn,w:"getting low"};
+  return {c:T.ok,w:"ok"};
+}
+/* traffic light against what this run needs: >10% spare green, within 10% amber, short red */
+function needState(T,i){
+  const need=neededVol(i); if(!need) return null;
+  if(st.sense[i]!=="ok"||st.size[i]===3) return {c:T.warn,w:"unknown",k:1};
+  const have=NOM[st.size[i]]*st.pct[i]/100*0.9;
+  if(have<need) return {c:T.bad,w:"short",k:2};
+  if(have<need*1.1) return {c:T.warn,w:"just enough",k:1};
+  return {c:T.ok,w:"ok",k:0};
+}
+const UL_S=54.72,T_INDEX=4.02,T_VIB=.8,T_HOME=22,T_FEED=6;
+const doseSec=v=>Math.max.apply(null,v)/UL_S;
+function fmtT(s){s=Math.round(s);const m=Math.floor(s/60),r=s%60;
+  return m?m+" min "+String(r).padStart(2,"0")+" s":r+" s";}
+
+/* ===================== STATE ===================== */
+const st={screen:"home",dark:false,
+  homed:{a1:false,a2:false},
+  fitted:[1,1,1,1,0,0],
+  filled:[0,0,0,0,0,0],
+  fillSel:[0,0,0,0,0,0],
+  size:[0,1,0,2,3,3],
+  pct:[96,50,71,12,0,0],
+  sense:["ok","ok","ok","ok","uncal","nosensor"],
+  names:["Buffer A","Reagent X","Saline","Ethanol","Liquid 5","Liquid 6"],
+  recipes:[{n:"Assay A",v:[320,100,20,0,0,0]},{n:"Assay B",v:[900,0,0,200,0,0]},
+           {n:"Wash",v:[0,0,600,0,0,0]},{n:"Blank",v:[150,150,150,150,0,0]},
+           {n:"Long mix",v:[400,300,250,200,0,0]}],
+  openRec:0,sel:[],active:0,assign:{},openRack:1,
+  edit:null,keyCh:null,keyVal:"",nameVal:"",
+  liquid:0,calStep:0,calPct:0,kbFrom:'liquid',
+  axis:"a1",homePct:0,
+  fillAttempt:1,fillPhase:1,fillPct:62,
+  tube:7,tubes:12,runPct:58,pauseKind:"low",
+  scrollY:{}};
+const key=(r,t)=>"r"+r+"t"+t;
+const owner=(r,t)=>st.assign[key(r,t)]===undefined?null:st.assign[key(r,t)];
+const nAssigned=p=>Object.values(st.assign).filter(v=>v===p).length;
+const total=()=>Object.keys(st.assign).length;
+const recTotal=p=>st.recipes[p].v.reduce((a,b)=>a+b,0);
+function neededVol(ch){let s=0;for(const k in st.assign)s+=st.recipes[st.assign[k]].v[ch];return s;}
+function usedCh(){const u=[];for(let i=0;i<6;i++)if(neededVol(i)>0)u.push(i);return u;}
+function unfilled(){return usedCh().filter(i=>st.fitted[i]&&!st.filled[i]);}
+function anyShort(T){return usedCh().some(i=>{const s=needState(T,i);return s&&s.k===2;});}
+function runSeconds(){let s=0;const racks=new Set();
+  for(const k in st.assign){const p=st.assign[k];racks.add(k.split("t")[0]);
+    s+=doseSec(st.recipes[p].v)+T_VIB+T_INDEX;}
+  return s+Math.max(0,racks.size-1)*T_FEED;}
+
+const go=s=>()=>{st.screen=s;render();};
+const act=f=>()=>{f();render();};
+
+/* ===================== SHARED PARTS ===================== */
+function statusBar(T,state,live){
+  const bg=live?T.live:T.sunk,fg=live?"#FFFFFF":T.ink,fg2=live?T.liveDim:T.ghost;
+  return [R(0,0,320,26,{fill:bg}),R(0,25,320,1,{fill:live?T.live:T.line}),
+    X(8,0,150,26,state||"READY",{size:12,weight:700,color:fg,va:"c",track:".07em"}),
+    I(190,5,16,IC.sd,fg2), I(212,5,16,IC.batt,fg2),
+    X(229,0,16,26,"--",{size:10,color:fg2,va:"c",ha:"c"}),
+    R(250,9,8,8,{fill:live?"#FF9E93":T.ok,radius:4}),
+    X(262,0,54,26,live?"LIVE":"OFF",{size:11,weight:700,color:fg,va:"c"})];
+}
+
+/* the rack, drawn as the real part */
+function rackSVG(T,w,h,states,dark){
+  const n=8,pitch=w/n,bY=3,bH=h-bY-7,topH=25;
+  const face=dark?"#48515C":"#C6CDD5",faceT=dark?"#59636F":"#DCE1E6",
+        edge=dark?"#242B33":"#8D96A1",bore=dark?"#090C10":"#5E6873";
+  const numOff=dark?"#0B0E12":"#1E242B";
+  let s=`<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">`;
+  s+=`<rect x="1" y="${bY}" width="${w-2}" height="${bH}" rx="10" fill="${face}" stroke="${edge}" stroke-width="1.5"/>`;
+  s+=`<path d="M11 ${bY+1} h${w-22} a10 10 0 0 1 10 10 v${topH-10} h-${w-2} v-${topH-10} a10 10 0 0 1 10-10 z" fill="${faceT}"/>`;
+  s+=`<line x1="2" y1="${bY+topH}" x2="${w-2}" y2="${bY+topH}" stroke="${edge}" stroke-width="1.2"/>`;
+  for(let i=0;i<n;i++){
+    const cx=pitch*(i+0.5),q=states[i]||{mode:"empty"},rx=Math.min(13.5,pitch*0.37),ry=7;
+    let fill=bore,ring=edge,rw=1.5;
+    if(q.mode==="sel"){fill=q.col;ring=q.col;rw=2.5;}
+    else if(q.mode==="lock"){fill=dark?"#6C7783":"#9BA4AE";ring=edge;}
+    s+=`<ellipse cx="${cx}" cy="${bY+13}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${ring}" stroke-width="${rw}"/>`;
+    if(q.mode==="sel")
+      s+=`<ellipse cx="${cx}" cy="${bY+13}" rx="${rx-4.5}" ry="${ry-2.8}" fill="none" stroke="${dark?"#090C10":"#FFFFFF"}" stroke-width="1.3" opacity=".6"/>`;
+    if(q.mode==="sel")
+      s+=`<rect x="${cx-11}" y="${bY+topH+6}" width="22" height="21" rx="5" fill="${q.col}"/>`;
+    s+=`<text x="${cx}" y="${bY+topH+21}" text-anchor="middle" font-family="ui-sans-serif,system-ui"
+        font-size="15" font-weight="700" fill="${q.mode==="sel"?(q.ink||"#fff"):numOff}">${i+1}</text>`;
+    if(q.tag){
+      s+=`<circle cx="${cx}" cy="${bY+topH+36}" r="7.5" fill="${T.warnBg}" stroke="${T.warn}" stroke-width="1.5"/>`;
+      s+=`<text x="${cx}" y="${bY+topH+40}" text-anchor="middle" font-family="ui-sans-serif,system-ui"
+          font-size="10" font-weight="700" fill="${T.warn}">${q.tag}</text>`;}
+  }
+  return s+`</svg>`;
+}
+
+/* a 2 mL tube with proportional colour bands */
+function tubeSVG(T,w,h,vols){
+  const cap=2000,top=8,bodyH=h-12,neck=Math.round(w*.72);
+  let acc=0,bands="";
+  vols.forEach((v,i)=>{if(v<=0)return;
+    const fh=(v/cap)*bodyH,fy=top+bodyH-acc-fh;acc+=fh;
+    bands+=`<rect x="${(w-neck)/2+2}" y="${fy}" width="${neck-4}" height="${fh}" fill="${CH[i]}"/>`;});
+  const path=`M${(w-neck)/2} ${top} h${neck} v${bodyH-neck/2} a${neck/2} ${neck/2} 0 0 1 -${neck} 0 z`;
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">
+    <defs><clipPath id="c${w}${h}"><path d="${path}"/></clipPath></defs>
+    <path d="${path}" fill="${T.bg}"/>
+    <g clip-path="url(#c${w}${h})">${bands}</g>
+    <path d="${path}" fill="none" stroke="${T.ink2}" stroke-width="2"/>
+    <rect x="${(w-neck)/2-3}" y="${top-6}" width="${neck+6}" height="6" rx="2" fill="${T.card}" stroke="${T.ink2}" stroke-width="2"/>
+  </svg>`;
+}
+
+/* the storage bottle: an inverted bottle seated in its holder */
+function bottleSVG(T,w,h,pct,col,arrow){
+  const dark=st.dark, glass=dark?"#232A32":"#EDEFF2", edge=T.ink2;
+  const aH=arrow?16:0;
+  const bw=Math.min(w*0.62,44), bx=(w-bw)/2;
+  const top=aH+4, shoulder=h-aH-30, bodyH=shoulder-top;
+  const fill=Math.max(0,Math.min(1,pct/100))*(bodyH-4);
+  const nw=Math.max(8,bw*0.34), nx=(w-nw)/2;
+  const hw=bw+10, hx=(w-hw)/2, hy=h-16;
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">
+    ${arrow?`<path d="M${w/2} 1 v9 M${w/2-5} 6 l5 5 5-5" fill="none" stroke="${T.acc}"
+        stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`:""}
+    <rect x="${bx}" y="${top}" width="${bw}" height="${bodyH}" rx="5"
+       fill="${glass}" stroke="${edge}" stroke-width="2"/>
+    <rect x="${bx+2}" y="${top+bodyH-2-fill}" width="${bw-4}" height="${fill}" rx="3" fill="${col}"/>
+    <path d="M${bx+2} ${shoulder} L${nx} ${shoulder+8} v6 h${nw} v-6 L${bx+bw-2} ${shoulder} z"
+       fill="${glass}" stroke="${edge}" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="${hx}" y="${hy}" width="${hw}" height="14" rx="4"
+       fill="${T.sunk}" stroke="${edge}" stroke-width="2"/>
+  </svg>`;
+}
+
+/* compact locator — used on the warning screen, where the full map does not fit
+   and would only repeat what the clearance screen shows properly */
+function locatorSVG(T,hl){
+  const on1=hl==="a1"||hl==="both", on2=hl==="a2"||hl==="both";
+  const lb='font-family="ui-sans-serif,system-ui" font-size="11" font-weight="700"';
+  const tag='font-family="ui-sans-serif,system-ui" font-size="10" font-weight="700"';
+  const bar=(y,h,on,name)=>`
+    <rect x="10" y="${y}" width="280" height="${h}" rx="4" fill="${on?T.badBg:T.sunk}"
+       stroke="${on?T.bad:T.line}" stroke-width="${on?2.5:1.5}"${on?' class="breathe"':''}/>
+    <text x="22" y="${y+h/2+4}" ${lb} fill="${on?T.bad:T.ink2}">${name}</text>
+    ${on?`<text x="278" y="${y+h/2+4}" text-anchor="end" ${tag}
+       fill="${T.bad}">must be reset</text>`:""}`;
+  return `<svg viewBox="0 0 300 72" width="300" height="72">
+    <rect x="1" y="1" width="298" height="70" rx="6" fill="${T.card}" stroke="${T.line}" stroke-width="1.5"/>
+    ${bar(8,27,on1,"RACK LANE")}
+    ${bar(39,26,on2,"RACK IN")}
+  </svg>`;
+}
+
+/* top-down machine map, matching the CAD layout */
+function machineSVG(T,hl){
+  const on1=hl==="a1"||hl==="both", on2=hl==="a2"||hl==="both";
+  const lf=on1?T.badBg:T.sunk, ls=on1?T.bad:T.line;
+  const inf=on2?T.badBg:T.sunk, ins=on2?T.bad:T.line;
+  const lb=`font-family="ui-sans-serif,system-ui" font-size="10" font-weight="700"`;
+  return `<svg viewBox="0 0 300 112" width="300" height="112">
+    <rect x="1" y="1" width="298" height="110" rx="7" fill="${T.card}" stroke="${T.line}" stroke-width="2"/>
+    <rect x="6" y="6" width="288" height="38" rx="4" fill="${lf}" stroke="${ls}"
+       stroke-width="${on1?2.5:1.5}"${on1?' class="breathe"':''}/>
+    <text x="16" y="21" ${lb} fill="${on1?T.bad:T.ink2}">RACK LANE</text>
+    ${[0,1,2,3,4,5].map(i=>`<circle cx="${112+i*17}" cy="30" r="4.2" fill="${T.card}"
+       stroke="${on1?T.bad:T.ink2}" stroke-width="1.4"/>`).join("")}
+    <text x="16" y="36" font-family="ui-sans-serif,system-ui" font-size="8.5"
+       fill="${on1?T.bad:T.ghost}">rack slides left to right</text>
+    <rect x="6" y="48" width="92" height="58" rx="4" fill="${inf}" stroke="${ins}"
+       stroke-width="${on2?2.5:1.5}"${on2?' class="breathe"':''}/>
+    <text x="16" y="72" ${lb} fill="${on2?T.bad:T.ink2}">RACK IN</text>
+    <text x="16" y="85" font-family="ui-sans-serif,system-ui" font-size="8.5"
+       fill="${on2?T.bad:T.ghost}">load here</text>
+    <rect x="103" y="48" width="86" height="58" rx="4" fill="${T.bg}" stroke="${T.line}" stroke-width="1.5"/>
+    <rect x="113" y="60" width="66" height="34" rx="3" fill="${T.sunk}" stroke="${T.ink2}" stroke-width="1.5"/>
+    <text x="146" y="81" text-anchor="middle" ${lb} fill="${T.ink2}">SCREEN</text>
+    <rect x="194" y="48" width="100" height="58" rx="4" fill="${T.bg}" stroke="${T.line}" stroke-width="1.5"/>
+    <text x="204" y="72" ${lb} fill="${T.ink2}">RACK OUT</text>
+    <text x="204" y="85" font-family="ui-sans-serif,system-ui" font-size="8.5"
+       fill="${T.ghost}">finished racks</text>
+  </svg>`;
+}
+
+/* a level chip: colour + numeral + traffic light. Colour is never the only cue. */
+function chChip(T,x,y,i,size){
+  size=size||22;
+  const tint=st.dark?CHBG_D[i]:CHBG_L[i];
+  return [R(x,y,size,size,{fill:tint,border:CH[i],bw:2,radius:5}),
+          X(x,y,size,size,String(i+1),{size:Math.max(9,size*0.55),weight:700,ha:"c",va:"c",color:T.ink})];
+}
+
+/* ===================== SCREENS ===================== */
+const SC={};
+
+SC.home=(T)=>{
+  const un=[]; if(!st.homed.a1)un.push("a1"); if(!st.homed.a2)un.push("a2");
+  const els=[]; let y=32;
+  if(un.length){
+    els.push(R(8,y,304,44,{fill:T.badBg,border:T.bad,bw:2,radius:6,touch:1,go:"resetwarn"}));
+    els.push(I(16,y+10,24,IC.alert,T.bad));
+    els.push(X(48,y,150,44,"Position unknown",{size:13,weight:700,color:T.bad,va:"c"}));
+    els.push(X(200,y,92,44,"RESET",{size:12,weight:700,color:T.bad,va:"c",ha:"r"}));
+    els.push(I(294,y+14,16,IC.chev,T.bad));
+    y+=50;
+  }
+  els.push(...BTN(8,y,304,46,"Start a run",{T,tone:"acc",icon:"play",left:1,size:16,
+    go:"assign",sub:"choose a recipe and the tubes"})); y+=51;
+  els.push(...BTN(8,y,304,46,"Fill tubing",{T,icon:"drop",left:1,size:16,
+    go:"fill1",sub:"push liquid through until air is gone"})); y+=51;
+  els.push(...BTN(8,y,304,46,"Recipes",{T,icon:"list",left:1,size:16,
+    go:"recipes",sub:st.recipes.length+" saved"})); y+=54;
+
+  els.push(X(8,y,150,14,"LIQUID LEVELS",{size:10,weight:600,color:T.ink2,track:".13em"}));
+  els.push(X(170,y,142,14,"tap to set up",{size:9.5,color:T.ghost,ha:"r"}));
+  y+=18;
+  for(let i=0;i<6;i++){
+    const cx=8+(i%3)*103, cy=y+Math.floor(i/3)*76;
+    const s=lvlState(T,st.size[i],st.pct[i],st.sense[i]);
+    const vt=volText(st.size[i],st.pct[i],st.sense[i]);
+    els.push(R(cx,cy,98,70,{fill:T.card,border:T.line,radius:7,touch:1,
+      act:act(()=>{st.liquid=i;st.screen="liquid";})}));
+    els.push(SVG(cx+3,cy+4,34,62,bottleSVG(T,34,62,st.size[i]===3?0:st.pct[i],
+      st.sense[i]==="ok"?CH[i]:T.dis,false)));
+    els.push(...chChip(T,cx+40,cy+6,i,20));
+    els.push(X(cx+40,cy+30,54,15,vt.v,{size:vt.dim?10:12,weight:700,tnum:1,
+      color:vt.dim?T.ghost:T.ink}));
+    els.push(R(cx+40,cy+50,10,10,{fill:s.c,radius:5}));
+    els.push(X(cx+54,cy+48,42,14,s.w==="getting low"?"low-ish":s.w,{size:8.5,color:T.ink2}));
+  }
+  y+=Math.ceil(6/3)*76;
+  return {cap:"Home. Three destinations, no wizard. Everything under the status bar scrolls, so the levels stay reachable even when the position warning is showing.",
+    els, scroll:26, contentH:y+6};
+};
+
+SC.liquid=(T)=>{
+  const i=st.liquid, vt=volText(st.size[i],st.pct[i],st.sense[i]);
+  const s=lvlState(T,st.size[i],st.pct[i],st.sense[i]);
+  const els=[];
+  els.push(...chChip(T,8,32,i,30));
+  els.push(X(46,32,180,17,st.names[i],{size:15,weight:700,color:T.ink}));
+  els.push(X(46,50,180,14,"liquid "+(i+1),{size:10,color:T.ghost}));
+  els.push(...BTN(228,30,84,44,"RENAME",{T,size:10,
+    act:act(()=>{st.nameVal=st.names[i];st.kbFrom="liquid";st.caps=true;st.screen="rname";})}));
+  els.push(SVG(6,70,66,116,bottleSVG(T,66,116,st.size[i]===3?0:st.pct[i],
+    st.sense[i]==="ok"?CH[i]:T.dis,false)));
+  els.push(R(76,72,236,58,{fill:T.card,border:T.line,radius:7}));
+  els.push(X(86,78,120,14,"IN THE BOTTLE",{size:9,weight:600,color:T.ink2,track:".12em"}));
+  els.push(X(86,92,132,26,vt.v,{size:20,weight:700,tnum:1,color:vt.dim?T.ghost:T.ink}));
+  els.push(R(226,96,12,12,{fill:s.c,radius:6}));
+  els.push(X(244,94,62,16,s.w,{size:11,weight:600,color:T.ink2,va:"c"}));
+  els.push(X(86,118,220,12,vt.sub,{size:10,color:T.ghost}));
+  els.push(...BTN(76,138,236,44,"CHANGE BOTTLE",{T,tone:"flat",size:12,
+    act:act(()=>{st.calStep=0;st.screen="bottle";})}));
+  els.push(...BTN(8,190,150,44,"BACK",{T,icon:"back",size:12,go:"home"}));
+  els.push(...BTN(164,190,148,44,"CHECK LEVEL",{T,size:12,
+    act:act(()=>{st.calStep=1;st.screen="bottle";})}));
+  return {cap:"One liquid's card, reached by tapping it anywhere it appears. Name, bottle, level and its traffic light in one place — this is the calibration UI the old firmware buried behind an unlabelled icon grid.",els};
+};
+
+SC.bottle=(T)=>{
+  const i=st.liquid, step=st.calStep;
+  const els=[];
+  const titles=["Which bottle is this?","Put an EMPTY bottle in","Measuring…","Now put a FULL bottle in","Measuring…"];
+  els.push(X(8,32,304,18,titles[step],{size:15,weight:700,color:T.ink}));
+  if(step===0){
+    els.push(X(8,52,304,14,"Pick the size printed on the bottle.",{size:11,color:T.ink2}));
+    ["40 mL","15 mL","4 mL","none"].forEach((lbl,k)=>{
+      const on=st.size[i]===k;
+      els.push(...BTN(8+k*77,74,71,48,lbl,{T,tone:on?"acc":"ghost",size:12,
+        act:act(()=>{st.size[i]=k; st.calStep=k===3?0:1; if(k===3)st.screen="liquid";})}));
+    });
+    els.push(X(8,132,304,14,"The machine learns full and empty for this size.",{size:10,color:T.ghost}));
+    els.push(...BTN(8,190,304,44,"BACK",{T,icon:"back",size:12,go:"liquid"}));
+  } else {
+    const measuring=(step===2||step===4);
+    const full=(step>=3);
+    els.push(X(8,52,190,32, full?"Seat a full bottle in the holder.":"Seat an empty bottle in the holder.",
+      {size:11.5,color:T.ink2,wrap:1}));
+    els.push(SVG(202,52,110,132,bottleSVG(T,110,132, full?96:3, CH[i], !measuring)));
+    if(measuring){
+      els.push(X(8,96,190,14,"Hold still…",{size:12,weight:700,color:T.acc}));
+      els.push(...BAR(8,116,190,12,st.calPct,T.acc,T.sunk,6));
+      els.push(X(8,134,190,12,Math.round(st.calPct)+"%",{size:10,tnum:1,color:T.ink2}));
+    } else {
+      els.push(R(8,96,190,44,{fill:T.sunk,border:T.line,radius:6}));
+      els.push(X(16,96,174,44,"Push it down until it is in place.",{size:11,color:T.ink2,va:"c",wrap:1}));
+    }
+    els.push(...BTN(8,190,150,44,"CANCEL",{T,size:12,go:"liquid"}));
+    els.push(...BTN(164,190,148,44,measuring?"MEASURING":"DONE",{T,tone:"acc",size:12,off:measuring,
+      act:act(()=>{ st.calPct=0; st.calStep = step===1?2:4; })}));
+  }
+  return {cap:"Changing a bottle. Marius's version demanded an empty vial then a full one through text alone, and hid the back button so the only exit was a reboot. Here the bottle is drawn, the arrow shows the motion, and Cancel is always live.",els};
+};
+
+/* ---------- reset position ---------- */
+SC.resetwarn=(T)=>{
+  const list=[]; if(!st.homed.a1)list.push("a1"); if(!st.homed.a2)list.push("a2");
+  if(!list.length) return SC.home(T);
+  const els=[R(8,30,304,48,{fill:T.badBg,border:T.bad,bw:2,radius:8})];
+  els.push(I(18,42,24,IC.alert,T.bad));
+  els.push(X(50,32,252,20,"Position unknown",{size:15,weight:700,color:T.bad}));
+  els.push(X(50,52,252,20,"Nothing can run until this is done.",{size:11.5,color:T.bad}));
+  els.push(SVG(10,86,300,72,locatorSVG(T,list.length===2?"both":list[0])));
+  els.push(X(8,164,304,18,"Moves the parts back to their starting point.",
+    {size:11,color:T.ink2,ha:"c"}));
+  els.push(...BTN(8,190,148,44,st.fromRun?"BACK":"NOT NOW",
+    {T,icon:st.fromRun?"back":null,size:13,go:st.fromRun?"home":"home"}));
+  els.push(...BTN(164,190,148,44,"RESET NOW",{T,tone:"acc",size:13,go:"resetclear"}));
+  return {cap:"Reset Position replaces Homing — it names the outcome, the way robot vacuums do, instead of the mechanism. Only the parts that actually need it are highlighted.",els};
+};
+
+SC.resetclear=(T)=>{
+  const list=[]; if(!st.homed.a1)list.push("a1"); if(!st.homed.a2)list.push("a2");
+  const hl=list.length===2?"both":(list[0]||"a1");
+  const msg = hl==="a1" ? "Clear the lane where the rack slides left to right."
+            : hl==="a2" ? "Clear the rack input. Take out any rack."
+            : "Clear the rack lane and the rack input.";
+  const els=[X(8,30,304,16,"BEFORE IT MOVES",{size:11,weight:700,color:T.bad,track:".13em"})];
+  els.push(X(8,46,304,28,msg,{size:12,color:T.ink,wrap:1}));
+  els.push(SVG(10,76,300,112,machineSVG(T,hl)));
+  els.push(...BTN(8,192,112,44,"BACK",{T,icon:"back",size:12,go:"resetwarn"}));
+  els.push(...BTN(128,192,184,44,"GO",{T,tone:"bad",size:13,go:"resetrun"}));
+  return {cap:"The map matches the machine: rack lane across the top with the six nozzles, rack input bottom left, the screen you are touching in the middle, finished racks on the right.",els};
+};
+
+SC.resetrun=(T)=>{
+  const a=st.axis, pct=st.homePct;
+  const els=[X(8,30,304,16,"RESETTING POSITION",{size:11,weight:700,color:T.acc,track:".13em"})];
+  els.push(X(8,46,304,26,a==="a1"?"Rack lane":"Rack input",{size:21,weight:700,color:T.ink}));
+  els.push(...BAR(8,78,304,14,pct,T.acc,T.sunk,7));
+  els.push(X(8,96,150,16,pct<70?"finding the end":"creeping back",{size:12,color:T.ink2}));
+  els.push(X(162,96,150,16,fmtT(T_HOME*(1-pct/100))+" left",{size:12,color:T.ink2,ha:"r",tnum:1}));
+  els.push(SVG(10,118,300,72,locatorSVG(T,a)));
+  els.push(...BTN(8,194,304,44,"STOP",{T,tone:"bad",icon:"stop",size:13,go:"home"}));
+  return {cap:"22 seconds per axis, measured on the bench. That is why this is a screen with a real bar and not a spinner. Back is replaced by Stop — reversing mid-move is meaningless.",els};
+};
+
+/* ---------- fill tubing ---------- */
+SC.fill1=(T)=>{
+  if(!st.homed.a1){st.fromRun=false;return SC.resetwarn(T);}
+  const els=[X(8,32,304,18,"Fill tubing",{size:15,weight:700,color:T.ink})];
+  els.push(X(8,52,304,14,"Pushes liquid through the tube until air is gone.",
+    {size:10.5,color:T.ghost}));
+  for(let i=0;i<6;i++){
+    const x=8+(i%3)*103, y=72+Math.floor(i/3)*54;
+    const fitted=st.fitted[i], on=st.fillSel[i]&&fitted;
+    const state=!fitted?"none":(st.filled[i]?"full":"unknown");
+    const tone=!fitted?T.dis:(st.filled[i]?T.ok:T.warn);
+    els.push(R(x,y,98,48,{fill:on?(st.dark?CHBG_D[i]:CHBG_L[i]):T.sunk,
+      border:on?CH[i]:T.line,bw:on?2:1,radius:6,touch:fitted,
+      act:fitted?act(()=>{st.fillSel[i]=st.fillSel[i]?0:1;}):null}));
+    els.push(...chChip(T,x+7,y+6,i,18));
+    els.push(X(x+30,y+6,62,16,st.names[i].slice(0,8),
+      {size:10.5,weight:600,color:fitted?T.ink:T.dis,va:"c",exempt:!fitted}));
+    els.push(R(x+8,y+30,9,9,{fill:tone,radius:4.5}));
+    els.push(X(x+22,y+28,52,14,state==="full"?"full":state==="none"?"no pump":"unknown",
+      {size:9,color:T.ink2}));
+    if(on) els.push(I(x+78,y+28,14,IC.check,CH[i]));
+  }
+  const n=st.fillSel.filter((v,i)=>v&&st.fitted[i]).length;
+  els.push(...BTN(8,190,100,44,"BACK",{T,icon:"back",size:12,go:"home"}));
+  els.push(...BTN(116,190,196,44,n?"NEXT · "+n+(n>1?" lines":" line"):"PICK A LIQUID",
+    {T,tone:"acc",size:13,go:"fill2",off:!n}));
+  return {cap:"Pick which lines to fill. Reached from a run, only the liquids that run actually needs are pre-ticked — so you are never asked to fill six lines to use one.",els};
+};
+
+SC.fill2=(T)=>{
+  const els=[X(8,32,304,18,"Put a rack in",{size:15,weight:700,color:T.ink})];
+  els.push(R(8,54,304,44,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,54,284,44,"Load a rack of empty tubes. They catch the liquid.",
+    {size:12,color:T.ink,va:"c",wrap:1}));
+  els.push(SVG(8,106,304,88,rackSVG(T,304,88,
+    [0,1,2,3,4,5,6,7].map(i=>st.fillSel[i]&&st.fitted[i]&&i<6
+      ?{mode:"sel",col:CH[i],ink:onCH(i)}:{mode:"empty"}),st.dark)));
+  els.push(...BTN(8,194,100,44,"BACK",{T,icon:"back",size:12,go:"fill1"}));
+  els.push(...BTN(116,194,196,44,"START",{T,tone:"acc",size:13,go:"fill3"}));
+  return {cap:"The rack drawing shows exactly which holes matter — the coloured ones match the liquids being filled.",els};
+};
+
+SC.fill3=(T)=>{
+  const n=st.fillSel.filter((v,i)=>v&&st.fitted[i]).length;
+  const V=550,P=100*st.fillAttempt, t1=V/UL_S, t2=(V+P)/UL_S;
+  const done=st.fillPhase===1?(st.fillPct/100)*t1:t1+(st.fillPct/100)*t2;
+  const els=[];
+  els.push(X(8,32,304,16,"FILLING",{size:11,weight:700,color:T.liveInk,track:".13em"}));
+  [[1,"EMPTY LINE",t1],[2,"REFILL LINE",t2]].forEach(([ph,nm,tt],k)=>{
+    const y=56+k*48, activeP=st.fillPhase===ph, done_=st.fillPhase>ph;
+    const pv=done_?100:(activeP?st.fillPct:0);
+    els.push(X(8,y,200,16,ph+"  "+nm,{size:13,weight:700,
+      color:done_?T.ok:(activeP?T.ink:T.ghost)}));
+    els.push(...BAR(8,y+20,304,12,pv,done_?T.ok:T.acc,T.sunk,6));
+    if(done_) els.push(I(292,y-1,16,IC.check,T.ok));
+  });
+  els.push(R(8,156,304,28,{fill:T.sunk,radius:6}));
+  els.push(X(16,156,150,28,n+(n>1?" lines":" line"),{size:11,color:T.ink2,va:"c"}));
+  els.push(X(170,156,134,28,fmtT(t1+t2-done)+" left",
+    {size:12,weight:700,color:T.ink,va:"c",ha:"r",tnum:1}));
+  els.push(...BTN(8,192,304,44,"STOP",{T,tone:"bad",icon:"stop",size:13,go:"fill1"}));
+  return {cap:"Empty Line then Refill Line — plain verbs instead of reverse and forward. All chosen pumps run together on one shared clock, so it takes the same time for one line or six.",els};
+};
+
+SC.fill4=(T)=>{
+  const els=[X(8,32,304,18,"Check the tubes",{size:15,weight:700,color:T.ink})];
+  els.push(R(8,54,304,40,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,54,284,40,"Is there liquid in each coloured tube?",
+    {size:12.5,color:T.ink,va:"c"}));
+  els.push(SVG(8,100,304,88,rackSVG(T,304,88,
+    [0,1,2,3,4,5,6,7].map(i=>st.fillSel[i]&&st.fitted[i]&&i<6
+      ?{mode:"sel",col:CH[i],ink:onCH(i)}:{mode:"empty"}),st.dark)));
+  els.push(...BTN(8,192,148,44,"NO, AGAIN",{T,tone:"warn",icon:"retry",size:12,
+    act:act(()=>{st.fillAttempt=Math.min(3,st.fillAttempt+1);st.screen="fill1";})}));
+  els.push(...BTN(164,192,148,44,"YES",{T,tone:"ok",icon:"check",size:13,
+    act:act(()=>{for(let i=0;i<6;i++)if(st.fillSel[i]&&st.fitted[i])st.filled[i]=1;
+      st.fillAttempt=1;st.screen=st.fromRun?"check":"home";})}));
+  return {cap:"No, again sends a little more liquid than last time — the tube volume stays fixed, only the extra grows.",els};
+};
+
+/* ---------- recipes ---------- */
+SC.recipes=(T)=>{
+  const p=st.openRec, r=st.recipes[p], tot=recTotal(p);
+  const els=[];
+  els.push(...BTN(8,30,132,44,"NEW",{T,tone:"acc",icon:"plus",size:13,
+    act:act(()=>{st.edit={n:"Recipe "+(st.recipes.length+1),v:[0,0,0,0,0,0],idx:-1};st.screen="redit";})}));
+  els.push(...BTN(146,30,80,44,"EDIT",{T,size:11,icon:"edit",
+    act:act(()=>{st.edit={n:r.n,v:r.v.slice(),idx:p};st.screen="redit";})}));
+  els.push(...BTN(232,30,80,44,"BACK",{T,size:11,icon:"back",go:"home"}));
+  /* list: a real scroll region, so every recipe is reachable by dragging */
+  els.push(R(8,80,146,152,{fill:T.card,border:T.line,radius:6}));
+  const rows=[];
+  st.recipes.forEach((q,i)=>{
+    const y=84+i*48, on=i===p;
+    rows.push(R(10,y,138,44,{fill:on?(st.dark?CHBG_D[0]:CHBG_L[0]):"transparent",radius:4,
+      touch:1,act:act(()=>{st.openRec=i;})}));
+    if(on) rows.push(R(10,y,3,44,{fill:T.acc}));
+    rows.push(X(20,y+5,80,17,q.n,{size:12,weight:on?700:500,color:T.ink}));
+    rows.push(X(20,y+23,64,14,recTotal(i)+" µL",{size:9.5,tnum:1,color:T.ink2}));
+    rows.push(R(88,y+26,9,9,{fill:recTotal(i)>1500?T.warn:T.ok,radius:4.5}));
+    if(on) rows.push.apply(rows, BTN(103,y,45,44,"",{T,tone:"acc",icon:"play",size:10,
+      act:act(()=>{st.sel=[i];st.active=i;st.screen="assign";})}));
+  });
+  /* detail */
+  els.push(R(160,80,152,152,{fill:T.card,border:T.line,radius:6}));
+  els.push(SVG(166,86,42,118,tubeSVG(T,42,118,r.v)));
+  let y=90;
+  r.v.forEach((v,i)=>{ if(v<=0) return;
+    els.push(R(214,y+2,9,9,{fill:CH[i],radius:2}));
+    els.push(X(228,y,42,13,st.names[i].slice(0,6),{size:9.5,color:T.ink}));
+    els.push(X(258,y,48,13,v+" µL",{size:10,weight:700,ha:"r",tnum:1,color:T.ink}));
+    y+=17;});
+  els.push(R(214,210,10,10,{fill:tot>1500?T.warn:T.ok,radius:5}));
+  els.push(X(230,208,78,14,tot+" µL",{size:12,weight:700,ha:"r",tnum:1,color:T.ink}));
+  return {regions:[{id:"list",x:9,y:82,w:144,h:148,
+      contentH:st.recipes.length*48+6,els:rows}],
+    cap:"Recipes, not protocols. The dot beside the total is green under 1500 µL and amber above — a quiet nudge that the tube is 1.5 or 2 mL, with no lecture attached.",els};
+};
+
+SC.redit=(T)=>{
+  const e=st.edit||{n:"—",v:[0,0,0,0,0,0]};
+  const tot=e.v.reduce((a,b)=>a+b,0), over=tot>2000;
+  const els=[];
+  els.push(...BTN(8,30,80,44,"CANCEL",{T,size:11,go:"recipes"}));
+  els.push(R(94,30,124,44,{fill:T.card,border:T.line,radius:6,touch:1,
+    act:act(()=>{st.nameVal=e.n;st.kbFrom="redit";st.caps=true;st.screen="rname";})}));
+  els.push(X(94,34,124,13,"NAME · tap",{size:8.5,weight:600,ha:"c",color:T.ghost,track:".12em"}));
+  els.push(X(98,47,116,20,e.n,{size:13,weight:700,ha:"c",color:T.ink}));
+  els.push(...BTN(224,30,88,44,over?"OVER":"SAVE",{T,tone:"acc",size:12,off:over,
+    act:act(()=>{ if(e.idx<0) st.recipes.push({n:e.n,v:e.v.slice()});
+      else st.recipes[e.idx]={n:e.n,v:e.v.slice()};
+      st.openRec=e.idx<0?st.recipes.length-1:e.idx; st.screen="recipes";})}));
+  els.push(SVG(8,80,44,128,tubeSVG(T,44,128,e.v)));
+  for(let i=0;i<6;i++){
+    const cx=58+(i%2)*128, cy=80+Math.floor(i/2)*46, used=e.v[i]>0;
+    els.push(R(cx,cy,124,44,{fill:used?(st.dark?CHBG_D[i]:CHBG_L[i]):T.card,
+      border:used?CH[i]:T.line,bw:used?2:1,radius:6,touch:1,
+      act:act(()=>{st.keyCh=i;st.keyVal=String(e.v[i]||"");st.screen="rkey";})}));
+    els.push(...chChip(T,cx+6,cy+5,i,17));
+    els.push(X(cx+28,cy+4,92,15,st.names[i].slice(0,9),
+      {size:10.5,weight:used?600:400,color:used?T.ink:T.ghost}));
+    els.push(X(cx+8,cy+22,108,18,used?e.v[i]+" µL":"not used",
+      {size:used?14:11,weight:used?700:400,tnum:1,color:used?T.ink:T.ghost}));
+  }
+  els.push(R(8,220,304,20,{fill:over?T.badBg:T.sunk,border:over?T.bad:null,radius:5}));
+  els.push(R(16,225,10,10,{fill:over?T.bad:(tot>1500?T.warn:T.ok),radius:5}));
+  els.push(X(34,220,120,20,"TOTAL",{size:9.5,weight:600,color:over?T.bad:T.ink2,
+    track:".12em",va:"c"}));
+  els.push(X(150,220,156,20,over?("+"+(tot-2000)+" µL too much"):(tot+" µL"),
+    {size:12,weight:700,ha:"r",va:"c",tnum:1,color:over?T.bad:T.ink}));
+  return {cap:"The tube fills as you type. Tapping the name opens a keyboard — the old firmware had no way to name anything at all.",els};
+};
+
+SC.rkey=(T)=>{
+  const i=st.keyCh===null?0:st.keyCh, v=st.keyVal, n=parseInt(v||"0",10);
+  const bad = v!=="" && (n<5||n>1000);
+  const els=[R(0,0,320,32,{fill:T.card}),R(0,31,320,1,{fill:bad?T.bad:T.line})];
+  els.push(...chChip(T,8,5,i,22));
+  els.push(X(36,0,140,32,st.names[i],{size:13,weight:600,color:T.ink,va:"c"}));
+  els.push(X(180,0,132,32,(v||"0")+" µL",{size:20,weight:700,ha:"r",va:"c",tnum:1,
+    color:bad?T.bad:T.ink}));
+  els.push(X(8,34,304,12,bad?"Between 5 and 1000":"5 – 1000 µL · 0 removes it",
+    {size:10,weight:bad?700:400,color:bad?T.bad:T.ghost}));
+  ["1","2","3","4","5","6","7","8","9","C","0","DEL"].forEach((k,idx)=>{
+    const x=8+(idx%3)*68, y=48+Math.floor(idx/3)*48;
+    const soft=(k==="C"||k==="DEL");
+    els.push(...BTN(x,y,64,44,k,{T,tone:soft?"flat":"ghost",size:soft?11:17,
+      act:act(()=>{ if(k==="C")st.keyVal="";
+        else if(k==="DEL")st.keyVal=st.keyVal.slice(0,-1);
+        else if(st.keyVal.length<4)st.keyVal=(st.keyVal+k).replace(/^0+/,""); })}));
+  });
+  els.push(...BTN(214,48,98,92,"BACK",{T,icon:"back",size:12,go:"redit"}));
+  els.push(...BTN(214,144,98,92,bad?"OUT OF RANGE":"OK",{T,tone:"acc",size:bad?10:16,off:bad,
+    act:act(()=>{st.edit.v[i]=n>=5?Math.min(1000,n):0;st.screen="redit";})}));
+  return {cap:"A keypad, not a slider. Of every lab instrument surveyed, not one uses a slider for a number that matters.",els};
+};
+
+SC.rname=(T)=>{
+  const up=["ABCDEFGHIJ","KLMNOPQRST","UVWXYZ0123","456789 -_."];
+  const rows= st.caps? up : up.map((r,i)=>i<3?r.toLowerCase():r);
+  const els=[R(0,0,320,34,{fill:T.card}),R(0,33,320,1,{fill:T.line})];
+  els.push(X(8,0,200,34,st.nameVal||"…",{size:15,weight:700,color:T.ink,va:"c"}));
+  els.push(X(212,0,100,34,st.nameVal.length+"/31",{size:10,color:T.ghost,va:"c",ha:"r"}));
+  rows.forEach((row,ri)=>{
+    for(let ci=0;ci<row.length;ci++){
+      const ch=row[ci], x=6+ci*31, y=42+ri*36;
+      els.push(...BTN(x,y,30,34,ch===" "?"␣":ch,{T,size:13,exc:"E2",
+        act:act(()=>{ if(st.nameVal.length<31) st.nameVal+=ch; })}));
+    }
+  });
+  els.push(...BTN(6,190,72,44,st.caps?"abc":"ABC",{T,tone:st.caps?"acc":"flat",size:12,
+    act:act(()=>{st.caps=!st.caps;})}));
+  els.push(...BTN(84,190,72,44,"DEL",{T,tone:"flat",size:12,
+    act:act(()=>{st.nameVal=st.nameVal.slice(0,-1);})}));
+  els.push(...BTN(162,190,72,44,"CANCEL",{T,size:11,
+    act:act(()=>{st.screen=st.kbFrom;})}));
+  els.push(...BTN(240,190,74,44,"OK",{T,tone:"acc",size:13,
+    act:act(()=>{ if(st.kbFrom==="redit") st.edit.n=st.nameVal||st.edit.n;
+      else st.names[st.liquid]=st.nameVal||st.names[st.liquid];
+      st.screen=st.kbFrom; })}));
+  return {cap:"Naming, which did not exist before. Keys are 30 × 34 px — recorded exception E2, the same compromise every phone keyboard makes, and never used for a number that affects a dose.",els};
+};
+
+/* ---------- run ---------- */
+SC.assign=(T)=>{
+  if(!st.homed.a1||!st.homed.a2){st.fromRun=true;return SC.resetwarn(T);}
+  const p=st.active, r=st.openRack;
+  const els=[];
+  /* recipe tabs, or the add button when nothing is chosen */
+  els.push(R(0,0,320,44,{fill:T.sunk}),R(0,43,320,1,{fill:T.line}));
+  if(!st.sel.length){
+    els.push(...BTN(8,3,304,38,"Choose a recipe",{T,tone:"acc",icon:"plus",size:14,go:"picker"}));
+  } else {
+    const w=Math.floor((320-46)/st.sel.length);
+    st.sel.forEach((pi,k)=>{
+      const x=k*w, on=pi===p;
+      if(on) els.push(R(x,0,w,44,{fill:T.card}));
+      els.push(R(x,0,w,44,{fill:on?null:"transparent",touch:1,act:act(()=>{st.active=pi;})}));
+      els.push(R(x+8,12,18,18,{fill:on?T.acc:T.line,radius:4}));
+      els.push(X(x+8,12,18,18,String.fromCharCode(65+k),{size:11,weight:700,ha:"c",va:"c",
+        color:on?T.accInk:T.ink}));
+      els.push(X(x+30,4,w-34,20,st.recipes[pi].n,{size:12,weight:on?700:600,
+        color:on?T.ink:T.ghost}));
+      els.push(X(x+30,23,w-34,14,nAssigned(pi)+(nAssigned(pi)===1?" tube":" tubes"),
+        {size:9.5,color:on?T.acc:T.ghost}));
+      if(on) els.push(R(x+8,40,w-16,3,{fill:T.acc}));
+    });
+    els.push(...BTN(274,0,44,44,"",{T,tone:"flat",icon:"plus",size:11,go:"picker"}));
+  }
+  /* rack stepper + accelerators */
+  const setAll=(v)=>act(()=>{for(let t=1;t<=8;t++){const o=owner(r,t);
+    if(v&&(o===null||o===p))st.assign[key(r,t)]=p;
+    if(!v&&o===p)delete st.assign[key(r,t)];}});
+  els.push(...BTN(8,50,44,44,"<",{T,tone:"flat",size:16,act:act(()=>{st.openRack=r>1?r-1:5;})}));
+  els.push(R(54,50,60,44,{fill:T.card,border:T.line,radius:6}));
+  els.push(X(54,53,60,17,"RACK",{size:9,weight:600,ha:"c",color:T.ink2,track:".14em"}));
+  els.push(X(54,68,60,20,r+" / 5",{size:15,weight:700,ha:"c",tnum:1,color:T.ink}));
+  els.push(...BTN(116,50,44,44,">",{T,tone:"flat",size:16,act:act(()=>{st.openRack=r<5?r+1:1;})}));
+  els.push(...BTN(168,50,46,44,"ALL",{T,tone:"flat",size:10,act:setAll(true),off:!st.sel.length}));
+  els.push(...BTN(218,50,46,44,"NONE",{T,tone:"flat",size:10,act:setAll(false),off:!st.sel.length}));
+  els.push(...BTN(268,50,44,44,"INV",{T,tone:"flat",size:10,off:!st.sel.length,
+    act:act(()=>{for(let t=1;t<=8;t++){const o=owner(r,t);
+      if(o===p)delete st.assign[key(r,t)];else if(o===null)st.assign[key(r,t)]=p;}})}));
+  /* the rack */
+  const states=[];
+  for(let t=1;t<=8;t++){
+    const o=owner(r,t), mine=o===p;
+    states.push(mine?{mode:"sel",col:T.acc,ink:T.accInk}
+      :o!==null?{mode:"lock",tag:String.fromCharCode(65+Math.max(0,st.sel.indexOf(o)))}
+      :{mode:"empty"});
+  }
+  els.push(SVG(8,100,304,88,rackSVG(T,304,88,states,st.dark)));
+  for(let t=1;t<=8;t++){
+    const o=owner(r,t), mine=o===p, locked=o!==null&&!mine;
+    els.push(R(8+(t-1)*38,100,38,88,{fill:null,touch:st.sel.length&&!locked,exc:"E1",
+      act:(st.sel.length&&!locked)?act(()=>{ if(mine)delete st.assign[key(r,t)];
+        else st.assign[key(r,t)]=p; }):null}));
+  }
+  els.push(...BTN(8,194,100,44,"BACK",{T,icon:"back",size:12,go:"home"}));
+  els.push(...BTN(116,194,196,44,total()?"NEXT · "+total()+(total()===1?" tube":" tubes"):"PICK TUBES",
+    {T,tone:"acc",size:13,go:"check",off:!total()}));
+  return {cap:"The first screen of a run. Recipes are added here with the plus, so there is no separate list step — and the same rack drawing does all the choosing.",els};
+};
+
+SC.picker=(T)=>{
+  const els=[X(8,32,220,18,"Which recipes?",{size:15,weight:700,color:T.ink})];
+  els.push(X(228,34,84,14,st.sel.length+" picked",{size:10,color:T.ink2,ha:"r"}));
+  const first=0;
+  st.recipes.slice(first,first+3).forEach((q,k)=>{
+    const i=first+k, y=56+k*48, on=st.sel.includes(i);
+    els.push(R(8,y,304,44,{fill:on?(st.dark?CHBG_D[0]:CHBG_L[0]):T.card,
+      border:on?T.acc:T.line,bw:on?2:1,radius:6,touch:1,
+      act:act(()=>{const kk=st.sel.indexOf(i);
+        if(kk<0){st.sel.push(i);st.active=i;}
+        else{st.sel.splice(kk,1);
+          for(const q2 in st.assign) if(st.assign[q2]===i) delete st.assign[q2];
+          st.active=st.sel[0]!==undefined?st.sel[0]:0;}})}));
+    els.push(R(16,y+16,13,13,{fill:on?T.acc:T.card,border:on?T.acc:T.line,radius:3}));
+    if(on) els.push(I(18,y+18,9,IC.check,T.accInk));
+    els.push(X(38,y+5,120,17,q.n,{size:13,weight:700,color:T.ink}));
+    els.push(X(38,y+24,120,14,recTotal(i)+" µL",{size:10,tnum:1,color:T.ink2}));
+    /* the liquids it uses, as coloured numerals */
+    let cx=166;
+    q.v.forEach((v,li)=>{ if(v<=0)return;
+      els.push(...chChip(T,cx,y+13,li,18)); cx+=22; });
+  });
+  if(st.recipes.length>3){
+    els.push(R(313,58,3,138,{fill:T.sunk,radius:2}));
+    els.push(R(313,58,3,50,{fill:T.ghost,radius:2}));
+  }
+  els.push(...BTN(8,194,304,44,"DONE",{T,tone:"acc",size:13,go:"assign"}));
+  return {cap:"The recipe picker, opened from the plus. Each row shows which liquids it uses as coloured numerals, so you can tell them apart without opening anything.",els};
+};
+
+SC.check=(T)=>{
+  const used=usedCh(), nf=unfilled(), short=anyShort(T);
+  const els=[]; let y=32;
+  els.push(X(8,y,200,18,"Ready to run",{size:15,weight:700,color:T.ink}));
+  els.push(X(212,y,100,18,total()+" tubes",{size:12,weight:700,ha:"r",tnum:1,color:T.ink2}));
+  y+=26;
+  /* what will run */
+  st.sel.forEach(pi=>{ const n=nAssigned(pi); if(!n)return;
+    els.push(R(8,y,304,34,{fill:T.card,border:T.line,radius:6}));
+    els.push(X(18,y,150,34,st.recipes[pi].n,{size:13,weight:700,color:T.ink,va:"c"}));
+    els.push(X(180,y,122,34,n+(n===1?" tube":" tubes"),{size:12,ha:"r",va:"c",tnum:1,color:T.ink2}));
+    y+=38; });
+  /* liquids, traffic light per liquid */
+  els.push(X(8,y,200,14,"LIQUID NEEDED",{size:10,weight:600,color:T.ink2,track:".12em"}));
+  y+=18;
+  used.forEach(i=>{
+    const s=needState(T,i), need=neededVol(i);
+    els.push(R(8,y,304,40,{fill:T.card,border:T.line,radius:6}));
+    els.push(...chChip(T,16,y+9,i,22));
+    els.push(X(46,y,120,40,st.names[i],{size:12,weight:600,color:T.ink,va:"c"}));
+    els.push(X(160,y,80,40,(need/1000).toFixed(2)+" mL",{size:13,weight:700,ha:"r",va:"c",
+      tnum:1,color:T.ink}));
+    els.push(R(252,y+13,14,14,{fill:s.c,radius:7}));
+    els.push(X(270,y,38,40,s.w==="just enough"?"tight":s.w,{size:9.5,weight:600,
+      color:s.k===2?T.bad:T.ink2,va:"c"}));
+    y+=44; });
+  if(short){
+    els.push(R(8,y,304,40,{fill:T.badBg,border:T.bad,radius:6}));
+    els.push(I(18,y+8,24,IC.alert,T.bad));
+    els.push(X(50,y,254,40,"Refill the red bottles before starting.",
+      {size:11.5,weight:700,color:T.bad,va:"c"}));
+    y+=44;
+  }
+  /* tubing not filled */
+  if(nf.length){
+    els.push(R(8,y,304,44,{fill:T.warnBg,border:T.warn,radius:6,touch:1,
+      act:act(()=>{ st.fillSel=[0,0,0,0,0,0]; nf.forEach(i=>st.fillSel[i]=1);
+        st.fromRun=true; st.screen="fill1"; })}));
+    els.push(I(18,y+10,24,IC.drop,T.warn));
+    els.push(X(50,y+5,180,18,"Tubing not filled",{size:12,weight:700,color:T.warn}));
+    els.push(X(50,y+22,180,16,nf.length+(nf.length>1?" lines":" line")+" still have air",
+      {size:10,color:T.warn}));
+    els.push(X(240,y,56,44,"FILL",{size:12,weight:700,color:T.warn,va:"c",ha:"r"}));
+    els.push(I(296,y+14,16,IC.chev,T.warn));
+    y+=48;
+  }
+  y+=4;
+  return {cap:"The pre-run check, and the reason priming moved to the end: it only asks about the lines this run actually uses. A red liquid blocks the start; the estimate is always pinned at the bottom.",
+    els, scroll:26, contentH:y, footH:68, foot:(T2)=>{
+      const f=[R(0,172,320,68,{fill:T2.card}),R(0,172,320,1,{fill:T2.line})];
+      f.push(X(8,176,180,16,"about "+fmtT(runSeconds()),{size:11,weight:600,color:T2.ink2}));
+      f.push(...BTN(8,193,100,44,"BACK",{T:T2,size:11,go:"assign"}));
+      f.push(...BTN(116,193,196,44,short?"REFILL FIRST":"START RUN",
+        {T:T2,tone:short?"ghost":"acc",size:12,off:short,go:"run"}));
+      return f; }};
+};
+
+SC.run=(T)=>{
+  const els=[];
+  els.push(X(8,34,180,16,st.recipes[st.sel[0]||0].n,{size:12,weight:700,color:T.ink}));
+  els.push(X(188,34,124,16,"rack 1 of 2",{size:11,color:T.ink2,ha:"r"}));
+  els.push(X(8,66,304,34,"tube "+st.tube+" of "+st.tubes,
+    {size:29,weight:700,ha:"c",color:T.ink,tnum:1}));
+  els.push(...BAR(8,116,304,20,st.runPct,T.acc,T.sunk,10));
+  els.push(X(8,144,150,18,st.runPct+"%",{size:13,weight:700,tnum:1,color:T.ink2}));
+  els.push(X(162,144,150,18,fmtT(runSeconds()*(1-st.runPct/100))+" left",
+    {size:13,weight:700,ha:"r",tnum:1,color:T.ink2}));
+  els.push(...BTN(8,178,148,52,"PAUSE",{T,icon:"pause",size:13,
+    act:act(()=>{st.pauseKind="manual";st.screen="paused";})}));
+  els.push(...BTN(164,178,148,52,"STOP",{T,tone:"bad",icon:"stop",size:13,go:"done"}));
+  return {cap:"Running. One number, one bar, one time — the per-liquid strip was too small to read and told the operator nothing they could act on. Stop sits in the same place on every screen where the pumps are live.",els};
+};
+
+SC.paused=(T)=>{
+  const low=st.pauseKind==="low";
+  const els=[];
+  if(low){
+    els.push(R(8,32,304,58,{fill:T.badBg,border:T.bad,bw:2,radius:8}));
+    els.push(I(18,52,24,IC.alert,T.bad));
+    els.push(X(50,38,254,20,"Reagent X has run low",{size:14,weight:700,color:T.bad}));
+    els.push(X(50,58,254,28,"Stopped between tubes. Tube "+st.tube+" finished properly.",
+      {size:11,color:T.bad,wrap:1}));
+  } else {
+    els.push(R(8,32,304,58,{fill:T.card,border:T.line,radius:8}));
+    els.push(I(18,52,24,IC.pause,T.ink2));
+    els.push(X(50,38,254,20,"Paused",{size:14,weight:700,color:T.ink}));
+    els.push(X(50,58,254,28,"Stopped between tubes. Tube "+st.tube+" finished properly.",
+      {size:11,color:T.ink2,wrap:1}));
+  }
+  els.push(R(8,98,304,30,{fill:T.sunk,border:T.line,radius:6}));
+  els.push(X(18,98,286,30,"Pumps are now stopped",{size:12,weight:600,color:T.ink,va:"c"}));
+  els.push(X(8,138,304,14,low?"Refill it, then choose:":"When you are ready:",
+    {size:11,color:T.ink2}));
+  els.push(...BTN(8,166,98,44,"CONTINUE",{T,tone:"acc",size:11,go:"run"}));
+  els.push(...BTN(112,166,98,44,"SKIP IT",{T,tone:"flat",size:11,go:"run",off:!low}));
+  els.push(...BTN(216,166,96,44,"STOP",{T,tone:"bad",size:11,go:"done"}));
+  return {cap:low
+    ? "A liquid ran low. This is a fault, so it is red — the old design put a green tick here, which read as reassurance at the exact moment something had gone wrong."
+    : "The same screen when you paused on purpose. No alarm colour, because nothing is wrong.",els};
+};
+
+SC.done=(T)=>{
+  const els=[R(0,0,320,30,{fill:T.okBg}),R(0,29,320,1,{fill:T.ok})];
+  els.push(I(8,7,16,IC.check,T.ok));
+  els.push(X(30,0,200,30,"RUN FINISHED",{size:12,weight:700,color:T.ok,va:"c",track:".08em"}));
+  els.push(X(230,0,82,30,"OFF",{size:11,weight:700,color:T.ok,va:"c",ha:"r"}));
+  els.push(X(8,38,150,24,st.tubes+" tubes",{size:19,weight:700,color:T.ink,tnum:1}));
+  els.push(X(162,40,150,20,fmtT(runSeconds()),{size:14,weight:700,ha:"r",tnum:1,color:T.ink2}));
+  els.push(R(8,68,304,86,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,72,200,12,"LIQUID USED",{size:9,weight:600,color:T.ink2,track:".12em"}));
+  let y=88, shown=0;
+  usedCh().forEach(i=>{ if(shown>=4)return;
+    els.push(...chChip(T,18,y-1,i,16));
+    els.push(X(40,y,140,14,st.names[i],{size:11.5,color:T.ink}));
+    els.push(X(172,y,130,14,(neededVol(i)/1000).toFixed(2)+" mL",
+      {size:11.5,weight:700,ha:"r",tnum:1,color:T.ink}));
+    y+=16; shown++; });
+  els.push(R(8,160,304,28,{fill:T.sunk,border:T.line,radius:6}));
+  els.push(I(16,166,16,IC.sd,T.ink2));
+  els.push(X(38,160,268,28,"Saved as RUN_000123",{size:11.5,weight:600,color:T.ink2,va:"c"}));
+  els.push(...BTN(8,194,304,44,"DONE",{T,tone:"acc",size:13,
+    act:act(()=>{st.assign={};st.sel=[];st.screen="home";})}));
+  return {cap:"The record is written on its own, for finished and stopped runs alike. A record you have to remember to ask for is a record you will lose.",els};
+};
+
+SC.fault=(T)=>{
+  const els=[R(0,0,320,26,{fill:T.bad})];
+  els.push(X(8,0,200,26,"PROBLEM",{size:12,weight:700,color:T.onBad,va:"c",track:".08em"}));
+  els.push(X(230,0,82,26,"PUMPS OFF",{size:11,weight:700,color:T.onBad,va:"c",ha:"r"}));
+  els.push(R(8,34,304,66,{fill:T.badBg,border:T.bad,radius:8}));
+  els.push(I(18,56,24,IC.alert,T.bad));
+  els.push(X(50,40,252,18,"The rack is stuck",{size:15,weight:700,color:T.bad}));
+  els.push(X(50,60,252,36,"It went further than it should without reaching the end. Check it has not come off its track.",
+    {size:10.5,color:T.bad,wrap:1}));
+  els.push(R(8,108,304,30,{fill:T.sunk,border:T.line,radius:6}));
+  els.push(X(18,108,286,30,"Pumps are now stopped",{size:12,weight:600,color:T.ink,va:"c"}));
+  els.push(...BTN(8,146,304,44,"RESET POSITION",{T,tone:"acc",size:12,go:"resetclear"}));
+  els.push(...BTN(8,194,304,44,"OK",{T,size:12,go:"home"}));
+  return {cap:"A problem, in plain words. The confirmation that the pumps stopped is neutral, not green — green here reads as “all good” at the moment something has gone wrong.",els};
+};
+
+/* ===================== RENDER ===================== */
+const V={touch:false,q:false,glare:false};
+const screenEl=document.getElementById("screen"), ovl=document.getElementById("ovl");
+function hex2rgb(h){h=h.replace("#","");if(h.length===3)h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function rgb2hex(r,g,b){return "#"+[r,g,b].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,"0")).join("");}
+function q565(hex){const[r,g,b]=hex2rgb(hex);
+  return rgb2hex((r>>3)*255/31|0,(g>>2)*255/63|0,(b>>3)*255/31|0);}
+function lum2(hex){const c=hex2rgb(hex).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});
+  return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+function contrast(a,b){const L1=lum2(a),L2=lum2(b);
+  return (Math.max(L1,L2)+.05)/(Math.min(L1,L2)+.05);}
+const col=c=>(V.q&&c&&c.startsWith("#"))?q565(c):c;
+function bgBehind(els,idx,el){
+  let bg=st.dark?DARK.bg:LIGHT.bg;
+  for(let i=0;i<idx;i++){const e=els[i];
+    if(e.kind!=="rect"||!e.fill||e.fill==="transparent")continue;
+    if(el.x>=e.x&&el.y>=e.y&&el.x+el.w<=e.x+e.w&&el.y+el.h<=e.y+e.h)bg=e.fill;}
+  return bg;
+}
+function iconSVG(path,color,size){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="${color}"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg>`;
+}
+function makeEl(e,T){
+  const d=document.createElement("div");
+  d.className="el"+(e.kind==="text"?" t":"")+((e.go||e.act)?" hit":"");
+  d.style.left=e.x+"px"; d.style.top=e.y+"px";
+  d.style.width=e.w+"px"; d.style.height=e.h+"px";
+  if(e.kind==="rect"){
+    if(e.fill&&e.fill!=="transparent") d.style.background=col(e.fill);
+    if(e.border) d.style.border=(e.bw||1)+"px solid "+col(e.border);
+    if(e.radius) d.style.borderRadius=e.radius+"px";
+  } else if(e.kind==="text"){
+    d.style.fontSize=(e.size||13)+"px"; d.style.fontWeight=e.weight||400;
+    d.style.color=col(e.color||T.ink);
+    d.style.lineHeight=e.wrap?"1.25":"1.15";
+    if(e.track) d.style.letterSpacing=e.track;
+    if(e.tnum) d.style.fontVariantNumeric="tabular-nums";
+    if(e.opa) d.style.opacity=e.opa;
+    d.style.alignItems=e.va==="c"?"center":"flex-start";
+    d.style.justifyContent=e.ha==="c"?"center":e.ha==="r"?"flex-end":"flex-start";
+    d.style.whiteSpace=e.wrap?"normal":"pre";
+    d.textContent=e.s;
+  } else if(e.kind==="icon"){ d.innerHTML=iconSVG(e.path,col(e.color||T.ink),e.w); }
+  else if(e.kind==="svg"){ d.innerHTML=e.svg; }
+  if(e.go) d.onclick=go(e.go);
+  if(e.act) d.onclick=e.act;
+  if(!e.go&&!e.act) d.style.pointerEvents="none";
+  return d;
+}
+const scrollPos={};
+function render(){
+  const T=st.dark?DARK:LIGHT;
+  const sc=(SC[st.screen]||SC.home)(T);
+  const live=["fill3","run"].includes(st.screen);
+  const stateWord = st.screen==="run"?"DISPENSING":st.screen==="fill3"?"FILLING":
+                    st.screen==="paused"?"PAUSED":"READY";
+  const bare=["rkey","rname","fault"].includes(st.screen);
+  const chrome = bare?[]:statusBar(T,stateWord,live);
+  const foot = sc.foot?sc.foot(T):[];
+  screenEl.style.background=col(T.bg);
+  [...screenEl.querySelectorAll(".el,.sv")].forEach(n=>n.remove());
+  const frag=document.createDocumentFragment();
+  chrome.forEach(e=>frag.appendChild(makeEl(e,T)));
+
+  if(sc.scroll!==undefined){
+    const top=sc.scroll, vh=240-top-(sc.footH||0);
+    const sv=document.createElement("div");
+    sv.className="sv"; sv.style.top=top+"px"; sv.style.height=vh+"px";
+    const inner=document.createElement("div");
+    inner.style.cssText="position:relative;width:320px;height:"+Math.max(vh,sc.contentH-top)+"px";
+    sc.els.forEach(e=>inner.appendChild(makeEl({...e,y:e.y-top},T)));
+    sv.appendChild(inner);
+    sv.addEventListener("scroll",()=>{scrollPos[st.screen]=sv.scrollTop;});
+    frag.appendChild(sv);
+    requestAnimationFrame(()=>{ if(sv.scrollHeight>sv.clientHeight) sv.scrollTop=scrollPos[st.screen]||0; });
+  } else {
+    sc.els.forEach(e=>frag.appendChild(makeEl(e,T)));
+  }
+  (sc.regions||[]).forEach(rg=>{
+    const sv=document.createElement("div");
+    sv.className="sv";
+    sv.style.left=rg.x+"px"; sv.style.top=rg.y+"px";
+    sv.style.width=rg.w+"px"; sv.style.height=rg.h+"px";
+    const inner=document.createElement("div");
+    inner.style.cssText="position:relative;width:"+rg.w+"px;height:"+
+      Math.max(rg.h,rg.contentH)+"px";
+    rg.els.forEach(e=>inner.appendChild(makeEl(Object.assign({},e,{x:e.x-rg.x,y:e.y-rg.y}),T)));
+    sv.appendChild(inner);
+    const k=st.screen+":"+(rg.id||"r");
+    sv.addEventListener("scroll",()=>{scrollPos[k]=sv.scrollTop;});
+    requestAnimationFrame(()=>{ if(sv.scrollHeight>sv.clientHeight) sv.scrollTop=scrollPos[k]||0; });
+    frag.appendChild(sv);
+  });
+  foot.forEach(e=>frag.appendChild(makeEl(e,T)));
+  screenEl.insertBefore(frag,document.getElementById("glare"));
+  const regEls=(sc.regions||[]).reduce((a,r)=>a.concat(r.els),[]);
+  drawOverlays(chrome.concat(sc.els,regEls,foot));
+  audit(chrome.concat(sc.els,regEls,foot),T);
+  document.getElementById("cap").textContent=sc.cap;
+  document.getElementById("crumbs").innerHTML="screen <b>"+st.screen+"</b> · "+
+    (st.dark?"dark":"light")+" · position "+(st.homed.a1&&st.homed.a2?"<b>known</b>":"<b>unknown</b>");
+  document.querySelectorAll("[data-j]").forEach(b=>b.classList.toggle("on",b.dataset.j===st.screen));
+}
+function drawOverlays(els){
+  ovl.innerHTML="";
+  if(!V.touch) return;
+  els.filter(e=>e.touch).forEach(e=>{
+    const d=document.createElement("div");
+    d.className=(e.w<44||e.h<44)?"tbad":"tmark";
+    d.style.left=e.x+"px"; d.style.top=e.y+"px";
+    d.style.width=e.w+"px"; d.style.height=e.h+"px";
+    ovl.appendChild(d);});
+}
+function audit(els,T){
+  const tg=els.filter(e=>e.touch);
+  let under=0,exc=0,wt=null;
+  tg.forEach(e=>{ if(!wt||e.w*e.h<wt.w*wt.h)wt=e;
+    if(e.w<44||e.h<44){ if(e.exc)exc++; else under++; }});
+  let worst=99,ws="";
+  els.forEach((e,i)=>{ if(e.kind!=="text"||!e.s||!e.s.trim()||e.exempt)return;
+    if((e.size||13)<9)return;
+    const c=contrast(q565(e.color||T.ink),q565(bgBehind(els,i,e)));
+    if(c<worst){worst=c;ws=e.s.slice(0,18);}});
+  const rows=[["Elements",els.length,""],["Touch targets",tg.length,""],
+    ["Smallest",wt?wt.w+" × "+wt.h+" px":"—",wt&&(wt.w<44||wt.h<44)?(under?"fail":"note"):"pass"],
+    ["Under 44 px",under,under?"fail":"pass"],
+    ["Exceptions",exc?exc+" logged":"0",exc?"note":"pass"],
+    ["Worst contrast",worst<90?worst.toFixed(1)+":1":"—",worst>=7?"pass":"fail"],
+    ["Weakest text",ws||"—",""]];
+  document.getElementById("audit").innerHTML=rows.map(([k,v,c])=>
+    `<div class="kv"><span>${k}</span><span class="${c}">${v}</span></div>`).join("");
+}
+const JUMPS=[["home","Home"],["liquid","Liquid"],["bottle","Bottle"],
+  ["resetwarn","Reset warn"],["resetclear","Clear"],["resetrun","Resetting"],
+  ["fill1","Fill 1"],["fill2","Fill 2"],["fill3","Fill 3"],["fill4","Fill 4"],
+  ["assign","Run 1"],["picker","Pick recipe"],["check","Check"],["run","Running"],
+  ["paused","Paused"],["done","Finished"],
+  ["recipes","Recipes"],["redit","Edit"],["rkey","Keypad"],["rname","Keyboard"],["fault","Problem"]];
+document.getElementById("jump").innerHTML=
+  JUMPS.map(([id,l])=>`<button class="nb" data-j="${id}">${l}</button>`).join("");
+document.querySelectorAll("[data-j]").forEach(b=>b.onclick=()=>{
+  if(b.dataset.j==="check"||b.dataset.j==="assign"){ if(!st.sel.length){st.sel=[0];st.active=0;}
+    if(!Object.keys(st.assign).length){st.assign={r1t1:0,r1t2:0,r1t3:0};} }
+  if(b.dataset.j==="redit"&&!st.edit) st.edit={n:"Assay A",v:[320,100,20,0,0,0],idx:0};
+  st.screen=b.dataset.j; render();});
+document.querySelectorAll(".tg").forEach(b=>{
+  b.onclick=()=>{ const k=b.dataset.t;
+    if(k==="dark"){ st.dark=!st.dark; b.classList.toggle("on",st.dark); }
+    else if(k==="reset"){ st.homed={a1:false,a2:false}; st.filled=[0,0,0,0,0,0];
+      st.assign={}; st.sel=[]; st.screen="home"; }
+    else { V[k]=!V[k]; b.classList.toggle("on",V[k]);
+      document.getElementById("glare").style.display=V.glare?"block":"none"; }
+    render(); };
+});
+setInterval(()=>{
+  if(st.screen==="resetrun"){ st.homePct+=14;
+    if(st.homePct>=100){ st.homed[st.axis]=true; st.homePct=0;
+      if(!st.homed.a2){ st.axis="a2"; } else { st.axis="a1"; st.screen="home"; } }
+    render();
+  } else if(st.screen==="bottle"&&(st.calStep===2||st.calStep===4)){
+    st.calPct+=9;
+    if(st.calPct>=100){ st.calPct=0;
+      if(st.calStep===2) st.calStep=3;
+      else { st.sense[st.liquid]="ok"; st.calStep=0; st.screen="liquid"; } }
+    render();
+  } else if(st.screen==="fill3"){ st.fillPct+=6;
+    if(st.fillPct>=100){ st.fillPct=0;
+      if(st.fillPhase===1) st.fillPhase=2; else { st.fillPhase=1; st.screen="fill4"; } }
+    render();
+  } else if(st.screen==="run"){ st.runPct+=1;
+    if(st.runPct>=100){ st.runPct=0; st.screen="done"; }
+    else if(st.runPct%9===0) st.tube=Math.min(st.tubes,st.tube+1);
+    render(); }
+},420);
+render();
+</script>

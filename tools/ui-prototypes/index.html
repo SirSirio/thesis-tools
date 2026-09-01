@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operator Interface Prototypes · DTU Thesis Tools</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  /* ── Page scaffold (local, per D-01: tool styles stay inline) ─────────── */
+  .tool-nav {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.82rem;
+  }
+  .tool-nav a {
+    color: var(--accent); font-weight: 500; letter-spacing: 0.02em;
+    transition: letter-spacing 0.2s ease, color 0.2s ease;
+  }
+  .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
+  .tool-nav span { color: var(--text-muted); }
+
+  .tool-main {
+    position: relative; z-index: 1;
+    max-width: 1080px; margin: 0 auto;
+    padding: 60px 32px 80px;
+    display: flex; flex-direction: column; gap: 54px;
+  }
+
+  .tool-header h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); letter-spacing: -0.02em; margin: 14px 0 16px; }
+  .tool-header p  { color: var(--text-muted); max-width: 68ch; line-height: 1.65; }
+  .tool-header b  { color: var(--text); font-weight: 600; }
+
+  .part-label { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+  .part-label .num { font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem; color: var(--accent); }
+  .part-label h2 { font-size: 1.45rem; letter-spacing: -0.01em; }
+  .part-intro { color: var(--text-muted); line-height: 1.65; max-width: 72ch; margin-bottom: 26px; }
+  .part-intro b { color: var(--text); font-weight: 600; }
+
+  .glass-panel {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,107,43,0.15);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* ── The instrument: probe grid ──────────────────────────────────────── */
+  .probe-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin: 22px 0 18px;
+  }
+  .probe {
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    padding: 16px 18px; background: rgba(255,255,255,0.02);
+  }
+  .probe .probe-name {
+    font-family: ui-monospace, Consolas, monospace; font-size: 0.78rem;
+    color: var(--text); letter-spacing: 0.04em; margin-bottom: 7px;
+  }
+  .probe p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+  .audit-note { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; max-width: 76ch; }
+  .audit-note b { color: var(--text); font-weight: 600; }
+
+  /* ── Round cards ─────────────────────────────────────────────────────── */
+  .round-card {
+    display: grid; overflow: hidden;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    transition: transform 0.35s cubic-bezier(.22,.68,0,1), border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .round-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,107,43,0.4);
+    box-shadow: 0 18px 48px -18px var(--accent-glow);
+  }
+  .round-stack { display: flex; flex-direction: column; gap: 26px; }
+
+  .round-card--split { grid-template-columns: 0.92fr 1.08fr; }
+  .round-card--split .thumb { min-height: 100%; border-radius: 0; }
+  .round-card--flip .thumb { order: 2; }
+  .round-card--flip .round-body { order: 1; }
+
+  .round-body { padding: 26px 30px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .round-meta {
+    font-family: ui-monospace, Consolas, monospace; font-size: 0.72rem;
+    color: var(--text-muted); letter-spacing: 0.08em;
+  }
+  .round-meta em { font-style: normal; color: var(--accent); }
+  .round-body h3 { font-size: 1.2rem; letter-spacing: -0.01em; color: var(--text); }
+  .round-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.62; }
+  .round-body p b { color: var(--text); font-weight: 600; }
+  .round-open {
+    margin-top: auto; padding-top: 12px;
+    font-size: 0.85rem; font-weight: 600; color: var(--accent);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .round-open .arrow { transition: transform 0.25s ease; }
+  .round-card:hover .round-open .arrow { transform: translateX(5px); }
+
+  /* Round 3: full-width feature card */
+  .round-card--feature { grid-template-columns: 1fr; border-color: rgba(255,107,43,0.32); }
+  .round-card--feature .thumb { aspect-ratio: 21 / 9; }
+  .feature-cols { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 28px; padding: 26px 30px 24px; }
+  .feature-cols .round-body { padding: 0; }
+  .stat-row { display: grid; grid-template-columns: 1fr; gap: 12px; align-content: start; }
+  .stat {
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    padding: 13px 16px; background: rgba(255,255,255,0.02);
+  }
+  .stat .stat-value { font-family: ui-monospace, Consolas, monospace; font-size: 1.05rem; color: var(--text); }
+  .stat .stat-label { font-size: 0.76rem; color: var(--text-muted); margin-top: 3px; line-height: 1.45; }
+
+  /* Rounds 4-5: vertical pair */
+  .round-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .round-card--vert { grid-template-columns: 1fr; }
+  .round-card--vert .thumb { aspect-ratio: 16 / 10; }
+
+  /* ── Live previews (the artifacts themselves, scaled) ────────────────── */
+  .thumb {
+    position: relative; overflow: hidden;
+    background: #f2f4f6;
+    aspect-ratio: 4 / 3;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .round-card--split .thumb { aspect-ratio: auto; border-bottom: 0; }
+  .thumb iframe {
+    position: absolute; top: 0; left: 0; border: 0;
+    transform-origin: 0 0; transform: scale(0.25);
+    pointer-events: none;
+  }
+  .thumb::after {
+    content: ""; position: absolute; inset: 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    pointer-events: none;
+  }
+
+  /* ── Provenance ──────────────────────────────────────────────────────── */
+  .provenance p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; max-width: 80ch; }
+  .provenance p + p { margin-top: 12px; }
+  .provenance b { color: var(--text); font-weight: 600; }
+  .provenance code {
+    font-family: ui-monospace, Consolas, monospace; font-size: 0.82em;
+    background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 6px;
+  }
+
+  .site-footer { position: relative; z-index: 1; }
+
+  /* ── Responsive ──────────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .probe-grid { grid-template-columns: repeat(2, 1fr); }
+    .round-card--split { grid-template-columns: 1fr; }
+    .round-card--split .thumb { aspect-ratio: 16 / 10; order: 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .round-card--flip .round-body { order: 0; }
+    .feature-cols { grid-template-columns: 1fr; }
+    .round-pair { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .tool-main { padding: 44px 20px 60px; gap: 44px; }
+    .probe-grid { grid-template-columns: 1fr; }
+    .round-body { padding: 22px 22px 20px; }
+    .feature-cols { padding: 22px 22px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in { animation: none; opacity: 1; transform: none; }
+    .round-card, .round-card:hover { transition: none; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<nav class="tool-nav" aria-label="Breadcrumb">
+  <a href="../../index.html">&larr; All tools</a>
+  <span>Operator Interface Prototypes</span>
+</nav>
+
+<main class="tool-main">
+
+  <header class="tool-header animate-in" style="--delay: 0s;">
+    <span class="site-label">Design Record &middot; User Interface Module</span>
+    <h1>Operator Interface Prototypes</h1>
+    <p>Nine candidate operator interfaces for the dispensing instrument, drawn as <b>self-auditing web
+      pages at the panel's real 320&nbsp;&times;&nbsp;240</b> before any firmware existed. These are the actual pages
+      the design decisions were made on, published unchanged: each round below opens the artifact
+      exactly as it was frozen, navigable where it was navigable then.</p>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       THE INSTRUMENT
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="instrument" class="animate-in" style="--delay: 0.06s;">
+    <div class="part-label"><span class="num">01</span><h2>Why these are instruments, not mockups</h2></div>
+    <p class="part-intro">A static picture can only assert that a screen works. The three design rounds
+      <b>measure themselves</b> instead: a controls panel re-renders every candidate under four probes,
+      and an audit recomputes on each render.</p>
+    <div class="probe-grid">
+      <div class="probe">
+        <div class="probe-name">touch targets</div>
+        <p>Outlines every interactive region and flags anything under 44&nbsp;px.</p>
+      </div>
+      <div class="probe">
+        <div class="probe-name">RGB565</div>
+        <p>Re-quantises every colour to the panel's real 5-6-5 bit depth before judging it.</p>
+      </div>
+      <div class="probe">
+        <div class="probe-name">sunlight</div>
+        <p>A glare wash approximating bright ambient light on the panel.</p>
+      </div>
+      <div class="probe">
+        <div class="probe-name">device dark</div>
+        <p>The on-device theme, a runtime toggle on the chosen design.</p>
+      </div>
+    </div>
+    <p class="audit-note">The <b>audit panel</b> beside each screen reports element count, smallest touch
+      target, count under 44&nbsp;px, recorded exceptions, and the worst text contrast <b>after</b>
+      quantisation. The two home-screen studies work differently: they are comparison boards, carrying
+      machine-state switches (position unknown, liquid levels, colour treatment) instead of an audit, so
+      layout and colour can be judged under the states that matter.</p>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PART 1 · DESIGNING THE INTERFACE
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="interface-rounds" class="animate-in" style="--delay: 0.12s;">
+    <div class="part-label"><span class="num">02</span><h2>Designing the interface</h2></div>
+    <p class="part-intro">Three rounds between <b>2026-07-31 and 2026-08-09</b>: nine candidates, one
+      survivor. The rounds narrow from style, to structure, to the exact pixels.</p>
+
+    <div class="round-stack">
+
+      <a class="round-card round-card--split" href="rounds/round-1-five-candidates.html">
+        <div class="thumb" aria-hidden="true">
+          <iframe src="rounds/round-1-five-candidates.html" loading="lazy" tabindex="-1" scrolling="no"
+                  data-w="1240" data-y="0" title=""></iframe>
+        </div>
+        <div class="round-body">
+          <span class="round-meta"><em>Round 1</em> &middot; 2026-07-31</span>
+          <h3>Five candidates, static screens</h3>
+          <p>How much of the interface should change? Three candidates explore layout and visual
+            language; two restructure what the interface is <b>about</b>. Instrument, Guided run and
+            Machine state survive the round.</p>
+          <p>It also settled a hardware fact: the panel is not sunlight-readable under any design, which
+            fixed the dark-on-light polarity everything later inherits.</p>
+          <span class="round-open">Open round 1 <span class="arrow" aria-hidden="true">&rarr;</span></span>
+        </div>
+      </a>
+
+      <a class="round-card round-card--split round-card--flip" href="rounds/round-2-three-candidates.html">
+        <div class="thumb" aria-hidden="true">
+          <iframe src="rounds/round-2-three-candidates.html" loading="lazy" tabindex="-1" scrolling="no"
+                  data-w="1280" data-y="0" title=""></iframe>
+        </div>
+        <div class="round-body">
+          <span class="round-meta"><em>Round 2</em> &middot; 2026-08-09</span>
+          <h3>Three candidates, fully navigable</h3>
+          <p>Round 1 compared pictures; round 2 compares <b>interfaces</b>: the whole 20-screen graph,
+            clickable, one information architecture against another. Guided wins on its home layout,
+            without the wizard.</p>
+          <p>The rack screen also produced a genuine negative result: no published design system
+            documents a button-only grid subset selection, so that screen is a design contribution of
+            its own.</p>
+          <span class="round-open">Open round 2 <span class="arrow" aria-hidden="true">&rarr;</span></span>
+        </div>
+      </a>
+
+      <a class="round-card round-card--feature" href="rounds/round-3-chosen.html">
+        <div class="thumb" aria-hidden="true">
+          <iframe src="rounds/round-3-chosen.html" loading="lazy" tabindex="-1" scrolling="no"
+                  data-w="1200" data-y="96" title=""></iframe>
+        </div>
+        <div class="feature-cols">
+          <div class="round-body">
+            <span class="round-meta"><em>Round 3</em> &middot; frozen 2026-08-09</span>
+            <h3>The chosen design</h3>
+            <p>Guided's layout without the wizard, refined through four review passes with the operator.
+              The changes are about <b>language and honesty</b> rather than layout: jargon replaced
+              (PRIME became <b>Fill tubing</b>, HOMING became <b>Reset position</b>), volumes quantised
+              to what the pump can actually deliver, and three distinct unknown states instead of
+              optimistic defaults.</p>
+            <p>This page is <b>the pixel contract the firmware was built from</b>; the LVGL
+              implementation transcribes it. Light and dark, both navigable.</p>
+            <span class="round-open">Open round 3 <span class="arrow" aria-hidden="true">&rarr;</span></span>
+          </div>
+          <div class="stat-row">
+            <div class="stat">
+              <div class="stat-value">84</div>
+              <div class="stat-label">screen states verified by the built-in audit</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">7.4 : 1</div>
+              <div class="stat-label">worst text contrast, measured after RGB565 quantisation</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">2</div>
+              <div class="stat-label">recorded target-size exceptions, each argued in the page itself</div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PART 2 · REVISITING THE HOME SCREEN
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="home-rounds" class="animate-in" style="--delay: 0.18s;">
+    <div class="part-label"><span class="num">03</span><h2>Revisiting the home screen</h2></div>
+    <p class="part-intro">These two studies are <b>not</b> steps of the same arc. They came on
+      <b>2026-08-11</b>, after the interface had been built, flashed and used, when the operator's own
+      judgement, not a defect, reopened one screen: Home. Both are comparison boards drawn from the
+      firmware's real token values and geometry, at 2&times; zoom.</p>
+
+    <div class="round-pair">
+
+      <a class="round-card round-card--vert" href="rounds/home-colour-options.html">
+        <div class="thumb" aria-hidden="true">
+          <iframe src="rounds/home-colour-options.html" loading="lazy" tabindex="-1" scrolling="no"
+                  data-w="760" data-y="150" title=""></iframe>
+        </div>
+        <div class="round-body">
+          <span class="round-meta"><em>Round 4</em> &middot; 2026-08-11</span>
+          <h3>Home screen colour study</h3>
+          <p>Three colour treatments built from the ColorBrewer Dark2 palette the product already ships,
+            drawn beside a recreation of the shipped screen as a fidelity benchmark. <b>Colour rails</b>
+            was chosen and carried forward.</p>
+          <span class="round-open">Open round 4 <span class="arrow" aria-hidden="true">&rarr;</span></span>
+        </div>
+      </a>
+
+      <a class="round-card round-card--vert" href="rounds/home-round2-three-tiles.html">
+        <div class="thumb" aria-hidden="true">
+          <iframe src="rounds/home-round2-three-tiles.html" loading="lazy" tabindex="-1" scrolling="no"
+                  data-w="760" data-y="170" title=""></iframe>
+        </div>
+        <div class="round-body">
+          <span class="round-meta"><em>Round 5</em> &middot; 2026-08-11</span>
+          <h3>Home screen structural study</h3>
+          <p>Three layouts for a home screen whose contents had changed, with colour treatment, liquid
+            state and position warning as live switches so structure and colour could be judged
+            independently. <b>The chosen panel is marked</b>; it was built and flashed the same day.</p>
+          <span class="round-open">Open round 5 <span class="arrow" aria-hidden="true">&rarr;</span></span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PROVENANCE
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="provenance" class="animate-in" style="--delay: 0.24s;">
+    <div class="glass-panel provenance">
+      <div class="part-label"><span class="num">04</span><h2>Provenance</h2></div>
+      <p>The five pages are copied <b>verbatim</b> from the thesis design record and are published as
+        dated artifacts: fixing even a typo inside a candidate would change the evidence of what was
+        considered and when. Exactly two mechanical changes were made for publication: the two
+        home-screen studies load a locally vendored copy of Montserrat instead of Google&nbsp;Fonts, so
+        they render pixel-identically offline, and each page carries a small link back to this index.
+        Every design decision, every measured value and every recorded exception is untouched; the
+        full rationale is in <code>SPEC.md</code> beside this page.</p>
+      <p>The rounds open as they were drawn: light, instrument-grade pages, deliberately outside this
+        site's visual language. Chapter 9 of the thesis (User Interface Module) cites this page by
+        printed address, so its path is frozen.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>DTU Master Thesis &middot; Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
+</footer>
+
+<script>
+  // Scale each live preview so the artifact's real page fits its card crop.
+  // data-w = the virtual browser width the artifact is rendered at;
+  // data-y = how many (unscaled) pixels of the artifact's top to crop away.
+  (function () {
+    function fit() {
+      document.querySelectorAll('.thumb iframe').forEach(function (f) {
+        var box = f.parentElement;
+        var w = parseInt(f.dataset.w, 10) || 1240;
+        var y = parseInt(f.dataset.y, 10) || 0;
+        var s = box.clientWidth / w;
+        f.style.width = w + 'px';
+        f.style.height = Math.ceil(box.clientHeight / s + y) + 'px';
+        f.style.transform = 'scale(' + s + ') translateY(-' + y + 'px)';
+      });
+    }
+    var t;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 120); });
+    window.addEventListener('load', fit);
+    fit();
+  })();
+</script>
+
+</body>
+</html>

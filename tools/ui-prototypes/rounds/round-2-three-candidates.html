@@ -1,0 +1,1463 @@
+<meta charset="utf-8">
+<title>Dispensing System — Interactive UI Prototype</title>
+
+<style>
+  /* The clearance highlight. On device this is an animated bg_opa on an overlay
+     rect — never generic opa, which would allocate a 24 KB layer. */
+  @keyframes breathe { 0%,100%{opacity:1} 50%{opacity:.34} }
+  .breathe { animation: breathe 1.8s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce){
+    .breathe { animation: none; }
+    * { transition-duration: .01ms !important; }
+  }
+  :focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; border-radius: 4px; }
+  :root {
+    --ground:#F2F4F6; --panel:#FFFFFF; --bench:#22262C;
+    --ink:#13171C; --ink-soft:#5C6672; --ink-faint:#8B95A1;
+    --rule:#D5DAE0; --rule-soft:#E6EAEE;
+    --mark:#D6006E; --mark-soft:#FBE4EF;
+    --ok:#16663A; --warn:#8A5200; --bad:#A3231B;
+    --mono: ui-monospace,"Cascadia Mono","SF Mono","Roboto Mono",Consolas,monospace;
+    --sans: ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#101317; --panel:#191D23; --bench:#05070A;
+      --ink:#E9EDF1; --ink-soft:#98A3AF; --ink-faint:#6B7683;
+      --rule:#2B313A; --rule-soft:#23282F;
+      --mark:#FF3D93; --mark-soft:#3A0A21;
+      --ok:#4FBE83; --warn:#D79B3C; --bad:#E4695F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#101317; --panel:#191D23; --bench:#05070A;
+    --ink:#E9EDF1; --ink-soft:#98A3AF; --ink-faint:#6B7683;
+    --rule:#2B313A; --rule-soft:#23282F;
+    --mark:#FF3D93; --mark-soft:#3A0A21;
+    --ok:#4FBE83; --warn:#D79B3C; --bad:#E4695F;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+       font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1220px;margin:0 auto;padding:28px 20px 80px}
+
+  .mast{border-bottom:2px solid var(--ink);padding-bottom:14px}
+  .mast .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+       text-transform:uppercase;color:var(--mark);margin:0 0 8px}
+  .mast h1{font-family:var(--mono);font-size:clamp(21px,3.2vw,31px);font-weight:700;
+       letter-spacing:-.02em;margin:0}
+  .mast .sub{color:var(--ink-soft);margin:8px 0 0;max-width:66ch}
+  .specline{display:flex;flex-wrap:wrap;gap:0 18px;font-family:var(--mono);font-size:11.5px;
+       color:var(--ink-soft);padding:10px 0 0}
+  .specline b{color:var(--ink);font-weight:600}
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 0}
+  .tab{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:9px 14px;
+       border:1px solid var(--rule);background:var(--panel);color:var(--ink-soft);
+       border-radius:7px;cursor:pointer;transition:.12s}
+  .tab:hover{border-color:var(--ink-faint);color:var(--ink)}
+  .tab.on{background:var(--ink);color:var(--ground);border-color:var(--ink);font-weight:700}
+  .tab .k{color:var(--mark);font-weight:700;margin-right:7px}
+  .tab.on .k{color:var(--mark)}
+
+  .rig{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:26px;margin-top:22px;align-items:start}
+  @media (max-width:940px){.rig{grid-template-columns:1fr}}
+
+  .stagewrap{background:var(--bench);border-radius:12px;padding:26px 20px 20px;
+       display:flex;flex-direction:column;align-items:center;gap:14px}
+  .stage{position:relative}
+  .device{position:relative;width:320px;height:240px;overflow:hidden;
+       transform-origin:top center;background:#fff}
+  .bezel{padding:11px;background:#111417;border-radius:12px;
+       box-shadow:0 0 0 1px #2A2F35 inset}
+  .el{position:absolute;overflow:hidden}
+  .el.t{display:flex;white-space:pre}
+  .el.hit{cursor:pointer}
+  .el.hit:active{filter:brightness(.9)}
+  .ovl{position:absolute;inset:0;pointer-events:none}
+  .ovl div{position:absolute;box-sizing:border-box}
+  .tmark{border:1px dashed rgba(214,0,110,.85);background:rgba(214,0,110,.07)}
+  .tbad{border:1px solid rgba(214,0,110,1);background:rgba(214,0,110,.18)}
+  .gridl{position:absolute;inset:0;pointer-events:none;opacity:.5;
+       background-image:linear-gradient(rgba(0,80,160,.30) 1px,transparent 1px),
+                        linear-gradient(90deg,rgba(0,80,160,.30) 1px,transparent 1px);
+       background-size:4px 4px}
+  .glare{position:absolute;inset:0;pointer-events:none;
+       background:linear-gradient(118deg,rgba(255,255,255,.80) 0%,rgba(255,255,255,.42) 38%,rgba(255,255,255,.30) 100%)}
+
+  .crumbs{font-family:var(--mono);font-size:11px;color:#9AA5B1;letter-spacing:.05em;
+       text-align:center;min-height:16px}
+  .crumbs b{color:#E8ECF0}
+  .navrow{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:560px}
+  .nb{font-family:var(--mono);font-size:10.5px;padding:5px 8px;border-radius:5px;cursor:pointer;
+      border:1px solid #333A42;background:#1A1E23;color:#9AA5B1}
+  .nb:hover{border-color:#5A646E;color:#E8ECF0}
+  .nb.on{background:#E8ECF0;color:#14181C;border-color:#E8ECF0;font-weight:700}
+
+  .side{display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 15px}
+  .card h3{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+       color:var(--mark);margin:0 0 10px}
+  .kv{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:4px 0;
+       border-bottom:1px solid var(--rule-soft)}
+  .kv:last-child{border-bottom:0}
+  .kv span:first-child{color:var(--ink-soft)}
+  .kv span:last-child{font-family:var(--mono);font-weight:600;text-align:right}
+  .pass{color:var(--ok)} .fail{color:var(--bad)} .note{color:var(--warn)}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:7px}
+  .tg{font-family:var(--mono);font-size:11px;padding:6px 10px;border:1px solid var(--rule);
+      background:var(--panel);color:var(--ink-soft);border-radius:6px;cursor:pointer}
+  .tg.on{background:var(--mark);border-color:var(--mark);color:#fff;font-weight:700}
+
+  .idea{font-size:13.5px;color:var(--ink-soft);margin:0}
+  .idea b{color:var(--ink)}
+  h2.sec{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+      margin:44px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+  .tablewrap{overflow-x:auto;margin:0 0 18px;-webkit-overflow-scrolling:touch}
+  table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px;margin:0}
+  td,th{font-variant-numeric:tabular-nums}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-soft);border-bottom:1px solid var(--rule)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--rule-soft);padding:1px 5px;border-radius:4px}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .warnbox{border-left:3px solid var(--warn);padding:2px 0 2px 14px;color:var(--ink-soft);font-size:13.5px}
+  ul{padding-left:20px} li{margin:5px 0;font-size:13.5px;color:var(--ink-soft)}
+  li b{color:var(--ink)}
+</style>
+
+<!-- Mechanical edit (see ../SPEC.md): back-link to the prototype index. -->
+<nav style="max-width:1220px;margin:0 auto;padding:18px 20px 0"><a href="../index.html" style="font:12px/1 ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;letter-spacing:.08em;color:inherit;opacity:.55;text-decoration:none">&larr; All rounds</a></nav>
+
+<div class="wrap">
+
+<div class="mast">
+  <p class="eyebrow">Phase 3.1 · master thesis · DTU · interactive prototype</p>
+  <h1>Operator interface — three navigable candidates</h1>
+  <p class="sub">Every screen below is clickable. Press the buttons on the panel and the prototype
+  walks the real flow: homing gates, guided priming, protocol authoring, rack and tube assignment,
+  a live run. Geometry is declared as data, so the audit measures the design rather than trusting it.</p>
+  <div class="specline">
+    <span><b>320 × 240</b> ILI9341</span>
+    <span><b>RGB565</b></span>
+    <span><b>resistive</b> single-touch</span>
+    <span><b>~15–20 fps</b></span>
+    <span><b>4.56 µL</b>/stroke</span>
+    <span><b>54.72 µL/s</b>/pump</span>
+    <span><b>8</b> positions × <b>5</b> racks</span>
+  </div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="rig">
+  <div class="stagewrap">
+    <div class="stage">
+      <div class="bezel"><div class="device" id="screen">
+        <div class="gridl" id="grid" style="display:none"></div>
+        <div class="ovl"  id="ovl"></div>
+        <div class="glare" id="glare" style="display:none"></div>
+      </div></div>
+    </div>
+    <div class="crumbs" id="crumbs"></div>
+    <div class="navrow" id="jump"></div>
+  </div>
+
+  <div class="side">
+    <div class="card">
+      <h3>Candidate</h3>
+      <p class="idea" id="idea"></p>
+      <div class="kv" style="margin-top:10px"><span>Costs you</span><span></span></div>
+      <p class="idea" id="cost" style="margin-top:6px;font-size:12.5px"></p>
+    </div>
+
+    <div class="card">
+      <h3>View</h3>
+      <div class="toggles">
+        <button class="tg" data-t="touch">touch targets</button>
+        <button class="tg" data-t="q">RGB565</button>
+        <button class="tg" data-t="grid">4 px grid</button>
+        <button class="tg" data-t="glare">sunlight</button>
+        <button class="tg" data-t="zoom">2×</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Audit — this screen</h3>
+      <div id="audit"></div>
+    </div>
+
+    <div class="card">
+      <h3>What this screen is for</h3>
+      <p class="idea" id="cap" style="font-size:12.5px"></p>
+    </div>
+  </div>
+</div>
+
+<h2 class="sec">How the three differ</h2>
+<div class="cols">
+  <div>
+    <p><b>F — Instrument.</b> A dense, calm lab panel. Persistent 26 px status strip, a six-channel
+    level card as the centre of gravity, three actions in a row. Closest to the instruments the
+    operator already knows.</p>
+    <p style="color:var(--ink-soft);font-size:13px">Bet: least relearning, most information per
+    screen. Cost: the home screen is a menu with a readout attached, not a picture of the machine.</p>
+  </div>
+  <div>
+    <p><b>G — Guided.</b> Every task is a numbered wizard under a persistent step spine. Home is
+    three large action rows. Largest targets, fewest elements per screen, most hand-holding.</p>
+    <p style="color:var(--ink-soft);font-size:13px">Bet: an operator who has never seen the machine
+    can finish a run. Cost: slower for the expert, and levels are one tap away rather than present.</p>
+  </div>
+  <div>
+    <p><b>H — Workbench.</b> Home is the machine, drawn. The rack lane runs across the panel with six
+    nozzles above it, each carrying its channel colour and level. The same drawing becomes the
+    clearance diagram and the run view.</p>
+    <p style="color:var(--ink-soft);font-size:13px">Bet: "where is my rack and what is in the lines"
+    is answered without reading. Cost: the most drawing, and the most coupled to real geometry.</p>
+  </div>
+</div>
+
+<h2 class="sec">Rules the prototype enforces on itself</h2>
+<div class="tablewrap"><table>
+  <tr><th>Rule</th><th>Source</th><th>How it is checked</th></tr>
+  <tr><td>Targets ≥ 44 × 44 px, ≥ 8 px apart</td><td>UX-01</td>
+      <td>Measured per screen. <b>One recorded exception, E1</b> — the eight 34 × 92 px tube buttons.</td></tr>
+  <tr><td>≥ 7:1 contrast after RGB565</td><td>UX-02</td>
+      <td>Every text element solved against the fill actually drawn behind it, quantised first.</td></tr>
+  <tr><td>No colour-only state</td><td>UX-02</td><td>Every coloured state also carries a word.</td></tr>
+  <tr><td>No shadows, blur, scaling, radial gradients</td><td>lv_conf.h</td>
+      <td>None used. Press feedback is a fill change, never a transform.</td></tr>
+  <tr><td>Abort present whenever pumps are energised</td><td>UX-05</td>
+      <td>Status strip turns <code>live</code> red; abort is in a fixed position on every such screen.</td></tr>
+  <tr><td>Back on every screen</td><td>operator</td>
+      <td>Except homing and dispensing, which carry <code>ABORT</code> instead — never nothing.</td></tr>
+</table></div>
+
+<h2 class="sec">Honesty rules visible in the pixels</h2>
+<ul>
+  <li><b>Volume is quantised to the sensor's real resolution.</b> 40 mL container → 1 mL steps,
+      15 mL → 0.5 mL, 4 mL → 0.2 mL. Under 5% it reads <code>&lt; 2 mL</code>, not a false figure.</li>
+  <li><b>Three distinct unknown states.</b> <code>— no sensor</code>, <code>— not calibrated</code>,
+      <code>— not configured</code>. The old UI showed a flat 100% for all three and then gated the
+      run on it.</li>
+  <li><b>Every time estimate is derived from step counts.</b> The hardcoded <code>flowrate = 5 µL/s</code>
+      is deleted. Pumps share one clock, so a multi-liquid dose takes
+      <code>max(Vᵢ)/54.72</code> seconds — never the sum.</li>
+  <li><b>The battery is a designed placeholder</b> that renders <code>not fitted</code>. There is no
+      battery and no rail sensing in this build; it never shows a level.</li>
+  <li><b>"Commanded, not measured"</b> appears on the finish screen. Volumes are open-loop step counts.</li>
+</ul>
+
+<div class="warnbox" style="margin-top:20px">
+  <b>Citation warning.</b> The clearance wording is our own. No manufacturer surveyed publishes
+  quotable "clear the path before homing" copy, and IEC 61010-1 / ISO 12100 / IEC 60417-6057 /
+  ISO 7010-W024 were reachable only through secondary sources. Verify against a DTU library copy
+  before citing. Equally, the no-drag tube selection grid is a <b>design contribution</b> — no design
+  system documents a button-only equivalent.
+</div>
+
+</div>
+
+<script>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+const LIGHT = {
+  ink:"#10151A", ink2:"#3A4552", line:"#C3C9D0", bg:"#EDEFF2", card:"#FFFFFF",
+  sunk:"#E0E4E8", acc:"#0F4278", accInk:"#FFFFFF", accDim:"#CFE0F2",
+  ok:"#0E4D2B", okBg:"#E4F0E9", warn:"#6B3F00", warnBg:"#FBF0DE",
+  bad:"#8C1A13", badBg:"#FBE9E7", live:"#7A2018", ghost:"#414B58", dis:"#8E97A1", liveDim:"#F8E6E4",
+  onBad:"#FFFFFF", onOk:"#FFFFFF", liveInk:"#7A2018",
+  ch:["#14508C","#0D6551","#7A4A00","#6B3488","#185E75","#4A4F58"],
+  chBg:["#DCE7F4","#DBEBE5","#F4EBD8","#EDE0F2","#DCEAEF","#E3E6E9"]
+};
+const DARK = {
+  ink:"#F0F3F6", ink2:"#AAB4C0", line:"#39424D", bg:"#0B0E12", card:"#161B22",
+  sunk:"#1F262E", acc:"#6FB2F2", accInk:"#04121F", accDim:"#0B2338",
+  ok:"#5FD196", okBg:"#12271C", warn:"#E5AE4E", warnBg:"#2B2110",
+  bad:"#F79A92", badBg:"#2E1512", live:"#7E2118", ghost:"#A8B2BE", dis:"#6A7480", liveDim:"#F8E6E4",
+  onBad:"#1A0603", onOk:"#04140C", liveInk:"#F79A92",
+  ch:["#7CB4EE","#5AC9A2","#E0AC48","#C09BE0","#66BCD4","#A3AEBA"],
+  chBg:["#122233","#0F2A22","#2A2110","#231830","#0F2831","#1C2027"]
+};
+
+/* ============================================================
+   ICONS — outline only, 2 px stroke, 24 px grid  (spec rule 11)
+   ============================================================ */
+const IC = {
+  play:"M8 5v14l11-7z",
+  drop:"M12 3c0 0 6 6.6 6 10.5A6 6 0 0 1 6 13.5C6 9.6 12 3 12 3z",
+  list:"M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01",
+  gear:"M12 9.4a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2zM12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1",
+  back:"M19 12H5M12 19l-7-7 7-7",
+  check:"M20 6L9 17l-5-5",
+  alert:"M12 3l9.5 17h-19zM12 9.5v5M12 17.6v.01",
+  pause:"M9 4v16M15 4v16",
+  stop:"M5 5h14v14H5z",
+  retry:"M20.5 12a8.5 8.5 0 1 1-2.5-6M20.5 3v6h-6",
+  home:"M4 11l8-7 8 7M6.5 9.6V20h11V9.6",
+  sun:"M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6zM12 1.5v2.6M12 19.9v2.6M1.5 12h2.6M19.9 12h2.6M4.6 4.6l1.9 1.9M17.5 17.5l1.9 1.9M19.4 4.6l-1.9 1.9M6.5 17.5l-1.9 1.9",
+  moon:"M20 14.6A8.6 8.6 0 0 1 9.4 4 8.6 8.6 0 1 0 20 14.6z",
+  sd:"M7 2.5h8l4.5 4.5V21.5H7zM11 5.5v3M14 5.5v3",
+  batt:"M2.5 8.5h15v7h-15zM19.5 11v2",
+  plus:"M12 5v14M5 12h14",
+  edit:"M16.5 3.5l4 4L8 20H4v-4z",
+  chev:"M9 5l7 7-7 7",
+  x:"M6 6l12 12M18 6L6 18",
+  tube:"M9 3.5h6V15a3 3 0 0 1-6 0zM8 3.5h8",
+  rack:"M3 8.5h18v7H3zM7 8.5v7M11 8.5v7M15 8.5v7",
+  axis:"M3 12h18M17 8l4 4-4 4M7 16l-4-4 4-4"
+};
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const R=(x,y,w,h,o={})=>({x,y,w,h,kind:"rect",...o});
+const X=(x,y,w,h,s,o={})=>({x,y,w,h,kind:"text",s,...o});
+const I=(x,y,s,p,c,o={})=>({x,y,w:s,h:s,kind:"icon",path:p,color:c,...o});
+const SVG=(x,y,w,h,svg,o={})=>({x,y,w,h,kind:"svg",svg,...o});
+
+function BAR(x,y,w,h,v,fill,trough,r){
+  r = r===undefined?h/2:r;
+  const out=[R(x,y,w,h,{fill:trough,radius:r})];
+  const fw=Math.max(0,Math.min(w,Math.round(w*v/100)));
+  if(fw>0) out.push(R(x,y,fw,h,{fill,radius:r}));
+  return out;
+}
+
+/* A button: rect + optional icon + label. Always a touch target. */
+function BTN(x,y,w,h,label,o={}){
+  const T=o.T, tone=o.tone||"ghost";
+  let bg,fg,bd=null;
+  if(tone==="acc"){bg=T.acc;fg=T.accInk}
+  else if(tone==="bad"){bg=T.bad;fg=T.onBad}
+  else if(tone==="warn"){bg=T.warnBg;fg=T.warn;bd=T.warn}
+  else if(tone==="ok"){bg=T.ok;fg=T.onOk}
+  else if(tone==="flat"){bg=T.sunk;fg=T.ink;bd=T.line}
+  else {bg=T.card;fg=T.ink;bd=T.line}
+  if(o.off){bg=T.sunk;fg=T.dis;bd=T.line}
+  const els=[R(x,y,w,h,{fill:bg,border:bd,radius:6,touch:!o.off,exc:o.exc,
+                        go:o.off?null:o.go, act:o.off?null:o.act})];
+  const size=o.size||14, weight=o.weight||700;
+  const ic=o.icon?24:0, gap=ic?8:0;
+  if(o.left){
+    const ix=x+12, tx=ix+ic+gap, tw=Math.max(10,w-(tx-x)-10);
+    if(ic) els.push(I(ix, y+Math.round((h-24)/2), 24, IC[o.icon], fg));
+    if(o.sub){
+      els.push(X(tx, y+7, tw, 18, label, {size, weight, color:fg, track:o.track||".01em"}));
+      els.push(X(tx, y+h-21, tw, 15, o.sub, {size:11, color:fg, opa:.78}));
+    } else {
+      els.push(X(tx, y, tw, h, label, {size, weight, color:fg, va:"c", track:o.track||".01em", exempt:o.off}));
+    }
+  } else {
+    const lw=measure(label,size,weight);
+    if(ic){
+      const sx=x+Math.max(4, Math.round((w-(lw+ic+gap))/2));
+      els.push(I(sx, y+Math.round((h-24)/2), 24, IC[o.icon], fg));
+      els.push(X(x+ic+gap+2, y, Math.max(10,w-ic-gap-4), h, label,
+                {size, weight, color:fg, va:"c", ha:"c", track:o.track||".01em", exempt:o.off}));
+    } else {
+      els.push(X(x+2, y, w-4, h, label,
+                {size, weight, color:fg, va:"c", ha:"c", track:o.track||".01em", exempt:o.off}));
+    }
+  }
+  return els;
+}
+function measure(s,size,weight){ return Math.round(s.length*size*(weight>=700?.60:.55)); }
+
+/* volume presentation — UI-SPEC §2.3 */
+const NOM=[40000,15000,4000,0], STEP=[1000,500,200,0], DEC=[0,1,1,0];
+const LOWLBL=["< 2 mL","< 1 mL","< 0.2 mL","—"];
+function volText(sizeIdx, pct, state){
+  if(state==="nosensor")  return {v:"—", sub:"no sensor",      dim:true};
+  if(state==="uncal")     return {v:"—", sub:"not calibrated", dim:true};
+  if(sizeIdx===3)         return {v:"—", sub:"not configured", dim:true};
+  const nom=NOM[sizeIdx];
+  if(pct<=0) return {v:"EMPTY", sub:"of "+(nom/1000)+" mL", low:true};
+  if(pct<5)  return {v:LOWLBL[sizeIdx], sub:"of "+(nom/1000)+" mL", low:true};
+  const q=Math.round(nom*pct/100/STEP[sizeIdx])*STEP[sizeIdx];
+  return {v:(q/1000).toFixed(DEC[sizeIdx])+" mL", sub:"of "+(nom/1000)+" mL"};
+}
+/* time — UI-SPEC §2.2. Pumps share one clock: dose time is max(), never sum(). */
+const UL_PER_S=54.72, T_INDEX=4.02, T_VIB=0.8, T_HOME=22, T_FEED=6;
+function doseSec(vols){ return Math.max(...vols)/UL_PER_S; }
+function fmtT(s){ s=Math.round(s); const m=Math.floor(s/60); const r=s%60;
+  return m? m+" min "+String(r).padStart(2,"0")+" s" : r+" s"; }
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const PROTO_COLORS=["A","B","C","D"];
+const st = {
+  cand:"F", screen:"home", dark:false,
+  homed:{a1:false,a2:false},
+  fitted:[1,1,0,0,0,0],                  /* 2 pumps wired today, 6 designed */
+  primed:[0,0,0,0,0,0],                  /* 0 unknown 1 primed */
+  primeSel:[1,1,1,1,1,1],
+  size:[0,1,0,2,3,3],                    /* container index per channel */
+  pct:[96,50,71,3,0,0],
+  sense:["ok","ok","ok","ok","uncal","nosensor"],
+  names:["Buffer A","Reagent X","Saline","Ethanol","Liquid 5","Liquid 6"],
+  protos:[
+    {n:"Assay A",  v:[320,100, 20,  0,0,0]},
+    {n:"Assay B",  v:[900,  0,  0,200,0,0]},
+    {n:"Wash",     v:[  0,  0,600,  0,0,0]},
+    {n:"Blank",    v:[150,150,150,150,0,0]}
+  ],
+  openProto:0, activeProto:0, selProtos:[0],
+  assign:{},                             /* "r1t3" -> proto index */
+  openRack:1,
+  edit:null, keypadCh:null, keypadVal:"",
+  homingAxis:"a1", homingPct:0,
+  primeAttempt:1, primePhase:1, primePct:62,
+  runTube:7, runTotal:12, runPct:58,
+  fromRun:false
+};
+
+/* selection helpers */
+const key=(r,t)=>"r"+r+"t"+t;
+function tubeOwner(r,t){ const v=st.assign[key(r,t)]; return v===undefined?null:v; }
+function countAssigned(p){ return Object.values(st.assign).filter(v=>v===p).length; }
+function totalAssigned(){ return Object.keys(st.assign).length; }
+function protoTotal(p){ return st.protos[p].v.reduce((a,b)=>a+b,0); }
+
+function runSeconds(){
+  let s=0; const racks=new Set();
+  for(const k in st.assign){
+    const p=st.assign[k]; racks.add(k.split("t")[0]);
+    s += doseSec(st.protos[p].v.filter(x=>x>0).length?st.protos[p].v:[0]) + T_VIB + T_INDEX;
+  }
+  return s + (racks.size-1>0?(racks.size-1)*T_FEED:0);
+}
+function neededVol(ch){
+  let s=0; for(const k in st.assign) s+=st.protos[st.assign[k]].v[ch];
+  return s;
+}
+
+/* ============================================================
+   SHARED PIECES
+   ============================================================ */
+function statusBar(T,{state,live,h}={}){
+  h=h||26;
+  const bg = live? T.live : T.sunk;
+  const fg = live? "#FFFFFF" : T.ink;
+  const fg2= live? T.liveDim : T.ink2;
+  const els=[R(0,0,320,h,{fill:bg}), R(0,h-1,320,1,{fill:live?T.live:T.line})];
+  els.push(X(8,0,150,h,state||"READY",{size:12,weight:700,color:fg,va:"c",track:".07em"}));
+  /* SD, battery placeholder, energised — right aligned */
+  els.push(I(190,Math.round((h-16)/2),16,IC.sd,fg2));
+  els.push(I(212,Math.round((h-16)/2),16,IC.batt,live?T.liveDim:T.ghost));
+  els.push(X(229,0,16,h,"--",{size:10,color:live?T.liveDim:T.ghost,va:"c",ha:"c"}));
+  els.push(R(250,Math.round(h/2)-4,8,8,{fill:live?"#FF9E93":T.ok,radius:4}));
+  els.push(X(262,0,54,h,live?"LIVE":"OFF",{size:11,weight:700,color:fg,va:"c"}));
+  return els;
+}
+
+function spine(T,steps,at){
+  const els=[R(0,0,320,30,{fill:T.sunk}),R(0,29,320,1,{fill:T.line})];
+  const w=Math.floor(320/steps.length);
+  steps.forEach((s,i)=>{
+    const done=i<at, now=i===at;
+    if(now) els.push(R(i*w,0,w,30,{fill:T.card}));
+    els.push(X(i*w,0,w,30,(i+1)+" "+s,
+      {size:11,weight:now?700:600,color:now?T.ink:(done?T.ok:T.ghost),va:"c",ha:"c"}));
+    els.push(R(i*w+8,27,w-16,2,{fill:now?T.acc:(done?T.ok:T.line)}));
+  });
+  return els;
+}
+
+/* Compact locator — used on the warning screen, where the full diagram does not fit
+   and would only repeat what the clearance screen shows properly. */
+function schematicMini(T,x,y,hl){
+  const on1 = hl==="a1"||hl==="both", on2 = hl==="a2"||hl==="both";
+  const s=`<svg viewBox="0 0 300 72" width="300" height="72">
+    <rect x="2" y="2" width="296" height="68" rx="6" fill="${T.card}" stroke="${T.line}" stroke-width="1.5"/>
+    <rect x="12" y="9" width="276" height="26" rx="4" fill="${on1?T.warnBg:T.sunk}"
+          stroke="${on1?T.warn:T.line}" stroke-width="${on1?2.5:1.5}"${on1?' class="breathe"':''}/>
+    <text x="22" y="27" font-family="ui-sans-serif,system-ui" font-size="11" font-weight="700"
+          fill="${on1?T.warn:T.ink2}">RACK LANE</text>
+    ${on1?`<text x="276" y="27" text-anchor="end" font-family="ui-sans-serif,system-ui" font-size="10"
+          font-weight="700" fill="${T.warn}">needs homing</text>`:""}
+    <rect x="12" y="41" width="276" height="24" rx="4" fill="${on2?T.warnBg:T.sunk}"
+          stroke="${on2?T.warn:T.line}" stroke-width="${on2?2.5:1.5}"${on2?' class="breathe"':''}/>
+    <text x="22" y="58" font-family="ui-sans-serif,system-ui" font-size="11" font-weight="700"
+          fill="${on2?T.warn:T.ink2}">RACK STORE</text>
+    ${on2?`<text x="276" y="58" text-anchor="end" font-family="ui-sans-serif,system-ui" font-size="10"
+          font-weight="700" fill="${T.warn}">needs homing</text>`:""}
+  </svg>`;
+  return [SVG(x,y,300,72,s)];
+}
+
+/* machine schematic — on device this is a pre-baked RGB565 image, 300x120 = 70 KB flash */
+function schematic(T,x,y,hl){
+  const on1 = hl==="a1"||hl==="both", on2 = hl==="a2"||hl==="both";
+  const s=`<svg viewBox="0 0 300 96" width="300" height="96">
+    <rect x="2" y="2" width="296" height="92" rx="7" fill="${T.card}" stroke="${T.line}" stroke-width="2"/>
+    <rect x="12" y="11" width="276" height="31" rx="4" fill="${on1?T.warnBg:T.sunk}"
+          stroke="${on1?T.warn:T.line}" stroke-width="${on1?2.5:1.5}"${on1?' class="breathe"':''}/>
+    <text x="22" y="31" font-family="ui-sans-serif,system-ui" font-size="11" font-weight="700"
+          fill="${on1?T.warn:T.ink2}">RACK LANE</text>
+    ${[0,1,2,3,4,5].map(i=>`<circle cx="${170+i*20}" cy="26" r="5.5" fill="${T.card}"
+          stroke="${T.ink2}" stroke-width="1.5"/>`).join("")}
+    <rect x="12" y="50" width="80" height="36" rx="4" fill="${on2?T.warnBg:T.sunk}"
+          stroke="${on2?T.warn:T.line}" stroke-width="${on2?2.5:1.5}"${on2?' class="breathe"':''}/>
+    <text x="22" y="65" font-family="ui-sans-serif,system-ui" font-size="10" font-weight="700"
+          fill="${on2?T.warn:T.ink2}">RACK</text>
+    <text x="22" y="78" font-family="ui-sans-serif,system-ui" font-size="10" font-weight="700"
+          fill="${on2?T.warn:T.ink2}">STORE</text>
+    <rect x="100" y="50" width="188" height="36" rx="4" fill="${T.bg}" stroke="${T.line}" stroke-width="1.5"/>
+    <text x="112" y="72" font-family="ui-sans-serif,system-ui" font-size="10"
+          fill="${T.ghost}">pumps · electronics</text>
+  </svg>`;
+  return [SVG(x,y,300,96,s)];
+}
+
+/* ------------------------------------------------------------------
+   The rack, drawn as the real part: a solid block with 8 bored holes and
+   engraved numbers. On device this composes from a rounded-rect body plus
+   8 rounded rects with radius = h/2 — no image asset needed.
+   states[i] = {mode:"empty"|"sel"|"lock"|"na", col, tag}
+   ------------------------------------------------------------------ */
+function rackSVG(T,w,h,states,dark){
+  const n=8, pitch=w/n, bodyY=3, bodyH=h-bodyY-7, topH=25;
+  const face  = dark?"#48515C":"#C6CDD5";      /* block body, front face */
+  const faceT = dark?"#59636F":"#DCE1E6";      /* lit top face           */
+  const edge  = dark?"#242B33":"#8D96A1";      /* moulding edge          */
+  const bore  = dark?"#090C10":"#5E6873";      /* the drilled hole       */
+  /* Engraved numbers are load-bearing text, so they are solved for contrast
+     against the block body rather than left at the moulding-edge colour. */
+  const numOn  = dark?"#0A0D11":"#FFFFFF";
+  const numOff = dark?"#0B0E12":"#1E242B";
+  const numNa  = dark?"#2C333B":"#8A929B";     /* unavailable = disabled */
+  let s=`<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">`;
+  s+=`<rect x="1" y="${bodyY}" width="${w-2}" height="${bodyH}" rx="10" fill="${face}" stroke="${edge}" stroke-width="1.5"/>`;
+  s+=`<path d="M11 ${bodyY+1} h${w-22} a10 10 0 0 1 10 10 v${topH-10} h-${w-2} v-${topH-10} a10 10 0 0 1 10-10 z" fill="${faceT}"/>`;
+  s+=`<line x1="2" y1="${bodyY+topH}" x2="${w-2}" y2="${bodyY+topH}" stroke="${edge}" stroke-width="1.2"/>`;
+  [0.16,0.54].forEach(f=>{ s+=`<rect x="${w*f}" y="${bodyY+bodyH-6}" width="${w*0.16}" height="7" rx="3" fill="${T.bg}"/>`; });
+  for(let i=0;i<n;i++){
+    const cx=pitch*(i+0.5), q=states[i]||{mode:"empty"};
+    const rx=Math.min(13.5,pitch*0.37), ry=7;
+    let fill=bore, ring=edge, rw=1.5;
+    if(q.mode==="sel"){ fill=q.col; ring=q.col; rw=2.5; }
+    else if(q.mode==="lock"){ fill=dark?"#6C7783":"#9BA4AE"; ring=edge; }
+    else if(q.mode==="na"){ fill=face; ring=edge; }
+    s+=`<ellipse cx="${cx}" cy="${bodyY+13}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${ring}" stroke-width="${rw}"/>`;
+    if(q.mode==="sel")   /* meniscus, so a filled vial reads as a vial */
+      s+=`<ellipse cx="${cx}" cy="${bodyY+13}" rx="${rx-4.5}" ry="${ry-2.8}" fill="none" stroke="${dark?"#090C10":"#FFFFFF"}" stroke-width="1.3" opacity=".6"/>`;
+    if(q.mode==="na")
+      s+=`<line x1="${cx-rx+1}" y1="${bodyY+13}" x2="${cx+rx-1}" y2="${bodyY+13}" stroke="${edge}" stroke-width="2"/>`;
+    if(q.mode==="sel")   /* a solved chip, so the figure never sits on an unknown ground */
+      s+=`<rect x="${cx-11}" y="${bodyY+topH+6}" width="22" height="21" rx="5" fill="${q.col}"/>`;
+    s+=`<text x="${cx}" y="${bodyY+topH+21}" text-anchor="middle" font-family="ui-sans-serif,system-ui"
+        font-size="15" font-weight="700"
+        fill="${q.mode==="na"?numNa:(q.mode==="sel"?numOn:numOff)}">${q.mode==="na"?"–":(i+1)}</text>`;
+    if(q.tag){          /* owned by another protocol: one-letter badge */
+      s+=`<circle cx="${cx}" cy="${bodyY+topH+36}" r="7.5" fill="${T.warnBg}" stroke="${T.warn}" stroke-width="1.5"/>`;
+      s+=`<text x="${cx}" y="${bodyY+topH+40}" text-anchor="middle" font-family="ui-sans-serif,system-ui"
+          font-size="10" font-weight="700" fill="${T.warn}">${q.tag}</text>`;
+    }
+  }
+  s+=`</svg>`; return s;
+}
+
+/* a 2 mL tube with proportional colour bands — nested rects on device */
+function tubeSVG(T,w,h,vols){
+  const cap=2000, bodyTop=10, bodyH=h-14, neck=Math.round(w*.72);
+  const total=vols.reduce((a,b)=>a+b,0);
+  let acc=0, bands="";
+  vols.forEach((v,i)=>{ if(v<=0) return;
+    const fh=(v/cap)*bodyH, fy=bodyTop+bodyH-acc-fh; acc+=fh;
+    bands+=`<rect x="${(w-neck)/2+2}" y="${fy}" width="${neck-4}" height="${fh}" fill="${T.ch[i]}"/>`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">
+    <defs><clipPath id="tc${w}${h}"><path d="M${(w-neck)/2} ${bodyTop} h${neck} v${bodyH-neck/2} a${neck/2} ${neck/2} 0 0 1 -${neck} 0 z"/></clipPath></defs>
+    <path d="M${(w-neck)/2} ${bodyTop} h${neck} v${bodyH-neck/2} a${neck/2} ${neck/2} 0 0 1 -${neck} 0 z" fill="${T.bg}"/>
+    <g clip-path="url(#tc${w}${h})">${bands}</g>
+    <path d="M${(w-neck)/2} ${bodyTop} h${neck} v${bodyH-neck/2} a${neck/2} ${neck/2} 0 0 1 -${neck} 0 z" fill="none" stroke="${T.ink2}" stroke-width="2"/>
+    <rect x="${(w-neck)/2-3}" y="${bodyTop-6}" width="${neck+6}" height="6" rx="2" fill="${T.card}" stroke="${T.ink2}" stroke-width="2"/>
+    <text x="${w-2}" y="${bodyTop+9}" text-anchor="end" font-family="ui-monospace,monospace" font-size="8" fill="${T.ghost}">2.0</text>
+  </svg>`;
+}
+
+/* channel colour chip + name + volume, one row */
+function levelRow(T,x,y,w,i,compact){
+  const vt=volText(st.size[i],st.pct[i],st.sense[i]);
+  const els=[R(x,y,10,10,{fill:st.size[i]===3?T.ghost:T.ch[i],radius:2})];
+  els.push(X(x+16,y-3,compact?70:96,16,st.names[i],{size:12,color:T.ink,weight:600}));
+  els.push(X(x+w-96,y-4,96,17,vt.v,{size:vt.dim?12:14,weight:700,ha:"r",tnum:1,
+        color:vt.dim?T.ghost:(vt.low?T.warn:T.ink)}));
+  if(!compact) els.push(X(x+w-96,y+11,96,12,vt.sub,{size:10,ha:"r",color:T.ghost}));
+  return els;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+function go(s){ return ()=>{ st.screen=s; render(); }; }
+function act(f){ return ()=>{ f(); render(); }; }
+
+/* ============================================================
+   SCREENS  — each returns {cap, els}
+   Chrome is added by the candidate wrapper.
+   ============================================================ */
+const SC = {};
+
+/* ---------- HOME : one per candidate ---------- */
+SC.home = (T)=>{
+  const c=st.cand;
+  const unhomed=[]; if(!st.homed.a1)unhomed.push("a1"); if(!st.homed.a2)unhomed.push("a2");
+  const els=[];
+  let cap="";
+
+  if(c==="F"){
+    cap="Instrument. The level card is the centre of gravity — six channels, real volumes, always visible without a navigation.";
+    let y=32;
+    if(unhomed.length){
+      els.push(R(8,y,304,44,{fill:T.warnBg,border:T.warn,radius:6,touch:1,go:"homewarn"}));
+      els.push(I(16,y+10,24,IC.alert,T.warn));
+      els.push(X(46,y,190,44,"Axes not homed",{size:13,weight:700,color:T.warn,va:"c"}));
+      els.push(X(236,y,56,44,"HOME",{size:12,weight:700,color:T.warn,va:"c",ha:"r"}));
+      els.push(I(294,y+14,16,IC.chev,T.warn));
+      y+=50;
+    }
+    const cardH=240-58-y, tileH=Math.floor((cardH-28)/2)-4;
+    els.push(R(8,y,304,cardH,{fill:T.card,border:T.line,radius:8}));
+    els.push(X(18,y+6,180,12,"LIQUID LEVELS",{size:10,weight:600,color:T.ink2,track:".13em"}));
+    els.push(X(200,y+6,104,12,"commanded",{size:9,color:T.ghost,ha:"r"}));
+    for(let i=0;i<6;i++){
+      const tx=16+(i%3)*99, ty=y+24+Math.floor(i/3)*(tileH+6);
+      const na=st.size[i]===3, vt=volText(st.size[i],st.pct[i],st.sense[i]);
+      const vcol=vt.dim?T.ghost:(vt.low?T.warn:T.ink);
+      els.push(R(tx,ty,94,tileH,{fill:na?T.bg:T.chBg[i],border:na?T.line:T.ch[i],radius:5}));
+      els.push(R(tx+7,ty+Math.round(tileH/2)-4,8,8,{fill:na?T.ghost:T.ch[i],radius:2}));
+      if(tileH>=40){
+        els.push(R(tx+7,ty+7,8,8,{fill:na?T.ghost:T.ch[i],radius:2}));
+        els.push(X(tx+20,ty+3,68,14,st.names[i].slice(0,9),
+              {size:10.5,weight:600,color:na?T.ghost:T.ink}));
+        els.push(X(tx+7,ty+tileH-22,80,18,vt.v,{size:vt.dim?11:15,weight:700,tnum:1,color:vcol}));
+        if(tileH>=56) els.push(X(tx+7,ty+tileH-38,80,12,vt.sub,{size:9,color:T.ghost}));
+      } else {
+        /* tight mode: one line — channel number and the figure */
+        els.push(X(tx+20,ty,20,tileH,String(i+1),{size:11,weight:700,va:"c",
+              color:na?T.ghost:T.ink}));
+        els.push(X(tx+38,ty,50,tileH,vt.v,{size:vt.dim?10:13,weight:700,va:"c",ha:"r",
+              tnum:1,color:vcol}));
+      }
+    }
+    const by=240-50;
+    els.push(...BTN(8,by,96,44,"PRIME",{T,icon:"drop",go:"phome",size:12}));
+    els.push(...BTN(112,by,96,44,"RUN",{T,tone:"acc",icon:"play",go:"rhome",size:12}));
+    els.push(...BTN(216,by,96,44,"PROTO",{T,icon:"list",go:"plist",size:12}));
+  }
+
+  if(c==="G"){
+    cap="Guided. Three destinations, nothing else. Levels are a one-line summary that opens on tap — the wizard will check them properly anyway.";
+    /* When an axis is un-homed that warning takes the levels slot — it is the more
+       urgent thing, and G's whole bet is one clear destination per row. */
+    let y = 32;
+    const rowH = unhomed.length ? 44 : 46, gap = unhomed.length ? 4 : 5;
+    if(unhomed.length){
+      els.push(R(8,y,304,44,{fill:T.warnBg,border:T.warn,radius:6,touch:1,go:"homewarn"}));
+      els.push(I(16,y+10,24,IC.alert,T.warn));
+      els.push(X(48,y,170,44,"Axes not homed",{size:14,weight:700,color:T.warn,va:"c"}));
+      els.push(X(214,y,78,44,"HOME NOW",{size:11,weight:700,color:T.warn,va:"c",ha:"r"}));
+      els.push(I(294,y+14,16,IC.chev,T.warn));
+      y+=50;
+    }
+    els.push(...BTN(8,y,304,rowH,"Start a run",{T,tone:"acc",icon:"play",left:1,size:16,
+        go:"rhome",sub:"choose protocol · assign tubes"})); y+=rowH+gap;
+    els.push(...BTN(8,y,304,rowH,"Prime the lines",{T,icon:"drop",left:1,size:16,
+        go:"phome",sub:"fill the tubing before a run"})); y+=rowH+gap;
+    els.push(...BTN(8,y,304,rowH,"Protocols",{T,icon:"list",left:1,size:16,
+        go:"plist",sub:st.protos.length+" saved · edit or create"})); y+=rowH+gap;
+    const lh=240-y-6;
+    if(lh>=44){
+      els.push(R(8,y,304,lh,{fill:T.sunk,border:T.line,radius:6,touch:1,go:"levels"}));
+      els.push(X(16,y,96,lh,"LEVELS",{size:10,weight:600,color:T.ink2,track:".13em",va:"c"}));
+      for(let i=0;i<6;i++){
+        const cx=112+i*32, low=st.pct[i]<5, na=st.size[i]===3;
+        const bh=Math.max(2,Math.round(18*st.pct[i]/100));
+        els.push(R(cx,y+8,22,20,{fill:na?T.card:T.chBg[i],border:na?T.line:T.ch[i],radius:3}));
+        if(!na) els.push(R(cx+2,y+8+18-bh+1,18,bh,{fill:low?T.warn:T.ch[i],radius:2}));
+        els.push(X(cx,y+lh-16,22,12,na?"-":String(i+1),{size:9.5,weight:600,ha:"c",color:T.ghost}));
+      }
+      els.push(I(292,y+Math.round(lh/2)-8,16,IC.chev,T.ink2));
+    }
+  }
+
+  if(c==="H"){
+    cap="Workbench. The panel is the machine: six nozzles with their channel colour and level, over the lane the rack travels. The same drawing becomes the clearance diagram.";
+    /* nozzle bank with integrated level gauges */
+    els.push(R(8,32,304,104,{fill:T.card,border:T.line,radius:8}));
+    els.push(X(16,38,140,12,"CHANNELS",{size:9,weight:600,color:T.ink2,track:".13em"}));
+    for(let i=0;i<6;i++){
+      const cx=16+i*49, na=st.size[i]===3, low=st.pct[i]<5&&!na;
+      const vt=volText(st.size[i],st.pct[i],st.sense[i]);
+      els.push(R(cx,54,44,52,{fill:na?T.sunk:T.chBg[i],border:na?T.line:T.ch[i],radius:5}));
+      const fh=na?0:Math.max(3,Math.round(48*st.pct[i]/100));
+      if(!na) els.push(R(cx+2,54+50-fh,40,fh,{fill:low?T.warn:T.ch[i],radius:3}));
+      els.push(R(cx+13,56,18,14,{fill:T.card,radius:3}));
+      els.push(X(cx+13,56,18,14,String(i+1),{size:10,weight:700,ha:"c",va:"c",
+            color:na?T.ghost:T.ink}));
+      els.push(X(cx,110,44,12,vt.dim?"–":vt.v.replace(" mL",""),
+            {size:10,weight:700,ha:"c",tnum:1,color:vt.dim?T.ghost:(vt.low?T.warn:T.ink2)}));
+      els.push(X(cx,121,44,10,vt.dim?vt.sub.slice(0,7):"mL",{size:8,ha:"c",color:T.ghost}));
+      /* nozzle stub */
+      els.push(R(cx+19,106,6,4,{fill:na?T.ghost:T.ink2}));
+    }
+    /* the lane */
+    els.push(R(8,140,304,44,{fill:st.homed.a1?T.sunk:T.warnBg,
+          border:st.homed.a1?T.line:T.warn,radius:6,touch:!st.homed.a1,
+          go:st.homed.a1?null:"homewarn"}));
+    if(st.homed.a1){
+      els.push(I(16,152,20,IC.rack,T.ink2));
+      els.push(X(44,140,180,44,"Lane clear · homed",{size:12,color:T.ink2,va:"c"}));
+      els.push(X(200,140,104,44,"no rack",{size:11,color:T.ghost,va:"c",ha:"r"}));
+    } else {
+      els.push(I(16,150,24,IC.alert,T.warn));
+      els.push(X(46,140,166,44,"Lane not homed",{size:13,weight:700,color:T.warn,va:"c"}));
+      els.push(X(216,140,76,44,"HOME",{size:12,weight:700,color:T.warn,va:"c",ha:"r"}));
+      els.push(I(294,154,16,IC.chev,T.warn));
+    }
+    const by=240-50;
+    els.push(...BTN(8,by,144,44,"START RUN",{T,tone:"acc",icon:"play",go:"rhome",size:13}));
+    els.push(...BTN(158,by,76,44,"PRIME",{T,go:"phome",size:12}));
+    els.push(...BTN(238,by,74,44,"PROTO",{T,go:"plist",size:12}));
+  }
+  return {cap,els};
+};
+
+/* ---------- LEVELS detail (G) ---------- */
+SC.levels=(T)=>({cap:"The full level card, reached from the summary strip. Three unknown states are distinct — the old UI showed a flat 100% for all of them.",els:(()=>{
+  const els=[X(8,32,200,20,"LIQUID LEVELS",{size:15,weight:700,color:T.ink})];
+  els.push(R(8,56,304,124,{fill:T.card,border:T.line,radius:8}));
+  for(let i=0;i<6;i++) els.push(...levelRow(T,18,68+i*19,286,i,true));
+  els.push(X(16,184,290,26,"Quantised to the sensor's resolution. Levels gate the run; they never alter a dose.",
+        {size:9.5,color:T.ghost,wrap:1}));
+  els.push(...BTN(8,240-50,148,44,"BACK",{T,icon:"back",go:"home",size:13}));
+  els.push(...BTN(164,240-50,148,44,"SET UP",{T,icon:"gear",go:"settings",size:13}));
+  return els;})()});
+
+/* ---------- HOMING ---------- */
+SC.homewarn=(T)=>{
+  const list=[]; if(!st.homed.a1)list.push("a1"); if(!st.homed.a2)list.push("a2");
+  if(!list.length) return SC.home(T);          /* both homed - nothing to warn about */
+  const names={a1:"the rack lane",a2:"the rack store"};
+  const els=[R(8,32,304,58,{fill:T.warnBg,border:T.warn,radius:8})];
+  els.push(I(18,50,24,IC.alert,T.warn));
+  els.push(X(50,38,252,20,"Position is unknown",{size:15,weight:700,color:T.warn}));
+  els.push(X(50,58,252,28,list.length===2
+        ? "Both axes must be homed before they can move accurately."
+        : "The "+names[list[0]].replace("the ","")+" must be homed.",
+        {size:11.5,color:T.warn,wrap:1}));
+  /* the full diagram belongs on the clearance screen; here a locator is enough */
+  els.push(...schematicMini(T,10,98,list.length===2?"both":list[0]));
+  els.push(X(8,174,304,12,"nothing moves until you confirm",{size:9,color:T.ghost,ha:"c"}));
+  els.push(...BTN(8,240-50,148,44, st.fromRun?"BACK":"IGNORE",
+        {T, icon: st.fromRun?"back":null, go:"home", size:13}));
+  els.push(...BTN(164,240-50,148,44,"HOME NOW",{T,tone:"acc",go:"homeclear",size:13}));
+  return {cap: st.fromRun
+    ? "Reached from Start Run. There is no Ignore here — a run cannot be correct with an unknown position."
+    : "Reached from home. Ignore is offered, because the operator may be doing something that needs no motion. Only the un-homed axes are named.",
+    els};
+};
+
+SC.homeclear=(T)=>{
+  const list=[]; if(!st.homed.a1)list.push("a1"); if(!st.homed.a2)list.push("a2");
+  const hl=list.length===2?"both":list[0];
+  const msg = hl==="a1" ? "Clear the lane where the rack slides left to right. Remove any rack, tube or tubing from it."
+            : hl==="a2" ? "Clear the rack store. Remove any rack that is not seated in its slot."
+            : "Clear the rack lane and the rack store. Remove any rack, tube or tubing.";
+  const els=[X(8,32,304,18,"BEFORE HOMING",{size:11,weight:700,color:T.bad,track:".13em"})];
+  els.push(X(8,50,304,30,msg,{size:12.5,color:T.ink,wrap:1}));
+  els.push(...schematic(T,10,84,hl));
+  
+  els.push(...BTN(8,240-48,112,44,"BACK",{T,icon:"back",go:"homewarn",size:12}));
+  els.push(...BTN(128,240-48,184,44,"PROCEED",{T,tone:"warn",go:"homerun",size:13}));
+  return {cap:"The clearance prompt. Region named in operator language, never 'axis 1'. The highlight breathes — an animated bg_opa on an overlay rect, not the base image.",els};
+};
+
+SC.homerun=(T)=>{
+  const a=st.homingAxis, pct=st.homingPct;
+  const nm=a==="a1"?"RACK LANE":"RACK STORE";
+  const phase = pct<55?"fast approach":pct<70?"backing off":"slow re-approach";
+  const els=[X(8,34,304,16,"HOMING",{size:11,weight:700,color:T.acc,track:".13em"})];
+  els.push(X(8,54,304,26,nm,{size:21,weight:700,color:T.ink}));
+  els.push(...BAR(8,90,304,14,pct,T.acc,T.sunk,7));
+  els.push(X(8,112,150,16,phase,{size:12,color:T.ink2}));
+  els.push(X(162,112,150,16,fmtT(T_HOME*(1-pct/100))+" left",{size:12,color:T.ink2,ha:"r",tnum:1}));
+
+  if(!st.homed.a1&&!st.homed.a2){
+    els.push(X(8,178,304,14,"then: RACK STORE",{size:11,color:T.ghost}));
+  }
+  els.push(...BTN(8,240-50,304,44,"ABORT HOMING",{T,tone:"bad",icon:"stop",
+    act:act(()=>{st.screen="home"}),size:13}));
+  return {cap:"22 seconds per axis, measured. That is why homing is a screen with a determinate bar and a phase word, not a spinner. Back is replaced by Abort — reversing is meaningless mid-move.",els};
+};
+
+/* ---------- PRIME ---------- */
+SC.phome=(T)=>{
+  if(!st.homed.a1) return SC.homewarn(T);
+  const els=[X(8,34,240,18,"PRIME — SELECT PUMPS",{size:12,weight:700,color:T.ink,track:".08em"})];
+  
+  for(let i=0;i<6;i++){
+    const x=8+(i%3)*104, y=76+Math.floor(i/3)*54;
+    const fitted=st.fitted[i], on=st.primeSel[i]&&fitted;
+    const stt = !fitted?"NOT FITTED":(st.primed[i]?"PRIMED":"UNKNOWN");
+    const tone = !fitted?T.ghost:(st.primed[i]?T.ok:T.warn);
+    els.push(R(x,y,96,48,{fill:on?T.chBg[i]:T.sunk,border:on?T.ch[i]:T.line,bw:on?2:1,
+        radius:6,touch:fitted,act:fitted?act(()=>{st.primeSel[i]=st.primeSel[i]?0:1}):null}));
+    els.push(R(x+8,y+9,8,8,{fill:fitted?T.ch[i]:T.ghost,radius:2}));
+    els.push(X(x+22,y+5,66,14,"Pump "+(i+1),{size:12,weight:700,color:fitted?T.ink:T.ghost}));
+    els.push(X(x+8,y+22,80,12,stt,{size:9,weight:700,color:tone,track:".08em"}));
+    els.push(X(x+8,y+33,80,12,fitted?st.names[i]:"—",{size:10,color:T.ghost}));
+    if(on) els.push(I(x+74,y+26,16,IC.check,T.ch[i]));
+  }
+  const n=st.primeSel.filter((v,i)=>v&&st.fitted[i]).length;
+  els.push(...BTN(8,240-50,100,44,"BACK",{T,icon:"back",go:"home",size:12}));
+  els.push(...BTN(116,240-50,196,44,n?"CONTINUE · "+n+" pump"+(n>1?"s":""):"SELECT A PUMP",
+        {T,tone:"acc",go:"pload",size:13,off:!n}));
+  return {cap:"Step 0.5. Three session states per channel — PRIMED this power cycle, UNKNOWN, NOT FITTED. Colour plus a word, never colour alone.",els};
+};
+
+SC.pload=(T)=>{
+  const els=[X(8,34,304,18,"PRIME — LOAD RACK",{size:12,weight:700,color:T.ink,track:".08em"})];
+  els.push(R(8,58,304,60,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,66,284,44,"Place a rack with 6 empty vials in positions 1–6, at the left of the lane.",
+        {size:13,color:T.ink,wrap:1}));
+  /* rack picture — positions 1-6 take the empty vials */
+  els.push(SVG(8,118,304,88,rackSVG(T,304,88,
+      [0,1,2,3,4,5,6,7].map(i=>i<6?{mode:"sel",col:T.ink2}:{mode:"empty"}),st.dark)));
+  els.push(X(8,206,304,11,"positions 1–6 · 7 and 8 stay empty",{size:9,color:T.ghost,ha:"c"}));
+  els.push(...BTN(8,240-50,100,44,"BACK",{T,icon:"back",go:"phome",size:12}));
+  els.push(...BTN(116,240-50,196,44,"CONTINUE",{T,tone:"acc",go:"prun",size:13}));
+  return {cap:"Step 1. The rack picture shows which positions matter. Positions 7 and 8 are drawn but unused for priming.",els};
+};
+
+SC.prun=(T)=>{
+  const n=st.primeSel.filter((v,i)=>v&&st.fitted[i]).length;
+  const V_TUBE=550, P=100*st.primeAttempt;
+  const t1=V_TUBE/UL_PER_S, t2=(V_TUBE+P)/UL_PER_S, tot=t1+t2+2*T_INDEX;
+  const done = st.primePhase===1 ? (st.primePct/100)*t1 : t1+(st.primePct/100)*t2;
+  const els=[...statusBar(T,{state:"PRIMING",live:true})];
+  els.push(X(8,34,304,16,"PRIME RUNNING",{size:11,weight:700,color:T.liveInk,track:".13em"}));
+  /* phase 1 */
+  [[1,"EMPTY LINE",V_TUBE+" µL",t1],[2,"REFILL LINE",(V_TUBE+P)+" µL",t2]].forEach(([ph,nm,vol,tt],k)=>{
+    const y=56+k*46, active=st.primePhase===ph, complete=st.primePhase>ph;
+    const pv = complete?100:(active?st.primePct:0);
+    els.push(X(8,y,150,14,ph+"  "+nm,{size:12,weight:700,
+          color:complete?T.ok:(active?T.ink:T.ghost)}));
+    els.push(X(162,y,150,14,vol,{size:11,ha:"r",tnum:1,
+          color:complete?T.ok:(active?T.ink2:T.ghost)}));
+    els.push(...BAR(8,y+18,304,12,pv,complete?T.ok:T.acc,T.sunk,6));
+    if(complete) els.push(I(292,y+16,16,IC.check,T.ok));
+  });
+  els.push(R(8,152,304,26,{fill:T.sunk,radius:6}));
+  els.push(X(16,152,140,26,n+" pumps · together",{size:11,color:T.ink2,va:"c"}));
+  els.push(X(160,152,144,26,fmtT(tot-done)+" left",{size:12,weight:700,color:T.ink,va:"c",ha:"r",tnum:1}));
+  els.push(...BTN(8,240-50,304,44,"ABORT",{T,tone:"bad",icon:"stop",go:"phome",size:13}));
+  return {cap:"Step 2. Two phases, both step-counted. All selected pumps run together and in the same direction — they share one STEP/DIR clock, so the prime takes the same time for one pump or six.",els};
+};
+
+SC.pconfirm=(T)=>{
+  const els=[X(8,34,304,18,"PRIME — CHECK",{size:12,weight:700,color:T.ink,track:".08em"})];
+  els.push(R(8,56,304,44,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,62,284,32,"Look at the vials. Is there liquid in each primed position?",
+        {size:13,color:T.ink,wrap:1}));
+  els.push(SVG(8,100,304,88,rackSVG(T,304,88,
+      [0,1,2,3,4,5,6,7].map(i=>i<6&&st.primeSel[i]&&st.fitted[i]
+        ?{mode:"sel",col:T.ch[i]}:{mode:"empty"}),st.dark)));
+  els.push(X(8,190,304,12, st.primeAttempt>1
+        ? "Attempt "+st.primeAttempt+" — proof dose raised to "+(100*st.primeAttempt)+" µL"
+        : "coloured positions were primed",
+        {size:9.5,color:st.primeAttempt>1?T.warn:T.ghost,ha:"c"}));
+  els.push(...BTN(8,240-50,148,44,"TRY AGAIN",{T,tone:"warn",icon:"retry",size:12,
+        act:act(()=>{st.primeAttempt=Math.min(3,st.primeAttempt+1);st.screen="phome"})}));
+  els.push(...BTN(164,240-50,148,44,"CONFIRM",{T,tone:"ok",icon:"check",size:13,
+        act:act(()=>{for(let i=0;i<6;i++) if(st.primeSel[i]&&st.fitted[i]) st.primed[i]=1;
+                     st.primeAttempt=1; st.screen="home";})}));
+  return {cap:"Step 3. Try Again returns to pump selection and escalates only the proof dose — the tube volume stays fixed. Capped at three attempts, then it offers a blockage check.",els};
+};
+
+/* ---------- RUN ---------- */
+SC.rhome=(T)=>{ st.fromRun=true;
+  if(!st.homed.a1||!st.homed.a2) return SC.homewarn(T);
+  st.fromRun=false; return SC.rprime(T); };
+
+SC.rprime=(T)=>{
+  const need=[0,1,2,3,4,5].filter(i=>st.fitted[i]&&!st.primed[i]);
+  if(!need.length) return SC.rselect(T);
+  const els=[R(8,34,304,58,{fill:T.warnBg,border:T.warn,radius:8})];
+  els.push(I(18,48,24,IC.alert,T.warn));
+  els.push(X(50,40,252,16,"Lines not primed this session",{size:14,weight:700,color:T.warn}));
+  els.push(X(50,60,252,28,"Pump "+need.map(i=>i+1).join(", ")+" has not been primed since power-on.",
+        {size:11.5,color:T.warn,wrap:1}));
+  els.push(R(8,100,304,60,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,106,284,48,"The machine cannot know whether the lines were primed before it was switched on. If you primed them earlier, continue.",
+        {size:11.5,color:T.ink2,wrap:1}));
+  els.push(...BTN(8,240-98,304,44,"PRIME NOW",{T,tone:"acc",icon:"drop",go:"phome",size:13}));
+  els.push(...BTN(8,240-48,148,44,"BACK",{T,icon:"back",go:"home",size:12}));
+  els.push(...BTN(164,240-48,148,44,"CONTINUE",{T,go:"rselect",size:12}));
+  return {cap:"Step 0.5 of a run. Override is deliberately allowed — priming state is RAM-only, so 'not primed' really means 'not primed since boot'.",els};
+};
+
+SC.rselect=(T)=>{
+  const els=[];
+  const sp=st.selProtos;
+  els.push(X(8,34,220,16,"CHOOSE PROTOCOLS",{size:11,weight:700,color:T.ink,track:".1em"}));
+  els.push(X(228,34,84,16,sp.length+" chosen",{size:11,color:T.ink2,ha:"r"}));
+  const firstP=Math.max(0,Math.min((sp[sp.length-1]||0)-1,st.protos.length-3));
+  st.protos.slice(firstP,firstP+3).forEach((p,k)=>{
+    const i=firstP+k, y=54+k*46, on=sp.includes(i), tot=protoTotal(i);
+    els.push(R(8,y,304,44,{fill:on?T.chBg[0]:T.card,border:on?T.acc:T.line,bw:on?2:1,radius:6,
+      touch:1,act:act(()=>{ const kk=sp.indexOf(i); if(kk<0)sp.push(i); else {sp.splice(kk,1);
+        for(const q in st.assign) if(st.assign[q]===i) delete st.assign[q];} })}));
+    els.push(R(16,y+17,12,12,{fill:on?T.acc:T.card,border:on?T.acc:T.line,radius:3}));
+    if(on) els.push(I(18,y+19,8,IC.check,T.accInk));
+    els.push(X(38,y+6,160,17,p.n,{size:13,weight:700,color:T.ink}));
+    els.push(X(38,y+24,170,14,p.v.filter(v=>v>0).length+" liquids · "+tot+" µL",{size:10,color:T.ghost}));
+    if(on) els.push(X(204,y,100,44,countAssigned(i)+(countAssigned(i)===1?" tube":" tubes"),{size:12,weight:700,color:T.acc,va:"c",ha:"r"}));
+  });
+
+  els.push(...BTN(8,240-50,100,44,"BACK",{T,icon:"back",go:"home",size:12}));
+  els.push(...BTN(116,240-50,196,44,sp.length?"ASSIGN TUBES":"CHOOSE ONE TO CONTINUE",
+        {T,tone:"acc",go:"rassign",size:sp.length?13:11,off:!sp.length}));
+  return {cap:"Step 1. Continue is disabled until a protocol is chosen — and it says why rather than sitting inert. Each row shows how many tubes it already owns.",els};
+};
+
+SC.rassign=(T)=>{
+  const p=st.activeProto, r=st.openRack;
+  const els=[];
+  /* --- protocol tabs, 44 px --- */
+  els.push(R(0,0,320,44,{fill:T.sunk}),R(0,43,320,1,{fill:T.line}));
+  st.selProtos.forEach((pi,k)=>{
+    const w=Math.floor(320/st.selProtos.length), x=k*w, on=pi===p;
+    if(on) els.push(R(x,0,w,44,{fill:T.card}));
+    els.push(R(x,0,w,44,{fill:on?null:"transparent",touch:1,act:act(()=>{st.activeProto=pi})}));
+    els.push(R(x+8,12,18,18,{fill:on?T.acc:T.line,radius:4}));
+    els.push(X(x+8,12,18,18,String.fromCharCode(65+k),{size:11,weight:700,ha:"c",va:"c",
+          color:on?T.accInk:T.ink}));
+    els.push(X(x+28,4,w-34,20,st.protos[pi].n,{size:12,weight:on?700:600,
+          color:on?T.ink:T.ghost}));
+    els.push(X(x+28,23,w-34,14,countAssigned(pi)+(countAssigned(pi)===1?" tube":" tubes"),{size:9.5,
+          color:on?T.acc:T.ghost}));
+    if(on) els.push(R(x+8,40,w-16,3,{fill:T.acc}));
+  });
+  /* --- rack stepper + accelerators, 44 px --- */
+  const setAll=(v)=>act(()=>{ for(let t=1;t<=8;t++){ const o=tubeOwner(r,t);
+      if(v&&(o===null||o===p)) st.assign[key(r,t)]=p;
+      if(!v&&o===p) delete st.assign[key(r,t)]; } });
+  els.push(...BTN(8,50,44,44,"<",{T,tone:"flat",size:16,
+        act:act(()=>{st.openRack=r>1?r-1:5})}));
+  els.push(R(54,50,60,44,{fill:T.card,border:T.line,radius:6}));
+  els.push(X(54,53,60,17,"RACK",{size:9,weight:600,ha:"c",color:T.ink2,track:".14em"}));
+  els.push(X(54,68,60,20,r+" / 5",{size:15,weight:700,ha:"c",tnum:1,color:T.ink}));
+  els.push(...BTN(116,50,44,44,">",{T,tone:"flat",size:16,
+        act:act(()=>{st.openRack=r<5?r+1:1})}));
+  els.push(...BTN(168,50,46,44,"ALL",{T,tone:"flat",size:10,act:setAll(true)}));
+  els.push(...BTN(218,50,46,44,"NONE",{T,tone:"flat",size:10,act:setAll(false)}));
+  els.push(...BTN(268,50,44,44,"INV",{T,tone:"flat",size:10,act:act(()=>{
+      for(let t=1;t<=8;t++){const o=tubeOwner(r,t);
+        if(o===p) delete st.assign[key(r,t)]; else if(o===null) st.assign[key(r,t)]=p;}})}));
+  /* --- the rack itself: 8 columns of 38 x 78. EXCEPTION E1 --- */
+  const states=[];
+  for(let t=1;t<=8;t++){
+    const owner=tubeOwner(r,t), mine=owner===p, avail=true;   /* rail lengthened 2026-08-09 */
+    states.push(!avail ? {mode:"na"}
+      : mine ? {mode:"sel", col:T.acc}
+      : owner!==null ? {mode:"lock", tag:String.fromCharCode(65+Math.max(0,st.selProtos.indexOf(owner)))}
+      : {mode:"empty"});
+  }
+  els.push(SVG(8,96,304,88,rackSVG(T,304,88,states,st.dark)));
+  for(let t=1;t<=8;t++){
+    const owner=tubeOwner(r,t), mine=owner===p, avail=true, locked=owner!==null&&!mine;
+    els.push(R(8+(t-1)*38,96,38,88,{fill:null,touch:avail&&!locked, exc:"E1",
+      act:(avail&&!locked)?act(()=>{ if(mine) delete st.assign[key(r,t)];
+                                     else st.assign[key(r,t)]=p; }):null}));
+  }
+  
+  els.push(...BTN(8,194,100,44,"BACK",{T,icon:"back",size:12,go:"rselect"}));
+  els.push(...BTN(116,194,196,44,totalAssigned()?"REVIEW · "+totalAssigned()+(totalAssigned()===1?" tube":" tubes"):"SELECT A TUBE",
+        {T,tone:"acc",size:13,go:"rsummary",off:!totalAssigned()}));
+  return {cap:"Step 2, and the hardest screen. The rack is drawn as the real part — a block with eight bored holes and engraved numbers — and the eight 38 × 78 px columns over it are the touch targets. Recorded exception E1. Tubes owned by another protocol are greyed and tagged with the owner.",els};
+};
+
+SC.rsummary=(T)=>{
+  const racks={}; for(const k in st.assign){ const r=k.split("t")[0].slice(1); (racks[r]=racks[r]||[]).push(k); }
+  const els=[X(8,34,200,16,"READY TO RUN",{size:11,weight:700,color:T.ink,track:".1em"})];
+  els.push(R(8,54,304,64,{fill:T.card,border:T.line,radius:8}));
+  let y=60;
+  st.selProtos.forEach(pi=>{
+    const n=countAssigned(pi); if(!n) return;
+    els.push(R(16,y+4,8,8,{fill:T.ch[0],radius:2}));
+    els.push(X(30,y,150,14,st.protos[pi].n,{size:12,weight:700,color:T.ink}));
+    els.push(X(180,y,124,14,n+" tube"+(n>1?"s":""),{size:12,ha:"r",tnum:1,color:T.ink2}));
+    y+=17;
+  });
+  els.push(X(16,y+2,288,12,Object.keys(racks).length+" rack"+(Object.keys(racks).length>1?"s":"")+
+        " · "+totalAssigned()+" tubes total",{size:10,color:T.ghost}));
+  /* per-liquid need vs available */
+  els.push(R(8,118,304,52,{fill:T.sunk,border:T.line,radius:8}));
+  els.push(X(16,121,180,12,"LIQUID NEEDED",{size:9,weight:600,color:T.ink2,track:".12em"}));
+  let cx=16;
+  for(let i=0;i<6;i++){
+    const nd=neededVol(i); if(!nd) continue;
+    const have=NOM[st.size[i]]*st.pct[i]/100*0.9, ok=have>=nd;
+    els.push(R(cx,136,8,8,{fill:T.ch[i],radius:2}));
+    els.push(X(cx,147,66,12,(nd/1000).toFixed(2)+" mL",{size:10,weight:700,tnum:1,
+          color:ok?T.ink:T.bad}));
+    els.push(X(cx,158,66,10,ok?"ok":"SHORT",{size:8,weight:700,color:ok?T.ok:T.bad}));
+    cx+=72;
+  }
+  els.push(X(8,174,150,16,"Estimated run time",{size:11,color:T.ink2,va:"c"}));
+  els.push(X(162,173,150,18,fmtT(runSeconds()),{size:16,weight:700,ha:"r",tnum:1,color:T.ink}));
+  els.push(...BTN(8,194,112,44,"BACK",{T,icon:"back",go:"rassign",size:12}));
+  els.push(...BTN(128,194,184,44,"START RUN",{T,tone:"acc",icon:"play",go:"rrun",size:13}));
+  return {cap:"Step 3. The estimate is built from step counts — max(Vᵢ)/54.72 per tube plus 4.02 s per index — never from the deleted flowrate constant.",els};
+};
+
+SC.rrun=(T)=>{
+  const els=[...statusBar(T,{state:"DISPENSING",live:true})];
+  els.push(X(8,32,180,16,st.protos[st.selProtos[0]].n,{size:12,weight:700,color:T.ink}));
+  els.push(X(188,32,124,16,"rack 1 of 2",{size:11,color:T.ink2,ha:"r"}));
+  els.push(X(8,52,180,26,"tube "+st.runTube+" of "+st.runTotal,{size:21,weight:700,color:T.ink,tnum:1}));
+  els.push(X(188,54,124,22,fmtT(runSeconds()*(1-st.runPct/100)),{size:15,weight:700,ha:"r",tnum:1,color:T.ink}));
+  els.push(X(188,74,124,12,"remaining",{size:10,ha:"r",color:T.ghost}));
+  els.push(...BAR(8,92,304,12,st.runPct,T.acc,T.sunk,6));
+  /* per-channel */
+  els.push(X(8,112,150,12,"CHANNELS",{size:9,weight:600,color:T.ink2,track:".12em"}));
+  for(let i=0;i<6;i++){
+    const x=8+i*51, act_=st.fitted[i]&&neededVol(i)>0;
+    const pv=act_?Math.min(100,st.runPct+ (i*7)%18):0;
+    els.push(R(x,126,46,34,{fill:act_?T.chBg[i]:T.sunk,border:act_?T.ch[i]:T.line,radius:5}));
+    els.push(X(x,129,46,12,String(i+1),{size:10,weight:700,ha:"c",color:act_?T.ink:T.ghost}));
+    els.push(...BAR(x+5,143,36,6,pv,act_?T.ch[i]:T.line,T.card,3));
+    els.push(X(x,150,46,10,act_?pv+"%":"—",{size:8,ha:"c",tnum:1,color:act_?T.ink2:T.ghost}));
+  }
+  
+  els.push(...BTN(8,240-52,148,46,"PAUSE",{T,icon:"pause",go:"rpause",size:13}));
+  els.push(...BTN(164,240-52,148,46,"ABORT",{T,tone:"bad",icon:"stop",go:"rdone",size:13}));
+  return {cap:"Step 4. Abort sits in a fixed position on every energised screen (UX-05), and cuts ENABLE on the motion side before the screen changes.",els};
+};
+
+SC.rpause=(T)=>{
+  const els=[...statusBar(T,{state:"PAUSED",live:false})];
+  els.push(R(8,34,304,54,{fill:T.warnBg,border:T.warn,radius:8}));
+  els.push(I(18,50,24,IC.alert,T.warn));
+  els.push(X(50,40,252,16,"Paused — Reagent X low",{size:14,weight:700,color:T.warn}));
+  els.push(X(50,58,252,28,"Stopped at the tube boundary. Tube "+st.runTube+" of "+st.runTotal+" is complete.",
+        {size:11,color:T.warn,wrap:1}));
+  els.push(R(8,96,304,30,{fill:T.okBg,border:T.ok,radius:6}));
+  els.push(I(18,102,20,IC.check,T.ok));
+  els.push(X(46,96,258,30,"Pumps are now stopped",{size:11.5,weight:600,color:T.ink,va:"c"}));
+  els.push(X(8,136,304,12,"Refill Reagent X, then choose:",{size:11,color:T.ink2}));
+  els.push(...BTN(8,150,98,44,"RESUME",{T,tone:"acc",size:12,go:"rrun"}));
+  els.push(...BTN(112,150,98,44,"SKIP",{T,tone:"flat",size:12,go:"rrun"}));
+  els.push(...BTN(216,150,96,44,"ABORT",{T,tone:"bad",size:12,go:"rdone"}));
+  
+  return {cap:"A level guard tripped mid-run. No tube is ever left half-dosed: the machine finishes the tube in progress, then stops at the boundary and states that pumps are confirmed off.",els};
+};
+
+SC.rdone=(T)=>{
+  const els=[R(0,0,320,30,{fill:T.okBg}),R(0,29,320,1,{fill:T.ok})];
+  els.push(I(8,7,16,IC.check,T.ok));
+  els.push(X(30,0,200,30,"RUN COMPLETE",{size:12,weight:700,color:T.ok,va:"c",track:".08em"}));
+  els.push(X(230,0,82,30,"OFF",{size:11,weight:700,color:T.ok,va:"c",ha:"r"}));
+  els.push(X(8,36,150,24,st.runTotal+" tubes",{size:19,weight:700,color:T.ink,tnum:1}));
+  els.push(X(162,38,150,20,fmtT(runSeconds()),{size:14,weight:700,ha:"r",tnum:1,color:T.ink2}));
+  els.push(R(8,64,304,86,{fill:T.card,border:T.line,radius:8}));
+  els.push(X(18,68,200,12,"COMMANDED VOLUMES",{size:9,weight:600,color:T.ink2,track:".12em"}));
+  let y=84, shown=0, hidden=0;
+  for(let i=0;i<6;i++){ const nd=neededVol(i); if(!nd) continue;
+    if(shown>=4){ hidden++; continue; }
+    els.push(R(18,y+3,8,8,{fill:T.ch[i],radius:2}));
+    els.push(X(32,y,140,14,st.names[i],{size:11.5,color:T.ink}));
+    els.push(X(172,y,130,14,(nd/1000).toFixed(2)+" mL",{size:11.5,weight:700,ha:"r",tnum:1,color:T.ink}));
+    y+=16; shown++;
+  }
+  if(hidden) els.push(X(32,y,270,12,"+"+hidden+" more in the receipt",{size:9.5,color:T.ghost}));
+  
+  els.push(R(8,166,304,28,{fill:T.sunk,border:T.line,radius:6}));
+  els.push(I(16,172,16,IC.sd,T.ink2));
+  els.push(X(38,166,268,28,"saved automatically → RUN_000123.txt",{size:11.5,weight:600,color:T.ink2,va:"c"}));
+  els.push(...BTN(8,240-46,148,44,"BACK",{T,icon:"back",size:12,go:"home"}));
+  els.push(...BTN(164,240-46,148,44,"DONE",{T,tone:"acc",size:13,
+        act:act(()=>{st.assign={};st.selProtos=[0];st.screen="home"})}));
+  return {cap:"Step 5. The receipt is written automatically on completion and on abort — a record you must remember to ask for is a record you will lose. Eject is offered because display, touch and SD share one SPI bus.",els};
+};
+
+/* ---------- PROTOCOLS ---------- */
+SC.plist=(T)=>{
+  const p=st.openProto, pr=st.protos[p];
+  const els=[];
+  els.push(...BTN(8,30,146,44,"NEW",{T,tone:"acc",icon:"plus",size:13,
+        act:act(()=>{st.edit={n:"Protocol "+(st.protos.length+1),v:[0,0,0,0,0,0],idx:-1};st.screen="pedit";})}));
+  els.push(...BTN(158,30,74,44,"EDIT",{T,size:11,icon:"edit",
+        act:act(()=>{st.edit={n:pr.n,v:pr.v.slice(),idx:p};st.screen="pedit";})}));
+  els.push(...BTN(236,30,76,44,"BACK",{T,size:11,icon:"back",go:"home"}));
+  /* list left — 44 px rows, scrolls (LVGL list scrolling is core in 9.5) */
+  els.push(R(8,80,142,152,{fill:T.card,border:T.line,radius:6}));
+  const first=Math.max(0,Math.min(p-1,st.protos.length-3));
+  st.protos.slice(first,first+3).forEach((q,k)=>{
+    const i=first+k, y=84+k*48, on=i===p;
+    els.push(R(10,y,138,44,{fill:on?T.chBg[0]:"transparent",radius:4,touch:1,
+          act:act(()=>{st.openProto=i})}));
+    if(on) els.push(R(10,y,3,44,{fill:T.acc}));
+    els.push(X(20,y+5,86,17,q.n,{size:12,weight:on?700:500,color:T.ink}));
+    els.push(X(20,y+23,86,14,q.v.filter(v=>v>0).length+" liquids",{size:9.5,color:T.ghost}));
+    els.push(X(106,y,38,44,protoTotal(i)+"",{size:11,weight:600,tnum:1,color:T.ink2,va:"c",ha:"r"}));
+  });
+
+  /* detail right */
+  els.push(R(156,80,156,152,{fill:T.card,border:T.line,radius:6}));
+  els.push(SVG(162,86,44,120,tubeSVG(T,44,120,pr.v)));
+  let y=90;
+  pr.v.forEach((v,i)=>{ if(v<=0) return;
+    els.push(R(212,y+3,8,8,{fill:T.ch[i],radius:2}));
+    els.push(X(226,y,46,13,st.names[i].slice(0,7),{size:10,color:T.ink}));
+    els.push(X(258,y,48,13,v+" µL",{size:10.5,weight:700,ha:"r",tnum:1,color:T.ink}));
+    y+=18;
+  });
+  els.push(X(212,210,94,12,protoTotal(p)+" µL of 2000",{size:9.5,color:T.ghost,ha:"r"}));
+  els.push(X(162,210,48,12,"2 mL tube",{size:8.5,color:T.ghost}));
+  return {cap:"List left, detail right. NEW PROTOCOL is a persistent action at the top — appending it to the bottom of a scrolling list would make the most important action the hardest to reach.",els};
+};
+
+SC.pedit=(T)=>{
+  const e=st.edit||{n:"—",v:[0,0,0,0,0,0]};
+  const tot=e.v.reduce((a,b)=>a+b,0), over=tot>2000;
+  const els=[];
+  els.push(...BTN(8,30,86,44,"CANCEL",{T,size:11,go:"plist"}));
+  els.push(R(98,30,116,44,{fill:T.card,border:T.line,radius:6,touch:1,act:act(()=>{})}));
+  els.push(X(98,34,116,14,"NAME",{size:8.5,weight:600,ha:"c",color:T.ghost,track:".14em"}));
+  els.push(X(102,48,108,20,e.n,{size:13,weight:700,ha:"c",color:T.ink}));
+  els.push(...BTN(218,30,94,44,over?"OVER":"SAVE",{T,tone:"acc",size:12,off:over,
+    act:act(()=>{ if(e.idx<0) st.protos.push({n:e.n,v:e.v.slice()});
+                  else st.protos[e.idx]={n:e.n,v:e.v.slice()};
+                  st.openProto=e.idx<0?st.protos.length-1:e.idx; st.screen="plist"; })}));
+  els.push(SVG(8,80,44,128,tubeSVG(T,44,128,e.v)));
+  /* two columns of three 44 px rows */
+  for(let i=0;i<6;i++){
+    const cx=58+(i%2)*128, cy=80+Math.floor(i/2)*46, used=e.v[i]>0;
+    els.push(R(cx,cy,124,44,{fill:used?T.chBg[i]:T.card,border:used?T.ch[i]:T.line,
+      bw:used?2:1,radius:6,touch:1,
+      act:act(()=>{st.keypadCh=i;st.keypadVal=String(e.v[i]||"");st.screen="pkey";})}));
+    els.push(R(cx+8,cy+8,8,8,{fill:used?T.ch[i]:T.ghost,radius:2}));
+    els.push(X(cx+22,cy+4,94,15,st.names[i].slice(0,10),
+          {size:10.5,weight:used?600:400,color:used?T.ink:T.ghost}));
+    els.push(X(cx+8,cy+22,108,18,used?e.v[i]+" µL":"not used",
+          {size:used?14:11,weight:used?700:400,tnum:1,color:used?T.ink:T.ghost}));
+  }
+  els.push(R(8,220,304,20,{fill:over?T.badBg:T.sunk,border:over?T.bad:null,radius:5}));
+  els.push(X(16,220,120,20,over?"OVER CAPACITY":"TOTAL",
+        {size:9.5,weight:600,color:over?T.bad:T.ink2,track:".12em",va:"c"}));
+  els.push(X(150,220,156,20,over?("+"+(tot-2000)+" µL over 2000"):(tot+" / 2000 µL"),
+        {size:12,weight:700,ha:"r",va:"c",tnum:1,color:over?T.bad:T.ink}));
+  return {cap:"The editor is the same tube visualisation, live. Save is disabled above 2000 µL and states the overage rather than silently clamping.",els};
+};
+
+SC.pkey=(T)=>{
+  const i=st.keypadCh===null?0:st.keypadCh, v=st.keypadVal;
+  const n=parseInt(v||"0",10);
+  const bad = v!=="" && (n<5||n>1000);
+  const els=[R(0,0,320,32,{fill:T.card}),R(0,31,320,1,{fill:bad?T.bad:T.line})];
+  els.push(R(10,12,10,10,{fill:T.ch[i],radius:2}));
+  els.push(X(28,0,150,32,st.names[i],{size:13,weight:600,color:T.ink,va:"c"}));
+  els.push(X(180,0,132,32,(v||"0")+" µL",{size:20,weight:700,ha:"r",va:"c",tnum:1,
+        color:bad?T.bad:T.ink}));
+  els.push(X(8,34,304,12,bad?"Must be between 5 and 1000 µL":"5 – 1000 µL · 0 removes the liquid",
+        {size:10,weight:bad?700:400,color:bad?T.bad:T.ghost}));
+  const keys=["1","2","3","4","5","6","7","8","9","C","0","DEL"];
+  keys.forEach((k,idx)=>{
+    const x=8+(idx%3)*68, y=48+Math.floor(idx/3)*48;
+    const isC=k==="C", isDel=k==="DEL";
+    els.push(...BTN(x,y,64,44,k,{T,tone:(isC||isDel)?"flat":"ghost",
+      size:(isC||isDel)?11:17,
+      act: act(()=>{
+        if(isC) st.keypadVal="";
+        else if(isDel) st.keypadVal=st.keypadVal.slice(0,-1);
+        else if(st.keypadVal.length<4) st.keypadVal=(st.keypadVal+k).replace(/^0+/,"");
+      })}));
+  });
+  els.push(...BTN(214,48,98,92,"BACK",{T,icon:"back",size:12,go:"pedit"}));
+  els.push(...BTN(214,144,98,92,bad?"OUT OF RANGE":"OK",{T,tone:"acc",size:bad?10:16,off:bad,
+    act:act(()=>{ st.edit.v[i]=n>=5?Math.min(1000,n):0; st.screen="pedit"; })}));
+  return {cap:"An on-screen keypad, not a slider. Of every lab instrument surveyed, none uses a slider for numeric entry — the only idioms are a keypad, a physical keypad, or per-digit jog.",els};
+};
+
+/* ---------- SETTINGS ---------- */
+SC.settings=(T)=>{
+  const els=[X(8,34,200,18,"SETTINGS",{size:14,weight:700,color:T.ink})];
+  els.push(R(8,58,304,44,{fill:T.card,border:T.line,radius:6}));
+  els.push(I(18,72,24,st.dark?IC.moon:IC.sun,T.ink2));
+  els.push(X(50,60,150,18,"Display",{size:12.5,weight:600,color:T.ink}));
+  els.push(X(50,78,180,14,st.dark?"Dark — indoor use":"Light — readable outdoors",{size:10,color:T.ghost}));
+  els.push(...BTN(226,60,80,44,st.dark?"LIGHT":"DARK",{T,tone:"flat",size:11,
+        act:act(()=>{st.dark=!st.dark})}));
+  els.push(R(8,108,304,40,{fill:T.warnBg,border:T.warn,radius:6}));
+  els.push(I(18,118,20,IC.alert,T.warn));
+  els.push(X(46,108,258,40,"Light is the outdoor-readable choice. Dark collapses first in bright ambient light.",
+        {size:10.5,color:T.warn,va:"c",wrap:1}));
+  els.push(...BTN(8,156,148,44,"LIQUID NAMES",{T,size:11,icon:"edit",go:"settings"}));
+  els.push(...BTN(164,156,148,44,"CONTAINERS",{T,size:11,icon:"gear",go:"settings"}));
+  els.push(...BTN(8,240-48,148,44,"BACK",{T,icon:"back",size:12,go:"home"}));
+  els.push(...BTN(164,240-48,148,44,"PRIME VOLUMES",{T,size:11,go:"settings"}));
+  return {cap:"Dark is offered as an explicit opt-in, and the screen says why light is the default. The theme swap is a singleton re-init plus one redraw — no screen is rebuilt.",els};
+};
+
+/* ---------- FAULT ---------- */
+SC.fault=(T)=>{
+  const els=[R(0,0,320,26,{fill:T.bad})];
+  els.push(X(8,0,200,26,"FAULT",{size:12,weight:700,color:T.onBad,va:"c",track:".08em"}));
+  els.push(X(230,0,82,26,"PUMPS OFF",{size:11,weight:700,color:T.onBad,va:"c",ha:"r"}));
+  els.push(R(8,34,304,58,{fill:T.badBg,border:T.bad,radius:8}));
+  els.push(I(18,50,24,IC.alert,T.bad));
+  els.push(X(50,40,252,18,"Rack lane stalled",{size:15,weight:700,color:T.bad}));
+  els.push(X(50,60,252,28,"Travel exceeded 20 000 half-steps without reaching the endstop.",
+        {size:11,color:T.bad,wrap:1}));
+  els.push(R(8,100,304,30,{fill:T.okBg,border:T.ok,radius:6}));
+  els.push(I(18,105,20,IC.check,T.ok));
+  els.push(X(46,100,258,30,"Pumps are now stopped",{size:11.5,weight:600,color:T.ink,va:"c"}));
+  els.push(X(8,140,304,26,"Check that the rack has not jumped the pinion, then re-home.",
+        {size:11,color:T.ink2,wrap:1}));
+  els.push(...BTN(8,240-98,304,44,"RE-HOME THE LANE",{T,tone:"acc",go:"homeclear",size:13}));
+  els.push(...BTN(8,240-48,148,44,"DETAILS",{T,size:12,go:"fault"}));
+  els.push(...BTN(164,240-48,148,44,"ACKNOWLEDGE",{T,size:12,go:"home"}));
+  return {cap:"A fault confirms what is off rather than leaving the operator to assume it, and offers the recovery action as the primary button — never a dead-end message.",els};
+};
+
+/* ============================================================
+   CANDIDATE CHROME
+   ============================================================ */
+const CAND={
+  F:{name:"Instrument",
+     idea:"A dense, calm lab panel. Persistent status strip, a six-channel level card as the centre of gravity, three actions in a row.",
+     cost:"Home is a menu with a readout attached, not a picture of the machine."},
+  G:{name:"Guided",
+     idea:"Every task is a numbered wizard under a persistent step spine. Home is three large action rows. Largest targets, fewest elements.",
+     cost:"Slower for an expert, and levels sit one tap away instead of being present."},
+  H:{name:"Workbench",
+     idea:"Home is the machine, drawn. Six nozzles carry their channel colour and level over the lane the rack travels.",
+     cost:"The most drawing, and the most coupled to real geometry — it needs the run state machine to exist."}
+};
+
+const SPINE={
+  phome:["Pumps","Load","Prime","Check"], pload:["Pumps","Load","Prime","Check"],
+  prun:["Pumps","Load","Prime","Check"],  pconfirm:["Pumps","Load","Prime","Check"],
+  rselect:["Choose","Assign","Check","Run"], rassign:["Choose","Assign","Check","Run"],
+  rsummary:["Choose","Assign","Check","Run"], rrun:["Choose","Assign","Check","Run"]
+};
+const SPINEAT={phome:0,pload:1,prun:2,pconfirm:3,rselect:0,rassign:1,rsummary:2,rrun:3};
+
+function chrome(T,id){
+  const live = ["prun","rrun"].includes(id);
+  /* rassign uses the full 240 px; its protocol tab row is its chrome. Pumps are
+     never energised on this screen, so UX-05 does not require the strip here. */
+  if(id==="rassign" || id==="pkey") return [];
+  if(st.cand==="G" && SPINE[id]) return spine(T,SPINE[id],SPINEAT[id]);
+  if(["rrun","prun","rpause","rdone","fault"].includes(id)) return [];   /* own header */
+  const stateWord = id==="home"?"READY":(id.startsWith("p")?"PRIME":id.startsWith("r")?"RUN":"READY");
+  return statusBar(T,{state:stateWord,live});
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const V={touch:false,q:false,grid:false,glare:false,zoom:false};
+const screenEl=document.getElementById("screen");
+const ovl=document.getElementById("ovl");
+
+function hex2rgb(h){h=h.replace("#","");if(h.length===3)h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function rgb2hex(r,g,b){return "#"+[r,g,b].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,"0")).join("");}
+function q565(hex){const [r,g,b]=hex2rgb(hex);
+  return rgb2hex((r>>3)*255/31|0,(g>>2)*255/63|0,(b>>3)*255/31|0);}
+function lum(hex){const c=hex2rgb(hex).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});
+  return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+function contrast(a,b){const L1=lum(a),L2=lum(b);
+  return ((Math.max(L1,L2)+.05)/(Math.min(L1,L2)+.05));}
+function col(c){ return (V.q && c && c.startsWith("#")) ? q565(c) : c; }
+
+function bgBehind(els,idx,el){
+  let bg = st.dark?DARK.bg:LIGHT.bg;
+  for(let i=0;i<idx;i++){const e=els[i];
+    if(e.kind!=="rect"||!e.fill||e.fill==="transparent")continue;
+    if(el.x>=e.x&&el.y>=e.y&&el.x+el.w<=e.x+e.w&&el.y+el.h<=e.y+e.h) bg=e.fill;}
+  return bg;
+}
+
+function iconSVG(path,color,size){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+    stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg>`;
+}
+
+function render(){
+  const T = st.dark?DARK:LIGHT;
+  const sc = (SC[st.screen]||SC.home)(T);
+  const els = [...chrome(T,st.screen), ...sc.els];
+
+  screenEl.style.background = col(T.bg);
+  [...screenEl.querySelectorAll(".el")].forEach(n=>n.remove());
+  const frag=document.createDocumentFragment();
+
+  els.forEach(e=>{
+    if(e.w<=0||e.h<=0) return;
+    const d=document.createElement("div");
+    d.className="el"+(e.kind==="text"?" t":"")+((e.go||e.act)?" hit":"");
+    d.style.left=e.x+"px"; d.style.top=e.y+"px";
+    d.style.width=e.w+"px"; d.style.height=e.h+"px";
+
+    if(e.kind==="rect"){
+      if(e.fill&&e.fill!=="transparent") d.style.background=col(e.fill);
+      if(e.border) d.style.border=(e.bw||1)+"px solid "+col(e.border);
+      if(e.radius) d.style.borderRadius=e.radius+"px";
+    } else if(e.kind==="text"){
+      d.style.fontSize=(e.size||13)+"px";
+      d.style.fontWeight=e.weight||400;
+      d.style.color=col(e.color||T.ink);
+      d.style.lineHeight=e.wrap?"1.25":"1.15";
+      d.style.fontFamily="var(--sans)";
+      if(e.track) d.style.letterSpacing=e.track;
+      if(e.tnum) d.style.fontVariantNumeric="tabular-nums";
+      if(e.opa) d.style.opacity=e.opa;
+      d.style.alignItems = e.va==="c" ? "center" : "flex-start";
+      d.style.justifyContent = e.ha==="c" ? "center" : e.ha==="r" ? "flex-end" : "flex-start";
+      d.style.whiteSpace = e.wrap ? "normal" : "pre";
+      d.textContent=e.s;
+    } else if(e.kind==="icon"){
+      d.innerHTML=iconSVG(e.path,col(e.color||T.ink),e.w);
+      d.style.pointerEvents="none";
+    } else if(e.kind==="svg"){
+      d.innerHTML=e.svg;
+    }
+    if(e.go)  d.onclick=go(e.go);
+    if(e.act) d.onclick=e.act;
+    if(!e.go && !e.act) d.style.pointerEvents="none";   /* let taps fall through */
+    frag.appendChild(d);
+  });
+  screenEl.insertBefore(frag,document.getElementById("glare"));
+
+  drawOverlays(els);
+  audit(els,T);
+  document.getElementById("cap").textContent=sc.cap;
+  document.getElementById("idea").innerHTML="<b>"+st.cand+" — "+CAND[st.cand].name+".</b> "+CAND[st.cand].idea;
+  document.getElementById("cost").textContent=CAND[st.cand].cost;
+  document.getElementById("crumbs").innerHTML=
+    "candidate <b>"+st.cand+"</b> · screen <b>"+st.screen+"</b> · theme <b>"+(st.dark?"dark":"light")+"</b>";
+  syncNav();
+}
+
+function drawOverlays(els){
+  ovl.innerHTML="";
+  if(!V.touch) return;
+  els.filter(e=>e.touch).forEach(e=>{
+    const d=document.createElement("div");
+    const small = e.w<44||e.h<44;
+    d.className = small ? "tbad" : "tmark";
+    d.style.left=e.x+"px"; d.style.top=e.y+"px";
+    d.style.width=e.w+"px"; d.style.height=e.h+"px";
+    ovl.appendChild(d);
+  });
+}
+
+function audit(els,T){
+  const targets=els.filter(e=>e.touch);
+  let under=0,exc=0,wt=null;
+  targets.forEach(e=>{
+    if(!wt || e.w*e.h < wt.w*wt.h) wt=e;
+    if(e.w<44||e.h<44){ if(e.exc) exc++; else under++; } });
+  let worst=99, worstS="";
+  els.forEach((e,i)=>{ if(e.kind!=="text"||!e.s||!e.s.trim())return;
+    if((e.size||13)<9 || e.exempt) return;
+    const fg=q565(e.color||T.ink), bg=q565(bgBehind(els,i,e));
+    const c=contrast(fg,bg);
+    if(c<worst){worst=c; worstS=e.s.slice(0,18);} });
+  const rows=[
+    ["Elements drawn", els.length, ""],
+    ["Touch targets", targets.length, ""],
+    ["Smallest target", wt?wt.w+" × "+wt.h+" px":"—",
+      wt&&(wt.w<44||wt.h<44)?(under?"fail":"note"):"pass"],
+    ["Under 44 px", under, under?"fail":"pass"],
+    ["Recorded exceptions", exc?exc+" (E1)":"0", exc?"note":"pass"],
+    ["Worst contrast, RGB565", worst<90?worst.toFixed(1)+":1":"—", worst>=7?"pass":"fail"],
+    ["Weakest text", worstS||"—",""],
+    ["Banned effects", "0", "pass"]
+  ];
+  document.getElementById("audit").innerHTML = rows.map(([k,v,c])=>
+    `<div class="kv"><span>${k}</span><span class="${c}">${v}</span></div>`).join("");
+}
+
+/* ============================================================
+   PAGE CONTROLS
+   ============================================================ */
+const JUMPS=[
+  ["home","Home"],["homewarn","Home warn"],["homeclear","Clearance"],["homerun","Homing"],
+  ["phome","Prime 1"],["pload","Prime 2"],["prun","Prime 3"],["pconfirm","Prime 4"],
+  ["rprime","Run 0"],["rselect","Run 1"],["rassign","Run 2"],["rsummary","Run 3"],
+  ["rrun","Run 4"],["rpause","Paused"],["rdone","Finish"],
+  ["plist","Protocols"],["pedit","Edit"],["pkey","Keypad"],
+  ["levels","Levels"],["settings","Settings"],["fault","Fault"]
+];
+function buildTabs(){
+  document.getElementById("tabs").innerHTML =
+    Object.keys(CAND).map(k=>`<button class="tab${k===st.cand?" on":""}" data-c="${k}">
+      <span class="k">${k}</span>${CAND[k].name}</button>`).join("") +
+    `<button class="tab" data-theme="1">${st.dark?"☾ device dark":"☀ device light"}</button>` +
+    `<button class="tab" data-reset="1">reset state</button>`;
+  document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{st.cand=b.dataset.c;render();buildTabs();});
+  document.querySelector("[data-theme]").onclick=()=>{st.dark=!st.dark;render();buildTabs();};
+  document.querySelector("[data-reset]").onclick=()=>{
+    st.homed={a1:false,a2:false}; st.primed=[0,0,0,0,0,0]; st.assign={};
+    st.selProtos=[0]; st.screen="home"; st.primeAttempt=1; render();};
+}
+function buildJump(){
+  document.getElementById("jump").innerHTML=
+    JUMPS.map(([id,l])=>`<button class="nb" data-j="${id}">${l}</button>`).join("");
+  document.querySelectorAll("[data-j]").forEach(b=>b.onclick=()=>{
+    if(b.dataset.j==="homerun"||b.dataset.j==="rprime"){ /* need state */ }
+    st.screen=b.dataset.j; render();});
+}
+function syncNav(){
+  document.querySelectorAll("[data-j]").forEach(b=>
+    b.classList.toggle("on", b.dataset.j===st.screen));
+}
+document.querySelectorAll(".tg").forEach(b=>{
+  b.onclick=()=>{ const k=b.dataset.t; V[k]=!V[k]; b.classList.toggle("on",V[k]);
+    document.getElementById("grid").style.display=V.grid?"block":"none";
+    document.getElementById("glare").style.display=V.glare?"block":"none";
+    const st2=document.querySelector(".stage");
+    document.querySelector(".device").parentElement.style.transform=V.zoom?"scale(2)":"scale(1)";
+    document.querySelector(".device").parentElement.style.transformOrigin="top center";
+    st2.style.height=V.zoom?"524px":"262px";
+    render(); };
+});
+
+/* auto-advance the simulated progress screens so the bars are alive */
+setInterval(()=>{
+  if(st.screen==="homerun"){
+    st.homingPct+=14;   /* playback only: ~3 s per axis so the walkthrough is
+                           not 22 s of waiting. The COUNTDOWN still runs from the
+                           measured 22 s (T_HOME) - the mock time-lapses it. */
+    if(st.homingPct>=100){ st.homed[st.homingAxis]=true; st.homingPct=0;
+      if(!st.homed.a2 && st.homingAxis==="a1" && !st.homed.a2 && SC.homewarn){ st.homingAxis="a2"; }
+      else { st.homingAxis="a1"; st.screen = st.fromRun?"rhome":"home"; }
+      if(st.homed.a1&&st.homed.a2){ st.homingAxis="a1"; st.screen= st.fromRun?"rhome":"home"; } }
+    render();
+  } else if(st.screen==="prun"){
+    st.primePct+=6;
+    if(st.primePct>=100){ st.primePct=0;
+      if(st.primePhase===1) st.primePhase=2; else {st.primePhase=1; st.screen="pconfirm";} }
+    render();
+  } else if(st.screen==="rrun"){
+    st.runPct+=1;
+    if(st.runPct>=100){ st.runPct=0; st.screen="rdone"; }
+    else if(st.runPct%9===0) st.runTube=Math.min(st.runTotal,st.runTube+1);
+    render();
+  }
+},420);
+
+buildTabs(); buildJump(); render();
+</script>

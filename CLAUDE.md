@@ -19,9 +19,14 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   ├── deck.js             Shared deck runtime (state machine) — D-01 exception
 │   ├── prototype-page.css  Shared visual system for the prototype subpages — same D-01 exception as the deck runtime (three subpages, one system). Root class .proto-page; accent modifier .proto-page--align swaps orange → violet via eight --p-* properties
 │   ├── fonts/
-│   │   └── geist/
-│   │       ├── Geist-Bold.woff2  Vendored, subsetted Geist Bold — landing-page headline only (D-20)
-│   │       └── LICENSE.txt       SIL Open Font License 1.1 (mandatory to keep alongside a redistributed font)
+│   │   ├── geist/
+│   │   │   ├── Geist-Bold.woff2  Vendored, subsetted Geist Bold — landing-page headline only (D-20)
+│   │   │   └── LICENSE.txt       SIL Open Font License 1.1 (mandatory to keep alongside a redistributed font)
+│   │   └── montserrat/
+│   │       ├── montserrat.css    @font-face declarations (weights 400–700, latin + latin-ext) — used only by the archived UI-prototype home studies
+│   │       ├── Montserrat-VF-latin.woff2      Vendored variable font, latin subset (Google Fonts v31)
+│   │       ├── Montserrat-VF-latin-ext.woff2  Vendored variable font, latin-ext subset
+│   │       └── LICENSE.txt       SIL Open Font License 1.1
 │   └── gsap/
 │       └── gsap.min.js     Vendored GSAP core, no plugins, no CDN — landing-page hero motif sync only (D-01/D-03 exception)
 ├── decks/
@@ -59,10 +64,14 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   ├── dispense-throughput-simulator/
 │   │   ├── index.html      Dispense Choreography & Throughput Simulator — configurable 6-liquid cocktail-pipeline scheduler for a 6-nozzle indexing line (32-sample rack); concurrency slider with A1/A2 endpoint markers, lockstep/independent mode toggle, row-per-station Gantt, bottleneck + A1-vs-A2 delta + throughput headline metrics, illustrative rack animation
 │   │   └── SPEC.md         Tool spec — liquid/flow inputs, scheduling formulas (dose-time, LPT grouping, fill/steady/drain cycle count), rack-change convention, benchmark, assumptions
-│   └── pump-testing/
-│       ├── index.html      Pump Testing Protocol — document-first, two-layer dispensing-accuracy qualification page: top layer market-grade ISO 23783-2 gravimetric method + ISO 8655 pipette-equivalence benchmark (deep accuracy core + lighter go-to-market map, D-03), bottom layer the actual proto-02 test protocol + justified deviations (D-04). No calculator (D-01)
-│       ├── SPEC.md         Tool spec — protocol structure, formulas (mass→volume Z-factor, CV, uncertainty), balance/environment constants, deviation-table sources, assumptions
-│       └── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js), copied from the displaced-volume-model precedent
+│   ├── pump-testing/
+│   │   ├── index.html      Pump Testing Protocol — document-first, two-layer dispensing-accuracy qualification page: top layer market-grade ISO 23783-2 gravimetric method + ISO 8655 pipette-equivalence benchmark (deep accuracy core + lighter go-to-market map, D-03), bottom layer the actual proto-02 test protocol + justified deviations (D-04). No calculator (D-01)
+│   │   ├── SPEC.md         Tool spec — protocol structure, formulas (mass→volume Z-factor, CV, uncertainty), balance/environment constants, deviation-table sources, assumptions
+│   │   └── katex/          KaTeX local fallback (katex.min.css, katex.min.js, auto-render.min.js), copied from the displaced-volume-model precedent
+│   └── ui-prototypes/
+│       ├── index.html      Operator Interface Prototypes — the UI design record published as live artifacts: index page with scaled inert-iframe previews of the five rounds, two-arc framing (rounds 1–3 designed the interface, rounds 4–5 revisited the home screen after use). Document/artifact page, no calculator (D-01). English-only. Thesis ch. 9 prints this page's address — path frozen
+│       ├── SPEC.md         Tool spec — the address contract, artifact table with frozen dates, verbatim rule, the two permitted mechanical edits (vendored Montserrat, back-links), preview technique
+│       └── rounds/         The five design-record HTML artifacts, copied verbatim — DO NOT EDIT (dated thesis evidence; see SPEC.md)
 ├── prototypes/
 │   ├── index.html              Prototype Design Space — journey index only, no detail views. Two module threads (pump = orange, alignment = violet), each with its own S-curve, node set, accent (--t-* properties) and IntersectionObserver. Cards link out to the subpages
 │   ├── SPEC.md                 Tool spec — thread model, subpage contract, animation technique, prototype registry

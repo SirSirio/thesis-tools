@@ -1,0 +1,1128 @@
+<title>Dispensing System &#8212; UI Design Study</title>
+
+<style>
+  :root {
+    --ground: #F2F4F6;
+    --panel: #FFFFFF;
+    --bench: #22262C;
+    --ink: #13171C;
+    --ink-soft: #5C6672;
+    --ink-faint: #8B95A1;
+    --rule: #D5DAE0;
+    --rule-soft: #E6EAEE;
+    --mark: #D6006E;
+    --mark-soft: #FBE4EF;
+    --ok: #16663A;
+    --warn: #8A5200;
+    --bad: #A3231B;
+
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    --sans: ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #101317;
+      --panel: #191D23;
+      --bench: #05070A;
+      --ink: #E9EDF1;
+      --ink-soft: #98A3AF;
+      --ink-faint: #6B7683;
+      --rule: #2B313A;
+      --rule-soft: #23282F;
+      --mark: #FF3D93;
+      --mark-soft: #3A0A21;
+      --ok: #4FBE83;
+      --warn: #D79B3C;
+      --bad: #E4695F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101317; --panel: #191D23; --bench: #05070A;
+    --ink: #E9EDF1; --ink-soft: #98A3AF; --ink-faint: #6B7683;
+    --rule: #2B313A; --rule-soft: #23282F;
+    --mark: #FF3D93; --mark-soft: #3A0A21;
+    --ok: #4FBE83; --warn: #D79B3C; --bad: #E4695F;
+  }
+  :root[data-theme="light"] {
+    --ground: #F2F4F6; --panel: #FFFFFF; --bench: #22262C;
+    --ink: #13171C; --ink-soft: #5C6672; --ink-faint: #8B95A1;
+    --rule: #D5DAE0; --rule-soft: #E6EAEE;
+    --mark: #D6006E; --mark-soft: #FBE4EF;
+    --ok: #16663A; --warn: #8A5200; --bad: #A3231B;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--sans); font-size: 15px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* ---------- masthead ---------- */
+  .mast { border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 6px; }
+  .mast .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--mark); margin: 0 0 8px;
+  }
+  .mast h1 {
+    font-family: var(--mono); font-size: clamp(22px, 3.4vw, 34px); font-weight: 700;
+    letter-spacing: -.02em; margin: 0; text-wrap: balance;
+  }
+  .mast .sub { color: var(--ink-soft); margin: 8px 0 0; max-width: 62ch; }
+  .specline {
+    display: flex; flex-wrap: wrap; gap: 0 20px; font-family: var(--mono); font-size: 11.5px;
+    color: var(--ink-soft); padding: 8px 0 0; letter-spacing: .02em;
+  }
+  .specline b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- controls ---------- */
+  .rig { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 24px; margin-top: 28px; }
+  @media (max-width: 900px) { .rig { grid-template-columns: 1fr; } }
+
+  .rail { display: flex; flex-direction: column; gap: 6px; align-self: start; }
+  .rail-head {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-faint); padding: 0 0 6px;
+  }
+  .vbtn {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    background: var(--panel); color: var(--ink); border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule); border-radius: 4px; padding: 9px 11px;
+    font-family: var(--mono); font-size: 12.5px; line-height: 1.35;
+  }
+  .vbtn .vk { font-weight: 700; letter-spacing: .04em; }
+  .vbtn .vn { display: block; font-family: var(--sans); font-size: 11.5px; color: var(--ink-soft); }
+  .vbtn:hover { border-color: var(--ink-faint); }
+  .vbtn[aria-pressed="true"] { border-left-color: var(--mark); background: var(--mark-soft); }
+  .vbtn[aria-pressed="true"] .vn { color: var(--ink); }
+  .vbtn:focus-visible, .tbtn:focus-visible, .chip:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+  .rail-note {
+    font-size: 11.5px; color: var(--ink-faint); margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--rule-soft); line-height: 1.45;
+  }
+
+  .stage-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tbtn {
+    cursor: pointer; background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--rule); border-radius: 3px; padding: 5px 10px;
+    font-family: var(--mono); font-size: 11.5px;
+  }
+  .tbtn[aria-pressed="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  .spacer { flex: 1; }
+  .chip {
+    cursor: pointer; background: var(--panel); color: var(--ink-soft);
+    border: 1px solid var(--rule); border-radius: 3px; padding: 5px 9px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .02em; white-space: nowrap;
+  }
+  .chip[aria-pressed="true"] { background: var(--mark); border-color: var(--mark); color: #fff; }
+
+  /* ---------- bench + panel ---------- */
+  .bench {
+    background: var(--bench); border-radius: 6px; padding: 30px 20px;
+    display: flex; justify-content: center; overflow-x: auto;
+  }
+  /* column + fit-content, so a long caption can never stretch the panel frame */
+  .holder { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .panel-frame {
+    position: relative; background: #000; padding: 6px; border-radius: 3px;
+    width: fit-content; flex: none;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.09);
+  }
+  #screen {
+    position: relative; width: 320px; height: 240px; overflow: hidden;
+    transform-origin: top left; background: #fff;
+    font-family: var(--sans);
+  }
+  .el { position: absolute; }
+  .el.t { display: flex; }
+
+  /* overlay layers */
+  #ovl { position: absolute; inset: 0; pointer-events: none; }
+  .tt { position: absolute; outline: 1px solid rgba(214,0,110,.85); }
+  .tt.bad { outline: 1px solid #FF2D00; background: rgba(255,45,0,.20); }
+  .ttlab {
+    position: absolute; font-family: var(--mono); font-size: 7px; line-height: 1;
+    background: #D6006E; color: #fff; padding: 1px 2px; white-space: nowrap;
+  }
+  .ttlab.bad { background: #FF2D00; }
+  #grid { position: absolute; inset: 0; pointer-events: none; }
+  #glare { position: absolute; inset: 0; pointer-events: none; }
+
+  .caption {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
+    text-align: center; margin: 10px 0 0; max-width: 420px; line-height: 1.5;
+  }
+
+  /* ---------- readout ---------- */
+  .readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 14px; margin-top: 20px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--rule); border-radius: 5px; padding: 13px 14px;
+  }
+  .card h3 {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 9px; font-weight: 600;
+  }
+  .metric { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 12px; padding: 3px 0; }
+  .metric span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .pass { color: var(--ok); } .fail { color: var(--bad); } .mid { color: var(--warn); }
+  .card p { margin: 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+  .card p + p { margin-top: 8px; }
+  .card .lede { color: var(--ink); }
+
+  .verdict { font-family: var(--mono); font-size: 11px; padding: 7px 9px; border-radius: 3px; margin-top: 9px; line-height: 1.45; }
+  .verdict.ok { background: color-mix(in srgb, var(--ok) 12%, transparent); color: var(--ok); }
+  .verdict.no { background: color-mix(in srgb, var(--bad) 12%, transparent); color: var(--bad); }
+
+  /* ---------- prose ---------- */
+  .prose { margin-top: 44px; max-width: 74ch; }
+  .prose h2 {
+    font-family: var(--mono); font-size: 15px; letter-spacing: .04em; margin: 34px 0 10px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+  }
+  .prose h2 .num { color: var(--mark); margin-right: 9px; }
+  .prose p { color: var(--ink-soft); margin: 0 0 12px; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose code { font-family: var(--mono); font-size: .88em; background: var(--rule-soft); padding: 1px 4px; border-radius: 2px; }
+  .tblwrap { overflow-x: auto; margin: 0 0 16px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-faint); border-bottom: 1px solid var(--rule); }
+  td { color: var(--ink-soft); }
+  td:first-child { font-family: var(--mono); color: var(--ink); white-space: nowrap; }
+  .foot { margin-top: 46px; padding-top: 14px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<!-- Mechanical edit (see ../SPEC.md): back-link to the prototype index. -->
+<nav style="max-width:1180px;margin:0 auto;padding:18px 20px 0"><a href="../index.html" style="font:12px/1 ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;letter-spacing:.08em;color:inherit;opacity:.55;text-decoration:none">&larr; All rounds</a></nav>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Phase 3.1 &#183; Design Track &#183; 2026-07-31</p>
+    <h1>Dispensing System &#8212; UI Design Study</h1>
+    <p class="sub">Five candidate interfaces for the ESP32-S3 dispensing prototype, drawn at the panel's true
+      resolution. Three explore layout and visual language; two restructure what the interface is
+      <em>about</em>. Nothing here promises a pixel the hardware cannot render.</p>
+    <div class="specline">
+      <span><b>320 &#215; 240</b> ILI9341 3.2&#8243;</span>
+      <span><b>RGB565</b> 65k colour</span>
+      <span><b>125 DPI</b> &#183; 1 px &#8776; 0.203 mm</span>
+      <span><b>XPT2046</b> resistive, single-touch</span>
+      <span><b>~200 cd/m&#178;</b> unbonded</span>
+    </div>
+  </header>
+
+  <div class="rig">
+    <nav class="rail" id="rail">
+      <p class="rail-head">Candidates</p>
+      <!-- injected -->
+      <p class="rail-note" id="railnote"></p>
+    </nav>
+
+    <div>
+      <div class="stage-head">
+        <div class="tabs" id="screentabs"></div>
+        <span class="spacer"></span>
+        <button class="chip" id="c-touch" aria-pressed="false" title="Outline every touch target; flag anything under 44 px">&#8862; Targets</button>
+        <button class="chip" id="c-grid" aria-pressed="false" title="4 px layout grid">&#8889; Grid</button>
+        <button class="chip" id="c-565" aria-pressed="false" title="Quantise every colour to RGB565 as the panel will">&#9638; RGB565</button>
+        <button class="chip" id="c-glare" aria-pressed="false" title="Simulate reflected daylight washing out the panel">&#9728; Glare</button>
+        <button class="chip" id="c-zoom" title="Zoom">1&#215;</button>
+      </div>
+
+      <div class="bench">
+        <div class="holder">
+          <div class="panel-frame">
+            <div id="screen">
+              <div id="glare"></div>
+              <div id="grid"></div>
+              <div id="ovl"></div>
+            </div>
+          </div>
+          <p class="caption" id="cap"></p>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="card">
+          <h3>Measured &#8212; this screen</h3>
+          <div id="audit"></div>
+          <div id="auditverdict"></div>
+        </div>
+        <div class="card">
+          <h3>The idea</h3>
+          <p class="lede" id="idea"></p>
+        </div>
+        <div class="card">
+          <h3>Cost of choosing it</h3>
+          <p id="cost"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prose">
+
+    <h2><span class="num">01</span>Why these constraints, and where they come from</h2>
+    <p>Every number below was measured from the actual build or read off a primary source. Where a
+      widely-repeated figure turned out to be folklore, it is named as such &#8212; a thesis that cites a
+      standard which does not say what it is claimed to say is worse than one that cites nothing.</p>
+
+    <div class="tblwrap">
+    <table>
+      <thead><tr><th>Constraint</th><th>Value</th><th>Where it comes from</th></tr></thead>
+      <tbody>
+        <tr><td>44 px targets</td><td>&#8776; 9.0 mm at 125 DPI</td>
+          <td>Not from WCAG. WCAG 2.5.5 (AAA) says 44 <em>CSS</em> px &#8776; 11.6 mm; WCAG 2.5.8 (AA) says only 24. The 9 mm figure is the convergent empirical band &#8212; Material Design (48 dp &#8776; 9 mm), Microsoft WinUI (7.5 mm), Parhi et&nbsp;al. 2006 (9.2 mm discrete / 9.6 mm serial), ANSI/HFES 100 (9.5 mm). On this panel 9 mm happens to land on 44 px.</td></tr>
+        <tr><td>Gloved use</td><td>20 mm = 98 px</td>
+          <td>MIL-STD-1472H: 15 mm minimum, <em>+5 mm for gloves</em>. At 98 px this panel fits nine targets total. <strong>Gloved operation is not achievable on a 3.2&#8243; touchscreen</strong> &#8212; it needs a physical control or a bigger panel. Stated as a limit, not designed around.</td></tr>
+        <tr><td>&#8805; 7:1 contrast</td><td>WCAG 2.x AAA</td>
+          <td>Chosen over AA (4.5:1) because ambient glare only ever subtracts. Measured after RGB565 quantisation, not before.</td></tr>
+        <tr><td>No gestures</td><td>&#8212;</td>
+          <td>Resistive single-point. Swipe and multi-touch are not reliably available; every function is a discrete press.</td></tr>
+        <tr><td>Flat fills only</td><td>&#8212;</td>
+          <td>RGB565 gives green 64 levels and red/blue 32 &#8212; LVGL publishes a dithering tutorial precisely because smooth gradients band. A hardware limit that happens to agree with current visual language.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2><span class="num">02</span>What the renderer will actually do</h2>
+    <p>The LVGL 9.5 source was read directly rather than trusting the docs site. Every widget these
+      mockups use exists and is enabled by default. Three things were <strong>banned from the mockups</strong>
+      because they are affordable in CSS and not on this target: <strong>box and drop shadows</strong>
+      (<code>LV_DRAW_SW_SHADOW_CACHE_SIZE</code> is 0 in this project, so every shadowed rectangle is
+      recomputed every redraw), <strong>blur and backdrop blur</strong>, and <strong>rotation or scaling</strong>
+      of widgets. Radial and conical gradients are also out &#8212; they need
+      <code>LV_USE_DRAW_SW_COMPLEX_GRADIENTS</code>, which is off.</p>
+    <p>The frame budget is arithmetic, not opinion: 320 &#215; 240 &#215; 2 bytes = 153,600 B; over SPI at 40 MHz
+      that is <strong>30.7 ms of wire time, a 32.5 fps ceiling before a single pixel is rendered</strong>.
+      Realistically 15&#8211;20 fps full-screen. So animation is confined to regions: a bar filling, a value
+      tweening, a button's press state. <strong>No full-screen transitions in any candidate.</strong></p>
+    <p>One free win, independent of which design is chosen: the draw buffer is currently 320 &#215; 10 lines
+      (6.4 KB), single-buffered &#8212; 24 separate transfers per full redraw. Espressif's own measurements
+      put an internal-RAM DMA buffer at <strong>28 fps against 12 fps for a PSRAM one</strong>. Two
+      320 &#215; 40 buffers in internal RAM with DMA is the single biggest smoothness change available, and
+      it is a build-config edit.</p>
+
+    <h2><span class="num">03</span>Sunlight: the honest answer</h2>
+    <p>The fitted panel cannot be made sun-readable by any design choice, and the arithmetic says so
+      plainly. A diffuse reflector's luminance is <code>L = R&#183;E/&#960;</code>. At 100,000 lux with an 8%
+      effective stack reflectance &#8212; a resistive overlay's air gap is structural and cannot be bonded
+      away &#8212; reflected luminance is <strong>2,546 cd/m&#178;</strong>. The panel emits ~200 cd/m&#178;, of which a
+      resistive layer transmits about 80%, so <strong>160 cd/m&#178;</strong> reaches the eye.</p>
+    <p>Ambient contrast ratio is therefore (160 + 2546) / 2546 = <strong>1.06 : 1</strong>, against an
+      industry-convention minimum of 5:1. Because reflected light adds to numerator and denominator
+      alike, <strong>no rendering choice can subtract it</strong> &#8212; the entire achievable palette spans
+      6% of contrast. Reaching 5:1 at this reflectance would need ~10,200 nits. Optical bonding drops
+      reflectance to 0.5%, at which point 1000 nits gives 7.3:1 &#8212; which is exactly where the industry's
+      "800&#8211;1000 nits = sunlight readable" convention comes from, and it is <strong>conditional on
+      bonding</strong>. This panel is off that curve by roughly 50&#215;.</p>
+    <p>What design <em>does</em> buy is bright-ambient and shade legibility. Dark-on-light is kept in
+      every candidate for that reason: in glare the screen's own reflection washes out dark pixels while
+      white ones still read, so dark mode is strictly worse outdoors. Toggle <strong>&#9728; Glare</strong>
+      above to see which candidates survive it.</p>
+
+    <h2><span class="num">04</span>The stop button question</h2>
+    <p>Worth settling before choosing a layout, because it changes what must be on screen. Across
+      commercial liquid handlers, <strong>enclosure interlock plus software stop is the dominant
+      pattern, not a hardwired emergency stop</strong>. Tecan Fluent's 199-page manual contains zero
+      occurrences of the word "emergency"; Eppendorf epMotion the same; Hamilton STAR lists an E-stop
+      box only in its ordering appendix; Opentrons OT-2 has software stop only. Opentrons Flex is the
+      exception that mandates one.</p>
+    <p>So a well-designed touchscreen abort is defensible for a benchtop prototype &#8212; but it earns that
+      only by being <em>always present and always reachable</em>. That is why every candidate here keeps
+      abort on screen during a run rather than behind navigation, and why the machine's energised state
+      is persistent chrome rather than a screen you visit.</p>
+
+    <h2><span class="num">05</span>What the current interface does, measured</h2>
+    <p>The inherited UI was audited line by line before any of this was drawn. It was a competent
+      handoff under deadline and the port deliberately did not refactor it &#8212; but the redesign is not a
+      matter of taste alone. The audit found <strong>a cold-boot deadlock</strong> (containers default to
+      "NA", which forces run-eligibility false, so a fresh device cannot start any protocol until every
+      liquid is configured), <strong>a calibration screen with no exit</strong> when the sensor is absent
+      (the back button is hidden on entry and progress only advances from a callback that returns early
+      without the sensor &#8212; the only escape is a reboot), and <strong>an abort that tells motion
+      nothing</strong> (it sets a flag and navigates; the pumps keep running).</p>
+    <p>Two displayed values are fiction: a four-block battery indicator on a device with no battery and
+      no fuel gauge, permanently reading 75%; and a hardcoded 5 &#181;L/s flow rate driving every time
+      estimate, while real dosing is step-count based at 4.56 &#181;L/stroke. Level percentages are also
+      shown as a flat 100% when no sensor answers, and are then used as a volume gate &#8212; the one thing
+      SENSE-02 forbids.</p>
+    <p>The smallest interactive element is <strong>25 &#215; 14 px</strong> (the protocol switch), with 0 px
+      between adjacent rows. Seven of twelve control types fall under 44 &#215; 44. This is what the
+      <strong>&#8862; Targets</strong> overlay is calibrated against.</p>
+
+    <h2><span class="num">06</span>How to read these</h2>
+    <p>Pick a candidate on the left, step through its screens, then turn on the overlays. The audit
+      panel is computed from the same data that draws the pixels, so it cannot flatter the design. What
+      is being asked of you is not "which is prettiest" but <strong>which model of the machine is
+      right</strong> &#8212; A, B and C are three dresses on roughly one idea; D and E disagree with that idea
+      and with each other.</p>
+
+    <div class="foot">
+      Drawn at 1:1 &#183; No shadow, blur, gradient or transform used anywhere &#183; Every colour survives RGB565<br>
+      Phase 3.1 design track &#183; requirements UX-01&#8230;UX-06 &#183; implementation waits for Phase 3
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Shared design tokens for the device screens.
+   Dark-on-light throughout \u2014 see prose \u00a703.
+   ============================================================ */
+/* Every value below was chosen by solving for >= 7:1 against the DARKEST ground it
+   is ever drawn on, not against white. The first draft failed its own audit at
+   6.2:1 (secondary text on the sunken status bar) \u2014 these are the corrected values. */
+const T = {
+  ink:   "#10151A",   // primary text     19.0:1 on white
+  ink2:  "#3A4552",   // secondary text    9.7:1 on white, 7.6:1 on sunk
+  line:  "#C3C9D0",
+  bg:    "#EDEFF2",
+  card:  "#FFFFFF",
+  sunk:  "#E0E4E8",
+  acc:   "#0F4278",   // action blue      10.0:1 vs white text, 7.5:1 vs its own tint
+  accInk:"#FFFFFF",
+  accDim:"#CFE0F2",   // secondary text on accent
+  ok:    "#0E4D2B",   //  9.9:1 on white,  8.7:1 on its tint
+  warn:  "#6B3F00",   //  8.0:1 on its tint
+  bad:   "#8C1A13",   //  9.3:1 vs white text, 7.9:1 on its tint
+  badBg: "#FBE9E7",
+  live:  "#7A2018",   //  7.9:1 vs the dimmed text drawn on it
+  grey:  "#3F464E"    // console secondary \u2014 7.9:1 on the table header band
+};
+
+/* helpers to build elements ------------------------------------------------ */
+const R = (x,y,w,h,o={}) => ({x,y,w,h,kind:"rect",...o});
+const X = (x,y,w,h,s,o={}) => ({x,y,w,h,kind:"text",s,...o});
+const B = (x,y,w,h,v,o={}) => ({x,y,w,h,kind:"bar",v,...o});
+
+/* ============================================================
+   CANDIDATES
+   ============================================================ */
+const V = {};
+
+/* ---------- A \u2014 Instrument -------------------------------------------- */
+V.A = {
+  key:"A", name:"Instrument",
+  tag:"Layout & style",
+  idea:"The existing two-choice home, done properly. Tonal cards on a light ground, one hero number per screen, a persistent status strip that always answers \u201cis it energised?\u201d. Closest to what exists, so the smallest behavioural relearning.",
+  cost:"It inherits the existing mental model, including its weakness: the home screen is a menu, not a picture of the machine. If the operator's real question is \u201cwhat is it doing right now\u201d, this answers it only after a navigation.",
+  screens:[
+    { id:"home", label:"Home",
+      note:"Idle. Status strip is persistent chrome on every screen.",
+      els:[
+        R(0,0,320,26,{fill:T.sunk}),
+        R(0,25,320,1,{fill:T.line}),
+        X(8,0,120,26,"READY",{size:12,weight:700,color:T.ink,va:"c",track:".06em"}),
+        R(214,9,8,8,{fill:T.ok,radius:4}),
+        X(226,0,86,26,"PUMPS OFF",{size:11,color:T.ink2,va:"c"}),
+
+        R(8,34,148,96,{fill:T.card,radius:8,border:T.line,touch:1}),
+        X(20,44,120,14,"LIQUIDS",{size:10,color:T.ink2,track:".13em",weight:600}),
+        X(20,62,120,30,"6 / 6",{size:30,weight:700,color:T.ink}),
+        X(20,96,124,16,"lowest 18%",{size:13,color:T.warn}),
+
+        R(164,34,148,96,{fill:T.acc,radius:8,touch:1}),
+        X(176,44,120,14,"RUN",{size:10,color:"#CFE0F2",track:".13em",weight:600}),
+        X(176,62,124,30,"3 ready",{size:26,weight:700,color:T.accInk}),
+        X(176,96,124,16,"protocols on SD",{size:12,color:"#CFE0F2"}),
+
+        R(8,138,304,94,{fill:T.card,radius:8,border:T.line}),
+        X(20,146,160,14,"CHANNELS",{size:10,color:T.ink2,track:".13em",weight:600}),
+        ...[[0,72,T.ok],[1,54,T.ok],[2,18,T.warn],[3,88,T.ok],[4,61,T.ok],[5,40,T.ok]].flatMap(([i,v,c])=>[
+          R(20+i*47, 168, 38, 40, {fill:T.sunk, radius:3}),
+          R(20+i*47, 168+40-Math.round(40*v/100), 38, Math.round(40*v/100), {fill:c, radius:3}),
+          X(20+i*47, 210, 38, 14, "L"+(i+1), {size:11, color:T.ink2, ha:"c"})
+        ])
+      ]},
+    { id:"run", label:"Running",
+      note:"Hero number is the sample count \u2014 the thing the operator is waiting on.",
+      els:[
+        R(0,0,320,26,{fill:T.live}),
+        X(8,0,140,26,"DISPENSING",{size:12,weight:700,color:"#fff",va:"c",track:".06em"}),
+        R(206,9,8,8,{fill:"#FFC4BC",radius:4}),
+        X(218,0,94,26,"PUMPS LIVE",{size:11,color:"#FFD9D4",va:"c",weight:600}),
+
+        X(12,32,180,14,"SAMPLE",{size:10,color:T.ink2,track:".13em",weight:600}),
+        X(12,46,190,48,"3 / 12",{size:46,weight:700,color:T.ink,tnum:1}),
+        X(196,52,116,18,"Serial dilution A",{size:13,color:T.ink,ha:"r",weight:600}),
+        X(196,72,116,16,"est. 4 min 10 s left",{size:12,color:T.ink2,ha:"r"}),
+
+        R(12,100,296,12,{fill:T.sunk,radius:6}),
+        B(12,100,296,12,25,{fill:T.acc,radius:6}),
+
+        R(12,122,296,58,{fill:T.card,radius:8,border:T.line}),
+        ...[[0,"L1",100],[1,"L2",100],[2,"L3",62],[3,"L4",0],[4,"L5",0],[5,"L6",0]].flatMap(([i,l,p])=>[
+          X(20+i*48,130,40,14,l,{size:11,color:T.ink2,ha:"c"}),
+          R(20+i*48,148,40,8,{fill:T.sunk,radius:4}),
+          B(20+i*48,148,40,8,p,{fill:p===100?T.ok:T.acc,radius:4}),
+          X(20+i*48,158,40,14,p+"%",{size:10,color:T.ink2,ha:"c",tnum:1})
+        ]),
+
+        R(12,188,140,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(12,188,140,44,"PAUSE",{size:15,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(168,188,140,44,{fill:T.bad,radius:6,touch:1}),
+        X(168,188,140,44,"ABORT",{size:15,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]},
+    { id:"select", label:"Select",
+      note:"Back moved out of the title bar into a full-size button \u2014 a 24 px back arrow is the inherited UI's most-pressed undersized target.",
+      els:[
+        R(0,0,320,26,{fill:T.sunk}),
+        R(0,25,320,1,{fill:T.line}),
+        X(10,0,220,26,"Select protocol",{size:12,weight:700,color:T.ink,va:"c"}),
+
+        ...[["Serial dilution A","12 samples \u00b7 4 liquids",1],
+            ["Standard curve","8 samples \u00b7 3 liquids",0],
+            ["Buffer exchange","6 samples \u00b7 2 liquids",0]].flatMap(([n,s,sel],i)=>{
+          const y=32+i*52;
+          return [
+            R(8,y,304,48,{fill:sel?"#E8F0F8":T.card,radius:8,border:sel?T.acc:T.line,bw:sel?2:1,touch:1}),
+            X(20,y+7,200,18,n,{size:15,weight:700,color:T.ink}),
+            X(20,y+26,220,14,s,{size:12,color:T.ink2}),
+            ...(sel?[R(280,y+16,16,16,{fill:T.acc,radius:8})]:[])
+          ];
+        }),
+
+        R(8,188,96,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(8,188,96,44,"BACK",{size:14,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(112,188,200,44,{fill:T.acc,radius:6,touch:1}),
+        X(112,188,200,44,"START RUN",{size:15,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]}
+  ]
+};
+
+/* ---------- B \u2014 Console (ISA-101 high-performance) --------------------- */
+V.B = {
+  key:"B", name:"Console",
+  tag:"Layout & style",
+  idea:"The process-industry answer. Greyscale by default with saturated colour reserved exclusively for abnormal conditions, so an alarm is the only coloured thing on screen and cannot be missed. Dense read-only tables, full-size controls.",
+  cost:"Reads as serious instrumentation, which is right for a lab \u2014 but it is austere, and the density means small type. It asks more of the operator's eyes and offers less reassurance to an untrained one.",
+  screens:[
+    { id:"home", label:"Status",
+      note:"Display rows are 22 px because they are not touch targets. Only the command row is pressable.",
+      els:[
+        R(0,0,320,22,{fill:"#1A1D21"}),
+        X(8,0,200,22,"DISPENSER",{size:11,weight:700,color:"#fff",va:"c",track:".1em"}),
+        X(200,0,112,22,"IDLE",{size:11,color:"#B9BFC6",va:"c",ha:"r",track:".1em"}),
+
+        R(0,22,320,16,{fill:"#E8EAED"}),
+        X(8,22,26,16,"CH",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        X(38,22,90,16,"LIQUID",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        X(132,22,56,16,"CONT",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        X(192,22,64,16,"LEVEL",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        X(256,22,56,16,"AVAIL",{size:9,color:T.grey,va:"c",ha:"r",track:".08em",weight:600}),
+
+        ...[["1","Buffer A","40 mL",72,"25.9"],
+            ["2","Buffer B","40 mL",54,"19.4"],
+            ["3","Reagent X","15 mL",18,"2.4"],
+            ["4","Diluent","40 mL",88,"31.7"],
+            ["5","Stop sol.","15 mL",61,"8.2"],
+            ["6","\u2014","\u2014",0,"\u2014"]].flatMap(([c,n,ct,lv,av],i)=>{
+          const y=38+i*22, low = lv>0 && lv<25;
+          return [
+            R(0,y,320,22,{fill:i%2?"#F5F6F7":"#fff"}),
+            R(0,y+21,320,1,{fill:"#E8EAED"}),
+            X(8,y,26,22,c,{size:11,color:"#1A1D21",va:"c",tnum:1}),
+            X(38,y,90,22,n,{size:11,color:"#1A1D21",va:"c"}),
+            X(132,y,56,22,ct,{size:11,color:T.grey,va:"c",tnum:1}),
+            R(192,y+7,44,8,{fill:"#DFE2E6"}),
+            R(192,y+7,Math.round(44*lv/100),8,{fill:low?T.bad:"#7C848D"}),
+            X(240,y,16,22,lv?lv:"",{size:10,color:T.grey,va:"c",tnum:1}),
+            X(256,y,56,22,av,{size:11,color:low?T.bad:"#1A1D21",va:"c",ha:"r",tnum:1,weight:low?700:400})
+          ];
+        }),
+
+        R(0,176,320,8,{fill:"#fff"}),
+        ...["RUN","LIQUIDS","SERVICE"].map((l,i)=>
+          R(8+i*102,184,96,48,{fill:"#fff",border:"#9AA1A9",bw:2,radius:2,touch:1})),
+        ...["RUN","LIQUIDS","SERVICE"].map((l,i)=>
+          X(8+i*102,184,96,48,l,{size:13,weight:700,color:"#1A1D21",ha:"c",va:"c"}))
+      ]},
+    { id:"run", label:"Running",
+      note:"Deviation from expected, not just raw values \u2014 the high-performance HMI principle.",
+      els:[
+        R(0,0,320,22,{fill:"#1A1D21"}),
+        X(8,0,200,22,"DISPENSER",{size:11,weight:700,color:"#fff",va:"c",track:".1em"}),
+        X(190,0,122,22,"RUNNING \u00b7 PUMPS LIVE",{size:10,color:"#FFD9D4",va:"c",ha:"r",weight:700}),
+
+        X(8,26,150,16,"SERIAL DILUTION A",{size:11,weight:700,color:"#1A1D21",track:".05em"}),
+        X(190,26,122,16,"SAMPLE 3/12",{size:11,color:"#1A1D21",ha:"r",tnum:1,weight:700}),
+        R(8,46,304,6,{fill:"#DFE2E6"}),
+        B(8,46,304,6,25,{fill:"#4A5560"}),
+
+        R(0,60,320,16,{fill:"#E8EAED"}),
+        X(8,60,60,16,"PUMP",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        X(70,60,74,16,"CMD \u00b5L",{size:9,color:T.grey,va:"c",ha:"r",track:".08em",weight:600}),
+        X(150,60,74,16,"DONE \u00b5L",{size:9,color:T.grey,va:"c",ha:"r",track:".08em",weight:600}),
+        X(230,60,82,16,"STEPS",{size:9,color:T.grey,va:"c",ha:"r",track:".08em",weight:600}),
+
+        ...[["P1","250","250","10 964"],
+            ["P2","120","120","5 263"],
+            ["P3","80","49","2 149"],
+            ["P4","\u2014","\u2014","\u2014"]].flatMap(([p,c,d,s],i)=>{
+          const y=76+i*22;
+          return [
+            R(0,y,320,22,{fill:i%2?"#F5F6F7":"#fff"}),
+            R(0,y+21,320,1,{fill:"#E8EAED"}),
+            X(8,y,60,22,p,{size:11,color:"#1A1D21",va:"c",weight:700}),
+            X(70,y,74,22,c,{size:11,color:"#1A1D21",va:"c",ha:"r",tnum:1}),
+            X(150,y,74,22,d,{size:11,color:"#1A1D21",va:"c",ha:"r",tnum:1}),
+            X(230,y,82,22,s,{size:11,color:T.grey,va:"c",ha:"r",tnum:1})
+          ];
+        }),
+
+        X(8,168,304,14,"Commanded volumes \u2014 not measured",{size:10,color:T.grey}),
+        R(8,186,150,46,{fill:"#fff",border:"#9AA1A9",bw:2,radius:2,touch:1}),
+        X(8,186,150,46,"HOLD",{size:13,weight:700,color:"#1A1D21",ha:"c",va:"c"}),
+        R(162,186,150,46,{fill:T.bad,radius:2,touch:1}),
+        X(162,186,150,46,"ABORT",{size:13,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]},
+    { id:"fault", label:"Fault",
+      note:"The only screen where colour appears. That is the entire point of the greyscale discipline.",
+      els:[
+        R(0,0,320,22,{fill:"#1A1D21"}),
+        X(8,0,200,22,"DISPENSER",{size:11,weight:700,color:"#fff",va:"c",track:".1em"}),
+        X(200,0,112,22,"FAULT",{size:11,color:"#FF8A7A",va:"c",ha:"r",weight:700,track:".1em"}),
+
+        R(0,22,320,44,{fill:T.bad}),
+        X(12,22,296,20,"MOTION WATCHDOG",{size:15,weight:700,color:"#fff",va:"c",track:".03em"}),
+        X(12,42,296,20,"Pump 3 stopped responding",{size:12,color:"#FFD9D4",va:"c"}),
+
+        R(0,74,320,16,{fill:"#E8EAED"}),
+        X(8,74,110,16,"SOURCE",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        X(120,74,192,16,"DETAIL",{size:9,color:T.grey,va:"c",track:".08em",weight:600}),
+        ...[["Motion","no step ack in 500 ms"],
+            ["Run","aborted at sample 3/12"],
+            ["Pumps","all ENABLE de-asserted"]].flatMap(([s,d],i)=>{
+          const y=90+i*22;
+          return [
+            R(0,y,320,22,{fill:i%2?"#F5F6F7":"#fff"}),
+            R(0,y+21,320,1,{fill:"#E8EAED"}),
+            X(8,y,110,22,s,{size:11,color:"#1A1D21",va:"c",weight:700}),
+            X(120,y,192,22,d,{size:11,color:T.grey,va:"c"})
+          ];
+        }),
+        X(8,162,304,16,"Motion is stopped. Pumps are de-energised.",{size:11,color:"#1A1D21",weight:600}),
+
+        R(8,186,150,46,{fill:"#fff",border:"#9AA1A9",bw:2,radius:2,touch:1}),
+        X(8,186,150,46,"DETAILS",{size:13,weight:700,color:"#1A1D21",ha:"c",va:"c"}),
+        R(162,186,150,46,{fill:"#1A1D21",radius:2,touch:1}),
+        X(162,186,150,46,"ACKNOWLEDGE",{size:12,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]}
+  ]
+};
+
+/* ---------- C \u2014 Field ------------------------------------------------- */
+V.C = {
+  key:"C", name:"Field",
+  tag:"Layout & style",
+  idea:"Built for the worst conditions this device will see: glare, haste, a gloved or wet hand. Pure black on pure white for maximum available contrast, four targets maximum per screen, nothing below 20 px type.",
+  cost:"Buys legibility with density \u2014 it needs more screens to say the same thing, so common tasks take more presses. And it still cannot deliver gloved operation (that needs 98 px targets), so it pays the cost without fully winning the prize.",
+  screens:[
+    { id:"home", label:"Home",
+      note:"Four targets, each 148 \u00d7 92. Nothing else competes for attention.",
+      els:[
+        R(0,0,320,240,{fill:"#FFFFFF"}),
+        R(0,0,320,32,{fill:"#000000"}),
+        X(10,0,180,32,"READY",{size:16,weight:700,color:"#fff",va:"c",track:".08em"}),
+        X(190,0,120,32,"PUMPS OFF",{size:13,color:"#fff",va:"c",ha:"r",weight:600}),
+
+        ...[["RUN",0,0],["LIQUIDS",1,0],["PRIME",0,1],["SETUP",1,1]].flatMap(([l,cx,cy])=>{
+          const x=8+cx*156, y=40+cy*100;
+          return [
+            R(x,y,156,92,{fill:cy===0&&cx===0?"#000":"#fff",border:"#000",bw:3,touch:1}),
+            X(x,y,156,92,l,{size:24,weight:700,color:cy===0&&cx===0?"#fff":"#000",ha:"c",va:"c",track:".04em"})
+          ];
+        })
+      ]},
+    { id:"run", label:"Running",
+      note:"One number, one bar, one stop. Everything else is deliberately absent.",
+      els:[
+        R(0,0,320,240,{fill:"#FFFFFF"}),
+        R(0,0,320,32,{fill:"#000"}),
+        X(10,0,300,32,"DISPENSING \u00b7 PUMPS LIVE",{size:15,weight:700,color:"#fff",va:"c",track:".05em"}),
+
+        X(0,44,320,22,"SAMPLE",{size:15,color:"#000",ha:"c",track:".22em",weight:600}),
+        X(0,66,320,62,"3 / 12",{size:62,weight:700,color:"#000",ha:"c",tnum:1}),
+        R(16,140,288,18,{fill:"#fff",border:"#000",bw:3}),
+        B(19,143,282,12,25,{fill:"#000"}),
+        X(0,162,320,20,"4 min 10 s remaining",{size:15,color:"#000",ha:"c"}),
+
+        R(16,188,288,44,{fill:"#000",touch:1}),
+        X(16,188,288,44,"STOP",{size:24,weight:700,color:"#fff",ha:"c",va:"c",track:".1em"})
+      ]},
+    { id:"confirm", label:"Confirm",
+      note:"Irreversible actions get their own screen, not a popup that can be dismissed by a stray press.",
+      els:[
+        R(0,0,320,240,{fill:"#FFFFFF"}),
+        R(0,0,320,32,{fill:"#000"}),
+        X(10,0,300,32,"CONFIRM",{size:16,weight:700,color:"#fff",va:"c",track:".08em"}),
+
+        X(16,48,288,26,"Start dispensing?",{size:24,weight:700,color:"#000"}),
+        X(16,82,288,22,"Serial dilution A",{size:18,color:"#000"}),
+        X(16,106,288,22,"12 samples \u00b7 4 liquids",{size:16,color:"#000"}),
+        R(16,136,288,3,{fill:"#000"}),
+        X(16,146,288,20,"Pumps will start immediately.",{size:15,color:"#000",weight:600}),
+
+        R(16,180,138,52,{fill:"#fff",border:"#000",bw:3,touch:1}),
+        X(16,180,138,52,"CANCEL",{size:18,weight:700,color:"#000",ha:"c",va:"c"}),
+        R(166,180,138,52,{fill:"#000",touch:1}),
+        X(166,180,138,52,"START",{size:18,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]}
+  ]
+};
+
+/* ---------- D \u2014 Guided run (structural) -------------------------------- */
+V.D = {
+  key:"D", name:"Guided run",
+  tag:"Structural",
+  idea:"Stops treating the interface as a menu tree and treats it as the job: choose \u2192 check \u2192 confirm \u2192 run \u2192 result, with a spine that always says where you are and what is left. Introduces the two screens the product needs and does not have \u2014 a pre-flight check with a level override, and a dry-run that is a visible mode rather than a hidden flag.",
+  cost:"A linear flow is slower for an expert repeating a familiar run, and it constrains navigation deliberately. It also adds screens, so it is the most implementation work of the five.",
+  screens:[
+    { id:"select", label:"1 \u00b7 Choose",
+      note:"The spine is persistent chrome. No screen title \u2014 the spine already says where you are, so that row of pixels goes to the list instead.",
+      els:[
+        R(0,0,320,240,{fill:T.bg}),
+        R(0,0,320,30,{fill:T.card}),
+        R(0,29,320,1,{fill:T.line}),
+        ...[0,1,2,3].flatMap(i=>[
+          R(12+i*78,13,66,4,{fill:i===0?T.acc:T.line,radius:2}),
+          X(12+i*78,17,66,12,["Choose","Check","Run","Result"][i],{size:9,color:i===0?T.ink:T.ink2,ha:"c",weight:i===0?700:400})
+        ]),
+
+        ...[["Serial dilution A","12 samples \u00b7 4 liquids",1],
+            ["Standard curve","8 samples \u00b7 3 liquids",0],
+            ["Buffer exchange","6 samples \u00b7 2 liquids",0]]
+          .flatMap(([n,s,sel],i)=>{
+            const y=36+i*48;
+            return [
+              R(12,y,296,44,{fill:sel?"#E8F0F8":T.card,radius:6,border:sel?T.acc:T.line,bw:sel?2:1,touch:1}),
+              X(24,y+6,200,16,n,{size:14,weight:700,color:T.ink}),
+              X(24,y+23,200,14,s,{size:11,color:T.ink2}),
+              ...(sel?[R(276,y+14,16,16,{fill:T.acc,radius:8})]:[])
+            ];
+          }),
+
+        R(12,184,296,48,{fill:T.acc,radius:6,touch:1}),
+        X(12,184,296,48,"NEXT \u2014 check levels",{size:14,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]},
+    { id:"check", label:"2 \u00b7 Check",
+      note:"The screen the product needs and lacks: a level guard that warns and offers an override, rather than silently forcing the run button inactive as the current firmware does.",
+      els:[
+        R(0,0,320,240,{fill:T.bg}),
+        R(0,0,320,30,{fill:T.card}),
+        R(0,29,320,1,{fill:T.line}),
+        ...[0,1,2,3].flatMap(i=>[
+          R(12+i*78,13,66,4,{fill:i<=1?T.acc:T.line,radius:2}),
+          X(12+i*78,17,66,12,["Choose","Check","Run","Result"][i],{size:9,color:i===1?T.ink:T.ink2,ha:"c",weight:i===1?700:400})
+        ]),
+
+        R(12,34,296,32,{fill:"#FDF0E0",radius:6,border:T.warn,bw:1}),
+        X(24,34,272,32,"Reagent X is low \u2014 2.4 of 3.0 mL needed",{size:12,weight:600,color:T.warn,va:"c"}),
+
+        ...[["Buffer A","25.9 / 12.0 mL",1],["Reagent X","2.4 / 3.0 mL",0],["Diluent","31.7 / 8.4 mL",1]]
+          .flatMap(([n,s,ok],i)=>{
+            const y=72+i*22;
+            return [
+              R(12,y,296,20,{fill:T.card,radius:3,border:T.line}),
+              R(22,y+6,8,8,{fill:ok?T.ok:T.warn,radius:4}),
+              X(38,y,120,20,n,{size:11,color:T.ink,va:"c",weight:600}),
+              X(170,y,126,20,s,{size:11,color:ok?T.ink2:T.warn,va:"c",ha:"r",tnum:1})
+            ];
+          }),
+
+        R(12,142,296,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        R(24,157,34,14,{fill:T.sunk,radius:7}),
+        R(26,159,10,10,{fill:T.card,radius:5}),
+        X(70,142,226,44,"Dry run \u2014 no liquid moves",{size:12,color:T.ink,va:"c"}),
+
+        R(12,192,140,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(12,192,140,44,"BACK",{size:13,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(168,192,140,44,{fill:T.warn,radius:6,touch:1}),
+        X(168,192,140,44,"RUN ANYWAY",{size:13,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]},
+    { id:"run", label:"3 \u00b7 Run",
+      note:"Per-pump progress derived from the step counter, not from any sensor. Abort is never off screen.",
+      els:[
+        R(0,0,320,240,{fill:T.bg}),
+        R(0,0,320,30,{fill:T.live}),
+        X(10,0,180,30,"RUNNING",{size:13,weight:700,color:"#fff",va:"c",track:".06em"}),
+        R(212,11,8,8,{fill:"#FFC4BC",radius:4}),
+        X(224,0,88,30,"PUMPS LIVE",{size:11,color:"#FFD9D4",va:"c",weight:600}),
+
+        X(12,34,180,16,"Serial dilution A",{size:13,weight:700,color:T.ink}),
+        X(190,34,118,16,"3 / 12",{size:13,color:T.ink,ha:"r",tnum:1,weight:700}),
+        R(12,54,296,10,{fill:T.sunk,radius:5}),
+        B(12,54,296,10,25,{fill:T.acc,radius:5}),
+        X(12,68,296,14,"4 min 10 s remaining",{size:11,color:T.ink2}),
+
+        ...[["Pump 1","250 / 250 \u00b5L",100],["Pump 2","120 / 120 \u00b5L",100],["Pump 3","49 / 80 \u00b5L",61]]
+          .flatMap(([n,s,p],i)=>{
+            const y=86+i*30;
+            return [
+              R(12,y,296,26,{fill:T.card,radius:4,border:T.line}),
+              X(22,y,80,26,n,{size:12,color:T.ink,va:"c",weight:600}),
+              R(104,y+9,120,8,{fill:T.sunk,radius:4}),
+              B(104,y+9,120,8,p,{fill:p===100?T.ok:T.acc,radius:4}),
+              X(232,y,66,26,s,{size:11,color:T.ink2,va:"c",ha:"r",tnum:1})
+            ];
+          }),
+
+        R(12,182,140,50,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(12,182,140,50,"PAUSE",{size:14,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(168,182,140,50,{fill:T.bad,radius:6,touch:1}),
+        X(168,182,140,50,"ABORT",{size:14,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]},
+    { id:"done", label:"4 \u00b7 Result",
+      note:"Volumes labelled commanded, not measured \u2014 the honest claim the product owes the operator (FLOW-05).",
+      els:[
+        R(0,0,320,240,{fill:T.bg}),
+        R(0,0,320,30,{fill:T.card}),
+        R(0,29,320,1,{fill:T.line}),
+        ...[0,1,2,3].flatMap(i=>[
+          R(12+i*78,13,66,4,{fill:T.ok,radius:2}),
+          X(12+i*78,17,66,12,["Choose","Check","Run","Result"][i],{size:9,color:i===3?T.ink:T.ink2,ha:"c",weight:i===3?700:400})
+        ]),
+
+        R(12,36,296,42,{fill:"#E7F3EC",radius:6,border:T.ok,bw:1}),
+        X(24,42,180,20,"Run complete",{size:17,weight:700,color:T.ok}),
+        X(24,58,272,16,"12 of 12 samples \u00b7 6 min 51 s",{size:12,color:T.ink2}),
+
+        X(12,84,296,12,"COMMANDED VOLUMES",{size:10,color:T.ink2,track:".13em",weight:600}),
+        ...[["Buffer A","3 000 \u00b5L"],["Buffer B","1 440 \u00b5L"],["Reagent X","960 \u00b5L"]]
+          .flatMap(([n,v],i)=>{
+            const y=100+i*24;
+            return [
+              R(12,y,296,22,{fill:T.card,radius:3,border:T.line}),
+              X(22,y,150,22,n,{size:12,color:T.ink,va:"c"}),
+              X(180,y,116,22,v,{size:12,color:T.ink,va:"c",ha:"r",tnum:1,weight:600})
+            ];
+          }),
+        X(12,174,296,12,"Commanded, not measured.",{size:10,color:T.ink2}),
+
+        R(12,190,140,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(12,190,140,44,"SAVE TO SD",{size:13,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(168,190,140,44,{fill:T.acc,radius:6,touch:1}),
+        X(168,190,140,44,"DONE",{size:13,weight:700,color:"#fff",ha:"c",va:"c"})
+      ]}
+  ]
+};
+
+/* ---------- E \u2014 Machine state (structural) ----------------------------- */
+V.E = {
+  key:"E", name:"Machine state",
+  tag:"Structural",
+  idea:"The home screen IS the machine. One screen always shows the run state, all six channels, whether the pumps are energised, and an abort \u2014 and everything else opens over it as a sheet. The screen becomes a projection of the state machine rather than a place you navigate to.",
+  cost:"The always-on dashboard spends screen area on information that is often unchanging, so each individual task gets less room. It also demands the run state machine actually exist first \u2014 it is the candidate most coupled to Phase 3.",
+  screens:[
+    { id:"idle", label:"Idle",
+      note:"Same layout in every state. Only the state chip, the colour and the action row change.",
+      els:[
+        R(0,0,320,240,{fill:T.bg}),
+        R(8,8,304,52,{fill:T.card,radius:8,border:T.line}),
+        R(20,22,10,10,{fill:T.ok,radius:5}),
+        X(38,16,150,22,"IDLE",{size:19,weight:700,color:T.ink,track:".04em"}),
+        X(38,38,180,14,"Pumps de-energised",{size:11,color:T.ink2}),
+        X(200,16,100,20,"12.1 V",{size:15,color:T.ink,ha:"r",tnum:1,weight:600}),
+        X(200,38,100,14,"SD \u00b7 3 protocols",{size:11,color:T.ink2,ha:"r"}),
+
+        X(8,68,304,14,"CHANNELS",{size:10,color:T.ink2,track:".13em",weight:600}),
+        ...[[0,"Buffer A",72],[1,"Buffer B",54],[2,"Reagent X",18],
+            [3,"Diluent",88],[4,"Stop sol.",61],[5,"\u2014",0]].flatMap(([i,n,v])=>{
+          const x=8+(i%3)*103, y=86+Math.floor(i/3)*44;
+          const low = v>0 && v<25;
+          return [
+            R(x,y,99,40,{fill:T.card,radius:6,border:T.line}),
+            X(x+8,y+4,83,12,n,{size:10,color:T.ink2}),
+            X(x+8,y+15,50,15,v?v+"%":"\u2014",{size:14,color:low?T.warn:T.ink,tnum:1,weight:700}),
+            R(x+8,y+31,83,5,{fill:T.sunk,radius:3}),
+            R(x+8,y+31,Math.round(83*v/100),5,{fill:low?T.warn:T.ok,radius:3})
+          ];
+        }),
+
+        R(8,180,148,44,{fill:T.acc,radius:6,touch:1}),
+        X(8,180,148,44,"START RUN",{size:14,weight:700,color:"#fff",ha:"c",va:"c"}),
+        R(164,180,148,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(164,180,148,44,"PRIME",{size:14,weight:700,color:T.ink,ha:"c",va:"c"}),
+        X(8,228,304,12,"Every screen shows this state. Nothing hides it.",{size:9,color:T.ink2,ha:"c"})
+      ]},
+    { id:"running", label:"Running",
+      note:"Identical geometry. The channel tiles now carry per-pump dose progress instead of levels.",
+      els:[
+        R(0,0,320,240,{fill:T.bg}),
+        R(8,8,304,52,{fill:T.live,radius:8}),
+        R(20,22,10,10,{fill:"#FFC4BC",radius:5}),
+        X(38,16,180,22,"RUNNING",{size:19,weight:700,color:"#fff",track:".04em"}),
+        X(38,38,190,14,"PUMPS LIVE \u00b7 sample 3 of 12",{size:11,color:"#FFD9D4"}),
+        X(210,16,90,20,"25%",{size:19,color:"#fff",ha:"r",tnum:1,weight:700}),
+        X(210,38,90,14,"4:10 left",{size:11,color:"#FFD9D4",ha:"r",tnum:1}),
+
+        X(8,68,304,14,"DOSE PROGRESS",{size:10,color:T.ink2,track:".13em",weight:600}),
+        ...[[0,"Buffer A",100],[1,"Buffer B",100],[2,"Reagent X",61],
+            [3,"Diluent",0],[4,"Stop sol.",0],[5,"\u2014",-1]].flatMap(([i,n,v])=>{
+          const x=8+(i%3)*103, y=86+Math.floor(i/3)*44;
+          const off = v<0;
+          return [
+            R(x,y,99,40,{fill:T.card,radius:6,border:T.line}),
+            X(x+8,y+4,83,12,n,{size:10,color:T.ink2}),
+            X(x+8,y+15,60,15,off?"\u2014":(v===100?"done":v+"%"),{size:14,color:off?T.ink2:(v===100?T.ok:T.acc),tnum:1,weight:700}),
+            R(x+8,y+31,83,5,{fill:T.sunk,radius:3}),
+            R(x+8,y+31,Math.round(83*Math.max(v,0)/100),5,{fill:v===100?T.ok:T.acc,radius:3})
+          ];
+        }),
+
+        R(8,180,148,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(8,180,148,44,"PAUSE",{size:14,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(164,180,148,44,{fill:T.bad,radius:6,touch:1}),
+        X(164,180,148,44,"ABORT",{size:14,weight:700,color:"#fff",ha:"c",va:"c"}),
+        X(8,228,304,12,"Abort is in the same place in every state.",{size:9,color:T.ink2,ha:"c"})
+      ]},
+    { id:"fault", label:"Fault",
+      note:"A fault is a state of the same dashboard, not a different screen you get thrown to.",
+      els:[
+        R(0,0,320,240,{fill:T.badBg}),
+        R(8,8,304,52,{fill:T.bad,radius:8}),
+        R(20,22,10,10,{fill:"#fff",radius:5}),
+        X(38,16,200,22,"FAULT",{size:19,weight:700,color:"#fff",track:".04em"}),
+        X(38,38,240,14,"Motion watchdog \u00b7 pump 3",{size:11,color:"#FFD9D4"}),
+
+        R(8,68,304,60,{fill:T.card,radius:8,border:T.bad,bw:1}),
+        X(20,76,280,18,"No step acknowledgement in 500 ms",{size:13,weight:700,color:T.ink,va:"c"}),
+        X(20,96,280,14,"Run stopped at sample 3 of 12.",{size:11,color:T.ink2}),
+        X(20,110,280,14,"All pumps de-energised.",{size:11,color:T.ok,weight:600}),
+
+        R(8,136,304,36,{fill:T.card,radius:6,border:T.line}),
+        R(20,150,10,10,{fill:T.ok,radius:5}),
+        X(38,136,260,36,"Pumps confirmed off at the ENABLE pins",{size:11,color:T.ink,va:"c"}),
+
+        R(8,180,148,44,{fill:T.card,radius:6,border:T.line,touch:1}),
+        X(8,180,148,44,"DETAILS",{size:14,weight:700,color:T.ink,ha:"c",va:"c"}),
+        R(164,180,148,44,{fill:T.ink,radius:6,touch:1}),
+        X(164,180,148,44,"ACKNOWLEDGE",{size:13,weight:700,color:"#fff",ha:"c",va:"c"}),
+        X(8,228,304,12,"Same geometry as idle and running.",{size:9,color:T.ink2,ha:"c"})
+      ]}
+  ]
+};
+
+/* ============================================================
+   Colour maths \u2014 RGB565 quantisation + WCAG contrast
+   ============================================================ */
+function hex2rgb(h){
+  h = h.replace("#","");
+  if (h.length === 3) h = h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function rgb2hex(r,g,b){
+  return "#" + [r,g,b].map(v=>Math.max(0,Math.min(255,v|0)).toString(16).padStart(2,"0")).join("");
+}
+/* Exactly what the panel does: 5 bits red, 6 green, 5 blue, low bits replicated. */
+function q565(hex){
+  const [r,g,b] = hex2rgb(hex);
+  const R5 = (r>>3), G6 = (g>>2), B5 = (b>>3);
+  return rgb2hex((R5<<3)|(R5>>2), (G6<<2)|(G6>>4), (B5<<3)|(B5>>2));
+}
+function lum(hex){
+  const [r,g,b] = hex2rgb(hex).map(v=>{
+    const s = v/255;
+    return s <= 0.03928 ? s/12.92 : Math.pow((s+0.055)/1.055, 2.4);
+  });
+  return 0.2126*r + 0.7152*g + 0.0722*b;
+}
+function contrast(a,b){
+  const L1 = lum(a), L2 = lum(b);
+  return ((Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05));
+}
+
+/* ============================================================
+   State + render
+   ============================================================ */
+const S = { v:"A", s:0, touch:false, grid:false, q:false, glare:false, zoom:1 };
+
+const screen = document.getElementById("screen");
+const ovl    = document.getElementById("ovl");
+const gridEl = document.getElementById("grid");
+const glareEl= document.getElementById("glare");
+
+function col(c){ return S.q ? q565(c) : c; }
+
+/* Find the background colour actually behind a given element, by scanning
+   the rects drawn before it that contain it. Makes the contrast audit real. */
+function bgBehind(els, idx, el){
+  let bg = "#FFFFFF";
+  for (let i = 0; i < idx; i++){
+    const e = els[i];
+    if (e.kind !== "rect" || !e.fill) continue;
+    if (el.x >= e.x && el.y >= e.y &&
+        el.x + el.w <= e.x + e.w && el.y + el.h <= e.y + e.h) bg = e.fill;
+  }
+  return bg;
+}
+
+function render(){
+  const V_ = V[S.v], sc = V_.screens[S.s];
+
+  /* clear previously drawn elements, keep the overlay layers */
+  [...screen.querySelectorAll(".el")].forEach(n=>n.remove());
+
+  const frag = document.createDocumentFragment();
+  sc.els.forEach(e=>{
+    const d = document.createElement("div");
+    d.className = "el" + (e.kind === "text" ? " t" : "");
+    d.style.left = e.x+"px"; d.style.top = e.y+"px";
+    d.style.width = e.w+"px"; d.style.height = e.h+"px";
+
+    if (e.kind === "rect" || e.kind === "bar"){
+      let w = e.w;
+      if (e.kind === "bar") w = Math.round(e.w * e.v/100);
+      d.style.width = w+"px";
+      if (e.fill) d.style.background = col(e.fill);
+      if (e.border) d.style.border = (e.bw||1)+"px solid "+col(e.border);
+      if (e.radius) d.style.borderRadius = e.radius+"px";
+    } else {
+      d.style.fontSize = (e.size||13)+"px";
+      d.style.fontWeight = e.weight||400;
+      d.style.color = col(e.color||T.ink);
+      d.style.lineHeight = "1.15";
+      if (e.track) d.style.letterSpacing = e.track;
+      if (e.tnum) d.style.fontVariantNumeric = "tabular-nums";
+      d.style.alignItems = e.va === "c" ? "center" : "flex-start";
+      d.style.justifyContent = e.ha === "c" ? "center" : e.ha === "r" ? "flex-end" : "flex-start";
+      d.style.overflow = "hidden";
+      d.textContent = e.s;
+    }
+    frag.appendChild(d);
+  });
+  screen.insertBefore(frag, glareEl);
+
+  drawOverlays(sc);
+  audit(sc);
+
+  document.getElementById("cap").textContent = sc.note;
+  document.getElementById("idea").textContent = V_.idea;
+  document.getElementById("cost").textContent = V_.cost;
+  document.getElementById("railnote").textContent =
+    V_.tag === "Structural"
+      ? "Structural candidate \u2014 changes what the interface is about, not only how it looks."
+      : "Layout & style candidate \u2014 same information model as today, presented differently.";
+}
+
+function drawOverlays(sc){
+  ovl.innerHTML = "";
+  if (S.touch){
+    sc.els.filter(e=>e.touch).forEach(e=>{
+      const bad = e.w < 44 || e.h < 44;
+      const b = document.createElement("div");
+      b.className = "tt" + (bad ? " bad" : "");
+      b.style.left = e.x+"px"; b.style.top = e.y+"px";
+      b.style.width = e.w+"px"; b.style.height = e.h+"px";
+      ovl.appendChild(b);
+      const l = document.createElement("div");
+      l.className = "ttlab" + (bad ? " bad" : "");
+      l.style.left = e.x+"px"; l.style.top = Math.max(0, e.y-8)+"px";
+      l.textContent = e.w+"\u00d7"+e.h;
+      ovl.appendChild(l);
+    });
+  }
+  gridEl.style.background = S.grid
+    ? "repeating-linear-gradient(to right, rgba(214,0,110,.22) 0 1px, transparent 1px 4px),"
+    + "repeating-linear-gradient(to bottom, rgba(214,0,110,.22) 0 1px, transparent 1px 4px)"
+    : "none";
+  /* Glare: additive veiling luminance, which is what reflection physically is. */
+  glareEl.style.background = S.glare ? "rgba(255,255,255,.72)" : "none";
+  glareEl.style.zIndex = S.glare ? "50" : "0";
+}
+
+function audit(sc){
+  const touches = sc.els.filter(e=>e.touch);
+  const minW = touches.length ? Math.min(...touches.map(e=>e.w)) : 0;
+  const minH = touches.length ? Math.min(...touches.map(e=>e.h)) : 0;
+  const smallest = Math.min(minW||999, minH||999);
+  const failing = touches.filter(e=>e.w<44||e.h<44).length;
+
+  /* Worst text contrast on the screen, measured post-quantisation. */
+  let worst = 99, worstTxt = "";
+  sc.els.forEach((e,i)=>{
+    if (e.kind !== "text" || !e.s) return;
+    const fg = q565(e.color||T.ink), bg = q565(bgBehind(sc.els,i,e));
+    const c = contrast(fg,bg);
+    if (c < worst){ worst = c; worstTxt = e.s; }
+  });
+
+  const mm = (smallest*0.2032).toFixed(1);
+  const rows = [
+    ["Touch targets", touches.length, ""],
+    ["Smallest target", smallest+" px \u00b7 "+mm+" mm", smallest>=44?"pass":"fail"],
+    ["Under 44 px", failing, failing===0?"pass":"fail"],
+    ["Worst text contrast", worst.toFixed(1)+":1", worst>=7?"pass":worst>=4.5?"mid":"fail"],
+    ["Elements drawn", sc.els.length, ""],
+    ["Shadow / blur / rotate", "0", "pass"]
+  ];
+  document.getElementById("audit").innerHTML = rows.map(([k,v,c])=>
+    `<div class="metric"><span>${k}</span><span class="${c}">${v}</span></div>`).join("");
+
+  const okAll = failing===0 && worst>=7;
+  document.getElementById("auditverdict").innerHTML = okAll
+    ? `<div class="verdict ok">UX-01 and UX-02 satisfied on this screen. Worst text is \u201c${worstTxt}\u201d at ${worst.toFixed(1)}:1.</div>`
+    : `<div class="verdict no">${failing?failing+" target(s) under 44 px. ":""}${worst<7?`Worst text \u201c${worstTxt}\u201d is ${worst.toFixed(1)}:1, under the 7:1 bar.`:""}</div>`;
+}
+
+/* ============================================================
+   Chrome wiring
+   ============================================================ */
+const rail = document.getElementById("rail");
+const railNote = document.getElementById("railnote");
+Object.values(V).forEach(v=>{
+  const b = document.createElement("button");
+  b.className = "vbtn"; b.type = "button";
+  b.setAttribute("aria-pressed", v.key === S.v);
+  b.dataset.k = v.key;
+  b.innerHTML = `<span class="vk">${v.key}</span> \u00b7 ${v.tag}<span class="vn">${v.name}</span>`;
+  b.addEventListener("click", ()=>{ S.v = v.key; S.s = 0; buildTabs(); syncRail(); render(); });
+  rail.insertBefore(b, railNote);
+});
+function syncRail(){
+  rail.querySelectorAll(".vbtn").forEach(b=>b.setAttribute("aria-pressed", b.dataset.k === S.v));
+}
+
+const tabs = document.getElementById("screentabs");
+function buildTabs(){
+  tabs.innerHTML = "";
+  V[S.v].screens.forEach((s,i)=>{
+    const b = document.createElement("button");
+    b.className = "tbtn"; b.type = "button";
+    b.textContent = s.label;
+    b.setAttribute("aria-pressed", i === S.s);
+    b.addEventListener("click", ()=>{ S.s = i; buildTabs(); render(); });
+    tabs.appendChild(b);
+  });
+}
+
+function toggle(id, key){
+  const el = document.getElementById(id);
+  el.addEventListener("click", ()=>{
+    S[key] = !S[key];
+    el.setAttribute("aria-pressed", S[key]);
+    render();
+  });
+}
+toggle("c-touch","touch"); toggle("c-grid","grid");
+toggle("c-565","q");       toggle("c-glare","glare");
+
+const zoomBtn = document.getElementById("c-zoom");
+zoomBtn.addEventListener("click", ()=>{
+  S.zoom = S.zoom === 1 ? 2 : S.zoom === 2 ? 3 : 1;
+  zoomBtn.textContent = S.zoom+"\u00d7";
+  screen.style.transform = "scale("+S.zoom+")";
+  const f = screen.parentElement;
+  f.style.width  = (320*S.zoom + 12)+"px";
+  f.style.height = (240*S.zoom + 12)+"px";
+});
+
+buildTabs(); syncRail(); render();
+</script>

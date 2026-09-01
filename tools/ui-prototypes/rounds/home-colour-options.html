@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home screen — colour options (V2.1)</title>
+<!-- Mechanical edit for offline use (see ../SPEC.md): Google Fonts links replaced with the vendored Montserrat under assets/fonts/montserrat/. Original: fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap -->
+<link href="../../../assets/fonts/montserrat/montserrat.css" rel="stylesheet">
+<style>
+  :root { --pg:#f5f6f8; --pgink:#1a1f26; --pgdim:#5b6672; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; padding:28px 32px 60px;
+    background:var(--pg); color:var(--pgink);
+    font:14px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  h1 { font-size:20px; margin:0 0 4px; letter-spacing:-.2px; }
+  .lede { color:var(--pgdim); max-width:74ch; margin:0 0 18px; }
+  .controls { display:flex; gap:18px; align-items:center; flex-wrap:wrap;
+    background:#fff; border:1px solid #dfe3e8; border-radius:10px;
+    padding:10px 14px; margin:0 0 22px; width:max-content; }
+  .controls label { display:flex; gap:7px; align-items:center; cursor:pointer; font-size:13px; }
+  .controls .grp { display:flex; gap:10px; align-items:center; }
+  .controls select { font:inherit; font-size:13px; padding:3px 6px; border:1px solid #cfd5dc; border-radius:6px; background:#fff; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(660px, 1fr)); gap:26px; max-width:1420px; }
+  .panel { background:#fff; border:1px solid #dfe3e8; border-radius:12px; padding:16px 18px 18px; }
+  .panel h2 { font-size:15px; margin:0 0 2px; }
+  .panel h2 .tag { font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase;
+    color:#fff; background:#7b8794; border-radius:4px; padding:2px 6px; margin-right:8px; vertical-align:2px; }
+  .panel.bench h2 .tag { background:#1a1f26; }
+  .panel p.note { color:var(--pgdim); font-size:13px; margin:6px 0 14px; min-height:38px; }
+  .panel p.note b { color:var(--pgink); font-weight:600; }
+  .frame { width:642px; height:482px; border:1px solid #b9c0c8; border-radius:8px; overflow:hidden;
+    background:#EDEFF2; }
+  .stage { width:320px; height:240px; position:relative; overflow:hidden;
+    transform:scale(2); transform-origin:0 0;
+    font-family:"Montserrat", "Segoe UI", system-ui, sans-serif; font-weight:500;
+    -webkit-font-smoothing:antialiased; }
+  .stage div { position:absolute; }
+  .stage .t { white-space:nowrap; overflow:hidden; }
+  .stage svg { position:absolute; display:block; }
+  footer { margin-top:34px; max-width:96ch; color:var(--pgdim); font-size:13.5px; }
+  footer h3 { color:var(--pgink); font-size:14px; margin:20px 0 6px; }
+  footer code { background:#e9edf1; padding:1px 5px; border-radius:4px; font-size:12.5px; }
+  footer ul { margin:6px 0; padding-left:20px; }
+</style>
+</head>
+<body>
+
+<!-- Mechanical edit (see ../SPEC.md): back-link to the prototype index. -->
+<nav style="margin:0 0 16px"><a href="../index.html" style="font:12px/1 ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;letter-spacing:.08em;color:#5b6672;text-decoration:none">&larr; All rounds</a></nav>
+
+<h1>Home screen — four colour treatments</h1>
+<p class="lede">
+  320 × 240 at 2× zoom, light theme, real token values from <code>ui_theme.cpp</code> and real
+  geometry from <code>scr_home.cpp</code>. Nothing is functional. The first panel is the current
+  firmware, drawn as a fidelity benchmark; the other three are proposals. Toggle the machine state
+  to see how each treatment behaves when the position warning and the liquid alarm fire.
+</p>
+
+<div class="controls">
+  <div class="grp"><label><input type="checkbox" id="unhomed"> Position unknown (boot state)</label></div>
+  <div class="grp">Liquid level state:
+    <select id="sev">
+      <option value="0">all levels fine</option>
+      <option value="1">1 getting low</option>
+      <option value="2">1 needs attention</option>
+    </select>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  <h3>What all three proposals change beside colour</h3>
+  <p>
+    The <b>label sits at the very top of the tile and the sub-line at the very bottom</b> —
+    <code>ui_btn()</code> places them at <code>y = 6</code> and <code>y = h − 20</code>, so a 72 px tile
+    has a 28 px hole in the middle and the label reads as pushed up. All three proposals centre the
+    label + sub-line pair as one block instead (label at <code>y = 19</code>, sub at <code>y = 40</code>),
+    and give the title the same vertical centre as the gear beside it. That is a two-line change in
+    <code>ui_widgets.cpp</code> and it applies to every tile-style button in the interface at once.
+  </p>
+
+  <h3>Constraints every proposal respects</h3>
+  <ul>
+    <li><b>One solid accent per screen.</b> "Start a run" stays the only fully filled tile, so it keeps
+      the hierarchy you liked.</li>
+    <li><b>No state by colour alone</b> (UX-02) — the Liquids tile keeps its icon and its word;
+      colour only reinforces them.</li>
+    <li><b>Alarm states are untouched.</b> Amber (getting low) and solid red (needs attention) render
+      exactly as the firmware does today in all four panels — softening the alarm to fit a palette
+      would be the wrong trade.</li>
+    <li><b>No gradients, no shadows, no new fonts.</b> Everything here is a flat rectangle or a
+      circle, i.e. things LVGL already draws for free at this frame rate.</li>
+    <li>Colours are taken from the palette the product <em>already has</em> — the ColorBrewer Dark2
+      channel set (<code>CH[]</code>) and its light tints (<code>CHBG_L[]</code>) — so no new tokens
+      need a contrast audit, only a re-check of ink on the tint.</li>
+  </ul>
+
+  <h3>Firmware cost, roughly</h3>
+  <ul>
+    <li><b>A — Colour rails:</b> one extra <code>ui_rect()</code> per tile plus an icon colour. Smallest change.</li>
+    <li><b>B — Tinted cards:</b> new <code>BtnTone</code> values (or a <code>tint</code> field on <code>BtnOpt</code>);
+      no new drawing at all. Needs an ink-on-tint contrast check.</li>
+    <li><b>C — Channel ribbon + discs:</b> six small rects for the ribbon, one circle per tile, and a
+      left-offset change to the label column. Largest change of the three, still small.</li>
+  </ul>
+</footer>
+
+<script>
+/* ---------------------------------------------------------------------------
+   Tokens — copied verbatim from Architecture/src/ui/ui_theme.cpp (LIGHT)
+--------------------------------------------------------------------------- */
+const P = {
+  ink:'#10151A', ink2:'#3A4552', ghost:'#414B58', dis:'#8E97A1', line:'#C3C9D0',
+  bg:'#EDEFF2', card:'#FFFFFF', sunk:'#E0E4E8',
+  acc:'#0F4278', accink:'#FFFFFF',
+  ok:'#0E4D2B', okbg:'#E4F0E9',
+  warn:'#6B3F00', warnbg:'#FBF0DE',
+  bad:'#8C1A13', badbg:'#FBE9E7', onbad:'#FFFFFF',
+  accLite:'#6FB2F2'          /* the dark-theme accent, used as a highlight on navy */
+};
+const CH   = ['#1B9E77','#D95F02','#7570B3','#E7298A','#66A61E','#E6AB02'];
+const CHBG = ['#DCEFE9','#FBE6D8','#E6E4F0','#FBE0EC','#E6F0DA','#FBF0D6'];
+
+/* ---------------------------------------------------------------------------
+   Icons — approximations of the LV_SYMBOL_* glyphs (FontAwesome in Montserrat)
+--------------------------------------------------------------------------- */
+function gearPath(cx, cy, ro, ri, hole, teeth) {
+  const n = teeth, step = Math.PI / n, half = step * 0.42;
+  let d = '';
+  for (let i = 0; i < n; i++) {
+    const a = i * 2 * step;
+    const pts = [
+      [a - half, ro], [a + half, ro], [a + step - half, ri], [a + step + half, ri]
+    ];
+    pts.forEach(([ang, r], k) => {
+      const x = (cx + Math.cos(ang) * r).toFixed(2), y = (cy + Math.sin(ang) * r).toFixed(2);
+      d += (i === 0 && k === 0 ? 'M' : 'L') + x + ' ' + y + ' ';
+    });
+  }
+  d += 'Z';
+  d += `M${cx} ${cy - hole}A${hole} ${hole} 0 1 0 ${cx} ${cy + hole}A${hole} ${hole} 0 1 0 ${cx} ${cy - hole}Z`;
+  return d;
+}
+const ICON = {
+  play : '<path d="M6 3.6 16.2 10 6 16.4Z"/>',
+  tint : '<path d="M10 1.8C10 1.8 3.7 9 3.7 12.4a6.3 6.3 0 0 0 12.6 0C16.3 9 10 1.8 10 1.8Z"/>',
+  list : '<path d="M2 4.2h3v2.4H2ZM6.6 4.4h11.4v2H6.6ZM2 8.8h3v2.4H2ZM6.6 9h11.4v2H6.6ZM2 13.4h3v2.4H2ZM6.6 13.6h11.4v2H6.6Z"/>',
+  eye  : '<path fill-rule="evenodd" d="M10 3.6C4.9 3.6 1.5 8.3.7 10c.8 1.7 4.2 6.4 9.3 6.4s8.5-4.7 9.3-6.4c-.8-1.7-4.2-6.4-9.3-6.4Zm0 9.6A3.2 3.2 0 1 1 10 6.8a3.2 3.2 0 0 1 0 6.4Z"/>',
+  warn : '<path fill-rule="evenodd" d="M10 1.6 19.2 18H.8ZM9 7.4h2v5.4H9Zm0 6.6h2v2.1H9Z"/>',
+  chev : '<path d="M6.6 2.9 13.7 10l-7.1 7.1-2-2L9.7 10 4.6 4.9Z"/>',
+  gear : `<path fill-rule="evenodd" d="${gearPath(10, 10, 9.4, 7.0, 3.5, 8)}"/>`,
+  sd   : '<path d="M4 1.5h7.2L16 6.2V18.5H4Zm5.4 1.6v3.6h1.4V3.1Zm2.6 0v3.6h1.4V3.1Z"/>',
+  batt : '<path fill-rule="evenodd" d="M1.5 5.5h14v9h-14Zm1.6 1.6v5.8h10.8V7.1ZM16.6 8.2h1.9v3.6h-1.9Z"/>'
+};
+function svg(name, size, colour, x, y) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 20 20" fill="${colour}"
+           style="left:${x}px;top:${y}px">${ICON[name]}</svg>`;
+}
+
+/* ---------------------------------------------------------------------------
+   tiny DOM helpers — everything is absolutely positioned, like LVGL
+--------------------------------------------------------------------------- */
+const h = (html) => html;
+function box(x, y, w, hh, css = '') {
+  return `<div style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;${css}"></div>`;
+}
+function txt(x, y, w, hh, s, size, colour, extra = '') {
+  return `<div class="t" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;
+    line-height:${hh}px;font-size:${size}px;color:${colour};${extra}">${s}</div>`;
+}
+
+/* ---------------------------------------------------------------------------
+   The persistent 26 px status bar (lv_layer_top) — identical in every panel
+--------------------------------------------------------------------------- */
+function statusBar() {
+  return box(0, 0, 320, 26, `background:${P.sunk}`)
+       + box(0, 25, 320, 1, `background:${P.line}`)
+       + txt(8, 0, 150, 26, 'READY', 12, P.ink, 'letter-spacing:1px')
+       + svg('sd', 10, P.ghost, 196, 8)
+       + svg('batt', 10, P.ghost, 216, 8)
+       + txt(236, 0, 16, 26, '--', 10, P.ghost, 'text-align:center')
+       + box(256, 9, 8, 8, `background:${P.ok};border-radius:50%`)
+       + txt(268, 0, 48, 26, 'OFF', 10, P.ink);
+}
+
+/* the red position-warning strip — unchanged in every proposal */
+function warnStrip() {
+  return box(8, 30, 252, 44, `background:${P.badbg};border:2px solid ${P.bad};border-radius:6px`)
+       + svg('warn', 16, P.bad, 16, 42)
+       + txt(42, 30, 130, 44, 'Position unknown', 14, P.bad, '')
+       + txt(168, 30, 54, 44, 'RESET', 12, P.bad, 'text-align:right')
+       + svg('chev', 16, P.bad, 236, 42);
+}
+
+/* ---------------------------------------------------------------------------
+   Model state
+--------------------------------------------------------------------------- */
+const SEV_SUB  = ['all levels fine', '1 getting low', '1 NEED ATTENTION'];
+const SEV_ICON = ['eye', 'warn', 'warn'];
+
+function tileData(st) {
+  return [
+    { x:8,   y:82,  label:'Start a run', sub:'recipes and tubes', icon:'play', role:'primary' },
+    { x:164, y:82,  label:'Fill lines',  sub:'clear the air out', icon:'tint', role:'fill'    },
+    { x:8,   y:162, label:'Recipes',     sub:'add or edit - 4',   icon:'list', role:'recipes' },
+    { x:164, y:162, label:'Liquids',     sub:SEV_SUB[st.sev],
+      icon:SEV_ICON[st.sev], role:'liquids' }
+  ];
+}
+
+/* Alarm rendering is identical in all four panels: amber outline, or solid red. */
+function liquidsAlarm(sev) {
+  if (sev === 1) return { bg:P.warnbg, fg:P.warn,  border:P.warn, bw:1 };
+  if (sev === 2) return { bg:P.bad,    fg:P.onbad, border:null,   bw:0 };
+  return null;
+}
+
+/* ===========================================================================
+   PANEL 0 — the benchmark: what the firmware draws today
+=========================================================================== */
+function renderOriginal(st) {
+  let o = box(0, 0, 320, 240, `background:${P.bg}`) + statusBar();
+
+  o += st.unhomed ? warnStrip()
+     : txt(8, 30, 252, 22, 'Dispensing system', 16, P.ink, '')
+     + txt(8, 52, 252, 20, 'Pick what you want to do.', 10, P.ghost);
+
+  /* gear — TONE_FLAT */
+  o += box(268, 30, 44, 44, `background:${P.sunk};border:1px solid ${P.line};border-radius:6px`)
+     + svg('gear', 20, P.ink, 280, 42);
+
+  for (const t of tileData(st)) {
+    let bg = P.card, fg = P.ink, border = P.line, bw = 1;
+    if (t.role === 'primary') { bg = P.acc; fg = P.accink; border = null; bw = 0; }
+    if (t.role === 'liquids') {
+      const a = liquidsAlarm(st.sev);
+      if (a) { bg = a.bg; fg = a.fg; border = a.border; bw = a.bw; }
+    }
+    o += box(t.x, t.y, 148, 72,
+      `background:${bg};border-radius:6px;` + (bw ? `border:${bw}px solid ${border};` : ''));
+    o += svg(t.icon, 16, fg, t.x + 12, t.y + 28);
+    /* THE PROBLEM: label pinned to y+6, sub pinned to y+h-20 */
+    o += txt(t.x + 42, t.y + 6,  96, 19, t.label, 14, fg, '');
+    o += txt(t.x + 42, t.y + 52, 96, 16, t.sub,   10, fg);
+  }
+  return o;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared by the three proposals: a balanced title strip and a balanced tile
+--------------------------------------------------------------------------- */
+function titleStrip(st, opt = {}) {
+  if (st.unhomed) return warnStrip();
+  return txt(8, 33, 252, 20, 'Dispensing system', 16, opt.ink || P.ink, '')
+       + txt(8, 55, 252, 14, 'Pick what you want to do.', 10, opt.sub || P.ghost);
+}
+/* label + sub as ONE optically centred block inside the 72 px tile */
+function tileText(x, y, w, label, sub, fg) {
+  return txt(x, y + 19, w, 19, label, 14, fg, '')
+       + txt(x, y + 40, w, 14, sub,   10, fg, 'opacity:.86');
+}
+
+/* ===========================================================================
+   PANEL A — Colour rails
+   White cards keep their ink; each tile gains a 6 px colour rail and a
+   matching icon. Colour identifies the destination, ink contrast untouched.
+=========================================================================== */
+function renderA(st) {
+  let o = box(0, 0, 320, 240, `background:${P.bg}`) + statusBar() + titleStrip(st);
+
+  o += box(268, 30, 44, 44, `background:${P.sunk};border:1px solid ${P.line};border-radius:6px`)
+     + svg('gear', 20, P.ink, 280, 42);
+
+  const RAIL = { primary:P.accLite, fill:CH[0], recipes:CH[2],
+                 liquids:[P.ok, P.warn, P.bad][st.sev] };
+
+  for (const t of tileData(st)) {
+    let bg = P.card, fg = P.ink, border = P.line, bw = 1, icon = RAIL[t.role];
+    if (t.role === 'primary') { bg = P.acc; fg = P.accink; border = null; bw = 0; icon = P.accink; }
+    if (t.role === 'liquids' && st.sev) {
+      const a = liquidsAlarm(st.sev);
+      bg = a.bg; fg = a.fg; border = a.border; bw = a.bw;
+      icon = st.sev === 2 ? P.onbad : P.warn;
+    }
+    o += box(t.x, t.y, 148, 72,
+      `background:${bg};border-radius:6px;` + (bw ? `border:${bw}px solid ${border};` : ''));
+    o += box(t.x, t.y, 6, 72,
+      `background:${RAIL[t.role]};border-radius:6px 0 0 6px`);
+    /* the label column keeps its original 96 px: the alarm sub-line
+       "1 NEED ATTENTION" clips below that, in LVGL as well as here */
+    o += svg(t.icon, 16, icon, t.x + 16, t.y + 28);
+    o += tileText(t.x + 42, t.y, 96, t.label, t.sub, fg);
+  }
+  return o;
+}
+
+/* ===========================================================================
+   PANEL B — Tinted cards
+   Every tile filled with the light tint of its own colour, saturated 1 px
+   border and icon, near-black ink. "Start a run" remains the one solid fill.
+=========================================================================== */
+function renderB(st) {
+  let o = box(0, 0, 320, 240, `background:${P.bg}`) + statusBar() + titleStrip(st);
+
+  o += box(268, 30, 44, 44, `background:${P.sunk};border:1px solid ${P.line};border-radius:6px`)
+     + svg('gear', 20, P.ink, 280, 42);
+
+  const TINT = {
+    fill:    { bg:CHBG[0], edge:CH[0] },
+    recipes: { bg:CHBG[2], edge:CH[2] },
+    liquids: { bg:P.okbg,  edge:P.ok  }
+  };
+
+  for (const t of tileData(st)) {
+    let bg, fg = P.ink, border, bw = 1, icon;
+    if (t.role === 'primary') { bg = P.acc; fg = P.accink; border = null; bw = 0; icon = P.accink; }
+    else { const s = TINT[t.role]; bg = s.bg; border = s.edge; icon = s.edge; }
+    if (t.role === 'liquids' && st.sev) {
+      const a = liquidsAlarm(st.sev);
+      bg = a.bg; fg = a.fg; border = a.border; bw = a.bw;
+      icon = st.sev === 2 ? P.onbad : P.warn;
+    }
+    o += box(t.x, t.y, 148, 72,
+      `background:${bg};border-radius:6px;` + (bw ? `border:${bw}px solid ${border};` : ''));
+    o += svg(t.icon, 16, icon, t.x + 12, t.y + 28);
+    o += tileText(t.x + 42, t.y, 96, t.label, t.sub, fg);
+  }
+  return o;
+}
+
+/* ===========================================================================
+   PANEL C — Channel ribbon + icon discs
+   A 4 px six-colour ribbon (the six liquid channels, the instrument's own
+   identity) under the status bar, and a filled colour disc carrying each
+   tile's glyph in white. Cards stay white, so body contrast is untouched.
+=========================================================================== */
+function renderC(st) {
+  let o = box(0, 0, 320, 240, `background:${P.bg}`) + statusBar();
+
+  /* the ribbon: six equal segments, the CH[] palette in channel order */
+  const segW = 304 / 6;
+  for (let i = 0; i < 6; i++) {
+    const r = i === 0 ? '2px 0 0 2px' : (i === 5 ? '0 2px 2px 0' : '0');
+    o += box(8 + i * segW, 28, segW + 0.4, 4, `background:${CH[i]};border-radius:${r}`);
+  }
+
+  o += st.unhomed ? warnStrip()
+     : txt(8, 38, 252, 20, 'Dispensing system', 16, P.ink, '')
+     + txt(8, 58, 252, 14, 'Pick what you want to do.', 10, P.ghost);
+
+  o += box(268, 30, 44, 44, `background:${P.sunk};border:1px solid ${P.line};border-radius:6px`)
+     + svg('gear', 20, P.ink, 280, 42);
+
+  const DISC = { primary:P.acc, fill:CH[0], recipes:CH[2],
+                 liquids:[P.ok, P.warn, P.bad][st.sev] };
+
+  for (const t of tileData(st)) {
+    let bg = P.card, fg = P.ink, border = P.line, bw = 1;
+    let disc = DISC[t.role], glyph = '#FFFFFF';
+    if (t.role === 'primary') {
+      bg = P.acc; fg = P.accink; border = null; bw = 0; disc = '#FFFFFF'; glyph = P.acc;
+    }
+    if (t.role === 'liquids' && st.sev) {
+      const a = liquidsAlarm(st.sev);
+      bg = a.bg; fg = a.fg; border = a.border; bw = a.bw;
+      disc = st.sev === 2 ? '#FFFFFF' : P.warn;
+      glyph = st.sev === 2 ? P.bad : P.warnbg;
+    }
+    o += box(t.x, t.y, 148, 72,
+      `background:${bg};border-radius:6px;` + (bw ? `border:${bw}px solid ${border};` : ''));
+    o += box(t.x + 6, t.y + 21, 30, 30, `background:${disc};border-radius:50%`);
+    o += svg(t.icon, 15, glyph, t.x + 13, t.y + 28);
+    o += tileText(t.x + 42, t.y, 96, t.label, t.sub, fg);
+  }
+  return o;
+}
+
+/* ---------------------------------------------------------------------------
+   Panel harness
+--------------------------------------------------------------------------- */
+const PANELS = [
+  { key:'orig', tag:'benchmark', name:'Current firmware (V2.1 as built)', bench:true,
+    note:'The recreation, for calibration. Three ghost tiles and one navy tile — this is the '
+       + '"shallow" reading. Note the label sitting at the top of each tile with a hole under it.',
+    fn:renderOriginal },
+  { key:'a', tag:'option A', name:'Colour rails',
+    note:'Cards stay white; a <b>6 px colour rail</b> and a matching icon give each destination an '
+       + 'identity. Quietest of the three, keeps every ink contrast exactly as audited, and the '
+       + 'rails double as a colour key for the six-channel palette used elsewhere.',
+    fn:renderA },
+  { key:'b', tag:'option B', name:'Tinted cards',
+    note:'Each tile takes the <b>light tint of its own colour</b> with a saturated border and icon; '
+       + '"Start a run" stays the only solid fill. The most colour per pixel, and the tints already '
+       + 'exist as <code>CHBG_L[]</code>. Ink on tint must be re-measured after RGB565.',
+    fn:renderB },
+  { key:'c', tag:'option C', name:'Channel ribbon + icon discs',
+    note:'A <b>4 px six-colour ribbon</b> — the instrument\'s own channel palette — under the status '
+       + 'bar, and a filled disc carrying each glyph in white. The most product-like; the ribbon also '
+       + 'gives the screen a masthead the thesis photographs well.',
+    fn:renderC }
+];
+
+const state = { unhomed:false, sev:0 };
+
+function draw() {
+  document.getElementById('grid').innerHTML = PANELS.map(p => `
+    <section class="panel${p.bench ? ' bench' : ''}">
+      <h2><span class="tag">${p.tag}</span>${p.name}</h2>
+      <p class="note">${p.note}</p>
+      <div class="frame"><div class="stage" id="st-${p.key}">${p.fn(state)}</div></div>
+    </section>`).join('');
+}
+
+document.getElementById('unhomed').addEventListener('change', e => {
+  state.unhomed = e.target.checked; draw();
+});
+document.getElementById('sev').addEventListener('change', e => {
+  state.sev = +e.target.value; draw();
+});
+draw();
+</script>
+</body>
+</html>

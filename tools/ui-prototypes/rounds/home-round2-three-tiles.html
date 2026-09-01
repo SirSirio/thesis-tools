@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home — round 2: three destinations, liquids as information</title>
+<!-- Mechanical edit for offline use (see ../SPEC.md): Google Fonts links replaced with the vendored Montserrat under assets/fonts/montserrat/. Original: fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap -->
+<link href="../../../assets/fonts/montserrat/montserrat.css" rel="stylesheet">
+<style>
+  :root { --pg:#f5f6f8; --pgink:#1a1f26; --pgdim:#5b6672; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:28px 32px 60px; background:var(--pg); color:var(--pgink);
+    font:14px/1.5 -apple-system,"Segoe UI",system-ui,sans-serif; }
+  h1 { font-size:20px; margin:0 0 4px; letter-spacing:-.2px; }
+  .lede { color:var(--pgdim); max-width:78ch; margin:0 0 16px; }
+  .lede b { color:var(--pgink); }
+  .controls { display:flex; gap:20px; align-items:center; flex-wrap:wrap; background:#fff;
+    border:1px solid #dfe3e8; border-radius:10px; padding:10px 14px; margin:0 0 22px; width:max-content; }
+  .controls .grp { display:flex; gap:8px; align-items:center; font-size:13px; }
+  .controls select { font:inherit; font-size:13px; padding:3px 6px; border:1px solid #cfd5dc;
+    border-radius:6px; background:#fff; }
+  .controls label { display:flex; gap:7px; align-items:center; cursor:pointer; font-size:13px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(660px,1fr)); gap:26px; max-width:1420px; }
+  .panel { background:#fff; border:1px solid #dfe3e8; border-radius:12px; padding:16px 18px 18px; }
+  .panel h2 { font-size:15px; margin:0 0 2px; }
+  .panel h2 .tag { font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase;
+    color:#fff; background:#7b8794; border-radius:4px; padding:2px 6px; margin-right:8px; vertical-align:2px; }
+  .panel.bench h2 .tag { background:#1a1f26; }
+  .panel.chosen { border:2px solid #0F4278; box-shadow:0 0 0 4px #0f42781a; }
+  .panel.chosen h2 .tag { background:#0F4278; }
+  .panel p.note { color:var(--pgdim); font-size:13px; margin:6px 0 14px; min-height:56px; }
+  .panel p.note b { color:var(--pgink); font-weight:600; }
+  .frame { width:642px; height:482px; border:1px solid #b9c0c8; border-radius:8px; overflow:hidden; background:#EDEFF2; }
+  .stage { width:320px; height:240px; position:relative; overflow:hidden; transform:scale(2);
+    transform-origin:0 0; font-family:"Montserrat","Segoe UI",system-ui,sans-serif; font-weight:500;
+    -webkit-font-smoothing:antialiased; }
+  .stage div { position:absolute; }
+  .stage .t { white-space:nowrap; overflow:hidden; }
+  .stage svg { position:absolute; display:block; }
+  footer { margin-top:34px; max-width:98ch; color:var(--pgdim); font-size:13.5px; }
+  footer h3 { color:var(--pgink); font-size:14px; margin:20px 0 6px; }
+  footer code { background:#e9edf1; padding:1px 5px; border-radius:4px; font-size:12.5px; }
+  footer ul { margin:6px 0; padding-left:20px; }
+  footer table { border-collapse:collapse; margin:8px 0; font-size:13px; }
+  footer td, footer th { border:1px solid #dfe3e8; padding:4px 10px; text-align:left; }
+  footer th { background:#f0f2f5; }
+</style>
+</head>
+<body>
+
+<!-- Mechanical edit (see ../SPEC.md): back-link to the prototype index. -->
+<nav style="margin:0 0 16px"><a href="../index.html" style="font:12px/1 ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;letter-spacing:.08em;color:#5b6672;text-decoration:none">&larr; All rounds</a></nav>
+
+<h1>Home — round 2: three destinations, and liquids that report rather than alarm</h1>
+<p class="lede">
+  Three changes carried into all three layouts: <b>Fill lines has left Home</b>, <b>Start a run and
+  Recipes are the two primaries</b>, and <b>the Liquids tile shows the six levels instead of only a
+  verdict</b> — with the new severity rule (red only when <em>everything</em> is empty). The colour
+  treatment from round 1 is now a switch, so layout and colour can be judged separately.
+  <br><br>
+  <b>Outcome: option D with colour rails was chosen and built on 2026-08-11</b> — the simplest of the
+  three and the one that asks the operator to relearn the least. E and F are kept here as the record
+  of what was tried and rejected, and both remain reachable positions if a later session finds D's
+  band does not read as tappable.
+</p>
+
+<div class="controls">
+  <div class="grp">Colour treatment:
+    <select id="treat">
+      <option value="rails" selected>A — colour rails (chosen)</option>
+      <option value="tints">B — tinted cards</option>
+      <option value="discs">C — icon discs</option>
+    </select>
+  </div>
+  <div class="grp">Liquid levels:
+    <select id="liq">
+      <option value="fine">all six fine</option>
+      <option value="some" selected>four of six low or empty</option>
+      <option value="all">all six empty</option>
+    </select>
+  </div>
+  <div class="grp"><label><input type="checkbox" id="unhomed"> Position unknown (boot state)</label></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  <h3>The new liquid rule</h3>
+  <p>
+    Today <code>liquid_severity()</code> returns red as soon as <em>one</em> liquid is below 15 %,
+    unreadable or has no bottle. That is wrong for the way the machine is used: a protocol may need
+    two of the six, and an empty bottle on a channel nobody is using is not an emergency. The rule
+    in these mockups:
+  </p>
+  <table>
+    <tr><th>Condition</th><th>Tile</th><th>Word</th></tr>
+    <tr><td>every fitted liquid ≥ 33 %</td><td>normal, green accent</td><td>"All six ready"</td></tr>
+    <tr><td>some below 33 %, unreadable or no bottle</td><td><b>amber</b></td><td>"4 of 6 low or empty"</td></tr>
+    <tr><td><b>all</b> of them empty / unreadable</td><td><b>red</b></td><td>"ALL SIX EMPTY"</td></tr>
+  </table>
+  <p>
+    The count and its denominator do the real work — "4 of 6" is actionable, "NEEDS ATTENTION" is not.
+    The pre-run check is where a shortage still <em>blocks</em>, and it already knows which liquids the
+    chosen recipe actually needs, so Home does not have to guess. An unknown level still counts as bad,
+    never as fine (defect V1-2).
+  </p>
+
+  <h3>What the tile looks like when nothing is wrong — the six bars</h3>
+  <p>
+    You asked how the Liquids tile should be designed if it never had an error to report. Answer: stop
+    making it a verdict and make it a <b>gauge</b>. Six bars, one per channel, in the channel colours
+    already used everywhere else, each with its numeral. In the healthy state it is a status readout
+    worth glancing at; in the amber state the short bars <em>are</em> the message and the word only
+    counts them. That also settles open question 3 in <code>UI-EVOLUTION.md</code> — the levels are
+    visible at a glance again, without Home scrolling, which is what dropping the fourth tile bought.
+  </p>
+  <p>
+    <b>Consequence worth flagging:</b> the Liquids tile can no longer go solid red, because a solid
+    fill destroys the bars. In the "all empty" state it takes the same treatment as the position
+    warning — pale red ground, 2 px red border, red ink — which is already this interface's blocking
+    look, so it is not a new visual language.
+  </p>
+
+  <h3>The sub-lines, rewritten (operator, same session)</h3>
+  <p>
+    A sub-line is a sentence: it <b>starts with a capital</b> and it says what <em>is</em>, not what
+    you may do. Two under the home tiles failed that and are worth not repeating.
+    <b>"recipes and tubes"</b> named what the <em>next</em> screen asks for — nothing the operator can
+    act on — and is now <b>"Set up, then run"</b>, which earns its place by setting the one
+    expectation that matters: pressing it does not energise anything, the run starts at START on the
+    pre-run check. <b>"add or edit - 10"</b> hung a count off a verb it had nothing to do with, so the
+    number read as part of an instruction; it is the contents, so it now reads <b>"10 recipes"</b>
+    ("1 recipe", "None saved yet"). The rule is recorded as rule 3 at the top of
+    <code>ui_screens.h</code> and was applied to every sub-line in the interface, not only Home.
+  </p>
+
+  <h3>Where Fill lines went</h3>
+  <p>
+    Out of Home, into <b>Settings → FILL TUBING</b>, beside the LINE VOLUME and EXTRA DOSE fields it
+    belongs with (<code>scr_misc.cpp:144</code>). Nothing is lost from the run path: the pre-run check
+    already routes to the fill screen when a line is unfilled, and the prime-check question added for
+    finding F5 does the same (<code>scr_run.cpp:370</code>, <code>:386</code>). Filling stops being
+    something the operator is invited to do at idle and becomes what it actually is — a step of
+    starting a run, plus a maintenance action in Settings.
+  </p>
+
+  <h3>Layout trade-offs, honestly</h3>
+  <ul>
+    <li><b>D — chosen and built.</b> Keeps Start a run and Recipes exactly where they are today, so
+      nothing already learned is invalidated, and it is the least elaborate of the three: two buttons
+      and a readout. The open risk, recorded rather than resolved: the band reads as a status strip,
+      and it must still be obviously tappable — to be checked on the panel.</li>
+    <li><b>E</b> is the most microwave-like: three targets of 96 × 152 px (19 × 31 mm), far above every
+      standard's finger minimum, so it is the only layout here that would work without the stylus.
+      Costs the sub-lines some width and moves both primaries.</li>
+    <li><b>F</b> gives the levels a permanent gauge and the two actions a wider label column, at the
+      price of narrower action tiles (196 px) and the most rearrangement.</li>
+  </ul>
+  <p>
+    All three keep: BACK/primary placement rules, ≥ 44 px targets, no colour-alone states, no
+    scrolling, and one solid accent per screen.
+  </p>
+</footer>
+
+<script>
+/* tokens — Architecture/src/ui/ui_theme.cpp (LIGHT) */
+const P = {
+  ink:'#10151A', ink2:'#3A4552', ghost:'#414B58', dis:'#8E97A1', line:'#C3C9D0',
+  bg:'#EDEFF2', card:'#FFFFFF', sunk:'#E0E4E8', acc:'#0F4278', accink:'#FFFFFF',
+  ok:'#0E4D2B', okbg:'#E4F0E9', warn:'#6B3F00', warnbg:'#FBF0DE',
+  bad:'#8C1A13', badbg:'#FBE9E7', onbad:'#FFFFFF', accLite:'#6FB2F2'
+};
+const CH   = ['#1B9E77','#D95F02','#7570B3','#E7298A','#66A61E','#E6AB02'];
+const CHBG = ['#DCEFE9','#FBE6D8','#E6E4F0','#FBE0EC','#E6F0DA','#FBF0D6'];
+
+/* ---- icons ---------------------------------------------------------------- */
+function gearPath(cx, cy, ro, ri, hole, teeth) {
+  const n = teeth, step = Math.PI / n, half = step * 0.42; let d = '';
+  for (let i = 0; i < n; i++) {
+    const a = i * 2 * step;
+    [[a-half,ro],[a+half,ro],[a+step-half,ri],[a+step+half,ri]].forEach(([ang,r],k) => {
+      d += (i===0&&k===0?'M':'L') + (cx+Math.cos(ang)*r).toFixed(2) + ' ' + (cy+Math.sin(ang)*r).toFixed(2) + ' ';
+    });
+  }
+  return d + 'Z' + `M${cx} ${cy-hole}A${hole} ${hole} 0 1 0 ${cx} ${cy+hole}A${hole} ${hole} 0 1 0 ${cx} ${cy-hole}Z`;
+}
+const ICON = {
+  play : '<path d="M6 3.6 16.2 10 6 16.4Z"/>',
+  tint : '<path d="M10 1.8C10 1.8 3.7 9 3.7 12.4a6.3 6.3 0 0 0 12.6 0C16.3 9 10 1.8 10 1.8Z"/>',
+  list : '<path d="M2 4.2h3v2.4H2ZM6.6 4.4h11.4v2H6.6ZM2 8.8h3v2.4H2ZM6.6 9h11.4v2H6.6ZM2 13.4h3v2.4H2ZM6.6 13.6h11.4v2H6.6Z"/>',
+  eye  : '<path fill-rule="evenodd" d="M10 3.6C4.9 3.6 1.5 8.3.7 10c.8 1.7 4.2 6.4 9.3 6.4s8.5-4.7 9.3-6.4c-.8-1.7-4.2-6.4-9.3-6.4Zm0 9.6A3.2 3.2 0 1 1 10 6.8a3.2 3.2 0 0 1 0 6.4Z"/>',
+  warn : '<path fill-rule="evenodd" d="M10 1.6 19.2 18H.8ZM9 7.4h2v5.4H9Zm0 6.6h2v2.1H9Z"/>',
+  chev : '<path d="M6.6 2.9 13.7 10l-7.1 7.1-2-2L9.7 10 4.6 4.9Z"/>',
+  gear : `<path fill-rule="evenodd" d="${gearPath(10,10,9.4,7.0,3.5,8)}"/>`,
+  sd   : '<path d="M4 1.5h7.2L16 6.2V18.5H4Zm5.4 1.6v3.6h1.4V3.1Zm2.6 0v3.6h1.4V3.1Z"/>',
+  batt : '<path fill-rule="evenodd" d="M1.5 5.5h14v9h-14Zm1.6 1.6v5.8h10.8V7.1ZM16.6 8.2h1.9v3.6h-1.9Z"/>'
+};
+const svg = (n,s,c,x,y) =>
+  `<svg width="${s}" height="${s}" viewBox="0 0 20 20" fill="${c}" style="left:${x}px;top:${y}px">${ICON[n]}</svg>`;
+
+const box = (x,y,w,h,css='') => `<div style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${css}"></div>`;
+const txt = (x,y,w,h,s,size,col,extra='') =>
+  `<div class="t" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;line-height:${h}px;
+    font-size:${size}px;color:${col};${extra}">${s}</div>`;
+
+/* ---- persistent chrome ---------------------------------------------------- */
+function statusBar() {
+  return box(0,0,320,26,`background:${P.sunk}`) + box(0,25,320,1,`background:${P.line}`)
+    + txt(8,0,150,26,'READY',12,P.ink,'letter-spacing:1px')
+    + svg('sd',10,P.ghost,196,8) + svg('batt',10,P.ghost,216,8)
+    + txt(236,0,16,26,'--',10,P.ghost,'text-align:center')
+    + box(256,9,8,8,`background:${P.ok};border-radius:50%`)
+    + txt(268,0,48,26,'OFF',10,P.ink);
+}
+function warnStrip() {
+  return box(8,30,252,44,`background:${P.badbg};border:2px solid ${P.bad};border-radius:6px`)
+    + svg('warn',16,P.bad,16,42)
+    + txt(42,30,130,44,'Position unknown',14,P.bad)
+    + txt(168,30,54,44,'RESET',12,P.bad,'text-align:right')
+    + svg('chev',16,P.bad,236,42);
+}
+function head(st) {
+  const t = st.unhomed ? warnStrip()
+    : txt(8,34,252,20,'Dispensing system',16,P.ink) + txt(8,56,252,14,'Pick what you want to do.',10,P.ghost);
+  return t + box(268,30,44,44,`background:${P.sunk};border:1px solid ${P.line};border-radius:6px`)
+           + svg('gear',20,P.ink,280,42);
+}
+
+/* ---------------------------------------------------------------------------
+   THE LIQUID MODEL — the new severity rule
+--------------------------------------------------------------------------- */
+const LEVELS = {
+  fine: [{p:96},{p:78},{p:64},{p:55},{p:88},{p:41}],
+  some: [{p:96},{p:50},{p:20},{p:12},{u:1},{u:1}],
+  all : [{u:1},{p:4},{p:0},{u:1},{p:6},{u:1}]
+};
+function liquidState(key) {
+  const L = LEVELS[key];
+  const crit = L.filter(l => l.u || l.p < 15).length;
+  const low  = L.filter(l => !l.u && l.p >= 15 && l.p < 33).length;
+  if (crit === L.length) return { sev:2, n:L.length, L,
+    word:'ALL SIX EMPTY', short:'ALL EMPTY' };
+  if (crit + low > 0)    return { sev:1, n:crit+low, L,
+    word:`${crit+low} of 6 low or empty`, short:`${crit+low} of 6 low` };
+  return { sev:0, n:0, L, word:'All six ready', short:'All 6 ready' };
+}
+const SEVCOL = s => [P.ok, P.warn, P.bad][s];
+
+/* the Liquids surface: pale ground + border, NEVER a solid fill — the bars
+   have to stay readable, so "all empty" borrows the position-warning look */
+function liquidSurface(sev) {
+  if (sev === 2) return { bg:P.badbg,  edge:P.bad,  bw:2, ink:P.bad,  sub:P.bad  };
+  if (sev === 1) return { bg:P.warnbg, edge:P.warn, bw:1, ink:P.ink,  sub:P.warn };
+  return             { bg:P.card,   edge:P.line, bw:1, ink:P.ink,  sub:P.ghost };
+}
+
+/* vertical bars + numerals, used by D and F */
+function barsV(x, y, pitch, bw, bh, L, numY) {
+  let o = '';
+  L.forEach((l, i) => {
+    const bx = x + i * pitch;
+    o += box(bx, y, bw, bh, `background:${P.sunk};border-radius:2px`);
+    if (!l.u && l.p > 0) {
+      const fh = Math.max(2, Math.round(bh * l.p / 100));
+      o += box(bx, y + bh - fh, bw, fh, `background:${CH[i]};border-radius:2px`);
+    }
+    const bad = l.u || l.p < 15, lowish = !l.u && l.p >= 15 && l.p < 33;
+    o += txt(bx - 3, numY, bw + 6, 12, l.u ? '?' : (i + 1),
+             10, bad ? P.bad : (lowish ? P.warn : P.ink2), 'text-align:center');
+  });
+  return o;
+}
+/* horizontal rows, used by E's narrow column */
+function barsH(x, y, pitch, w, L) {
+  let o = '';
+  L.forEach((l, i) => {
+    const ry = y + i * pitch;
+    const bad = l.u || l.p < 15, lowish = !l.u && l.p >= 15 && l.p < 33;
+    o += txt(x, ry, 9, 10, l.u ? '?' : (i + 1), 10,
+             bad ? P.bad : (lowish ? P.warn : P.ink2), 'text-align:center');
+    o += box(x + 12, ry + 2, w, 6, `background:${P.sunk};border-radius:3px`);
+    if (!l.u && l.p > 0)
+      o += box(x + 12, ry + 2, Math.max(3, Math.round(w * l.p / 100)), 6,
+               `background:${CH[i]};border-radius:3px`);
+  });
+  return o;
+}
+
+/* ---------------------------------------------------------------------------
+   Colour treatments — round 1's A / B / C, now a switch
+--------------------------------------------------------------------------- */
+const HUE = { run:P.acc, recipes:CH[2] };
+
+/* returns the tile surface + a decoration renderer for the icon area */
+function surface(role, treat, st) {
+  if (role === 'run')
+    return { bg:P.acc, fg:P.accink, edge:null, bw:0, hue:P.accLite, glyphOnDisc:P.acc, discCol:'#FFFFFF' };
+  if (role === 'recipes') {
+    const hue = HUE.recipes;
+    if (treat === 'tints')
+      return { bg:CHBG[2], fg:P.ink, edge:hue, bw:1, hue, glyphOnDisc:'#FFFFFF', discCol:hue };
+    return { bg:P.card, fg:P.ink, edge:P.line, bw:1, hue, glyphOnDisc:'#FFFFFF', discCol:hue };
+  }
+  /* liquids */
+  const s = liquidSurface(st.liq.sev), hue = SEVCOL(st.liq.sev);
+  if (treat === 'tints' && st.liq.sev === 0)
+    return { bg:P.okbg, fg:P.ink, edge:P.ok, bw:1, hue, glyphOnDisc:'#FFFFFF', discCol:hue, sub:s.sub };
+  return { bg:s.bg, fg:s.ink, edge:s.edge, bw:s.bw, hue, glyphOnDisc:'#FFFFFF', discCol:hue, sub:s.sub };
+}
+/* the icon block: plain glyph, glyph on a disc, or glyph beside a rail */
+function iconBlock(treat, sf, icon, cx, cy, size) {
+  if (treat === 'discs') {
+    const d = size + 14;
+    return box(cx - d / 2, cy - d / 2, d, d, `background:${sf.discCol};border-radius:50%`)
+         + svg(icon, size, sf.glyphOnDisc, cx - size / 2, cy - size / 2);
+  }
+  return svg(icon, size, treat === 'rails' || treat === 'tints' ? sf.hue : sf.fg,
+             cx - size / 2, cy - size / 2);
+}
+const railV = (x,y,h,c) => box(x, y, 6, h, `background:${c};border-radius:6px 0 0 6px`);
+const railH = (x,y,w,c) => box(x, y, w, 6, `background:${c};border-radius:6px 6px 0 0`);
+
+function tileBox(x, y, w, h, sf) {
+  return box(x, y, w, h,
+    `background:${sf.bg};border-radius:6px;` + (sf.bw ? `border:${sf.bw}px solid ${sf.edge};` : ''));
+}
+
+/* ===========================================================================
+   D — two actions on top, a full-width liquid band underneath
+=========================================================================== */
+function renderD(st) {
+  const T = st.treat;
+  let o = box(0,0,320,240,`background:${P.bg}`) + statusBar() + head(st);
+
+  /* AS BUILT 2026-08-11: tiles 148 x 78 at y 82, band 304 x 66 at y 168 —
+     the band was thickened from the 58 px first shown here, on the operator's
+     call, and the eye became a droplet. Geometry matches scr_home.cpp. */
+  const A = [
+    { x:8,   role:'run',     icon:'play', label:'Start a run', sub:'Set up, then run' },
+    { x:164, role:'recipes', icon:'list', label:'Recipes',     sub:'4 recipes'   }
+  ];
+  for (const t of A) {
+    const sf = surface(t.role, T, st);
+    if (sf.bw) sf.bw = 2;              /* as built: 2 px, a hairline read as no edge at all */
+    o += tileBox(t.x, 82, 148, 78, sf);
+    if (T === 'rails') o += railV(t.x, 82, 78, sf.hue);
+    o += iconBlock(T, sf, t.icon, t.x + (T === 'discs' ? 26 : 24), 121, 16);
+    const tx = t.x + (T === 'discs' ? 44 : 42);
+    o += txt(tx, 82 + 21, 148 - (tx - t.x) - 8, 19, t.label, 14, sf.fg);
+    o += txt(tx, 82 + 42, 148 - (tx - t.x) - 8, 14, t.sub, 10, sf.fg, 'opacity:.86');
+  }
+
+  /* the liquid band — a status strip that is still a destination */
+  const sf = surface('liquids', T, st);
+  if (sf.bw) sf.bw = 2;
+  o += tileBox(8, 168, 304, 66, sf);
+  if (T === 'rails') o += railV(8, 168, 66, sf.hue);
+  o += iconBlock(T, sf, st.liq.sev ? 'warn' : 'tint', 8 + (T === 'discs' ? 26 : 24), 201, 16);
+  const lx = 8 + (T === 'discs' ? 44 : 42);
+  o += txt(lx, 184, 110, 19, 'Liquids', 14, sf.fg);
+  o += txt(lx, 204, 110, 14, st.liq.word, 10, sf.sub);
+  o += barsV(172, 180, 22, 12, 34, st.liq.L, 216);
+  return o;
+}
+
+/* ===========================================================================
+   E — three equal columns; the liquid column carries six rows
+=========================================================================== */
+function renderE(st) {
+  const T = st.treat;
+  let o = box(0,0,320,240,`background:${P.bg}`) + statusBar() + head(st);
+
+  const COLS = [
+    { x:8,   role:'run',     icon:'play', label:'Start a run', sub:'Set up, then run' },
+    { x:112, role:'recipes', icon:'list', label:'Recipes',     sub:'4 recipes'   },
+    { x:216, role:'liquids', icon:st.liq.sev ? 'warn' : 'eye', label:'Liquids', sub:st.liq.short }
+  ];
+  for (const c of COLS) {
+    const sf = surface(c.role, T, st);
+    o += tileBox(c.x, 82, 96, 152, sf);
+    if (T === 'rails') o += railH(c.x, 82, 96, sf.hue);
+
+    if (c.role === 'liquids') {
+      o += iconBlock(T, sf, c.icon, c.x + 48, 82 + 28, 16);
+      o += txt(c.x, 82 + 46, 96, 19, c.label, 14, sf.fg, 'text-align:center');
+      o += txt(c.x, 82 + 66, 96, 14, c.sub, 10, sf.sub, 'text-align:center');
+      o += barsH(c.x + 8, 82 + 86, 11, 56, st.liq.L);
+    } else {
+      o += iconBlock(T, sf, c.icon, c.x + 48, 82 + 52, 20);
+      o += txt(c.x, 82 + 76, 96, 19, c.label, 14, sf.fg, 'text-align:center');
+      o += txt(c.x, 82 + 99, 96, 14, c.sub, 10, sf.fg, 'text-align:center;opacity:.86');
+    }
+  }
+  return o;
+}
+
+/* ===========================================================================
+   F — the two actions stacked on the left, a permanent liquid gauge right
+=========================================================================== */
+function renderF(st) {
+  const T = st.treat;
+  let o = box(0,0,320,240,`background:${P.bg}`) + statusBar() + head(st);
+
+  const A = [
+    { y:82,  role:'run',     icon:'play', label:'Start a run', sub:'Set up, then run' },
+    { y:162, role:'recipes', icon:'list', label:'Recipes',     sub:'4 recipes'   }
+  ];
+  for (const t of A) {
+    const sf = surface(t.role, T, st);
+    o += tileBox(8, t.y, 196, 72, sf);
+    if (T === 'rails') o += railV(8, t.y, 72, sf.hue);
+    o += iconBlock(T, sf, t.icon, 8 + (T === 'discs' ? 26 : 24), t.y + 36, 16);
+    const tx = 8 + (T === 'discs' ? 44 : 42);
+    o += txt(tx, t.y + 19, 196 - (tx - 8) - 8, 19, t.label, 14, sf.fg);
+    o += txt(tx, t.y + 40, 196 - (tx - 8) - 8, 14, t.sub, 10, sf.fg, 'opacity:.86');
+  }
+
+  const sf = surface('liquids', T, st);
+  o += tileBox(212, 82, 100, 152, sf);
+  if (T === 'rails') o += railH(212, 82, 100, sf.hue);
+  o += txt(222, 82 + 12, 62, 19, 'Liquids', 14, sf.fg);
+  o += svg(st.liq.sev ? 'warn' : 'eye', 14, sf.hue, 288, 82 + 15);
+  o += txt(222, 82 + 33, 80, 13, st.liq.short, 10, sf.sub);
+  o += barsV(219, 82 + 54, 15, 10, 66, st.liq.L, 82 + 124);
+  return o;
+}
+
+/* ===========================================================================
+   Reference — Home as built today (four tiles, old severity rule)
+=========================================================================== */
+function renderToday(st) {
+  let o = box(0,0,320,240,`background:${P.bg}`) + statusBar();
+  o += st.unhomed ? warnStrip()
+     : txt(8,30,252,22,'Dispensing system',16,P.ink) + txt(8,52,252,20,'Pick what you want to do.',10,P.ghost);
+  o += box(268,30,44,44,`background:${P.sunk};border:1px solid ${P.line};border-radius:6px`)
+     + svg('gear',20,P.ink,280,42);
+
+  /* today's rule: ANY liquid critical -> solid red */
+  const anyCrit = st.liq.L.some(l => l.u || l.p < 15);
+  const anyLow  = st.liq.L.some(l => !l.u && l.p >= 15 && l.p < 33);
+  const sev = anyCrit ? 2 : (anyLow ? 1 : 0);
+  const nWorst = st.liq.L.filter(l => sev === 2 ? (l.u || l.p < 15)
+                                    : sev === 1 ? (!l.u && l.p >= 15 && l.p < 33) : false).length;
+  const sub = sev === 2 ? `${nWorst} NEED ATTENTION` : sev === 1 ? `${nWorst} getting low` : 'all levels fine';
+
+  /* the reference panel keeps the OLD strings verbatim — lower case, and the
+     count hung off a verb — because that is what it is documenting */
+  const T = [
+    { x:8,   y:82,  label:'Start a run', sub:'recipes and tubes', icon:'play', acc:true },
+    { x:164, y:82,  label:'Fill lines',  sub:'clear the air out', icon:'tint' },
+    { x:8,   y:162, label:'Recipes',     sub:'add or edit - 4',   icon:'list' },
+    { x:164, y:162, label:'Liquids',     sub, icon:sev ? 'warn' : 'eye', sev }
+  ];
+  for (const t of T) {
+    let bg = P.card, fg = P.ink, edge = P.line, bw = 1;
+    if (t.acc) { bg = P.acc; fg = P.accink; edge = null; bw = 0; }
+    if (t.sev === 1) { bg = P.warnbg; fg = P.warn; edge = P.warn; bw = 1; }
+    if (t.sev === 2) { bg = P.bad;    fg = P.onbad; edge = null; bw = 0; }
+    o += box(t.x, t.y, 148, 72,
+      `background:${bg};border-radius:6px;` + (bw ? `border:${bw}px solid ${edge};` : ''));
+    o += svg(t.icon, 16, fg, t.x + 12, t.y + 28);
+    o += txt(t.x + 42, t.y + 6,  96, 19, t.label, 14, fg);
+    o += txt(t.x + 42, t.y + 52, 100, 16, t.sub,  10, fg);
+  }
+  return o;
+}
+
+/* ---- harness -------------------------------------------------------------- */
+const PANELS = [
+  { key:'d', tag:'✔ chosen — built', name:'Two actions + a liquid band', chosen:true,
+    note:'<b>Selected by the operator on 2026-08-11 and built the same day</b>, with colour rails, a '
+       + 'band thickened from 58 to 66 px, and a droplet in place of the eye. Start a run and Recipes '
+       + 'stay where they already were; the width freed by Fill lines becomes a band carrying all six '
+       + 'levels. Chosen because it is the simplest and the least to relearn.', fn:renderD },
+  { key:'e', tag:'option E', name:'Three equal columns',
+    note:'Three destinations, three <b>96 × 152 px</b> targets — 19 × 31 mm, above every human-factors '
+       + 'minimum, so this is the one layout that works without the stylus. The liquid column stacks '
+       + 'its six levels as rows under the label.', fn:renderE },
+  { key:'f', tag:'option F', name:'Actions left, permanent gauge right',
+    note:'The two things you do are stacked on the left at full label width; the right third becomes a '
+       + '<b>standing gauge</b> — six vertical bars, always visible, never a button you have to open. '
+       + 'The levels stop being a destination and become instrumentation.', fn:renderF },
+  { key:'today', tag:'reference', name:'On the device today (four tiles, old rule)', bench:true,
+    note:'For comparison only, with the <b>current</b> severity rule: one liquid under 15 % turns the '
+       + 'whole tile solid red, whether or not the operator is using that channel. Switch the level '
+       + 'selector to see the difference against D/E/F.', fn:renderToday }
+];
+
+const state = { treat:'rails', liqKey:'some', unhomed:false };
+
+function draw() {
+  state.liq = liquidState(state.liqKey);
+  document.getElementById('grid').innerHTML = PANELS.map(p => `
+    <section class="panel${p.bench ? ' bench' : ''}${p.chosen ? ' chosen' : ''}">
+      <h2><span class="tag">${p.tag}</span>${p.name}</h2>
+      <p class="note">${p.note}</p>
+      <div class="frame"><div class="stage">${p.fn(state)}</div></div>
+    </section>`).join('');
+}
+document.getElementById('treat').addEventListener('change', e => { state.treat = e.target.value; draw(); });
+document.getElementById('liq').addEventListener('change',   e => { state.liqKey = e.target.value; draw(); });
+document.getElementById('unhomed').addEventListener('change', e => { state.unhomed = e.target.checked; draw(); });
+draw();
+</script>
+</body>
+</html>
