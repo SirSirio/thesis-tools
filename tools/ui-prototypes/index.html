@@ -3,24 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Operator Interface Prototypes · DTU Thesis Tools</title>
+<title>Operator Interface Prototypes · Thesis Tools</title>
 <link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/site-nav.js"></script>
 <style>
   /* ── Page scaffold (local, per D-01: tool styles stay inline) ─────────── */
-  .tool-nav {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 32px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.82rem;
-  }
-  .tool-nav a {
-    color: var(--accent); font-weight: 500; letter-spacing: 0.02em;
-    transition: letter-spacing 0.2s ease, color 0.2s ease;
-  }
-  .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
-  .tool-nav span { color: var(--text-muted); }
-
   .tool-main {
     position: relative; z-index: 1;
     max-width: 1080px; margin: 0 auto;
@@ -147,8 +135,6 @@
     background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 6px;
   }
 
-  .site-footer { position: relative; z-index: 1; }
-
   /* ── Responsive ──────────────────────────────────────────────────────── */
   @media (max-width: 900px) {
     .probe-grid { grid-template-columns: repeat(2, 1fr); }
@@ -178,10 +164,15 @@
   <div class="blob blob-3"></div>
 </div>
 
-<nav class="tool-nav" aria-label="Breadcrumb">
-  <a href="../../index.html">&larr; All tools</a>
-  <span>Operator Interface Prototypes</span>
-</nav>
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
 
 <main class="tool-main">
 
@@ -376,8 +367,19 @@
 
 </main>
 
-<footer class="site-footer">
-  <p>DTU Master Thesis &middot; Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
 </footer>
 
 <script>

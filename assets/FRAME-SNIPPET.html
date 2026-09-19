@@ -1,0 +1,205 @@
+<!--
+  FRAME-SNIPPET.html : documentation only, not served, not linked.
+  The exact markup a page pastes to join the shared frame
+  (assets/site.css + assets/site-nav.js). Three depths are shown.
+
+  Rules
+  1. Load style.css first, site.css second, then site-nav.js in <head> with no
+     defer: the script adds html.js before first paint so .reveal elements do not
+     flash, and it renders the Instruments panel on DOMContentLoaded.
+  2. data-root on .site-nav is the relative path from the page to the repo root.
+     Every href in the panel is prefixed with it. Use "" on the landing page.
+  3. Keep the three .bg-blobs children exactly as they are; site.css restyles
+     them into the background wash. Nothing else is needed for the background.
+  4. <body class="site-frame"> opts the page into the display face for h1 and h2.
+     Tool pages that keep their own inner headings should leave that class off;
+     they still get it on main.tool-main > header h1, h2.
+  5. .site-nav__lang is only for pages with an EN/IT switch (rotor solver).
+  6. Add class="reveal" to any block that should fade in once when scrolled to.
+     Optional per-element stagger: style="--delay: 80ms".
+  7. No em-dashes or en-dashes anywhere in visible text.
+-->
+
+
+<!-- =================================================================
+     DEPTH 0 : the landing page, /index.html
+     ================================================================= -->
+<!-- <head> -->
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site-nav.js"></script>
+
+<!-- first children of <body class="site-frame"> -->
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="">
+  <span class="site-nav__back site-nav__back--brand">Thesis Tools</span>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="#machine">Machine</a>
+    <a href="prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+  <div class="site-nav__lang"><!-- EN/IT switch, landing page only --></div>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<!-- last child of <body> -->
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="prototypes/index.html">Prototypes</a>
+      <a href="tools/index.html">Instruments</a>
+      <a href="decks/index.html">Presentations</a>
+      <a href="tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+
+<!-- =================================================================
+     DEPTH 1 : /tools/index.html, /prototypes/index.html, /decks/index.html
+     ================================================================= -->
+<!-- <head> -->
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/site-nav.js"></script>
+
+<!-- first children of <body class="site-frame"> -->
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../">
+  <a class="site-nav__back" href="../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../index.html#machine">Machine</a>
+    <a href="../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<!-- last child of <body> -->
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../prototypes/index.html">Prototypes</a>
+      <a href="../tools/index.html">Instruments</a>
+      <a href="../decks/index.html">Presentations</a>
+      <a href="../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+
+<!-- =================================================================
+     DEPTH 2 : /tools/<slug>/index.html, /decks/<slug>/index.html,
+               /prototypes/Prototype-2-Alignment-Module/index.html
+     ================================================================= -->
+<!-- <head> -->
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/site-nav.js"></script>
+
+<!-- first children of <body> (add class="site-frame" only on non-tool pages) -->
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+  <div class="site-nav__lang"><!-- rotor solver only: move its #lang-toggle button in here --></div>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<!-- last child of <body> -->
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+
+<!-- =================================================================
+     DEPTH 3 : /prototypes/Prototype-1-Pump-Module/proto-0N-<slug>/index.html
+     ================================================================= -->
+<!-- <head> -->
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script src="../../../assets/site-nav.js"></script>
+
+<!-- first children of <body class="site-frame"> -->
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../../">
+  <a class="site-nav__back" href="../../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../../index.html#machine">Machine</a>
+    <a href="../../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<!-- last child of <body> -->
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../../prototypes/index.html">Prototypes</a>
+      <a href="../../../tools/index.html">Instruments</a>
+      <a href="../../../decks/index.html">Presentations</a>
+      <a href="../../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+
+<!-- =================================================================
+     Reusing the tools list from a page script (after DOMContentLoaded)
+     ================================================================= -->
+<script>
+  // window.ThesisTools.tools : array of { title, items: [{ name, href, line, mark }] }
+  // window.ThesisTools.root  : the data-root string read from .site-nav
+  // Marks: <span class="mark mark--rotor"></span>, and likewise
+  //   occlusion, path, balance, matrix, gantt, screen, loop, bars,
+  //   journey, deck, grid, machine.
+  // Buttons: <a class="btn">Watch it run</a>, <a class="btn btn--ghost">Read the method</a>
+</script>

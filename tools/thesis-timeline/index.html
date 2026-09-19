@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Working thesis roadmap and Gantt timeline, from the original Miro plan to the extended schedule ending with submission (15 Sep 2026) and defense (28 Sep 2026)." />
+  <title>Thesis Roadmap & Timeline · Thesis Tools</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='7' fill='%23ff6b2b'/%3E%3Crect x='11' y='11' width='10' height='10' rx='3' fill='%230a0a0c'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script src="../../assets/site-nav.js"></script>
+  <style>
+    .tool-main {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 32px 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .tool-header h1 {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin: 6px 0 14px;
+      background: linear-gradient(130deg, #ffffff 35%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tool-header p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 760px;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255,107,43,0.10);
+      border: 1px solid rgba(255,107,43,0.28);
+      padding: 4px 13px;
+      border-radius: 100px;
+    }
+
+    /* ── Glass panel ────────────────────────────────────────── */
+    .glass-panel {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,107,43,0.15);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .panel-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* ── Countdown / status strip ───────────────────────────── */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 13px;
+      padding: 16px 18px;
+    }
+    .stat .num {
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat .num.accent { color: var(--accent); }
+    .stat .lbl {
+      margin-top: 7px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ── Legend ─────────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      align-items: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+    .swatch {
+      width: 26px; height: 13px;
+      border-radius: 4px;
+      flex: none;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .swatch.sirio   { background: linear-gradient(135deg, #ff8c42, #e83535); }
+    .swatch.partner { background: linear-gradient(135deg, #43b9c9, #2b7bd6); }
+    .swatch.shared  { background: linear-gradient(135deg, #b06cf0, #7b52e0); }
+    .swatch.planned {
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 5px, transparent 5px 10px);
+      border-style: dashed;
+    }
+    .swatch.today {
+      width: 3px; height: 15px;
+      border: 0; border-radius: 2px;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .swatch.milestone {
+      width: 12px; height: 12px;
+      border-radius: 2px;
+      background: #ffd27a;
+      transform: rotate(45deg);
+      border: 0;
+    }
+
+    /* ── Gantt ──────────────────────────────────────────────── */
+    .gantt-scroll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+    .timeline {
+      position: relative;
+      min-width: 940px;
+      --lbl: 210px;
+    }
+    /* Full-height gridlines + today line overlay */
+    .grid-overlay {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: var(--lbl); right: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .gridline {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: rgba(255,255,255,0.055);
+    }
+    .today-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(var(--accent), rgba(255,107,43,0.15));
+      box-shadow: 0 0 10px rgba(255,107,43,0.5);
+      z-index: 3;
+    }
+    .milestone-line {
+      position: absolute;
+      top: 30px; bottom: 0;
+      width: 1px;
+      background: repeating-linear-gradient(rgba(255,210,122,0.55) 0 4px, transparent 4px 9px);
+      z-index: 2;
+    }
+
+    /* Axis */
+    .axis {
+      position: relative;
+      height: 92px;
+      margin-left: var(--lbl);
+      z-index: 4;
+    }
+    .month {
+      position: absolute;
+      top: 70px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      transform: translateX(6px);
+      white-space: nowrap;
+    }
+    .ms-diamond {
+      position: absolute;
+      top: 8px;
+      width: 11px; height: 11px;
+      transform: translateX(-50%) rotate(45deg);
+      background: #ffd27a;
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(255,210,122,0.6);
+      z-index: 6;
+    }
+    .ms-flag {
+      position: absolute;
+      width: 112px;
+      z-index: 5;
+    }
+    .ms-flag.mid   { transform: translateX(-50%); text-align: center; }
+    .ms-flag.start { transform: translateX(-8px);  text-align: left; }
+    .ms-flag.end   { transform: translateX(calc(-100% + 8px)); text-align: right; }
+    .ms-flag .ms-lbl {
+      font-size: 0.63rem;
+      line-height: 1.15;
+      color: #ffd9a0;
+      font-weight: 600;
+    }
+    .ms-flag .ms-date { font-size: 0.58rem; color: var(--text-muted); }
+
+    /* Rows */
+    .group-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 0 7px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .group-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .group-owner {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+    }
+    .row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      height: 32px;
+    }
+    .row:hover .row-track::before { background: rgba(255,255,255,0.02); }
+    .row-label {
+      width: var(--lbl);
+      flex: none;
+      padding-right: 14px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      z-index: 4;
+    }
+    .row-track { position: relative; flex: 1; height: 100%; }
+    .row-track::before {
+      content: '';
+      position: absolute; inset: 4px 0;
+      border-radius: 6px;
+      transition: background 0.2s ease;
+    }
+    .bar {
+      position: absolute;
+      top: 6px;
+      height: 20px;
+      border-radius: 6px;
+      z-index: 2;
+      cursor: default;
+      display: flex;
+      align-items: center;
+      min-width: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    .bar:hover { transform: translateY(-1px); filter: brightness(1.12); box-shadow: 0 4px 16px rgba(0,0,0,0.45); z-index: 6; }
+    .bar.sirio   { background: linear-gradient(135deg, #ff8c42, #e83535); }
+    .bar.partner { background: linear-gradient(135deg, #43b9c9, #2b7bd6); }
+    .bar.shared  { background: linear-gradient(135deg, #b06cf0, #7b52e0); }
+    .bar.done    { opacity: 0.62; }
+    .bar.active  { box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 1px rgba(255,255,255,0.15), 0 0 14px rgba(255,107,43,0.28); }
+    .bar.planned {
+      opacity: 0.92;
+      background-blend-mode: overlay;
+      border: 1px dashed rgba(255,255,255,0.55);
+    }
+    .bar.planned::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: repeating-linear-gradient(45deg, rgba(0,0,0,0.16) 0 6px, transparent 6px 12px);
+    }
+    .bar .caret {
+      position: absolute;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      right: -16px;
+      top: 3px;
+    }
+
+    /* Tooltip */
+    .tt {
+      position: fixed;
+      z-index: 100;
+      max-width: 280px;
+      padding: 11px 13px;
+      background: rgba(16,14,18,0.96);
+      border: 1px solid rgba(255,107,43,0.35);
+      border-radius: 11px;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      font-size: 0.78rem;
+    }
+    .tt.show { opacity: 1; transform: none; }
+    .tt .tt-title { font-weight: 700; color: var(--text); margin-bottom: 5px; line-height: 1.3; }
+    .tt .tt-row { color: var(--text-muted); line-height: 1.5; }
+    .tt .tt-row b { color: var(--text); font-weight: 600; }
+    .tt .tt-pill {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 0.66rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .tt-pill.done { color: #9fb0a4; }
+    .tt-pill.active { color: #ffb27a; border-color: rgba(255,107,43,0.4); }
+    .tt-pill.planned { color: #b9a6e6; }
+
+    /* Notes / narrative */
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .note h3 {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .note h3 .tag {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em;
+      padding: 2px 7px; border-radius: 5px; text-transform: uppercase;
+    }
+    .tag.sirio { background: rgba(232,53,53,0.16); color: #ff9c6b; }
+    .tag.partner { background: rgba(43,123,214,0.16); color: #6fc6d6; }
+    .tag.shared { background: rgba(123,82,224,0.16); color: #b79cf0; }
+    .note p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .note ul { margin: 8px 0 0 18px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.6; }
+
+    .caveat {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      border-left: 2px solid rgba(255,107,43,0.4);
+      padding-left: 16px;
+    }
+    .caveat b { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .tool-main { padding: 40px 18px 70px; }
+      .glass-panel { padding: 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<main class="tool-main">
+  <header class="tool-header">
+    <span class="eyebrow">Project Roadmap</span>
+    <h1>Thesis Roadmap &amp; Timeline</h1>
+    <p>The working schedule for the thesis, built from the original Miro plan and updated for the extended
+      end date. The project now runs to <b>thesis submission on 15&nbsp;September 2026</b> and
+      <b>defense on 28&nbsp;September 2026</b>. Bars are colour-coded by owner and shaded by status; hover any
+      bar for dates and detail. Everything from today forward is a working plan and will move as the build progresses.</p>
+  </header>
+
+  <!-- Countdown strip -->
+  <section class="glass-panel">
+    <p class="panel-title">Where things stand · <span id="asof"></span></p>
+    <div class="stat-strip">
+      <div class="stat"><div class="num accent" id="d-submit">-</div><div class="lbl">days to submission<br>15 Sep 2026</div></div>
+      <div class="stat"><div class="num" id="d-defense">-</div><div class="lbl">days to defense<br>28 Sep 2026</div></div>
+      <div class="stat"><div class="num" id="d-write">-</div><div class="lbl">days to the writing sprint<br>~4 weeks reserved</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">active fronts you own<br>pump · alignment · integration</div></div>
+    </div>
+  </section>
+
+  <!-- Legend -->
+  <section class="glass-panel">
+    <p class="panel-title">Legend</p>
+    <div class="legend">
+      <span class="legend-item"><span class="swatch sirio"></span>You (pump, alignment, testing)</span>
+      <span class="legend-item"><span class="swatch partner"></span>Thesis partner (other modules)</span>
+      <span class="legend-item"><span class="swatch shared"></span>Shared (integration)</span>
+      <span class="legend-item"><span class="swatch planned"></span>Planned (estimate)</span>
+      <span class="legend-item"><span class="swatch today"></span>Today</span>
+      <span class="legend-item"><span class="swatch milestone"></span>Milestone</span>
+    </div>
+  </section>
+
+  <!-- Gantt -->
+  <section class="glass-panel">
+    <p class="panel-title">Timeline · Feb-Sep 2026</p>
+    <div class="gantt-scroll">
+      <div class="timeline" id="timeline">
+        <div class="grid-overlay" id="gridOverlay"></div>
+        <div class="axis" id="axis"></div>
+        <div id="rows"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Narrative -->
+  <section class="glass-panel">
+    <p class="panel-title">Reading the plan</p>
+    <div class="note-grid">
+      <div class="note">
+        <h3>Pump module <span class="tag sirio">You</span></h3>
+        <p>The single-channel design is being finalised. Next is a <b>4-channel build for four liquids</b>, enough to
+          validate the multi-liquid concept, followed by a design-only scale study toward the eventual 6-channel target.</p>
+      </div>
+      <div class="note">
+        <h3>Pump test method <span class="tag sirio">You</span></h3>
+        <p>You own the pump's test methodology and built the <b>test-campaign software</b> for it. That tool exists; the
+          remaining work is running the validation campaign and folding results into the design.</p>
+      </div>
+      <div class="note">
+        <h3>Alignment module <span class="tag sirio">You</span></h3>
+        <p>Currently an MVP. The next step is designing a <b>queueing system</b>, the largest unknown, then printing and
+          assembling parts. Budgeted generously because the queueing logic may iterate.</p>
+      </div>
+      <div class="note">
+        <h3>Other modules <span class="tag partner">Partner</span></h3>
+        <p>Storage, user interface, electronics, and operate-area modules were carried mostly by your thesis partner and
+          are largely prototyped. They feed into integration rather than needing new design from you.</p>
+      </div>
+      <div class="note">
+        <h3>Integration <span class="tag shared">Shared</span></h3>
+        <p>No full integration has happened yet: the module work ran longer than planned. The first joint
+          <b>module integration &amp; testing</b> run is the critical shared milestone before writing locks in.</p>
+      </div>
+      <div class="note">
+        <h3>Writing <span class="tag sirio">You</span></h3>
+        <p>Much of the content already exists across these tools and prototype logs; the ~4-week sprint is mostly
+          <b>transferring documentation into the LaTeX thesis</b>, not researching from scratch.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="glass-panel">
+    <p class="panel-title">Assumptions &amp; caveats</p>
+    <p class="caveat">
+      The <b>Feb to early-Jul portion is history</b>, taken from the original Miro board (discovery, definition, ideation,
+      lo-fi prototyping, and the partner's module prototyping). Everything from <b>today (13 Jul) forward is a working
+      estimate</b>: dates overlap intentionally because pump, alignment, and testing progress in parallel. The original
+      Miro end dates are superseded: the thesis was extended, so integration, the writing sprint, submission (15 Sep) and
+      defense (28 Sep) replace the original July hand-in. Adjust the <code>DATA</code> block in this page's script as
+      reality shifts: the chart re-renders from it.
+    </p>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="tt" id="tt" role="tooltip"></div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   DATA — edit dates/status here; the chart re-renders from it.
+   owner:  'sirio' | 'partner' | 'shared'
+   status: 'done'  | 'active'  | 'planned'
+   ───────────────────────────────────────────────────────────── */
+const SPAN   = { start: '2026-02-23', end: '2026-09-30' };
+const TODAY  = '2026-07-13';
+
+const SECTIONS = [
+  { group: 'Discovery & Definition', owner: 'shared', tasks: [
+    { name: 'Protocol / stakeholder / market analysis', start: '2026-02-23', end: '2026-03-01', owner: 'shared', status: 'done', note: 'Protocol, stakeholder, and market analysis plus interviews.' },
+    { name: 'Use-case scenarios & opportunity eval', start: '2026-03-02', end: '2026-03-08', owner: 'shared', status: 'done' },
+    { name: 'Innovation Brief', start: '2026-03-04', end: '2026-03-09', owner: 'shared', status: 'done', note: 'Milestone deliverable — 9 Mar.' },
+    { name: 'Requirements & Criteria', start: '2026-03-07', end: '2026-03-15', owner: 'shared', status: 'done', note: 'Binary requirements + weighted criteria (canonical evaluation table).' },
+  ]},
+  { group: 'Pump Module', owner: 'sirio', tasks: [
+    { name: 'Ideate & identify components', start: '2026-03-09', end: '2026-03-31', owner: 'sirio', status: 'done' },
+    { name: 'Lo-fi prototyping & concept selection', start: '2026-04-09', end: '2026-04-26', owner: 'sirio', status: 'done' },
+    { name: 'Single-channel prototyping (proto-01/02)', start: '2026-04-27', end: '2026-07-26', owner: 'sirio', status: 'active', note: 'Peristaltic pump head — current single-channel design being finalised.' },
+    { name: '4-channel build (4 liquids)', start: '2026-07-27', end: '2026-08-16', owner: 'sirio', status: 'planned', note: 'Multi-liquid architecture — 4 pumps validate the concept before scaling.' },
+    { name: 'Scale study → 6 channels (design only)', start: '2026-08-10', end: '2026-08-23', owner: 'sirio', status: 'planned', note: 'Design/CAD for the eventual 6-channel target; not necessarily built.' },
+  ]},
+  { group: 'Pump Test Method', owner: 'sirio', tasks: [
+    { name: 'Test method + software development', start: '2026-05-15', end: '2026-07-05', owner: 'sirio', status: 'done', note: 'You own the pump test methodology and built the test-campaign app for it.' },
+    { name: 'Validation campaign & data', start: '2026-07-06', end: '2026-08-09', owner: 'sirio', status: 'active', note: 'Running the campaign; feeding results back into the pump design.' },
+  ]},
+  { group: 'Alignment Module', owner: 'sirio', tasks: [
+    { name: 'Ideate & identify components', start: '2026-03-09', end: '2026-03-31', owner: 'sirio', status: 'done' },
+    { name: 'Lo-fi prototyping & concept selection', start: '2026-04-09', end: '2026-04-26', owner: 'sirio', status: 'done' },
+    { name: 'MVP prototyping', start: '2026-04-27', end: '2026-07-12', owner: 'sirio', status: 'done', note: 'Current alignment module is a working MVP.' },
+    { name: 'Queueing system design', start: '2026-07-13', end: '2026-08-02', owner: 'sirio', status: 'active', note: 'Largest unknown — may iterate before parts are committed.' },
+    { name: 'Print & assemble queueing parts', start: '2026-08-03', end: '2026-08-23', owner: 'sirio', status: 'planned' },
+  ]},
+  { group: 'Other Modules', owner: 'partner', tasks: [
+    { name: 'Ideate & identify components', start: '2026-03-09', end: '2026-03-31', owner: 'partner', status: 'done', note: 'Storage, user interface, electronics, operate-area modules.' },
+    { name: 'Lo-fi prototyping', start: '2026-04-09', end: '2026-04-26', owner: 'partner', status: 'done' },
+    { name: 'Module prototyping', start: '2026-04-27', end: '2026-07-05', owner: 'partner', status: 'done', note: 'Carried mostly by the thesis partner; largely complete.' },
+  ]},
+  { group: 'Integration', owner: 'shared', tasks: [
+    { name: '1st module integration & testing', start: '2026-08-17', end: '2026-08-31', owner: 'shared', status: 'planned', note: 'First real integration — none done yet; module work ran long. Critical shared milestone.' },
+    { name: 'Integrated system refinement', start: '2026-09-01', end: '2026-09-07', owner: 'shared', status: 'planned', note: 'Fix issues found during the joint run.' },
+  ]},
+  { group: 'Thesis Writing', owner: 'sirio', tasks: [
+    { name: 'Documentation → LaTeX transfer', start: '2026-06-15', end: '2026-08-16', owner: 'sirio', status: 'active', note: 'Much content already exists in these tools and prototype logs.' },
+    { name: 'Writing sprint (~4 weeks)', start: '2026-08-17', end: '2026-09-14', owner: 'sirio', status: 'planned' },
+    { name: 'Defense preparation', start: '2026-09-15', end: '2026-09-27', owner: 'sirio', status: 'planned' },
+  ]},
+];
+
+const MILESTONES = [
+  { label: 'Innovation Brief', date: '2026-03-09' },
+  { label: 'Order 1st components', date: '2026-04-01' },
+  { label: 'Test method ready', date: '2026-07-05' },
+  { label: '1st full integration', date: '2026-08-31' },
+  { label: 'Thesis submission', date: '2026-09-15' },
+  { label: 'Defense', date: '2026-09-28' },
+];
+
+/* ── Render ─────────────────────────────────────────────────── */
+const OWNER_DOT = { sirio: '#ff6b2b', partner: '#2b7bd6', shared: '#7b52e0' };
+const OWNER_LBL = { sirio: 'You', partner: 'Thesis partner', shared: 'Shared' };
+
+const toMs = s => new Date(s + 'T00:00:00Z').getTime();
+const S = toMs(SPAN.start), E = toMs(SPAN.end), TOT = E - S;
+const pct = s => ((toMs(s) - S) / TOT) * 100;
+const fmt = s => new Date(s + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+
+/* Axis: month gridlines + labels */
+const axis = document.getElementById('axis');
+const overlay = document.getElementById('gridOverlay');
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let m = new Date(Date.UTC(2026, 1, 1)); // Feb 2026
+while (m.getTime() <= E) {
+  const iso = m.toISOString().slice(0, 10);
+  const x = pct(iso);
+  if (x >= 0 && x <= 100) {
+    const gl = document.createElement('div');
+    gl.className = 'gridline'; gl.style.left = x + '%';
+    overlay.appendChild(gl);
+    const lab = document.createElement('div');
+    lab.className = 'month'; lab.style.left = x + '%';
+    lab.textContent = MONTHS[m.getUTCMonth()];
+    axis.appendChild(lab);
+  }
+  m = new Date(Date.UTC(2026, m.getUTCMonth() + 1, 1));
+}
+
+/* Today line */
+const tX = pct(TODAY);
+const tl = document.createElement('div');
+tl.className = 'today-line'; tl.style.left = tX + '%';
+overlay.appendChild(tl);
+
+/* Milestones — lines on overlay + flags on axis (stagger to avoid overlap) */
+MILESTONES.forEach((ms, i) => {
+  const x = pct(ms.date);
+  const ln = document.createElement('div');
+  ln.className = 'milestone-line'; ln.style.left = x + '%';
+  overlay.appendChild(ln);
+
+  const dia = document.createElement('div');
+  dia.className = 'ms-diamond'; dia.style.left = x + '%';
+  axis.appendChild(dia);
+
+  const align = x <= 10 ? 'start' : x >= 84 ? 'end' : 'mid';
+  const flag = document.createElement('div');
+  flag.className = 'ms-flag ' + align;
+  flag.style.left = x + '%';
+  flag.style.top = (i % 2 === 0 ? 22 : 44) + 'px';
+  flag.innerHTML = '<div class="ms-lbl">' + ms.label +
+                   '</div><div class="ms-date">' + fmt(ms.date) + '</div>';
+  axis.appendChild(flag);
+});
+
+/* Rows */
+const rowsEl = document.getElementById('rows');
+SECTIONS.forEach(sec => {
+  const gh = document.createElement('div');
+  gh.className = 'group-head';
+  gh.innerHTML = '<span class="group-dot" style="background:' + OWNER_DOT[sec.owner] + '"></span>' +
+                 sec.group + '<span class="group-owner">' + OWNER_LBL[sec.owner] + '</span>';
+  rowsEl.appendChild(gh);
+
+  sec.tasks.forEach(t => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const label = document.createElement('div');
+    label.className = 'row-label';
+    label.textContent = t.name;
+    label.title = t.name;
+    const track = document.createElement('div');
+    track.className = 'row-track';
+    const bar = document.createElement('div');
+    bar.className = 'bar ' + t.owner + ' ' + t.status;
+    const left = Math.max(0, pct(t.start));
+    const right = Math.min(100, pct(t.end));
+    bar.style.left = left + '%';
+    bar.style.width = Math.max(0.6, right - left) + '%';
+    bar.dataset.name = t.name;
+    bar.dataset.owner = OWNER_LBL[t.owner];
+    bar.dataset.start = fmt(t.start);
+    bar.dataset.end = fmt(t.end);
+    bar.dataset.status = t.status;
+    bar.dataset.note = t.note || '';
+    track.appendChild(bar);
+    row.appendChild(label);
+    row.appendChild(track);
+    rowsEl.appendChild(row);
+  });
+});
+
+/* Tooltip */
+const tt = document.getElementById('tt');
+function showTip(e) {
+  const b = e.currentTarget;
+  const status = b.dataset.status;
+  tt.innerHTML =
+    '<div class="tt-title">' + b.dataset.name + '</div>' +
+    '<div class="tt-row"><b>' + b.dataset.start + '</b> → <b>' + b.dataset.end + '</b></div>' +
+    '<div class="tt-row">Owner: ' + b.dataset.owner + '</div>' +
+    (b.dataset.note ? '<div class="tt-row" style="margin-top:5px">' + b.dataset.note + '</div>' : '') +
+    '<span class="tt-pill ' + status + '">' + status + '</span>';
+  tt.classList.add('show');
+  moveTip(e);
+}
+function moveTip(e) {
+  const pad = 14;
+  let x = e.clientX + pad, y = e.clientY + pad;
+  const r = tt.getBoundingClientRect();
+  if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - pad;
+  if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - pad;
+  tt.style.left = x + 'px'; tt.style.top = y + 'px';
+}
+function hideTip() { tt.classList.remove('show'); }
+document.querySelectorAll('.bar').forEach(b => {
+  b.addEventListener('mouseenter', showTip);
+  b.addEventListener('mousemove', moveTip);
+  b.addEventListener('mouseleave', hideTip);
+});
+
+/* Countdown */
+const now = toMs(TODAY);
+const days = target => Math.round((toMs(target) - now) / 86400000);
+document.getElementById('asof').textContent = fmt(TODAY) + ' 2026';
+document.getElementById('d-submit').textContent = days('2026-09-15');
+document.getElementById('d-defense').textContent = days('2026-09-28');
+document.getElementById('d-write').textContent = days('2026-08-17');
+</script>
+</body>
+</html>

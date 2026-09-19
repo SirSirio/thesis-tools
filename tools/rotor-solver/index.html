@@ -3,29 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rotor Geometry Solver — Thesis Tools</title>
+  <title>Rotor Geometry Solver · Thesis Tools</title>
   <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script src="../../assets/site-nav.js"></script>
   <style>
     /* ── Tool page layout ───────────────────────────────────── */
-    .tool-nav {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 32px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.82rem;
-    }
-    .tool-nav a {
-      color: var(--accent);
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      transition: letter-spacing 0.2s ease, color 0.2s ease;
-    }
-    .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
-    .tool-nav span { color: var(--text-muted); }
-
     .tool-main {
       position: relative;
       z-index: 1;
@@ -294,7 +277,6 @@
     /* ── Responsive ─────────────────────────────────────────── */
     @media (max-width: 600px) {
       .tool-main { padding: 40px 16px 60px; }
-      .tool-nav { padding: 14px 16px; }
       .glass-panel { padding: 20px 18px; }
       .summary { gap: 8px; }
       .mc { min-width: 100px; padding: 12px 14px; }
@@ -308,7 +290,17 @@
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
 </div>
-<nav class="tool-nav"><a href="../../index.html" data-i18n="nav-back">&larr; Resources</a> <span data-i18n="nav-site">DTU Thesis Tools &middot; Sirio Vittorio Feltrin</span> <button id="lang-toggle" class="lang-toggle">IT</button></nav><main class="tool-main"><header class="tool-header animate-in" style="--delay: 0s;"><span class="site-label" data-i18n="tool-label">Design Tool &middot; Peristaltic Pump</span>
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+  <div class="site-nav__lang"><button id="lang-toggle" class="lang-toggle">IT</button></div>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+<main class="tool-main"><header class="tool-header animate-in" style="--delay: 0s;"><span class="site-label" data-i18n="tool-label">Design Tool &middot; Peristaltic Pump</span>
 <h1 data-i18n="tool-h1">Rotor Geometry Solver</h1>
 <p data-i18n="tool-desc">Solves rotor radius analytically so each roller pass delivers your target stroke volume. Occlusion loss is compensated by extending the required arc. Assumes 180&deg; contact. Feasibility is checked against three independent constraints: roller collision, hub clearance, and available tube length.</p>
 </header><!-- Controls -->
@@ -326,8 +318,8 @@
 <option value="1.14">1.14 mm</option>
 </select></div>
 <div class="cg"><label data-i18n="label-bearing">Roller bearing</label><select id="bSel">
-<option value="16" selected="selected">625-2RS &mdash; 16 mm OD</option>
-<option value="10">MR105ZZ &mdash; 10 mm OD</option>
+<option value="16" selected="selected">625-2RS, 16 mm OD</option>
+<option value="10">MR105ZZ, 10 mm OD</option>
 </select></div>
 <div class="cg"><label data-i18n="label-arc-comp">Arc compensation ΔArc<sub>total</sub></label>
 <div class="input-row"><input type="number" id="arcCompN" min="0" max="50" step="0.01" value="0"> <span class="unit">mm</span></div>
@@ -357,7 +349,7 @@
 <div class="summary animate-in" style="--delay: 0.22s;" id="summary"></div>
 <!-- Results table -->
 <div class="glass-panel glass-panel--wide animate-in" style="--delay: 0.32s;">
-<p class="panel-title" data-i18n="panel-results">Geometry results &mdash; rollers 3 to 12</p>
+<p class="panel-title" data-i18n="panel-results">Geometry results: rollers 3 to 12</p>
 <div class="table-wrap">
 <table class="tbl">
 <thead>
@@ -401,10 +393,21 @@
 <div id="figWrap" style="display:flex;justify-content:center;"></div>
 </div>
 <!-- Notes -->
-<p class="note animate-in" style="--delay: 0.42s;" data-i18n="note"><b>&sup1; Geometric swept volume</b> per stroke = (target arc + &Delta;Arc<sub>total</sub>) &times; tube cross-section area. &Delta;Arc<sub>total</sub> is the extra arc each roller requires to compensate its displaced volume; compute it in the <a href="../peristaltic-roller-displaced-volume-model/index.html#calculator" style="color:var(--accent);">Peristaltic Occlusion &amp; Displaced-Volume Model</a> and paste the result here.<br><b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, at the selected microstepping mode, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br><b>Hub clr</b> = (R &minus; roller radius) &minus; boss radius; must be &gt; 0 (roller must clear the motor boss).<br><b>Tube arc</b> = &pi;R; must be &le; 300 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.<br><b>&sup3; Factor of Safety (FoS)</b> = torque at rim &divide; (200 g &times; rollers in contact). Green &ge; 2.0 &middot; amber 1.0&ndash;2.0 &middot; red &lt; 1.0. Torque at rim (g) = 4800 &times; torque_fraction &divide; R_mm &times; 10.<br><b>&sup4; Max step rate (inductive ceiling, theoretical lower bound)</b> = V_supply &divide; (2 &times; L &times; I_rated). At 12 V &rarr; 1333 steps/s; at 24 V &rarr; 2667 steps/s. DRV8825 chopper regulation enables higher practical rates.<br><b>Motor:</b> Wantai 42BYGHW811 &mdash; 200 steps/rev (1.8&deg;), 4800 g&middot;cm holding torque, 2.5 A/phase, 1.25 &Omega;, 1.8 mH. Driver: DRV8825. Torque fractions: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.</p>
-</main><footer class="site-footer">
-<p data-i18n="footer-university">Technical University of Denmark &middot; Department of Health Technology</p>
-<p>Sirio Vittorio Feltrin &middot; 2025&ndash;2026</p>
+<p class="note animate-in" style="--delay: 0.42s;" data-i18n="note"><b>&sup1; Geometric swept volume</b> per stroke = (target arc + &Delta;Arc<sub>total</sub>) &times; tube cross-section area. &Delta;Arc<sub>total</sub> is the extra arc each roller requires to compensate its displaced volume; compute it in the <a href="../peristaltic-roller-displaced-volume-model/index.html#calculator" style="color:var(--accent);">Peristaltic Occlusion &amp; Displaced-Volume Model</a> and paste the result here.<br><b>&sup2; Dispense time</b> for 1000 &micro;L at the set step rate, at the selected microstepping mode, excludes accel/decel.<br><b>Arc gap</b> = arc between rollers &minus; bearing OD; must be &gt; 0 (rollers must not touch).<br><b>Hub clr</b> = (R &minus; roller radius) &minus; boss radius; must be &gt; 0 (roller must clear the motor boss).<br><b>Tube arc</b> = &pi;R; must be &le; 300 mm (adjustable stoppers), else <b>tube too short</b>.<br>R rounded to 0.1 mm (Bambu P1S resolution); PLA for first test prints.<br><b>&sup3; Factor of Safety (FoS)</b> = torque at rim &divide; (200 g &times; rollers in contact). Green &ge; 2.0 &middot; amber 1.0-2.0 &middot; red &lt; 1.0. Torque at rim (g) = 4800 &times; torque_fraction &divide; R_mm &times; 10.<br><b>&sup4; Max step rate (inductive ceiling, theoretical lower bound)</b> = V_supply &divide; (2 &times; L &times; I_rated). At 12 V &rarr; 1333 steps/s; at 24 V &rarr; 2667 steps/s. DRV8825 chopper regulation enables higher practical rates.<br><b>Motor:</b> Wantai 42BYGHW811: 200 steps/rev (1.8&deg;), 4800 g&middot;cm holding torque, 2.5 A/phase, 1.25 &Omega;, 1.8 mH. Driver: DRV8825. Torque fractions: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.</p>
+</main>
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
 </footer>
 
   <script>
@@ -468,7 +471,7 @@
           '<br><b>⁴ Max step rate (inductive ceiling)</b> = V_supply ÷ (2 × L × I_rated). At 12 V → 1333 steps/s; at 24 V → 2667 steps/s. Above this ceiling, current cannot reach rated value before the next step fires — the speed_derating factor (³) reduces effective torque proportionally. Higher supply voltage raises the ceiling and improves torque at speed.' +
           '<br><b>Compression load</b> (estimated, 0.51 mm soft PVC tube): 50–200 g per roller; worst-case per row = 200 g × rollers in contact (the FoS denominator); typical ≈ 100 g × rollers in contact.' +
           '<br><b>Motor:</b> Wantai 42BYGHW811 — 200 steps/rev (1.8°), 4800 g·cm holding torque, 2.5 A/phase, 1.25 Ω, 1.8 mH. Driver: DRV8825. Torque fractions: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.',
-        'footer-university': 'Technical University of Denmark · Department of Health Technology',
+        'footer-university': 'Technical University of Denmark · DTU Bioengineering',
       },
       it: {
         'nav-back':       '← Risorse',
@@ -528,7 +531,7 @@
           '<br><b>⁴ Step rate massimo (limite induttivo)</b> = V_alimentazione ÷ (2 × L × I_nominale). A 12 V → 1333 step/s; a 24 V → 2667 step/s. Sopra questo limite, la corrente non raggiunge il valore nominale prima del passo successivo — il fattore_velocità (³) riduce la coppia proporzionalmente. Una tensione più alta alza il limite e migliora la coppia alla velocità.' +
           '<br><b>Carico di compressione</b> (stimato, tubo PVC morbido 0.51 mm): 50–200 g per rullo; caso peggiore per riga = 200 g × rulli in contatto (il denominatore del FoS); tipico ≈ 100 g × rulli in contatto.' +
           '<br><b>Motore:</b> Wantai 42BYGHW811 — 200 step/giro (1.8°), 4800 g·cm coppia di stallo, 2.5 A/fase, 1.25 Ω, 1.8 mH. Driver: DRV8825. Frazioni coppia: full=1.00, 1/2=0.70, 1/4=0.50, 1/8=0.35, 1/16=0.20, 1/32=0.10.',
-        'footer-university': 'Politecnico di Danimarca · Dipartimento di Tecnologia della Salute',
+        'footer-university': 'Politecnico di Danimarca · DTU Bioengineering',
       }
     };
 

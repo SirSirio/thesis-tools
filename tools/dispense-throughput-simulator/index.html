@@ -3,29 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dispense Choreography &amp; Throughput Simulator — Thesis Tools</title>
+<title>Dispense Choreography &amp; Throughput Simulator · Thesis Tools</title>
 <link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../assets/site.css" />
+<script src="../../assets/site-nav.js"></script>
 <style>
   /* ── Tool page layout (rotor-solver / thesis-timeline precedent) ──── */
-  .tool-nav {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 32px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.82rem;
-  }
-  .tool-nav a {
-    color: var(--accent);
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: letter-spacing 0.2s ease, color 0.2s ease;
-  }
-  .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
-  .tool-nav span { color: var(--text-muted); }
-
   .tool-main {
     position: relative;
     z-index: 1;
@@ -253,7 +236,7 @@
   }
   .slider-endpoints span:last-child { text-align: right; }
 
-  /* Concurrency K is the pivotal parameter — emphasise its label and keep the
+  /* Concurrency K is the pivotal parameter, emphasise its label and keep the
      slider itself short and centred so a small drag maps to a meaningful change. */
   .cg-concurrency label {
     font-size: 1rem;
@@ -600,7 +583,6 @@
   /* ── Responsive ───────────────────────────────────────────────── */
   @media (max-width: 600px) {
     .tool-main { padding: 40px 16px 60px; }
-    .tool-nav { padding: 14px 16px; }
     .glass-panel { padding: 20px 18px; }
     .liquid-label { min-width: 5.5em; font-size: 0.8rem; }
   }
@@ -613,10 +595,15 @@
   <div class="blob blob-3"></div>
 </div>
 
-<nav class="tool-nav" aria-label="Breadcrumb">
-  <a href="../../index.html">← All tools</a>
-  <span>Dispense Choreography &amp; Throughput Simulator</span>
-</nav>
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
 
 <main class="tool-main">
   <header class="tool-header animate-in" style="--delay: 0s;">
@@ -624,7 +611,7 @@
     <h1>Dispense Choreography &amp; Throughput Simulator</h1>
     <p>Configure a 6-nozzle linear indexing line that dispenses a liquid cocktail into a 32-sample rack
       (8 samples &times; 4 racks), then sweep concurrency from fully serial (A1) to fully parallel (A2) to see
-      whether the pump architecture actually needs independent per-motor rates — the empirical answer to
+      whether the pump architecture actually needs independent per-motor rates, the empirical answer to
       <b>U5</b>.</p>
   </header>
 
@@ -640,7 +627,7 @@
 
     <div class="ctrl">
       <div class="cg" style="grid-column: 1 / -1;">
-        <label>Liquids (up to 6) — volume per liquid, and per-pump speed — line length N = liquid count</label>
+        <label>Liquids (up to 6): volume per liquid, and per-pump speed. Line length N = liquid count</label>
         <div class="liquid-rows" id="liquidRows">
           <div class="liquid-row" id="liquidRow0">
             <span class="dot" id="dot0" aria-hidden="true"></span>
@@ -750,7 +737,7 @@
   <section class="glass-panel animate-in" style="--delay: 0.42s;">
     <p class="panel-title">Benchmark comparison</p>
     <p class="cmp-intro">How three representative dispensing loads respond to <b>1, 2, and 6 pumps in parallel</b>,
-      at the current system settings (rollers, µL/stroke, and the shared pump speed — <b>fixed clock</b>, every
+      at the current system settings (rollers, µL/stroke, and the shared pump speed, <b>fixed clock</b>, every
       pump at the same rate). Change those settings above to see how a different pump system copes with each load.</p>
     <div class="cmp-racks" id="cmpRacks">
       <span class="presets-label">Batch size</span>
@@ -762,6 +749,21 @@
     <div id="benchmarkCompare"></div>
   </section>
 </main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
 
 <script>
   // ── Fixed timing constants (D-08) — declared at script scope, not user-editable ──

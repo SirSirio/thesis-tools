@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alignment Module V3, two-axis chassis · Thesis Tools</title>
+  <meta name="description" content="Prototype 2, alignment module, V3: the two-axis chassis with an input queue, a dispensing lane, a motorless fishbone ejector and an output tray. Five racks, 40 tubes, run unattended on the assembled instrument." />
+  <link rel="stylesheet" href="../../../assets/style.css" />
+  <link rel="stylesheet" href="../../../assets/site.css" />
+  <script src="../../../assets/site-nav.js"></script>
+  <link rel="stylesheet" href="../../../assets/prototype-page.css" />
+  <style>
+    /* Page-specific only. Everything else comes from prototype-page.css. */
+
+    /* Pass / not-met / gap markers in the results table. Green and red are
+       literal on purpose: on this page the second accent is blue, and a blue
+       "not met" would read as information rather than a problem. */
+    .flag { font-weight: 700; letter-spacing: 0.02em; }
+    .flag-met   { color: #5fd08a; }
+    .flag-unmet { color: #e83535; }
+    .flag-gap {
+      color: var(--text-muted);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.28);
+      font-weight: 700;
+    }
+
+    /* assets/style.css zeroes every margin, so a <p> that follows bare text
+       inside a callout would butt straight against it. */
+    .callout > p { margin-top: 10px; }
+
+    /* Numbered workflow steps, used once for the U-shaped path. */
+    .path-steps { counter-reset: step; list-style: none; padding-left: 0; margin: 16px 0 24px; }
+    .path-steps li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 44px;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+    .path-steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 1px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--p-accent-soft);
+      background: var(--p-tint);
+      border: 1px solid var(--p-edge);
+    }
+
+    /* Pill links to the other records, used in the header and at the foot. */
+    .link-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+    .link-row a {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--p-edge);
+      background: var(--p-tint);
+      color: var(--text);
+      font-size: 0.86rem;
+      text-decoration: none;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .link-row a:hover { transform: translateY(-2px); border-color: var(--p-accent); }
+
+    /* The header animation must not leave content invisible when the browser
+       is told to suppress motion (assets/style.css has no such guard). */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-in { opacity: 1; transform: none; animation: none; }
+      .link-row a { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../../">
+  <a class="site-nav__back" href="../../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../../index.html#machine">Machine</a>
+    <a href="../../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<main class="proto-page proto-page--align">
+  <a class="proto-back" href="../../index.html">&larr; Back to journey</a>
+
+  <header class="proto-page-header animate-in" style="--delay:0s">
+    <div class="proto-page-eyebrow">Prototype 2 &middot; Alignment Module &middot; V3</div>
+    <h1 class="proto-page-title">Two-axis chassis: an input queue, a dispensing lane and an output tray</h1>
+    <div class="proto-status">
+      <span class="status-chip status-chip--tested">V3 built</span>
+      <span class="status-chip status-chip--tested">40-tube batch run unattended</span>
+      <span class="status-chip status-chip--warn">One known failure mode: flat lids</span>
+      <span class="status-chip status-chip--planned">No V3 bench numbers published</span>
+    </div>
+    <p class="proto-page-summary">
+      V2 and V2.1 proved that one eight-tube rack can be indexed under the nozzle and can find its own
+      zero. V3 is the version that runs a batch: a second, transverse axis feeds racks from an input
+      queue into the lane, axis 1 indexes them in 22 mm steps, and a motorless cam ejects each finished
+      rack into an output tray. The chassis it needed to do that became the structural foundation of the
+      whole instrument.
+    </p>
+    <p class="proto-page-meta">
+      Two full-scale builds. Run on the assembled instrument through a five-rack, 40-tube unattended
+      batch (thesis chapter 12). Every number on this page comes from the thesis, chapter 7 section 7.4,
+      chapter 11 section 11.6 and chapter 12 sections 12.3 and 12.4, as recorded in
+      <a class="tool-link" href="../PROTOTYPE.md">PROTOTYPE.md</a>.
+    </p>
+    <div class="link-row">
+      <a href="../index.html">V2 and V2.1 record: the single-axis stage and its homing</a>
+      <a href="../../index.html">Prototype Design Space</a>
+      <a href="../../../index.html">All tools</a>
+    </div>
+  </header>
+
+  <div class="proto-page-body">
+
+    <!-- Hero: isometric render and headline numbers -->
+    <section class="detail-block animate-in" id="sec-overview" style="--delay:0.08s">
+      <figure class="detail-figure">
+        <img src="../../../assets/media/alignment/v3-iso.png"
+             width="1449" height="782" loading="eager" decoding="async"
+             alt="Isometric CAD view of the V3 alignment chassis: a long printed platform with the input queue on the left, the dispensing lane in the middle, the output tray on the right, both drive pushers on their overhead racks, and the open electronics bay between the trays." />
+        <figcaption>
+          The V3 chassis in isometric view: both drive pushers on their overhead gear racks, the open
+          electronics bay in the centre, and the output collection tray on the right (thesis figure in
+          section 7.4.1).
+        </figcaption>
+      </figure>
+
+      <div class="stats-row">
+        <div class="stat-card stat-good">
+          <div class="stat-value">309 mm</div>
+          <div class="stat-label">Active stroke on axis 1: the full eight-position pattern plus the ejection stroke. V2.1 had ~140 mm</div>
+        </div>
+        <div class="stat-card stat-good">
+          <div class="stat-value">5 racks &middot; 40 tubes</div>
+          <div class="stat-label">One batch: four racks queued, one pre-loaded on the lane</div>
+        </div>
+        <div class="stat-card stat-good">
+          <div class="stat-value">40 of 40</div>
+          <div class="stat-label">Tubes hit within the 5 mm landing tolerance in the unattended run; three droplets partly on the rack or lane</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~500 mm</div>
+          <div class="stat-label">Chassis length, printed as three dovetail-keyed sections of about 8 h each</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contents -->
+    <nav class="proto-toc animate-in" aria-label="Page contents" style="--delay:0.14s">
+      <div class="toc-title">Contents &middot; click to jump</div>
+      <div class="toc-grid">
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">The design</div>
+          <a class="toc-link" href="#sec-changed">What changed from V2.1</a>
+          <a class="toc-link" href="#sec-axes">The two axes</a>
+          <a class="toc-link" href="#sec-ejector">The fishbone ejector</a>
+        </div>
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">The build</div>
+          <a class="toc-link" href="#sec-manufacture">Chassis manufacture</a>
+          <a class="toc-link" href="#sec-machine">On the machine</a>
+        </div>
+        <div class="toc-group toc-group--pass">
+          <div class="toc-group-label">Evidence</div>
+          <a class="toc-link" href="#sec-validation">Validation</a>
+        </div>
+        <div class="toc-group toc-group--fail">
+          <div class="toc-group-label">Open</div>
+          <a class="toc-link" href="#sec-gaps">Open gaps</a>
+          <a class="toc-link" href="#sec-record">Record and sources</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 1. What changed -->
+    <section class="detail-block" id="sec-changed">
+      <h2 class="block-heading">What changed from V2.1</h2>
+      <p>
+        An unattended diagnostic protocol needs the machine to work through several racks with nobody
+        swapping them. V3 therefore adds a second axis and two queuing trays either side of the
+        dispensing lane, and the module grows into a platform roughly 500 mm long that sets the
+        physical envelope of the instrument (thesis 7.4). The workflow is a U-shaped path:
+      </p>
+      <ol class="path-steps">
+        <li><strong>Load.</strong> Racks go into the input queue on the left, up to four of them, with a fifth pre-loaded on the lane.</li>
+        <li><strong>Feed.</strong> Axis 2 advances the queue and transfers the leading rack into the dispensing lane at the start of each cycle.</li>
+        <li><strong>Index.</strong> Axis 1 moves the rack left to right under the nozzle window in 22 mm steps until every tube has passed beneath it.</li>
+        <li><strong>Eject.</strong> One more 22 mm stroke at the right end drives the passive cam, which slides the finished rack diagonally into the output tray.</li>
+      </ol>
+
+      <div class="figure-grid">
+        <figure>
+          <img src="../../../assets/media/alignment/v3-top.png"
+               width="1448" height="783" loading="lazy" decoding="async"
+               alt="Plan view of the V3 chassis: input queue on the left, dispensing lane across the middle, output tray on the right, electronics bay between the trays." />
+          <figcaption>Plan view. Input queue left, lane centre, output tray right, electronics bay in the walled volume between them.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../../assets/media/alignment/v3-bottom.png"
+               width="1447" height="783" loading="lazy" decoding="async"
+               alt="Underside view of the V3 chassis showing the wiring channels, the switch pockets, the dovetail sockets along the rear wall and the pockets for the joining plates." />
+          <figcaption>Underside. Wiring channels, switch pockets, the rear-wall dovetail sockets and the pockets for the joining plates.</figcaption>
+        </figure>
+      </div>
+
+      <table class="param-table">
+        <thead>
+          <tr><th>&nbsp;</th><th>V2.1</th><th>V3</th><th>Thesis</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Axes</strong></td>
+            <td>One, longitudinal</td>
+            <td>Two: axis 1 longitudinal indexing, axis 2 transverse queue feed</td>
+            <td class="num">7.4.1</td>
+          </tr>
+          <tr>
+            <td><strong>Stroke, axis 1</strong></td>
+            <td>~140 mm, six index moves, short of the 154 mm the eight-position pattern needs. The only unmet criterion of V2.1</td>
+            <td><span class="num">309 mm</span> active: full eight-position indexing plus the ejection stroke</td>
+            <td class="num">7.3.3, 7.4.1</td>
+          </tr>
+          <tr>
+            <td><strong>Racks per run</strong></td>
+            <td>One, placed by hand</td>
+            <td><span class="num">Five</span>, four queued and one on the lane: <span class="num">40 tubes</span></td>
+            <td class="num">7.4.1</td>
+          </tr>
+          <tr>
+            <td><strong>Rack hand-off</strong></td>
+            <td>Manual</td>
+            <td>Axis 2 feeds in; a motorless fishbone cam ejects out</td>
+            <td class="num">7.4.1, 7.4.2</td>
+          </tr>
+          <tr>
+            <td><strong>Chassis</strong></td>
+            <td>One printed rail and carriage</td>
+            <td>Three dovetail-keyed printed sections, about 500 mm, with the electronics bay between the trays</td>
+            <td class="num">7.4.3</td>
+          </tr>
+          <tr>
+            <td><strong>Homing</strong></td>
+            <td>One microswitch, three-pass sequence</td>
+            <td>The same switch, the same normally-closed fail-safe loop and the same sequence, on each axis</td>
+            <td class="num">7.4.1</td>
+          </tr>
+          <tr>
+            <td><strong>Drive</strong></td>
+            <td>28BYJ-48 through a pinion of 12.80 mm pitch diameter</td>
+            <td>The same motor on both axes, 16-tooth spur pinion, printed involute gear rack</td>
+            <td class="num">7.4.1</td>
+          </tr>
+          <tr>
+            <td><strong>Role</strong></td>
+            <td>Bench stage</td>
+            <td>Structural foundation: dovetail sockets for the pump and storage modules, a boss for the nozzle holder, a ridge that locates the display holder</td>
+            <td class="num">7.4.4</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">
+        What did not change: the endstop wiring and the three-pass homing are the V2.1 ones, and the
+        control path behind the port expander was laid out for two axes from the start. V3 is a
+        mechanical scale-up around a validated drive, not a new drive.
+      </p>
+
+      <div class="detail-media">
+        <video class="media-video" id="v2-clip" muted loop playsinline preload="metadata"
+               width="1080" height="1024"
+               poster="../../../assets/media/video/alignment-v2-poster.jpg"
+               aria-label="The V2 single-axis stage indexing a sample rack under the nozzle.">
+          <source src="../../../assets/media/video/alignment-v2.mp4" type="video/mp4" />
+        </video>
+        <p class="media-caption">
+          <strong>This is the V2 stage moving, not V3.</strong> No clip of the two-axis chassis in
+          motion exists. The clip shows the single-axis indexing that axis 1 of V3 extends: same motor,
+          same rack-and-pinion drive above the sample plane, same 22 mm index step. Plays only while in
+          view.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. The two axes -->
+    <section class="detail-block" id="sec-axes">
+      <h2 class="block-heading">The two axes</h2>
+      <figure class="detail-figure">
+        <img src="../../../assets/media/alignment/v3-top-annotated.png"
+             width="2000" height="1081" loading="lazy" decoding="async"
+             alt="Annotated plan view of the V3 chassis with the input queue, axis 2 feed direction, the dispensing lane and axis 1 indexing direction, the nozzle window, the fishbone ejection station and the output tray labelled." />
+        <figcaption>
+          Annotated plan: racks are loaded into the input queue (left) and fed into the lane by axis 2;
+          axis 1 indexes them left to right beneath the dispensing window; the passive fishbone cam
+          transfers each completed rack into the output tray (right).
+        </figcaption>
+      </figure>
+      <p>
+        Both axes use identical drive components: a 28BYJ-48 geared stepper, a 16-tooth spur pinion and a
+        3D-printed involute gear rack. Only the pushers differ, to match what each one has to push
+        (thesis 7.4.1).
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>&nbsp;</th><th>Axis 1</th><th>Axis 2</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Direction</strong></td>
+            <td>Longitudinal, along the dispensing lane</td>
+            <td>Transverse, through the input tray</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>Index the active rack under the nozzles in <span class="num">22 mm</span> steps, then drive the ejection stroke</td>
+            <td>Advance the whole queue of waiting racks and hand the leading one into the lane</td>
+          </tr>
+          <tr>
+            <td><strong>Pusher</strong></td>
+            <td>Extends downward from an overhead gear rack along the rear wall to contact the back face of the active rack</td>
+            <td>Spans the full width of the input tray on two parallel legs, so the entire queue moves at once</td>
+          </tr>
+          <tr>
+            <td><strong>Stroke</strong></td>
+            <td class="num">309 mm active</td>
+            <td><span class="flag flag-gap">not stated in the thesis</span></td>
+          </tr>
+          <tr>
+            <td><strong>Endstop</strong></td>
+            <td>Own microswitch, normally-closed fail-safe loop, three-pass homing</td>
+            <td>Same</td>
+          </tr>
+          <tr>
+            <td><strong>Motor mount</strong></td>
+            <td>Standalone bracket, aligned against the assembled rack in situ</td>
+            <td>Same</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="figure-grid">
+        <figure>
+          <img src="../../../assets/media/alignment/pusher-axis-2.png"
+               width="1441" height="778" loading="lazy" decoding="async"
+               alt="CAD view of the axis 2 queue-feeder pusher: a toothed arm joined to a wide cross bar on two parallel legs, with the split dovetail joint highlighted in blue." />
+          <figcaption>Axis 2, the queue feeder. Two legs span the input tray; the deepened chamfer where the toothed arm meets the cross bar is the second-build fix for torsional flex.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../../assets/media/alignment/pusher-axis-1.png"
+               width="1446" height="784" loading="lazy" decoding="async"
+               alt="CAD view of the axis 1 indexing pusher: a toothed gear rack with an arm extending downward to contact the back face of the sample rack, split dovetail joint highlighted in blue." />
+          <figcaption>Axis 1, the indexing pusher. The same gear-rack profile, with an arm reaching down from the overhead rack to the back face of the active rack.</figcaption>
+        </figure>
+      </div>
+      <p class="table-note">
+        Blue highlights in both renders mark the split dovetail joints: each pusher was printed in two
+        parts and thermally welded, because neither fits a desktop printer in one piece (thesis 7.4.3).
+      </p>
+
+      <h3 class="block-subheading">Precision moved from CAD to the bench</h3>
+      <p>
+        Two decisions took alignment out of tolerance modelling and put it on the bench (thesis 7.4.3).
+        The motor mounts are independent brackets rather than chassis features, so each motor is
+        positioned against the assembled gear rack in situ for correct mesh and minimal backlash. The
+        microswitch seats are flat locating pads with no pilot holes; the screw holes are drilled at
+        final calibration.
+      </p>
+      <div class="callout callout-note">
+        <span class="callout-label">The axis 2 pusher was redesigned between the two builds.</span>
+        In the first full-scale build its long dual-span arms showed minor torsional flex under the
+        load of four full racks and absorbed drive displacement. The second build enlarged the chamfer
+        where the toothed arm meets the cross bar, small in the first build and considerably deeper in
+        the second, so the corner the load turns through is braced and the load reaches the queue
+        directly (thesis 7.4.3).
+      </div>
+      <p>
+        The height of every side wall is set by the tallest moving obstacle: a rack carrying open tubes
+        with their caps standing (thesis 7.4.1). That envelope is exactly what the lid-fouling failure
+        mode in the validation section escapes from.
+      </p>
+    </section>
+
+    <!-- 3. The ejector -->
+    <section class="detail-block" id="sec-ejector">
+      <h2 class="block-heading">The fishbone ejector</h2>
+      <p>
+        When a rack finishes its pass at the right end of the lane it has to be cleared sideways into the
+        output tray to make room for the next one. Three constraints governed the mechanism (thesis 7.4.2):
+      </p>
+      <ol>
+        <li><strong>No auxiliary actuator.</strong> Ejection had to be powered by the existing travel of axis 1, to keep the parts count and the controller outputs down.</li>
+        <li><strong>Zero stored elastic energy.</strong> A spring-loaded kicker releases at an uncontrolled speed above open sample tubes: liquid agitation and aerosol risk.</li>
+        <li><strong>Cleanability.</strong> No pivots, hinges or slide bushings, which are particulate traps and fluid ingress paths.</li>
+      </ol>
+
+      <figure class="detail-figure figure-compact">
+        <img src="../../../assets/media/alignment/rack.png"
+             width="1449" height="781" loading="lazy" decoding="async"
+             alt="CAD render of the eight-position sample rack seen from the front, with the two angled ejection ribs visible on its underside, one wider than the other." />
+        <figcaption>
+          The two ejection ribs on the underside of the rack. Each runs at a fixed angle across the full
+          width; they differ in width so the trailing rib bridges the leading rib's groove instead of
+          dropping into it. The ribs were added to the rack in its final iteration (thesis 7.2).
+        </figcaption>
+      </figure>
+
+      <p>
+        The answer is a passive <strong>fishbone cam track</strong>. Two angled ribs protrude from the
+        underside of every rack, and two matching angled grooves are recessed into the rail floor at the
+        ejection station. When the rack completes position 8 the ribs line up with the grooves; one more
+        22 mm stroke of axis 1 forces the ribs along the groove walls and turns longitudinal pusher travel
+        into a smooth diagonal slide that puts the rack in the output tray, which sits 1 mm below the
+        main lane. The geometry is moulded into the structural floor and the rack body: no moving parts,
+        no springs, no pivots.
+      </p>
+      <div class="callout callout-good">
+        <span class="callout-label">Two features make the cam track reliably.</span>
+        <p>
+          The ribs are <strong>elongated</strong>, not cylindrical, giving line contact along the groove
+          wall; that constrains yaw so the rack cannot cock or bind in the lane. And the two ribs have
+          <strong>asymmetric widths</strong>: the wider trailing rib bridges the narrower leading groove
+          instead of dropping into it, so the rack cannot start ejecting during an intermediate
+          dispensing step.
+        </p>
+      </div>
+      <p>
+        Completed racks accumulate passively. Each newly ejected rack pushes the earlier ones forward
+        across the low-friction floor and squares the batch against the outer corner wall for retrieval
+        at the end of the run. Active alternatives, pivoting push-arms, motorised cross-shuttles and
+        spring-loaded flippers, were rejected at concept screening (thesis Appendix L).
+      </p>
+    </section>
+
+    <!-- 4. Manufacture -->
+    <section class="detail-block" id="sec-manufacture">
+      <h2 class="block-heading">Chassis manufacture</h2>
+      <figure class="detail-figure">
+        <img src="../../../assets/media/alignment/v3-bottom-annotated.png"
+             width="2000" height="1260" loading="lazy" decoding="async"
+             alt="Annotated underside of the V3 chassis: longitudinal wiring channels running to the electronics bay, the two microswitch pockets, dovetail mounting sockets along the rear wall, recessed pockets for the joining plates across the two printed seams, and the carrying handles in the end walls." />
+        <figcaption>
+          Underside features. Longitudinal channels route motor and switch wiring into the central
+          electronics bay; dovetail sockets along the rear wall host the pump and storage modules;
+          recessed pockets accept the joining plates across the two printed seams (thesis 7.4.3).
+        </figcaption>
+      </figure>
+      <table class="param-table">
+        <thead>
+          <tr><th>Aspect</th><th>As built</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>One body, three sections</strong></td>
+            <td>The 500 mm chassis was modelled as a single CAD body and split into three sections to fit
+              a desktop printer. Three rather than two so that a change to one groove or wall reprints one
+              third. The two parting planes coincide with the outer walls of the electronics bay and cross
+              a plain baseline with no grooves, dispensing windows or retaining sills</td>
+          </tr>
+          <tr>
+            <td><strong>Joining</strong></td>
+            <td>Interlocking dovetail keys align the sections; M3 screws driven from the rear and bottom
+              faces clamp them; flat reinforcement plates bridge each seam, one at the front and two at
+              the rear, against bending</td>
+          </tr>
+          <tr>
+            <td><strong>Underside</strong></td>
+            <td>Recessed wiring ducts to a central port in the electronics bay; pockets for the two homing
+              microswitches; two carrying handles recessed into the outer end walls for two-handed
+              transport; a row of downward-opening dovetail sockets along the rear exterior wall that takes
+              the pump and reagent storage modules from above without external fasteners (7.4.4)</td>
+          </tr>
+          <tr>
+            <td><strong>Print time</strong></td>
+            <td>About <span class="num">8 hours per section</span>, which limited the prototyping cycle to
+              <span class="num">two</span> full-scale build iterations. Both pushers were printed in two
+              parts and joined at dovetail interfaces by localised thermal welding</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="figure-grid">
+        <figure>
+          <img src="../../../assets/media/alignment/v3-left-end.jpg"
+               width="1471" height="1036" loading="lazy" decoding="async"
+               alt="Photograph of the left end of the assembled V3 chassis: the standalone motor bracket holding the axis 2 stepper above the sample deck, the axis 2 homing microswitch seated in its recessed pocket, and the carrying handle moulded into the end wall." />
+          <figcaption>Left end, as built. The standalone bracket supports the axis 2 stepper above the deck; the axis 2 homing switch sits in its pocket; the carrying handle is moulded into the end wall, with the switch leads routed through the underside channel.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../../assets/media/alignment/v3-markings.jpg"
+               width="2000" height="1059" loading="lazy" decoding="async"
+               alt="The assembled alignment module seen from above with pencil markings on the deck: slot 1 on the rack lane, slots 2 to 5 ruled across the input queue with an arrow pointing toward the lane, and an arrow on the output tray. Pumps, nozzle holder and display are mounted on the chassis." />
+          <figcaption>Zone markings from above. Slot 1 on the lane; slots 2 to 5 across the input queue with its arrow toward the lane; the output tray with its own arrow. All in pencil.</figcaption>
+        </figure>
+      </div>
+
+      <div class="callout callout-note">
+        <span class="callout-label">Markings sit on the surface, never in it.</span>
+        Lettering cut into the deck is a crevice; a marking laid on top identifies the same zone without
+        introducing one. The markings name the input queue, the rack lane and the output tray, and number
+        the five rack slots so an operator knows which slot fills first and in what order the racks are
+        drawn. On the prototype they are pencil, which lifts with the same wipe that cleans the deck; a
+        production chassis would carry the same scheme printed or painted (thesis 7.4.3).
+      </div>
+    </section>
+
+    <!-- 5. On the machine -->
+    <section class="detail-block" id="sec-machine">
+      <h2 class="block-heading">On the machine</h2>
+      <p>
+        As the largest structural component, the chassis is the mechanical foundation of the assembled
+        instrument (thesis 7.4.4, 11.6). Input queue left, output tray right; the two pump and storage
+        carriers slide into the dovetail sockets along the rear wall; the stationary nozzle holder
+        mounts to a reinforced boss on the rear wall above the electronics bay, which gives it a stiff
+        fixing point that does not shift relative to the rail and clear height over the tubes; the
+        touchscreen stands at centre front on the bay, located by a ridge on its left wall; the battery
+        sits at front left.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>Quantity</th><th>Value</th><th>Note</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Assembled instrument</strong></td>
+            <td class="num">50 cm wide &middot; 35 cm deep &middot; 18 cm high</td>
+            <td>The battery adds 5.5 cm to the depth; the height is set by the storage modules (11.6)</td>
+          </tr>
+          <tr>
+            <td><strong>Mass</strong></td>
+            <td class="num">~4 kg, estimated</td>
+            <td><span class="flag flag-gap">not weighed</span>, with four racks loaded (11.6)</td>
+          </tr>
+          <tr>
+            <td><strong>Batch</strong></td>
+            <td class="num">5 racks, 40 tubes</td>
+            <td>Rack count and tubes per rack are set on the touchscreen (7.4.1)</td>
+          </tr>
+          <tr>
+            <td><strong>Electronics bay</strong></td>
+            <td>Between the trays</td>
+            <td>Microcontroller, motor driver boards and power distribution, on solderless breadboards behind a removable front panel (7.4.1, 11.6)</td>
+          </tr>
+          <tr>
+            <td><strong>Carrying</strong></td>
+            <td>Two handles</td>
+            <td>Recessed into the outer end walls of the chassis (11.6)</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3 class="block-subheading">A run, start to finish</h3>
+      <p>
+        The operator loads racks into the input queue, selects one or more recipes on the touchscreen and
+        assigns them to tube positions. A pre-run routine checks reagent levels against the batch and
+        refuses to start if a line is short. The axes home if not already referenced. Axis 2 draws the
+        first rack onto the lane; axis 1 indexes each tube under the nozzles, where the pump delivers the
+        volume and a vibration burst detaches the pendant droplet. The finished rack is ejected to the
+        output tray and the next one drawn in (thesis 11.6).
+      </p>
+    </section>
+
+    <!-- 6. Validation -->
+    <section class="detail-block" id="sec-validation">
+      <h2 class="block-heading">Validation</h2>
+      <p>
+        The validation that concerns this module is in the thesis, chapter 12 sections 12.3 and 12.4,
+        with the lid failure mode also recorded in 7.4.1. Numbers below are those; nothing is added.
+      </p>
+      <div class="figure-grid">
+        <figure>
+          <img src="../../../assets/media/device/validation-start.jpg"
+               width="2000" height="1226" loading="lazy" decoding="async"
+               alt="The assembled instrument at the start of the forty-tube run, five racks of empty tubes loaded in the input queue and on the lane." />
+          <figcaption>Before: five racks of empty tubes loaded.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../../assets/media/device/validation-done.jpg"
+               width="2000" height="1126" loading="lazy" decoding="async"
+               alt="The same five racks after the unattended run, every tube holding dyed liquid, accumulated in the output tray." />
+          <figcaption>After: the same racks with every tube filled, run unattended to completion.</figcaption>
+        </figure>
+      </div>
+
+      <table class="param-table">
+        <thead>
+          <tr><th>Check</th><th>Result</th><th>Thesis</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Full batch, unattended</strong></td>
+            <td><span class="flag flag-met">Done</span>: five racks, 40 tubes, two-reagent recipe
+              (100 &micro;L and 75 &micro;L), start to finish with no operator help, on the bench DC supply</td>
+            <td class="num">12.3, 12.4</td>
+          </tr>
+          <tr>
+            <td><strong>Placement</strong></td>
+            <td><span class="flag flag-met">All 40 tubes hit</span> within the 5 mm landing tolerance</td>
+            <td class="num">12.3</td>
+          </tr>
+          <tr>
+            <td><strong>Off-target</strong></td>
+            <td>Three droplets showed partial wetting on the rack deck or lane. No dye reached the bench or
+              the operator</td>
+            <td class="num">12.3, 12.5</td>
+          </tr>
+          <tr>
+            <td><strong>Volume across racks</strong></td>
+            <td>Tubes lifted from the first and the last rack held visually comparable volumes</td>
+            <td class="num">12.3</td>
+          </tr>
+          <tr>
+            <td><strong>Axis speed</strong></td>
+            <td>Both linear axes were slowed so the steppers had the strength to push the loaded five-rack
+              magazine without stalling; a small delay per cycle</td>
+            <td class="num">12.4</td>
+          </tr>
+          <tr>
+            <td><strong>Battery run</strong></td>
+            <td>The 12 V tool battery carried two full racks (16 samples); then, as it drained, running both
+              pumps at once stalled them and the run stopped, because the firmware cannot run one pump at
+              a time. A power limit, not an alignment failure</td>
+            <td class="num">12.4</td>
+          </tr>
+          <tr>
+            <td><strong>Qualification on the two-axis chassis</strong></td>
+            <td>The multi-pass bench protocol was repeated on the assembled chassis under integrated
+              firmware; both axes gave reliable queue feeding, precise indexing and automated ejection
+              across repeated full batch sequences. <span class="flag flag-gap">No numeric V3 results are
+              published</span>; the figures on record remain the V2.1 bench numbers of 31 July 2026</td>
+            <td class="num">7.4.1, 7.3.3, App. L</td>
+          </tr>
+          <tr>
+            <td><strong>Lids left flat</strong></td>
+            <td><span class="flag flag-unmet">Known failure mode</span>, observed on the assembled
+              instrument. See below</td>
+            <td class="num">7.4.1, 12.3</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="block-subheading">The one known failure mode: a lid that rubs the wall</h3>
+      <figure class="detail-figure figure-compact">
+        <img src="../../../assets/media/alignment/lid-fouling.jpg"
+             width="1600" height="1420" loading="lazy" decoding="async"
+             alt="Two tubes in the rack on the assembled instrument. Left, in position 2, the lid is folded back to about 135 degrees and stands clear of the wall. Right, in position 3, the lid is pushed flat to 180 degrees and reaches the chamfered wall beside the lane." />
+        <figcaption>
+          Left, position 2: the lid is folded back to about 135&deg; and stands clear. Right, position 3:
+          the lid is pushed flat to 180&deg; and reaches the 45&deg; chamfered wall beside the lane, where
+          it rubs as the rack moves.
+        </figcaption>
+      </figure>
+      <div class="callout callout-warn">
+        <span class="callout-label">The axis is open-loop, so friction it cannot sense becomes lost steps.</span>
+        <p>
+          The side walls were drawn around a cap left standing. A lid pushed all the way flat projects
+          sideways instead of upward and reaches the chamfered wall alongside the lane. Contact there loads
+          the rack with a friction the drive cannot detect: the motor completes its commanded steps, the
+          rack lags behind them, and the stage holds a position the firmware believes it has reached.
+          Dispensing into a rack that has fallen short puts the dose beside the tube rather than in it
+          (thesis 7.4.1, 12.3).
+        </p>
+        <p>
+          The bench repeatability figure of the single-axis stage, no worse than about 0.03 mm, bounds the
+          drive and not the rack: it holds only when external friction is absent (thesis 7.3.3).
+        </p>
+        <p>
+          <strong>Present operating instruction:</strong> fold every cap to 135&deg;, avoid lateral cap
+          overlap, and keep rack clearance. A production version would open the caps automatically and
+          remove the manual handling the prototype depends on (12.3).
+        </p>
+      </div>
+    </section>
+
+    <!-- 7. Open gaps -->
+    <section class="detail-block" id="sec-gaps">
+      <h2 class="block-heading">Open gaps</h2>
+      <div class="callout callout-warn">
+        <span class="callout-label">1. The lid-fouling remedies are not built.</span>
+        Two are named (thesis 7.4.1): reshape the wall profile, which is chamfered at 45&deg; on the built
+        chassis, and a firmware check that compares the step count on the return home against the
+        commanded outward travel. The second is the derailment-check idea from the V2.1 record, still
+        untested.
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-label">2. No V3-specific numbers.</span>
+        Repeatability, return-to-zero and timing were not re-measured and published for either axis on the
+        two-axis chassis. Axis 2 still has no bench number of its own, and its stroke is not stated.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">3. Battery batches above 16 samples.</span>
+        They need firmware that runs one pump at a time, and the machine has no battery monitor or
+        low-battery lockout (thesis 12.4).
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">4. Two full-scale builds only.</span>
+        The axis 2 pusher redesign is proven by the batch runs, not by a dedicated flex measurement.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">5. Mass is an estimate.</span>
+        About 4 kg with four racks loaded; the machine has not been weighed (thesis 11.6).
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">6. Production items.</span>
+        Automatic cap opening (12.3); printed or painted markings (7.4.3); sliding labyrinth covers for the
+        motors and an enclosure for the whole machine (7.3.2, 11.6).
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">7. The V2.1 verification debt is still open.</span>
+        The travel-budget fault has not fired on hardware, coil resistance and rail voltage are not metered,
+        and the switch release distance is not measured. See the
+        <a class="tool-link" href="../index.html#sec-risks">V2 and V2.1 record</a>.
+      </div>
+    </section>
+
+    <!-- 8. Record and sources -->
+    <section class="detail-block" id="sec-record">
+      <h2 class="block-heading">Record and sources</h2>
+      <p class="block-note">
+        This page is written from the V3 part of the module's design-side record. The V2 and V2.1 page
+        stays where it was and is untouched; this page is the continuation.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr><th>What</th><th>Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>The V3 record in full</td> <td><a class="tool-link" href="../PROTOTYPE.md">PROTOTYPE.md</a>, sections 13 to 22, alongside the V2 and V2.1 sections</td></tr>
+          <tr><td>Concept, axes, queuing, capacity, lid fouling</td> <td>Thesis chapter 7, section 7.4.1</td></tr>
+          <tr><td>Fishbone ejector</td> <td>Thesis 7.4.2</td></tr>
+          <tr><td>Three-section chassis, brackets, switch seats, markings</td> <td>Thesis 7.4.3</td></tr>
+          <tr><td>Dovetail sockets, nozzle boss</td> <td>Thesis 7.4.4</td></tr>
+          <tr><td>The integrated prototype, envelope, run sequence</td> <td>Thesis 11.6</td></tr>
+          <tr><td>40-tube run, placement, lid failure mode; unattended run, slowed axes, battery run</td> <td>Thesis 12.3 and 12.4</td></tr>
+          <tr><td>Bench qualification table, the V2.1 figures V3 inherits</td> <td>Thesis Appendix L, bench qualification of the indexing stage</td></tr>
+        </tbody>
+      </table>
+      <div class="link-row">
+        <a href="../index.html">V2 and V2.1 record</a>
+        <a href="../../index.html">Prototype Design Space</a>
+        <a href="../../../index.html">All tools</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // TOC: open any collapsed <details> ancestor before jumping.
+  document.querySelectorAll('.toc-link').forEach(a => {
+    a.addEventListener('click', () => {
+      const t = document.querySelector(a.getAttribute('href'));
+      let p = t && t.parentElement;
+      while (p) { if (p.tagName === 'DETAILS') p.open = true; p = p.parentElement; }
+    });
+  });
+
+  // Lightbox for every figure image.
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeLightbox = () => { lightbox.hidden = true; lightboxImg.src = ''; };
+  document.querySelectorAll('.detail-figure img, .figure-grid img, .fig-side img, .zoomable')
+    .forEach(img => img.addEventListener('click', () => {
+      lightboxImg.src = img.src; lightboxImg.alt = img.alt || ''; lightbox.hidden = false;
+    }));
+  lightbox.addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lightbox.hidden) closeLightbox(); });
+
+  // The V2 clip plays only while in view. Under reduced motion it never
+  // autoplays and exposes native controls instead, so it stays a poster the
+  // visitor can start deliberately.
+  const clip = document.getElementById('v2-clip');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (clip) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      clip.setAttribute('controls', '');
+    } else {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) en.target.play().catch(() => {});
+          else en.target.pause();
+        });
+      }, { threshold: 0.35 });
+      io.observe(clip);
+    }
+  }
+</script>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../../prototypes/index.html">Prototypes</a>
+      <a href="../../../tools/index.html">Instruments</a>
+      <a href="../../../decks/index.html">Presentations</a>
+      <a href="../../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

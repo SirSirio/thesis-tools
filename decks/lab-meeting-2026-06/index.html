@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab Meeting Jun 2026 — Thesis Tools</title>
+  <title>Lab Meeting Jun 2026 · Thesis Tools</title>
   <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <script src="../../assets/site-nav.js"></script>
   <link rel="stylesheet" href="../../assets/deck.css" />
   <style>
     .glass {
@@ -19,7 +21,7 @@
        Inactive slides sit at opacity:0 (not display:none), so plain
        CSS animations would fire once at page load. The inline script
        at the bottom restarts every .auto-anim element each time its
-       slide becomes active — so media animates first, writing after,
+       slide becomes active, so media animates first, writing after,
        on every visit. */
     @keyframes avIn {
       from { opacity: 0; transform: translateY(16px); }
@@ -130,6 +132,33 @@
       box-shadow: 0 24px 64px rgba(0,0,0,0.6);
       background: #000;
     }
+
+    /* ── Shared frame, deck variant ────────────────────────────────────────
+       The 64px sticky bar would push the 100vh deck viewport below the
+       fold, so the frame nav is rendered as a compact corner bar in the
+       deck's own back-link position (deck.css, z 300). The Instruments
+       panel hangs from the top of the page, above the slides, only while
+       open. The deck stage keeps the browser default line-height so the
+       fixed 1280 x 720 slides lay out exactly as before. */
+    .site-nav--deck {
+      position: absolute;
+      top: 20px; left: 20px;
+      width: auto; height: auto;
+      padding: 0; gap: 16px;
+      background: transparent;
+      border: 0;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      z-index: 300;
+    }
+    .site-nav--deck .deck-back-link { position: static; }
+    .site-nav--deck .site-nav__links { margin-left: 0; }
+    #instr-panel { top: 0; z-index: 299; }
+    #instr-panel .instr__inner { top: 72px; max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px); }
+    .deck-viewport, .deck-overview { line-height: normal; }
+    /* A slide deck must not scroll: the shared footer stays in the markup for
+       consistency but is hidden here, so the page height equals the viewport. */
+    .site-foot { display: none; }
+    html, body { overflow: hidden; }
   </style>
 </head>
 <body>
@@ -138,6 +167,15 @@
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
   </div>
+
+  <header class="site-nav site-nav--deck" data-root="../../">
+    <a class="deck-back-link" href="../../decks/index.html">← Presentations</a>
+    <nav class="site-nav__links" aria-label="Primary">
+      <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+    </nav>
+  </header>
+  <div id="instr-panel" class="instr" hidden></div>
+
   <div class="deck-viewport">
     <div class="deck-stage" tabindex="0">
 
@@ -153,7 +191,7 @@
         </div>
       </section>
 
-      <!-- ░░ 2. DIVIDER — ALIGNMENT MODULE ░░ -->
+      <!-- ░░ 2. DIVIDER: ALIGNMENT MODULE ░░ -->
       <section class="slide slide-divider">
         <img class="divider-bg auto-anim" src="assets/alignment_poster.jpg" alt="Alignment module test rig on the bench" />
         <div class="divider-scrim auto-anim"></div>
@@ -164,7 +202,7 @@
         </div>
       </section>
 
-      <!-- ░░ 3. ALIGNMENT MODULE — title + video, no bullets ░░ -->
+      <!-- ░░ 3. ALIGNMENT MODULE: title + video, no bullets ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 36px 40px 48px;">
         <div class="auto-anim delay-1" style="text-align: center; margin-bottom: 22px;">
           <div class="site-label">Module 01 · Prototype V2</div>
@@ -179,11 +217,11 @@
           tabindex="-1"></video>
       </section>
 
-      <!-- ░░ 3b. ALIGNMENT — FUTURE PERSPECTIVE ░░ -->
+      <!-- ░░ 3b. ALIGNMENT: FUTURE PERSPECTIVE ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 80px;">
         <div class="auto-anim delay-1">
           <div class="site-label">Module 01 · Roadmap</div>
-          <h2 class="site-title" style="font-size: 2.5rem; margin: 6px 0 28px;">One rack today — a self-feeding queue next</h2>
+          <h2 class="site-title" style="font-size: 2.5rem; margin: 6px 0 28px;">One rack today, a self-feeding queue next</h2>
         </div>
 
         <!-- Queue schematic: proven stage (solid) flanked by future queues (dashed) -->
@@ -233,16 +271,16 @@
         <div class="auto-anim delay-2" style="display: flex; gap: 18px; margin-top: 8px;">
           <div class="glass" style="flex: 1; padding: 16px 20px;">
             <div style="font-size: 1.1rem; font-weight: 700; color: #27c93f; margin-bottom: 4px;">Today ✓</div>
-            <div style="color: var(--text-muted); font-size: 1.02rem; line-height: 1.45;">Moves a single 8-tube rack under the nozzle — reliably. The core motion is proven.</div>
+            <div style="color: var(--text-muted); font-size: 1.02rem; line-height: 1.45;">Moves a single 8-tube rack under the nozzle, reliably. The core motion is proven.</div>
           </div>
           <div class="glass" style="flex: 1; padding: 16px 20px;">
             <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px;">Next →</div>
-            <div style="color: var(--text-muted); font-size: 1.02rem; line-height: 1.45;">Input + output queues holding ≥4 racks, handled automatically — for seamless, high-throughput sample handling.</div>
+            <div style="color: var(--text-muted); font-size: 1.02rem; line-height: 1.45;">Input + output queues holding ≥4 racks, handled automatically, for seamless, high-throughput sample handling.</div>
           </div>
         </div>
       </section>
 
-      <!-- ░░ 4. DIVIDER — AI FOR ENGINEERING ░░ -->
+      <!-- ░░ 4. DIVIDER: AI FOR ENGINEERING ░░ -->
       <section class="slide slide-divider">
         <img class="divider-bg auto-anim" src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Displaced_Volume_Tool.png" alt="Displaced-volume calculator built for the project" />
         <div class="divider-scrim auto-anim"></div>
@@ -265,11 +303,11 @@
             </div>
             <div class="glass" style="padding: 18px 22px;">
               <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">A build &amp; documentation engine</div>
-              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Turns concepts into live tools and captures the whole process as presentable text — as it happens.</div>
+              <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.45;">Turns concepts into live tools and captures the whole process as presentable text, as it happens.</div>
             </div>
           </div>
           <p class="auto-anim delay-3" style="margin-top: 22px; color: var(--text-muted); font-size: 0.95rem;">
-            Design, build, analysis, and write-up run as one continuous loop &mdash; next.
+            Design, build, analysis, and write-up run as one continuous loop: next.
           </p>
         </div>
         <div class="term auto-anim" style="flex: 0.95;">
@@ -283,7 +321,7 @@
         </div>
       </section>
 
-      <!-- ░░ 5b. AI WORKFLOW — the cycle ░░ -->
+      <!-- ░░ 5b. AI WORKFLOW: the cycle ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 64px;">
         <div class="auto-anim delay-1" style="text-align: center; margin-bottom: 6px;">
           <div class="site-label">AI · workflow</div>
@@ -336,45 +374,45 @@
         </p>
       </section>
 
-      <!-- ░░ 6. GSD — spec-driven development vs GSD ░░ -->
+      <!-- ░░ 6. GSD: spec-driven development vs GSD ░░ -->
       <section class="slide" style="display: flex; flex-direction: column; justify-content: center; padding: 0 72px;">
         <div class="auto-anim delay-1">
           <div class="site-label">Methodology</div>
           <h2 class="site-title" style="font-size: 2.5rem; margin: 6px 0 16px;">Spec-driven development, run by GSD</h2>
           <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 980px; line-height: 1.5; margin-bottom: 30px;">
-            <span class="term-tag">Spec-driven development</span> is the discipline — lock decisions before plans, plans before code.
+            <span class="term-tag">Spec-driven development</span> is the discipline: lock decisions before plans, plans before code.
             <span class="gsd-tag">GSD</span> (&ldquo;Get Sh*t Done&rdquo;) is one framework that automates that loop.
           </p>
         </div>
         <div class="gsd-cards auto-anim">
           <div class="gsd-card">
             <div class="gsd-card-head"><span class="gsd-num">1</span><span class="gsd-card-name">Discuss</span></div>
-            <div class="gsd-card-desc">Lock decisions before planning — binding context the planner can&rsquo;t contradict.</div>
+            <div class="gsd-card-desc">Lock decisions before planning: binding context the planner can&rsquo;t contradict.</div>
           </div>
           <span class="gsd-arrow">&rarr;</span>
           <div class="gsd-card">
             <div class="gsd-card-head"><span class="gsd-num">2</span><span class="gsd-card-name">Plan</span></div>
-            <div class="gsd-card-desc">Research first, then atomic tasks — each executable in a fresh context.</div>
+            <div class="gsd-card-desc">Research first, then atomic tasks, each executable in a fresh context.</div>
           </div>
           <span class="gsd-arrow">&rarr;</span>
           <div class="gsd-card">
             <div class="gsd-card-head"><span class="gsd-num">3</span><span class="gsd-card-name">Execute</span></div>
-            <div class="gsd-card-desc">Parallel waves, atomic commits — reviewable at every step, not one giant diff.</div>
+            <div class="gsd-card-desc">Parallel waves, atomic commits: reviewable at every step, not one giant diff.</div>
           </div>
         </div>
         <p class="auto-anim delay-2" style="margin-top: 26px; color: var(--text-muted); font-size: 0.98rem;">
-          GSD wraps the loop with research, verification, and atomic commits — keeping AI context lean as a project grows.
+          GSD wraps the loop with research, verification, and atomic commits, keeping AI context lean as a project grows.
         </p>
       </section>
 
-      <!-- ░░ 7. DIVIDER — PUMP MODULE ░░ -->
+      <!-- ░░ 7. DIVIDER: PUMP MODULE ░░ -->
       <section class="slide slide-divider">
         <img class="divider-bg auto-anim" src="../../prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Render_Open.png" alt="Peristaltic pump module render, cover open" />
         <div class="divider-scrim auto-anim"></div>
         <div class="divider-content">
           <div class="divider-eyebrow auto-anim delay-1">Section 03</div>
           <h2 class="divider-title auto-anim delay-1">Pump Module</h2>
-          <p class="divider-sub auto-anim delay-2">The dispensing core — from model to prototype.</p>
+          <p class="divider-sub auto-anim delay-2">The dispensing core, from model to prototype.</p>
         </div>
       </section>
 
@@ -489,7 +527,7 @@
               <path d="M 95 152 C 180 96, 250 72, 300 70 C 360 68, 435 178, 505 214" fill="none" stroke="#ff6b2b" stroke-width="3" stroke-linecap="round"/>
               <!-- seal-point peak -->
               <circle cx="300" cy="70" r="5" fill="#ff6b2b"/>
-              <text x="300" y="54" fill="#f0ece8" font-size="12" font-weight="600" text-anchor="middle">seal point — max delivery (proto-02 target)</text>
+              <text x="300" y="54" fill="#f0ece8" font-size="12" font-weight="600" text-anchor="middle">seal point: max delivery (proto-02 target)</text>
               <!-- proto-01 + shim (over-squeezed, left of peak) -->
               <circle cx="112" cy="145" r="5" fill="#e83535"/>
               <text x="122" y="135" fill="#e83535" font-size="11.5">proto-01 + shim ≈ 3.4 µL</text>
@@ -504,20 +542,20 @@
       <section class="slide" style="display: flex; align-items: center; padding: 0 56px; gap: 40px;">
         <div style="flex: 1.05;">
           <div class="site-label auto-anim delay-1">Test-campaign app</div>
-          <h2 class="site-title auto-anim delay-1" style="font-size: 2.2rem; line-height: 1.12; margin: 6px 0 22px;">One app runs the campaign — I just weigh the tubes</h2>
+          <h2 class="site-title auto-anim delay-1" style="font-size: 2.2rem; line-height: 1.12; margin: 6px 0 22px;">One app runs the campaign: I just weigh the tubes</h2>
           <ul class="auto-anim delay-2" style="font-size: 1.18rem; color: var(--text-muted); line-height: 1.5; padding-left: 20px; margin: 0;">
-            <li style="margin-bottom: 12px;">Set the DoE parameters — the app designs &amp; <span style="color: var(--accent);">randomizes</span> the run order.</li>
-            <li style="margin-bottom: 12px;">Commands the Arduino directly: dose &amp; parameters per run — no re-flashing.</li>
-            <li style="margin-bottom: 12px;">Runs unattended — I just collect the tubes and weigh them.</li>
+            <li style="margin-bottom: 12px;">Set the DoE parameters: the app designs &amp; <span style="color: var(--accent);">randomizes</span> the run order.</li>
+            <li style="margin-bottom: 12px;">Commands the Arduino directly: dose &amp; parameters per run, no re-flashing.</li>
+            <li style="margin-bottom: 12px;">Runs unattended: I just collect the tubes and weigh them.</li>
             <li>Randomized order &rarr; statistically robust results, far faster.</li>
           </ul>
           <p class="auto-anim delay-3" style="margin-top: 18px; color: var(--text-muted); font-size: 0.88rem;">
-            Inline flow-sensor volume readout still WIP — gravimetric weigh-out is the working measure today.
+            Inline flow-sensor volume readout still WIP: gravimetric weigh-out is the working measure today.
           </p>
         </div>
         <div class="auto-anim" style="flex: 1.5; display: flex; flex-direction: column; gap: 14px;">
           <div class="glass" style="padding: 8px; border-radius: var(--radius); box-shadow: 0 16px 40px rgba(0,0,0,0.5);">
-            <img src="assets/run-campaign.png" alt="Run Campaign — DoE & hardware setup" style="display: block; width: 100%; max-height: 420px; object-fit: contain; border-radius: calc(var(--radius) - 6px);" />
+            <img src="assets/run-campaign.png" alt="Run Campaign: DoE & hardware setup" style="display: block; width: 100%; max-height: 420px; object-fit: contain; border-radius: calc(var(--radius) - 6px);" />
           </div>
           <div style="display: flex; gap: 14px;">
             <div class="glass" style="flex: 1; padding: 8px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; background: #0d0f12;">
@@ -533,7 +571,20 @@
     </div>
   </div>
 
-  <a class="deck-back-link" href="../../decks/index.html">← Presentations</a>
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <div class="site-foot__who">
+        <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+        <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+      </div>
+      <nav class="site-foot__links" aria-label="Site">
+        <a href="../../prototypes/index.html">Prototypes</a>
+        <a href="../../tools/index.html">Instruments</a>
+        <a href="../../decks/index.html">Presentations</a>
+        <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+      </nav>
+    </div>
+  </footer>
 
   <script src="../../assets/deck.js"></script>
   <script>

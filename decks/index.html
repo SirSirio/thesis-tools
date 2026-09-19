@@ -3,27 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Presentations — Thesis Tools</title>
+  <title>Presentations · Thesis Tools</title>
   <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/site-nav.js"></script>
   <style>
-    /* ── Nav bar ──────────────────────────────────────────────── */
-    .tool-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 32px;
-      border-bottom: 1px solid var(--glass-border);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(10, 10, 12, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-    .nav-back { color: var(--accent); font-size: 0.85rem; letter-spacing: 0.04em; }
-    .nav-back:hover { opacity: 0.75; }
-    .nav-title { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.04em; }
-
     /* ── Layout ────────────────────────────────────────────────── */
     .presentations-view {
       position: relative;
@@ -103,7 +87,6 @@
     
     @media (max-width: 600px) {
       .presentations-view { padding: 40px 20px 60px; }
-      .tool-nav { padding: 16px 20px; }
     }
   </style>
 </head>
@@ -115,24 +98,44 @@
 <div class="blob blob-3"></div>
 </div>
 
-<nav class="tool-nav animate-in" style="--delay: 0s">
-  <a class="nav-back" href="../index.html">← Resources</a>
-  <span class="nav-title">Presentations</span>
-</nav>
+<header class="site-nav" data-root="../">
+  <a class="site-nav__back" href="../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../index.html#machine">Machine</a>
+    <a href="../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
 
 <main class="presentations-view">
   <div class="decks-container" id="decks-container">
     
     <a class="deck-card" href="lab-meeting-2026-06/index.html" style="--card-angle: -4deg; --delay: 0.15s;">
       <div class="deck-date">2026-06-24</div>
-      <h2 class="deck-title">Lab Meeting — June 2026</h2>
+      <h2 class="deck-title">Lab Meeting, June 2026</h2>
       <p class="deck-desc">GSD · rotor solver · displaced-volume model · proto-01 · proto-02 · test-campaign app</p>
     </a>
 
-    <!-- Future decks — duplicate the card block above -->
+    <!-- Future decks: duplicate the card block above -->
 
   </div>
 </main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../prototypes/index.html">Prototypes</a>
+      <a href="../tools/index.html">Instruments</a>
+      <a href="../decks/index.html">Presentations</a>
+      <a href="../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
 
 <script>
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

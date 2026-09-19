@@ -12,21 +12,33 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 
 ```
 /
-├── index.html              Landing page — links to all tools
+├── index.html              Landing page — showcase of the finished instrument: opening, problem, the machine with leader-line callouts, a seven stop journey with the tools anchored to the module each one served, and the method. EN/IT strings, Italian pass pending
 ├── assets/
 │   ├── style.css           Shared stylesheet — imported by every page
+│   ├── site.css            Shared site frame (Sept 2026 showcase redesign), loaded after style.css on every page: new tokens, the Geist display face for h1 and h2, the water background wash that restyles the existing .bg-blobs markup, the sticky nav, the Instruments panel, the footer, .reveal, the pill buttons and the 28px tool marks. Sanctioned shared file, same exception class as the deck runtime
+│   ├── site-nav.js         Shared frame behaviour, loaded in <head> with no defer: single source of truth for the tools list, renders the Instruments panel into #instr-panel with every href prefixed by the nav's data-root, drives the .reveal observer, exposes window.ThesisTools. Dependency free
+│   ├── FRAME-SNIPPET.html  Documentation only, never served and never linked: the exact frame markup to paste at each folder depth, plus the rules that go with it
 │   ├── deck.css            Shared deck runtime (styles/transitions) — D-01 exception
 │   ├── deck.js             Shared deck runtime (state machine) — D-01 exception
-│   ├── prototype-page.css  Shared visual system for the prototype subpages — same D-01 exception as the deck runtime (three subpages, one system). Root class .proto-page; accent modifier .proto-page--align swaps orange → violet via eight --p-* properties
+│   ├── prototype-page.css  Shared visual system for the prototype subpages — same D-01 exception as the deck runtime (several prototype subpages, one system). Root class .proto-page; accent modifiers .proto-page--align (orange to violet) and .proto-page--nozzle (orange to teal-blue) swap the eight --p-* properties
 │   ├── fonts/
 │   │   ├── geist/
-│   │   │   ├── Geist-Bold.woff2  Vendored, subsetted Geist Bold — landing-page headline only (D-20)
+│   │   │   ├── Geist-Bold.woff2  Vendored, subsetted Geist Bold — the display face, declared in site.css and used for h1 and h2 on every page (D-20)
 │   │   │   └── LICENSE.txt       SIL Open Font License 1.1 (mandatory to keep alongside a redistributed font)
 │   │   └── montserrat/
 │   │       ├── montserrat.css    @font-face declarations (weights 400–700, latin + latin-ext) — used only by the archived UI-prototype home studies
 │   │       ├── Montserrat-VF-latin.woff2      Vendored variable font, latin subset (Google Fonts v31)
 │   │       ├── Montserrat-VF-latin-ext.woff2  Vendored variable font, latin-ext subset
 │   │       └── LICENSE.txt       SIL Open Font License 1.1
+│   ├── media/              Web-sized copies of the thesis photos and renders, used by the landing page, the prototype records and the instruments index. Masters stay in the thesis folders
+│   │   ├── device/         The assembled instrument: outside and inside views, electronics bay, battery cradle, carriers, outdoor shot, validation-run frames
+│   │   ├── pump/           Pump module: proto-01 open and closed, v2.3 render, integrated carriers, gravimetric bench, disassembly
+│   │   ├── alignment/      Alignment module: concept sketch sheets, rack, motor holder, V2.1 homing photo, V3 chassis renders and annotated views
+│   │   ├── nozzle/         Nozzle module: needle assortment, carrier and holder renders, as-built and mounted views, lines over the rack
+│   │   ├── ui/             Operator interface: screen captures and the display holder, on the bench and in CAD
+│   │   ├── storage/        Reagent storage: cartridge, sleeve, needle holder
+│   │   ├── method/         Method shots: calibration rings, shrink bars, proto-01 circuit
+│   │   └── video/          H.264 web clips, muted, each beside its -poster.jpg: pump-head, droplet-slowmo, alignment-v2, pump-gravimetric. machine-dispensing.mp4 is a reserved slot, that clip is not filmed yet
 │   └── gsap/
 │       └── gsap.min.js     Vendored GSAP core, no plugins, no CDN — landing-page hero motif sync only (D-01/D-03 exception)
 ├── decks/
@@ -36,6 +48,7 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │       ├── SPEC.md             Deck spec — runtime structure, embedded tools, assumptions
 │       └── assets/             Local deck assets (e.g., screenshots of external apps)
 ├── tools/
+│   ├── index.html          Instruments, the plain index of every tool and record, grouped Pump, Electronics, Interface, Method, Records. Works with JavaScript off; the Instruments panel in the nav renders the same list from site-nav.js
 │   ├── rotor-solver/
 │   │   ├── index.html      Peristaltic Rotor Geometry Solver
 │   │   └── SPEC.md         Tool spec — inputs, outputs, formulas, constants, assumptions
@@ -73,7 +86,7 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │       ├── SPEC.md         Tool spec — the address contract, artifact table with frozen dates, verbatim rule, the two permitted mechanical edits (vendored Montserrat, back-links), preview technique
 │       └── rounds/         The five design-record HTML artifacts, copied verbatim — DO NOT EDIT (dated thesis evidence; see SPEC.md)
 ├── prototypes/
-│   ├── index.html              Prototype Design Space — journey index only, no detail views. Two module threads (pump = orange, alignment = violet), each with its own S-curve, node set, accent (--t-* properties) and IntersectionObserver. Cards link out to the subpages
+│   ├── index.html              Prototype Design Space — journey index only, no detail views. Three module threads (pump = orange, alignment = violet, nozzle = teal-blue), each with its own curve, node set, accent (--t-* properties) and IntersectionObserver, converging into one wide Integration node. Cards link out to the records
 │   ├── SPEC.md                 Tool spec — thread model, subpage contract, animation technique, prototype registry
 │   ├── PROTOTYPES.md           Shallow prototype registry (scan before opening deep PROTOTYPE.md)
 │   ├── REQUIREMENTS-CRITERIA.md  Device requirements (binary) + weighted criteria — canonical concept-evaluation table
@@ -98,7 +111,12 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │   │   ├── index.html          Alignment module subpage (violet, .proto-page--align) — V2 stage + V2.1 homing, written from PROTOTYPE.md
 │   │   ├── PROTOTYPE.md        Alignment module deep detail — V2 rack-indexing stage, V2.1 bench-validated homing, open gaps
 │   │   ├── AlignmentModuelHomingV2.1.png  V2.1 bench photo — hero image of the subpage
-│   │   └── Alignment_Module_V2.mp4        V2 in motion, ~36 MB — deliberately NOT linked from any page; needs re-encoding first
+│   │   ├── Alignment_Module_V2.mp4        V2 in motion, ~36 MB — deliberately NOT linked from any page; the web copy lives at assets/media/video/alignment-v2.mp4
+│   │   └── v3-two-axis-chassis/
+│   │       └── index.html      V3 subpage, the two-axis chassis: input queue, dispensing lane, output tray. Written from the V3 section appended to the module PROTOTYPE.md; no PROTOTYPE.md of its own
+│   ├── Prototype-3-Nozzle-Module/    Detail lives at MODULE ROOT, like the alignment module
+│   │   ├── index.html          Nozzle module subpage (teal-blue thread): six-needle carrier, vibration release, the droplet-release clip at #droplet-video
+│   │   └── PROTOTYPE.md        Nozzle module deep detail: inherited concept, rebuild, integration on the chassis, forty-tube validation, open gaps
 │   └── System-Architecture/
 │       ├── ARCHITECTURE.md         Fixed components, open questions, driver-vs-MCU verdict — trimmed to pointers into the tool's #theory
 │       ├── PUMP-CONTROL-CONCEPTS.md  Comms-layer reasoning — trimmed to pointers into the tool's #theory
@@ -113,6 +131,7 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 │           ├── 01-CONTEXT.md        Phase implementation decisions
 │           └── 01-DISCUSSION-LOG.md Audit trail
 ├── openspec/               Empty — historical OpenSpec folder, kept for git history
+├── mocks/                  Working files from the Sept 2026 redesign, not served pages: three direction mocks (engineering sheet, cinematic product, industrial catalogue) and the tool-marks study. Safe to delete in a later cleanup
 ├── CLAUDE.md               This file — keep it updated
 ├── README.md               GitHub-facing project description and tool table
 └── ROADMAP.md              Shipped / planned / backlog tools (repo-level)
@@ -122,18 +141,22 @@ DTU master's thesis tools site. One-person project, static HTML/CSS/JS only — 
 
 ## Design system
 
-Dark glassmorphic theme. See `assets/style.css` for all tokens.
+Dark glassmorphic theme, restated in September 2026 as a calm showcase with water as the underlying metaphor. Base tokens live in `assets/style.css`; the frame tokens added by the redesign live in `assets/site.css`, which every page loads second.
 
-- **Background:** `#0a0a0c`
+- **Background:** `#0a0a0c` with the water wash. `site.css` restyles the three `.bg-blobs` elements that every page already carried into one slow wash: a warm orange radial at the top left, a red radial at the bottom right, and a deep blue undertone (`--cool: #14203f`) sitting low and off centre. Blurred 120px, drifting over 44 to 52 s, frozen under `prefers-reduced-motion`. The blue is background only, never on text or on a control
 - **Accent:** `#ff6b2b` (orange) → `#e83535` (red)
 - **Glass cards:** `rgba(255,255,255,0.04)` background, `backdrop-filter: blur(24px)`, orange border
 - **Text:** `#f0ece8` primary · `#7a7068` muted
-- **Font:** system-ui sans-serif stack (no CDN fonts) for body text everywhere. The landing page (`index.html`) only additionally vendors **Geist Bold** (self-hosted `@font-face`, subsetted, SIL OFL 1.1) for its `.site-title` headline — body text on the landing page stays `system-ui` like every other page.
+- **Font:** system-ui sans-serif stack (no CDN fonts) for body text on every page. Display type is **Geist Bold**, self-hosted and subsetted (SIL OFL 1.1), declared once in `assets/site.css` as `--display` and used for h1 and h2 on every page, not only the landing page. Numbers and callout labels use the `--mono` stack, tabular. Body text stays `system-ui` everywhere.
+- **Shared frame:** every page loads `assets/style.css`, then `assets/site.css`, then `assets/site-nav.js` in the head with no defer, and carries the same markup: the three-element `.bg-blobs` wash, a sticky 64px glass nav with `data-root` set to the relative path back to the repo root, the `#instr-panel` anchor and the shared footer. `assets/FRAME-SNIPPET.html` holds that markup at each folder depth plus the rules that go with it. Page-specific CSS and JS still stay inline in the page.
+- **Navigation:** the **Instruments panel** in the nav is the site tool navigation. `assets/site-nav.js` owns the single tools list and renders the panel from it, grouped Pump, Electronics, Interface, Method and Records, one 28px tool mark and one line of purpose per row. `tools/index.html` is the same list as a plain page that works with JavaScript off. The old per page `← All tools` bar is retired.
+- **Radius scale:** `--r-lg: 28px` for media frames and large panels, `--r-md: 18px` for cards and tiles, `--r-sm: 10px` for inputs and chips, `--r-pill` for buttons and pills. Nothing sharp on the landing page, the prototypes river or the instruments index; tool pages keep their own inner components as they are.
+- **Motion tokens:** one easing curve everywhere, `--ease: cubic-bezier(.22,.68,0,1)`, with `--dur: 480ms` for reveals and `--dur-fast: 220ms` for hover. `.reveal` blocks fade in once with a 14px lift through the IntersectionObserver in `site-nav.js`. Videos are muted, carry a poster and play only while in view. Everything is gated by `prefers-reduced-motion`.
 - **Animations:** `fade-up` entrance with staggered `--delay`, hover lift + glow on cards. The landing page's hero motif additionally uses locally-vendored **GSAP core** (`assets/gsap/gsap.min.js`, no plugins, no CDN) to drive one synchronized animation timeline (rotor rotation + liquid-slug highlight) — a D-01/D-03 exception approved specifically for that motif; every other page's motion stays hand-built CSS/SVG.
 
-- **Per-thread accent (prototype pages only):** the Prototype Design Space journey carries **two accent families** — the pump thread stays orange → red, the alignment thread is violet → indigo-blue (`#9b7fe0` → `#5a8fd8`, already proven on `tools/pump-testing/`). This is **scoped to those pages** and does **not** change the global accent: threads set `--t-*` properties on the thread wrapper, prototype subpages set `--p-*` properties on `.proto-page` (with `.proto-page--align` for violet). Never override the global `--accent` for this — the nav, the background blobs and every other page depend on it staying orange. Note `--glass-border` is itself orange-tinted, so a card that only swaps `--accent` still reads orange at its border.
+- **Per-thread accent (prototype pages only):** the Prototype Design Space river carries **three accent families**, one per module thread: pump orange to red (`#ff6b2b` to `#e83535`), alignment violet to indigo-blue (`#9b7fe0` to `#5a8fd8`, also used on `tools/pump-testing/`), nozzle teal to blue (`#4fb3c8` to `#3a7bd5`). This is **scoped to those pages** and does **not** change the global accent: threads set `--t-*` properties on the thread wrapper, prototype subpages set `--p-*` properties on `.proto-page` (`.proto-page--align` for violet, `.proto-page--nozzle` for teal-blue). Never override the global `--accent` for this: the nav, the background wash and every other page depend on it staying orange. Note `--glass-border` is itself orange-tinted, so a card that only swaps `--accent` still reads orange at its border. The Integration node where the three threads meet keeps the global orange, because it is the whole machine.
 
-Each tool page links back to `../../index.html` via a `← All tools` nav bar and shares the blobs + animate-in pattern from the landing page.
+Every page joins the shared frame instead of rolling its own header: the sticky nav with the Instruments panel carries the way back to the landing page and out to any tool, the background wash and the footer are the same everywhere, and the tool calculators and content sit untouched inside it.
 
 `tools/pump-testing/` is a document-first, no-calculator (D-01) exception to the "enter your parameters and get answers" tool pattern: a citable, two-layer protocol page — top layer the market-grade dispensing-accuracy qualification (deep ISO 23783-2 gravimetric + ISO 8655 pipette-equivalence core, lighter go-to-market map, D-03), bottom layer the actual proto-02 test protocol and its justified deviations from the ideal. No interactive calculator or planner is built for this tool.
 
@@ -176,7 +199,15 @@ tools/<tool-name>/
 
 **Rules:**
 - Tool-specific constants and formulas live in `SPEC.md` and inline in the tool's `<script>` — **not** in shared files
-- The shared resources between pages are `assets/style.css`, the presentation deck runtime (`assets/deck.css`, `assets/deck.js` — a sanctioned D-01 exception for reuse across one-shot decks), `assets/prototype-page.css` (shared visual system for the prototype subpages — sanctioned on exactly the deck-runtime precedent: three subpages sharing one system, so the CSS lives once rather than being copied three times), and `assets/fonts/` (vendored web fonts, precedent: `assets/fonts/geist/`) and `assets/gsap/gsap.min.js` (vendored GSAP core, referenced only by the landing page's hero motif, D-01/D-03 exception). `assets/fonts/` is a sanctioned shared-asset location going forward — future vendored fonts belong there, not in a tool-local folder
+- The sanctioned shared files, and only these, are:
+  - `assets/style.css`, the base stylesheet every page imports
+  - `assets/site.css` and `assets/site-nav.js`, the site frame every page loads after it (tokens, display face, background wash, nav, Instruments panel, footer, reveal helper, tool marks), documented by `assets/FRAME-SNIPPET.html`. Same exception class as the deck runtime: one frame shared by every page beats the same header copied into twenty files
+  - the presentation deck runtime, `assets/deck.css` and `assets/deck.js`, a sanctioned D-01 exception for reuse across one-shot decks
+  - `assets/prototype-page.css`, the shared visual system for the prototype subpages, sanctioned on exactly the deck-runtime precedent: several subpages share one system, so the CSS lives once rather than being copied per page
+  - `assets/fonts/`, vendored web fonts (precedent: `assets/fonts/geist/`). This is the shared-asset location going forward; future vendored fonts belong there, not in a tool-local folder
+  - `assets/gsap/gsap.min.js`, vendored GSAP core, referenced only by the landing page hero motif (D-01/D-03 exception)
+  - `assets/media/`, the web-sized photos, renders and clips shared by the landing page, the prototype records and the instruments index
+- Everything else stays inline in the page that uses it
 - `SPEC.md` is the canonical reference; `.planning/phases/` context files point to it
 - Keep `SPEC.md` in sync when formulas or constants change
 
@@ -186,8 +217,9 @@ tools/<tool-name>/
 
 - No CDN-only dependencies — any external resource needs a local fallback
 - No horizontal scroll on any page — table columns must wrap headers before adding scroll
-- All calculation logic lives in inline `<script>` tags in the tool's `index.html` (except for the deck runtime exception)
-- Tool-specific styles go in a `<style>` block inside the tool's HTML; shared styles go in `assets/style.css` and `assets/deck.css`
+- All calculation logic lives in inline `<script>` tags in the tool's `index.html` (the shared exceptions are the deck runtime and `assets/site-nav.js`, which only renders the frame)
+- Tool-specific styles go in a `<style>` block inside the tool's HTML; shared styles go in `assets/style.css`, `assets/site.css` and `assets/deck.css`
+- Every new page joins the shared frame by pasting the markup from `assets/FRAME-SNIPPET.html` at the right folder depth, and sets `data-root` on the nav accordingly
 
 ---
 

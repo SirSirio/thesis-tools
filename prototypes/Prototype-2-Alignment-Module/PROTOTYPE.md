@@ -2,9 +2,9 @@
 id: align-01
 module: Prototype-2-Alignment-Module
 title: Alignment Module — sample-rack indexing stage
-status: v2.1-homing-validated-single-axis
+status: v3-two-axis-chassis-built-and-run
 created: 2026-06-25
-updated: 2026-07-31
+updated: 2026-09-18
 ---
 
 # Alignment Module
@@ -26,7 +26,7 @@ moves the samples.
 |---------|-------|-------|
 | 🟩 **V2** | **BUILT ✅** — single rack, rack-and-pinion stage, gravity-protected layout. Indexes reliably. | §1–§4 |
 | 🟩 **V2.1** | **BUILT + BENCH-VALIDATED ✅ (2026-07-31)** — homing microswitch added, three-pass homing, repeatable zero measured at **≤ 0.03 mm**, 132 mm home in **22 s**. Axis 1 only. | §5–§8 |
-| ⬜ **V3** | **NOT STARTED** — mechanical stroke redesign (>170 mm), second axis, rack queueing. | §9, §10 |
+| **V3** | **BUILT, run on the assembled instrument (thesis chapter 12)**: two-axis chassis about 500 mm long in three printed sections, 309 mm active stroke, four-rack input queue, motorless fishbone ejection, 40-tube unattended batch. Supersedes the "not started" and "pending" remarks below. | §13 to §22 |
 
 ---
 
@@ -434,3 +434,273 @@ taken from `hardware.md` and the bench session, not from the ideal design.
   ⚠ ~36 MB — needs re-encoding before it can be served on a web page.
 
 *Design iterations will continue to be documented here.*
+
+---
+
+# V3, the two-axis chassis
+
+> Everything from here on concerns **V3**, the final build of this module as
+> described in the thesis (chapter 7 section 7.4, chapter 11 section 11.6,
+> chapter 12 sections 12.3 and 12.4, and the bench table in Appendix L).
+> Sections 1 to 12 above are the V2 and V2.1 record and are left as written;
+> where they say V3 is "not started" or "pending", this part supersedes them.
+> The V3 page lives at `v3-two-axis-chassis/index.html`; the V2 and V2.1 page
+> stays at `index.html`.
+
+---
+
+## 13. Concept
+
+V2 and V2.1 proved single-axis indexing of one eight-tube rack. An unattended
+diagnostic protocol needs the machine to work through several racks with nobody
+swapping them between runs, so V3 adds a **second, transverse axis** and two
+**queuing trays** flanking the dispensing lane (thesis 7.4). The module grows into
+a platform roughly **500 mm** long that sets the physical envelope of the whole
+instrument and becomes the **structural chassis** the other subsystems mount to
+(7.4, 7.4.4).
+
+The workflow is a **U-shaped path** (7.4.1):
+
+1. Racks are loaded into the **input queue** on the left.
+2. **Axis 2** advances the queue and transfers the leading rack into the
+   **dispensing lane** at the start of each cycle.
+3. **Axis 1** indexes that rack left to right under the nozzle window in
+   **22 mm** steps until every tube has passed beneath it.
+4. At the right end of the stroke a **passive cam** ejects the finished rack
+   diagonally into the **output tray**, where completed racks accumulate for
+   retrieval.
+
+The enclosed central compartment between the two trays is the **electronics
+bay**: an open-topped housing with a removable front panel that holds the
+microcontroller, the motor driver boards and the power distribution wiring
+(7.4.1, 11.6).
+
+---
+
+## 14. What changed from V2.1
+
+| | V2.1 | V3 | Thesis |
+|---|---|---|---|
+| Axes | One, longitudinal | Two: axis 1 longitudinal indexing, axis 2 transverse queue feed | 7.4.1 |
+| Usable stroke on axis 1 | ~140 mm, six index moves, short of the 154 mm the eight-position pattern needs (the one unmet criterion in section 2) | **309 mm** active stroke: complete eight-position indexing plus the ejection stroke | 7.3.3, 7.4.1 |
+| Racks per run | One, placed by hand | **Five** (four queued, one pre-loaded on the lane), **40 tubes** | 7.4.1 |
+| Rack hand-off | Manual | Axis 2 feeds in; a motorless fishbone cam ejects out | 7.4.1, 7.4.2 |
+| Chassis | One printed rail and carriage | Three dovetail-keyed printed sections, about 500 mm overall, with the electronics bay between the trays | 7.4.3 |
+| Homing | One microswitch, three-pass sequence | The same switch, the same normally-closed fail-safe loop and the same three-pass sequence, on each axis | 7.4.1 |
+| Drive | 28BYJ-48 through a pinion of 12.80 mm pitch diameter | The same motor on both axes, **16-tooth** spur pinion, 3D-printed involute gear rack | 7.4.1 |
+| Role in the instrument | Bench stage | Structural foundation: dovetail sockets for the pump and storage modules, a reinforced boss for the nozzle holder, a ridge that locates the display holder | 7.4.4 |
+
+What did **not** change: the endstop wiring and the three-pass homing are the
+V2.1 ones (7.4.1), and the control path in section 6 was laid out for two axes
+from the start (four coil lines plus one endstop input per axis on the
+expander). V3 is a mechanical scale-up around a validated drive, not a new
+drive.
+
+---
+
+## 15. Axis 1 and axis 2
+
+Both axes use **identical drive components**: a 28BYJ-48 geared stepper, a
+16-tooth spur pinion and a 3D-printed involute gear rack. Only the **pushers**
+differ, to match what each one has to push (7.4.1).
+
+| | Axis 1 | Axis 2 |
+|---|---|---|
+| Direction | Longitudinal, along the dispensing lane | Transverse, through the input tray |
+| Job | Index the active rack under the nozzles in 22 mm steps, then drive the ejection stroke | Advance the whole queue of waiting racks and hand the leading one into the lane |
+| Pusher | Extends **downward** from an overhead gear rack mounted along the rear wall to contact the back face of the active rack | Spans the **full width** of the input tray on **two parallel legs**, so the entire queue moves at once |
+| Stroke | 309 mm active | Not stated in the thesis |
+| Endstop | Own microswitch, normally-closed fail-safe loop, three-pass homing | Same |
+| Motor mount | Standalone bracket, aligned against the assembled rack in situ | Same |
+
+**Axis 2 pusher redesign (7.4.3).** In the first full-scale build the long
+dual-span arms of the queue pusher showed minor torsional flex under the load of
+four full racks and absorbed drive displacement. The second build enlarged the
+chamfer where the toothed arm meets the cross bar, a small one in the first
+build and considerably deeper in the second, so the corner the load turns
+through is braced and the load reaches the queue directly.
+
+**Two decisions moved precision from CAD tolerance to the bench (7.4.3).** The
+motor mounts are independent brackets rather than chassis features, so each
+motor can be positioned against the assembled gear rack in situ for correct mesh
+and minimal backlash. The microswitch seats are flat locating pads with no pilot
+holes; the screw holes are drilled at final calibration.
+
+**Vertical clearance (7.4.1).** The height of every side wall is set by the
+tallest moving obstacle: a rack carrying open tubes with their caps standing.
+That envelope is what the lid-fouling failure mode in section 19 escapes from.
+
+---
+
+## 16. The fishbone ejector (7.4.2)
+
+When a rack finishes its pass at the right end of the lane it must be cleared
+sideways into the output tray to make room for the next one. Three constraints
+governed the mechanism:
+
+1. **No auxiliary actuator.** Ejection had to be powered by the existing travel
+   of axis 1, to keep parts count and controller outputs down.
+2. **Zero stored elastic energy.** A spring-loaded kicker releases at an
+   uncontrolled speed above open sample tubes: agitation and aerosol risk.
+3. **Cleanability.** No pivots, hinges or slide bushings, which are particulate
+   traps and fluid ingress paths.
+
+The answer is a **passive fishbone cam track**. Two **angled ribs** protrude from
+the underside of every sample rack (they were added to the rack in its final
+iteration, 7.2), and two matching **angled grooves** are recessed into the rail
+floor at the ejection station. When the rack completes position 8 the ribs line
+up with the grooves; one more **22 mm** stroke of axis 1 forces the ribs along
+the groove walls and turns longitudinal pusher travel into a smooth diagonal
+slide that puts the rack in the output tray, which sits **1 mm below** the main
+lane. The geometry is moulded into the structural floor and the rack body, so
+there are no moving parts, springs or pivots.
+
+Two features make the cam track reliably:
+
+- The ribs are **elongated**, not cylindrical, giving line contact along the
+  groove wall; that constrains yaw so the rack cannot cock or bind in the lane.
+- The two ribs have **asymmetric widths**: the wider trailing rib bridges the
+  narrower leading groove instead of dropping into it, so the rack cannot start
+  ejecting during an intermediate dispensing step.
+
+Completed racks accumulate passively. Each newly ejected rack pushes the earlier
+ones forward across the low-friction floor and squares the batch against the
+outer corner wall for retrieval at the end of the run. Active alternatives
+(pivoting push-arms, motorised cross-shuttles, spring-loaded flippers) were
+rejected at concept screening (Appendix L).
+
+---
+
+## 17. Chassis manufacture (7.4.3)
+
+- **One body, three sections.** The 500 mm chassis was modelled as a single CAD
+  body and split into **three** sections to fit a desktop printer. Three rather
+  than two so that a change to one groove or wall reprints one third. The two
+  parting planes coincide with the outer walls of the electronics bay and cross a
+  plain baseline that carries no grooves, dispensing windows or retaining sills.
+- **Joining.** Interlocking **dovetail keys** align the sections; **M3** screws
+  driven from the rear and bottom faces clamp them; flat reinforcement plates
+  bridge each seam (one at the front, two at the rear) against bending.
+- **Underside.** Recessed wiring ducts run to a central port in the electronics
+  bay; dedicated pockets seat the two homing microswitches; two carrying handles
+  are recessed into the outer end walls for two-handed transport; a row of
+  downward-opening dovetail sockets along the rear exterior wall takes the pump
+  and reagent storage modules from above without external fasteners (7.4.4).
+- **Print time.** About **8 hours per section**, which limited the prototyping
+  cycle: only **two** full-scale build iterations were carried out. Both pushers
+  were printed in two parts and joined at dovetail interfaces by localised
+  thermal welding.
+- **Markings.** Operator markings sit **on** the surface, never engraved: a letter
+  cut into the deck is a crevice. They name the input queue, the rack lane and
+  the output tray, and number the five rack slots, slot 1 on the lane and slots
+  2 to 5 back along the input queue, so an operator knows which slot fills first
+  and in what order the racks are drawn. On the prototype they are drawn in
+  **pencil**, which lifts with the same wipe that cleans the deck; a production
+  chassis would carry the same scheme printed or painted.
+
+---
+
+## 18. Capacity and the batch run
+
+A standard batch is **five racks, 40 tubes**: four waiting in the input queue
+and one pre-loaded directly on the lane, which buys capacity without extra tray
+depth. The operator sets the number of racks and the tubes per rack on the
+touchscreen (7.4.1).
+
+On the assembled instrument (11.6) the chassis is the anchor: input queue left,
+output tray right, the two pump and storage carriers on the rear wall, the
+nozzle holder above the lane, the touchscreen at centre front on the electronics
+bay, the battery at front left. The assembled machine measures **50 cm wide,
+35 cm deep and 18 cm high**; its mass has not been weighed and is estimated at
+about **4 kg** with four racks loaded.
+
+Run sequence (11.6): load racks into the input queue, select recipes and assign
+them to tube positions, pre-run reagent-level check, home the axes if not
+already referenced, axis 2 draws the first rack onto the lane, axis 1 indexes
+each tube under the nozzles, the pump delivers and a vibration burst detaches
+the droplet, the finished rack is ejected to the output tray and the next one
+drawn in.
+
+---
+
+## 19. Validation results that concern alignment
+
+| Check | Result | Thesis |
+|---|---|---|
+| Full batch, unattended | **Five racks, 40 tubes**, two-reagent recipe (100 µL and 75 µL), run from start to finish with no operator help, on the bench DC supply | 12.3, 12.4 |
+| Placement | Across the 40 tubes the droplets hit the tube openings within the **5 mm** landing tolerance: **all 40 tubes hit** | 12.3 |
+| Off-target | **Three droplets** showed partial wetting on the rack deck or lane; no dye reached the bench or the operator | 12.3, 12.5 |
+| Volume across racks | Tubes lifted from the first and the last rack held visually comparable volumes | 12.3 |
+| Axis speed | Both linear axes were **slowed** so the steppers had the strength to push the loaded five-rack magazine without stalling; a small delay per cycle | 12.4 |
+| Battery run | The 12 V tool battery carried **two full racks (16 samples)**; then, as it drained, running both pumps at once stalled them and the run had to stop because the firmware cannot run one pump at a time. A power limit, not an alignment failure | 12.4 |
+| Qualification on the two-axis chassis | The multi-pass bench protocol of section 8 was **repeated on the assembled chassis** under integrated firmware; both axes gave reliable queue feeding, precise indexing and automated ejection across repeated full batch sequences. **No numeric V3 results are published**; the figures on record remain the V2.1 bench numbers of 31 July 2026 | 7.4.1, 7.3.3, Appendix L |
+| Known failure mode: lids | A lid pushed flat to **180°** projects sideways and reaches the **45°** chamfered wall beside the lane. The friction cannot be sensed on an open-loop axis: the motor completes its steps, the rack lags, the firmware believes the position was reached, and the dose lands beside the tube. **Observed on the assembled instrument.** A lid folded back to about **135°** stands clear. Operating instruction: fold every cap to 135°, avoid lateral cap overlap, keep rack clearance | 7.4.1, 12.3 |
+
+The bench repeatability figure (no worse than ~0.03 mm, section 8) bounds the
+**drive, not the rack**: it says how faithfully the carriage follows its step
+count when nothing obstructs it. External friction on the rack leaves the count
+intact while the rack falls short (7.3.3).
+
+---
+
+## 20. Open gaps
+
+1. **Lid fouling remedies are not built.** Two are named (7.4.1): reshape the wall
+   profile, which is chamfered at 45° on the built chassis, and a firmware check
+   that compares the step count on the return home against the commanded outward
+   travel. The second is the section 9 derailment idea, still untested.
+2. **No V3-specific numbers.** Repeatability, return-to-zero and timing were not
+   re-measured and published for either axis on the two-axis chassis; axis 2
+   still has no bench number of its own. Its stroke is not stated either.
+3. **Battery batches above 16 samples** need one-pump-at-a-time firmware, and the
+   machine has no battery monitor or low-battery lockout (12.4).
+4. **Two full-scale builds only.** The axis-2 pusher redesign is proven by the
+   batch runs, not by a dedicated flex measurement.
+5. **Mass is an estimate**, about 4 kg, not a weighed value (11.6).
+6. **Production items**: automatic cap opening removes the manual cap handling the
+   prototype depends on (12.3); printed or painted markings (7.4.3); sliding
+   labyrinth covers for the motors and an enclosure for the whole machine (7.3.2,
+   11.6).
+7. **The V2.1 verification debt in section 9 is still open**: the travel-budget
+   fault has not fired on hardware, coil resistance and rail voltage are not
+   metered, the switch release distance is not measured.
+
+---
+
+## 21. Version log addendum
+
+- **V3 (two full-scale builds; run on the assembled instrument, thesis chapter
+  12)**: two-axis chassis about 500 mm long in three dovetail-keyed printed
+  sections, 309 mm active stroke on axis 1, transverse axis 2 feeding a
+  four-rack input queue, motorless fishbone-cam ejection into an output tray,
+  electronics bay between the trays, dovetail sockets and a nozzle boss that make
+  the chassis the instrument's structural foundation. Closes the stroke shortfall
+  that was the only unmet criterion of V2.1. Validated by an unattended
+  five-rack, 40-tube batch with every tube hit and three droplets partly on the
+  rack; one known failure mode, lost steps when a flat lid rubs the lane wall.
+  → §13 to §20
+
+---
+
+## 22. V3 sources and media
+
+| What | Where |
+|------|-------|
+| Concept, axes, queuing, capacity, lid fouling | Thesis chapter 7, section 7.4.1 |
+| Fishbone ejector | Thesis 7.4.2 |
+| Three-section chassis, brackets, switch seats, markings | Thesis 7.4.3 |
+| Dovetail sockets, nozzle boss | Thesis 7.4.4 |
+| The integrated prototype, envelope, run sequence | Thesis 11.6 |
+| 40-tube run, placement, lid failure mode | Thesis 12.3 |
+| Unattended run, slowed axes, battery run | Thesis 12.4 |
+| Bench qualification table (V2.1 figures that V3 inherits) | Thesis Appendix L, bench qualification of the indexing stage |
+
+Media for the V3 page, all under `assets/media/alignment/` at the repo root:
+`v3-iso.png`, `v3-top.png`, `v3-bottom.png`, `v3-top-annotated.png`,
+`v3-bottom-annotated.png`, `rack.png`, `pusher-axis-1.png`, `pusher-axis-2.png`,
+`v3-markings.jpg`, `v3-left-end.jpg`, `lid-fouling.jpg`; the two batch-run
+photographs `validation-start.jpg` and `validation-done.jpg` under
+`assets/media/device/`. The V2 clip now exists re-encoded at
+`assets/media/video/alignment-v2.mp4` (about 1.4 MB, with a poster), which
+supersedes the media note above. **No clip of V3 in motion exists**; the V3 page
+shows the V2 stage and says so.

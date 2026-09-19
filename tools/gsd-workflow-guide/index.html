@@ -3,21 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GSD Workflow Guide — Thesis Tools</title>
+  <title>GSD Workflow Guide · Thesis Tools</title>
   <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script src="../../assets/site-nav.js"></script>
   <style>
     /* ── Tool page layout ─────────────────────────── */
-    .tool-nav {
-      position: relative; z-index: 10;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 32px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.82rem;
-    }
-    .tool-nav a { color: var(--accent); font-weight: 500; letter-spacing: 0.02em; transition: letter-spacing 0.2s ease, color 0.2s ease; }
-    .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
-    .tool-nav span { color: var(--text-muted); }
-
     .tool-main {
       position: relative; z-index: 1;
       max-width: 900px; margin: 0 auto;
@@ -338,17 +329,22 @@
   <div class="blob blob-3"></div>
 </div>
 
-<nav class="tool-nav">
-  <a href="../../index.html">&larr; Resources</a>
-  <span>GSD Workflow Guide</span>
-</nav>
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
 
 <main class="tool-main">
 
   <header class="tool-header animate-in" style="--delay: 0s;">
     <h1>GSD Workflow Guide</h1>
-    <p><strong>GSD</strong> (&ldquo;Get Sh*t Done&rdquo;) is a lightweight spec-driven development system for AI coding agents. It structures work into a repeatable loop so the AI&rsquo;s context stays lean and output quality holds up as a project grows. This guide documents the exact workflow used to build every tool on this site &mdash; see <a href="https://github.com/open-gsd/gsd-core" target="_blank" rel="noopener">github.com/open-gsd/gsd-core</a> for the system itself.</p>
-    <p>Each tool was built using the discuss &rarr; plan &rarr; execute loop below &mdash; locking decisions before planning, planning before building, to keep AI context lean and work reviewable at every step.</p>
+    <p><strong>GSD</strong> (&ldquo;Get Sh*t Done&rdquo;) is a lightweight spec-driven development system for AI coding agents. It structures work into a repeatable loop so the AI&rsquo;s context stays lean and output quality holds up as a project grows. This guide documents the exact workflow used to build every tool on this site. See <a href="https://github.com/open-gsd/gsd-core" target="_blank" rel="noopener">github.com/open-gsd/gsd-core</a> for the system itself.</p>
+    <p>Each tool was built using the discuss &rarr; plan &rarr; execute loop below: locking decisions before planning, planning before building, to keep AI context lean and work reviewable at every step.</p>
     <p>Click any command node to see what it does and the exact slash command to type.</p>
   </header>
 
@@ -359,9 +355,9 @@
       <span class="section-chevron" aria-hidden="true">&#9656;</span>
     </button>
     <div class="section-body">
-      <p>Spec-driven development means <strong>locking decisions before writing plans, and locking plans before writing code</strong>. The core insight is that when implementation preferences aren&rsquo;t documented upfront, AI agents make conflicting assumptions downstream &mdash; inconsistent patterns, differing architectural choices, rework. GSD forces these conversations first.</p>
-      <p>Each phase starts with <code>/gsd:discuss-phase</code>, which captures decisions in a <code>CONTEXT.md</code> file &mdash; tech choices, file locations, error handling, layout direction &mdash; as numbered entries (D-01, D-02&hellip;). These decisions are <strong>binding</strong>: the planner won&rsquo;t approve plans that contradict them, and the verifier flags code that misses them.</p>
-      <p>Plans are then small enough to execute in a fresh 200k-token context, committed atomically. The result is work that is reviewable at every step &mdash; not one giant diff at the end.</p>
+      <p>Spec-driven development means <strong>locking decisions before writing plans, and locking plans before writing code</strong>. The core insight is that when implementation preferences aren&rsquo;t documented upfront, AI agents make conflicting assumptions downstream: inconsistent patterns, differing architectural choices, rework. GSD forces these conversations first.</p>
+      <p>Each phase starts with <code>/gsd:discuss-phase</code>, which captures decisions in a <code>CONTEXT.md</code> file, tech choices, file locations, error handling, layout direction, as numbered entries (D-01, D-02&hellip;). These decisions are <strong>binding</strong>: the planner won&rsquo;t approve plans that contradict them, and the verifier flags code that misses them.</p>
+      <p>Plans are then small enough to execute in a fresh 200k-token context, committed atomically. The result is work that is reviewable at every step, not one giant diff at the end.</p>
       <div class="sdd-diagram">
 
         <div class="sdd-phase" data-sdd="discuss">
@@ -372,7 +368,7 @@
           </div>
           <p class="sdd-brief">Lock decisions before planning</p>
           <div class="sdd-detail">
-            <p>Produces <code>CONTEXT.md</code> with numbered decisions (D-01, D-02&hellip;). These are binding contracts &mdash; the planner rejects plans that contradict them, and the verifier flags code that misses them. Decisions capture the <em>how</em> before any task is written.</p>
+            <p>Produces <code>CONTEXT.md</code> with numbered decisions (D-01, D-02&hellip;). These are binding contracts: the planner rejects plans that contradict them, and the verifier flags code that misses them. Decisions capture the <em>how</em> before any task is written.</p>
           </div>
         </div>
 
@@ -400,7 +396,7 @@
           </div>
           <p class="sdd-brief">Parallel waves, atomic commits</p>
           <div class="sdd-detail">
-            <p>Each plan runs in an isolated context with its own fresh token budget. Every task commits atomically. Work is reviewable at every step &mdash; not one giant diff at the end.</p>
+            <p>Each plan runs in an isolated context with its own fresh token budget. Every task commits atomically. Work is reviewable at every step, not one giant diff at the end.</p>
           </div>
         </div>
 
@@ -415,8 +411,8 @@
       <span class="section-chevron" aria-hidden="true">&#9656;</span>
     </button>
     <div class="section-body">
-      <p><strong>GSD</strong> &mdash; &ldquo;Get Sh*t Done&rdquo; &mdash; is a lightweight meta-prompting and spec-driven development system for AI coding agents such as Claude Code, GitHub Copilot, and Cursor. It wraps an AI agent in enough structure to keep its output reliable across a long, multi-step project.</p>
-      <p>The system is built on one insight: AI output quality rarely degrades from poor planning &mdash; it degrades from <strong>context rot</strong>, the accumulated noise that fills an agent&rsquo;s context window over a long session. GSD fights this by splitting work into a disciplined loop &mdash; <strong>discuss &rarr; plan &rarr; execute &rarr; verify &rarr; ship</strong> &mdash; and pushing the heavy lifting into fresh-context subagents, each starting with a clean ~200k-token budget. The main session stays lean while structured artifacts (<code>STATE.md</code>, <code>CONTEXT.md</code>, <code>PLAN.md</code>) preserve decisions and progress across context resets.</p>
+      <p><strong>GSD</strong>, &ldquo;Get Sh*t Done&rdquo;, is a lightweight meta-prompting and spec-driven development system for AI coding agents such as Claude Code, GitHub Copilot, and Cursor. It wraps an AI agent in enough structure to keep its output reliable across a long, multi-step project.</p>
+      <p>The system is built on one insight: AI output quality rarely degrades from poor planning. It degrades from <strong>context rot</strong>, the accumulated noise that fills an agent&rsquo;s context window over a long session. GSD fights this by splitting work into a disciplined loop, <strong>discuss &rarr; plan &rarr; execute &rarr; verify &rarr; ship</strong>, and pushing the heavy lifting into fresh-context subagents, each starting with a clean ~200k-token budget. The main session stays lean while structured artifacts (<code>STATE.md</code>, <code>CONTEXT.md</code>, <code>PLAN.md</code>) preserve decisions and progress across context resets.</p>
       <p>Source &amp; full documentation: <a href="https://github.com/open-gsd/gsd-core" target="_blank" rel="noopener">github.com/open-gsd/gsd-core</a>.</p>
     </div>
   </section>
@@ -430,11 +426,11 @@
     <div class="section-body">
       <div class="start-case">
         <p class="start-case-title">New project from scratch</p>
-        <p>Run <code>/gsd:new-project</code> first. It asks structured questions about your idea, spawns parallel research agents, extracts requirements, and produces an approval-gated roadmap &mdash; no code is written until you approve.</p>
+        <p>Run <code>/gsd:new-project</code> first. It asks structured questions about your idea, spawns parallel research agents, extracts requirements, and produces an approval-gated roadmap: no code is written until you approve.</p>
         <pre><code>/gsd:new-project
 # or, if you already have a PRD:
 /gsd:new-project --auto @prd.md</code></pre>
-        <p><code>--auto @doc.md</code> &mdash; Skip interactive questions; extract requirements from a provided document or PRD.</p>
+        <p><code>--auto @doc.md</code>: Skip interactive questions; extract requirements from a provided document or PRD.</p>
         <p>This creates <code>.planning/</code> with <code>PROJECT.md</code> (vision), <code>REQUIREMENTS.md</code> (scoped req IDs), and <code>ROADMAP.md</code> (phase breakdown). Then run the phase loop for each phase:</p>
         <pre><code>/gsd:discuss-phase 1     # lock implementation decisions → CONTEXT.md
 /gsd:plan-phase 1        # research + atomic plans + verify → PLAN.md files
@@ -446,7 +442,7 @@
         <pre><code>/gsd:map-codebase        # full analysis: stack, architecture, conventions
 # or faster:
 /gsd:map-codebase --fast # quick tech + architecture scan only</code></pre>
-        <p>Then run <code>/gsd:new-project</code> as normal &mdash; but now the questions focus on what you&rsquo;re <em>adding</em>, not what already exists. Alternatively, if you have existing ADRs or specs, ingest them directly:</p>
+        <p>Then run <code>/gsd:new-project</code> as normal, but now the questions focus on what you&rsquo;re <em>adding</em>, not what already exists. Alternatively, if you have existing ADRs or specs, ingest them directly:</p>
         <pre><code>/gsd:new-project
 # or ingest existing docs into .planning/:
 /gsd:ingest-docs</code></pre>
@@ -484,14 +480,14 @@
         </div>
         <p class="node-brief">Lock in implementation decisions before planning</p>
         <div class="node-detail">
-          <p>Asks open-ended questions about how to build the phase. Surfaces design details &mdash; layouts, API structures, error handling &mdash; to eliminate ambiguity before planning begins. Produces <code>CONTEXT.md</code>.</p>
+          <p>Asks open-ended questions about how to build the phase. Surfaces design details, layouts, API structures, error handling, to eliminate ambiguity before planning begins. Produces <code>CONTEXT.md</code>.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--auto</code> &mdash; Skip interactive questions; auto-extract decisions from context.</p>
-            <p><code>--analyze</code> &mdash; Analyze codebase assumptions before the discussion starts.</p>
-            <p><code>--power</code> &mdash; Deep-dive extended discussion with more probing questions.</p>
-            <p><code>--chain</code> &mdash; Auto-advance into plan-phase after discussion completes.</p>
-            <p><code>--batch</code> &mdash; Process multiple discussion topics in a single pass.</p>
+            <p><code>--auto</code>: Skip interactive questions; auto-extract decisions from context.</p>
+            <p><code>--analyze</code>: Analyze codebase assumptions before the discussion starts.</p>
+            <p><code>--power</code>: Deep-dive extended discussion with more probing questions.</p>
+            <p><code>--chain</code>: Auto-advance into plan-phase after discussion completes.</p>
+            <p><code>--batch</code>: Process multiple discussion topics in a single pass.</p>
           </div>
         </div>
       </div>
@@ -509,11 +505,11 @@
           <p>Spawns research agents, generates small task plans each executable in a fresh context, and verifies each plan achieves the phase goal. Produces <code>PLAN.md</code> files.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--skip-research</code> &mdash; Skip the research agent step; go straight to planning.</p>
-            <p><code>--research</code> &mdash; Force re-run research even if RESEARCH.md already exists.</p>
-            <p><code>--gaps</code> &mdash; Plan only for gap tasks flagged by verify-work.</p>
-            <p><code>--prd &lt;filepath&gt;</code> &mdash; Use a PRD file as context, skipping the discussion step.</p>
-            <p><code>--force</code> &mdash; Force replan even if the phase is already marked Complete.</p>
+            <p><code>--skip-research</code>: Skip the research agent step; go straight to planning.</p>
+            <p><code>--research</code>: Force re-run research even if RESEARCH.md already exists.</p>
+            <p><code>--gaps</code>: Plan only for gap tasks flagged by verify-work.</p>
+            <p><code>--prd &lt;filepath&gt;</code>: Use a PRD file as context, skipping the discussion step.</p>
+            <p><code>--force</code>: Force replan even if the phase is already marked Complete.</p>
           </div>
         </div>
       </div>
@@ -528,13 +524,13 @@
         </div>
         <p class="node-brief">Run plans in parallel waves with atomic commits</p>
         <div class="node-detail">
-          <p>Runs task plans in dependency-ordered waves, each in a 200k-token context. Commits atomically per task. Keeps the main context at 30&ndash;40% capacity.</p>
+          <p>Runs task plans in dependency-ordered waves, each in a 200k-token context. Commits atomically per task. Keeps the main context at 30-40% capacity.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--wave N</code> &mdash; Execute only a specific wave number.</p>
-            <p><code>--gaps-only</code> &mdash; Execute only gap tasks flagged by verify-work.</p>
-            <p><code>--cross-ai</code> &mdash; Force all plans through cross-AI execution.</p>
-            <p><code>--no-cross-ai</code> &mdash; Disable cross-AI execution for this run.</p>
+            <p><code>--wave N</code>: Execute only a specific wave number.</p>
+            <p><code>--gaps-only</code>: Execute only gap tasks flagged by verify-work.</p>
+            <p><code>--cross-ai</code>: Force all plans through cross-AI execution.</p>
+            <p><code>--no-cross-ai</code>: Disable cross-AI execution for this run.</p>
           </div>
         </div>
       </div>
@@ -568,10 +564,10 @@
           <p>Flags critical, warning, and info findings scoped to the phase diff.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--fix</code> &mdash; Auto-apply fixes after review completes.</p>
-            <p><code>--all</code> &mdash; Apply all findings, not only critical ones.</p>
-            <p><code>--files=f1,f2</code> &mdash; Review specific files instead of the phase diff.</p>
-            <p><code>--depth=quick|deep</code> &mdash; Control review depth (quick scan vs. cross-file analysis).</p>
+            <p><code>--fix</code>: Auto-apply fixes after review completes.</p>
+            <p><code>--all</code>: Apply all findings, not only critical ones.</p>
+            <p><code>--files=f1,f2</code>: Review specific files instead of the phase diff.</p>
+            <p><code>--depth=quick|deep</code>: Control review depth (quick scan vs. cross-file analysis).</p>
           </div>
         </div>
       </div>
@@ -590,7 +586,7 @@
           <p>Converts verified phase work into a pull request with summary, changes, requirements addressed, and verification status.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--draft</code> &mdash; Create as a draft PR.</p>
+            <p><code>--draft</code>: Create as a draft PR.</p>
           </div>
         </div>
       </div>
@@ -612,7 +608,7 @@
           <p>Auto-detects the next recommended command. Central hub for situational awareness between phases.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--next</code> &mdash; Immediately run the recommended next command.</p>
+            <p><code>--next</code>: Immediately run the recommended next command.</p>
           </div>
         </div>
       </div>
@@ -628,10 +624,10 @@
           <p>For small, well-scoped changes that don&rsquo;t warrant a full discuss&rarr;plan&rarr;execute cycle.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--discuss</code> &mdash; Add a lightweight discussion phase before planning.</p>
-            <p><code>--research</code> &mdash; Spawn a research agent before planning.</p>
-            <p><code>--validate</code> &mdash; Enable plan-checking and post-execution verification.</p>
-            <p><code>--full</code> &mdash; Enable the complete quality pipeline (discuss + research + validate).</p>
+            <p><code>--discuss</code>: Add a lightweight discussion phase before planning.</p>
+            <p><code>--research</code>: Spawn a research agent before planning.</p>
+            <p><code>--validate</code>: Enable plan-checking and post-execution verification.</p>
+            <p><code>--full</code>: Enable the complete quality pipeline (discuss + research + validate).</p>
           </div>
         </div>
       </div>
@@ -642,7 +638,7 @@
           <span class="node-cmd">/gsd:fast</span>
           <span class="node-toggle" aria-hidden="true">&#9656;</span>
         </div>
-        <p class="node-brief">Inline trivial task &mdash; no subagents, no overhead</p>
+        <p class="node-brief">Inline trivial task: no subagents, no overhead</p>
         <div class="node-detail">
           <p>Fastest path for truly trivial, one-step changes. No planning or subagent cost.</p>
         </div>
@@ -659,7 +655,7 @@
           <p>Runs multi-cycle debugging with persistent state across context resets.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--diagnose</code> &mdash; Analysis only; no fixes applied.</p>
+            <p><code>--diagnose</code>: Analysis only; no fixes applied.</p>
           </div>
         </div>
       </div>
@@ -672,7 +668,7 @@
         </div>
         <p class="node-brief">Think through an idea before committing to a plan</p>
         <div class="node-detail">
-          <p>Socratic ideation and idea routing &mdash; explores a rough idea through guided questions, then routes it to the right next step (a phase, a capture, or a spike). Use before there&rsquo;s enough clarity to discuss or plan.</p>
+          <p>Socratic ideation and idea routing: explores a rough idea through guided questions, then routes it to the right next step (a phase, a capture, or a spike). Use before there&rsquo;s enough clarity to discuss or plan.</p>
         </div>
       </div>
 
@@ -687,7 +683,7 @@
           <p>Routes ideas to the right destination without interrupting current work.</p>
           <div class="node-flags">
             <span class="flags-label">Flags</span>
-            <p><code>--backlog</code> &mdash; Park idea outside the active sequence.</p>
+            <p><code>--backlog</code>: Park idea outside the active sequence.</p>
           </div>
         </div>
       </div>
@@ -702,7 +698,7 @@
         </div>
         <p class="node-brief">Manage persistent context for cross-session work</p>
         <div class="node-detail">
-          <p>Maintains named context threads that survive across sessions and context resets &mdash; pick up long-running work without re-explaining where you left off.</p>
+          <p>Maintains named context threads that survive across sessions and context resets: pick up long-running work without re-explaining where you left off.</p>
         </div>
       </div>
 
@@ -714,7 +710,7 @@
         </div>
         <p class="node-brief">Mine a finished phase for decisions and lessons</p>
         <div class="node-detail">
-          <p>Extracts decisions, lessons, reusable patterns, and surprises from completed phase artifacts &mdash; turning what was learned during execution into durable project knowledge.</p>
+          <p>Extracts decisions, lessons, reusable patterns, and surprises from completed phase artifacts, turning what was learned during execution into durable project knowledge.</p>
         </div>
       </div>
 
@@ -723,6 +719,21 @@
   </div><!-- /.diagram-layout -->
 
 </main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
 
 <script>
   document.querySelectorAll('.flow-node, .util-node').forEach(node => {

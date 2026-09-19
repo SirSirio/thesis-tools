@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nozzle Module, six-needle dispensing array · Thesis Tools</title>
+  <meta name="description" content="Prototype 3, the nozzle module: six blunt dispensing needles seated on their moulded hubs, a metal eccentric mass for vibration release, and the tip-bore finding that decides whether a droplet forms at all." />
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <script src="../../assets/site-nav.js"></script>
+  <link rel="stylesheet" href="../../assets/prototype-page.css" />
+  <style>
+    /* Page-specific only. Everything else comes from prototype-page.css.
+       Third accent family: teal to blue, set here on the page rather than in the
+       shared sheet, mirroring how .proto-page--align swaps the same eight names. */
+    .proto-page--nozzle,
+    body:has(.proto-page--nozzle) {
+      --p-accent:      #4fb3c8;
+      --p-accent-2:    #3a7bd5;
+      --p-accent-soft: #9fdceb;
+      --p-glow:        rgba(79, 179, 200, 0.28);
+      --p-border:      rgba(79, 179, 200, 0.22);
+      --p-tint:        rgba(79, 179, 200, 0.12);
+      --p-fill:        rgba(79, 179, 200, 0.40);
+      --p-edge:        rgba(79, 179, 200, 0.55);
+    }
+
+    /* Regime markers in the tip table. Green, amber and red are literal on
+       purpose: on this page the accent is blue and would read as information. */
+    .flag { font-weight: 700; letter-spacing: 0.02em; }
+    .flag-good { color: #5fd08a; }
+    .flag-part { color: #ff9f43; }
+    .flag-bad  { color: #e83535; }
+    .flag-gap { color: var(--text-muted); border-bottom: 1px dashed rgba(255, 255, 255, 0.28); font-weight: 700; }
+
+    /* assets/style.css zeroes every margin, so a <p> after bare text in a
+       callout would butt straight against it. */
+    .callout > p { margin-top: 10px; }
+
+    /* Three-step sequence as a row of cards. */
+    .seq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0 8px; }
+    .seq-step { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--p-border); border-radius: 14px; padding: 16px 18px; }
+    .seq-n { display: inline-block; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--p-accent-soft); border: 1px solid var(--p-edge); background: var(--p-tint); border-radius: 999px; padding: 3px 10px; margin-bottom: 10px; }
+    .seq-step h4 { font-size: 0.98rem; margin-bottom: 6px; color: var(--text); }
+    .seq-step p { font-size: 0.86rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* Part dividers, same grouping device as the alignment page. */
+    .part-rule { margin: 64px 0 28px; padding-top: 26px; border-top: 1px solid var(--p-border); scroll-margin-top: 88px; }
+    .part-rule:first-of-type { margin-top: 40px; }
+    .part-tag { display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--p-accent-soft); border: 1px solid var(--p-edge); background: var(--p-tint); border-radius: 999px; padding: 4px 12px; margin-bottom: 12px; }
+    .part-title { font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: 8px; }
+    .part-note { font-size: 0.86rem; color: var(--text-muted); line-height: 1.6; max-width: 620px; }
+
+    /* Version log as a table: the thesis names stages, not numbered versions. */
+    .ver-table td:first-child { white-space: nowrap; }
+    .src { font-size: 0.78rem; color: var(--p-accent-soft); white-space: nowrap; }
+
+    @media (max-width: 760px) {
+      .seq { grid-template-columns: 1fr; }
+      .part-rule { margin-top: 48px; }
+      .part-title { font-size: 1.25rem; }
+      .ver-table td:first-child { white-space: normal; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-in { opacity: 1; transform: none; animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<main class="proto-page proto-page--nozzle">
+  <a class="proto-back" href="../index.html">&larr; Back to journey</a>
+
+  <header class="proto-page-header animate-in" style="--delay:0s">
+    <div class="proto-page-eyebrow">Prototype 3 &middot; Nozzle Module</div>
+    <h1 class="proto-page-title">Six needles on their hubs, and a shake that lets the droplet go</h1>
+    <div class="proto-status">
+      <span class="status-chip status-chip--tested">Rebuilt and working</span>
+      <span class="status-chip status-chip--tested">On the machine, validated over 40 tubes</span>
+      <span class="status-chip status-chip--warn">Steel tips scatter a few droplets</span>
+      <span class="status-chip status-chip--planned">Polymer tip on the same seat: next</span>
+    </div>
+    <p class="proto-page-summary">
+      The pump meters the volume; the nozzle module puts it in the tube. Six blunt dispensing needles
+      sit in a fixed line above the sample rail, one dedicated path per reagent. Every droplet has to
+      land within 5 mm of its target from under 5 cm, and a droplet that stays on the tip is a dose
+      that never arrived. The module was inherited inoperative and without a mount; the rebuild seats
+      each needle on its moulded hub, swaps the printed eccentric weight for metal, and holds the
+      carrier with elastic bands.
+    </p>
+    <p class="proto-page-meta">
+      Concept inherited from the companion thesis; rebuilt, integrated and system-tested in this one.
+      The thesis assigns no version numbers or build dates to the nozzle stages. Every number on this page
+      comes from <a class="tool-link" href="PROTOTYPE.md">PROTOTYPE.md</a>, which cites the thesis section for each.
+    </p>
+  </header>
+
+  <div class="proto-page-body">
+
+    <!-- Hero photograph and headline numbers -->
+    <section class="detail-block animate-in" id="sec-overview" style="--delay:0.08s">
+      <figure class="detail-figure">
+        <img src="../../assets/media/nozzle/mounted-front.jpg"
+             width="2000" height="1126" loading="eager" decoding="async"
+             alt="The white printed nozzle holder screwed to the chassis above the electronics bay. Two clear Luer-to-barb adapters with blue 22 G needle hubs sit in the left two of six keyed seats, short tan junction tubes lead up to the clear pump lines, the vibration motor sits in its cradle with three blue ceramic capacitors and a tape-wrapped eccentric mass on its shaft, and an elastic band passes over the carrier at the right." />
+        <figcaption>
+          The holder on the chassis above the electronics bay: two of its three screws visible, two channels
+          arriving at their Luer hubs, four empty keyed seats, the motor in its cradle with the tape-wrapped
+          eccentric mass and suppression capacitors, and the elastic retaining band at the right.
+        </figcaption>
+      </figure>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">6 &times; 22 mm</div>
+          <div class="stat-label">Needle positions and pitch, matching the rack. Two channels fitted on the prototype</div>
+        </div>
+        <div class="stat-card stat-good">
+          <div class="stat-value">5 mm</div>
+          <div class="stat-label">Landing radius required. Met over forty tubes on the assembled machine</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">0.41 mm</div>
+          <div class="stat-label">Smallest bore that forms a droplet (22 G). Below 0.26 mm the tip streams and there is nothing to release</div>
+        </div>
+        <div class="stat-card stat-warn">
+          <div class="stat-value">3 of 40</div>
+          <div class="stat-label">Droplets with partial wetting on the rack deck or lane during the validation run</div>
+        </div>
+        <div class="stat-card stat-good">
+          <div class="stat-value">5 &micro;L</div>
+          <div class="stat-label">Formed and released on the plastic pipette tip, the bottom of the specified range</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contents -->
+    <nav class="proto-toc animate-in" aria-label="Page contents" style="--delay:0.14s">
+      <div class="toc-title">Contents, click to jump</div>
+      <div class="toc-grid">
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">The module</div>
+          <a class="toc-link" href="#sec-purpose">What it does</a>
+          <a class="toc-link" href="#sec-handover">Hand-over and the second ideation</a>
+        </div>
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">How it works</div>
+          <a class="toc-link" href="#sec-seat">Hub seat</a>
+          <a class="toc-link" href="#sec-luer">Luer coupling</a>
+          <a class="toc-link" href="#sec-vibration">Vibration release</a>
+          <a class="toc-link" href="#sec-carrier">Carrier, holder, bands</a>
+        </div>
+        <div class="toc-group toc-group--pass">
+          <div class="toc-group-label">Evidence</div>
+          <a class="toc-link" href="#sec-regime">The tip regime</a>
+          <a class="toc-link" href="#sec-asbuilt">As-built numbers</a>
+          <a class="toc-link" href="#sec-machine">On the machine</a>
+        </div>
+        <div class="toc-group toc-group--fail">
+          <div class="toc-group-label">Open</div>
+          <a class="toc-link" href="#sec-gaps">Open gaps</a>
+        </div>
+        <div class="toc-group toc-group--accent">
+          <div class="toc-group-label">Record</div>
+          <a class="toc-link" href="#sec-versions">Version log</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- The module -->
+    <div class="part-rule" id="part-module">
+      <span class="part-tag">The module</span>
+      <div class="part-title">What this thing is for</div>
+      <p class="part-note">Placement, not metering. The pump decides how much; the nozzle decides where it
+        lands and whether it leaves the tip at all.</p>
+    </div>
+
+    <section class="detail-block" id="sec-purpose">
+      <h2 class="block-heading">What it does</h2>
+      <ul>
+        <li><strong>Delivers each reagent into the tube.</strong> Six needles, one per reagent line, in a
+          fixed line above the sample transport rail.</li>
+        <li><strong>Places the droplet.</strong> The requirement is geometric: every droplet lands within a
+          <strong>5 mm target radius</strong> when released from a dispensing height under <strong>5 cm</strong>.
+          Between tip and tube the droplet answers only to gravity, inertia and its own surface tension.</li>
+        <li><strong>Releases the droplet.</strong> A droplet that stays pinned to the tip is a fatal delivery
+          error the pump cannot compensate: the correctly metered volume never reaches the tube.</li>
+        <li><strong>Non-contact.</strong> The droplet crosses an air gap; the needle touches neither the tube
+          nor the liquid, which removes tube-to-tube carryover by design.</li>
+      </ul>
+      <div class="callout callout-note">
+        <span class="callout-label">Two conflicting jobs for one tip.</span>
+        Transport the liquid from the pump with zero residual dead volume, and cleanly let go of the pendant
+        droplet at the end. The blunt needle answers the first; the vibration burst answers the second.
+      </div>
+    </section>
+
+    <section class="detail-block" id="sec-handover">
+      <h2 class="block-heading">Hand-over and the second ideation</h2>
+      <p>
+        Marius Schiller conceptualised and prototyped the first version in the companion thesis: industrial
+        blunt dispensing needles (flat-ended stainless cannulas in moulded plastic hubs, sold across gauges at
+        consumable prices) plus an <strong>active vibration mechanism</strong>, a compact brushed DC motor with an
+        unbalanced shaft mass that shakes the array and gives the droplet downward momentum. He validated the
+        principle on a single needle carrying a pendant droplet. At hand-over the geometry was partly established
+        but the mechanism was inoperative: the printed eccentric mass gave too little imbalance to shed droplets,
+        and the assembly had no interface to the chassis.
+      </p>
+      <p>
+        <strong>The vibration-detachment concept was kept throughout.</strong> The CAD was not: the inherited
+        models were OpenSCAD, which exports polygon meshes only. Opened in Fusion 360 they were unmodifiable solids
+        with no sketches or editable dimensions, so the module was modelled from scratch from calliper and bench
+        measurements.
+      </p>
+      <h3 class="block-subheading">Two alternatives rejected before the rebuild</h3>
+      <table class="param-table">
+        <thead><tr><th>Concept</th><th>Why it was rejected</th></tr></thead>
+        <tbody>
+          <tr> <td><strong>Cantilever vibrating strip.</strong> Needles along a thin flexible strip fixed at one end, oscillated by an eccentric motor, like a flicked ruler. No sliding joints or guides.</td> <td>Kinematics. A cantilever deflects through an arc, not a straight line, so the tip picks up a lateral velocity and ejects droplets at unpredictable angles, violating the 5 mm landing radius.</td></tr>
+          <tr> <td><strong>Bare cannula direct insertion.</strong> Pull the steel cannula out of its hub and push it straight into the PVC pump tubing. No fittings, no wetted joints.</td> <td>Serviceability. A bare cannula is a fragile, slippery cylinder with no locating feature; it needs tool clamping and precise manual insertion, the opposite of toolless field operation.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- How it works -->
+    <div class="part-rule" id="part-how">
+      <span class="part-tag">How it works</span>
+      <div class="part-title">Seat, coupling, shake</div>
+      <p class="part-note">Three component trials on printed coupons retired the unknowns before the full
+        six-seat carrier was committed. Then the bench added the bands.</p>
+    </div>
+
+    <section class="detail-block" id="sec-seat">
+      <h2 class="block-heading">Hub seat: the needle locates on its moulded hub</h2>
+      <p>
+        The inherited design clamped each needle with a <strong>set screw bearing on the steel cannula in a
+        V-groove</strong>. Rigid, but every swap needed a tool, and over-tightening readily crushed the thin-walled
+        cannula, occluding the bore or bending the tip.
+      </p>
+      <figure class="detail-figure">
+        <img src="../../assets/media/nozzle/needle-assortment.jpg"
+             width="2000" height="620" loading="lazy" decoding="async"
+             alt="A row of blunt dispensing needles of different gauges, each with the same moulded plastic Luer hub and a different colour coding the gauge." />
+        <figcaption>The assortment the module was built around: the cannula bore changes with gauge, the moulded hub does not.</figcaption>
+      </figure>
+      <p>
+        The moulded plastic <strong>hub</strong> is the better locating feature. Across commercial assortments the hub
+        dimensions and Luer geometry are identical; only the cannula bore varies. A printed test coupon with a cavity
+        formed as the <strong>negative imprint of the hub</strong>, dimensioned from calliper measurements, accepted the
+        needle with an <strong>exact slip fit on the first print</strong>. The seat has a keyed slot matching the hub
+        ears from above and a cannula clearance bore from below.
+      </p>
+      <div class="callout callout-good">
+        <span class="callout-label">Passive kinematic constraint.</span>
+        No fasteners, no tools, no stress on the cannula. Any gauge in the assortment fits interchangeably, and a
+        needle swap is instantaneous.
+      </div>
+    </section>
+
+    <section class="detail-block" id="sec-luer">
+      <h2 class="block-heading">Luer coupling: one wetted fitting</h2>
+      <p>
+        Retention and fluidic connection converge on the same feature. The hub is at once the mounting seat and the
+        <strong>female Luer port</strong>. It takes a standard <strong>male Luer-to-barb adapter</strong>; a
+        <strong>short soft-walled junction tube</strong> joins the barb to the main PVC line that runs back through
+        the peristaltic pump to the reservoir.
+      </p>
+      <p>
+        This puts a single wetted fitting into the delivery line, unlike the unbroken tube path through the pump.
+        In exchange the joint is rugged and user-serviceable: an untrained operator disconnects and replaces it by hand.
+      </p>
+      <div class="callout callout-warn">
+        <span class="callout-label">Not fully specified in the thesis.</span>
+        Luer lock versus slip adapter, the junction-tube step-down sizing and the vendor part reference were left as
+        an open item in the text. They are not invented here.
+      </div>
+    </section>
+
+    <section class="detail-block" id="sec-vibration">
+      <h2 class="block-heading">Vibration release: a metal eccentric mass</h2>
+      <p>
+        The inherited prototype could not detach droplets because its eccentric mass was a <strong>small printed
+        plastic arm</strong>. On the bench it was replaced with metal: a <strong>compact permanent magnet taped to
+        the motor shaft, loaded with three steel nuts on the eccentric side</strong>. Metal is denser, and offsetting
+        the nuts lengthens the moment arm, so the unbalanced momentum is several times the printed weight's at the
+        same speed.
+      </p>
+      <table class="param-table">
+        <thead><tr><th>Element</th><th>As built</th></tr></thead>
+        <tbody>
+          <tr> <td><strong>Motor</strong></td> <td class="num">RD520PA, 3 V brushed DC</td></tr>
+          <tr> <td><strong>Supply</strong></td> <td>Instrument 5 V bus</td></tr>
+          <tr> <td><strong>Driver</strong></td> <td>IRF520 MOSFET, switched by the microcontroller</td></tr>
+          <tr> <td><strong>Duty cycle</strong></td> <td>Capped at <span class="num">about 60 %</span> in firmware, to prevent overheating</td></tr>
+          <tr> <td><strong>Noise suppression</strong></td> <td>Ceramic capacitors at the motor. The brushed motor's electromagnetic interference needed dedicated decoupling to protect the shared I<sup>2</sup>C bus</td></tr>
+        </tbody>
+      </table>
+
+      <div class="detail-media">
+        <video id="droplet-video" class="media-video"
+               src="../../assets/media/video/droplet-slowmo.mp4"
+               poster="../../assets/media/video/droplet-slowmo-poster.jpg"
+               muted loop playsinline preload="metadata"
+               aria-label="Slow-motion clip of a droplet leaving a dispensing tip"></video>
+        <p class="media-caption">A droplet leaving the tip, slowed down. Portrait clip, sound off; it plays only while in view.</p>
+      </div>
+
+      <h3 class="block-subheading">The dispensing sequence</h3>
+      <div class="seq">
+        <div class="seq-step">
+          <span class="seq-n">Step 1</span>
+          <h4>Fluid delivery</h4>
+          <p>The pump meters the target volume through the selected channel. Where the tip bore is wide enough, the
+            liquid accumulates into a pendant droplet held by surface tension.</p>
+        </div>
+        <div class="seq-step">
+          <span class="seq-n">Step 2</span>
+          <h4>Vibrational pulse</h4>
+          <p>The microcontroller energises the motor for a short burst. The rotating mass drives the carrier into
+            high-frequency vertical oscillation along its guide posts.</p>
+        </div>
+        <div class="seq-step">
+          <span class="seq-n">Step 3</span>
+          <h4>Inertial release</h4>
+          <p>Downward acceleration overcomes capillary pinning; the droplet leaves with vertical momentum into the tube.
+            The bands arrest overshoot without damping the stroke.</p>
+        </div>
+      </div>
+      <p class="table-note">
+        Step 3 is conditional on step 1. A tip that streams instead of dropping leaves the burst with nothing to
+        release, or a droplet too small to be detached.
+      </p>
+    </section>
+
+    <section class="detail-block" id="sec-carrier">
+      <h2 class="block-heading">Carrier, holder, and the retaining bands</h2>
+      <p>
+        The validated seat and drive were integrated into a two-part mechanism. The <strong>nozzle carrier</strong>
+        is a rigid travelling carriage: the motor cradle at one end and six hub seats in a line at the standard
+        <strong>22 mm pitch</strong>. The <strong>fixed holder</strong> is a stationary bracket that bolts to the rear
+        wall of the alignment-module chassis.
+      </p>
+      <div class="figure-grid">
+        <figure>
+          <img src="../../assets/media/nozzle/carrier-top.png" width="1488" height="803" loading="lazy" decoding="async"
+               alt="CAD render of the nozzle carrier from above: a flat bar with six keyed hub seats, a motor cradle at one end, and six cylindrical guide posts hanging beneath." />
+          <figcaption>The carrier: six keyed seats, the cradle, and the vertical guide posts underneath.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../assets/media/nozzle/holder-vibr-top.png" width="1490" height="806" loading="lazy" decoding="async"
+               alt="CAD render of the carrier seated inside the fixed holder, seen from above, with the mounting lugs of the holder visible at both ends." />
+          <figcaption>Carrier seated in the holder, from above.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../assets/media/nozzle/holder-vibr-bottom.png" width="1490" height="807" loading="lazy" decoding="async"
+               alt="CAD render of the assembled carrier and holder from below, showing the row of cannula clearance bores." />
+          <figcaption>From below: the cannula clearance bores. The two cross-drilled band holes exist only on the physical part.</figcaption>
+        </figure>
+        <figure>
+          <img src="../../assets/media/nozzle/carrier-in-holder-top.png" width="1156" height="741" loading="lazy" decoding="async"
+               alt="Closer CAD view of the carrier in the holder from above, showing the keyed slots that match the needle hub ears." />
+          <figcaption>Closer: the keyed slots that match the hub ears.</figcaption>
+        </figure>
+      </div>
+      <p>
+        The carrier couples to the holder through <strong>vertical cylindrical guide posts</strong> moulded into its
+        underside, which constrain it to <strong>one degree of freedom, vertical</strong>. The eccentric mass pushes in
+        every radial direction; the guides absorb the lateral component so the needles translate purely up and down.
+        Necessary for a vertical departure, but not sufficient: whether the droplet itself leaves straight also depends
+        on the tip fitted.
+      </p>
+
+      <h3 class="block-subheading">What the bench showed</h3>
+      <div class="callout callout-warn">
+        <span class="callout-label">The carrier walked off its posts.</span>
+        With the metal mass, the first dynamic test drove the carrier upward along the guide posts until it disengaged
+        from the holder. Rigid fasteners were ruled out: clamping the carrier would remove the compliance the vibration
+        needs.
+        <p>
+          <strong>Fix:</strong> two horizontal holes drilled through the holder body and <strong>two elastic bands</strong>
+          around the carrier. The bands stay slack through the small working amplitude, so they add no damping to the
+          active stroke, and take up tension only at the travel limits. A rigid fastener or an inextensible cord is
+          either too loose to retain or too tight to permit motion; the bands' nonlinear restoring force does both jobs.
+        </p>
+      </div>
+      <ul>
+        <li><strong>Off-centre excitation.</strong> The motor body sits on the carrier centreline but the rotating mass
+          is offset to one side of the shaft, so the carrier sees a twisting moment alongside the vertical oscillation,
+          tilts slightly, and binds on the posts more readily than centred excitation would. Centring the rotating mass
+          is the geometric fix.</li>
+        <li><strong>Printed sliding surfaces.</strong> Layer-line roughness of FDM PLA gives intermittent stick-slip on
+          the posts, and the slender posts flex under lateral loads. Both absorb part of the stroke's energy. Metal
+          posts or machined bushings would give it back.</li>
+        <li>The rejected cantilever would have avoided sliding friction entirely, but its arc still rules it out: a
+          rough linear guide that delivers purely vertical acceleration beats a frictionless one that scatters droplets.</li>
+      </ul>
+    </section>
+
+    <!-- Evidence -->
+    <div class="part-rule" id="part-evidence">
+      <span class="part-tag">Evidence</span>
+      <div class="part-title">What the tip decides, and what the machine showed</div>
+      <p class="part-note">Five tip types on distilled water on the assembled instrument, then the forty-tube
+        validation run with 22 G needles on both channels.</p>
+    </div>
+
+    <section class="detail-block" id="sec-regime">
+      <h2 class="block-heading">The tip regime: bore decides whether a droplet forms at all</h2>
+      <p>
+        The mechanism was designed against a <strong>pendant droplet</strong>: liquid emerges slowly, surface tension
+        holds it, a vertical impulse releases it. Whether the assembled instrument behaves that way depends on the tip,
+        and strongly enough to decide whether the module does anything at all. Four steel blunt needles from the
+        assortment (gauge coded by hub colour, bores from the assortment data) and a set of plastic biotech pipette tips
+        were run on distilled water on the assembled machine.
+      </p>
+      <table class="param-table">
+        <thead><tr><th>Tip</th><th>Bore</th><th>What leaves the tip</th><th>Vibration burst</th></tr></thead>
+        <tbody>
+          <tr> <td>27 G steel, clear</td> <td class="num">0.21 mm</td> <td>A fast stream; no droplet forms, a small residue stays on the tip</td> <td><span class="flag flag-bad">Nothing to act on</span></td></tr>
+          <tr> <td>25 G steel, dark pink/red</td> <td class="num">0.26 mm</td> <td>As above, indistinguishable</td> <td><span class="flag flag-bad">Nothing to act on</span></td></tr>
+          <tr> <td>22 G steel, blue</td> <td class="num">0.41 mm</td> <td>A droplet forms and grows; most release, small ones often do not</td> <td><span class="flag flag-part">Releases, some scatter</span></td></tr>
+          <tr> <td>21 G steel, violet</td> <td class="num">0.51 mm</td> <td>As above, indistinguishable</td> <td><span class="flag flag-part">Releases, some scatter</span></td></tr>
+          <tr> <td>Plastic pipette tip</td> <td><span class="flag flag-gap">not measured</span></td> <td>A droplet forms at every volume tried, comparable in size to the 22 G; small droplets release as readily as large</td> <td><span class="flag flag-good">Releases cleanly</span></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">
+        Below roughly 0.26 mm of bore the liquid streams and no droplet forms. Above roughly 0.41 mm a droplet forms
+        and the burst releases it. The boundary lies between those bores and is a property of the consumable, not of
+        the module.
+      </p>
+      <div class="callout callout-good">
+        <span class="callout-label">The plastic tips performed best of the five.</span>
+        No streaming at any commanded volume, small droplets released as readily as large (nine of ten across an
+        assorted range), and no droplet was seen to leave sideways. A <strong>5 &micro;L</strong> dose formed a droplet
+        and released it, the bottom of the instrument's specified range. Where a dose did stay on the tip, air in the
+        line behind it was the cause: a fluid-path question, not a nozzle one.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">Most likely reason: material. Recorded as a hypothesis.</span>
+        A polymer surface wets less readily than steel, so it holds the droplet with less force. Two things were not
+        controlled: the plastic bore was not measured (droplet size points near the 22 G), and the tips were
+        <strong>taped to the carrier rather than seated</strong>, so the tape may have damped the residual lateral motion
+        that makes the steel needles scatter. An untaped plastic tip of known bore, filmed at high speed, would settle
+        both.
+      </div>
+      <p>
+        The instrument was validated with <strong>22 G needles on both channels</strong>, the best tip available on a
+        Luer seat and not the best tip tried. A finer cannula is not an alternative: reducing the bore moves the tip
+        toward the streaming regime, where the burst has nothing to release.
+      </p>
+    </section>
+
+    <section class="detail-block" id="sec-asbuilt">
+      <h2 class="block-heading">As-built numbers</h2>
+      <figure class="detail-figure">
+        <img src="../../assets/media/nozzle/as-built.jpg"
+             width="2000" height="1131" loading="lazy" decoding="async"
+             alt="The nozzle module as built on the alignment chassis: two 22 G needles on Luer-to-barb adapters in the left two seats, the vibration motor with capacitors and tape-wrapped mass, an elastic band over the carrier, two screws into the chassis." />
+        <figcaption>As built and mounted: a compact two-piece printed assembly with the two channels of the prototype fitted.</figcaption>
+      </figure>
+      <table class="param-table">
+        <thead><tr><th>Item</th><th>As built</th></tr></thead>
+        <tbody>
+          <tr> <td><strong>Needle positions</strong></td> <td><span class="num">6</span>, at <span class="num">22 mm</span> pitch, directly above the tube indexing axis</td></tr>
+          <tr> <td><strong>Channels fitted</strong></td> <td><span class="num">2</span>, each with a <span class="num">22 G</span> needle (blue hub)</td></tr>
+          <tr> <td><strong>Joint per channel</strong></td> <td>Female Luer hub, male Luer-to-barb adapter, short soft junction tube, PVC line to the pump</td></tr>
+          <tr> <td><strong>Line length</strong></td> <td><span class="num">450 mm</span> of PVC tubing from each pump head to its hub</td></tr>
+          <tr> <td><strong>Vibration motor</strong></td> <td>RD520PA 3 V brushed DC in a compliant printed cradle, tape-wrapped eccentric mass, ceramic suppression capacitors at the motor</td></tr>
+          <tr> <td><strong>Retention</strong></td> <td>Elastic band over the carrier through two cross-drilled holes in the holder</td></tr>
+          <tr> <td><strong>Fixing</strong></td> <td>Two screws down into the chassis, a third driven horizontally into the bay wall on the left</td></tr>
+        </tbody>
+      </table>
+      <table class="param-table">
+        <thead><tr><th>Interface</th><th>What it is</th></tr></thead>
+        <tbody>
+          <tr> <td><strong>Mechanical</strong></td> <td>Holder bolts to a reinforced mounting boss on the alignment chassis rear wall; rigid axial alignment with the sample deck</td></tr>
+          <tr> <td><strong>Fluidic</strong></td> <td>Six independent female Luer hubs mating with Luer-to-barb adapters, soft PVC lines from the pumps</td></tr>
+          <tr> <td><strong>Electrical</strong></td> <td>Brushed DC motor circuit switched by an IRF520 MOSFET, with decoupling capacitors to keep motor noise off the shared I<sup>2</sup>C bus</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="detail-block" id="sec-machine">
+      <h2 class="block-heading">On the machine</h2>
+      <p>
+        From the pump carriers at the rear, the fluid path converges at the stationary nozzle module, which suspends
+        the needles directly above the tube axis. The holder <strong>docks atop the electronics bay</strong>, the enclosed
+        central compartment between the input and output queues that houses the microcontroller, motor drivers and
+        power wiring. Its underside conforms to the profile of the bay walls, so the chassis locates the part before any
+        fastener; two screws fix it down and a third, horizontal on the left, makes the mount sturdy.
+      </p>
+      <figure class="detail-figure">
+        <img src="../../assets/media/nozzle/lines-over-rack.jpg"
+             width="2000" height="1126" loading="lazy" decoding="async"
+             alt="From above and behind the machine: two clear PVC dispense lines leave the pump heads, cross over the toothed drive rack of the alignment module, and arrive at the needle hubs on the nozzle holder." />
+        <figcaption>From above and behind: the dispense lines leaving the pump heads and crossing the toothed drive rack to reach the hubs.</figcaption>
+      </figure>
+      <ul>
+        <li><strong>Designed against the chassis CAD.</strong> Unlike the storage module, whose uneditable meshes forced a
+          carrier designed around physical hardware, the holder was modelled directly against the finalised V3 chassis
+          with fit tolerances in. It was reprinted <strong>four or five times</strong> for its own features (the compliant
+          motor cradle, rounded edges, clearance for the eccentric weights to spin); <strong>none of those reprints was
+          needed to correct the chassis interface</strong>.</li>
+        <li><strong>Lines.</strong> A 450 mm PVC line leaves each pump head, bridges the drive rack, and ends at the
+          junction tube and adapter on its hub. The left carrier feeds the leftmost needle and the central carrier the
+          adjacent position, so the two lines do not cross. Between outlet and hub the tubing is <strong>unguided</strong>:
+          it hangs on its own stiffness with the Luer fitting as the single anchor. Functional on the prototype without
+          fouling the rack; a production instrument would route it deliberately, clear of every moving part.</li>
+      </ul>
+
+      <h3 class="block-subheading">Placement on the forty-tube run</h3>
+      <table class="param-table">
+        <thead><tr><th>Question</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr> <td>Landing inside the 5 mm tolerance</td> <td><span class="flag flag-good">MET</span>: across <strong>forty tubes</strong> (five racks of eight, two reagents, dyed solutions for contrast), droplets consistently hit the tube openings within tolerance</td></tr>
+          <tr> <td>Droplets missing the tube</td> <td><span class="flag flag-part">PARTLY</span>: outside a consumable interference mode, only <strong>three</strong> droplets showed partial wetting on the rack deck or lane. No dye escaped the machine onto the bench or reached the operator, but the rack is where an operator picks up</td></tr>
+          <tr> <td>Regime held over a full protocol</td> <td><span class="flag flag-good">MET</span>: multi-rack dye trials confirmed the 22 G dropping regime held across the whole protocol</td></tr>
+          <tr> <td>The consumable interference mode</td> <td>Tube caps left flat rather than folded back to 135 degrees rub the alignment lane wall. That axis runs open-loop, so friction costs steps and the rack lags the firmware position; doses land off-centre. An alignment and cap-handling failure, not a nozzle one</td></tr>
+          <tr> <td>Residue after draining</td> <td>Reverse pumping leaves capillary retention in the nozzle Luer fitting. With a dedicated line per reagent this causes no cross-contamination in single-reagent use, but lines cannot be switched between chemicals without a thorough wash or replacement</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Open -->
+    <div class="part-rule" id="part-open">
+      <span class="part-tag">Where it stands</span>
+      <div class="part-title">What is still open</div>
+      <p class="part-note">The module works on the machine. Each gap below is a stated finding or an unconfirmed
+        item from the thesis, not a new idea.</p>
+    </div>
+
+    <section class="detail-block" id="sec-gaps">
+      <h2 class="block-heading">Open gaps</h2>
+      <div class="callout callout-warn">
+        <span class="callout-label">1. A polymer tip on a Luer hub is the clearest available improvement.</span>
+        Tapered polypropylene dispensing tips with a Luer lock hub are a stock consumable across the same gauge range as
+        the steel needles and would seat in the existing socket with no change to the module. None was obtained within
+        the project, and the taped pipette tips of the trial are not a substitute. An untaped plastic tip of known bore,
+        filmed at high speed, would settle the material hypothesis.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">2. The eccentric mass is off the carrier centreline.</span>
+        The twisting moment tilts the carrier and makes it bind on the posts. Centring the rotating mass is the
+        geometric fix and would cut the lateral loads the bands absorb.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">3. Printed guide posts lose energy.</span>
+        Stick-slip on PLA layer lines and post flexure absorb part of the stroke. Metal guide posts or machined bushings
+        are the next step.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">4. The Luer coupling is not fully specified.</span>
+        Lock versus slip adapter, junction-tube step-down sizing and the vendor part reference were not confirmed in the
+        thesis text.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">5. Small droplets on steel.</span>
+        In the dropping class small droplets often do not release and a few scatter onto the rack; three did so over
+        forty tubes.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">6. The 5 &micro;L bound on the instrument.</span>
+        Released on the taped plastic tip only; not yet validated on the fitted 22 G needles, expected to pass.
+      </div>
+      <div class="callout callout-note">
+        <span class="callout-label">7. Free-hanging tubing.</span>
+        Acceptable on the prototype; a production instrument needs the lines held clear of the drive rack and placed
+        for easy replacement.
+      </div>
+    </section>
+
+    <!-- Version log -->
+    <section class="detail-block" id="sec-versions">
+      <h2 class="block-heading">Version log</h2>
+      <p class="block-note">
+        The thesis names stages, not numbered versions, and gives no build dates. The source column is the thesis
+        section each row comes from.
+      </p>
+      <table class="param-table ver-table">
+        <thead><tr><th>Stage</th><th>What changed</th><th>What was learned</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr> <td><strong>Inherited</strong></td> <td>Blunt-needle array with a set-screw V-groove clamp and a brushed DC motor swinging a printed plastic eccentric arm. OpenSCAD meshes only.</td> <td>The vibration-release principle works on a single needle, but the printed mass gave too little imbalance to shed droplets from the assembly; no chassis mount; CAD not editable.</td> <td><span class="src">8, 8.1</span></td></tr>
+          <tr> <td><strong>Ideation</strong></td> <td>Cantilever strip and bare-cannula insertion weighed against a guided rebuild of the inherited concept.</td> <td>Arc deflection scatters droplets; a bare cannula cannot be handled without tools. Keep the guided vibrating array.</td> <td><span class="src">8.1</span></td></tr>
+          <tr> <td><strong>Trials</strong></td> <td>Printed hub-seat coupon; Luer-to-barb coupling with a soft junction tube; magnet plus three steel nuts as the eccentric mass; RD520PA on the 5 V bus through an IRF520, duty capped near 60 %.</td> <td>Exact slip fit on the first print; any gauge locates on its hub without tools; metal mass gives several times the momentum.</td> <td><span class="src">8.2.1</span></td></tr>
+          <tr> <td><strong>Carrier and holder</strong></td> <td>Two-part mechanism: carrier with motor cradle and six seats at 22 mm pitch on vertical guide posts; fixed holder for the chassis rear wall.</td> <td>One vertical degree of freedom is necessary for a vertical departure; the tip decides whether the droplet itself leaves straight.</td> <td><span class="src">8.2.2</span></td></tr>
+          <tr> <td><strong>Retaining bands</strong></td> <td>Two holes drilled through the holder, two elastic bands around the carrier. On the physical part only, not in CAD.</td> <td>The metal mass walks the carrier off its posts; slack bands retain without damping. Off-centre mass tilts and binds; PLA posts stick-slip and flex.</td> <td><span class="src">8.2.3</span></td></tr>
+          <tr> <td><strong>As built</strong></td> <td>Two channels fitted with 22 G needles, capacitors at the motor, band over the carrier, holder screwed to the chassis.</td> <td>Three-step sequence: deliver, pulse, release. Release is conditional on a droplet having formed.</td> <td><span class="src">8.3</span></td></tr>
+          <tr> <td><strong>Tip trials</strong></td> <td>27 G, 25 G, 22 G, 21 G steel and a taped plastic pipette tip on distilled water, on the assembled machine.</td> <td>Below about 0.26 mm bore the tip streams; above about 0.41 mm it drops. Plastic releases nine of ten small droplets with no sideways departure; 5 &micro;L released on plastic. Material hypothesis, two variables uncontrolled.</td> <td><span class="src">8.3.1</span></td></tr>
+          <tr> <td><strong>Integrated</strong></td> <td>Holder docked on the electronics bay of the V3 chassis, three screws; 450 mm lines bridged over the drive rack; four or five reprints for the holder's own features.</td> <td>The chassis interface was right first time. Free-hanging lines are acceptable on the prototype only.</td> <td><span class="src">11.3</span></td></tr>
+          <tr> <td><strong>Validated</strong></td> <td>Forty-tube, five-rack, two-reagent run with 22 G on both channels, dyed solutions.</td> <td>Droplets consistently inside 5 mm; three partial wettings on the rack; regime held across the protocol; flat tube caps cause off-centre doses through the open-loop axis, not the nozzle.</td> <td><span class="src">12.3, 12.5</span></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">
+        Full record with the requirement table, the media list and the thesis citations:
+        <a class="tool-link" href="PROTOTYPE.md">PROTOTYPE.md</a>, alongside this page.
+        Back to the <a class="tool-link" href="../index.html">Prototype Design Space</a> or
+        <a class="tool-link" href="../../index.html">all tools</a>.
+      </p>
+    </section>
+
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // TOC: open any collapsed <details> ancestor before jumping.
+  document.querySelectorAll('.toc-link').forEach(a => {
+    a.addEventListener('click', () => {
+      const t = document.querySelector(a.getAttribute('href'));
+      let p = t && t.parentElement;
+      while (p) { if (p.tagName === 'DETAILS') p.open = true; p = p.parentElement; }
+    });
+  });
+
+  // Lightbox for the photographs and renders.
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeLightbox = () => { lightbox.hidden = true; lightboxImg.src = ''; };
+  document.querySelectorAll('.detail-figure img, .figure-grid img, .fig-side img, .zoomable')
+    .forEach(img => img.addEventListener('click', () => {
+      lightboxImg.src = img.src; lightboxImg.alt = img.alt || ''; lightbox.hidden = false;
+    }));
+  lightbox.addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lightbox.hidden) closeLightbox(); });
+
+  // Droplet clip: plays only while in view. Under reduced motion it never
+  // autoplays and exposes native controls instead, so it stays a still poster
+  // the reader can start deliberately.
+  const dropletVideo = document.getElementById('droplet-video');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (dropletVideo) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      dropletVideo.setAttribute('controls', '');
+    } else {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) en.target.play().catch(() => {});
+          else en.target.pause();
+        });
+      }, { threshold: 0.25 });
+      io.observe(dropletVideo);
+    }
+  }
+</script>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

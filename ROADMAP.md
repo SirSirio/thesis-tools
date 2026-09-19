@@ -22,6 +22,36 @@ Tools planned, in progress, and shipped for the thesis tools site.
 
 ---
 
+## Shipped, September 2026: the showcase redesign
+
+One pass over the whole site once the thesis was written, so it reads as the record of a
+finished instrument rather than a folder of calculators. The cited addresses did not move:
+the root, `tools/ui-prototypes/` and every `tools/<slug>/` still answer at the same URL. A
+pre-redesign copy is kept in the sibling folder `02. GitHub Thesis Tools Page - BACKUP
+2026-09-18` and at the git tag `backup/pre-showcase-2026-09-18`.
+
+| Item | Description |
+|------|-------------|
+| Showcase landing page | Rewritten as one read. A three breath opening (the rotor motif kept, GSAP still local), the problem statement, then the assembled machine in photographs with leader-line callouts. `#machine` adds a floating clip cluster and strips of development photos; `#journey` walks seven stops, vial, pump, nozzle, rack, screen, electronics and landing, with each tool anchored to the module it served and a fixed route map alongside; `#method` closes on how the work was run. English and Italian strings are in place, the Italian pass is still to come. |
+| Shared site frame | `assets/site.css` and `assets/site-nav.js`, new sanctioned shared files on the same footing as the deck runtime. Tokens, the Geist display face for headings on every page, a water background wash that restyles the `.bg-blobs` markup each page already had, the sticky glass nav, the Instruments panel, the footer, the `.reveal` helper, the buttons and the 28px tool marks. `assets/FRAME-SNIPPET.html` documents the markup per folder depth. Every tool page, both deck pages and every prototype record now carry it; their calculators and content were left untouched, only visible dashes in the copy were replaced. |
+| Instruments page | `tools/index.html`, a plain index of all nine tools and the three records, grouped Pump, Electronics, Interface, Method and Records. Same list the nav panel renders from `site-nav.js`, and it works with JavaScript off. |
+| Prototypes river | `prototypes/index.html` rebuilt from two threads to three, pump orange, alignment violet, nozzle teal-blue, converging into one Integration node for the assembled machine. Ghost cards for builds that never happened are gone; `prototypes/SPEC.md` was rewritten to match. |
+| Nozzle module record | New `prototypes/Prototype-3-Nozzle-Module/`, both the deep `PROTOTYPE.md` and its page: the inherited mechanism and why it did not work, the rebuild into a six seat carrier with vibration release, the mount on the chassis, the tip trials that set the boundary, and the forty-tube validation inside the 5 mm landing tolerance. |
+| Alignment V3 record | New `prototypes/Prototype-2-Alignment-Module/v3-two-axis-chassis/index.html`, written from the V3 section appended to the module `PROTOTYPE.md`: the two-axis chassis with an input queue, a dispensing lane and an output tray. |
+| Media library | `assets/media/` now holds the web-sized photographs and renders, grouped `device/`, `pump/`, `alignment/`, `nozzle/`, `ui/`, `storage/`, `method/` and `video/`. The four clips are re-encoded H.264, muted, each with a poster frame. Masters stay in the thesis folders. |
+| Droplet release clip, published | Moved up from Planned. `assets/media/video/droplet-slowmo.mp4` with its poster, shown on the nozzle record at `#droplet-video`. Captioned as the regime in which the vibration burst is effective, not as the normal dispensing mode: on the assembled machine delivery is jet-like across most of the range, and the thesis reports that. |
+
+---
+
+## Next
+
+| Item | Description |
+|------|-------------|
+| Whole-machine dispensing clip | `assets/media/video/machine-dispensing.mp4` is a reserved slot on the landing page, standing in with `device/validation-done.jpg` as the poster and a visible note that the clip is coming. Film the assembled instrument dispensing, then transcode a web copy the same way as the others: no audio track, `-movflags +faststart`, `-pix_fmt yuv420p`, roughly 1 to 3 MB, with a poster frame beside it. |
+| Italian translation pass | Every visible string on the landing page carries a `data-i18n` key and the English side is complete. The Italian dictionary still needs a full pass before the switch earns its place. |
+
+---
+
 ## Planned
 
 | Tool | Description | Priority |

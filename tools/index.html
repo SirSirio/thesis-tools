@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instruments</title>
+<meta name="description" content="The nine web tools built for the DTU master's thesis on a portable microlitre liquid dispenser, grouped by the module they served, plus the prototype records.">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/site-nav.js"></script>
+<style>
+  .site-main {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 72px 32px 96px;
+  }
+  .page-head { margin-bottom: 56px; }
+  .page-head h1 { margin-bottom: 18px; }
+  .page-head p { color: var(--text-soft); font-size: 1.05rem; }
+
+  .inst-section { margin-bottom: 56px; }
+  .inst-section__head {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .inst-section__head h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
+  .inst-section__head .count {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+  }
+
+  .inst-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .inst-card {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 18px;
+    align-items: start;
+    height: 100%;
+    padding: 22px 22px 22px 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    color: var(--text);
+    transition: transform var(--dur-fast) var(--ease),
+                border-color var(--dur-fast) var(--ease),
+                background var(--dur-fast) var(--ease);
+  }
+  .inst-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-accent);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .inst-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .inst-card__well {
+    width: 52px; height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--r-sm);
+    background: rgba(255, 107, 43, 0.08);
+    border: 1px solid var(--line-accent);
+  }
+  .inst-card__name { font-weight: 600; font-size: 1.02rem; line-height: 1.3; margin-bottom: 6px; }
+  .inst-card:hover .inst-card__name { color: var(--accent); }
+  .inst-card__line { color: var(--text-soft); font-size: 0.9rem; line-height: 1.5; }
+  .inst-card__go {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .noscript-note {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 18px auto 0;
+    padding: 12px 32px;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 767px) {
+    .site-main { padding: 48px 16px 64px; }
+    .page-head { margin-bottom: 40px; }
+    .inst-grid { grid-template-columns: 1fr; }
+    .inst-card { padding: 18px 16px; gap: 14px; grid-template-columns: 44px 1fr; }
+    .inst-card__well { width: 44px; height: 44px; }
+    .noscript-note { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body class="site-frame">
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../">
+  <a class="site-nav__back" href="../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../index.html#machine">Machine</a>
+    <a href="../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<noscript>
+  <p class="noscript-note">The Instruments menu in the top bar needs JavaScript. Every tool is listed on this page below.</p>
+</noscript>
+
+<main class="site-main">
+  <header class="page-head">
+    <h1>Instruments</h1>
+    <p>Nine web tools built during the thesis, each anchored to the module it served. Every one runs offline, in the browser, with no build step. The records at the end hold the prototype journey and the presentations.</p>
+  </header>
+
+  <section class="inst-section reveal" aria-labelledby="g-pump">
+    <div class="inst-section__head">
+      <h2 id="g-pump">Pump</h2>
+      <span class="count">4 tools</span>
+    </div>
+    <ul class="inst-grid">
+      <li>
+        <a class="inst-card" href="rotor-solver/index.html">
+          <span class="inst-card__well"><span class="mark mark--rotor" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Rotor Geometry Solver</span>
+            <span class="inst-card__line">Solves the rotor radius for a target stroke volume.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="peristaltic-roller-displaced-volume-model/index.html">
+          <span class="inst-card__well"><span class="mark mark--occlusion" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Occlusion &amp; Displaced-Volume Model</span>
+            <span class="inst-card__line">The tube section under a roller and the volume each roller displaces.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="peristaltic-tensioned-path-model/index.html">
+          <span class="inst-card__well"><span class="mark mark--path" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Tensioned Tube-Path Model</span>
+            <span class="inst-card__line">The taut tube path between rollers and the stroke volume it implies.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="pump-testing/index.html">
+          <span class="inst-card__well"><span class="mark mark--balance" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Pump Testing Protocol</span>
+            <span class="inst-card__line">Gravimetric qualification method, ISO 23783-2 adapted, with the pipette benchmark.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="inst-section reveal" aria-labelledby="g-electronics">
+    <div class="inst-section__head">
+      <h2 id="g-electronics">Electronics</h2>
+      <span class="count">2 tools</span>
+    </div>
+    <ul class="inst-grid">
+      <li>
+        <a class="inst-card" href="system-architecture-explorer/index.html">
+          <span class="inst-card__well"><span class="mark mark--matrix" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">System Architecture Explorer</span>
+            <span class="inst-card__line">25 candidate architectures, costed and pin-audited.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="dispense-throughput-simulator/index.html">
+          <span class="inst-card__well"><span class="mark mark--gantt" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Dispense Throughput Simulator</span>
+            <span class="inst-card__line">Schedules six reagent channels over a run and shows where the time goes.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="inst-section reveal" aria-labelledby="g-interface">
+    <div class="inst-section__head">
+      <h2 id="g-interface">Interface</h2>
+      <span class="count">1 tool</span>
+    </div>
+    <ul class="inst-grid">
+      <li>
+        <a class="inst-card" href="ui-prototypes/index.html">
+          <span class="inst-card__well"><span class="mark mark--screen" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Operator Interface Prototypes</span>
+            <span class="inst-card__line">Nine candidate interfaces over five design rounds, at the panel's native 320 by 240.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="inst-section reveal" aria-labelledby="g-method">
+    <div class="inst-section__head">
+      <h2 id="g-method">Method</h2>
+      <span class="count">2 tools</span>
+    </div>
+    <ul class="inst-grid">
+      <li>
+        <a class="inst-card" href="gsd-workflow-guide/index.html">
+          <span class="inst-card__well"><span class="mark mark--loop" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Spec-Driven Workflow Guide</span>
+            <span class="inst-card__line">The spec-driven loop that ran firmware and web tools with an AI assistant.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="thesis-timeline/index.html">
+          <span class="inst-card__well"><span class="mark mark--bars" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Thesis Timeline</span>
+            <span class="inst-card__line">Roadmap and Gantt of the thesis, February to September 2026.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="inst-section reveal" aria-labelledby="g-records">
+    <div class="inst-section__head">
+      <h2 id="g-records">Records</h2>
+      <span class="count">3 records</span>
+    </div>
+    <ul class="inst-grid">
+      <li>
+        <a class="inst-card" href="../prototypes/index.html">
+          <span class="inst-card__well"><span class="mark mark--journey" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Prototype journey</span>
+            <span class="inst-card__line">Every build of the pump and alignment modules, in order.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="../decks/index.html">
+          <span class="inst-card__well"><span class="mark mark--deck" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">Presentations</span>
+            <span class="inst-card__line">Slide decks given during the thesis.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="inst-card" href="../index.html">
+          <span class="inst-card__well"><span class="mark mark--machine" aria-hidden="true"></span></span>
+          <span>
+            <span class="inst-card__name">The machine</span>
+            <span class="inst-card__line">Back to the landing page and the assembled instrument.</span>
+            <span class="inst-card__go">Open</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../prototypes/index.html">Prototypes</a>
+      <a href="../tools/index.html">Instruments</a>
+      <a href="../decks/index.html">Presentations</a>
+      <a href="../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

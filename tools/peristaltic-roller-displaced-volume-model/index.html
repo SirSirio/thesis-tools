@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peristaltic Occlusion &amp; Displaced-Volume Model — Thesis Tools</title>
+  <title>Peristaltic Occlusion &amp; Displaced-Volume Model · Thesis Tools</title>
 
   <!-- KaTeX: CDN primary, local copy as offline fallback -->
   <link id="katex-css" rel="stylesheet"
@@ -11,23 +11,10 @@
         onerror="this.onerror=null;this.href='katex/katex.min.css';">
 
   <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script src="../../assets/site-nav.js"></script>
 
   <style>
-    /* ── Tool nav ──────────────────────────────────────────── */
-    .tool-nav {
-      position: relative; z-index: 10;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 32px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.82rem;
-    }
-    .tool-nav a {
-      color: var(--accent); font-weight: 500; letter-spacing: 0.02em;
-      transition: letter-spacing 0.2s ease, color 0.2s ease;
-    }
-    .tool-nav a:hover { letter-spacing: 0.06em; color: #ffaa7a; }
-    .tool-nav span { color: var(--text-muted); }
-
     /* ── Page layout ────────────────────────────────────────── */
     .tool-main {
       position: relative; z-index: 1;
@@ -202,7 +189,7 @@
     select:focus { border-color: var(--accent); }
     select option { background: #1a1814; color: var(--text); }
 
-    /* ── Part 1 — compression state buttons ─────────────────── */
+    /* ── Part 1: compression state buttons ─────────────────── */
     .state-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
     .state-btn {
       font-family: var(--font); font-size: 0.82rem; font-weight: 600;
@@ -347,23 +334,27 @@
 <body>
 
 <!-- Background blobs -->
-<div class="bg-blobs">
+<div class="bg-blobs" aria-hidden="true">
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
 </div>
 
-<!-- Tool nav -->
-<nav class="tool-nav animate-in" style="--delay:0s">
-  <a href="../../index.html">← Resources</a>
-  <span>Peristaltic Occlusion Model</span>
-</nav>
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
 
 <main class="tool-main">
 
   <!-- ── Tool header ─────────────────────────────────────── -->
   <header class="tool-header animate-in" style="--delay:0.05s">
-    <div class="section-label">Thesis Tool — Modular Liquid Dispensing · Proto 1</div>
+    <div class="section-label">Thesis Tool: Modular Liquid Dispensing · Proto 1</div>
     <h1>Peristaltic Roller Occlusion<br>&amp; Displaced-Volume Model</h1>
     <p>
       A two-part geometric reference for the tube-deformation mechanics of a rigid-backed
@@ -376,14 +367,14 @@
   </header>
 
   <!-- ══════════════════════════════════════════════════════
-       PART 1 — TUBE CROSS-SECTION: THE STADIUM MODEL
+       PART 1: TUBE CROSS-SECTION, THE STADIUM MODEL
        ══════════════════════════════════════════════════════ -->
   <div class="part-label animate-in" style="--delay:0.08s">
     <span class="num">Part 1</span>
-    <h2>Tube Cross-Section — The Stadium Model</h2>
+    <h2>Tube Cross-Section: The Stadium Model</h2>
   </div>
   <p class="part-summary animate-in" style="--delay:0.095s">
-    Under a roller the tube lumen flattens into a <em>stadium</em> shape — two straight
+    Under a roller the tube lumen flattens into a <em>stadium</em> shape: two straight
     segments joined by semicircular caps. A single physical assumption (conservation of
     the inner-wall perimeter) yields a closed-form expression for the residual lumen area
     $A(h)$ at any squeeze depth: a geometry-based replacement for the ill-posed
@@ -397,7 +388,7 @@
       <h3>Purpose &amp; Motivation</h3>
       <p>
         When a peristaltic roller presses a flexible tube against a rigid backing, the circular bore
-        does not simply shrink in diameter — it changes shape, flattening into an elongated form
+        does not simply shrink in diameter, it changes shape, flattening into an elongated form
         before closing entirely. Quantifying that shape matters for two reasons in this design.
       </p>
       <p>
@@ -429,7 +420,7 @@
           <tr><td>$r_0 = d/2$</td><td>Undeformed lumen radius</td><td>mm</td></tr>
           <tr><td>$w$</td><td>Tube wall thickness</td><td>mm</td></tr>
           <tr><td>$\mathrm{OD} = d + 2w$</td><td>Outer diameter</td><td>mm</td></tr>
-          <tr><td>$\delta$</td><td>Radial interference — crush depth past wall-contact</td><td>mm</td></tr>
+          <tr><td>$\delta$</td><td>Radial interference, crush depth past wall-contact</td><td>mm</td></tr>
           <tr><td>$G$</td><td>Printed roller-to-backing gap</td><td>mm</td></tr>
           <tr><td>$h$</td><td>Residual inner-wall separation under roller</td><td>mm</td></tr>
           <tr><td>$L_w$</td><td>Flat (straight) width of the stadium lumen</td><td>mm</td></tr>
@@ -441,7 +432,7 @@
     </div>
 
     <div class="theory-section">
-      <h3>Physical Assumption — Perimeter Conservation</h3>
+      <h3>Physical Assumption: Perimeter Conservation</h3>
       <p>
         Elastomeric tube walls (soft PVC in this design) are very nearly incompressible in bulk.
         Squeezing the tube redistributes wall material rather than compressing its volume.
@@ -464,8 +455,8 @@
 
       <p>
         <strong>Flat width from conserved perimeter.</strong>
-        The perimeter of a stadium — two straight segments plus two semicircular caps (which together
-        form one full circle of diameter $h$) — must equal the conserved circular perimeter:
+        The perimeter of a stadium, two straight segments plus two semicircular caps (which together
+        form one full circle of diameter $h$), must equal the conserved circular perimeter:
       </p>
       <div class="math-block">$$P = 2\,L_w + \pi h = \pi d$$</div>
       <p>Solving for the flat width:</p>
@@ -496,7 +487,7 @@
     </div>
 
     <div class="theory-section">
-      <h3>The Gap Equation — Squeeze to Residual Area</h3>
+      <h3>The Gap Equation: Squeeze to Residual Area</h3>
       <p>
         The printed hardware dimension links directly to the residual lumen via the gap between
         the roller and the backing wall. A key physical insight: <strong>the squeeze is governed
@@ -509,7 +500,7 @@
       </div>
       <p>
         At the moment of occlusion the bore has pinched shut, so the inner diameter no longer
-        contributes to the gap — only the two stacked wall thicknesses remain. The interference
+        contributes to the gap: only the two stacked wall thicknesses remain. The interference
         $\delta$ is the depth of rubber crushed <em>beyond</em> that wall-kiss point. Its sole
         purpose is to guarantee complete occlusion despite manufacturing and print-tolerance
         variation. For soft PVC the recommended starting band is:
@@ -517,7 +508,7 @@
       <div class="math-block">$$\delta \;=\; (0.10 \;\text{to}\; 0.20) \times 2w$$</div>
       <p>
         Driving $\delta$ beyond approximately $2w$ means crushing wall material rather than merely
-        closing the lumen — accelerating fatigue and risking silent bore drift.
+        closing the lumen, accelerating fatigue and risking silent bore drift.
       </p>
       <p>
         For the interactive figure below, each compression state maps to a residual gap $h$ via a
@@ -538,7 +529,7 @@
         <li data-n="1.">
           <strong>Bulk-incompressible wall.</strong>
           The inner wall conserves arc length as it deforms. Holds well for thin-walled soft
-          elastomers at moderate compression — the foundation of the stadium shape.
+          elastomers at moderate compression, the foundation of the stadium shape.
         </li>
         <li data-n="2.">
           <strong>Rigid backing.</strong>
@@ -554,7 +545,7 @@
         <li data-n="4.">
           <strong>Quasi-static, single cross-section.</strong>
           The model describes one axial slice at the roller contact. It does not address tube
-          re-recovery dynamics behind the roller, which is the physical origin of flow pulsation —
+          re-recovery dynamics behind the roller, which is the physical origin of flow pulsation,
           a separate question requiring flow-trace measurement at Proto 1.
         </li>
       </ol>
@@ -566,19 +557,19 @@
         <thead><tr><th>Parameter</th><th>Selected value / range</th><th>Source</th></tr></thead>
         <tbody>
           <tr>
-            <td>$d$ — tube ID</td>
-            <td>0.51 mm selected; range 0.25–1.14 mm available</td>
+            <td>$d$, tube ID</td>
+            <td>0.51 mm selected; range 0.25-1.14 mm available</td>
             <td>Ismatec/Masterflex Pump Tubing Selection Guide (Cole-Parmer 14-035 Rev C); Darwin Microfluidics Puri-Clear LL listing</td>
           </tr>
           <tr>
-            <td>$w$ — wall thickness</td>
+            <td>$w$, wall thickness</td>
             <td>0.85 mm default; measure actual Puri-Clear LL OD in Proto 0</td>
             <td>Platinum-cured silicone 2-stop: 0.89 mm ID / 2.59 mm OD → $w = 0.85$ mm (Cole-Parmer MFLX06421-26). PVC 2-stop OD not published by Ismatec.</td>
           </tr>
           <tr>
-            <td>$\delta$ — interference</td>
+            <td>$\delta$, interference</td>
             <td>$(0.10\text{–}0.20)\times 2w \approx 0.17\text{–}0.34$ mm for $w = 0.85$</td>
-            <td>10–20% compression past wall-kiss, higher for softer tube — Pump Industry Magazine (2014). Occlusion onset constraint ($G < 2w$) — Boxer Pumps, "Peristaltic Pumps for Liquid".</td>
+            <td>10-20% compression past wall-kiss, higher for softer tube: Pump Industry Magazine (2014). Occlusion onset constraint ($G < 2w$): Boxer Pumps, "Peristaltic Pumps for Liquid".</td>
           </tr>
         </tbody>
       </table>
@@ -588,7 +579,7 @@
 
   <!-- Interactive figure card -->
   <div class="glass-panel animate-in" style="--delay:0.14s">
-    <div class="panel-title">Interactive Figure — Cross-Section Under a Roller</div>
+    <div class="panel-title">Interactive Figure: Cross-Section Under a Roller</div>
 
     <!-- State buttons -->
     <div class="state-btns">
@@ -630,7 +621,7 @@
         <text x="510" y="26" text-anchor="middle" font-size="13"
               fill="#7a7068" font-family="system-ui,sans-serif">Under roller</text>
 
-        <!-- Left panel — undeformed tube (sizes updated by JS) -->
+        <!-- Left panel: undeformed tube (sizes updated by JS) -->
         <circle id="p1-u-outer" cx="170" cy="235" r="72"
           fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
         <circle id="p1-u-lumen" cx="170" cy="235" r="31"
@@ -644,7 +635,7 @@
         <text x="182" y="186" font-size="12"
               fill="rgba(255,255,255,0.35)" font-family="system-ui,sans-serif" font-style="italic">w</text>
 
-        <!-- Right panel — deformed, fully drawn by JS -->
+        <!-- Right panel: deformed, fully drawn by JS -->
         <g id="p1-flat"></g>
       </svg>
     </div>
@@ -653,30 +644,30 @@
     <div class="output-row">
       <div class="out-item">
         <span class="out-label">Printed gap G = 2w − δ</span>
-        <span class="out-val" id="s1-gap">—<span class="out-unit">mm</span></span>
+        <span class="out-val" id="s1-gap">-<span class="out-unit">mm</span></span>
       </div>
       <div class="out-item">
         <span class="out-label">Residual gap h</span>
-        <span class="out-val" id="s1-h">—<span class="out-unit">mm</span></span>
+        <span class="out-val" id="s1-h">-<span class="out-unit">mm</span></span>
       </div>
       <div class="out-item">
         <span class="out-label">Flat width L<sub>w</sub></span>
-        <span class="out-val" id="s1-lw">—<span class="out-unit">mm</span></span>
+        <span class="out-val" id="s1-lw">-<span class="out-unit">mm</span></span>
       </div>
       <div class="out-item">
         <span class="out-label">Lumen area A(h)</span>
-        <span class="out-val" id="s1-area">—<span class="out-unit">mm²</span></span>
+        <span class="out-val" id="s1-area">-<span class="out-unit">mm²</span></span>
       </div>
       <div class="out-item">
         <span class="out-label">Area / A₀</span>
-        <span class="out-val" id="s1-pct">—<span class="out-unit">%</span></span>
+        <span class="out-val" id="s1-pct">-<span class="out-unit">%</span></span>
       </div>
     </div>
   </div><!-- /glass-panel part 1 -->
 
 
   <!-- ══════════════════════════════════════════════════════
-       PART 2 — DISPLACED VOLUME & CONTACT LENGTH MODEL
+       PART 2: DISPLACED VOLUME & CONTACT LENGTH MODEL
        ══════════════════════════════════════════════════════ -->
   <div class="part-label animate-in" style="--delay:0.18s">
     <span class="num">Part 2</span>
@@ -686,7 +677,7 @@
     A roller displaces fluid over a finite axial <em>contact length</em> $L_c$,
     not at a single line. The contact length follows from the Hertz-style chord geometry of a
     cylinder indenting a flat-backed layer. The key result: the tube arc added to compensate
-    one roller's displacement equals $L_c$ exactly — the lumen area cancels and the
+    one roller's displacement equals $L_c$ exactly: the lumen area cancels and the
     correction is independent of bore size. Expand each sub-section below for the full derivation.
   </p>
 
@@ -696,7 +687,7 @@
     <div class="theory-section">
       <h3>Purpose</h3>
       <p>
-        A single roller pass on a rigid-backed peristaltic pump displaces a finite slug of fluid —
+        A single roller pass on a rigid-backed peristaltic pump displaces a finite slug of fluid,
         not at the single contact line but over the <em>axial contact length</em> $L_c$, the length
         of tube the roller squashes flat as it rolls. This section derives $L_c$, the displaced
         volume $V_{\text{roller}}$ per pass, and the extra tube arc $\Delta\mathrm{Arc}$ required
@@ -704,8 +695,8 @@
       </p>
       <p>
         The gap equation and stadium cross-section geometry from Part 1 are taken as inputs.
-        In the operating regime $\delta > 0$, occlusion is always complete — the residual lumen
-        area under the roller is zero — so the displacement is entirely determined by the axial
+        In the operating regime $\delta > 0$, occlusion is always complete (the residual lumen
+        area under the roller is zero), so the displacement is entirely determined by the axial
         contact footprint, not the cross-sectional area at the contact point.
       </p>
     </div>
@@ -717,11 +708,11 @@
         <tbody>
           <tr><td>$R_r$</td><td>Roller radius $= \mathrm{bearing\_OD}/2$</td><td>mm</td></tr>
           <tr><td>$\delta$</td><td>Radial interference (same as Part 1)</td><td>mm</td></tr>
-          <tr><td>$k$</td><td>Empirical inflation factor — calibrated from Proto 1 gravimetry</td><td>—</td></tr>
+          <tr><td>$k$</td><td>Empirical inflation factor, calibrated from Proto 1 gravimetry</td><td>-</td></tr>
           <tr><td>$L_c$</td><td>Axial contact (flattened) length per roller</td><td>mm</td></tr>
           <tr><td>$A_\ell = \pi d^2/4$</td><td>Open lumen cross-sectional area</td><td>mm²</td></tr>
           <tr><td>$V_{\text{roller}}$</td><td>Volume displaced by one roller per pass</td><td>mm³ = µL</td></tr>
-          <tr><td>$N_c$</td><td>Rollers simultaneously engaged on the arc</td><td>—</td></tr>
+          <tr><td>$N_c$</td><td>Rollers simultaneously engaged on the arc</td><td>-</td></tr>
           <tr><td>$V_{\text{total}}$</td><td>Total displaced volume for $N_c$ rollers</td><td>µL</td></tr>
           <tr><td>$\Delta\mathrm{Arc}$</td><td>Extra tube arc needed for stroke compensation</td><td>mm</td></tr>
         </tbody>
@@ -753,12 +744,12 @@
         A key design consequence follows immediately: a larger roller (16 mm OD,
         $R_r = 8$ mm) flattens a longer axial section per pass than a smaller roller
         (10 mm OD, $R_r = 5$ mm), displacing more volume and requiring more arc
-        compensation — but at proportionally lower contact stress and gentler tube wear.
+        compensation, but at proportionally lower contact stress and gentler tube wear.
       </p>
     </div>
 
     <div class="theory-section">
-      <h3>The Inflation Factor $k$ — Why the Geometry Alone Is Not Enough</h3>
+      <h3>The Inflation Factor $k$: Why the Geometry Alone Is Not Enough</h3>
       <p>
         The base formula $2\sqrt{2\,R_r\,\delta}$ comes from a classic contact-mechanics
         result: how long a chord is cut when a circle of radius $R_r$ sinks a depth $\delta$
@@ -771,7 +762,7 @@
           <strong>Axial wall bulge.</strong>
           Rubber is nearly incompressible (Poisson's ratio $\nu \approx 0.5$). When the
           roller squeezes the wall radially, the displaced material has nowhere to go except
-          sideways — it flows axially outward, beyond the edge of the geometric contact zone.
+          sideways: it flows axially outward, beyond the edge of the geometric contact zone.
           The result is a contact pressure footprint that extends past the chord the formula
           would draw, even if the wall thickness were constant.
         </li>
@@ -797,13 +788,13 @@
         and $L_c$ then multiplies both $V_{\text{roller}}$ and $\Delta\mathrm{Arc}$, an
         error in $k$ propagates <em>linearly</em> and without attenuation into every
         downstream result. A 10 % under-estimate of $k$ produces a 10 % error in
-        dispensed volume — so calibrating it accurately matters as much as knowing
+        dispensed volume, so calibrating it accurately matters as much as knowing
         $\delta$ accurately.
       </p>
       <p>
-        Typical values for soft PVC tubing (shore A 55–65) fall in the range
-        $k \approx 1.10$–$1.25$. Stiffer materials (medical-grade silicone, Tygon) sit
-        closer to $1.0$–$1.10$ because their higher elastic modulus reduces axial bulge.
+        Typical values for soft PVC tubing (shore A 55-65) fall in the range
+        $k \approx 1.10$-$1.25$. Stiffer materials (medical-grade silicone, Tygon) sit
+        closer to $1.0$-$1.10$ because their higher elastic modulus reduces axial bulge.
         The default $k = 1.15$ is a reasonable first estimate for the 0.51 mm ID
         soft-PVC tubes in this design; it should be replaced with a measured value
         before committing to a rotor-arc length.
@@ -828,7 +819,7 @@
           mean volume per stroke $V_{\text{meas}}$. Then:
           $k = V_{\text{meas}} / V_{\text{model,\,}k=1}$.
           This is the most direct calibration because it includes every real-world
-          deviation — geometry, compliance, and any residual backflow at the pinch line.
+          deviation: geometry, compliance, and any residual backflow at the pinch line.
           Run it at the representative dispense volume (not just at maximum stroke) to
           capture any stroke-length dependence.
         </li>
@@ -836,7 +827,7 @@
       <p>
         If the two methods give significantly different $k$ values (more than ~5 %),
         the most likely cause is either backflow past an incompletely occluded tube
-        (check that $\delta$ is inside the recommended $0.10$–$0.20 \times 2w$ band)
+        (check that $\delta$ is inside the recommended $0.10$-$0.20 \times 2w$ band)
         or a non-rigid backing plate deflecting under roller load.
       </p>
     </div>
@@ -863,7 +854,7 @@
       </div>
       <p>
         The elegant result is that <strong>the compensating arc per roller equals its axial
-        contact length exactly</strong>. The lumen area $A_\ell$ cancels in the ratio — the
+        contact length exactly</strong>. The lumen area $A_\ell$ cancels in the ratio: the
         correction is purely geometric and independent of the tube bore. For example: with
         $R_r = 8$ mm, $\delta = 0.25$ mm, $k = 1.15$, and $N_c = 2$ engaged rollers,
         $L_c \approx 1.83$ mm and $\Delta\mathrm{Arc}_{\text{total}} \approx 3.66$ mm
@@ -915,23 +906,23 @@
         <thead><tr><th>Parameter</th><th>Value / range</th><th>Note &amp; source</th></tr></thead>
         <tbody>
           <tr>
-            <td>$R_r$ — roller radius</td>
+            <td>$R_r$, roller radius</td>
             <td>5 mm (10 mm OD) or 8 mm (16 mm OD)</td>
             <td>Two candidate bearings: MR105ZZ ($R_r = 5$ mm) and 625-2RS ($R_r = 8$ mm)</td>
           </tr>
           <tr>
-            <td>$\delta$ — interference</td>
-            <td>0.02–0.60 mm; $(0.10\text{–}0.20)\times 2w$ recommended</td>
+            <td>$\delta$, interference</td>
+            <td>0.02-0.60 mm; $(0.10\text{–}0.20)\times 2w$ recommended</td>
             <td>Measure printed gap, subtract $2w$ to confirm actual $\delta$. <span class="ref">Pump Industry Mag. 2014</span></td>
           </tr>
           <tr>
-            <td>$N_c$ — engaged rollers</td>
+            <td>$N_c$, engaged rollers</td>
             <td>Default 2; approx. roller count / 2 for 180° arc</td>
             <td>Cross-reference with the Rotor Geometry Solver for the specific roller count</td>
           </tr>
           <tr>
-            <td>$k$ — inflation factor</td>
-            <td>Default 1.15; range 1.0–1.5</td>
+            <td>$k$, inflation factor</td>
+            <td>Default 1.15; range 1.0-1.5</td>
             <td>Proto 1 calibration: ink-press footprint → measure $L_c$; 20-replicate gravimetry → $k = V_{\text{meas}}/V_{\text{model}}$. <span class="ref">Klespitz &amp; Kovács, S&amp;A-A, 2022</span></td>
           </tr>
         </tbody>
@@ -942,14 +933,14 @@
 
   <!-- Interactive calculator card -->
   <div class="glass-panel animate-in" id="calculator" style="--delay:0.24s">
-    <div class="panel-title">Interactive Calculator — Displaced Volume &amp; Arc Compensation</div>
+    <div class="panel-title">Interactive Calculator: Displaced Volume &amp; Arc Compensation</div>
 
     <div class="ctrl">
       <div class="cg">
         <label>Bearing OD</label>
         <select id="s2-bod" onchange="p2calc()">
-          <option value="10">10 mm — MR105ZZ &nbsp;(R<sub>r</sub> = 5 mm)</option>
-          <option value="16" selected>16 mm — 625-2RS &nbsp;(R<sub>r</sub> = 8 mm)</option>
+          <option value="10">10 mm, MR105ZZ &nbsp;(R<sub>r</sub> = 5 mm)</option>
+          <option value="16" selected>16 mm, 625-2RS &nbsp;(R<sub>r</sub> = 8 mm)</option>
         </select>
       </div>
       <div class="cg">
@@ -992,36 +983,36 @@
       </div>
     </div>
 
-    <!-- Results — hero: primary design output; row 2: volume breakdown; row 3: derived -->
+    <!-- Results: hero: primary design output; row 2: volume breakdown; row 3: derived -->
     <div class="metrics-grid">
       <div class="metric hero">
         <span class="m-label">Arc compensation ΔArc<sub>total</sub></span>
-        <span class="m-val" id="s2-arc">—</span>
+        <span class="m-val" id="s2-arc">-</span>
         <span class="m-unit">mm</span>
       </div>
       <div class="metric highlight">
         <span class="m-label">Volume per roller V<sub>roller</sub></span>
-        <span class="m-val" id="s2-Vr">—</span>
+        <span class="m-val" id="s2-Vr">-</span>
         <span class="m-unit">µL</span>
       </div>
       <div class="metric highlight">
         <span class="m-label">Total displaced V<sub>total</sub></span>
-        <span class="m-val" id="s2-Vt">—</span>
+        <span class="m-val" id="s2-Vt">-</span>
         <span class="m-unit">µL</span>
       </div>
       <div class="metric">
         <span class="m-label">Printed gap G = 2w − δ</span>
-        <span class="m-val" id="s2-G">—</span>
+        <span class="m-val" id="s2-G">-</span>
         <span class="m-unit">mm</span>
       </div>
       <div class="metric">
         <span class="m-label">Contact length L<sub>c</sub></span>
-        <span class="m-val" id="s2-Lc">—</span>
+        <span class="m-val" id="s2-Lc">-</span>
         <span class="m-unit">mm / roller</span>
       </div>
       <div class="metric">
         <span class="m-label">Open lumen area A<sub>ℓ</sub></span>
-        <span class="m-val" id="s2-Al">—</span>
+        <span class="m-val" id="s2-Al">-</span>
         <span class="m-unit">mm²</span>
       </div>
     </div>
@@ -1032,13 +1023,23 @@
 
 </main>
 
-<footer class="site-footer">
-  Sirio Vittorio Feltrin · DTU Master's Thesis 2025–2026 ·
-  Modular automated liquid dispensing for point-of-care use
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
 </footer>
 
 <!-- ══════════════════════════════════════════════════════
-     KaTeX — CDN primary, local copy as offline fallback
+     KaTeX: CDN primary, local copy as offline fallback
      ══════════════════════════════════════════════════════ -->
 <script>
   function _loadScript(src, onload) {

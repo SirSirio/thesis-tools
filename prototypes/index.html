@@ -3,111 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prototype Design Space — Thesis Tools</title>
+  <title>Prototype Design Space, Thesis Tools</title>
   <link rel="stylesheet" href="../assets/style.css" />
-  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/site-nav.js"></script>
   <style>
-    /* ── Nav bar ──────────────────────────────────────────────── */
-    .tool-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 32px;
-      border-bottom: 1px solid var(--glass-border);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(10, 10, 12, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-    .nav-back { color: var(--accent); font-size: 0.85rem; letter-spacing: 0.04em; }
-    .nav-back:hover { opacity: 0.75; }
-    .nav-title { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.04em; }
-
-    /* ── View container ───────────────────────────────────────── */
-    .journey-view {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 60px 32px 100px;
+    /* Page shell: style.css caps main at 1000px, the river needs more on desktop */
+    main.journey {
+      max-width: 1000px;
+      padding: 56px 32px 96px;
     }
 
-    /* ── Page header ──────────────────────────────────────────── */
-    .journey-header { margin-bottom: 60px; }
-    .journey-title {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+    .journey-header { margin-bottom: 56px; }
+    .journey-header h1 { margin-bottom: 18px; }
     .journey-sub {
-      color: var(--text-muted);
-      font-size: 1rem;
+      color: var(--text-soft);
+      font-size: 1.05rem;
       line-height: 1.6;
-      max-width: 560px;
+      max-width: 60ch;
     }
 
-    /* ── Threads ──────────────────────────────────────────────────
-       One thread = one module = one curve + its own node set.
-       Every accent inside a thread reads its --t-* variables, never
-       the global --accent / --accent-2 / --glass-border (all orange).
-       --stage-h scales the stage to the thread's node count.        */
-    .thread {
+    /* Threads. One thread = one module = one curve + its own node set.
+       Every accent inside a thread reads the --t-* properties, never the
+       global --accent (orange, shared by the nav and the wash).
+       The river paths carry the same classes so one rule colours both
+       the per-thread curve (stacked) and the river curve (desktop). */
+    .thread, .river-path--pump {
       --t-accent:      #ff6b2b;
       --t-accent-2:    #e83535;
       --t-accent-soft: #ffb08a;
       --t-glow:        rgba(255, 107, 43, 0.25);
       --t-border:      rgba(255, 107, 43, 0.18);
-      --t-path:        rgba(255, 107, 43, 0.25);
-      --stage-h:       2500px;
+      --t-path:        rgba(255, 107, 43, 0.28);
+      --stage-h:       1400px;
       position: relative;
     }
-    .thread--align {
+    .thread--align, .river-path--align {
       --t-accent:      #9b7fe0;
       --t-accent-2:    #5a8fd8;
       --t-accent-soft: #c3aef5;
       --t-glow:        rgba(155, 127, 224, 0.28);
       --t-border:      rgba(155, 127, 224, 0.22);
       --t-path:        rgba(155, 127, 224, 0.28);
-      --stage-h:       2000px;
     }
-    .thread + .thread { margin-top: 40px; padding-top: 56px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+    .thread--nozzle, .river-path--nozzle {
+      --t-accent:      #4fb3c8;
+      --t-accent-2:    #3a7bd5;
+      --t-accent-soft: #a9dbe6;
+      --t-glow:        rgba(79, 179, 200, 0.28);
+      --t-border:      rgba(79, 179, 200, 0.22);
+      --t-path:        rgba(79, 179, 200, 0.28);
+    }
+    .thread + .thread {
+      margin-top: 48px;
+      padding-top: 56px;
+      border-top: 1px solid var(--line);
+    }
 
     .thread-head { margin-bottom: 36px; }
-    .thread-eyebrow {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--t-accent);
-      margin-bottom: 8px;
-    }
-    .thread-title {
-      font-size: clamp(1.35rem, 3vw, 1.9rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .site-frame .thread-title {
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
       margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--t-accent), var(--t-accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--t-accent);
     }
     .thread-sub {
-      color: var(--text-muted);
-      font-size: 0.94rem;
-      line-height: 1.6;
-      max-width: 620px;
+      color: var(--text-soft);
+      font-size: 0.96rem;
+      line-height: 1.55;
+      max-width: 48ch;
     }
 
-    /* ── Journey stage (SVG + nodes) ──────────────────────────── */
+    /* Stage: the curve behind, the nodes in front */
     .journey-stage { position: relative; width: 100%; }
     .stage-inner { position: relative; width: 100%; min-height: var(--stage-h); }
-    .journey-path-svg {
+    .thread-svg, .river-svg {
       position: absolute;
       top: 0;
       left: 0;
@@ -116,480 +85,638 @@
       pointer-events: none;
       overflow: visible;
     }
+    .river-svg { display: none; z-index: 0; }
     .nodes-layer { position: relative; z-index: 1; width: 100%; min-height: var(--stage-h); }
 
-    /* Node positioning: per-node custom property, so each thread
-       spaces its own nodes (no ID-keyed rules). */
+    .journey-path {
+      fill: none;
+      stroke: var(--t-path);
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-dasharray: 1 0;
+    }
+    .river-path { stroke-width: 2.6; }
+
+    /* Node: absolute on its stage. JS sets left so the card centre lands on
+       the curve; without JS the CSS centre column holds. */
     .proto-node {
       position: absolute;
       left: 50%;
       top: var(--node-top, 0%);
       transform: translateX(-50%);
       width: clamp(260px, 55vw, 380px);
+      opacity: 1;
     }
 
-    /* Default: visible (covers reduced-motion and no-JS cases) */
-    .proto-node { opacity: 1; }
-    /* Default path state: always drawn. Stroke colour comes from the
-       thread — never hard-coded on the SVG element. */
-    .journey-path {
-      fill: none;
-      stroke: var(--t-path);
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-dasharray: 1 0;
-    }
-
-    /* The .js guard means a no-JS visitor never sees a hidden node —
-       nothing would ever add .is-visible for them. */
+    /* Motion: the path draws, then the nodes rise in. Guarded by html.js
+       (site-nav.js) so a no-JS visitor never meets a hidden node. */
     @media (prefers-reduced-motion: no-preference) {
       .js .journey-path {
         stroke-dasharray: 0 1;
-        transition: stroke-dasharray 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: stroke-dasharray 1.4s var(--ease);
       }
       .js .journey-path.is-visible { stroke-dasharray: 1 0; }
 
       .js .proto-node {
         opacity: 0;
-        transform: translateX(-50%) scale(0.85);
-        transition: opacity 0.45s ease, transform 0.45s ease;
-        transition-delay: 1.5s;
+        transform: translate(-50%, 14px);
+        transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+        transition-delay: calc(1.1s + var(--i, 0) * 140ms);
       }
-      .js .proto-node.is-visible { opacity: 1; transform: translateX(-50%) scale(1); }
-      /* Keyboard focus must never land on an invisible card */
-      .js .proto-node:focus-within { opacity: 1; transform: translateX(-50%) scale(1); transition-delay: 0s; }
+      .js .proto-node.is-visible { opacity: 1; transform: translate(-50%, 0); }
+      .js .proto-node:focus-within { opacity: 1; transform: translate(-50%, 0); transition-delay: 0s; }
     }
 
-    /* assets/style.css ships .animate-in at opacity:0 with no guard */
-    @media (prefers-reduced-motion: reduce) {
-      .animate-in { opacity: 1; transform: none; animation: none; }
-    }
-
-    /* ── Proto summary card ───────────────────────────────────── */
+    /* Node card */
     .proto-card {
-      display: block;
-      width: 100%;
-      text-align: left;
-      font-family: var(--font);
-      background: var(--glass-bg);
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 12px 16px;
+      align-items: center;
+      background: var(--surface);
       border: 1px solid var(--t-border);
-      border-radius: var(--radius);
-      padding: 24px 28px;
-      cursor: pointer;
+      border-radius: var(--r-md);
+      padding: 20px 22px 18px;
       color: var(--text);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
     }
-    .proto-card:hover { border-color: var(--t-accent); box-shadow: 0 0 20px var(--t-glow); }
-    .proto-card:focus-visible {
-      outline: 2px solid var(--t-accent);
-      outline-offset: 3px;
-      border-color: var(--t-accent);
-    }
-    .proto-card-tag {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--t-accent);
-      margin-bottom: 8px;
-    }
-    .proto-card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
-    .proto-card-purpose {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 16px;
-    }
-    .proto-card-kpi { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-    .kpi-pill {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--t-border);
-    }
-    /* Semantic, not accent-following: a warning stays red on both threads
-       (on the violet thread --t-accent-2 is blue, which reads as information). */
-    .kpi-pill.kpi-warn { border-color: rgba(232, 53, 53, 0.5); color: #e83535; }
-    .proto-card-cta { font-size: 0.8rem; color: var(--t-accent); font-weight: 500; }
+    .proto-card:hover { transform: translateY(-2px); border-color: var(--t-accent); }
+    .proto-card:focus-visible { outline: 2px solid var(--t-accent); outline-offset: 3px; }
 
-    /* ── Card thumbnail (real photo, circular node) ───────────── */
-    .proto-card-thumb {
-      width: 88px;
-      height: 88px;
+    .proto-thumb {
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--t-accent);
-      box-shadow: 0 0 18px var(--t-glow);
-      float: right;
-      margin: 0 0 12px 16px;
+      background: #131316;
+      transition: transform var(--dur-fast) var(--ease);
     }
-    /* Placeholder thumb — no photo carried onto this page */
-    .proto-card-thumb-ph {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      float: right;
-      margin: 0 0 12px 16px;
+    .proto-card:hover .proto-thumb { transform: scale(1.02); }
+    .proto-thumb--render { object-fit: contain; background: #f4f2ef; }
+
+    .proto-tag {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--t-accent);
+      margin-bottom: 4px;
+    }
+    .site-frame .proto-title { font-size: 1.08rem; font-weight: 600; line-height: 1.25; }
+    .proto-purpose {
+      grid-column: 1 / -1;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+    .proto-nums {
+      grid-column: 1 / -1;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: 0.7rem;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      background: repeating-linear-gradient(
-        45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px,
-        rgba(255,255,255,0.02) 6px, rgba(255,255,255,0.02) 12px);
-      border: 2px dashed var(--t-accent);
-      box-shadow: 0 0 14px var(--t-glow);
+      flex-wrap: wrap;
+      gap: 6px;
     }
-
-    /* ── Ghost cards (planned, not yet started) ───────────────── */
-    .proto-card-ghost {
-      display: block;
-      width: 100%;
-      text-align: left;
-      font-family: var(--font);
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed var(--t-border);
-      border-radius: var(--radius);
-      padding: 24px 28px;
+    .proto-nums .num {
+      font-size: 0.76rem;
+      padding: 4px 9px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
       color: var(--text);
-      opacity: 0.42;
-      filter: grayscale(1);
-      cursor: default;
+      white-space: nowrap;
     }
-    .proto-card-ghost .proto-card-thumb-ph {
-      border-style: dashed;
-      border-color: var(--text-muted);
-      box-shadow: none;
+    .proto-cta {
+      grid-column: 1 / -1;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--t-accent);
     }
-    .proto-card-ghost .proto-card-tag { color: var(--text-muted); }
-    .proto-card-ghost .proto-card-cta { color: var(--text-muted); }
+    .proto-cta::after { content: " \2192"; }
 
-    /* ── Mobile (≤ 640px) ─────────────────────────────────────── */
+    /* Confluence: the wide Integration node the three curves flow into */
+    .confluence {
+      position: relative;
+      margin-top: 72px;
+    }
+    .confluence-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line-accent);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      color: var(--text);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+    }
+    .confluence-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .confluence-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .confluence-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: var(--r-md);
+      background: #131316;
+      transition: transform var(--dur-fast) var(--ease);
+    }
+    .confluence-card:hover .confluence-thumb { transform: scale(1.02); }
+    .confluence-text { display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+    .confluence-tag { font-family: var(--mono); font-size: 0.74rem; color: var(--accent); }
+    .site-frame .confluence-title { font-size: clamp(1.5rem, 2.4vw, 2.1rem); }
+    .confluence-purpose { color: var(--text-soft); font-size: 0.98rem; line-height: 1.55; max-width: 52ch; }
+    .confluence-nums { display: flex; flex-wrap: wrap; gap: 8px; }
+    .confluence-nums .num {
+      font-size: 0.8rem;
+      padding: 5px 11px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--line-accent);
+      background: rgba(255, 107, 43, 0.06);
+      white-space: nowrap;
+    }
+    .confluence-cta { font-size: 0.88rem; font-weight: 600; color: var(--accent); }
+    .confluence-cta::after { content: " \2192"; }
+    .confluence-next {
+      margin: 22px auto 0;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 0.92rem;
+    }
+
+    @media (min-width: 768px) {
+      .confluence-card { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px; padding: 28px; }
+    }
+
+    /* Phones: no curve, plain stack */
     @media (max-width: 640px) {
-      .journey-path-svg { display: none; }
+      .thread-svg { display: none; }
       .stage-inner, .nodes-layer { min-height: unset; }
       .proto-node {
         position: static;
         transform: none;
         opacity: 1;
         width: 100%;
-        margin: 0 0 24px;
+        margin: 0 0 20px;
         transition: none;
       }
       .js .proto-node { opacity: 1; transform: none; transition: none; }
       .js .proto-node.is-visible { transform: none; }
-      .journey-view { padding: 40px 20px 60px; }
-      .tool-nav { padding: 16px 20px; }
-      .proto-card, .proto-card-ghost { padding: 20px 18px; }
-      .proto-card-thumb, .proto-card-thumb-ph { width: 64px; height: 64px; }
-      .thread + .thread { padding-top: 40px; }
+      main.journey { padding: 40px 16px 64px; }
+      .journey-header { margin-bottom: 40px; }
+      .proto-card { padding: 18px; }
+      .proto-thumb { width: 64px; height: 64px; }
+      .thread + .thread { margin-top: 32px; padding-top: 40px; }
+      .confluence { margin-top: 56px; }
+      .confluence-card { padding: 18px; }
     }
 
-    /* ── Parallel threads (≥ 1000px) ──────────────────────────────
-       Both modules descend the page side by side, so you see the two
-       tracks develop together instead of reading one then the other.
-
-       Breakpoint is set by the card, not by a round number. Cards are
-       min(380px, 74%) of their column; 74% is the widest that keeps a
-       card clear of alignNodesToPath()'s edge clamp, because the curve
-       only reaches x = 39.4%..60.6% of the stage, so anything past
-       ~78% would pin to the edge and fall off its own curve.
-       Holding a 320px card floor (the width at which the purpose text
-       beside the thumb still runs ~28 characters) gives
-       0.74 · (vw − 64 − 48)/2 ≥ 320  →  vw ≥ 977px. Rounded to 1000px:
-       the card measures 328px there, and 291px one step below — the
-       ravine this breakpoint exists to avoid.
-       Below 1000px everything falls back to the stacked layout, and
-       the ≤640px rules are untouched.                                */
-    @media (min-width: 1000px) {
-      /* assets/style.css caps main at 1000px with a 32px gutter, and
-         .journey-view adds a second 32px gutter on top. Two columns need
-         the room back: widen main and drop the inner gutter (main's own
-         32px still keeps the content off the viewport edge). Scoped to
-         this breakpoint, so the stacked layout keeps the shared defaults. */
-      main { max-width: 1400px; }
-      .journey-view {
-        max-width: none;
-        padding-left: 0;
-        padding-right: 0;
+    /* Desktop: three columns, one river. The threads dissolve into the grid
+       (display: contents) so heads share row 1 and stages share row 2, and
+       one SVG spans row 2 behind all three stages. Its three paths end at
+       the same point, the bottom centre of row 2, which is where the
+       Integration node begins in row 3. */
+    @media (min-width: 1100px) {
+      main.journey { max-width: 1440px; }
+      .river {
+        position: relative;
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        /* row 1 page header · row 2 thread heads · row 3 stages */
-        grid-template-rows: auto auto auto;
-        column-gap: 48px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: auto auto auto auto;
+        column-gap: 40px;
+        row-gap: 0;
       }
-      .journey-header { grid-column: 1 / -1; grid-row: 1; }
-
-      /* Each thread spans the head row and the stage row, and borrows them
-         as a subgrid — so both heads share one row and are the same height,
-         which puts both curves' start at the same y. Without subgrid this
-         degrades to naturally-sized heads; the layout still holds. */
-      .thread {
-        grid-row: 2 / span 2;
-        display: grid;
-        grid-template-rows: subgrid;
-      }
-      .thread--pump  { grid-column: 1; }
-      .thread--align { grid-column: 2; }
+      .thread { display: contents; --stage-h: 1700px; }
       .thread + .thread { margin-top: 0; padding-top: 0; border-top: none; }
-
-      /* One shared stage height for both threads — that is what makes the
-         two tracks read as parallel. Each still spreads its own nodes over
-         it, so the alignment thread's 4 nodes simply sit further apart than
-         the pump thread's 5.
-         Sized off the tallest card (proto-02, 481px at the narrowest
-         two-column width): the pump's 20% node spacing has to clear it,
-         so 0.20 · 2900 = 580px leaves ~100px between cards at 1000px and
-         more above that. */
-      .thread { --stage-h: 2900px; }
-
-      /* The alignment thread carries 3 nodes to the pump's 5. Holding it to the
-         same 2900px left ~690px of curve trailing past its last card with
-         nothing on it. Both columns still START at the same y — which is the
-         point of the parallel layout — but this track finishes sooner, which is
-         the honest picture: it is the younger module with fewer milestones. */
-      .thread--align { --stage-h: 2300px; }
-
-      /* Cards were sized for a full-width stage; a half-width column needs
-         them narrower. Padding and thumb shrink with them so the purpose
-         paragraph beside the floated thumb does not become a ravine. */
-      .proto-node { width: min(380px, 74%); }
-      .proto-card, .proto-card-ghost { padding: 24px 22px; }
-      .proto-card-thumb, .proto-card-thumb-ph { width: 72px; height: 72px; margin: 0 0 10px 14px; }
+      .thread-head { grid-row: 1; margin-bottom: 40px; }
+      .journey-stage { grid-row: 2; z-index: 1; }
+      .thread--pump   .thread-head, .thread--pump   .journey-stage { grid-column: 1; }
+      .thread--align  .thread-head, .thread--align  .journey-stage { grid-column: 2; }
+      .thread--nozzle .thread-head, .thread--nozzle .journey-stage { grid-column: 3; }
       .thread-sub { max-width: none; }
+
+      .river-svg { display: block; grid-row: 2; grid-column: 1 / -1; }
+      .thread-svg { display: none; }
+
+      .proto-node { top: var(--node-top-wide, var(--node-top, 0%)); width: clamp(250px, 72%, 360px); }
+      .proto-card { padding: 18px 18px 16px; gap: 10px 14px; }
+      .proto-thumb { width: 64px; height: 64px; }
+
+      .confluence { grid-row: 3; grid-column: 1 / -1; margin-top: 0; padding-top: 22px; }
+      .confluence::before {
+        content: "";
+        position: absolute;
+        top: -7px;
+        left: 50%;
+        width: 14px;
+        height: 14px;
+        margin-left: -7px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 6px rgba(255, 107, 43, 0.18);
+      }
+      .confluence-next { grid-row: 4; grid-column: 1 / -1; }
+    }
+    @media (min-width: 1320px) {
+      .proto-thumb { width: 72px; height: 72px; }
+      .proto-card { padding: 20px 22px 18px; gap: 12px 16px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .proto-card, .confluence-card, .proto-thumb, .confluence-thumb { transition: none; }
+      .proto-card:hover, .confluence-card:hover { transform: none; }
+      .proto-card:hover .proto-thumb, .confluence-card:hover .confluence-thumb { transform: none; }
     }
   </style>
 </head>
-<body>
-<!-- Ambient background blobs for glassmorphism depth -->
+<body class="site-frame">
 <div class="bg-blobs" aria-hidden="true">
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 </div>
 
-<nav class="tool-nav animate-in" style="--delay:0s">
-  <a class="nav-back" href="../index.html">← All tools</a>
-  <span class="nav-title">Prototype Design Space</span>
-</nav>
+<header class="site-nav" data-root="../">
+  <a class="site-nav__back" href="../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../index.html#machine">Machine</a>
+    <a href="../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
 
-<main>
-  <div class="journey-view">
-    <div class="journey-header">
-      <h1 class="journey-title">Prototype Design Space</h1>
-      <p class="journey-sub">Two hardware threads — the pump that meters the dose, and the stage that brings the samples to it. Each node is a build, and each build a question posed to the physics. Open a node for its full story.</p>
-    </div>
+<main class="journey">
+  <header class="journey-header">
+    <h1>Prototype Design Space</h1>
+    <p class="journey-sub">Three module threads, one build at a time, meeting in the assembled instrument. Each node is a build; open it for the full record.</p>
+  </header>
 
-    <!-- ── Thread 1 · Pump module ────────────────────────────── -->
-    <section class="thread thread--pump" id="thread-pump" aria-labelledby="thread-pump-title">
+  <div class="river">
+    <!-- Desktop river: one viewBox, three paths, one meeting point at (900, 2200).
+         Half-waves of 660 units with the control points a third of the way in,
+         so each card sits at the crest of its bump. The last segment of every
+         path bends to the bottom centre. -->
+    <svg class="river-svg" viewBox="0 0 1800 2200" preserveAspectRatio="none" aria-hidden="true">
+      <path class="journey-path river-path river-path--pump" data-thread="pump" pathLength="1"
+        d="M 285 0 C 205 220, 205 440, 285 660 C 365 880, 365 1100, 285 1320 C 205 1540, 205 1760, 285 1980 C 341 2134, 600 2200, 900 2200"/>
+      <path class="journey-path river-path river-path--align" data-thread="align" pathLength="1"
+        d="M 900 0 C 980 220, 980 440, 900 660 C 820 880, 820 1100, 900 1320 C 980 1540, 980 1760, 900 1980 C 860 2090, 900 2150, 900 2200"/>
+      <path class="journey-path river-path river-path--nozzle" data-thread="nozzle" pathLength="1"
+        d="M 1515 0 C 1595 220, 1595 440, 1515 660 C 1435 880, 1435 1100, 1515 1320 C 1595 1540, 1595 1760, 1515 1980 C 1459 2134, 1200 2200, 900 2200"/>
+    </svg>
+
+    <!-- Thread 1: pump module -->
+    <section class="thread thread--pump" id="thread-pump" data-thread="pump" aria-labelledby="thread-pump-title">
       <div class="thread-head">
-        <div class="thread-eyebrow">Prototype 1 · Module</div>
-        <h2 class="thread-title" id="thread-pump-title">Pump Module</h2>
-        <p class="thread-sub">The dispensing head — a 3D-printed peristaltic rotor that meters a few microlitres per stroke, with the liquid touching nothing but a disposable tube.</p>
+        <h2 class="thread-title" id="thread-pump-title">Pump module</h2>
+        <p class="thread-sub">The peristaltic head that meters the dose: one rotor step, one stroke, and a step count for every volume.</p>
       </div>
-
       <div class="journey-stage">
         <div class="stage-inner">
-          <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
-            <path class="journey-path"
-              d="M 300 40 C 520 140, 80 300, 300 440 C 520 580, 80 740, 300 880"
-              pathLength="1"/>
+          <svg class="thread-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="journey-path" pathLength="1"
+              d="M 300 0 C 180 100, 180 200, 300 300 C 420 400, 420 500, 300 600 C 180 700, 180 800, 300 900"/>
           </svg>
-
           <div class="nodes-layer">
-            <div class="proto-node" style="--node-top:1%">
+            <div class="proto-node" style="--node-top: 6%; --node-top-wide: 5%; --i: 0">
               <a class="proto-card" href="Prototype-1-Pump-Module/proto-01-5ul-4roller/index.html">
-                <img class="proto-card-thumb" src="Prototype-1-Pump-Module/proto-01-5ul-4roller/Prototype1_Real_Closed.jpg" alt="Prototype 1, head closed" />
-                <div class="proto-card-tag">Proto 01 · 2026</div>
-                <h3 class="proto-card-title">5 µL 4-roller peristaltic</h3>
-                <p class="proto-card-purpose">First physical build — prove the concept, validate the model, learn before the next cycle. It pumps; the model holds; three fixable errors found.</p>
-                <div class="proto-card-kpi">
-                  <span class="kpi-pill kpi-warn">−32 % under-dispense</span>
-                  <span class="kpi-pill">CV 4.5 %</span>
-                  <span class="kpi-pill">model ✓ ~11 %</span>
+                <img class="proto-thumb" src="../assets/media/pump/proto01-closed.jpg" alt="Proto-01 pump head, closed" loading="lazy" />
+                <div>
+                  <div class="proto-tag">Proto-01, first build</div>
+                  <h3 class="proto-title">5 µL four-roller head</h3>
                 </div>
-                <span class="proto-card-cta">Explore →</span>
+                <p class="proto-purpose">The first physical head. It pumped, the model held, and the shortfall sent the printer to be calibrated.</p>
+                <div class="proto-nums">
+                  <span class="num">3.39 µL per stroke</span>
+                  <span class="num">5 µL nominal</span>
+                  <span class="num">4 rollers</span>
+                </div>
+                <span class="proto-cta">Open record</span>
               </a>
             </div>
 
-            <div class="proto-node" style="--node-top:21%">
+            <div class="proto-node" style="--node-top: 39%; --node-top-wide: 35%; --i: 1">
               <a class="proto-card" href="Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/index.html">
-                <div class="proto-card-thumb-ph" aria-hidden="true">v2.3 tested ✅</div>
-                <div class="proto-card-tag">Proto 02 · 2026</div>
-                <h3 class="proto-card-title">5 µL 4-roller — corrected geometry</h3>
-                <p class="proto-card-purpose">The first build that works to spec. v2.1 didn't seal; v2.2 rebuilt the rotor and turned the printer into a calibrated model; v2.3 spent both — gap <strong>1.52 measured</strong>, and the gravimetric campaign delivered <strong>4.56 µL/stroke, linear, with 100-stroke CV below the manual-pipette reference</strong>.</p>
-                <div class="proto-card-kpi">
-                  <span class="kpi-pill">4.56 µL/stroke (−8.9 %)</span>
-                  <span class="kpi-pill">CV 0.25 % vs pipette 0.27 %</span>
-                  <span class="kpi-pill">180 rpm optimum</span>
+                <img class="proto-thumb proto-thumb--render" src="../assets/media/pump/v23-render.png" alt="Proto-02 v2.3 pump head, CAD render" loading="lazy" />
+                <div>
+                  <div class="proto-tag">Proto-02, v2.1 to v2.3</div>
+                  <h3 class="proto-title">Corrected geometry, gap sweep</h3>
                 </div>
-                <span class="proto-card-cta">Explore →</span>
+                <p class="proto-purpose">Three builds to a rotor that hits its gap, then a gravimetric campaign that matched manual pipetting.</p>
+                <div class="proto-nums">
+                  <span class="num">4.53 µL per stroke</span>
+                  <span class="num">CV 0.25 to 0.34 %</span>
+                  <span class="num">gap 1.52 mm</span>
+                </div>
+                <span class="proto-cta">Open record</span>
               </a>
             </div>
 
-            <div class="proto-node" style="--node-top:41%">
-              <div class="proto-card-ghost" aria-disabled="true">
-                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-                <div class="proto-card-tag">Proto 03 · planned</div>
-                <h3 class="proto-card-title">Precision &amp; calibration validation</h3>
-                <p class="proto-card-purpose">Stable CV, reliable step-count calibration, model validated across the volume range. Nothing built yet.</p>
-                <span class="proto-card-cta">Not started</span>
-              </div>
-            </div>
-
-            <div class="proto-node" style="--node-top:61%">
-              <div class="proto-card-ghost" aria-disabled="true">
-                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-                <div class="proto-card-tag">Proto 04 · planned</div>
-                <h3 class="proto-card-title">Multi-liquid mechanism</h3>
-                <p class="proto-card-purpose">One motor, 5 liquids, a separate tube per liquid — without 5 motors (size/portability). Mechanism still open. Nothing built yet.</p>
-                <span class="proto-card-cta">Not started</span>
-              </div>
-            </div>
-
-            <div class="proto-node" style="--node-top:81%">
-              <div class="proto-card-ghost" aria-disabled="true">
-                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-                <div class="proto-card-tag">Proto 05 · planned</div>
-                <h3 class="proto-card-title">System integration</h3>
-                <p class="proto-card-purpose">Pump + multi-liquid mechanism + electronics in one dispensing-module enclosure. Nothing built yet.</p>
-                <span class="proto-card-cta">Not started</span>
-              </div>
+            <div class="proto-node" style="--node-top: 72%; --node-top-wide: 65%; --i: 2">
+              <a class="proto-card" href="../index.html#stop-pump">
+                <img class="proto-thumb proto-thumb--render" src="../assets/media/pump/carrier-central-full.png" alt="Pump head with its vial carrier, CAD render" loading="lazy" />
+                <div>
+                  <div class="proto-tag">On the instrument</div>
+                  <h3 class="proto-title">Integrated pump heads</h3>
+                </div>
+                <p class="proto-purpose">Two heads on the chassis, each with its own calibration, dosing forty tubes unattended.</p>
+                <div class="proto-nums">
+                  <span class="num">3.94 and 4.10 µL per stroke</span>
+                  <span class="num">2 of 6 channels</span>
+                </div>
+                <span class="proto-cta">See it on the machine</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Thread 2 · Alignment module ───────────────────────── -->
-    <section class="thread thread--align" id="thread-align" aria-labelledby="thread-align-title">
+    <!-- Thread 2: alignment module -->
+    <section class="thread thread--align" id="thread-align" data-thread="align" aria-labelledby="thread-align-title">
       <div class="thread-head">
-        <div class="thread-eyebrow">Prototype 2 · Module</div>
-        <h2 class="thread-title" id="thread-align-title">Alignment Module</h2>
-        <p class="thread-sub">Hosts the sample rack and indexes each tube under the dispensing nozzle — it moves the samples, not the head.</p>
+        <h2 class="thread-title" id="thread-align-title">Alignment module</h2>
+        <p class="thread-sub">The stage that brings each tube under the needles, and grew into the chassis of the whole machine.</p>
       </div>
-
       <div class="journey-stage">
         <div class="stage-inner">
-          <!-- Mirror of the pump curve (x → 600 − x): side by side the two
-               threads swing opposite ways and read as two strands of one
-               project rather than a copy-paste. Pump's d is unchanged. -->
-          <svg class="journey-path-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
-            <path class="journey-path"
-              d="M 300 40 C 80 140, 520 300, 300 440 C 80 580, 520 740, 300 880"
-              pathLength="1"/>
+          <svg class="thread-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="journey-path" pathLength="1"
+              d="M 300 0 C 420 100, 420 200, 300 300 C 180 400, 180 500, 300 600 C 420 700, 420 800, 300 900"/>
           </svg>
-
           <div class="nodes-layer">
-            <div class="proto-node" style="--node-top:1%">
+            <div class="proto-node" style="--node-top: 6%; --node-top-wide: 5%; --i: 0">
               <a class="proto-card" href="Prototype-2-Alignment-Module/index.html">
-                <div class="proto-card-thumb-ph" aria-hidden="true">V2.1 ✅</div>
-                <div class="proto-card-tag">V2 · built 2026-06-25 · V2.1 tested 2026-07-31</div>
-                <h3 class="proto-card-title">Rack indexing stage, with homing</h3>
-                <p class="proto-card-purpose">A rack-and-pinion stage that carries a custom 8-tube rack under the nozzle. Motor and pusher sit <strong>above</strong> the rail, so gravity — not a seal — keeps spilled liquid away from the parts that are hard to clean. <strong>V2.1 bolts on a roller-lever endstop</strong> — wired so a severed cable reads as “at the switch” and halts the axis rather than driving it into a hard stop — plus three-pass homing. The stage stops counting steps from wherever it happens to be and finds its own zero.</p>
-                <div class="proto-card-kpi">
-                  <span class="kpi-pill">8 tube positions · 22 mm pitch</span>
-                  <span class="kpi-pill">repeatable zero no worse than 0.03 mm</span>
-                  <span class="kpi-pill">22 s full home, from 110 s</span>
-                  <span class="kpi-pill kpi-warn">~140 mm stroke — 14 mm short of 154</span>
+                <img class="proto-thumb" src="../assets/media/alignment/sketch-1.jpg" alt="Hand-sketched alignment concepts, sheet one" loading="lazy" />
+                <div>
+                  <div class="proto-tag">Concept sheets</div>
+                  <h3 class="proto-title">Fifty concepts on six sheets</h3>
                 </div>
-                <span class="proto-card-cta">Explore →</span>
+                <p class="proto-purpose">About fifty stages, queues and ejectors on paper before one was printed.</p>
+                <div class="proto-nums">
+                  <span class="num">about 50 concepts</span>
+                  <span class="num">6 sketch sheets</span>
+                </div>
+                <span class="proto-cta">Open record</span>
               </a>
             </div>
 
-            <div class="proto-node" style="--node-top:38%">
-              <div class="proto-card-ghost" aria-disabled="true">
-                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-                <div class="proto-card-tag">V3 · planned</div>
-                <h3 class="proto-card-title">Long-stroke redesign + second axis</h3>
-                <p class="proto-card-purpose">Rail and carriage redesigned past 170 mm so the full 8-position pattern fits with margin — the only unmet pass criterion, and a purely mechanical change: the electronics and firmware already carry a 196 mm travel budget. Second axis wired and proved. Nothing built yet.</p>
-                <span class="proto-card-cta">Not started</span>
-              </div>
+            <div class="proto-node" style="--node-top: 39%; --node-top-wide: 35%; --i: 1">
+              <a class="proto-card" href="Prototype-2-Alignment-Module/index.html">
+                <img class="proto-thumb" src="../assets/media/alignment/v21-homing.jpg" alt="Alignment stage V2.1 with its homing switch, on the bench" loading="lazy" />
+                <div>
+                  <div class="proto-tag">V2 and V2.1</div>
+                  <h3 class="proto-title">Rack-indexing stage with homing</h3>
+                </div>
+                <p class="proto-purpose">A rack-and-pinion stage under the needles, then a fail-safe endstop that finds its own zero.</p>
+                <div class="proto-nums">
+                  <span class="num">homing ≤ 0.03 mm</span>
+                  <span class="num">22 s to home</span>
+                  <span class="num">22 mm pitch</span>
+                </div>
+                <span class="proto-cta">Open record</span>
+              </a>
             </div>
 
-            <div class="proto-node" style="--node-top:74%">
-              <div class="proto-card-ghost" aria-disabled="true">
-                <div class="proto-card-thumb-ph" aria-hidden="true">planned</div>
-                <div class="proto-card-tag">V4 · planned</div>
-                <h3 class="proto-card-title">Rack queueing</h3>
-                <p class="proto-card-purpose">An input and an output queue holding at least four racks, handled automatically, so a run is not one rack at a time and the throughput ceiling stops being the operator. Nothing built yet.</p>
-                <span class="proto-card-cta">Not started</span>
-              </div>
+            <div class="proto-node" style="--node-top: 72%; --node-top-wide: 65%; --i: 2">
+              <a class="proto-card" href="Prototype-2-Alignment-Module/v3-two-axis-chassis/index.html">
+                <img class="proto-thumb proto-thumb--render" src="../assets/media/alignment/v3-iso.png" alt="V3 two-axis chassis, CAD render" loading="lazy" />
+                <div>
+                  <div class="proto-tag">V3</div>
+                  <h3 class="proto-title">Two-axis chassis</h3>
+                </div>
+                <p class="proto-purpose">The stage grows into the chassis: a second axis feeds five racks through the lane.</p>
+                <div class="proto-nums">
+                  <span class="num">5 racks</span>
+                  <span class="num">40 tubes</span>
+                  <span class="num">about 500 mm</span>
+                </div>
+                <span class="proto-cta">Open record</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Thread 3: nozzle module -->
+    <section class="thread thread--nozzle" id="thread-nozzle" data-thread="nozzle" aria-labelledby="thread-nozzle-title">
+      <div class="thread-head">
+        <h2 class="thread-title" id="thread-nozzle-title">Nozzle module</h2>
+        <p class="thread-sub">Six needles that place the droplet, and a small motor that shakes it free of the tip.</p>
+      </div>
+      <div class="journey-stage">
+        <div class="stage-inner">
+          <svg class="thread-svg" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="journey-path" pathLength="1"
+              d="M 300 0 C 180 100, 180 200, 300 300 C 420 400, 420 500, 300 600 C 180 700, 180 800, 300 900"/>
+          </svg>
+          <div class="nodes-layer">
+            <div class="proto-node" style="--node-top: 6%; --node-top-wide: 5%; --i: 0">
+              <a class="proto-card" href="Prototype-3-Nozzle-Module/index.html">
+                <img class="proto-thumb" src="../assets/media/nozzle/needle-assortment.jpg" alt="Blunt dispensing needles of several gauges" loading="lazy" />
+                <div>
+                  <div class="proto-tag">Inherited</div>
+                  <h3 class="proto-title">Inherited needle carrier</h3>
+                </div>
+                <p class="proto-purpose">The companion thesis carrier, tried across needle gauges. Droplets stayed pinned to the tip.</p>
+                <div class="proto-nums">
+                  <span class="num">27 to 21 G tried</span>
+                  <span class="num">6 needles</span>
+                </div>
+                <span class="proto-cta">Open record</span>
+              </a>
+            </div>
+
+            <div class="proto-node" style="--node-top: 39%; --node-top-wide: 35%; --i: 1">
+              <a class="proto-card" href="Prototype-3-Nozzle-Module/index.html">
+                <img class="proto-thumb proto-thumb--render" src="../assets/media/nozzle/holder-vibr-top.png" alt="Rebuilt nozzle holder with the vibration motor, CAD render" loading="lazy" />
+                <div>
+                  <div class="proto-tag">Rebuilt</div>
+                  <h3 class="proto-title">Six-seat carrier with vibration release</h3>
+                </div>
+                <p class="proto-purpose">Needles seat on their Luer hubs, any gauge swaps in without tools, and a metal eccentric mass shakes the droplet free.</p>
+                <div class="proto-nums">
+                  <span class="num">6 seats</span>
+                  <span class="num">22 G validated</span>
+                  <span class="num">5 mm radius</span>
+                </div>
+                <span class="proto-cta">Open record</span>
+              </a>
+            </div>
+
+            <div class="proto-node" style="--node-top: 72%; --node-top-wide: 65%; --i: 2">
+              <a class="proto-card" href="Prototype-3-Nozzle-Module/index.html#droplet-video">
+                <img class="proto-thumb" src="../assets/media/video/droplet-slowmo-poster.jpg" alt="A droplet leaving the needle tip, slow-motion still" loading="lazy" />
+                <div>
+                  <div class="proto-tag">Release</div>
+                  <h3 class="proto-title">Droplet release, on camera</h3>
+                </div>
+                <p class="proto-purpose">The pendant droplet leaving a 22 G tip under the vibration pulse, filmed in slow motion.</p>
+                <div class="proto-nums">
+                  <span class="num">22 G</span>
+                  <span class="num">40 of 40 tubes</span>
+                  <span class="num">5 mm radius</span>
+                </div>
+                <span class="proto-cta">Open the release section</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integration node: where the three threads meet -->
+    <section class="confluence reveal" aria-labelledby="confluence-title">
+      <a class="confluence-card" href="../index.html#machine">
+        <img class="confluence-thumb" src="../assets/media/device/top.jpg" alt="The integrated prototype seen from above" loading="lazy" />
+        <div class="confluence-text">
+          <div class="confluence-tag">All three threads</div>
+          <h2 class="confluence-title" id="confluence-title">Integrated prototype</h2>
+          <p class="confluence-purpose">Two reagent channels, five racks and one touchscreen on a battery pack: the modules assembled into one instrument that ran forty tubes unattended.</p>
+          <div class="confluence-nums">
+            <span class="num">50 × 35 × 18 cm</span>
+            <span class="num">2 of 6 channels</span>
+            <span class="num">40 tubes per run</span>
+          </div>
+          <span class="confluence-cta">See the machine</span>
+        </div>
+      </a>
+    </section>
+    <p class="confluence-next reveal" style="--delay: 120ms">Next: six channels, a custom PCB, an enclosure, a run with real reagents.</p>
   </div>
 </main>
 
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../prototypes/index.html">Prototypes</a>
+      <a href="../tools/index.html">Instruments</a>
+      <a href="../decks/index.html">Presentations</a>
+      <a href="../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
 <script>
-  // Path draw + node pop-in. One observer per thread — a shared observer
-  // would reveal both threads the moment either one scrolled into view.
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const threads = document.querySelectorAll('.thread');
+  (function () {
+    'use strict';
+    var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var river    = document.querySelector('.river');
+    var riverSvg = river ? river.querySelector('.river-svg') : null;
+    var threads  = Array.prototype.slice.call(document.querySelectorAll('.thread'));
+    var RIVER_VB = { w: 1800, h: 2200 };
+    var STACK_VB = { w: 600,  h: 900  };
 
-  if (!reducedMotion) {
-    threads.forEach(thread => {
-      const stage = thread.querySelector('.stage-inner');
-      if (!stage) return;
-      const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          // Scoped to this stage, not the document.
-          stage.querySelector('.journey-path')?.classList.add('is-visible');
-          stage.querySelectorAll('.proto-node').forEach(n => n.classList.add('is-visible'));
+    function riverPath(key) {
+      return riverSvg ? riverSvg.querySelector('[data-thread="' + key + '"]') : null;
+    }
+    function shown(el) {
+      return !!el && getComputedStyle(el).display !== 'none';
+    }
+
+    /* Reveal: one observer per stage. Draws that thread's curve (the stacked
+       one and the river one share the class) and lifts its nodes in. */
+    if (!reducedMotion && 'IntersectionObserver' in window) {
+      threads.forEach(function (thread) {
+        var stage = thread.querySelector('.stage-inner');
+        if (!stage) return;
+        var obs = new IntersectionObserver(function (entries) {
+          if (!entries[0].isIntersecting) return;
+          var own = thread.querySelector('.thread-svg .journey-path');
+          var shared = riverPath(thread.getAttribute('data-thread'));
+          if (own) own.classList.add('is-visible');
+          if (shared) shared.classList.add('is-visible');
+          stage.querySelectorAll('.proto-node').forEach(function (n) { n.classList.add('is-visible'); });
           obs.disconnect();
-        }
-      }, { threshold: 0.1 });
-      obs.observe(stage);
-    });
-  }
-  // reducedMotion=true: CSS default (stroke-dasharray:1 0, opacity:1) already shows everything
-
-  // Node alignment — place each card's centre on its own thread's path.
-  // The SVG is stretched with preserveAspectRatio="none", so viewBox units
-  // map linearly to stage fractions: x/600 → width, y/900 → height.
-  function alignNodesToPath() {
-    threads.forEach(thread => {
-      const stage = thread.querySelector('.stage-inner');
-      const svg   = thread.querySelector('.journey-path-svg');
-      const path  = thread.querySelector('.journey-path');
-      if (!stage || !svg || !path) return;
-      const nodes = stage.querySelectorAll('.proto-node');
-      if (getComputedStyle(svg).display === 'none') {
-        // Mobile stack (≤640px): nodes are static — clear inline offsets so
-        // they don't leak back when resizing up to desktop.
-        nodes.forEach(n => { n.style.left = ''; });
-        return;
-      }
-      const H = stage.offsetHeight;
-      const W = stage.offsetWidth;
-      if (!H || !W) return;
-      // pathLength="1" only rescales stroke dashes; getPointAtLength stays in user units
-      const total = path.getTotalLength();
-      const SAMPLES = 240;
-      const pts = [];
-      for (let i = 0; i <= SAMPLES; i++) pts.push(path.getPointAtLength(total * i / SAMPLES));
-      nodes.forEach(node => {
-        const ySvg = (node.offsetTop + node.offsetHeight / 2) / H * 900;
-        let best = pts[0];
-        for (const p of pts) { if (Math.abs(p.y - ySvg) < Math.abs(best.y - ySvg)) best = p; }
-        const halfPct = node.offsetWidth / 2 / W * 100;
-        const leftPct = Math.min(100 - halfPct, Math.max(halfPct, best.x / 600 * 100));
-        node.style.left = leftPct + '%';
+        }, { threshold: 0.1 });
+        obs.observe(stage);
       });
-    });
-  }
+    }
+    /* Reduced motion or no observer: the CSS defaults already show everything. */
 
-  alignNodesToPath();
-  window.addEventListener('load', alignNodesToPath);   // card heights settle once the photo loads
-  window.addEventListener('resize', alignNodesToPath);
+    /* Place each card's centre on its thread's curve.
+       Desktop: the river SVG spans the stage row of the grid, so a node's y
+       relative to that SVG maps to viewBox y, and the sampled x maps back
+       into the node's own column. Stacked: the per-thread SVG fills the
+       stage, so stage fractions map directly. Phones: no curve, no offsets. */
+    function samplePath(path, n) {
+      var total = path.getTotalLength();
+      var pts = [];
+      for (var i = 0; i <= n; i++) pts.push(path.getPointAtLength(total * i / n));
+      return pts;
+    }
+    function nearestByY(pts, y) {
+      var best = pts[0];
+      for (var i = 1; i < pts.length; i++) {
+        if (Math.abs(pts[i].y - y) < Math.abs(best.y - y)) best = pts[i];
+      }
+      return best;
+    }
+
+    function alignNodesToPath() {
+      var riverMode = shown(riverSvg);
+      var svgRect = riverMode ? riverSvg.getBoundingClientRect() : null;
+      threads.forEach(function (thread) {
+        var stage = thread.querySelector('.stage-inner');
+        if (!stage) return;
+        var nodes = stage.querySelectorAll('.proto-node');
+        var path, vb, pts;
+        var stageRect = stage.getBoundingClientRect();
+        var W = stage.offsetWidth;
+        var H = stage.offsetHeight;
+        if (!W || !H) return;
+
+        if (riverMode) {
+          path = riverPath(thread.getAttribute('data-thread'));
+          vb = RIVER_VB;
+        } else {
+          var own = thread.querySelector('.thread-svg');
+          if (!shown(own)) {
+            nodes.forEach(function (n) { n.style.left = ''; });
+            return;
+          }
+          path = own.querySelector('.journey-path');
+          vb = STACK_VB;
+        }
+        if (!path || !svgRectOk(riverMode, svgRect)) return;
+        pts = samplePath(path, 300);
+
+        nodes.forEach(function (node) {
+          var nodeRect = node.getBoundingClientRect();
+          var cy = nodeRect.top + nodeRect.height / 2;
+          var ySvg, xPx;
+          if (riverMode) {
+            ySvg = (cy - svgRect.top) / svgRect.height * vb.h;
+            var p = nearestByY(pts, ySvg);
+            xPx = p.x / vb.w * svgRect.width + svgRect.left - stageRect.left;
+          } else {
+            ySvg = (cy - stageRect.top) / H * vb.h;
+            var q = nearestByY(pts, ySvg);
+            xPx = q.x / vb.w * W;
+          }
+          var half = node.offsetWidth / 2;
+          var left = Math.min(W - half, Math.max(half, xPx));
+          node.style.left = Math.round(left) + 'px';
+        });
+      });
+    }
+    function svgRectOk(riverMode, rect) {
+      return !riverMode || (rect && rect.width > 0 && rect.height > 0);
+    }
+
+    alignNodesToPath();
+    window.addEventListener('load', alignNodesToPath);
+    window.addEventListener('resize', alignNodesToPath);
+    if ('ResizeObserver' in window && river) {
+      new ResizeObserver(function () { alignNodesToPath(); }).observe(river);
+    }
+  })();
 </script>
-
 </body>
 </html>

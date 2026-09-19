@@ -1,851 +1,1267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Computational tools, reference guides, and prototype documentation for a DTU master's thesis on modular automated liquid dispensing for point-of-care use." />
-  <title>Thesis Tools — Sirio Vittorio Feltrin</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='7' fill='%23ff6b2b'/%3E%3Crect x='11' y='11' width='10' height='10' rx='3' fill='%230a0a0c'/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="assets/style.css" />
-  <script>document.documentElement.classList.add('js');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A portable, battery-powered instrument that dispenses microlitre reagents into rows of sample tubes without an operator. DTU master's thesis by Sirio Vittorio Feltrin, with the prototype records and the engineering tools built along the way.">
+  <title>Thesis Tools, Sirio Vittorio Feltrin</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='7' fill='%23ff6b2b'/%3E%3Crect x='11' y='11' width='10' height='10' rx='3' fill='%230a0a0c'/%3E%3C/svg%3E">
+  <link rel="preload" as="image" href="assets/media/device/top.jpg">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site-nav.js"></script>
   <style>
-    /* ── Top navigation ─────────────────────────────────────── */
-    .top-nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 28px;
-      background: rgba(10, 10, 12, 0.55);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .nav-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--text);
-    }
-    .brand-dot {
-      width: 9px; height: 9px;
-      border-radius: 3px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 12px var(--accent-glow);
-    }
-    .brand-muted { color: var(--text-muted); font-weight: 500; }
+    /* ---- Landing page: layout shell ---- */
+    body { timeline-scope: --problem; }
+    main.home { position: relative; z-index: 1; max-width: none; margin: 0; padding: 0; }
+    main.home > section { position: relative; padding: 0 32px; }
+    .wrap { max-width: 1200px; margin: 0 auto; }
+    .home p { font-size: 1rem; line-height: 1.6; color: var(--text-soft); }
+    .home h2 { color: var(--text); margin-bottom: 14px; }
+    .home h3 { font-family: var(--display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; font-size: 1.55rem; color: var(--text); }
+    .lead { color: var(--text); max-width: 60ch; }
+    .home .mono, .home .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .home a.tlink { color: var(--accent); font-weight: 600; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 6px; }
+    .home a.tlink .arrow { transition: transform var(--dur-fast) var(--ease); }
+    .home a.tlink:hover .arrow { transform: translateX(4px); }
+    .home a.tlink:focus-visible, .home button:focus-visible, .home a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .frame { position: relative; overflow: hidden; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+    .frame img, .frame video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur) var(--ease); }
+    .frame:hover img { transform: scale(1.02); }
+    .frame--md { border-radius: var(--r-md); }
+    .frame--sm { border-radius: var(--r-sm); }
 
-    /* Segmented language switch */
-    .lang-switch {
-      display: flex;
-      gap: 2px;
-      padding: 3px;
-      background: var(--glass-bg);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 100px;
-    }
-    .lang-opt {
-      border: 0;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: var(--font);
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.09em;
-      padding: 4px 13px;
-      border-radius: 100px;
-      cursor: pointer;
-      transition: color 0.2s ease, background 0.2s ease;
-    }
-    .lang-opt.active {
-      color: #fff;
-      background: linear-gradient(135deg, rgba(255, 107, 43, 0.85), rgba(232, 53, 53, 0.85));
-      box-shadow: 0 2px 12px var(--accent-glow);
-    }
+    /* Language switch, lives in .site-nav__lang */
+    .lang-switch { display: flex; gap: 2px; padding: 3px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-pill); }
+    .lang-opt { border: 0; background: transparent; color: var(--text-muted); font: inherit; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; padding: 4px 12px; border-radius: var(--r-pill); cursor: pointer; transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease); }
+    .lang-opt.active { color: #0a0a0c; background: var(--accent); }
     .lang-opt:not(.active):hover { color: var(--text); }
+    .lang-opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    /* ── Landing-page-only overrides (D-07) ─────────────────── */
-    /* .bg-blobs markup stays in the body for other pages that share
-       assets/style.css; this page alone suppresses it so the hero
-       rotor motif owns that visual space instead. */
-    .bg-blobs { display: none; }
-
-    /* ── Background grid overlay ────────────────────────────── */
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-      background-size: 54px 54px;
-      -webkit-mask-image: radial-gradient(ellipse 100% 58% at 50% 0%, black 25%, transparent 78%);
-      mask-image: radial-gradient(ellipse 100% 58% at 50% 0%, black 25%, transparent 78%);
-    }
-
-    /* ── Hero refinements ───────────────────────────────────── */
-    main { padding-top: 92px; }
-
-    /* Self-hosted, subsetted Geist Bold — headline only (D-20).
-       Source: https://github.com/vercel/geist-font (SIL OFL 1.1),
-       license text at assets/fonts/geist/LICENSE.txt. */
-    @font-face {
-      font-family: 'Geist';
-      src: url('assets/fonts/geist/Geist-Bold.woff2') format('woff2');
-      font-weight: 700;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    /* Asymmetric two-column hero (D-04 variance 7): copy left, rotor
-       motif right. Collapses to a single centred column at 600px. */
-    .site-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 48px;
-      text-align: left;
-      margin-bottom: 64px;
-    }
-    .hero-copy { flex: 1 1 440px; max-width: 520px; }
-    .hero-rotor {
-      flex: 1 1 400px;
-      max-width: 500px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* ── Hero fluidic-path motif, Rework 2 (D-01/D-05/D-06, D-01/D-03
-       AMENDED by explicit user decision) ───────────────────────────
-       Hand-built SVG scene, one continuous tangent-entry/exit tube:
-       50ml Falcon-style source (screw cap, graduation ticks, conical
-       bottom, liquid pooled into the cone) -> dip tube rising through
-       the cap -> tangential entry into the pump wrap (real proto-02
-       geometry: N=4, R=19.7mm rotor, rollerR=5mm/MR105ZZ, 180° wrap
-       ON TOP) -> tangential exit -> smooth curve down into a short
-       rigid NEEDLE -> an open-lid 1.5ml Eppendorf-style collection
-       tube. Glass idiom only (existing --accent/--accent-2/glass
-       tokens), no dimension lines/callouts.
-
-       Motion, Rework 2: GSAP core (locally vendored, assets/gsap/
-       gsap.min.js — D-01/D-03 amended by Sirio to permit this) drives
-       ONE timeline: rotor rotation (gsap.to on the roller <g>'s
-       `rotation`) and the slug highlight's `strokeDashoffset` share
-       the identical duration/ease/repeat, so they are structurally
-       phase-locked rather than tuned to merely matching periods.
-       Sync spec: slug linear speed = roller tangential speed at the
-       wrap radius = 2π·Rpx per rotor period; slug spacing = a quarter
-       of the wrap circumference (matching the 90° roller spacing) —
-       see buildHeroRotor()/initHeroMotion() below for the derivation.
-       "Hybrid" liquid look (Sirio's decision): a static translucent
-       `.hero-tube-liquid` stroke always shows the tube as full, with
-       brighter `.hero-tube-slug` highlight segments animated on top. */
-    .hero-rotor svg { display: block; overflow: visible; }
-    .hero-vessel {
-      fill: rgba(255, 255, 255, 0.04);
-      stroke: rgba(255, 107, 43, 0.30);
-      stroke-width: 1.4;
-    }
-    .hero-vessel-cap {
-      fill: rgba(255, 255, 255, 0.07);
-      stroke: rgba(255, 107, 43, 0.35);
-      stroke-width: 1.2;
-    }
+    /* ---- 1. Breath one ---- */
+    #opening { min-height: 100svh; min-height: 640px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; text-align: center; padding-top: 24px; }
+    .hero-rotor { width: 100%; max-width: 620px; display: flex; justify-content: center; align-items: center; }
+    .hero-rotor svg { display: block; overflow: visible; width: 100%; max-width: 620px !important; max-height: 46svh; height: auto; }
+    .hero-vessel { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 107, 43, 0.30); stroke-width: 1.4; }
+    .hero-vessel-cap { fill: rgba(255, 255, 255, 0.07); stroke: rgba(255, 107, 43, 0.35); stroke-width: 1.2; }
     .hero-vessel-tick { stroke: rgba(255, 255, 255, 0.20); stroke-width: 1; }
     .hero-vessel-liquid { fill: var(--accent); opacity: 0.16; }
-    .hero-cap-flap {
-      fill: rgba(255, 255, 255, 0.08);
-      stroke: rgba(255, 107, 43, 0.40);
-      stroke-width: 1.2;
-    }
+    .hero-cap-flap { fill: rgba(255, 255, 255, 0.08); stroke: rgba(255, 107, 43, 0.40); stroke-width: 1.2; }
     .hero-cap-hinge { fill: var(--accent); opacity: 0.7; }
-    .hero-rotor-disc {
-      fill: rgba(255, 255, 255, 0.04);
-      stroke: rgba(255, 107, 43, 0.30);
-      stroke-width: 1;
-    }
-    .hero-roller {
-      fill: rgba(255, 107, 43, 0.18);
-      stroke: var(--accent);
-      stroke-width: 2;
-    }
+    .hero-rotor-disc { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 107, 43, 0.30); stroke-width: 1; }
+    .hero-roller { fill: rgba(255, 107, 43, 0.18); stroke: var(--accent); stroke-width: 2; }
     .hero-hub { fill: var(--accent); opacity: 0.85; }
-    .hero-tube-wall {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.14);
-      stroke-width: 11;
-      stroke-linecap: round;
-    }
-    .hero-tube-liquid {
-      fill: none;
-      stroke: var(--accent);
-      stroke-opacity: 0.22;
-      stroke-width: 7;
-      stroke-linecap: round;
-    }
-    .hero-tube-slug {
-      fill: none;
-      stroke: url(#hero-packet-grad);
-      stroke-width: 6;
-      stroke-linecap: round;
-    }
-    .hero-needle {
-      stroke: rgba(255, 255, 255, 0.55);
-      stroke-width: 2.6;
-      stroke-linecap: round;
-    }
+    .hero-tube-wall { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: 11; stroke-linecap: round; }
+    .hero-tube-liquid { fill: none; stroke: var(--accent); stroke-opacity: 0.22; stroke-width: 7; stroke-linecap: round; }
+    .hero-tube-slug { fill: none; stroke: url(#hero-packet-grad); stroke-width: 6; stroke-linecap: round; }
+    .hero-needle { stroke: rgba(255, 255, 255, 0.55); stroke-width: 2.6; stroke-linecap: round; }
     .hero-droplet { fill: url(#hero-packet-grad); opacity: 0; }
+    .opening__line { max-width: 20ch; margin: 0 auto; text-wrap: balance; color: var(--text); }
+    html.js .opening__line, html.js .hero-rotor { opacity: 0; transform: translateY(14px); animation: fade-in var(--dur) var(--ease) forwards; }
+    html.js .opening__line { animation-delay: 240ms; }
+    @keyframes fade-in { to { opacity: 1; transform: none; } }
 
-    .site-title {
-      font-family: 'Geist', var(--font);
-      font-size: clamp(2.1rem, 5.4vw, 3.6rem);
-      padding-bottom: 4px;
-      text-wrap: balance;
+    /* ---- 2. Breath two ---- */
+    #problem { min-height: 100svh; display: grid; align-items: center; view-timeline-name: --problem; }
+    .problem__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .problem__line { grid-column: 2 / 10; font-size: clamp(1.9rem, 3.6vw, 3.2rem) !important; max-width: 24ch; color: var(--text); }
+    .warm { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse 70% 60% at 50% 45%, var(--accent) 0%, var(--accent-2) 45%, transparent 75%); }
+    @supports (animation-timeline: view()) {
+      .warm { animation: warm-in linear both; animation-timeline: --problem; }
+      @keyframes warm-in { 0% { opacity: 0; } 45% { opacity: 0.28; } 60% { opacity: 0.28; } 100% { opacity: 0; } }
     }
-    .site-author {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 16px;
-    }
-    .site-author::before, .site-author::after {
-      content: '';
-      width: 38px; height: 1px;
-    }
-    .site-author::before { background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.5)); }
-    .site-author::after  { background: linear-gradient(90deg, rgba(255, 107, 43, 0.5), transparent); }
-    .site-subtitle { max-width: 480px; }
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-start;
-      margin-top: 32px;
-    }
-    .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 7px 15px;
-      border-radius: 100px;
-    }
-    .meta-chip::before {
-      content: '';
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 7px var(--accent);
-      flex: none;
+    @supports not (animation-timeline: view()) {
+      .warm { transition: opacity 900ms var(--ease); }
+      .warm.is-warm { opacity: 0.28; }
     }
 
-    /* ── Narrative sections (D-13/D-17) ─────────────────────────
-       Four eyebrow-less story beats between the hero and the
-       resource sections: problem -> device -> proof -> journey.
-       Deliberately NOT using .section-head/.section-index — those
-       carry the numbered eyebrow, and D-17 keeps eyebrows below the
-       fold only (story ends, index begins). Four distinct layout
-       families here (centred prose / split copy+media / centred
-       heading+media / CTA panel) join the existing hero, card-grid,
-       and wide-row families for taste-skill's layout-variety rule. */
-    .narrative-sections { margin-bottom: 96px; }
-    .narrative-sections section + section { margin-top: 96px; }
-    .narrative-title {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      line-height: 1.25;
-      margin-bottom: 18px;
-      color: var(--text);
-    }
-    .narrative-body {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.75;
-      max-width: 640px;
-    }
-    .narrative-body + .narrative-body { margin-top: 14px; }
-    .narrative-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 22px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--accent);
-    }
-    .narrative-link .arrow { transition: transform 0.28s cubic-bezier(.22,.68,0,1.2); }
-    .narrative-link:hover .arrow { transform: translateX(5px); }
+    /* ---- 3. Breath three: the reveal ---- */
+    #reveal { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 48px; padding-bottom: 96px; }
+    .reveal__frame { width: 100%; max-width: 1180px; aspect-ratio: 2000 / 1125; }
+    .reveal__frame:hover img { transform: none; }
+    .callouts { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .callouts path { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .callouts circle { fill: var(--accent); opacity: 0; }
+    .co-label { position: absolute; font-family: var(--mono); font-size: 13px; line-height: 1.2; color: var(--text); white-space: nowrap; opacity: 0; transform: translateY(-100%); padding-bottom: 6px; }
+    .co-badge { display: none; position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--accent); color: #0a0a0c; font-family: var(--mono); font-size: 11px; font-weight: 700; line-height: 20px; text-align: center; }
+    .is-drawn .callouts path { transition: stroke-dashoffset 600ms var(--ease); transition-delay: calc(var(--i) * 220ms); stroke-dashoffset: 0; }
+    .is-drawn .callouts circle { transition: opacity 300ms var(--ease); transition-delay: calc(var(--i) * 220ms); opacity: 1; }
+    .is-drawn .co-label { transition: opacity 400ms var(--ease); transition-delay: calc(var(--i) * 220ms + 500ms); opacity: 1; }
+    .co-list { display: none; list-style: none; margin: 14px auto 0; max-width: 1180px; width: 100%; font-family: var(--mono); font-size: 13px; color: var(--text-soft); gap: 6px 18px; flex-wrap: wrap; }
+    .co-list li::before { content: attr(data-n); display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: #0a0a0c; font-weight: 700; text-align: center; line-height: 18px; font-size: 11px; margin-right: 8px; }
+    .reveal__caption { margin-top: 18px; text-align: center; font-size: 0.9rem; }
+    .reveal__ctas { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
 
-    /* Problem — centred prose, no card: reads as a story, not a UI element */
-    .narrative-center { max-width: 680px; margin: 0 auto; text-align: center; }
-    .narrative-center .narrative-body { max-width: 100%; margin-left: auto; margin-right: auto; }
-    .narrative-center .narrative-link { justify-content: center; }
+    /* ---- 4. Watch it run ---- */
+    #machine { padding-top: 64px; padding-bottom: 96px; }
+    .machine__head { text-align: center; margin-bottom: 40px; }
+    .machine__head p { margin: 0 auto; }
+    /* The stage is sized in px, not by ratio: every tile carries a drawer stack of a known height
+       below it, so the four cabinets are placed on measured offsets and the stage is exactly tall
+       enough to hold them. --side reserves the edge offset, the tile, the 20px cabinet padding,
+       the drift (6px) plus the 18px lean, and a 12px gap before the centre frame. */
+    .stage { position: relative; max-width: 1200px; margin: 0 auto; height: var(--stage-h);
+             --stage-h: 1020px; --edge: 56px; --tile-w: 300px; --side: calc(var(--edge) + var(--tile-w) + 56px);
+             --btn-w: 200px; --btn-h: 300px; --btn-w-wide: 300px; --btn-h-wide: 200px;
+             --t-tl: 16px; --t-tr: 16px; --t-bl: 572px; --t-br: 525px; }
+    .stage__centre { position: absolute; left: 50%; top: 50%; width: min(44%, calc(100% - 2 * var(--side))); aspect-ratio: 16 / 10; transform: translate(-50%, -50%); z-index: 1; }
+    .stage__centre .frame { width: 100%; height: 100%; }
+    .stage__centre .frame { position: relative; }
+    .stage__note { position: absolute; left: 12px; bottom: 12px; z-index: 1; font-family: var(--mono); font-size: 12px; color: var(--text-soft); background: rgba(10, 10, 12, 0.72); padding: 6px 10px; border-radius: var(--r-sm); }
+    /* A closed clip only takes pointer events on its video button, so the reserved (invisible)
+       drawer area below it never steals a hover. An open one takes them across the whole cabinet. */
+    .clip { position: absolute; z-index: 2; pointer-events: none; }
+    .clip--tl { left: var(--edge); top: var(--t-tl); }
+    .clip--tr { right: var(--edge); top: var(--t-tr); }
+    .clip--bl { left: var(--edge); top: var(--t-bl); }
+    .clip--br { right: var(--edge); top: var(--t-br); }
+    .clip.is-open { z-index: 5; pointer-events: auto; }
+    .clip__lean { will-change: transform; }
+    .clip__drift { animation: drift-tile var(--dt, 11s) ease-in-out infinite alternate; }
+    .clip--tl .clip__drift { --dt: 9s; }
+    .clip--tr .clip__drift { --dt: 12s; animation-delay: -3s; }
+    .clip--bl .clip__drift { --dt: 14s; animation-delay: -7s; }
+    .clip--br .clip__drift { --dt: 10s; animation-delay: -5s; }
+    .clip.is-open .clip__drift { animation-play-state: paused; }
+    @keyframes drift-tile { from { transform: translate(0, 0); } to { transform: translate(6px, -10px); } }
 
-    /* Device — split copy + media (echoes, then varies, the hero's asymmetry) */
-    .narrative-split { display: flex; align-items: center; gap: 48px; }
-    .narrative-copy { flex: 1 1 380px; }
-    .narrative-media { flex: 1 1 320px; display: flex; flex-direction: column; align-items: center; }
-    .module-schema { width: 100%; }
-    .module-legend {
-      display: flex;
-      gap: 24px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.76rem;
-      color: var(--text-muted);
-    }
-    .legend-swatch { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
-    .legend-swatch--liquid { background: #4a90d9; }
-    .legend-swatch--data { height: 0; border-top: 3px dashed #3ec06b; }
+    /* ---- The drawer cabinet ---- */
+    /* The finished module is the clip on top; every step that led to it is a drawer underneath. */
+    /* The cabinet is exactly the tile plus 10px of padding: a long drawer label must never widen it. */
+    .clip__cab { position: relative; width: calc(var(--btn-w) + 20px); padding: 10px; transition: opacity var(--dur) var(--ease); }
+    .clip--wide .clip__cab { width: calc(var(--btn-w-wide) + 20px); }
+    .cab__outline { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
+    /* rx mirrors --r-md (18px); it is an attribute so it works without CSS geometry properties. */
+    .cab__outline rect { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 500ms var(--ease); }
+    .clip.is-open .cab__outline rect { stroke-dashoffset: 0; }
 
-    /* Proof — centred heading, portrait video below (video + graphic wired in Task 2) */
-    .narrative-video-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 36px; }
-    .narrative-caption {
-      margin-top: 14px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-align: center;
+    .clip__btn { position: relative; z-index: 1; display: block; width: var(--btn-w); height: var(--btn-h); padding: 0; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--surface); cursor: pointer; pointer-events: auto; transition: opacity var(--dur) var(--ease), border-color var(--dur-fast) var(--ease); }
+    .clip--wide .clip__btn { width: var(--btn-w-wide); height: var(--btn-h-wide); }
+    .clip__btn video { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .clip__btn:hover, .clip.is-open .clip__btn { border-color: var(--line-accent); }
+    .stage.has-open .clip:not(.is-open) .clip__cab, .stage.has-open .stage__centre { opacity: 0.45; }
+
+    .clip__stack { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 6px; margin-top: 12px; opacity: 0; visibility: hidden; transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur); }
+    .clip.is-open .clip__stack { opacity: 1; visibility: visible; transition-delay: 0s; }
+    .drawer { position: relative; }
+    /* The label takes all the width left of the handle and may run to two lines, so the front grows
+       from its 34px minimum. Only the reveal transform is staggered; the background keeps a 0s
+       delay so hover stays instant. */
+    .drawer__front { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; width: 100%; min-height: 34px; height: auto; margin: 0; padding: 6px 10px; border: 1px solid var(--line-accent); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; text-align: left; cursor: pointer; pointer-events: auto; transform: translateY(-6px);
+                    transition-property: transform, background; transition-duration: var(--dur-fast), var(--dur-fast); transition-timing-function: var(--ease), var(--ease); transition-delay: 0s, 0s; }
+    .clip.is-open .drawer__front { transform: none; transition-delay: calc(240ms + var(--d, 0) * 60ms), 0s; }
+    .drawer__label { min-width: 0; font-family: var(--mono); font-size: 11px; line-height: 1.25; color: var(--text-soft); white-space: normal; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+    .drawer__handle { width: 22px; height: 3px; border-radius: 2px; background: rgba(255, 107, 43, 0.45); transition: background var(--dur-fast) var(--ease); }
+    .drawer__front:hover { background: rgba(255, 107, 43, 0.08); }
+    .drawer__front:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .drawer.is-out .drawer__front { background: rgba(255, 107, 43, 0.10); }
+    .drawer.is-out .drawer__handle { background: var(--accent); }
+    .drawer.is-out .drawer__label { color: var(--text); }
+
+    /* --panel-w, --panel-gap and --panel-h are written onto .clip__cab by the script, which
+       measures the room left between the cabinet and the window edge. --panel-gap may go negative
+       on narrow desktops: the panel then rides over the cabinet rather than off the screen. */
+    .drawer__panel { position: absolute; top: 50%; z-index: 4; width: var(--panel-w, 200px); margin: 0; padding: 8px; background: #0f0f13; border: 1px solid var(--line-accent); border-radius: var(--r-md); opacity: 0; visibility: hidden; transform: translateY(-50%) translateX(var(--tuck, 0px)); transition: opacity 400ms var(--ease), transform 400ms var(--ease), visibility 0s linear 400ms; }
+    .drawer__panel--light { background: #f4f2ee; }
+    .clip--left .drawer__panel { right: 100%; margin-right: var(--panel-gap, 20px); --tuck: calc(var(--panel-w, 200px) + var(--panel-gap, 20px)); }
+    .clip--right .drawer__panel { left: 100%; margin-left: var(--panel-gap, 20px); --tuck: calc(-1 * (var(--panel-w, 200px) + var(--panel-gap, 20px))); }
+    .clip.is-tight .drawer__panel { box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55); }
+    .drawer.is-out .drawer__panel { opacity: 1; visibility: visible; transform: translateY(-50%) translateX(0); transition-delay: 0s; }
+    .drawer__panel img { display: block; width: 100%; height: var(--panel-h, 150px); object-fit: contain; border-radius: var(--r-sm); }
+    .drawer__cap { display: block; margin-top: 6px; font-family: var(--mono); font-size: 11px; line-height: 1.35; color: var(--text-soft); text-align: center; }
+    .drawer__panel--light .drawer__cap { color: #55504a; }
+
+    /* ---- 5. Follow one droplet ---- */
+    #journey { padding-top: 64px; padding-bottom: 64px; }
+    .journey__head { max-width: 760px; margin: 0 auto 64px; text-align: center; }
+    .journey__head p { margin: 0 auto; }
+    .stops { position: relative; max-width: 1200px; margin: 0 auto; }
+    .rail { display: none; position: absolute; left: -48px; top: 0; bottom: 0; width: 2px; background: var(--line-accent); border-radius: 1px; }
+    .rail__drop { position: absolute; left: -4px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px 3px rgba(255, 107, 43, 0.55); transition: top 600ms var(--ease); }
+    .stop { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 64px; align-items: center; padding: 56px 0; border-top: 1px solid var(--line); scroll-margin-top: 96px; }
+    .stop:first-of-type { border-top: 0; }
+    .stop__media { min-width: 0; }
+    .stop__text { min-width: 0; }
+    .stop--media-right .stop__media { order: 2; }
+    .stop--full { grid-template-columns: 1fr; }
+    .stop--full .stop__media { grid-column: 1; }
+    .stop--full .stop__text { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 64px; align-items: start; }
+    .stop--full .stop__text > .stop__body { grid-column: 1; }
+    .stop--full .stop__text > .stop__aside { grid-column: 2; }
+    .stop__principle { font-size: 1.15rem; color: var(--text); margin: 16px 0 12px; }
+    .stop__note { font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; }
+    .nums { display: flex; flex-wrap: wrap; gap: 14px 36px; margin: 24px 0 0; }
+    .num { display: flex; flex-direction: column; gap: 2px; }
+    .num__v { font-size: 1.35rem; color: var(--text); font-weight: 600; }
+    .num__l { font-size: 0.78rem; color: var(--text-muted); font-family: var(--font); }
+    .tools-row { margin-top: 28px; }
+    .tools-row__title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+    .tiles { display: flex; flex-wrap: wrap; gap: 18px 16px; }
+    .tile { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 160px; color: var(--text); font-size: 0.78rem; text-align: center; line-height: 1.3; transition: transform var(--dur-fast) var(--ease); }
+    .tile:hover { transform: translateY(-2px); color: var(--accent); }
+    .tile .tm { transition: border-color var(--dur-fast) var(--ease); }
+    .tile:hover .tm { border-color: var(--line-accent); }
+    .records { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 22px; }
+    .media-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .media-pair .frame { aspect-ratio: 4 / 5; }
+    .media-stack { display: grid; gap: 16px; }
+    .media-stack .frame--big { aspect-ratio: 1 / 1; }
+    .media-stack .frame--under { aspect-ratio: 2 / 1; }
+    .media-render { aspect-ratio: 16 / 9; }
+    .media-render img { object-fit: cover; }
+    .media-full { position: relative; aspect-ratio: 1449 / 782; }
+    .media-inset { position: absolute; right: 20px; bottom: 20px; width: 28%; aspect-ratio: 1449 / 781; border-radius: var(--r-md); border: 1px solid var(--line-accent); overflow: hidden; background: rgba(10, 10, 12, 0.6); }
+    .media-inset img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .media-ui { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    .media-ui .frame--photo { aspect-ratio: 4 / 5; grid-row: span 2; }
+    .mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mosaic .frame--sm { aspect-ratio: 4 / 3; }
+    .media-wide { position: relative; aspect-ratio: 2000 / 1126; }
+    .media-inset--sq { aspect-ratio: 1 / 1; width: 22%; }
+
+    /* Route map, desktop */
+    .route { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 30; display: none; opacity: 0; visibility: hidden; transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur); }
+    .route.is-shown { opacity: 1; visibility: visible; transition-delay: 0s; }
+    .route ol { list-style: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; position: relative; }
+    .route ol::before { content: ""; position: absolute; right: 13px; top: 8px; bottom: 8px; width: 1px; background: var(--line); }
+    .route li { position: relative; display: flex; align-items: center; justify-content: flex-end; }
+    .route__dot { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; border: 0; background: transparent; cursor: pointer; padding: 0; display: grid; place-items: center; }
+    .route__dot::after { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--text-soft); background: var(--bg); transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
+    .route__dot:hover::after, .route li:focus-within .route__dot::after { transform: scale(1.25); border-color: var(--accent); }
+    .route li.is-active .route__dot::after { background: var(--accent); border-color: var(--accent); }
+    .route__label { position: absolute; right: 36px; top: 50%; transform: translate(10px, -50%); opacity: 0; visibility: hidden; pointer-events: none; background: rgba(12, 12, 15, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 14px; white-space: nowrap; transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), visibility 0s linear var(--dur-fast); }
+    .route li:hover .route__label, .route li:focus-within .route__label, .route li:has(.route__dot:focus-visible) .route__label { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, -50%); transition-delay: 0s; }
+    .route__name { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text); }
+    .route__pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-width: 320px; white-space: normal; }
+    .route__pills a { font-size: 0.72rem; padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--line-accent); color: var(--accent); transition: background var(--dur-fast) var(--ease); }
+    .route__pills a:hover { background: rgba(255, 107, 43, 0.12); }
+    /* Route bar, phones and tablets */
+    .route-bar { position: fixed; left: 12px; right: 12px; bottom: 12px; height: 44px; z-index: 30; border-radius: var(--r-pill); background: rgba(10, 10, 12, 0.72); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--line); display: flex; align-items: center; justify-content: space-evenly; opacity: 0; visibility: hidden; transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur); }
+    .route-bar.is-shown { opacity: 1; visibility: visible; transition-delay: 0s; }
+    .route-bar button { width: 36px; height: 36px; border: 0; background: transparent; padding: 0; display: grid; place-items: center; cursor: pointer; border-radius: 50%; }
+    .route-bar button::after { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--text-soft); background: transparent; }
+    .route-bar button.is-active::after { background: var(--accent); border-color: var(--accent); }
+
+    /* ---- 6. Method ---- */
+    #method { padding-top: 64px; padding-bottom: 96px; border-top: 1px solid var(--line); }
+    .method__band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 40px; }
+    .beat .frame { aspect-ratio: 3 / 2; margin-bottom: 18px; }
+    .beat h3 { font-size: 1.2rem; margin-bottom: 8px; }
+    .beat p { font-size: 0.92rem; }
+    .quote { margin: 72px auto 0; max-width: 900px; text-align: center; }
+    .quote blockquote { font-family: var(--display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; font-size: clamp(1.5rem, 2.8vw, 2.3rem); color: var(--text); }
+    .quote figcaption { margin-top: 14px; font-size: 0.85rem; color: var(--text-muted); }
+    .method__foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; margin-top: 64px; }
+
+    /* ---- Responsive ---- */
+    @media (min-width: 1024px) {
+      .rail { display: block; }
+      .route { display: block; }
+      .route-bar { display: none; }
+      .stops { padding-left: 24px; }
+    }
+    @media (min-width: 1024px) and (max-width: 1279px) {
+      .stage { --tile-w: 240px; --edge: 40px; --stage-h: 910px;
+               --btn-w: 160px; --btn-h: 240px; --btn-w-wide: 240px; --btn-h-wide: 160px;
+               --t-tl: 16px; --t-tr: 16px; --t-bl: 512px; --t-br: 465px; }
+    }
+    @media (max-width: 1023px) {
+      main.home > section { padding-left: 24px; padding-right: 24px; }
+      .stage { --edge: 16px; --tile-w: 195px; --stage-h: 830px;
+               --btn-w: 130px; --btn-h: 195px; --btn-w-wide: 195px; --btn-h-wide: 130px;
+               --t-tl: 12px; --t-tr: 12px; --t-bl: 463px; --t-br: 416px; }
+      .drawer__front { padding: 6px 8px; }
+    }
+    @media (max-width: 899px) {
+      .co-label { display: none; }
+      .co-badge { display: block; }
+      .callouts { display: none; }
+      .co-list { display: flex; }
+    }
+    @media (max-width: 767px) {
+      main.home > section { padding-left: 16px; padding-right: 16px; }
+      #opening { gap: 28px; }
+      .problem__line { grid-column: 1 / -1; }
+      .reveal__ctas .btn { width: 100%; }
+      .stage { height: auto; display: block; }
+      .stage__centre { position: static; width: 100%; transform: none; aspect-ratio: 16 / 10; margin-bottom: 16px; }
+      .stage__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+      .clip { position: static; pointer-events: auto; }
+      .clip.is-open { grid-column: 1 / -1; }
+      .clip__cab, .clip--wide .clip__cab { width: auto; padding: 8px; }
+      .clip__btn, .clip--wide .clip__btn { width: 100%; height: auto; aspect-ratio: 2 / 3; }
+      .clip--wide .clip__btn { aspect-ratio: 3 / 2; }
+      .clip.is-open .clip__btn { aspect-ratio: 4 / 3; }
+      .clip__drift { animation: none; }
+      /* Phones: the cabinet wraps the tile inside the 2 x 2 grid, the stack only exists while the
+         cabinet is open, and a drawer opens downward in normal flow, never out of the viewport. */
+      .clip__stack { display: none; margin-top: 10px; opacity: 1; visibility: visible; transition: none; }
+      .clip.is-open .clip__stack { display: flex; }
+      .drawer__front { transform: none; transition-delay: 0s !important; }
+      .clip.is-open .drawer__front { transition-delay: 0s; }
+      .clip--left .drawer__panel, .clip--right .drawer__panel {
+        position: static; display: none; width: auto; margin: 0; opacity: 1; visibility: visible;
+        transform: none; transition: none; box-shadow: none; }
+      .clip--left .drawer.is-out .drawer__panel, .clip--right .drawer.is-out .drawer__panel {
+        display: block; margin-top: 6px; }
+      .drawer__panel img { height: auto; max-height: 180px; }
+      .stop { grid-template-columns: 1fr; gap: 28px; padding: 40px 0; }
+      .stop--media-right .stop__media { order: 0; }
+      .stop--full .stop__text { grid-template-columns: 1fr; }
+      .stop--full .stop__text > .stop__aside { grid-column: 1; }
+      .media-ui { grid-template-columns: 1fr; }
+      .media-ui .frame--photo { aspect-ratio: 16 / 10; grid-row: auto; }
+      .media-inset { width: 34%; right: 12px; bottom: 12px; }
+      .method__band { grid-template-columns: 1fr; }
+      .tile { width: calc(50% - 8px); }
+      .tile .tm { width: 100%; max-width: 160px; }
+      .route-bar { bottom: 12px; }
+      #journey { padding-bottom: 96px; }
     }
 
-    /* Journey — CTA panel, deliberately distinct from .tool-card (story, not a directory entry, D-15) */
-    .narrative-cta {
-      text-align: center;
-      padding: 48px 40px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-    }
-    .narrative-cta .narrative-body { max-width: 560px; margin: 0 auto; }
-    .narrative-cta .narrative-link { justify-content: center; }
-
-    /* Six-module device schema (D-16) — new, simplified, non-interactive.
-       Colours reused exactly from the System Architecture Explorer's
-       liquid/data vocabulary (#4a90d9 solid liquid, #3ec06b dashed data)
-       so the two diagrams read as the same visual language one hop apart. */
-    .module-box {
-      fill: rgba(255, 255, 255, 0.04);
-      stroke: rgba(255, 107, 43, 0.28);
-      stroke-width: 1.4;
-    }
-    .module-label {
-      fill: var(--text);
-      font-family: var(--font);
-      font-size: 15px;
-      font-weight: 600;
-      text-anchor: middle;
-    }
-    .module-flow-liquid { stroke: #4a90d9; stroke-width: 2.4; fill: none; }
-    .module-flow-data { stroke: #3ec06b; stroke-width: 1.4; stroke-dasharray: 5 4; fill: none; }
-
-    /* Portrait pump-head clip (540x960, 9:16, D-09/D-10) — constrained by
-       HEIGHT, never a 16:9 aspect-ratio rule (RESEARCH Pitfall 2). */
-    .narrative-video {
-      display: block;
-      max-height: 70vh;
-      width: auto;
-      max-width: 100%;
-      border-radius: var(--radius);
-      border: 1px solid var(--glass-border);
-      background: var(--glass-bg);
-    }
-
-    /* ── Editorial section headers ──────────────────────────── */
-    .resources-sections section + section { margin-top: 72px; }
-    .section-head {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 12px;
-    }
-    .section-index {
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      line-height: 1;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-    .section-head .section-label { margin-bottom: 0; color: var(--text); font-weight: 600; }
-    .section-rule {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255, 107, 43, 0.4), rgba(255, 255, 255, 0.06) 55%, transparent);
-    }
-    .section-desc {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 28px;
-      max-width: 620px;
-    }
-
-    /* ── Premium card treatment ─────────────────────────────── */
-    .tool-card {
-      position: relative;
-      overflow: hidden;
-      padding: 28px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-      border-color: rgba(255, 255, 255, 0.09);
-    }
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 12%; right: 12%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.6), transparent);
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
-    .tool-card:hover::before { opacity: 1; }
-    .tool-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 140, 66, 0.09), transparent 65%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-    .tool-card:hover::after { opacity: 1; }
-    .card-icon {
-      width: 54px; height: 54px;
-      display: grid;
-      place-items: center;
-      font-size: 1.55rem;
-      line-height: 1;
-      border-radius: 14px;
-      background: linear-gradient(145deg, rgba(255, 107, 43, 0.16), rgba(232, 53, 53, 0.06));
-      border: 1px solid rgba(255, 107, 43, 0.28);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
-      filter: none;
-      flex: none;
-    }
-    .card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .card-link .arrow { transition: transform 0.28s cubic-bezier(.22,.68,0,1.2); }
-    .tool-card:hover .card-link { letter-spacing: 0.03em; }
-    .tool-card:hover .card-link .arrow { transform: translateX(5px); }
-
-    /* Wide horizontal card — single-item sections */
-    .tools-row { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    .tool-card--wide {
-      flex-direction: row;
-      align-items: center;
-      gap: 26px;
-      padding: 26px 30px;
-    }
-    .tool-card--wide .card-link { white-space: nowrap; }
-
-    /* ── Scroll-triggered reveals (gated on .js) ────────────── */
-    .js .reveal {
-      opacity: 0;
-      transform: translateY(26px);
-      transition: opacity 0.7s cubic-bezier(.22,.68,0,1), transform 0.7s cubic-bezier(.22,.68,0,1);
-      transition-delay: var(--rd, 0s);
-    }
-    .js .reveal.in-view { opacity: 1; transform: none; }
-
-    /* ── Footer refinements ─────────────────────────────────── */
-    .site-footer {
-      border-top: 0;
-      margin-top: 24px;
-      padding: 44px 32px 40px;
-    }
-    .site-footer::before {
-      content: '';
-      display: block;
-      width: min(640px, 80%);
-      height: 1px;
-      margin: 0 auto 32px;
-      background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.35), transparent);
-    }
-
-    /* ── Accessibility & motion ─────────────────────────────── */
-    .tool-card:focus-visible, .lang-opt:focus-visible, .nav-brand:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
+    /* ---- Reduced motion: final states ---- */
     @media (prefers-reduced-motion: reduce) {
-      .js .reveal { opacity: 1; transform: none; transition: none; }
-      .card-link .arrow { transition: none; }
-      /* The hero motif itself (Rework 2) is driven entirely by a JS
-         GSAP timeline, not CSS animations — there is nothing left to
-         freeze here. initHeroMotion() checks prefers-reduced-motion
-         directly and, when set, never calls tl.play(): it seeks the
-         timeline to a fixed legible progress value and leaves it
-         paused (rollers at a natural angle, slugs visible mid-tube,
-         one droplet frozen at the needle) rather than hiding the
-         scene (D-03/D-11: reduced motion means frozen, not gone). */
-    }
-
-    /* ── Responsive ─────────────────────────────────────────── */
-    @media (max-width: 680px) {
-      .tool-card--wide { flex-direction: column; align-items: flex-start; }
-      .tool-card--wide .card-link { white-space: normal; }
-      .narrative-split { flex-direction: column; gap: 32px; }
-      .narrative-cta { padding: 36px 24px; }
-    }
-    @media (max-width: 600px) {
-      main { padding-top: 84px; }
-      .top-nav { padding: 11px 18px; }
-      .brand-muted { display: none; }
-      .site-header { flex-direction: column; text-align: center; gap: 32px; margin-bottom: 52px; }
-      .hero-copy, .hero-rotor { max-width: 100%; }
-      .site-author { justify-content: center; }
-      .hero-meta { justify-content: center; }
+      html.js .opening__line, html.js .hero-rotor { animation: none; opacity: 1; transform: none; }
+      .warm { animation: none !important; transition: none !important; opacity: 0 !important; }
+      .callouts path { stroke-dashoffset: 0 !important; transition: none !important; }
+      .callouts circle, .co-label { opacity: 1 !important; transition: none !important; }
+      .clip__drift { animation: none !important; }
+      .clip__btn, .clip__cab, .clip__stack, .rail__drop, .route, .route-bar, .route__label, .frame img, .tile, .home a.tlink .arrow { transition: none !important; }
+      /* The cabinet appears at once, all drawers shut, and stays a plain list until one is clicked. */
+      .cab__outline rect, .drawer__front, .drawer__handle, .drawer__panel { transition: none !important; }
+      .drawer__front { transform: none !important; }
+      .frame:hover img { transform: none; }
     }
   </style>
+<style id="tm-css">
+  /* ---- Tool marks. Every rule is prefixed .tm; paste as one block. ---- */
+  .tm { position: relative; width: 160px; height: 100px; border-radius: 18px; overflow: hidden;
+        background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08);
+        box-sizing: border-box; flex: none; }
+  .tm svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .tm-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .tm-fig figcaption { font-size: 12px; color: #7a7068; letter-spacing: 0.01em; }
+
+  /* shared strokes and fills */
+  .tm .tm-k { fill: none; stroke: #7a7068; stroke-width: 1.5; stroke-linecap: round; }
+  .tm .tm-l { fill: none; stroke: rgba(255,255,255,0.12); stroke-width: 1.5; stroke-linecap: round; }
+  .tm .tm-a { fill: #ff6b2b; }
+  .tm .tm-r { fill: #0a0a0c; stroke: #ff6b2b; stroke-width: 2; }
+
+  /* play only while in view; the page toggles .is-in with an IntersectionObserver */
+  .tm svg * { animation-play-state: paused; }
+  .tm.is-in svg * { animation-play-state: running; }
+
+  /* 1. rotor: four rollers on a ring, one turn per 12 s */
+  .tm--rotor .tm-rotor-g { transform-box: view-box; transform-origin: 80px 50px;
+                           animation: tm-spin 12s linear infinite; }
+  .tm--rotor .tm-track { stroke-width: 4; stroke: rgba(255,255,255,0.10); }
+
+  /* 2. occlusion: a stadium tube squeezed from above, 4 s cycle */
+  .tm--occlusion .tm-occ-roller { transform-box: fill-box; animation: tm-occ-press 4s ease-in-out infinite; }
+  .tm--occlusion .tm-occ-tube { transform-box: fill-box; transform-origin: 50% 100%;
+                                animation: tm-occ-squash 4s ease-in-out infinite; }
+  .tm--occlusion .tm-occ-lumen { fill: #ff6b2b; fill-opacity: 0.35; }
+
+  /* 3. tensioned: a taut line over two rollers, plucked once every 6 s */
+  .tm--tensioned .tm-tens-line { fill: none; stroke: #ff6b2b; stroke-width: 2; stroke-linecap: round;
+                                 transform-box: view-box; transform-origin: 80px 42px;
+                                 animation: tm-pluck 6s linear infinite; }
+
+  /* 4. pump-testing: a balance needle settling onto the mark, restarts every 8 s */
+  .tm--pump-testing .tm-needle { stroke: #f0ece8; stroke-width: 2; stroke-linecap: round;
+                                 transform-box: view-box; transform-origin: 80px 64px;
+                                 animation: tm-settle 8s ease-out infinite; }
+  .tm--pump-testing .tm-mark { stroke: #ff6b2b; stroke-width: 2; stroke-linecap: round; }
+
+  /* 5. architecture: a 4 x 4 matrix, cells fill one by one over 6 s */
+  .tm--architecture .tm-cell { fill: #ff6b2b; fill-opacity: 0.9;
+                               animation: tm-cell 6s ease-in-out infinite;
+                               animation-delay: calc(var(--i) * 0.28s); }
+
+  /* 6. throughput: an eight-tube rack, each tube filling in turn, 5.5 s cycle.
+     Timeline: 8 fills of 0.5 s (0 to 4.0 s), a 1 s pause with the rack full, then every tube
+     drains together over the last 0.5 s. The drain has to be simultaneous, so the stagger lives
+     in the keyframes (tm-rack-0 to tm-rack-7) rather than in animation-delay. */
+  .tm--throughput .tm-tube-fill { fill: #ff6b2b; fill-opacity: 0.85; transform-box: fill-box;
+                                  transform-origin: 50% 100%;
+                                  animation: tm-rack-0 5.5s ease-in-out infinite; }
+  .tm--throughput .tm-tube-fill:nth-of-type(2) { animation-name: tm-rack-1; }
+  .tm--throughput .tm-tube-fill:nth-of-type(3) { animation-name: tm-rack-2; }
+  .tm--throughput .tm-tube-fill:nth-of-type(4) { animation-name: tm-rack-3; }
+  .tm--throughput .tm-tube-fill:nth-of-type(5) { animation-name: tm-rack-4; }
+  .tm--throughput .tm-tube-fill:nth-of-type(6) { animation-name: tm-rack-5; }
+  .tm--throughput .tm-tube-fill:nth-of-type(7) { animation-name: tm-rack-6; }
+  .tm--throughput .tm-tube-fill:nth-of-type(8) { animation-name: tm-rack-7; }
+
+  /* 7. ui: a 4:3 screen with three blocks, one lit at a time, 4 s */
+  .tm--ui .tm-ui-b { fill: #ff6b2b; fill-opacity: 0.3; animation: tm-lit 4s ease-in-out infinite; }
+  .tm--ui .tm-ui-b:nth-of-type(2) { animation-delay: 1.333s; }
+  .tm--ui .tm-ui-b:nth-of-type(3) { animation-delay: 2.667s; }
+
+  /* 8. workflow: five nodes on a loop, a dot dwelling at each, 6 s per lap */
+  .tm--workflow .tm-wf-dot { transform-box: view-box; transform-origin: 80px 50px;
+                             animation: tm-lap 6s ease-in-out infinite; }
+
+  /* 9. timeline: six bars rising in sequence, 5 s */
+  .tm--timeline .tm-bar { fill: #ff6b2b; fill-opacity: 0.85; transform-box: fill-box;
+                          transform-origin: 50% 100%; animation: tm-rise 5s ease-out infinite;
+                          animation-delay: calc(var(--i) * 0.4s); }
+
+  @keyframes tm-spin { to { transform: rotate(360deg); } }
+  @keyframes tm-occ-press { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(9px); } }
+  @keyframes tm-occ-squash { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.12, 0.72); } }
+  @keyframes tm-pluck {
+    0%, 70% { transform: scaleY(0.25); }
+    72% { transform: scaleY(-1); }   75% { transform: scaleY(0.85); }
+    78% { transform: scaleY(-0.6); } 81% { transform: scaleY(0.45); }
+    84% { transform: scaleY(-0.25); } 87% { transform: scaleY(0.3); }
+    91%, 100% { transform: scaleY(0.25); } }
+  @keyframes tm-settle {
+    0% { transform: rotate(-22deg); } 28% { transform: rotate(3deg); }
+    40% { transform: rotate(-1.2deg); } 50%, 84% { transform: rotate(0deg); }
+    100% { transform: rotate(-22deg); } }
+  @keyframes tm-cell { 0% { fill-opacity: 0.1; } 6% { fill-opacity: 0.9; }
+                       68% { fill-opacity: 0.9; } 74%, 100% { fill-opacity: 0.1; } }
+  @keyframes tm-rack-0 { 0% { transform: scaleY(0); } 9.09% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-1 { 0%, 9.09% { transform: scaleY(0); } 18.18% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-2 { 0%, 18.18% { transform: scaleY(0); } 27.27% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-3 { 0%, 27.27% { transform: scaleY(0); } 36.36% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-4 { 0%, 36.36% { transform: scaleY(0); } 45.45% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-5 { 0%, 45.45% { transform: scaleY(0); } 54.55% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-6 { 0%, 54.55% { transform: scaleY(0); } 63.64% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-rack-7 { 0%, 63.64% { transform: scaleY(0); } 72.73% { transform: scaleY(1); } 90.91% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  @keyframes tm-lit { 0% { fill-opacity: 0.3; } 8% { fill-opacity: 1; }
+                      30% { fill-opacity: 1; } 40%, 100% { fill-opacity: 0.3; } }
+  @keyframes tm-lap {
+    0% { transform: rotate(0deg); }     15%, 20% { transform: rotate(72deg); }
+    35%, 40% { transform: rotate(144deg); } 55%, 60% { transform: rotate(216deg); }
+    75%, 80% { transform: rotate(288deg); } 95%, 100% { transform: rotate(360deg); } }
+  @keyframes tm-rise { 0% { transform: scaleY(0.04); } 10% { transform: scaleY(1); }
+                       78% { transform: scaleY(1); } 88%, 100% { transform: scaleY(0.04); } }
+
+  /* small static glyph for a menu row: 28 x 28, shows the central square of the drawing */
+  .tm--sm { width: 28px; height: 28px; border-radius: 8px; }
+  .tm--sm svg { left: -30%; width: 160%; }
+  .tm--sm svg * { animation: none !important; }
+  .tm--sm .tm-k, .tm--sm .tm-l { stroke-width: 3; }
+  .tm--sm .tm-r, .tm--sm .tm-tens-line, .tm--sm .tm-needle, .tm--sm .tm-mark { stroke-width: 3.5; }
+  .tm--sm.tm--architecture .tm-cell:nth-child(3n) { fill-opacity: 0.3; }
+  .tm--sm.tm--ui .tm-ui-b:first-of-type { fill-opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tm svg * { animation: none !important; }
+  }
+</style>
 </head>
-<body>
-<!-- Fixed glass navigation -->
-<nav class="top-nav" aria-label="Site">
-  <a class="nav-brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>Thesis Tools&nbsp;<span class="brand-muted">· Sirio V. Feltrin</span></a>
-  <div class="lang-switch" role="group" aria-label="Language">
-    <button type="button" class="lang-opt" data-lang="en">EN</button>
-    <button type="button" class="lang-opt" data-lang="it">IT</button>
-  </div>
-</nav>
-
-<!-- Ambient background blobs + grid for glassmorphism depth -->
+<body class="site-frame">
 <div class="bg-blobs" aria-hidden="true">
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 </div>
-<div class="bg-grid" aria-hidden="true"></div>
+<div class="warm" id="warm" aria-hidden="true"></div>
 
-<main>
-<header class="site-header">
-<div class="hero-copy">
-<span class="site-label animate-in" style="--delay: 0s;" data-i18n="site-label">DTU Master&rsquo;s Thesis &middot; 2026</span>
-<h1 class="site-title animate-in" style="--delay: 0.08s;" data-i18n="site-title">Modular Automated Liquid Dispensing<br>for Point-of-Care Use</h1>
-<p class="site-author animate-in" style="--delay: 0.16s;">Sirio Vittorio Feltrin</p>
-<p class="site-subtitle animate-in" style="--delay: 0.24s;" data-i18n="site-subtitle">Computational tools, reference guides, and prototype documentation built alongside the thesis research, runnable offline from a browser or USB drive.</p>
-<div class="hero-meta animate-in" style="--delay: 0.32s;">
-<span class="meta-chip" data-i18n="meta-chip-browser">Runs in any browser</span>
-<span class="meta-chip" data-i18n="meta-chip-offline">Offline-ready &middot; USB</span>
-<span class="meta-chip" data-i18n="meta-chip-nodeps">No install required</span>
-</div>
-</div>
-<div class="hero-rotor animate-in" id="hero-rotor" style="--delay: 0.4s;" aria-hidden="true"></div>
+<header class="site-nav" data-root="">
+  <span class="site-nav__back site-nav__back--brand" data-i18n="nav-brand">Thesis Tools</span>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="#machine" data-i18n="nav-machine">Machine</a>
+    <a href="prototypes/index.html" data-i18n="nav-prototypes">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel" data-i18n="nav-instruments">Instruments</button>
+  </nav>
+  <div class="site-nav__lang">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" class="lang-opt" data-lang="en">EN</button>
+      <button type="button" class="lang-opt" data-lang="it">IT</button>
+    </div>
+  </div>
 </header>
+<div id="instr-panel" class="instr" hidden></div>
 
-<div class="narrative-sections">
+<main class="home">
 
-<section class="narrative narrative-problem" aria-label="Why this matters">
-<div class="narrative-center">
-<h2 class="narrative-title reveal" data-i18n="narrative-problem-title">A pipette and a lab bench aren&rsquo;t always there.</h2>
-<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-problem-body-1">Most diagnostic assays assume a lab: a technician, a pipette, a bench. Point-of-care testing removes all three &mdash; the device itself has to get the liquid handling right, unsupervised, wherever the patient actually is.</p>
-<p class="narrative-body reveal" style="--rd: 0.16s;" data-i18n="narrative-problem-body-2">The requirements are unforgiving on purpose: dispense five or more different liquids, from 5&nbsp;&micro;L to 1000&nbsp;&micro;L, accurate and reproducible &mdash; and every wetted part has to be cleanable or disposable, with no spill and no contact with the operator. That&rsquo;s not a chemistry problem. It&rsquo;s a mechanical design problem, and it&rsquo;s the one this thesis is about.</p>
-</div>
+<!-- 1. Breath one -->
+<section id="opening" aria-label="Opening">
+  <div class="hero-rotor" id="hero-rotor" aria-hidden="true"></div>
+  <h1 class="opening__line" data-i18n="opening-line">Automated µL dispensing, wherever the sample is.</h1>
 </section>
 
-<section class="narrative narrative-device" aria-label="What the device is">
-<div class="narrative-split">
-<div class="narrative-copy">
-<h2 class="narrative-title reveal" data-i18n="narrative-device-title">Six modules, one job each.</h2>
-<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-device-body">Storage holds the liquids and watches their level. Pump meters each one out by roller displacement. Nozzle shakes a droplet loose in short bursts. Alignment moves the sample rack underneath. Software &amp; Electronics is the brain and the bus, sealed away from anything wet. UI is where a protocol gets set &mdash; on a laptop, loaded in from an SD card &mdash; and where the run gets watched.</p>
-<a class="narrative-link reveal" style="--rd: 0.16s;" href="tools/system-architecture-explorer/index.html"><span data-i18n="narrative-device-link">See the full architecture</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
-</div>
-<div class="narrative-media reveal" style="--rd: 0.12s;">
-<div id="module-schema" class="module-schema"></div>
-<div class="module-legend">
-<span class="legend-item"><span class="legend-swatch legend-swatch--liquid" aria-hidden="true"></span><span data-i18n="narrative-legend-liquid">Liquid flow</span></span>
-<span class="legend-item"><span class="legend-swatch legend-swatch--data" aria-hidden="true"></span><span data-i18n="narrative-legend-data">Data flow</span></span>
-</div>
-</div>
-</div>
+<!-- 2. Breath two -->
+<section id="problem" aria-label="The problem">
+  <div class="problem__grid">
+    <h2 class="problem__line" data-i18n="problem-line">A molecular test can travel. Its sample preparation still needs a lab bench, a trained hand and a pipette.</h2>
+  </div>
 </section>
 
-<section class="narrative narrative-proof" aria-label="See it running">
-<div class="narrative-center">
-<h2 class="narrative-title reveal" data-i18n="narrative-proof-title">It&rsquo;s not a diagram. It runs.</h2>
-<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-proof-body">This is proto-02&rsquo;s pump head &mdash; the same four-roller mechanism the animation above is drawn from, actually turning and dispensing.</p>
-</div>
-<div class="narrative-video-wrap reveal" style="--rd: 0.16s;">
-<video id="pump-head-video" class="narrative-video" src="prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/pump-head-web.mp4" poster="prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/pump-head-poster.jpg" muted loop playsinline preload="metadata" aria-label="Proto-02 pump head, dispensing"></video>
-<p class="narrative-caption" data-i18n="narrative-proof-caption">Proto-02 pump head, dispensing &mdash; portrait clip, sound off.</p>
-</div>
+<!-- 3. Breath three -->
+<section id="reveal" aria-label="The machine">
+  <div class="frame reveal__frame" id="reveal-frame">
+    <img src="assets/media/device/top.jpg" width="2000" height="1125" alt="The two-channel prototype seen from above: reagent towers and pump steppers along the rear, the needle carrier over the central bay, the rack lanes and the touchscreen in front, a 12 V tool battery at the front left." decoding="async">
+    <svg class="callouts" viewBox="0 0 2000 1125" preserveAspectRatio="none" aria-hidden="true">
+      <g style="--i:0"><path pathLength="1" d="M440 250 L300 110 H50"/><circle cx="440" cy="250" r="7"/></g>
+      <g style="--i:1"><path pathLength="1" d="M905 335 L1060 150 H1400"/><circle cx="905" cy="335" r="7"/></g>
+      <g style="--i:2"><path pathLength="1" d="M935 468 L1110 250 H1480"/><circle cx="935" cy="468" r="7"/></g>
+      <g style="--i:3"><path pathLength="1" d="M1400 835 L1560 1030 H1900"/><circle cx="1400" cy="835" r="7"/></g>
+      <g style="--i:4"><path pathLength="1" d="M980 815 L1180 1040 H1480"/><circle cx="980" cy="815" r="7"/></g>
+      <g style="--i:5"><path pathLength="1" d="M430 1000 L250 910 H30"/><circle cx="430" cy="1000" r="7"/></g>
+    </svg>
+    <span class="co-label" style="--i:0; left:2.5%; top:9.8%" data-i18n="co-vials">Reagent vials, 4 mL</span>
+    <span class="co-label" style="--i:1; left:53%; top:13.3%" data-i18n="co-pumps">Pump heads, 4 rollers each</span>
+    <span class="co-label" style="--i:2; left:55.5%; top:22.2%" data-i18n="co-needles">Six needle seats, two fitted</span>
+    <span class="co-label" style="--i:3; left:78%; top:91.6%" data-i18n="co-rack">Rack lane, 22 mm pitch</span>
+    <span class="co-label" style="--i:4; left:59%; top:92.4%" data-i18n="co-screen">3.2-inch touchscreen</span>
+    <span class="co-label" style="--i:5; left:1.5%; top:80.9%" data-i18n="co-battery">12 V tool battery</span>
+    <span class="co-badge" style="left:22%; top:22.2%" aria-hidden="true">1</span>
+    <span class="co-badge" style="left:45.25%; top:29.8%" aria-hidden="true">2</span>
+    <span class="co-badge" style="left:46.75%; top:41.6%" aria-hidden="true">3</span>
+    <span class="co-badge" style="left:70%; top:74.2%" aria-hidden="true">4</span>
+    <span class="co-badge" style="left:49%; top:72.4%" aria-hidden="true">5</span>
+    <span class="co-badge" style="left:21.5%; top:88.9%" aria-hidden="true">6</span>
+  </div>
+  <ol class="co-list" aria-label="Callouts">
+    <li data-n="1" data-i18n="co-vials">Reagent vials, 4 mL</li>
+    <li data-n="2" data-i18n="co-pumps">Pump heads, 4 rollers each</li>
+    <li data-n="3" data-i18n="co-needles">Six needle seats, two fitted</li>
+    <li data-n="4" data-i18n="co-rack">Rack lane, 22 mm pitch</li>
+    <li data-n="5" data-i18n="co-screen">3.2-inch touchscreen</li>
+    <li data-n="6" data-i18n="co-battery">12 V tool battery</li>
+  </ol>
+  <p class="reveal__caption" data-i18n="reveal-caption">Two-channel prototype. DTU Bioengineering, February to September 2026.</p>
+  <div class="reveal__ctas">
+    <a class="btn" href="#machine" data-i18n="cta-watch">Watch it run</a>
+    <a class="btn btn--ghost" href="#journey" data-i18n="cta-follow">Follow one droplet</a>
+  </div>
 </section>
 
-<section class="narrative narrative-journey" aria-label="The prototype journey">
-<div class="narrative-cta">
-<h2 class="narrative-title reveal" data-i18n="narrative-journey-title">Every prototype is a corrected mistake.</h2>
-<p class="narrative-body reveal" style="--rd: 0.08s;" data-i18n="narrative-journey-body">Proto-01 under-dispensed by about a third against its target &mdash; a real, measured gap. Proto-02 corrects the rotor geometry that caused it, and whatever proto-02 gets wrong will shape the version after that. None of it moves in a straight line.</p>
-<a class="narrative-link narrative-link--cta reveal" style="--rd: 0.16s;" href="prototypes/index.html"><span data-i18n="narrative-journey-link">Explore the prototype journey</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
-</div>
+<!-- 4. Watch it run -->
+<section id="machine" aria-labelledby="machine-title">
+  <div class="machine__head reveal">
+    <h2 id="machine-title" data-i18n="machine-title">It runs.</h2>
+    <p class="lead" data-i18n="machine-lead">Two of six channels built. Forty tubes in one unattended run.</p>
+  </div>
+  <div class="stage" id="stage">
+    <div class="stage__centre" id="stage-centre">
+      <div class="frame">
+        <video id="machine-video" src="assets/media/video/machine-dispensing.mp4" poster="assets/media/device/validation-done.jpg" muted loop playsinline preload="metadata" aria-label="Whole-machine dispensing clip"></video>
+        <span class="stage__note mono" data-i18n="machine-note">Whole-machine clip coming</span>
+      </div>
+    </div>
+    <!-- Each tile is a cabinet: the finished module on top, every earlier step a drawer below it,
+         newest drawer first, oldest at the bottom. The drawer captions reuse the st-* keys. -->
+    <div class="stage__grid">
+      <div class="clip clip--tl clip--left" data-cab="pump">
+        <div class="clip__lean"><div class="clip__drift">
+          <div class="clip__cab">
+            <svg class="cab__outline" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="18" ry="18" pathLength="1"/></svg>
+            <button class="clip__btn" type="button" aria-expanded="false" aria-label="Pump head dispensing, open the development drawers">
+              <video src="assets/media/video/pump-head.mp4" poster="assets/media/video/pump-head-poster.jpg" muted loop playsinline preload="metadata" tabindex="-1"></video>
+            </button>
+            <div class="clip__stack">
+              <div class="drawer" style="--d:0">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-pump-4">On the balance</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/pump/gravimetric.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-pump-4">On the balance</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:1">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-pump-3">Qualified head, CAD</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel drawer__panel--light"><img src="assets/media/pump/v23-render.png" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-pump-3">Qualified head, CAD</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:2">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-pump-2">Fourth build, laid out</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/pump/disassembly.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-pump-2">Fourth build, laid out</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:3">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-pump-1">First build</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/pump/proto01-closed.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-pump-1">First build</figcaption></figure>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="clip clip--tr clip--right" data-cab="droplet">
+        <div class="clip__lean"><div class="clip__drift">
+          <div class="clip__cab">
+            <svg class="cab__outline" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="18" ry="18" pathLength="1"/></svg>
+            <button class="clip__btn" type="button" aria-expanded="false" aria-label="Droplet detaching in slow motion, open the development drawers">
+              <video src="assets/media/video/droplet-slowmo.mp4" poster="assets/media/video/droplet-slowmo-poster.jpg" muted loop playsinline preload="metadata" tabindex="-1"></video>
+            </button>
+            <div class="clip__stack">
+              <div class="drawer" style="--d:0">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-noz-3">Mounted over the bay</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/nozzle/mounted-front.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-noz-3">Mounted over the bay</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:1">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-noz-2">Carrier, six seats</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel drawer__panel--light"><img src="assets/media/nozzle/carrier-top.png" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-noz-2">Carrier, six seats</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:2">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-noz-1">Needle gauges tried</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/nozzle/needle-assortment.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-noz-1">Needle gauges tried</figcaption></figure>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="clip clip--bl clip--wide clip--left" data-cab="alignment">
+        <div class="clip__lean"><div class="clip__drift">
+          <div class="clip__cab">
+            <svg class="cab__outline" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="18" ry="18" pathLength="1"/></svg>
+            <button class="clip__btn" type="button" aria-expanded="false" aria-label="Rack indexing stage moving, open the development drawers">
+              <video src="assets/media/video/alignment-v2.mp4" poster="assets/media/video/alignment-v2-poster.jpg" muted loop playsinline preload="metadata" tabindex="-1"></video>
+            </button>
+            <div class="clip__stack">
+              <div class="drawer" style="--d:0">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-al-4">V3 two-axis chassis</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel drawer__panel--light"><img src="assets/media/alignment/v3-iso.png" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-al-4">V3 two-axis chassis</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:1">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-al-3">V2.1 homing bench</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/alignment/v21-homing.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-al-3">V2.1 homing bench</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:2">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-al-2">The 8-tube rack</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel drawer__panel--light"><img src="assets/media/alignment/rack.png" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-al-2">The 8-tube rack</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:3">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-al-1">Concept sheet</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/alignment/sketch-1.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-al-1">Concept sheet</figcaption></figure>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="clip clip--br clip--right" data-cab="balance">
+        <div class="clip__lean"><div class="clip__drift">
+          <div class="clip__cab">
+            <svg class="cab__outline" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="18" ry="18" pathLength="1"/></svg>
+            <button class="clip__btn" type="button" aria-expanded="false" aria-label="Pump dispensing onto the balance, open the development drawers">
+              <video src="assets/media/video/pump-gravimetric.mp4" poster="assets/media/video/pump-gravimetric-poster.jpg" muted loop playsinline preload="metadata" tabindex="-1"></video>
+            </button>
+            <div class="clip__stack">
+              <div class="drawer" style="--d:0">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-bal-3">Shrinkage bars</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/method/shrink-bars.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-bal-3">Shrinkage bars</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:1">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-bal-2">Printer calibration coupon</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/method/calibration-rings.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-bal-2">Printer calibration coupon</figcaption></figure>
+              </div>
+              <div class="drawer" style="--d:2">
+                <button class="drawer__front" type="button" aria-expanded="false"><span class="drawer__label" data-i18n="st-bal-1">Bearing pocket test</span><span class="drawer__handle" aria-hidden="true"></span></button>
+                <figure class="drawer__panel"><img src="assets/media/pump/bearing-pocket-test.jpg" alt="" loading="lazy"><figcaption class="drawer__cap" data-i18n="st-bal-1">Bearing pocket test</figcaption></figure>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
 </section>
 
-</div>
+<!-- 5. Follow one droplet -->
+<section id="journey" aria-labelledby="journey-title">
+  <div class="journey__head reveal">
+    <h2 id="journey-title" data-i18n="journey-title">Follow one droplet.</h2>
+    <p class="lead" data-i18n="journey-lead">From the vial to the tube, in the order the liquid meets the machine. Each stop is one module, with the numbers it earned and the instruments that shaped it.</p>
+  </div>
+  <div class="stops" id="stops">
+    <div class="rail" aria-hidden="true"><span class="rail__drop" id="rail-drop"></span></div>
 
-<div class="resources-sections">
+    <article class="stop stop--media-right reveal" id="stop-vial">
+      <div class="stop__media media-pair">
+        <div class="frame"><img src="assets/media/storage/cartridge.jpg" alt="The inverted 4 mL vial cartridge with its septum" loading="lazy"></div>
+        <div class="frame"><img src="assets/media/storage/needle-holder.jpg" alt="The needle holder that pierces the septum" loading="lazy"></div>
+      </div>
+      <div class="stop__text">
+        <h3 data-i18n="vial-title">Reagent vial</h3>
+        <p class="stop__principle" data-i18n="vial-principle">The liquid starts in an inverted 4 mL glass vial with a septum; a capacitive strip reads the level.</p>
+        <p data-i18n="vial-body">Six vials sit along the rear of the machine, one per channel. The storage module is the companion thesis by Marius Schiller; this page follows the liquid from the moment it leaves the vial.</p>
+        <div class="nums">
+          <div class="num"><span class="num__v">4 mL</span><span class="num__l" data-i18n="vial-n1">per vial</span></div>
+          <div class="num"><span class="num__v">6</span><span class="num__l" data-i18n="vial-n2">channels planned</span></div>
+        </div>
+      </div>
+    </article>
 
-<section aria-label="Tools and guides">
-<div class="section-head reveal">
-<span class="section-index">01</span>
-<p class="section-label" data-i18n="section-label-tools">Tools</p>
-<span class="section-rule" aria-hidden="true"></span>
-</div>
-<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-tools">Computational solvers and reference guides built for the thesis design process — enter your parameters and get answers, or see how the site itself was built.</p>
-<div class="tools-grid">
-<a href="tools/rotor-solver/index.html" class="tool-card reveal" style="--rd: 0.1s;">
-<div class="card-icon" aria-hidden="true">⚙</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-rotor">Peristaltic Rotor Geometry Solver</h2>
-<p class="card-desc" data-i18n="card-desc-rotor">Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/peristaltic-roller-displaced-volume-model/index.html" class="tool-card reveal" style="--rd: 0.18s;">
-<div class="card-icon" aria-hidden="true">🧫</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-occlusion">Peristaltic Occlusion &amp; Displaced-Volume Model</h2>
-<p class="card-desc" data-i18n="card-desc-occlusion">Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/peristaltic-tensioned-path-model/index.html" class="tool-card reveal" style="--rd: 0.26s;">
-<div class="card-icon" aria-hidden="true">〰</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-tensioned">Tensioned Tube-Path &amp; Stroke Volume Model</h2>
-<p class="card-desc" data-i18n="card-desc-tensioned">Alternative path geometry for a tube pinned at both ends under seating tension — straight roller-to-roller runs with α/2 wraps instead of the 180° wall arc. Includes axial pre-strain corrections (lumen shrink, interference loss), volume-per-stroke prediction, and a closed-form corrected rotor radius.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/system-architecture-explorer/index.html" class="tool-card reveal" style="--rd: 0.34s;">
-<div class="card-icon" aria-hidden="true">🔌</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-sysarch">System Architecture Explorer</h2>
-<p class="card-desc" data-i18n="card-desc-sysarch">Whole-device architecture page: an interactive six-module hardware schema, design-direction device personas (single board to fully distributed), then a sortable/filterable cost-and-complexity matrix with a live variant-driven system diagram, pin-budget feasibility readout, and an editable BOM with a DKK↔EUR converter.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/gsd-workflow-guide/index.html" class="tool-card reveal" style="--rd: 0.42s;">
-<div class="card-icon" aria-hidden="true">⬡</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-gsd">GSD Workflow Guide</h2>
-<p class="card-desc" data-i18n="card-desc-gsd">Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-guide">Open guide</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/dispense-throughput-simulator/index.html" class="tool-card reveal" style="--rd: 0.5s;">
-<div class="card-icon" aria-hidden="true">⏱</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-dispense-sim">Dispense Choreography &amp; Throughput Simulator</h2>
-<p class="card-desc" data-i18n="card-desc-dispense-sim">Configure up to six liquids and per-pump flow parameters, then schedule a six-nozzle indexing line at a chosen concurrency (lockstep vs. independent-rate endpoints). Row-per-station Gantt with bottleneck highlight, headline metrics for total run time, bottleneck station, time saved, and throughput, plus an illustrative rack-indexing animation.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/pump-testing/index.html" class="tool-card reveal" style="--rd: 0.58s;">
-<div class="card-icon" aria-hidden="true">⚖</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-pumptest">Pump Testing Protocol</h2>
-<p class="card-desc" data-i18n="card-desc-pumptest">A citable, document-first dispensing-accuracy qualification protocol for the peristaltic pump. Top layer: the market-grade ISO 23783-2 gravimetric method plus the ISO 8655 pipette-equivalence benchmark, with a lighter go-to-market map for the remaining readiness dimensions. Bottom layer: the actual prototype protocol, with every deviation from the ideal reasoned and justified.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-tool">Open tool</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-<a href="tools/ui-prototypes/index.html" class="tool-card reveal" style="--rd: 0.66s;">
-<div class="card-icon" aria-hidden="true">▦</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-uiproto">Operator Interface Prototypes</h2>
-<p class="card-desc" data-i18n="card-desc-uiproto">The interface design record, published as the live artifacts it was made on: nine candidate operator interfaces over five rounds, drawn as self-auditing web pages at the panel's real 320 × 240 before any firmware existed. Each round overlays touch targets, re-quantises colours to RGB565, simulates glare, and recomputes its contrast audit on every render — including the chosen design the firmware was built from.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-open">Open</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-</div>
+    <article class="stop reveal" id="stop-pump">
+      <div class="stop__media media-stack">
+        <div class="frame frame--big"><img src="assets/media/pump/v23-render.png" alt="CAD render of the qualified pump head, gap 1.52 mm, with its four-roller rotor" loading="lazy"></div>
+        <div class="frame frame--under"><img src="assets/media/pump/disassembly.jpg" alt="The fourth pump build laid out part by part" loading="lazy"></div>
+      </div>
+      <div class="stop__text">
+        <h3 data-i18n="pump-title">Pump head</h3>
+        <p class="stop__principle" data-i18n="pump-principle">Four rollers on a printed rotor meter by geometry: one rotor step is one stroke, so a dose is a step count.</p>
+        <p data-i18n="pump-body">Four builds. The first delivered 3.39 µL of a nominal 5 µL, which triggered a full characterisation of the printer. The fourth build hit its 1.52 mm gap and was qualified on the balance.</p>
+        <div class="nums">
+          <div class="num"><span class="num__v">4.53 µL</span><span class="num__l" data-i18n="pump-n1">per stroke</span></div>
+          <div class="num"><span class="num__v">1.52 mm</span><span class="num__l" data-i18n="pump-n2">occlusion gap</span></div>
+          <div class="num"><span class="num__v">0.25 to 0.34 %</span><span class="num__l" data-i18n="pump-n3">CV, 0.27 % for a micropipette on the same balance</span></div>
+        </div>
+        <div class="tools-row">
+          <p class="tools-row__title" data-i18n="tools-here">Instruments used here</p>
+          <div class="tiles">
+            <a class="tile" href="tools/rotor-solver/index.html">
+              <div class="tm tm--rotor">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <circle class="tm-k tm-track" cx="80" cy="50" r="38"/>
+                  <g class="tm-rotor-g">
+                    <circle class="tm-k" cx="80" cy="50" r="28"/>
+                    <line class="tm-k" x1="80" y1="22" x2="80" y2="78"/>
+                    <line class="tm-k" x1="52" y1="50" x2="108" y2="50"/>
+                    <circle class="tm-a" cx="80" cy="50" r="5"/>
+                    <circle class="tm-r" cx="80" cy="22" r="7"/>
+                    <circle class="tm-r" cx="108" cy="50" r="7"/>
+                    <circle class="tm-r" cx="80" cy="78" r="7"/>
+                    <circle class="tm-r" cx="52" cy="50" r="7"/>
+                  </g>
+                </svg>
+              </div>
+              <span data-i18n="tool-rotor">Rotor Geometry Solver</span>
+            </a>
+            <a class="tile" href="tools/peristaltic-roller-displaced-volume-model/index.html">
+              <div class="tm tm--occlusion">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <circle class="tm-r tm-occ-roller" cx="80" cy="18" r="16"/>
+                  <g class="tm-occ-tube">
+                    <rect class="tm-k" x="56" y="36" width="48" height="28" rx="14"/>
+                    <rect class="tm-occ-lumen" x="63" y="43" width="34" height="14" rx="7"/>
+                  </g>
+                  <line class="tm-l" x1="40" y1="66" x2="120" y2="66"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-occlusion">Occlusion &amp; Displaced-Volume Model</span>
+            </a>
+            <a class="tile" href="tools/peristaltic-tensioned-path-model/index.html">
+              <div class="tm tm--tensioned">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <circle class="tm-r" cx="44" cy="52" r="10"/>
+                  <circle class="tm-r" cx="116" cy="52" r="10"/>
+                  <path class="tm-tens-line" d="M44 42 Q80 48 116 42"/>
+                  <circle class="tm-a" cx="44" cy="42" r="2"/>
+                  <circle class="tm-a" cx="116" cy="42" r="2"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-tensioned">Tensioned Tube-Path Model</span>
+            </a>
+            <a class="tile" href="tools/pump-testing/index.html">
+              <div class="tm tm--pump-testing">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <path class="tm-k" d="M46 62 A34 34 0 0 1 114 62"/>
+                  <line class="tm-k" x1="63" y1="32.6" x2="65" y2="36"/>
+                  <line class="tm-k" x1="97" y1="32.6" x2="95" y2="36"/>
+                  <line class="tm-mark" x1="80" y1="24" x2="80" y2="32"/>
+                  <line class="tm-needle" x1="80" y1="64" x2="80" y2="31"/>
+                  <circle class="tm-a" cx="80" cy="64" r="3.5"/>
+                  <line class="tm-l" x1="52" y1="76" x2="108" y2="76"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-testing">Pump Testing Protocol</span>
+            </a>
+          </div>
+        </div>
+        <div class="records">
+          <a class="tlink" href="prototypes/Prototype-1-Pump-Module/proto-01-5ul-4roller/index.html"><span data-i18n="rec-proto01">Proto-01</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a class="tlink" href="prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/index.html"><span data-i18n="rec-proto02">Proto-02, v2.1 to v2.3</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="stop reveal" id="stop-nozzle">
+      <div class="stop__media media-stack">
+        <div class="frame media-render"><img src="assets/media/nozzle/holder-vibr-top.png" alt="CAD render of the needle carrier with its six seats and the vibration motor pocket" loading="lazy"></div>
+        <div class="frame frame--under"><img src="assets/media/nozzle/mounted-front.jpg" alt="The needle carrier mounted over the central bay" loading="lazy"></div>
+      </div>
+      <div class="stop__text">
+        <h3 data-i18n="nozzle-title">Needle and release</h3>
+        <p class="stop__principle" data-i18n="nozzle-principle">Six blunt needles seat on their moulded Luer hubs, so any gauge swaps in without tools; a vibration burst shakes the pendant droplet free.</p>
+        <p data-i18n="nozzle-body">The carrier is one printed part. An eccentric-mass motor sits in it, and a short burst after each dose is enough to release the droplet into the tube below.</p>
+        <div class="nums">
+          <div class="num"><span class="num__v">22 G</span><span class="num__l" data-i18n="nozzle-n1">validated needle</span></div>
+          <div class="num"><span class="num__v">5 mm</span><span class="num__l" data-i18n="nozzle-n2">landing radius</span></div>
+          <div class="num"><span class="num__v">6</span><span class="num__l" data-i18n="nozzle-n3">seats</span></div>
+        </div>
+        <div class="records">
+          <a class="tlink" href="prototypes/Prototype-3-Nozzle-Module/index.html"><span data-i18n="rec-nozzle">Nozzle module</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="stop stop--full reveal" id="stop-rack">
+      <div class="stop__media">
+        <div class="frame media-full">
+          <img src="assets/media/alignment/v3-iso.png" alt="CAD render of the V3 two-axis chassis with the rack lane and the pinion drive" loading="lazy">
+          <div class="media-inset"><img src="assets/media/alignment/rack.png" alt="The printed 8-tube rack" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="stop__text">
+        <div class="stop__body">
+          <h3 data-i18n="rack-title">Rack under the needle</h3>
+          <p class="stop__principle" data-i18n="rack-principle">A printed rack and pinion indexes eight tubes at 22 mm pitch under the fixed needles; the finished rack is ejected by a motorless fishbone cam.</p>
+          <p data-i18n="rack-body">The stage is also the chassis, printed in three dovetail-keyed sections. About fifty concepts were sketched; one was built, then given a homing switch and a second axis to feed the queue.</p>
+        </div>
+        <div class="stop__aside">
+          <div class="nums">
+            <div class="num"><span class="num__v">&le;0.03 mm</span><span class="num__l" data-i18n="rack-n1">homing repeatability</span></div>
+            <div class="num"><span class="num__v">22 mm</span><span class="num__l" data-i18n="rack-n2">tube pitch</span></div>
+            <div class="num"><span class="num__v">40</span><span class="num__l" data-i18n="rack-n3">tubes per run</span></div>
+          </div>
+          <div class="records">
+            <a class="tlink" href="prototypes/Prototype-2-Alignment-Module/index.html"><span data-i18n="rec-v2">V2 and V2.1</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+            <a class="tlink" href="prototypes/Prototype-2-Alignment-Module/v3-two-axis-chassis/index.html"><span data-i18n="rec-v3">V3 two-axis chassis</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="stop stop--media-right reveal" id="stop-screen">
+      <div class="stop__media media-ui">
+        <div class="frame frame--photo"><img src="assets/media/ui/display-side.jpg" alt="The 3.2-inch touchscreen on the machine, showing the home screen" loading="lazy"></div>
+        <div class="mosaic">
+          <div class="frame frame--sm"><img src="assets/media/ui/screen-home.png" alt="Home screen" loading="lazy"></div>
+          <div class="frame frame--sm"><img src="assets/media/ui/screen-check.png" alt="Pre-run check screen" loading="lazy"></div>
+          <div class="frame frame--sm"><img src="assets/media/ui/screen-run.png" alt="Run screen" loading="lazy"></div>
+          <div class="frame frame--sm"><img src="assets/media/ui/screen-done.png" alt="Run complete screen" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="stop__text">
+        <h3 data-i18n="screen-title">The screen that ordered it</h3>
+        <p class="stop__principle" data-i18n="screen-principle">A 3.2-inch resistive touchscreen with a tethered stylus; recipes, tube assignment across five racks, a pre-run check that refuses to start short.</p>
+        <p data-i18n="screen-body">Every candidate interface was drawn as a self-auditing web page at the panel's native resolution before any firmware existed, so the chosen design was already tested for touch targets and contrast.</p>
+        <div class="nums">
+          <div class="num"><span class="num__v">320 &times; 240 px</span><span class="num__l" data-i18n="screen-n1">panel</span></div>
+          <div class="num"><span class="num__v">9</span><span class="num__l" data-i18n="screen-n2">candidate interfaces</span></div>
+          <div class="num"><span class="num__v">5</span><span class="num__l" data-i18n="screen-n3">design rounds</span></div>
+        </div>
+        <div class="tools-row">
+          <p class="tools-row__title" data-i18n="tools-here">Instruments used here</p>
+          <div class="tiles">
+            <a class="tile" href="tools/ui-prototypes/index.html">
+              <div class="tm tm--ui">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <rect class="tm-k" x="44" y="23" width="72" height="54" rx="6"/>
+                  <rect class="tm-ui-b" x="50" y="29" width="60" height="8" rx="2"/>
+                  <rect class="tm-ui-b" x="50" y="41" width="28" height="30" rx="3"/>
+                  <rect class="tm-ui-b" x="82" y="41" width="28" height="30" rx="3"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-ui">Operator Interface Prototypes</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="stop reveal" id="stop-electronics">
+      <div class="stop__media">
+        <div class="frame media-render"><img src="assets/media/device/electronics-bay.jpg" alt="The electronics bay: breadboards, the ESP32-S3 and the step/direction drivers" loading="lazy"></div>
+      </div>
+      <div class="stop__text">
+        <h3 data-i18n="elec-title">One clock for six pumps</h3>
+        <p class="stop__principle" data-i18n="elec-principle">One ESP32-S3 and commodity step/direction drivers: a shared step and direction line, one enable per driver, eight pins instead of twelve.</p>
+        <p data-i18n="elec-body">The same controller sequences the motors and drives the screen. Twenty-five candidate architectures were costed and pin-audited before this one was wired on a breadboard.</p>
+        <div class="nums">
+          <div class="num"><span class="num__v">8</span><span class="num__l" data-i18n="elec-n1">pins for six pumps</span></div>
+          <div class="num"><span class="num__v">about &euro;103</span><span class="num__l" data-i18n="elec-n2">control electronics</span></div>
+          <div class="num"><span class="num__v">2 of 6</span><span class="num__l" data-i18n="elec-n3">drivers fitted</span></div>
+        </div>
+        <div class="tools-row">
+          <p class="tools-row__title" data-i18n="tools-here">Instruments used here</p>
+          <div class="tiles">
+            <a class="tile" href="tools/system-architecture-explorer/index.html">
+              <div class="tm tm--architecture">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <rect class="tm-cell" style="--i:0" x="46" y="16" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:1" x="64" y="16" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:2" x="82" y="16" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:3" x="100" y="16" width="14" height="14" rx="3"/>
+                  <rect class="tm-cell" style="--i:4" x="46" y="34" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:5" x="64" y="34" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:6" x="82" y="34" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:7" x="100" y="34" width="14" height="14" rx="3"/>
+                  <rect class="tm-cell" style="--i:8" x="46" y="52" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:9" x="64" y="52" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:10" x="82" y="52" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:11" x="100" y="52" width="14" height="14" rx="3"/>
+                  <rect class="tm-cell" style="--i:12" x="46" y="70" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:13" x="64" y="70" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:14" x="82" y="70" width="14" height="14" rx="3"/><rect class="tm-cell" style="--i:15" x="100" y="70" width="14" height="14" rx="3"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-arch">System Architecture Explorer</span>
+            </a>
+            <a class="tile" href="tools/dispense-throughput-simulator/index.html">
+              <div class="tm tm--throughput">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <defs>
+                    <clipPath id="tm-rack-clip">
+                      <path d="M22 26 L22 68 A5.5 5.5 0 0 0 33 68 L33 26 Z"/>
+                      <path d="M37 26 L37 68 A5.5 5.5 0 0 0 48 68 L48 26 Z"/>
+                      <path d="M52 26 L52 68 A5.5 5.5 0 0 0 63 68 L63 26 Z"/>
+                      <path d="M67 26 L67 68 A5.5 5.5 0 0 0 78 68 L78 26 Z"/>
+                      <path d="M82 26 L82 68 A5.5 5.5 0 0 0 93 68 L93 26 Z"/>
+                      <path d="M97 26 L97 68 A5.5 5.5 0 0 0 108 68 L108 26 Z"/>
+                      <path d="M112 26 L112 68 A5.5 5.5 0 0 0 123 68 L123 26 Z"/>
+                      <path d="M127 26 L127 68 A5.5 5.5 0 0 0 138 68 L138 26 Z"/>
+                    </clipPath>
+                  </defs>
+                  <g clip-path="url(#tm-rack-clip)">
+                    <rect class="tm-tube-fill" x="22" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="37" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="52" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="67" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="82" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="97" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="112" y="26" width="11" height="47.5"/>
+                    <rect class="tm-tube-fill" x="127" y="26" width="11" height="47.5"/>
+                  </g>
+                  <path class="tm-k" d="M22 26 L22 68 A5.5 5.5 0 0 0 33 68 L33 26"/>
+                  <path class="tm-k" d="M37 26 L37 68 A5.5 5.5 0 0 0 48 68 L48 26"/>
+                  <path class="tm-k" d="M52 26 L52 68 A5.5 5.5 0 0 0 63 68 L63 26"/>
+                  <path class="tm-k" d="M67 26 L67 68 A5.5 5.5 0 0 0 78 68 L78 26"/>
+                  <path class="tm-k" d="M82 26 L82 68 A5.5 5.5 0 0 0 93 68 L93 26"/>
+                  <path class="tm-k" d="M97 26 L97 68 A5.5 5.5 0 0 0 108 68 L108 26"/>
+                  <path class="tm-k" d="M112 26 L112 68 A5.5 5.5 0 0 0 123 68 L123 26"/>
+                  <path class="tm-k" d="M127 26 L127 68 A5.5 5.5 0 0 0 138 68 L138 26"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-throughput">Dispense Throughput Simulator</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="stop stop--full reveal" id="stop-landing">
+      <div class="stop__media">
+        <div class="frame media-wide">
+          <img src="assets/media/device/validation-done.jpg" alt="Five racks, forty tubes filled with red dye at the end of an unattended run" loading="lazy">
+          <div class="media-inset media-inset--sq"><img src="assets/media/device/sample-front.jpg" alt="One filled sample tube, front view" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="stop__text">
+        <div class="stop__body">
+          <h3 data-i18n="land-title">The droplet lands</h3>
+          <p class="stop__principle" data-i18n="land-body">Forty tubes, two dyed reagents, no operator. Accuracy within &plusmn;10 % after per-head calibration; repeatability equal to a micropipette on the same balance; two racks completed on the tool battery.</p>
+        </div>
+        <div class="stop__aside">
+          <div class="nums">
+            <div class="num"><span class="num__v">40</span><span class="num__l" data-i18n="land-n1">tubes</span></div>
+            <div class="num"><span class="num__v">&plusmn;10 %</span><span class="num__l" data-i18n="land-n2">accuracy after calibration</span></div>
+            <div class="num"><span class="num__v">2</span><span class="num__l" data-i18n="land-n3">racks on battery</span></div>
+          </div>
+          <div class="records">
+            <a class="tlink" href="tools/pump-testing/index.html"><span data-i18n="tool-testing">Pump Testing Protocol</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+            <a class="tlink" href="prototypes/index.html"><span data-i18n="rec-journey">Prototype journey</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <nav class="route" id="route" aria-label="Route map">
+    <ol>
+      <li data-stop="stop-vial"><div class="route__label"><span class="route__name" data-i18n="vial-title">Reagent vial</span></div><button class="route__dot" type="button" aria-label="Reagent vial"></button></li>
+      <li data-stop="stop-pump"><div class="route__label"><span class="route__name" data-i18n="pump-title">Pump head</span><div class="route__pills"><a href="tools/rotor-solver/index.html" data-i18n="tool-rotor">Rotor Geometry Solver</a><a href="tools/peristaltic-roller-displaced-volume-model/index.html" data-i18n="tool-occlusion">Occlusion &amp; Displaced-Volume Model</a><a href="tools/peristaltic-tensioned-path-model/index.html" data-i18n="tool-tensioned">Tensioned Tube-Path Model</a><a href="tools/pump-testing/index.html" data-i18n="tool-testing">Pump Testing Protocol</a></div></div><button class="route__dot" type="button" aria-label="Pump head"></button></li>
+      <li data-stop="stop-nozzle"><div class="route__label"><span class="route__name" data-i18n="nozzle-title">Needle and release</span></div><button class="route__dot" type="button" aria-label="Needle and release"></button></li>
+      <li data-stop="stop-rack"><div class="route__label"><span class="route__name" data-i18n="rack-title">Rack under the needle</span></div><button class="route__dot" type="button" aria-label="Rack under the needle"></button></li>
+      <li data-stop="stop-screen"><div class="route__label"><span class="route__name" data-i18n="screen-title">The screen that ordered it</span><div class="route__pills"><a href="tools/ui-prototypes/index.html" data-i18n="tool-ui">Operator Interface Prototypes</a></div></div><button class="route__dot" type="button" aria-label="The screen that ordered it"></button></li>
+      <li data-stop="stop-electronics"><div class="route__label"><span class="route__name" data-i18n="elec-title">One clock for six pumps</span><div class="route__pills"><a href="tools/system-architecture-explorer/index.html" data-i18n="tool-arch">System Architecture Explorer</a><a href="tools/dispense-throughput-simulator/index.html" data-i18n="tool-throughput">Dispense Throughput Simulator</a></div></div><button class="route__dot" type="button" aria-label="One clock for six pumps"></button></li>
+      <li data-stop="stop-landing"><div class="route__label"><span class="route__name" data-i18n="land-title">The droplet lands</span></div><button class="route__dot" type="button" aria-label="The droplet lands"></button></li>
+    </ol>
+  </nav>
+  <nav class="route-bar" id="route-bar" aria-label="Route map">
+    <button type="button" data-stop="stop-vial" aria-label="Reagent vial"></button>
+    <button type="button" data-stop="stop-pump" aria-label="Pump head"></button>
+    <button type="button" data-stop="stop-nozzle" aria-label="Needle and release"></button>
+    <button type="button" data-stop="stop-rack" aria-label="Rack under the needle"></button>
+    <button type="button" data-stop="stop-screen" aria-label="The screen that ordered it"></button>
+    <button type="button" data-stop="stop-electronics" aria-label="One clock for six pumps"></button>
+    <button type="button" data-stop="stop-landing" aria-label="The droplet lands"></button>
+  </nav>
 </section>
 
-<section aria-label="Project roadmap">
-<div class="section-head reveal">
-<span class="section-index">02</span>
-<p class="section-label" data-i18n="section-label-roadmap">Roadmap</p>
-<span class="section-rule" aria-hidden="true"></span>
-</div>
-<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-roadmap">The thesis schedule as a live Gantt — original plan updated to the extended submission and defense dates.</p>
-<div class="tools-row">
-<a href="tools/thesis-timeline/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
-<div class="card-icon" aria-hidden="true">🗓</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-timeline">Thesis Roadmap &amp; Timeline</h2>
-<p class="card-desc" data-i18n="card-desc-timeline">Interactive Gantt of the whole project — work streams colour-coded by owner (author vs. thesis partner), shaded by status, with a live countdown to submission (15 Sep) and defense (28 Sep 2026). Built from the original Miro plan and updated for the extended schedule.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-open">Open</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-</div>
+<!-- 6. How I worked -->
+<section id="method" aria-labelledby="method-title">
+  <div class="wrap">
+    <h2 id="method-title" class="reveal" data-i18n="method-title">Design, build, test, learn. Per module.</h2>
+    <div class="method__band">
+      <div class="beat reveal">
+        <div class="frame frame--md"><img src="assets/media/pump/proto01-open.jpg" alt="The first pump build, opened" loading="lazy"></div>
+        <h3 data-i18n="beat1-title">Prototypes</h3>
+        <p data-i18n="beat1-body">Four pump builds and about fifty alignment concepts. Every measurement was gravimetric, on a 0.1 mg balance, with the method adapted from ISO 23783-2.</p>
+      </div>
+      <div class="beat reveal" style="--delay: 80ms">
+        <div class="frame frame--md"><img src="assets/media/method/calibration-rings.jpg" alt="The printer calibration coupon with its rings" loading="lazy"></div>
+        <h3 data-i18n="beat2-title">CAD and printing</h3>
+        <p data-i18n="beat2-body">Fully parametric Fusion 360. The printer was characterised like an instrument: &plusmn;0.10 mm, outer dimensions shrink about 0.65 %, bores lose 0.14 mm.</p>
+      </div>
+      <div class="beat reveal" style="--delay: 160ms">
+        <div class="frame frame--md"><img src="assets/media/method/proto01-circuit.jpg" alt="The first prototype's breadboard circuit" loading="lazy"></div>
+        <h3 data-i18n="beat3-title">AI in the loop</h3>
+        <p data-i18n="beat3-body">Claude Code in VS Code, through a spec-driven workflow, for the firmware and these tools. An MCP link to Fusion 360 verified CAD dimensions against the specs; assembly generation failed and stayed manual.</p>
+      </div>
+    </div>
+    <figure class="quote reveal">
+      <blockquote data-i18n="quote-text">&ldquo;the assistant's self-assessment is never accepted as verification.&rdquo;</blockquote>
+      <figcaption data-i18n="quote-src">From the thesis</figcaption>
+    </figure>
+    <div class="method__foot reveal">
+      <div class="tools-row">
+        <p class="tools-row__title" data-i18n="tools-here">Instruments used here</p>
+        <div class="tiles">
+          <a class="tile" href="tools/gsd-workflow-guide/index.html">
+            <div class="tm tm--workflow">
+              <svg viewBox="0 0 160 100" aria-hidden="true">
+                <circle class="tm-l" cx="80" cy="50" r="30"/>
+                <circle class="tm-r" cx="80" cy="20" r="5"/>
+                <circle class="tm-r" cx="108.5" cy="40.7" r="5"/>
+                <circle class="tm-r" cx="97.6" cy="74.3" r="5"/>
+                <circle class="tm-r" cx="62.4" cy="74.3" r="5"/>
+                <circle class="tm-r" cx="51.5" cy="40.7" r="5"/>
+                <circle class="tm-a tm-wf-dot" cx="80" cy="20" r="3"/>
+              </svg>
+            </div>
+            <span data-i18n="tool-workflow">Spec-Driven Workflow Guide</span>
+          </a>
+          <a class="tile" href="tools/thesis-timeline/index.html">
+            <div class="tm tm--timeline">
+              <svg viewBox="0 0 160 100" aria-hidden="true">
+                <line class="tm-l" x1="42" y1="76.5" x2="118" y2="76.5"/>
+                <rect class="tm-bar" style="--i:0" x="46" y="60" width="8" height="16" rx="2"/>
+                <rect class="tm-bar" style="--i:1" x="58" y="50" width="8" height="26" rx="2"/>
+                <rect class="tm-bar" style="--i:2" x="70" y="54" width="8" height="22" rx="2"/>
+                <rect class="tm-bar" style="--i:3" x="82" y="40" width="8" height="36" rx="2"/>
+                <rect class="tm-bar" style="--i:4" x="94" y="44" width="8" height="32" rx="2"/>
+                <rect class="tm-bar" style="--i:5" x="106" y="30" width="8" height="46" rx="2"/>
+              </svg>
+            </div>
+            <span data-i18n="tool-timeline">Thesis Timeline</span>
+          </a>
+        </div>
+      </div>
+      <a class="tlink" href="decks/index.html"><span data-i18n="link-decks">Presentations</span><span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
 </section>
 
-<section aria-label="Presentations">
-<div class="section-head reveal">
-<span class="section-index">03</span>
-<p class="section-label" data-i18n="section-label-decks">Presentations</p>
-<span class="section-rule" aria-hidden="true"></span>
-</div>
-<p class="section-desc reveal" style="--rd: 0.06s;" data-i18n="section-desc-decks">Reveal-style HTML slide decks covering the AI-assisted design process — runnable in the browser or offline.</p>
-<div class="tools-row">
-<a href="decks/index.html" class="tool-card tool-card--wide reveal" style="--rd: 0.1s;">
-<div class="card-icon" aria-hidden="true">🃏</div>
-<div class="card-body">
-<h2 class="card-title" data-i18n="card-title-decks">Presentations</h2>
-<p class="card-desc" data-i18n="card-desc-decks">Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.</p>
-</div>
-<span class="card-link"><span data-i18n="card-link-open">Open</span><span class="arrow" aria-hidden="true">→</span></span>
-</a>
-</div>
-</section>
-
-</div>
 </main>
 
-<footer class="site-footer">
-<p data-i18n="footer-university">Technical University of Denmark &middot; Department of Bioengineering - Nano Bio Integrated System group</p>
-<p>Sirio Vittorio Feltrin &middot; 2026</p>
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name" data-i18n="foot-name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis" data-i18n="foot-thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="prototypes/index.html" data-i18n="nav-prototypes">Prototypes</a>
+      <a href="tools/index.html" data-i18n="nav-instruments">Instruments</a>
+      <a href="decks/index.html" data-i18n="link-decks">Presentations</a>
+      <a href="tools/thesis-timeline/index.html" data-i18n="foot-timeline">Timeline</a>
+    </nav>
+  </div>
 </footer>
 
-  <!-- D-01/D-03 AMENDED by explicit user decision (Rework 2): the hero
-       motif's rotor+slug sync now runs on locally-vendored GSAP core —
-       no CDN, no plugins, just this one local file. -->
+  <!-- GSAP core, locally vendored, no plugins, no CDN: the hero motif and the clip-cluster pointer lean. -->
   <script src="assets/gsap/gsap.min.js"></script>
   <script>
     const LANG = {
       en: {
-        'site-label':               'DTU Master’s Thesis · 2026',
-        'site-title':               'Modular Automated Liquid Dispensing<br>for Point-of-Care Use',
-        'site-subtitle':            'Computational tools, reference guides, and prototype documentation built alongside the thesis research, runnable offline from a browser or USB drive.',
-        'meta-chip-browser':        'Runs in any browser',
-        'meta-chip-offline':        'Offline-ready · USB',
-        'meta-chip-nodeps':         'No install required',
-        'narrative-problem-title':   'A pipette and a lab bench aren&rsquo;t always there.',
-        'narrative-problem-body-1':  'Most diagnostic assays assume a lab: a technician, a pipette, a bench. Point-of-care testing removes all three &mdash; the device itself has to get the liquid handling right, unsupervised, wherever the patient actually is.',
-        'narrative-problem-body-2':  'The requirements are unforgiving on purpose: dispense five or more different liquids, from 5&nbsp;&micro;L to 1000&nbsp;&micro;L, accurate and reproducible &mdash; and every wetted part has to be cleanable or disposable, with no spill and no contact with the operator. That&rsquo;s not a chemistry problem. It&rsquo;s a mechanical design problem, and it&rsquo;s the one this thesis is about.',
-        'narrative-device-title':    'Six modules, one job each.',
-        'narrative-device-body':     'Storage holds the liquids and watches their level. Pump meters each one out by roller displacement. Nozzle shakes a droplet loose in short bursts. Alignment moves the sample rack underneath. Software &amp; Electronics is the brain and the bus, sealed away from anything wet. UI is where a protocol gets set &mdash; on a laptop, loaded in from an SD card &mdash; and where the run gets watched.',
-        'narrative-device-link':     'See the full architecture',
-        'narrative-legend-liquid':   'Liquid flow',
-        'narrative-legend-data':     'Data flow',
-        'module-storage':            'Storage',
-        'module-pump':                'Pump',
-        'module-nozzle':              'Nozzle',
-        'module-alignment':          'Alignment',
-        'module-ui':                  'UI',
-        'module-software-electronics': 'Software &amp; Electronics',
-        'narrative-proof-title':     'It&rsquo;s not a diagram. It runs.',
-        'narrative-proof-body':      'This is proto-02&rsquo;s pump head &mdash; the same four-roller mechanism the animation above is drawn from, actually turning and dispensing.',
-        'narrative-proof-caption':   'Proto-02 pump head, dispensing &mdash; portrait clip, sound off.',
-        'narrative-journey-title':   'Every prototype is a corrected mistake.',
-        'narrative-journey-body':    'Proto-01 under-dispensed by about a third against its target &mdash; a real, measured gap. Proto-02 corrects the rotor geometry that caused it, and whatever proto-02 gets wrong will shape the version after that. None of it moves in a straight line.',
-        'narrative-journey-link':    'Explore the prototype journey',
-        'section-label-tools':      'Tools',
-        'section-desc-tools':       'Computational solvers and reference guides built for the thesis design process — enter your parameters and get answers, or see how the site itself was built.',
-        'section-label-roadmap':    'Roadmap',
-        'section-desc-roadmap':      'The thesis schedule as a live Gantt — original plan updated to the extended submission and defense dates.',
-        'section-label-decks':      'Presentations',
-        'section-desc-decks':       'Reveal-style HTML slide decks covering the AI-assisted design process — runnable in the browser or offline.',
-        'card-title-rotor':         'Peristaltic Rotor Geometry Solver',
-        'card-desc-rotor':          'Analytically solves rotor radius for peristaltic pumps. Set your target stroke volume, tube ID, roller bearing, and occlusion efficiency — get a full geometry table for 3–12 rollers with feasibility checks.',
-        'card-title-occlusion':     'Peristaltic Occlusion &amp; Displaced-Volume Model',
-        'card-desc-occlusion':      'Two-part geometric reference for tube-deformation mechanics. Part 1: stadium cross-section model with interactive SVG — residual lumen area vs. roller squeeze. Part 2: axial contact length, displaced volume per roller pass, and arc compensation formula. Full derivations with LaTeX formulas.',
-        'card-title-tensioned':     'Tensioned Tube-Path &amp; Stroke Volume Model',
-        'card-desc-tensioned':      'Alternative path geometry for a tube pinned at both ends under seating tension — straight roller-to-roller runs with α/2 wraps instead of the 180° wall arc. Includes axial pre-strain corrections (lumen shrink, interference loss), volume-per-stroke prediction, and a closed-form corrected rotor radius.',
-        'card-title-sysarch':       'System Architecture Explorer',
-        'card-desc-sysarch':        'Whole-device architecture page: an interactive six-module hardware schema, design-direction device personas (single board to fully distributed), then a sortable/filterable cost-and-complexity matrix with a live variant-driven system diagram, pin-budget feasibility readout, and an editable BOM with a DKK↔EUR converter.',
-        'card-title-gsd':           'GSD Workflow Guide',
-        'card-desc-gsd':            'Interactive diagram of the spec-driven development workflow used to build this site. Explore the discuss → plan → execute loop, optional quality gates, and utility commands — click any node to see what it does.',
-        'card-title-timeline':      'Thesis Roadmap &amp; Timeline',
-        'card-desc-timeline':       'Interactive Gantt of the whole project — work streams colour-coded by owner (author vs. thesis partner), shaded by status, with a live countdown to submission (15 Sep) and defense (28 Sep 2026). Built from the original Miro plan and updated for the extended schedule.',
-        'card-title-decks':         'Presentations',
-        'card-desc-decks':          'Browse the lab meeting and architecture presentation decks. Built with a custom reveal-style HTML slide system.',
-        'card-title-dispense-sim':  'Dispense Choreography &amp; Throughput Simulator',
-        'card-desc-dispense-sim':   'Configure up to six liquids and per-pump flow parameters, then schedule a six-nozzle indexing line at a chosen concurrency (lockstep vs. independent-rate endpoints). Row-per-station Gantt with bottleneck highlight, headline metrics for total run time, bottleneck station, time saved, and throughput, plus an illustrative rack-indexing animation.',
-        'card-title-pumptest':      'Pump Testing Protocol',
-        'card-desc-pumptest':       'A citable, document-first dispensing-accuracy qualification protocol for the peristaltic pump. Top layer: the market-grade ISO 23783-2 gravimetric method plus the ISO 8655 pipette-equivalence benchmark, with a lighter go-to-market map for the remaining readiness dimensions. Bottom layer: the actual prototype protocol, with every deviation from the ideal reasoned and justified.',
-        'card-title-uiproto':       'Operator Interface Prototypes',
-        'card-desc-uiproto':        'The interface design record, published as the live artifacts it was made on: nine candidate operator interfaces over five rounds, drawn as self-auditing web pages at the panel\'s real 320 × 240 before any firmware existed. Each round overlays touch targets, re-quantises colours to RGB565, simulates glare, and recomputes its contrast audit on every render — including the chosen design the firmware was built from.',
-        'card-link-tool':           'Open tool',
-        'card-link-guide':          'Open guide',
-        'card-link-open':           'Open',
-        'footer-university':        'Technical University of Denmark · Department of Bioengineering - Nano Bio Integrated System group',
+        'nav-brand':        'Thesis Tools',
+        'nav-machine':      'Machine',
+        'nav-prototypes':   'Prototypes',
+        'nav-instruments':  'Instruments',
+        'opening-line':     'Automated µL dispensing, wherever the sample is.',
+        'problem-line':     'A molecular test can travel. Its sample preparation still needs a lab bench, a trained hand and a pipette.',
+        'co-vials':         'Reagent vials, 4 mL',
+        'co-pumps':         'Pump heads, 4 rollers each',
+        'co-needles':       'Six needle seats, two fitted',
+        'co-rack':          'Rack lane, 22 mm pitch',
+        'co-screen':        '3.2-inch touchscreen',
+        'co-battery':       '12 V tool battery',
+        'reveal-caption':   'Two-channel prototype. DTU Bioengineering, February to September 2026.',
+        'cta-watch':        'Watch it run',
+        'cta-follow':       'Follow one droplet',
+        'machine-title':    'It runs.',
+        'machine-lead':     'Two of six channels built. Forty tubes in one unattended run.',
+        'machine-note':     'Whole-machine clip coming',
+        'st-pump-1':        'First build',
+        'st-pump-2':        'Fourth build, laid out',
+        'st-pump-3':        'Qualified head, CAD',
+        'st-pump-4':        'On the balance',
+        'st-noz-1':         'Needle gauges tried',
+        'st-noz-2':         'Carrier, six seats',
+        'st-noz-3':         'Mounted over the bay',
+        'st-al-1':          'Concept sheet',
+        'st-al-2':          'The 8-tube rack',
+        'st-al-3':          'V2.1 homing bench',
+        'st-al-4':          'V3 two-axis chassis',
+        'st-bal-1':         'Bearing pocket test',
+        'st-bal-2':         'Printer calibration coupon',
+        'st-bal-3':         'Shrinkage bars',
+        'journey-title':    'Follow one droplet.',
+        'journey-lead':     'From the vial to the tube, in the order the liquid meets the machine. Each stop is one module, with the numbers it earned and the instruments that shaped it.',
+        'tools-here':       'Instruments used here',
+        'vial-title':       'Reagent vial',
+        'vial-principle':   'The liquid starts in an inverted 4 mL glass vial with a septum; a capacitive strip reads the level.',
+        'vial-body':        'Six vials sit along the rear of the machine, one per channel. The storage module is the companion thesis by Marius Schiller; this page follows the liquid from the moment it leaves the vial.',
+        'vial-n1':          'per vial',
+        'vial-n2':          'channels planned',
+        'pump-title':       'Pump head',
+        'pump-principle':   'Four rollers on a printed rotor meter by geometry: one rotor step is one stroke, so a dose is a step count.',
+        'pump-body':        'Four builds. The first delivered 3.39 µL of a nominal 5 µL, which triggered a full characterisation of the printer. The fourth build hit its 1.52 mm gap and was qualified on the balance.',
+        'pump-n1':          'per stroke',
+        'pump-n2':          'occlusion gap',
+        'pump-n3':          'CV, 0.27 % for a micropipette on the same balance',
+        'tool-rotor':       'Rotor Geometry Solver',
+        'tool-occlusion':   'Occlusion &amp; Displaced-Volume Model',
+        'tool-tensioned':   'Tensioned Tube-Path Model',
+        'tool-testing':     'Pump Testing Protocol',
+        'tool-ui':          'Operator Interface Prototypes',
+        'tool-arch':        'System Architecture Explorer',
+        'tool-throughput':  'Dispense Throughput Simulator',
+        'tool-workflow':    'Spec-Driven Workflow Guide',
+        'tool-timeline':    'Thesis Timeline',
+        'rec-proto01':      'Proto-01',
+        'rec-proto02':      'Proto-02, v2.1 to v2.3',
+        'nozzle-title':     'Needle and release',
+        'nozzle-principle': 'Six blunt needles seat on their moulded Luer hubs, so any gauge swaps in without tools; a vibration burst shakes the pendant droplet free.',
+        'nozzle-body':      'The carrier is one printed part. An eccentric-mass motor sits in it, and a short burst after each dose is enough to release the droplet into the tube below.',
+        'nozzle-n1':        'validated needle',
+        'nozzle-n2':        'landing radius',
+        'nozzle-n3':        'seats',
+        'rec-nozzle':       'Nozzle module',
+        'rack-title':       'Rack under the needle',
+        'rack-principle':   'A printed rack and pinion indexes eight tubes at 22 mm pitch under the fixed needles; the finished rack is ejected by a motorless fishbone cam.',
+        'rack-body':        'The stage is also the chassis, printed in three dovetail-keyed sections. About fifty concepts were sketched; one was built, then given a homing switch and a second axis to feed the queue.',
+        'rack-n1':          'homing repeatability',
+        'rack-n2':          'tube pitch',
+        'rack-n3':          'tubes per run',
+        'rec-v2':           'V2 and V2.1',
+        'rec-v3':           'V3 two-axis chassis',
+        'screen-title':     'The screen that ordered it',
+        'screen-principle': 'A 3.2-inch resistive touchscreen with a tethered stylus; recipes, tube assignment across five racks, a pre-run check that refuses to start short.',
+        'screen-body':      'Every candidate interface was drawn as a self-auditing web page at the panel\'s native resolution before any firmware existed, so the chosen design was already tested for touch targets and contrast.',
+        'screen-n1':        'panel',
+        'screen-n2':        'candidate interfaces',
+        'screen-n3':        'design rounds',
+        'elec-title':       'One clock for six pumps',
+        'elec-principle':   'One ESP32-S3 and commodity step/direction drivers: a shared step and direction line, one enable per driver, eight pins instead of twelve.',
+        'elec-body':        'The same controller sequences the motors and drives the screen. Twenty-five candidate architectures were costed and pin-audited before this one was wired on a breadboard.',
+        'elec-n1':          'pins for six pumps',
+        'elec-n2':          'control electronics',
+        'elec-n3':          'drivers fitted',
+        'land-title':       'The droplet lands',
+        'land-body':        'Forty tubes, two dyed reagents, no operator. Accuracy within &plusmn;10 % after per-head calibration; repeatability equal to a micropipette on the same balance; two racks completed on the tool battery.',
+        'land-n1':          'tubes',
+        'land-n2':          'accuracy after calibration',
+        'land-n3':          'racks on battery',
+        'rec-journey':      'Prototype journey',
+        'method-title':     'Design, build, test, learn. Per module.',
+        'beat1-title':      'Prototypes',
+        'beat1-body':       'Four pump builds and about fifty alignment concepts. Every measurement was gravimetric, on a 0.1 mg balance, with the method adapted from ISO 23783-2.',
+        'beat2-title':      'CAD and printing',
+        'beat2-body':       'Fully parametric Fusion 360. The printer was characterised like an instrument: &plusmn;0.10 mm, outer dimensions shrink about 0.65 %, bores lose 0.14 mm.',
+        'beat3-title':      'AI in the loop',
+        'beat3-body':       'Claude Code in VS Code, through a spec-driven workflow, for the firmware and these tools. An MCP link to Fusion 360 verified CAD dimensions against the specs; assembly generation failed and stayed manual.',
+        'quote-text':       '&ldquo;the assistant\'s self-assessment is never accepted as verification.&rdquo;',
+        'quote-src':        'From the thesis',
+        'link-decks':       'Presentations',
+        'foot-name':        'Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026',
+        'foot-thesis':      'Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications',
+        'foot-timeline':    'Timeline'
       },
       it: {
-        'site-label':               'Tesi Magistrale DTU · 2026',
-        'site-title':               'Distribuzione Automatizzata Modulare di Liquidi<br>per Diagnostica Point-of-Care',
-        'site-subtitle':            'Strumenti computazionali, guide di riferimento e documentazione dei prototipi sviluppati parallelamente alla tesi, utilizzabili offline dal browser o da una chiavetta USB.',
-        'meta-chip-browser':        'Funziona in qualsiasi browser',
-        'meta-chip-offline':        'Utilizzabile offline · USB',
-        'meta-chip-nodeps':         'Nessuna installazione richiesta',
-        'narrative-problem-title':   'Non sempre ci sono una pipetta e un banco da laboratorio.',
-        'narrative-problem-body-1':  'La maggior parte dei test diagnostici presuppone un laboratorio: un tecnico, una pipetta, un banco. La diagnostica point-of-care elimina tutti e tre &mdash; &egrave; il dispositivo stesso a dover gestire correttamente i liquidi, senza supervisione, ovunque si trovi il paziente.',
-        'narrative-problem-body-2':  'I requisiti sono volutamente severi: dosare almeno cinque liquidi diversi, da 5&nbsp;&micro;L a 1000&nbsp;&micro;L, con accuratezza e ripetibilit&agrave; &mdash; e ogni parte a contatto con il liquido deve essere lavabile o monouso, senza versamenti e senza contatto con l&rsquo;operatore. Non &egrave; un problema di chimica. &Egrave; un problema di progettazione meccanica, ed &egrave; il problema al centro di questa tesi.',
-        'narrative-device-title':    'Sei moduli, un compito ciascuno.',
-        'narrative-device-body':     'Storage contiene i liquidi e ne monitora il livello. Pump dosa ciascun liquido per spostamento dei rulli. Nozzle scuote una goccia con brevi impulsi. Alignment sposta il rack dei campioni sotto gli ugelli. Software &amp; Electronics &egrave; il cervello e il bus, sigillato lontano da tutto ci&ograve; che &egrave; bagnato. UI &egrave; dove si imposta un protocollo &mdash; su un laptop, caricato da scheda SD &mdash; e da dove si segue l&rsquo;esecuzione.',
-        'narrative-device-link':     'Vedi l&rsquo;architettura completa',
-        'narrative-legend-liquid':   'Flusso liquido',
-        'narrative-legend-data':     'Flusso dati',
-        'module-storage':            'Storage',
-        'module-pump':                'Pump',
-        'module-nozzle':              'Nozzle',
-        'module-alignment':          'Alignment',
-        'module-ui':                  'UI',
-        'module-software-electronics': 'Software &amp; Electronics',
-        'narrative-proof-title':     'Non &egrave; uno schema. Funziona davvero.',
-        'narrative-proof-body':      'Questa &egrave; la testa pompante di proto-02 &mdash; lo stesso meccanismo a quattro rulli dell&rsquo;animazione qui sopra, che gira e dosa per davvero.',
-        'narrative-proof-caption':   'Testa pompante proto-02, in dosaggio &mdash; clip verticale, senza audio.',
-        'narrative-journey-title':   'Ogni prototipo &egrave; un errore corretto.',
-        'narrative-journey-body':    'Proto-01 dosava circa un terzo in meno del target &mdash; uno scarto reale e misurato. Proto-02 corregge la geometria del rotore che lo causava, e ci&ograve; che proto-02 sbaglier&agrave; former&agrave; la versione successiva. Niente di tutto questo procede in linea retta.',
-        'narrative-journey-link':    'Esplora il percorso dei prototipi',
-        'section-label-tools':      'Strumenti',
-        'section-desc-tools':       'Risolutori computazionali e guide di riferimento sviluppati per il processo di progettazione — inserisci i parametri e ottieni le risposte, oppure scopri come è stato costruito il sito stesso.',
-        'section-label-roadmap':    'Cronoprogramma',
-        'section-desc-roadmap':      'Il piano della tesi come diagramma di Gantt interattivo — piano originale aggiornato alle nuove date di consegna e discussione.',
-        'section-label-decks':      'Presentazioni',
-        'section-desc-decks':       'Presentazioni HTML in stile reveal sul processo di progettazione assistito dall\'AI — eseguibili nel browser o offline.',
-        'card-title-rotor':         'Risolutore Geometrico del Rotore Peristaltico',
-        'card-desc-rotor':          'Calcola analiticamente il raggio del rotore per pompe peristaltiche. Imposta il volume target per ciclo, il diametro interno del tubo, il cuscinetto e l\'efficienza di occlusione — ottieni una tabella geometrica completa per 3–12 rulli con verifica di fattibilità.',
-        'card-title-occlusion':     'Modello di Occlusione Peristaltica e Volume Spostato',
-        'card-desc-occlusion':      'Riferimento geometrico in due parti per la meccanica di deformazione del tubo. Parte 1: modello a sezione "stadium" con SVG interattivo — area residua del lume in funzione dello schiacciamento del rullo. Parte 2: lunghezza di contatto assiale, volume spostato per passaggio del rullo e formula di compensazione dell\'arco. Derivazioni complete con formule LaTeX.',
-        'card-title-tensioned':     'Modello del Percorso in Tensione e Volume per Ciclo',
-        'card-desc-tensioned':      'Geometria alternativa del percorso per un tubo fissato alle due estremità sotto tensione di montaggio — tratti rettilinei tra i rulli con avvolgimenti α/2 invece dell\'arco a parete di 180°. Include correzioni di pre-deformazione assiale (restringimento del lume, perdita di interferenza), previsione del volume per ciclo e raggio del rotore corretto in forma chiusa.',
-        'card-title-sysarch':       'Esploratore dell\'Architettura di Sistema',
-        'card-desc-sysarch':        'Pagina di architettura dell\'intero dispositivo: uno schema hardware interattivo a sei moduli, tipologie di dispositivo per direzione progettuale (scheda singola a struttura completamente distribuita), poi una matrice di costo e complessità ordinabile e filtrabile con diagramma di sistema live per variante, verifica di fattibilità dei pin e distinta base modificabile con convertitore DKK↔EUR.',
-        'card-title-gsd':           'Guida al Flusso di Lavoro GSD',
-        'card-desc-gsd':            'Diagramma interattivo del flusso di sviluppo spec-driven usato per costruire questo sito. Esplora il ciclo discuss → plan → execute, i controlli di qualità opzionali e i comandi di utilità — clicca su un nodo per vedere cosa fa.',
-        'card-title-timeline':      'Cronoprogramma e Timeline della Tesi',
-        'card-desc-timeline':       'Diagramma di Gantt interattivo dell\'intero progetto — flussi di lavoro colorati per responsabile (autore vs. partner di tesi), sfumati per stato, con conto alla rovescia per la consegna (15 set) e la discussione (28 set 2026). Costruito dal piano Miro originale e aggiornato al calendario esteso.',
-        'card-title-decks':         'Presentazioni',
-        'card-desc-decks':          'Sfoglia le presentazioni del lab meeting e dell\'architettura. Realizzate con un sistema di slide HTML personalizzato in stile reveal.',
-        'card-title-dispense-sim':  'Simulatore di Coreografia e Portata di Dispensazione',
-        'card-desc-dispense-sim':   'Configura fino a sei liquidi e i parametri di flusso per pompa, poi pianifica una linea a indicizzazione con sei ugelli alla concorrenza scelta (estremi lockstep vs. tasso indipendente). Diagramma di Gantt riga per stazione con evidenza del collo di bottiglia, metriche principali per tempo totale, stazione limitante, tempo risparmiato e portata, più un\'animazione illustrativa dell\'indicizzazione del rack.',
-        'card-title-pumptest':      'Protocollo di Test della Pompa',
-        'card-desc-pumptest':       'Un protocollo di qualificazione dell\'accuratezza di dispensazione, citabile e document-first, per la pompa peristaltica. Livello superiore: il metodo gravimetrico ISO 23783-2 di livello commerciale più il benchmark di equivalenza-pipetta ISO 8655, con una mappa più leggera per le restanti dimensioni di readiness al mercato. Livello inferiore: il protocollo effettivamente usato sul prototipo, con ogni deviazione dall\'ideale motivata e giustificata.',
-        'card-title-uiproto':       'Prototipi dell\'Interfaccia Operatore',
-        'card-desc-uiproto':        'Il registro di progettazione dell\'interfaccia, pubblicato come gli artefatti vivi su cui è stato costruito: nove interfacce operatore candidate in cinque round, disegnate come pagine web auto-verificanti alla risoluzione reale del pannello (320 × 240) prima che esistesse il firmware. Ogni round evidenzia i touch target, ri-quantizza i colori in RGB565, simula il riverbero e ricalcola l\'audit di contrasto a ogni render — incluso il design scelto da cui è stato costruito il firmware.',
-        'card-link-tool':           'Apri strumento',
-        'card-link-guide':          'Apri guida',
-        'card-link-open':           'Apri',
-        'footer-university':        'Politecnico di Danimarca · Dipartimento di Bioingegneria - Gruppo Nano Bio Integrated System',
+        'nav-brand':        'Thesis Tools',
+        'nav-machine':      'Macchina',
+        'nav-prototypes':   'Prototipi',
+        'nav-instruments':  'Strumenti',
+        'opening-line':     'Dispensazione automatica di µL, ovunque sia il campione.',
+        'problem-line':     'Un test molecolare può viaggiare. La preparazione del suo campione richiede ancora un bancone da laboratorio, una mano esperta e una pipetta.',
+        'co-vials':         'Vial dei reagenti, 4 mL',
+        'co-pumps':         'Teste pompa, 4 rulli ciascuna',
+        'co-needles':       'Sei sedi per ago, due montate',
+        'co-rack':          'Corsia del rack, passo 22 mm',
+        'co-screen':        'Touchscreen da 3.2 pollici',
+        'co-battery':       'Batteria da 12 V per utensili',
+        'reveal-caption':   'Prototipo a due canali. DTU Bioengineering, da febbraio a settembre 2026.',
+        'cta-watch':        'Guardala in funzione',
+        'cta-follow':       'Segui una goccia',
+        'machine-title':    'Funziona.',
+        'machine-lead':     'Due canali su sei costruiti. Quaranta provette in un solo ciclo senza operatore.',
+        'machine-note':     'Video della macchina completa in arrivo',
+        'st-pump-1':        'Prima versione',
+        'st-pump-2':        'Quarta versione, componenti in vista',
+        'st-pump-3':        'Testa qualificata, CAD',
+        'st-pump-4':        'Sulla bilancia',
+        'st-noz-1':         'Gauge degli aghi provati',
+        'st-noz-2':         'Supporto, sei sedi',
+        'st-noz-3':         'Montato sopra il vano',
+        'st-al-1':          'Foglio dei concept',
+        'st-al-2':          'Il rack da 8 provette',
+        'st-al-3':          'Banco di homing V2.1',
+        'st-al-4':          'Telaio a due assi V3',
+        'st-bal-1':         'Prova della sede del cuscinetto',
+        'st-bal-2':         'Provino di calibrazione della stampante',
+        'st-bal-3':         'Barrette di ritiro',
+        'journey-title':    'Segui una goccia.',
+        'journey-lead':     'Dalla vial alla provetta, nell\'ordine in cui il liquido incontra la macchina. Ogni tappa è un modulo, con i numeri che si è guadagnato e gli strumenti che l\'hanno definito.',
+        'tools-here':       'Strumenti usati qui',
+        'vial-title':       'Vial del reagente',
+        'vial-principle':   'Il liquido parte da una vial di vetro da 4 mL capovolta, chiusa da un setto; una striscia capacitiva ne legge il livello.',
+        'vial-body':        'Sei vial sono allineate sul retro della macchina, una per canale. Il modulo di stoccaggio è la tesi parallela di Marius Schiller; questa pagina segue il liquido da quando lascia la vial.',
+        'vial-n1':          'per vial',
+        'vial-n2':          'canali previsti',
+        'pump-title':       'Testa pompa',
+        'pump-principle':   'Quattro rulli su un rotore stampato dosano per geometria: un passo del rotore è una corsa, quindi una dose è un numero di passi.',
+        'pump-body':        'Quattro versioni costruite. La prima erogava 3.39 µL contro i 5 µL nominali, e questo ha portato a caratterizzare a fondo la stampante. La quarta ha centrato il suo gap di 1.52 mm ed è stata qualificata sulla bilancia.',
+        'pump-n1':          'per corsa',
+        'pump-n2':          'gap di occlusione',
+        'pump-n3':          'CV, 0.27 % per una micropipetta sulla stessa bilancia',
+        'tool-rotor':       'Rotor Geometry Solver',
+        'tool-occlusion':   'Occlusion &amp; Displaced-Volume Model',
+        'tool-tensioned':   'Tensioned Tube-Path Model',
+        'tool-testing':     'Pump Testing Protocol',
+        'tool-ui':          'Operator Interface Prototypes',
+        'tool-arch':        'System Architecture Explorer',
+        'tool-throughput':  'Dispense Throughput Simulator',
+        'tool-workflow':    'Spec-Driven Workflow Guide',
+        'tool-timeline':    'Thesis Timeline',
+        'rec-proto01':      'Proto-01',
+        'rec-proto02':      'Proto-02, da v2.1 a v2.3',
+        'nozzle-title':     'Ago e distacco',
+        'nozzle-principle': 'Sei aghi a punta smussata si innestano sui loro hub Luer stampati, così qualsiasi gauge si cambia senza attrezzi; una breve vibrazione stacca la goccia sospesa.',
+        'nozzle-body':      'Il supporto è un unico pezzo stampato. Al suo interno c\'è un motore a massa eccentrica, e una breve raffica dopo ogni dose basta a far cadere la goccia nella provetta sottostante.',
+        'nozzle-n1':        'ago validato',
+        'nozzle-n2':        'raggio di caduta',
+        'nozzle-n3':        'sedi',
+        'rec-nozzle':       'Modulo ugello',
+        'rack-title':       'Il rack sotto l\'ago',
+        'rack-principle':   'Una cremagliera stampata con pignone fa avanzare otto provette con passo 22 mm sotto gli aghi fissi; il rack completato viene espulso da una camma a lisca di pesce, senza motore.',
+        'rack-body':        'Lo stage è anche il telaio, stampato in tre sezioni unite a coda di rondine. Sono stati schizzati una cinquantina di concept; uno è stato costruito, poi dotato di un finecorsa di homing e di un secondo asse per alimentare la coda.',
+        'rack-n1':          'ripetibilità di homing',
+        'rack-n2':          'passo tra le provette',
+        'rack-n3':          'provette per ciclo',
+        'rec-v2':           'V2 e V2.1',
+        'rec-v3':           'Telaio a due assi V3',
+        'screen-title':     'Lo schermo che comanda tutto',
+        'screen-principle': 'Un touchscreen resistivo da 3.2 pollici con stilo vincolato; ricette, assegnazione delle provette su cinque rack, un controllo pre-avvio che si rifiuta di partire se manca qualcosa.',
+        'screen-body':      'Ogni interfaccia candidata è stata disegnata come pagina web auto-verificante alla risoluzione nativa del pannello, prima ancora che esistesse il firmware. Il design scelto era già verificato per aree di tocco e contrasto.',
+        'screen-n1':        'pannello',
+        'screen-n2':        'interfacce candidate',
+        'screen-n3':        'cicli di design',
+        'elec-title':       'Un solo clock per sei pompe',
+        'elec-principle':   'Un ESP32-S3 e driver step/direction commerciali: una linea di step e una di direzione condivise, un enable per driver, otto pin invece di dodici.',
+        'elec-body':        'Lo stesso controllore sequenzia i motori e pilota lo schermo. Venticinque architetture candidate sono state valutate nei costi e verificate sui pin prima di cablare questa su breadboard.',
+        'elec-n1':          'pin per sei pompe',
+        'elec-n2':          'elettronica di controllo',
+        'elec-n3':          'driver montati',
+        'land-title':       'La goccia arriva',
+        'land-body':        'Quaranta provette, due reagenti colorati, nessun operatore. Accuratezza entro &plusmn;10 % dopo la calibrazione della singola testa; ripetibilità pari a quella di una micropipetta sulla stessa bilancia; due rack completati con la batteria dell\'utensile.',
+        'land-n1':          'provette',
+        'land-n2':          'accuratezza dopo calibrazione',
+        'land-n3':          'rack a batteria',
+        'rec-journey':      'Percorso dei prototipi',
+        'method-title':     'Progetta, costruisci, testa, impara. Modulo per modulo.',
+        'beat1-title':      'Prototipi',
+        'beat1-body':       'Quattro versioni della pompa e circa cinquanta concept di allineamento. Ogni misura è stata gravimetrica, su una bilancia da 0.1 mg, con il metodo adattato dalla ISO 23783-2.',
+        'beat2-title':      'CAD e stampa 3D',
+        'beat2-body':       'Fusion 360 completamente parametrico. La stampante è stata caratterizzata come uno strumento di misura: &plusmn;0.10 mm, le quote esterne si ritirano di circa 0.65 %, i fori perdono 0.14 mm.',
+        'beat3-title':      'AI nel processo',
+        'beat3-body':       'Claude Code dentro VS Code, con un flusso di lavoro guidato dalle specifiche, per il firmware e per questi strumenti. Un collegamento MCP a Fusion 360 ha verificato le quote CAD rispetto alle specifiche; la generazione degli assiemi non ha funzionato ed è rimasta manuale.',
+        'quote-text':       '&ldquo;the assistant\'s self-assessment is never accepted as verification.&rdquo;',
+        'quote-src':        'Dalla tesi',
+        'link-decks':       'Presentazioni',
+        'foot-name':        'Sirio Vittorio Feltrin, DTU Bioengineering, gruppo NaBIS, 2026',
+        'foot-thesis':      'Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications',
+        'foot-timeline':    'Timeline'
       }
     };
 
@@ -870,44 +1286,35 @@
       btn.addEventListener('click', () => applyLang(btn.dataset.lang));
     });
 
-    // ── Hero fluidic-path motif, Rework 2 ──────────────────────────
-    // Hand-built SVG, built once via a template string and assigned
-    // through innerHTML — same technique as tools/rotor-solver's
-    // buildFigure(). Real proto-02 geometry (N=4, R=19.7mm rotor
-    // radius, 5mm MR105ZZ roller radius, 180° tube-wrap contact arc
-    // on TOP of the rotor). One continuous tube path: a dip tube
-    // inside the 50ml Falcon-style source, up through its screw cap,
-    // a Bezier sweep that enters the pump wrap TANGENTIALLY (both
-    // wrap endpoints get a same-x control point, forcing a vertical
-    // — i.e. tangent-to-the-circle — approach/departure, per Sirio's
-    // explicit complaint about the old 90° entry), 180° over the top,
-    // tangential exit, then a smooth curve down into a short rigid
-    // needle above the open 1.5ml Eppendorf-style collection tube.
-    //
-    // Motion, Rework 2 (D-01/D-03 AMENDED by explicit user decision):
-    // buildHeroRotor() only builds the static markup + geometry; all
-    // motion lives in initHeroMotion() below, driven by ONE GSAP
-    // timeline (gsap core, locally vendored at assets/gsap/gsap.min.js
-    // — no CDN, no plugins). See initHeroMotion() for the sync
-    // derivation (roller rotation and slug stroke-dashoffset share
-    // the identical duration/ease/repeat on the same timeline clock).
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+    // ---- Hero fluidic-path motif (carried over unchanged from the previous landing page) ----
+    // Hand-built SVG, built once via a template string and assigned through innerHTML.
+    // Real proto-02 geometry (N=4, R=19.7mm rotor radius, 5mm MR105ZZ roller radius, 180 degree
+    // tube-wrap contact arc on TOP of the rotor). One continuous tube path: a dip tube inside the
+    // 50ml Falcon-style source, up through its screw cap, a Bezier sweep that enters the pump wrap
+    // tangentially, 180 degrees over the top, tangential exit, then a smooth curve down into a short
+    // rigid needle above the open 1.5ml Eppendorf-style collection tube.
+    // buildHeroRotor() only builds the static markup + geometry; all motion lives in initHeroMotion(),
+    // driven by ONE GSAP timeline (gsap core, locally vendored at assets/gsap/gsap.min.js).
     const cosd = a => Math.cos(a * Math.PI / 180);
     const sind = a => Math.sin(a * Math.PI / 180);
 
     function buildHeroRotor() {
-      const N = 4;        // roller count (D-06, fixed)
-      const R = 19.7;      // rotor radius, mm — proto-02 design value (N_c=2 corrected)
+      const N = 4;        // roller count
+      const R = 19.7;      // rotor radius, mm: proto-02 design value (N_c=2 corrected)
       const rollerR = 5;   // MR105ZZ bearing radius, mm (10mm OD)
       const f = v => v.toFixed(2);
 
-      // ── Pump (rotor) geometry ──
+      // Pump (rotor) geometry
       const pcx = 380, pcy = 150;  // pump centre, SVG user-space
       const OUTER = 64;            // visual budget for R + rollerR, in SVG user units
       const scale = OUTER / (R + rollerR);
       const Rpx = R * scale;
       const rrPx = rollerR * scale;
 
-      // 4 rollers at 90° spacing on the pitch circle, first at top (-90°)
+      // 4 rollers at 90 degree spacing on the pitch circle, first at top (-90 degrees)
       let rollers = '';
       for (let i = 0; i < N; i++) {
         const ang = -90 + i * 360 / N;
@@ -920,15 +1327,12 @@
         ${rollers}
       </g>`;
 
-      // Wrap endpoints — both sit exactly on the horizontal through
-      // the pump centre; the tube's control points on either side are
-      // placed directly below each endpoint (same x), which forces a
-      // VERTICAL — i.e. tangent-to-the-pitch-circle — approach/depart,
-      // fixing the old 90°-elbow entry.
+      // Wrap endpoints: both sit exactly on the horizontal through the pump centre; the tube's
+      // control points on either side are placed directly below each endpoint (same x), which
+      // forces a vertical, tangent-to-the-pitch-circle approach and departure.
       const wrapLeftX = pcx - Rpx, wrapRightX = pcx + Rpx;
 
-      // ── 50ml Falcon-style source (screw cap, ticks, conical bottom,
-      // liquid pooled into the cone), far left ──
+      // 50ml Falcon-style source (screw cap, ticks, conical bottom, liquid pooled into the cone), far left
       const srcX0 = 30, srcX1 = 100, srcCx = (srcX0 + srcX1) / 2;
       const capX0 = 27, capX1 = 103, capY0 = 20, capY1 = 38;
       const bodyTop = 38, bodyBottom = 190;
@@ -950,27 +1354,19 @@
         <line class="hero-vessel-tick" x1="${capX0 + 5}" y1="26" x2="${capX1 - 5}" y2="26" />
         <line class="hero-vessel-tick" x1="${capX0 + 5}" y1="32" x2="${capX1 - 5}" y2="32" />`;
 
-      // Dip tube: starts just above the conical bottom, rises straight
-      // up through the vessel and exits just above the cap.
+      // Dip tube: starts just above the conical bottom, rises straight up through the vessel and exits just above the cap.
       const dipStart = { x: srcCx, y: coneTipY - 16 };
       const capExit  = { x: srcCx, y: capY0 - 6 };
 
-      // ── 1.5ml Eppendorf-style collection tube (short shoulder,
-      // aggressive taper, small liquid pooled at the tip, open snap
-      // cap on a hinge), far right — kept substantially smaller AND
-      // substantially SLIMMER than the 50ml source (width 34 vs the
-      // Falcon's 70, height:width ratio ~1.9 so it reads as a slim
-      // 1.5ml tube, not a wide vial) ──
+      // 1.5ml Eppendorf-style collection tube (short shoulder, aggressive taper, small liquid pooled
+      // at the tip, open snap cap on a hinge), far right. Kept smaller and slimmer than the source.
       const dstX0 = 583, dstX1 = 617, dstCx = (dstX0 + dstX1) / 2;
       const shoulderTop = 228, shoulderBottom = 242;
       const eppTipY = shoulderBottom + 50; // aggressive taper: 50 over a 34-wide shoulder
-      const liqFrac = 0.46; // liquid surface sits 46% of the way down the cone -- small pool at the tip
+      const liqFrac = 0.46; // liquid surface sits 46% of the way down the cone, a small pool at the tip
       const liqY = shoulderBottom + (eppTipY - shoulderBottom) * liqFrac;
       const halfWidthAtLiqY = ((dstX1 - dstX0) / 2) * (1 - liqFrac);
-      // Open lid: hinged at the tube's own top rim (not extending past
-      // it), a short flap rotated 45° off horizontal so it stands up
-      // and back like a real opened snap-cap -- not the old ~110°
-      // sideways-swung flap.
+      // Open lid: hinged at the tube's own top rim, a short flap rotated 45 degrees off horizontal.
       const hinge = { x: dstX1, y: shoulderTop };
       const capFlapLen = 22;
       const destVessel = `
@@ -980,29 +1376,19 @@
         <rect class="hero-cap-flap" x="${hinge.x - capFlapLen}" y="${hinge.y - 4}" width="${capFlapLen}" height="8" rx="3" transform="rotate(135 ${hinge.x} ${hinge.y})" />
         <circle class="hero-cap-hinge" cx="${hinge.x}" cy="${hinge.y}" r="2.4" />`;
 
-      // Needle: short, rigid, straight — visually distinct from the
-      // soft tube (D-06 glass idiom stays on the tube; the needle is
-      // deliberately NOT glass-styled). Positioned above the open
-      // Eppendorf's shoulder, tip clear of it by a small air gap.
+      // Needle: short, rigid, straight, visually distinct from the soft tube. Positioned above the
+      // open Eppendorf's shoulder, tip clear of it by a small air gap.
       const needleTop = { x: dstCx, y: 195 };
       const needleTip = { x: dstCx, y: shoulderTop - 8 };
       const needleLine = `<line class="hero-needle" x1="${needleTop.x}" y1="${needleTop.y}" x2="${needleTip.x}" y2="${needleTip.y}" />`;
       const dropletCircle = `<circle class="hero-droplet" id="hero-droplet" cx="${needleTip.x}" cy="${needleTip.y}" r="4.5" />`;
 
-      // One continuous path, no elbows: dip tube (straight) -> smooth
-      // Bezier into the wrap, arriving VERTICALLY (control point c2
-      // shares wrapLeftX, forcing tangent entry) -> 180° top wrap ->
-      // smooth Bezier departing VERTICALLY (c1 shares wrapRightX) into
-      // the needle-top hand-off, arriving vertically there too (c2
-      // shares needleTop.x) so the soft tube's own final tangent is
-      // already straight-down before the rigid needle continues it.
-      //
-      // preWrapD is the SAME initial two segments (dip tube + entry
-      // Bezier), stopping exactly where the wrap arc begins. It is
-      // rendered nowhere (display:none) — it exists purely so
-      // initHeroMotion() can call .getTotalLength() on it to measure
-      // the real, DOM-derived arc-length position where the wrap
-      // starts, for the pinch-registration fix (Rework 3).
+      // One continuous path, no elbows: dip tube (straight) -> smooth Bezier into the wrap, arriving
+      // vertically -> 180 degree top wrap -> smooth Bezier departing vertically into the needle-top
+      // hand-off, arriving vertically there too.
+      // preWrapD is the same initial two segments, stopping exactly where the wrap arc begins. It is
+      // rendered nowhere (display:none); it exists so initHeroMotion() can call .getTotalLength() on
+      // it to measure the real arc-length position where the wrap starts (pinch registration).
       const preWrapD = `M ${dipStart.x} ${dipStart.y} `
         + `L ${capExit.x} ${capExit.y} `
         + `C ${capExit.x} ${capExit.y - 20}, ${f(wrapLeftX)} ${f(pcy + 25)}, ${f(wrapLeftX)} ${pcy}`;
@@ -1032,46 +1418,14 @@
       return { html, geo: { Rpx, rrPx, needleTip } };
     }
 
-    // ── GSAP-driven motion (Rework 2/3, D-01/D-03 amended) ─────────
-    // ONE timeline drives the rotor rotation and the slug highlight's
-    // stroke-dashoffset.
-    //
-    // Direction (Rework 4): rotor spin and liquid flow are driven by
-    // two INDEPENDENT constants, ROTOR_SIGN and FLOW_SIGN. Rework 3 had
-    // ROTOR_SIGN drive both, which meant reversing the spin silently
-    // reversed the flow as well (liquid ran needle -> Falcon). Keep them
-    // separate: liquid must always advance Falcon -> needle.
-    //
-    // Note for future work: with the wrap on TOP, a roller physically
-    // pushes fluid in the direction it sweeps across the wrap. A
-    // counter-clockwise rotor sweeps right -> top -> left, which in a
-    // real pump would drive fluid right -> left. The rotor direction
-    // and the flow direction shown here are therefore set for visual
-    // preference and are not mutually consistent as physics. Revisit
-    // together (flip ROTOR_SIGN to +1) if the motif is ever presented
-    // as a physical claim rather than a decorative motif.
-    //
-    // Sync spec (derived numerically at runtime from the real,
-    // DOM-measured tube geometry -- not eyeballed):
-    //   slug linear speed  = roller tangential speed at the wrap
-    //                        radius = 2π·Rpx per rotor period T
-    //   slug spacing       = a quarter of the wrap circumference,
-    //                        matching the 90° roller spacing
-    // Shifting the dash pattern by exactly one full circumference per
-    // period is an exact 4x multiple of the pattern length, so the
-    // loop is seamless AND phase-locked to roller position by
-    // construction (both tweens share the same timeline clock, same
-    // duration, same ease, same start position, same ROTOR_SIGN).
-    //
-    // Pinch registration (Rework 3): dashoffset0 is chosen so a
-    // "start-of-dash" slug boundary sits exactly at the wrap's entry
-    // arc-length position (measured via the hidden #hero-tube-prewrap
-    // path's real .getTotalLength()) at t=0. Because the wrap's own
-    // arc length (π·Rpx) is exactly 2x the slug spacing, that single
-    // alignment condition ALSO puts boundaries exactly at the wrap's
-    // midpoint (top roller) and far/exit boundary at t=0 -- i.e. at
-    // all three roller contact points relevant to the wrap at that
-    // instant, not just one.
+    // GSAP-driven motion. ONE timeline drives the rotor rotation and the slug highlight's
+    // stroke-dashoffset. Rotor spin and liquid flow are driven by two INDEPENDENT constants,
+    // ROTOR_SIGN and FLOW_SIGN: liquid must always advance Falcon -> needle.
+    // Sync spec (derived numerically at runtime from the real, DOM-measured tube geometry):
+    //   slug linear speed = roller tangential speed at the wrap radius = 2*pi*Rpx per rotor period T
+    //   slug spacing      = a quarter of the wrap circumference, matching the 90 degree roller spacing
+    // Pinch registration: dashoffset0 is chosen so a start-of-dash slug boundary sits exactly at the
+    // wrap's entry arc-length position (measured via the hidden #hero-tube-prewrap path) at t=0.
     function initHeroMotion(geo) {
       const rotorGroupEl = document.getElementById('hero-rotor-group');
       const slugEl = document.getElementById('hero-tube-slug');
@@ -1081,9 +1435,6 @@
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Rotation and flow directions are set independently and must not
-      // be re-coupled: FLOW_SIGN keeps the liquid running Falcon -> needle
-      // (left -> right) regardless of which way ROTOR_SIGN spins the rotor.
       const ROTOR_SIGN = -1; // -1 = counter-clockwise on screen
       const FLOW_SIGN = 1;   // +1 = liquid advances inlet(Falcon) -> outlet(needle)
       const T = 4; // rotor period, seconds
@@ -1093,11 +1444,8 @@
       slugEl.setAttribute('stroke-dasharray', `${slugDash.toFixed(2)} ${(spacing - slugDash).toFixed(2)}`);
 
       const sWrapStart = preWrapEl ? preWrapEl.getTotalLength() : 0;
-      // A roller occludes the tube completely at its contact point, so no
-      // liquid can sit there -- each slug is the pocket TRAPPED BETWEEN two
-      // consecutive rollers. Roller contacts fall at sWrapStart + k*spacing,
-      // so centre the dash in the gap: half a spacing along, minus half the
-      // dash's own length.
+      // A roller occludes the tube completely at its contact point, so each slug is the pocket
+      // trapped between two consecutive rollers: centre the dash in the gap.
       const pocketOffset = spacing / 2 - slugDash / 2;
       const dashOffset0 = -((((sWrapStart + pocketOffset) % spacing) + spacing) % spacing);
 
@@ -1111,13 +1459,8 @@
       tl.fromTo(rotorGroupEl, { rotation: 0 }, { rotation: ROTOR_SIGN * 360, duration: T, transformOrigin: '50% 50%' }, 0);
       tl.fromTo(slugEl, { strokeDashoffset: dashOffset0 }, { strokeDashoffset: dashOffset0 - FLOW_SIGN * circumference, duration: T }, 0);
 
-      // Droplet release(s), timed so a drop detaches when a slug
-      // reaches the needle tip. The loop condition itself guarantees
-      // no child tween's end time ever exceeds T, regardless of the
-      // exact runtime-measured dropDelay: a GSAP timeline's own
-      // repeat cycle length is the max end-time of its children, so
-      // letting one overflow past T would silently stretch the loop
-      // and desync it from the rotation/slug tweens above.
+      // Droplet release(s), timed so a drop detaches when a slug reaches the needle tip. The loop
+      // condition guarantees no child tween's end time ever exceeds T.
       const dropDuration = dropCycle * 0.6;
       for (let k = 0, pos = dropDelay; pos + dropDuration <= T && k < 4; k++, pos += dropCycle) {
         tl.fromTo(dropletEl,
@@ -1136,20 +1479,14 @@
       }
 
       if (prefersReducedMotion) {
-        // Freeze on a legible static frame -- rollers at a natural
-        // angle, slugs visible mid-tube, one droplet frozen at the
-        // needle -- rather than hiding the scene (D-03/D-11).
+        // Freeze on a legible static frame rather than hiding the scene.
         tl.progress(0.15).pause();
         gsap.set(dropletEl, { attr: { cy: geo.needleTip.y + 6 }, opacity: 1 });
         return;
       }
 
       tl.play();
-      // Brief spin-up feel: ramp the WHOLE timeline's playback rate
-      // from a standstill to normal speed over ~0.6s. Scaling
-      // timeScale uniformly cannot desync the rotation/slug tweens --
-      // they share the same clock -- so this is a free embellishment
-      // layered on top of the structural sync guarantee above.
+      // Brief spin-up feel: ramp the whole timeline's playback rate from a standstill to normal speed.
       gsap.fromTo(tl, { timeScale: 0 }, { timeScale: 1, duration: 0.6, ease: 'power2.out' });
     }
 
@@ -1160,126 +1497,288 @@
       initHeroMotion(built.geo);
     }
 
-    // ── Six-module device schema (D-16) ───────────────────────────
-    // NEW, purpose-built, simplified graphic — NOT a port of the
-    // System Architecture Explorer's schema-drawing function: no
-    // per-module hardware-payload chips, no pin/cost/BOM data, no
-    // interactivity. Same template-string SVG technique as
-    // buildHeroRotor()/rotor-solver's buildFigure() — built once,
-    // assigned via innerHTML, viewBox + width:100% + max-width so it
-    // never causes horizontal scroll at 375px (LANG-05). Spatial
-    // layout carries no meaning (matching the source tool's own
-    // framing) — only the drawn connectivity does: a solid blue
-    // liquid path Storage -> Pump -> Nozzle -> Alignment, and a
-    // dashed green data path from Software & Electronics to every
-    // other module, reusing the explorer's exact flow colours
-    // (#4a90d9 liquid, #3ec06b data) as an established vocabulary one
-    // hop away. Module <text> labels carry data-i18n so a language
-    // switch after the graphic is built still updates them (D-18) —
-    // applyLang(currentLang) is called once, below, after both this
-    // and the hero rotor are injected into the DOM.
-    function buildModuleSchema() {
-      const boxes = [
-        { key: 'storage',   x: 20,  y: 30,  w: 135, h: 64, labelKey: 'module-storage' },
-        { key: 'pump',      x: 175, y: 30,  w: 135, h: 64, labelKey: 'module-pump' },
-        { key: 'nozzle',    x: 330, y: 30,  w: 135, h: 64, labelKey: 'module-nozzle' },
-        { key: 'alignment', x: 485, y: 30,  w: 135, h: 64, labelKey: 'module-alignment' },
-        { key: 'ui',        x: 125, y: 190, w: 180, h: 64, labelKey: 'module-ui' },
-        { key: 'software',  x: 335, y: 190, w: 180, h: 64, labelKey: 'module-software-electronics' },
-      ];
-      const byKey = k => boxes.find(b => b.key === k);
-      const cx = b => b.x + b.w / 2;
-      const cy = b => b.y + b.h / 2;
-
-      let boxesSvg = '';
-      boxes.forEach(b => {
-        boxesSvg += `<rect class="module-box" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="10" />`;
-        boxesSvg += `<text class="module-label" x="${cx(b)}" y="${cy(b) + 5}" data-i18n="${b.labelKey}">${LANG.en[b.labelKey]}</text>`;
-      });
-
-      // Liquid flow (solid blue, D-16): Storage -> Pump -> Nozzle -> Alignment
-      let liquidSvg = '';
-      [['storage', 'pump'], ['pump', 'nozzle'], ['nozzle', 'alignment']].forEach(([a, b]) => {
-        const A = byKey(a), B = byKey(b);
-        const y = A.y + A.h / 2;
-        liquidSvg += `<line class="module-flow-liquid" x1="${A.x + A.w}" y1="${y}" x2="${B.x - 4}" y2="${y}" marker-end="url(#mod-liquid-arrow)" />`;
-      });
-
-      // Data flow (dashed green, D-16): Software & Electronics -> every other module
-      const se = byKey('software');
-      let dataSvg = '';
-      ['storage', 'pump', 'nozzle', 'alignment'].forEach(k => {
-        const T = byKey(k);
-        dataSvg += `<line class="module-flow-data" x1="${cx(se)}" y1="${se.y}" x2="${cx(T)}" y2="${T.y + T.h + 4}" marker-end="url(#mod-data-arrow)" />`;
-      });
-      const ui = byKey('ui');
-      dataSvg += `<line class="module-flow-data" x1="${se.x}" y1="${cy(se)}" x2="${ui.x + ui.w + 4}" y2="${cy(ui)}" marker-end="url(#mod-data-arrow)" />`;
-
-      return `<svg viewBox="0 0 640 280" width="100%" style="max-width:560px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Six device modules: Storage, Pump, Nozzle, and Alignment carry the liquid path; Software and Electronics sends data to every module">
-        <defs>
-          <marker id="mod-liquid-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 Z" fill="#4a90d9" />
-          </marker>
-          <marker id="mod-data-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M2,1 L8,5 L2,9" fill="none" stroke="#3ec06b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-          </marker>
-        </defs>
-        ${dataSvg}
-        ${liquidSvg}
-        ${boxesSvg}
-      </svg>`;
-    }
-
-    const moduleSchemaEl = document.getElementById('module-schema');
-    if (moduleSchemaEl) moduleSchemaEl.innerHTML = buildModuleSchema();
-
-    // Apply the current language once both SVG builders above have run,
-    // so the module graphic's data-i18n <text> labels are correct on
-    // first paint under a non-English stored preference (D-18).
+    // Apply the stored language once the DOM is complete.
     applyLang(currentLang);
 
-    // Mouse-tracking spotlight on cards
-    document.querySelectorAll('.tool-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
-    });
+    const hasIO = 'IntersectionObserver' in window;
 
-    // Scroll-triggered reveals + pump-head video autoplay (D-11)
-    // Extends the ONE existing IntersectionObserver rather than
-    // constructing a second instance — branch on target identity so
-    // the reveal targets keep their one-shot unobserve-on-reveal
-    // semantics while the video gets repeated play/pause on every
-    // enter/exit, never unobserved. Under prefers-reduced-motion the
-    // video never autoplays and instead exposes native controls so it
-    // stays a static poster the visitor can start deliberately.
-    const revealEls = document.querySelectorAll('.reveal');
-    const pumpVideo = document.getElementById('pump-head-video');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (pumpVideo && prefersReducedMotion) pumpVideo.setAttribute('controls', '');
-    if ('IntersectionObserver' in window) {
+    // ---- Breath two: warm wash fallback for browsers without scroll-driven animations ----
+    (function () {
+      const warm = document.getElementById('warm');
+      const problem = document.getElementById('problem');
+      if (!warm || !problem || prefersReducedMotion) return;
+      if (window.CSS && CSS.supports && CSS.supports('animation-timeline: view()')) return;
+      if (!hasIO) return;
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => warm.classList.toggle('is-warm', en.isIntersecting));
+      }, { threshold: 0.5 });
+      io.observe(problem);
+    })();
+
+    // ---- Breath three: leader lines draw once the frame is 40 % in view ----
+    (function () {
+      const frame = document.getElementById('reveal-frame');
+      if (!frame) return;
+      if (!hasIO || prefersReducedMotion) { frame.classList.add('is-drawn'); return; }
       const io = new IntersectionObserver(entries => {
         entries.forEach(en => {
-          if (en.target === pumpVideo) {
-            if (prefersReducedMotion) return;
-            if (en.isIntersecting) en.target.play().catch(() => {});
-            else en.target.pause();
-            return;
-          }
-          if (en.isIntersecting) {
-            en.target.classList.add('in-view');
-            io.unobserve(en.target);
-          }
+          if (en.isIntersecting) { frame.classList.add('is-drawn'); io.disconnect(); }
         });
-      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-      revealEls.forEach(el => io.observe(el));
-      if (pumpVideo) io.observe(pumpVideo);
-    } else {
-      revealEls.forEach(el => el.classList.add('in-view'));
-    }
-  </script>
+      }, { threshold: 0.4 });
+      io.observe(frame);
+    })();
 
+    // ---- Videos: play only while in view; controls and no autoplay under reduced motion ----
+    (function () {
+      const videos = document.querySelectorAll('video');
+      if (prefersReducedMotion) {
+        videos.forEach(v => { v.setAttribute('controls', ''); v.removeAttribute('tabindex'); });
+        return;
+      }
+      if (!hasIO) return;
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) en.target.play().catch(() => {});
+          else en.target.pause();
+        });
+      }, { threshold: 0.2 });
+      videos.forEach(v => io.observe(v));
+    })();
+
+    // ---- Tool marks: animate only while on screen ----
+    (function () {
+      const tiles = document.querySelectorAll('.tm');
+      if (!hasIO) { tiles.forEach(t => t.classList.add('is-in')); return; }
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => e.target.classList.toggle('is-in', e.isIntersecting));
+      }, { threshold: 0.1 });
+      tiles.forEach(t => io.observe(t));
+    })();
+
+    // ---- Watch it run: the clip cluster and its drawer cabinets ----
+    // Each tile is the finished module; the steps that led to it live in drawers underneath.
+    // Opening a tile draws the cabinet outline (500 ms), then runs the drawers bottom to top on a
+    // setTimeout chain: out, hold 2000 ms, back in 400 ms, next. Clicking a front takes over and
+    // pauses the chain for 6 s. Everything is cleared when the cabinet closes.
+    (function () {
+      const stage = document.getElementById('stage');
+      if (!stage) return;
+      const clips = Array.from(stage.querySelectorAll('.clip'));
+      const centre = document.getElementById('stage-centre');
+      const phoneMq = window.matchMedia('(max-width: 767px)');
+
+      // Panel geometry. The panel's outer edge is placed `slide` px beyond the cabinet's outer
+      // edge, and `slide` can never be larger than the room actually left between that edge and
+      // the window (MARGIN keeps a 12px breathing gap), so the panel is always inside the viewport.
+      // Wide screens get the full 260px pull with a 240px panel; on a narrow desktop the pull is
+      // shorter than the panel, which then rides over the cabinet (.is-tight adds a drop shadow).
+      const SLIDE_MAX = 260, PANEL_MAX = 240, PANEL_MIN = 160, PANEL_GAP = 14, MARGIN = 12, CAB_PAD = 10;
+      const OUT_MS = 400, HOLD_MS = 2000, BACK_MS = 400, DRAW_MS = 500, PAUSE_MS = 6000;
+
+      let openClip = null;
+      let pinned = false;
+      let seqTimer = null;
+      let resumeTimer = null;
+
+      function drawersOf(clip) { return Array.from(clip.querySelectorAll('.drawer')); }
+      function bottomUp(clip) { return drawersOf(clip).reverse(); }
+
+      function measure(clip) {
+        const cab = clip.querySelector('.clip__cab');
+        if (!cab || phoneMq.matches) return;
+        const r = cab.getBoundingClientRect();
+        const toLeft = clip.classList.contains('clip--left');
+        const room = Math.max(0, (toLeft ? r.left : window.innerWidth - r.right) - MARGIN);
+        const slide = Math.min(SLIDE_MAX, room);
+        const panelW = Math.min(PANEL_MAX, Math.max(PANEL_MIN, slide - PANEL_GAP));
+        cab.style.setProperty('--panel-w', panelW + 'px');
+        cab.style.setProperty('--panel-gap', (CAB_PAD + slide - panelW) + 'px');
+        cab.style.setProperty('--panel-h', Math.round(Math.min(180, panelW * 0.75)) + 'px');
+        clip.classList.toggle('is-tight', slide < panelW);
+      }
+
+      function setDrawer(d, out) {
+        d.classList.toggle('is-out', out);
+        d.querySelector('.drawer__front').setAttribute('aria-expanded', out ? 'true' : 'false');
+      }
+      function shutDrawers(clip) { drawersOf(clip).forEach(d => setDrawer(d, false)); }
+      function clearTimers() {
+        if (seqTimer) { clearTimeout(seqTimer); seqTimer = null; }
+        if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
+      }
+
+      // Oldest drawer (the bottom one) first, upwards, then round again while the cabinet is open.
+      function runSequence(clip, startIdx) {
+        const order = bottomUp(clip);
+        if (!order.length) return;
+        let i = ((startIdx % order.length) + order.length) % order.length;
+        const step = () => {
+          shutDrawers(clip);
+          setDrawer(order[i], true);
+          seqTimer = setTimeout(() => {
+            setDrawer(order[i], false);
+            seqTimer = setTimeout(() => { i = (i + 1) % order.length; step(); }, BACK_MS);
+          }, OUT_MS + HOLD_MS);
+        };
+        step();
+      }
+      function startAuto(clip, startIdx) {
+        clearTimers();
+        if (prefersReducedMotion || phoneMq.matches) return;
+        seqTimer = setTimeout(() => runSequence(clip, startIdx), DRAW_MS);
+      }
+
+      function pickDrawer(clip, drawer) {
+        clearTimers();
+        const wasOut = drawer.classList.contains('is-out');
+        shutDrawers(clip);
+        setDrawer(drawer, !(wasOut && (prefersReducedMotion || phoneMq.matches)));
+        if (prefersReducedMotion || phoneMq.matches) return;
+        const order = bottomUp(clip);
+        const next = (order.indexOf(drawer) + 1) % order.length;
+        resumeTimer = setTimeout(() => runSequence(clip, next), PAUSE_MS);
+      }
+
+      function open(clip) {
+        if (openClip === clip) return;
+        close(false);
+        openClip = clip;
+        measure(clip);
+        shutDrawers(clip);
+        clip.classList.add('is-open');
+        stage.classList.add('has-open');
+        clip.querySelector('.clip__btn').setAttribute('aria-expanded', 'true');
+        startAuto(clip, 0);
+      }
+      function close(returnFocus) {
+        if (!openClip) return;
+        const clip = openClip;
+        const btn = clip.querySelector('.clip__btn');
+        clearTimers();
+        shutDrawers(clip);
+        btn.setAttribute('aria-expanded', 'false');
+        clip.classList.remove('is-open');
+        stage.classList.remove('has-open');
+        openClip = null;
+        pinned = false;
+        if (returnFocus) btn.focus();
+      }
+
+      clips.forEach(clip => {
+        const btn = clip.querySelector('.clip__btn');
+        btn.addEventListener('click', () => {
+          if (openClip === clip && pinned) { close(false); return; }
+          open(clip);
+          pinned = true;
+        });
+        drawersOf(clip).forEach(d => {
+          d.querySelector('.drawer__front').addEventListener('click', () => {
+            if (openClip !== clip) { open(clip); pinned = true; }
+            pickDrawer(clip, d);
+          });
+        });
+        if (finePointer && !prefersReducedMotion) {
+          clip.addEventListener('mouseenter', () => { if (!pinned) open(clip); });
+          clip.addEventListener('mouseleave', () => { if (!pinned && openClip === clip) close(false); });
+        }
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && openClip) { e.preventDefault(); close(true); }
+      });
+      document.addEventListener('click', e => {
+        if (openClip && !openClip.contains(e.target)) close(false);
+      });
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { if (openClip) measure(openClip); }, 150);
+      });
+
+      // Pointer lean: fine pointers only, GSAP quickTo on x/y, nothing on touch or reduced motion.
+      if (!finePointer || prefersReducedMotion || typeof gsap === 'undefined') return;
+      const leans = clips.map(clip => {
+        const el = clip.querySelector('.clip__lean');
+        return { x: gsap.quickTo(el, 'x', { duration: 0.9, ease: 'power2' }),
+                 y: gsap.quickTo(el, 'y', { duration: 0.9, ease: 'power2' }) };
+      });
+      const centreInner = centre.querySelector('.frame');
+      const centreLean = { x: gsap.quickTo(centreInner, 'x', { duration: 0.9, ease: 'power2' }),
+                           y: gsap.quickTo(centreInner, 'y', { duration: 0.9, ease: 'power2' }) };
+      let inside = false;
+      stage.addEventListener('pointermove', e => {
+        if (e.pointerType !== 'mouse') return;
+        const r = stage.getBoundingClientRect();
+        const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        inside = true;
+        leans.forEach(l => { l.x(nx * 18); l.y(ny * 18); });
+        centreLean.x(nx * 6);
+        centreLean.y(ny * 6);
+      });
+      stage.addEventListener('pointerleave', () => {
+        if (!inside) return;
+        inside = false;
+        leans.forEach(l => { l.x(0); l.y(0); });
+        centreLean.x(0); centreLean.y(0);
+      });
+    })();
+
+    // ---- Follow one droplet: active stop, rail droplet, route map ----
+    (function () {
+      const journey = document.getElementById('journey');
+      const stops = Array.from(document.querySelectorAll('.stop'));
+      const drop = document.getElementById('rail-drop');
+      const stopsWrap = document.getElementById('stops');
+      const route = document.getElementById('route');
+      const bar = document.getElementById('route-bar');
+      if (!journey || !stops.length) return;
+      const routeItems = route ? Array.from(route.querySelectorAll('li')) : [];
+      const barItems = bar ? Array.from(bar.querySelectorAll('button')) : [];
+
+      function setActive(id) {
+        routeItems.forEach(li => li.classList.toggle('is-active', li.dataset.stop === id));
+        barItems.forEach(b => b.classList.toggle('is-active', b.dataset.stop === id));
+        const stop = document.getElementById(id);
+        if (drop && stop && stopsWrap) {
+          drop.style.top = (stop.offsetTop + stop.offsetHeight / 2 - 5) + 'px';
+        }
+      }
+      setActive(stops[0].id);
+
+      function jump(id) {
+        const target = document.getElementById(id);
+        if (!target) return;
+        target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'center' });
+      }
+      routeItems.forEach(li => li.querySelector('.route__dot').addEventListener('click', () => jump(li.dataset.stop)));
+      barItems.forEach(b => b.addEventListener('click', () => jump(b.dataset.stop)));
+
+      // The active stop is the one whose box contains the viewport's vertical centre, or, failing
+      // that, the last stop whose top has already passed the centre. Evaluated whenever the observer
+      // fires for any stop (several thresholds so it fires often enough); no scroll listener.
+      function evaluateActive() {
+        const centre = window.innerHeight / 2;
+        let active = null, lastPassed = null;
+        stops.forEach(s => {
+          const r = s.getBoundingClientRect();
+          if (r.top <= centre && r.bottom > centre) active = s;
+          if (r.top <= centre) lastPassed = s;
+        });
+        setActive((active || lastPassed || stops[0]).id);
+      }
+      if (!hasIO) return;
+      const ioStops = new IntersectionObserver(() => evaluateActive(),
+        { rootMargin: '0px', threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
+      stops.forEach(s => ioStops.observe(s));
+
+      const ioJourney = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (route) route.classList.toggle('is-shown', en.isIntersecting);
+          if (bar) bar.classList.toggle('is-shown', en.isIntersecting);
+        });
+      }, { rootMargin: '-20% 0px -20% 0px', threshold: 0 });
+      ioJourney.observe(journey);
+    })();
+  </script>
 </body>
 </html>

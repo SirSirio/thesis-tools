@@ -1,0 +1,576 @@
+/* ============================================================
+   site.css : shared frame for every page (Sept 2026 redesign)
+   Load AFTER assets/style.css. Adds tokens, the display face,
+   the background wash, the sticky nav, the Instruments panel,
+   the footer, the reveal helper and the pill buttons.
+   Tool pages keep their own inner components untouched.
+   ============================================================ */
+
+/* ---- Tokens (new; the style.css tokens are kept as they are) ---- */
+:root {
+  --cool:        #14203f;
+  --cool-soft:   rgba(40, 70, 140, 0.18);
+  --warm-soft:   rgba(255, 107, 43, 0.16);
+  --surface:     rgba(255, 255, 255, 0.035);
+  --line:        rgba(255, 255, 255, 0.08);
+  --line-accent: rgba(255, 107, 43, 0.35);
+  --text-soft:   #a39d97;               /* secondary text that still passes AA on --bg */
+  --mono:        ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  --display:     "Geist", var(--font);
+  --r-pill: 999px;
+  --r-lg:   28px;
+  --r-md:   18px;
+  --r-sm:   10px;
+  --ease:     cubic-bezier(.22, .68, 0, 1);
+  --dur:      480ms;
+  --dur-fast: 220ms;
+  --nav-h:    64px;
+}
+
+/* ---- Display face ---- */
+@font-face {
+  font-family: "Geist";
+  src: url("fonts/geist/Geist-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Body rhythm ---- */
+html { scroll-padding-top: calc(var(--nav-h) + 16px); }
+body { line-height: 1.6; }
+
+/* ---- Display typography, scoped so tool-page inner components are left alone ---- */
+.site-frame h1, .site-frame h2,
+main.tool-main > header h1, main.tool-main > header h2,
+.site-nav h1, .site-nav h2,
+.site-foot h1, .site-foot h2,
+.instr h1, .instr h2,
+.display {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+.site-frame h1, main.tool-main > header h1, h1.display {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+}
+.site-frame h2, main.tool-main > header h2, h2.display {
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+}
+.site-frame h3 { font-size: 1.15rem; font-weight: 600; line-height: 1.3; }
+.site-frame p  { max-width: 65ch; }
+.site-frame .num, .site-frame .callout { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ---- Background wash: restyles the .bg-blobs markup every page already has ---- */
+.bg-blobs .blob {
+  filter: blur(120px);
+  will-change: transform;
+}
+.bg-blobs .blob-1 {
+  width: 1100px; height: 1100px;
+  top: -420px; left: -360px;
+  background: radial-gradient(circle, #ff6b2b 0%, rgba(255, 107, 43, 0.35) 38%, transparent 70%);
+  opacity: 0.22;
+  animation: wash-a 52s var(--ease) infinite alternate;
+}
+.bg-blobs .blob-2 {
+  width: 900px; height: 900px;
+  bottom: -380px; right: -300px;
+  top: auto; left: auto;
+  background: radial-gradient(circle, #e83535 0%, rgba(232, 53, 53, 0.35) 40%, transparent 70%);
+  opacity: 0.16;
+  animation: wash-b 44s var(--ease) infinite alternate;
+}
+.bg-blobs .blob-3 {
+  width: 1200px; height: 800px;
+  top: auto; bottom: -260px; left: 18%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, var(--cool) 0%, rgba(20, 32, 63, 0.5) 45%, transparent 72%);
+  opacity: 0.35;
+  animation: wash-a 60s var(--ease) infinite alternate-reverse;
+}
+/* Optional grain, off by default. Turn on with <div class="bg-blobs" data-grain="on"> */
+.bg-blobs::after {
+  content: none;
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+  opacity: 0.35;
+}
+.bg-blobs[data-grain="on"]::after { content: ""; }
+
+@keyframes wash-a {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(26px, 18px); }
+}
+@keyframes wash-b {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(-24px, -28px); }
+}
+
+/* ---- Sticky nav ---- */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 0 32px;
+  background: rgba(10, 10, 12, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+.site-nav__back {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color var(--dur-fast) var(--ease);
+}
+.site-nav__back:hover { color: var(--accent); }
+.site-nav__back--brand { pointer-events: none; }
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.site-nav__links a,
+.site-nav__instr {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+.site-nav__links a:hover,
+.site-nav__instr:hover {
+  background: var(--surface);
+  border-color: var(--line);
+}
+.site-nav__instr {
+  border-color: var(--line-accent);
+  color: var(--accent);
+}
+.site-nav__instr::after {
+  content: "";
+  width: 7px; height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--dur-fast) var(--ease);
+}
+.site-nav__instr[aria-expanded="true"] {
+  background: rgba(255, 107, 43, 0.12);
+  border-color: var(--accent);
+}
+.site-nav__instr[aria-expanded="true"]::after { transform: translateY(2px) rotate(225deg); }
+
+.site-nav__lang { display: flex; align-items: center; gap: 8px; }
+.site-nav__lang:empty { display: none; }
+
+.site-nav a:focus-visible,
+.site-nav button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- Instruments panel ---- */
+/* .instr is a sticky, zero-height anchor just under the nav; the rendered
+   .instr__inner hangs from it, so opening the panel never shifts the page. */
+.instr {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 39;
+  height: 0;
+  overflow: visible;
+}
+.instr__inner {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  max-height: calc(100vh - var(--nav-h));
+  max-height: calc(100dvh - var(--nav-h));
+  overflow-y: auto;
+  background: rgba(12, 12, 15, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--line-accent);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+  padding: 28px 32px 34px;
+  transform-origin: top center;
+  animation: instr-in var(--dur) var(--ease);
+}
+@keyframes instr-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.instr__groups {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 26px 32px;
+}
+.instr__group { min-width: 0; }
+.instr__title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+  padding: 0 12px 10px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 6px;
+}
+.instr__row {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  color: var(--text);
+  transition: background var(--dur-fast) var(--ease);
+}
+.instr__row:hover { background: var(--surface); }
+.instr__row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.instr__row .mark { margin-top: 1px; }
+.instr__name { display: block; font-weight: 600; font-size: 0.92rem; line-height: 1.3; }
+.instr__line { display: block; color: var(--text-soft); font-size: 0.8rem; line-height: 1.45; margin-top: 2px; }
+.instr__row:hover .instr__name { color: var(--accent); }
+
+/* ---- Footer ---- */
+.site-foot {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--line);
+  padding: 48px 32px 56px;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+.site-foot__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px 48px;
+  align-items: start;
+}
+.site-foot__name { color: var(--text); font-weight: 600; margin-bottom: 6px; }
+.site-foot__thesis { max-width: 60ch; line-height: 1.55; }
+.site-foot__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.site-foot__links a {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  color: var(--text);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.site-foot__links a:hover { background: var(--surface); color: var(--accent); }
+.site-foot__links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- Reveal helper (site-nav.js adds html.js, then .is-in on intersection) ---- */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition-delay: var(--delay, 0ms);
+}
+html.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Pill buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 24px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #0a0a0c;                       /* 6.9:1 on the orange */
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+.btn:hover { background: #ff7d45; border-color: #ff7d45; transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: var(--text);                   /* 17:1 on --bg */
+}
+.btn--ghost:hover { background: var(--surface); border-color: rgba(255, 255, 255, 0.4); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---- Tool marks: 28px static glyphs, CSS only ---- */
+.mark {
+  position: relative;
+  display: inline-block;
+  width: 28px; height: 28px;
+  flex: none;
+  color: var(--accent);
+  vertical-align: middle;
+}
+.mark::before, .mark::after { content: ""; position: absolute; }
+
+/* rotor solver: a ring with four rollers */
+.mark--rotor::before {
+  inset: 3px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+.mark--rotor::after {
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 4px,  currentColor 2.6px, transparent 3.2px),
+    radial-gradient(circle at 24px 50%, currentColor 2.6px, transparent 3.2px),
+    radial-gradient(circle at 50% 24px, currentColor 2.6px, transparent 3.2px),
+    radial-gradient(circle at 4px 50%,  currentColor 2.6px, transparent 3.2px);
+}
+
+/* occlusion model: a tube section squeezed between two flats */
+.mark--occlusion::before {
+  left: 4px; right: 4px; top: 9px; bottom: 9px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+.mark--occlusion::after {
+  inset: 0;
+  background:
+    linear-gradient(currentColor, currentColor) 5px 5px / 18px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 5px 21px / 18px 2px no-repeat;
+  opacity: 0.55;
+}
+
+/* tensioned path: a taut line between two rollers */
+.mark--path::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 6px 21px, currentColor 3.6px, transparent 4.2px),
+    radial-gradient(circle at 22px 7px, currentColor 3.6px, transparent 4.2px);
+}
+.mark--path::after {
+  left: 4px; top: 13px;
+  width: 20px; height: 2px;
+  background: currentColor;
+  transform: rotate(-41deg);
+  opacity: 0.7;
+}
+
+/* pump testing: a balance needle settled on its arc */
+.mark--balance::before {
+  left: 3px; right: 3px; top: 6px;
+  height: 22px;
+  border: 2px solid currentColor;
+  border-color: currentColor transparent transparent transparent;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  opacity: 0.55;
+}
+.mark--balance::after {
+  left: 13px; bottom: 4px;
+  width: 2px; height: 15px;
+  background: currentColor;
+  transform-origin: 50% 100%;
+  transform: rotate(-12deg);
+  border-radius: 1px;
+}
+
+/* architecture explorer: a 4 by 4 matrix, part filled */
+.mark--matrix::before {
+  inset: 2px;
+  border-radius: 4px;
+  background-color: rgba(255, 107, 43, 0.22);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--bg) 5px 6px),
+    repeating-linear-gradient(0deg, transparent 0 5px, var(--bg) 5px 6px),
+    linear-gradient(135deg, currentColor 0 52%, transparent 52% 100%);
+}
+
+/* throughput simulator: three tiny Gantt bars */
+.mark--gantt::before {
+  inset: 0;
+  background:
+    linear-gradient(currentColor, currentColor) 3px 6px  / 14px 4px no-repeat,
+    linear-gradient(currentColor, currentColor) 9px 12px / 16px 4px no-repeat,
+    linear-gradient(currentColor, currentColor) 6px 18px / 10px 4px no-repeat;
+}
+.mark--gantt::after {
+  left: 3px; top: 4px; bottom: 4px;
+  width: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+/* UI prototypes: a 4:3 screen with three blocks */
+.mark--screen::before {
+  left: 2px; top: 5px;
+  width: 24px; height: 18px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  opacity: 0.7;
+}
+.mark--screen::after {
+  inset: 0;
+  background:
+    linear-gradient(currentColor, currentColor) 6px 9px  / 16px 3px no-repeat,
+    linear-gradient(currentColor, currentColor) 6px 14px / 7px 5px no-repeat,
+    linear-gradient(currentColor, currentColor) 15px 14px / 7px 5px no-repeat;
+}
+
+/* workflow guide: five nodes on a loop */
+.mark--loop::before {
+  inset: 4px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.mark--loop::after {
+  inset: 0;
+  background:
+    radial-gradient(circle at 14px 4px,    currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 23.5px 10.9px, currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 19.9px 22.1px, currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 8.1px 22.1px,  currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 4.5px 10.9px,  currentColor 2.4px, transparent 3px);
+}
+
+/* timeline: a small bar chart */
+.mark--bars::before {
+  inset: 0;
+  background:
+    linear-gradient(currentColor, currentColor) 3px  16px / 4px 8px  no-repeat,
+    linear-gradient(currentColor, currentColor) 9px  10px / 4px 14px no-repeat,
+    linear-gradient(currentColor, currentColor) 15px 4px  / 4px 20px no-repeat,
+    linear-gradient(currentColor, currentColor) 21px 13px / 4px 11px no-repeat;
+}
+.mark--bars::after {
+  left: 2px; right: 2px; bottom: 3px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+/* records: prototype journey (an S-curve with two stops) */
+.mark--journey::before {
+  left: 5px; top: 5px;
+  width: 18px; height: 18px;
+  border: 2px solid currentColor;
+  border-color: currentColor transparent transparent currentColor;
+  border-radius: 50%;
+  transform: rotate(45deg);
+  opacity: 0.55;
+}
+.mark--journey::after {
+  inset: 0;
+  background:
+    radial-gradient(circle at 5px 5px,   currentColor 3px, transparent 3.6px),
+    radial-gradient(circle at 23px 23px, currentColor 3px, transparent 3.6px);
+}
+
+/* records: presentations (two stacked slides) */
+.mark--deck::before {
+  left: 2px; top: 8px;
+  width: 20px; height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+.mark--deck::after {
+  left: 7px; top: 4px;
+  width: 20px; height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  opacity: 0.4;
+}
+
+/* records: all instruments (3 by 3 dots) */
+.mark--grid::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 6px 6px,   currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 14px 6px,  currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 22px 6px,  currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 6px 14px,  currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 14px 14px, currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 22px 14px, currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 6px 22px,  currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 14px 22px, currentColor 2.4px, transparent 3px),
+    radial-gradient(circle at 22px 22px, currentColor 2.4px, transparent 3px);
+}
+
+/* navigation rows on phones: the machine (a rounded body with the bay) */
+.mark--machine::before {
+  left: 2px; top: 7px;
+  width: 24px; height: 15px;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+}
+.mark--machine::after {
+  left: 10px; top: 12px;
+  width: 8px; height: 5px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1023px) {
+  .site-nav { gap: 16px; padding: 0 24px; }
+}
+@media (max-width: 767px) {
+  .site-nav { padding: 0 16px; }
+  .site-nav__links a { display: none; }        /* the panel lists Machine and Prototypes instead */
+  .instr__inner { padding: 20px 16px 26px; border-radius: 0 0 var(--r-md) var(--r-md); }
+  .instr__groups { grid-template-columns: 1fr; gap: 18px; }
+  .site-foot { padding: 40px 16px 48px; }
+  .site-foot__inner { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (min-width: 768px) {
+  .instr__group--nav { display: none; }
+}
+
+/* ---- Reduced motion: final states everywhere ---- */
+@media (prefers-reduced-motion: reduce) {
+  .bg-blobs .blob { animation: none !important; }
+  .instr__inner { animation: none !important; }
+  html.js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .site-nav *, .instr *, .site-foot *, .btn, .mark { transition: none !important; }
+  .btn:hover { transform: none !important; }
+}

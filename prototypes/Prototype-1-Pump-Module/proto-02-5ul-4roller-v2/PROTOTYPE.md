@@ -22,6 +22,25 @@ factor `k`.
 
 ---
 
+> [!IMPORTANT]
+> **TODO — file the v2.3 measurement media.** Two files from the gravimetric
+> campaign sit loose at the repository root and are referenced by nothing:
+>
+> | File | Status |
+> |---|---|
+> | `pump-prototype-2-3-final-measurment-picture-cropped.jpg` | **In the thesis** — carried verbatim into §3.4 as the gravimetric setup figure (`latex/Pictures/gravimetric-setup.jpg`). The uncropped duplicate was deleted 2026-08-25. Still needs a home in this repo |
+> | `pump-pprototype-2-3-measurement-video.mp4` | **Not placed anywhere yet.** Decide where it belongs — most likely beside the other prototype videos in this folder, and linked from the test results |
+>
+> Both belong under `prototypes/Prototype-1-Pump-Module/proto-02-5ul-4roller-v2/`
+> next to `PrototypePumpHeadV2.3Dispensing.mp4`. Note the video filename has a
+> typo (`pprototype`) worth fixing when it moves.
+>
+> The photograph settled a detail the thesis had been carrying vaguely: the
+> balance is marked `max = 220 g`, `d = 0.0001 g`, which is the 0.1 mg
+> readability every ISO 23783-2 compliance claim in §3.4 rests on.
+>
+> *Added 2026-08-25.*
+
 ## ▣ Version status
 
 | Version | State | Where |
@@ -1635,7 +1654,194 @@ constant hole-only corrections [2] and slope-only scale factors [5].
 
 ---
 
-## 12. Version log
+## 12. Motor sizing — how small a motor can turn the head (recorded 2026-07-30)
+
+**Why this is a design question, not a curiosity.** Squeezing the tube shut costs real torque, and
+the multi-liquid architecture gives **every liquid its own motor** (the A-family decision —
+[`ARCHITECTURE-DECISION.md`](../multi-liquid-architecture/ARCHITECTURE-DECISION.md)). Six liquids
+means six motors, so motor size drives the size, weight, and cost of the finished device more
+directly than almost any other single component. This test asks the simplest possible version of
+that question: **how small can the motor get before it can no longer turn the pump?**
+
+Two motors smaller than the NEMA 17 used throughout the project were run against the v2.3 head.
+
+### 12.1 Setup
+
+| | |
+|---|---|
+| Pump | proto-02 **v2.3** head — gap 1.52 mm (δ = 0.30), tube installed, real occlusion |
+| Driver | DRV8825 |
+| Supply | **12 V** (the design target is 24 V — see §12.4) |
+| Driver current limit (V_ref) | **left at the setting used for the standard NEMA 17** — not re-tuned per motor, **not measured during this test** (§12.5) |
+
+### 12.2 Result
+
+| Motor | Free-running (nothing attached) | 2 rollers pressing the tube | 3 rollers pressing the tube | Verdict |
+|-------|---------------------------------|-----------------------------|-----------------------------|---------|
+| **Creality 42-40** | turns | turns | **turns — including at 1/8 microstepping** | ✅ **drives the head** |
+| **JLB 17HS1352-P4130** (physically smaller) | turns | starts and moves | **will not start** — also at full step | ❌ **not enough torque** |
+
+> **Part identification.** The label was read as *"JBL 17H2152-P4130"*. The catalogue part that
+> matches is **JLB 17HS1352-P4130** (= 42BYGH33) — the brand **JLB** and the `-P4130` suffix both
+> match, and the specs (33–34 mm body, 220 g, 1.3 A) match "physically smaller than the Wantai".
+> **Confirm the string against the label** before the number goes in the thesis. `[Likely]`
+
+Two entries in that table carry more weight than they look:
+
+- **The free-running check rules out the boring explanations.** A motor with a broken wire, a bad
+  crimp, or a mis-paired coil also stalls under load. Both motors spun with nothing attached, so the
+  JLB's stall is a **load** problem, not a wiring problem. `[Certain]`
+- **The 2-vs-3 roller step is a bracket, not an anecdote.** As the rotor turns, the number of rollers
+  pressing the tube alternates between two and three; the three-roller phase is the heavier of the
+  two. The JLB cleared the lighter phase and stopped on the heavier one, so **its starting torque
+  sits between those two loads**. With both motors' rated torques now logged (§12.3), that becomes a
+  number: **the torque needed to start the pump on three rollers lies between 25 and 40 N·cm.**
+  `[Certain on the upper bound; the lower bound assumes the driver current was at or above the
+  JLB's 1.3 A rating — see §12.5]`
+
+### 12.3 Comparison table — torque, size, weight, cost
+
+The reason for downsizing is a **cheaper, smaller, lighter** device, and the multi-liquid
+architecture multiplies every motor figure by six. So the honest comparison is not "does it turn" on
+its own — it is torque *against* grams and kroner. Catalogue figures, sources listed below.
+
+| Motor | Body length | Weight (×6) | Holding torque | Rated current | Unit price (×6) | Status |
+|-------|:-----------:|:-----------:|:--------------:|:-------------:|:---------------:|--------|
+| **Wantai 42BYGHW811** — the current baseline | 48 mm | 340 g (**2.04 kg**) | **48 N·cm** | 2.5 A | 107.50 DKK ≈ €14.4 (645 DKK ≈ €86) | ✅ used for every pump test to date |
+| **Creality 42-40** | 40 mm | 280 g (**1.68 kg**) | **40 N·cm** | 1.5 A | 189.95 DKK ≈ €25.5 (1140 DKK ≈ €153) | ✅ **TESTED — drives the head**, incl. 1/8 microstepping |
+| **JK42HS40-1704** — same class, unbranded | 40 mm | 280 g (**1.68 kg**) | **40 N·cm** | 1.7 A | 107.50 DKK ≈ €14.4 (645 DKK ≈ €86) | ⬜ **not tested** — identical class to the Creality at 57 % of its price |
+| **JLB 17HS1352-P4130** (42BYGH33) | 34 mm | 220 g (**1.32 kg**) | **25 N·cm** | 1.3 A | ≈ $4.50 marketplace | ❌ **TESTED — will not start** on three rollers |
+| **17HS08-1004S** pancake | 20 mm | 140 g (**0.84 kg**) | **16 N·cm** | 1.0 A | ≈ €10 (≈ €62) | ❌ **ruled out by inference** — below a motor that already failed |
+
+**Sources.** Wantai 42BYGHW811: §6 of `../multi-liquid-architecture/ARCHITECTURE-DECISION.md` and
+the [System Architecture Explorer](../../../tools/system-architecture-explorer/index.html) bill of
+materials (107.50 DKK, arduinotech.dk / bitbyg.dk). Creality 42-40: manufacturer specification
+(1.5 A, 0.4 N·m, 40 mm, 280 g); price 189.95 DKK at 3deksperten.dk. JK42HS40-1704: bitbyg.dk product
+page (0.4 N·m, 1.7 A, 40 mm, 280 g, 107.50 DKK). JLB 17HS1352-P4130: vendor listings
+(42BYGH33, 1.3 A, 0.25 N·m, 220 g, 2.1 Ω, 2.5 mH). 17HS08-1004S: StepperOnline
+(16 N·cm, 1.0 A, 21.5 mm, 140 g). Currency at the repo's own basis, 7.46 DKK/€.
+
+> **Prices are single-unit retail from different vendors and are not directly comparable in the
+> absolute** — the marketplace figure for the JLB especially. Read the *ordering*, not the decimals.
+> None of the weights were verified on a scale; they are catalogue values. `[Caveat]`
+
+#### 12.3.1 ⭐ What the two tested points actually decide
+
+**The requirement is bracketed: more than 25 N·cm, no more than 40 N·cm.** Everything below the JLB
+is therefore out — including the 16 N·cm pancake, without needing to buy one. That single inference
+is the most valuable output of this test, because the pancake was the option carrying the whole
+weight case for the multi-liquid rack.
+
+**The consequence for the six-motor device:**
+
+| | Six pancakes (hoped) | Six 40 mm motors (what the test allows) | Six Wantais (today) |
+|---|:---:|:---:|:---:|
+| Motor mass | 0.84 kg | **1.68 kg** | 2.04 kg |
+| Motor cost | ≈ €62 | **645 DKK ≈ €86** (JK42HS40-1704) | 645 DKK ≈ €86 |
+| Stack length each | 20 mm | **40 mm** | 48 mm |
+
+So downsizing is still worth doing, but the prize is **smaller than the architecture study assumed**:
+**−60 g and −8 mm per motor (−360 g over six) at no extra cost** if the unbranded JK42HS40-1704 is
+used — not the −200 g per motor a pancake would have given. Buying the Creality instead of the
+JK42HS40 would cost **+495 DKK over six motors for identical published specs**; the Creality earned
+its place as the *test article*, not necessarily as the *production part*. `[Likely — the JK42HS40
+is untested; it shares the Creality's published torque, length and mass, not a measured equivalence]`
+
+#### 12.3.2 ⚠ The test contradicts the downsizing model — and that matters
+
+`../multi-liquid-architecture/ARCHITECTURE-DECISION.md` §6 lists a "mid NEMA17, 17HS13-class, 33 mm,
+~220 g, ~26–33 N·cm" candidate and predicts a **safety factor of ~1.7–2.1 at quarter-stepping**.
+**The JLB tested here is exactly that motor** — 17HS13-class, 34 mm, 220 g, 25 N·cm — and it could
+not start the pump **even at full stepping**, the highest-torque mode available. A predicted safety
+factor near 2 met a motor that would not turn at all.
+
+Two explanations, and they demand opposite responses:
+
+1. **The load estimate behind that safety factor is too low.** It rests on a SPEC estimate of
+   200 g per roller, which that document already flags as unverified. If so, the whole downsizing
+   table needs recomputing against the real load, and the correct reading of this test is that the
+   pump is simply heavier to turn than modelled.
+2. **The driver current was set below the JLB's 1.3 A rating**, so it never delivered its rated
+   25 N·cm. If so, the JLB is not exonerated but the bracket's lower bound moves, and the mid-size
+   class may still be viable.
+
+**Measuring the driver current setting is what separates these two, and it is the single
+highest-value measurement still outstanding on this test** (§12.5, item 1). Until it is done, the
+solid claims are the upper bound (a 40 N·cm motor turns the pump) and the ordering (the tested
+40 N·cm motor turns it, the tested 25 N·cm motor does not).
+
+### 12.4 Does a 12 V test say anything about the 24 V design? — for *this* question, yes
+
+The test was run at 12 V because that is the bench supply available; the device is designed for
+24 V. Whether that invalidates the result depends entirely on **which** property is being measured,
+so the reasoning is written out here in full rather than asserted.
+
+**What the driver actually does.** A DRV8825 does not connect the supply straight to the motor. It
+is a *current* regulator: a small potentiometer on the board sets a target coil current, and the
+chip switches the supply on and off tens of thousands of times a second to hold the coils at that
+current. **A stepper's torque comes from the current in its coils, not from the supply voltage.**
+Same current setting → same torque, whether the board is fed 12 V or 24 V. `[Certain]`
+
+**So what is the supply voltage for? Speed.** A coil resists sudden changes in current (it is an
+inductor), and a *spinning* motor generates a voltage of its own that opposes the driver
+(back-EMF), growing with speed. Both make it harder for the driver to reach its current target
+inside the short time each step allows. A higher supply voltage is the headroom the driver uses to
+win that race. It buys **torque at high speed** — it does not raise the torque available at
+standstill. `[Certain]`
+
+**Why 12 V is therefore sufficient to answer this test's question.** At the instant a motor starts
+from rest, speed is zero, so there is no back-EMF, and the coil has as long as it needs to reach the
+set current. **The torque available to break away from standstill is set by the current limit alone
+and is identical at 12 V and 24 V.** Both observations sit in exactly that regime:
+
+- The JLB **failed to start**. That is the standstill case, so it would fail identically at 24 V.
+  The 12 V supply is not the reason it failed. `[Certain]`
+- The Creality **started and ran**, including at 1/8 microstepping. Moving to 24 V can only give the
+  driver more headroom, never less, so **a pass at 12 V is a conservative pass**. `[Certain]`
+
+**What the 12 V test does *not* establish:** the Creality's torque margin at the top of the speed
+range under 24 V, where back-EMF is the limiting factor. That regime is untested (§12.5).
+
+### 12.5 What was not measured — open items
+
+Recorded explicitly so none of these is later mistaken for a result:
+
+1. **⭐ The driver current setting (V_ref) was not measured** — now the highest-value open item, for
+   the reason in §12.3.2. It was left at the value used for the standard NEMA 17 rather than
+   re-tuned per motor. The baseline Wantai is rated **2.5 A** and the JLB **1.3 A**, so if the
+   setting was left at the Wantai's value the JLB was driven **at or above** its rating and the
+   failure is real; that is the expectation, but it is **inferred from an assumed setting, not
+   measured**. A single multimeter reading on the V_ref pin closes it.
+2. **Nothing was weighed or purchased.** Every weight and price in §12.3 is a catalogue or vendor
+   figure, gathered from the sources listed there — not measured on a scale or paid at a checkout.
+   Both tested motors are in hand, so a kitchen scale settles the weights immediately.
+3. **The Creality's margin is unknown.** It turns the head; by how much it exceeds the requirement
+   was not measured. Without it, the bracket has a hard floor but a soft ceiling.
+4. **The JK42HS40-1704 is untested.** It is recommended on **published-spec equivalence** to the
+   Creality (same 40 mm, 280 g, 0.4 N·m class) at 57 % of the price — equivalence on paper, not on
+   the bench. One unit, one run against the v2.3 head, confirms or kills it.
+5. **High-speed behaviour at 24 V is untested** (see §12.4).
+6. **One head, one tube, water, no backpressure.** The torque demand measured here belongs to the
+   1.52 mm gap (δ = 0.30). A firmer gap demands more; a downstream needle adds more still.
+
+### 12.6 What this feeds forward
+
+- **The motor class is now bounded, not guessed.** The multi-liquid rack needs a **40 N·cm-class,
+  40 mm NEMA 17** — six of them, ≈ 1.68 kg. The 20 mm pancake that carried the architecture study's
+  weight case is **out**, inferred from a failure rather than a purchase.
+- **Downsizing is still worth doing, but the prize is smaller than assumed:** −60 g and −8 mm per
+  motor versus today's Wantai, at **no extra cost** if bought unbranded (§12.3.1).
+- **The cheapest correct part is probably not the one tested.** The Creality proved the class; the
+  JK42HS40-1704 appears to buy the same class for 82 DKK less per motor (495 DKK over six).
+- **The downsizing model needs revisiting** (§12.3.2) — a predicted safety factor near 2 met a motor
+  that would not start. That is either a load-estimate error or a current-setting artifact, and
+  measuring V_ref decides which. This is the open question the architecture study raised as *the
+  real stall margin of a downsized motor*; this test is the first hard data against it, and it
+  points the unfavourable way.
+
+---
+
+## 13. Version log
 
 - **v1 (planned)** — corrected N_c = 2 (R ≈ 19.7 mm), gap-sweep heads, caliper-access slots,
   screw-clamp head lock, tube-retention fixes, 1/4-step firmware. Targets: mean ~5 µL *known*,
@@ -1660,7 +1866,7 @@ constant hole-only corrections [2] and slope-only scale factors [5].
 
 ---
 
-## 13. Test data
+## 14. Test data
 
 - **v2.3 gravimetric campaign (2026-07-23):** raw per-replicate JSON + app report →
   `Tests/Peristaltic Gap 1.52 V2.23/2026.07.23 - 1 - New tube 0.51 ID/` (`gravimetric_report.html`,

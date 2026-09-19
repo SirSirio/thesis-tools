@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tensioned Tube-Path &amp; Stroke Volume Model · Thesis Tools</title>
+
+  <!-- KaTeX: CDN primary, local copy as offline fallback -->
+  <link id="katex-css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+        onerror="this.onerror=null;this.href='katex/katex.min.css';">
+
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script src="../../assets/site-nav.js"></script>
+
+  <style>
+    /* ── Page layout ────────────────────────────────────────── */
+    .tool-main {
+      position: relative; z-index: 1;
+      max-width: 1060px; margin: 0 auto;
+      padding: 60px 32px 90px;
+      display: flex; flex-direction: column; gap: 24px;
+    }
+
+    /* ── Tool header ────────────────────────────────────────── */
+    .tool-header { margin-bottom: 4px; }
+    .tool-header h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+      margin: 14px 0 14px;
+      background: linear-gradient(130deg, #ffffff 35%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tool-header p {
+      font-size: 0.95rem; color: var(--text-muted);
+      line-height: 1.70; max-width: 800px;
+    }
+
+    /* ── Part divider label ─────────────────────────────────── */
+    .part-label {
+      display: flex; align-items: center; gap: 14px;
+      margin-top: 16px;
+    }
+    .part-label .num {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255,107,43,0.10);
+      border: 1px solid rgba(255,107,43,0.28);
+      padding: 4px 13px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .part-label h2 {
+      font-size: 1.30rem; font-weight: 600; letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .part-summary {
+      font-size: 0.91rem; color: var(--text-muted);
+      line-height: 1.72; max-width: 840px;
+    }
+
+    /* ── Glass panel (tool cards) ───────────────────────────── */
+    .glass-panel {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,107,43,0.15);
+      border-radius: var(--radius);
+      padding: 30px 34px;
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    }
+    .panel-title {
+      font-size: 0.72rem; letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 24px;
+    }
+
+    /* ── Theory / documentation cards ──────────────────────── */
+    .theory-card {
+      background: rgba(255,255,255,0.022);
+      border: 1px solid rgba(255,107,43,0.10);
+      border-left: 3px solid rgba(255,107,43,0.42);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      display: flex; flex-direction: column; gap: 32px;
+    }
+    .theory-section h3 {
+      font-size: 0.80rem; font-weight: 700; letter-spacing: 0.11em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .theory-section p {
+      font-size: 0.93rem; color: var(--text); line-height: 1.78;
+      margin-bottom: 10px;
+    }
+    .theory-section p:last-child { margin-bottom: 0; }
+    .theory-section em { color: var(--text); font-style: italic; }
+    .theory-section strong { color: var(--text); font-weight: 600; }
+
+    .sym-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.88rem; margin-top: 4px;
+    }
+    .sym-table th {
+      font-size: 0.70rem; letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--text-muted); font-weight: 600;
+      padding: 7px 12px; border-bottom: 1px solid rgba(255,255,255,0.10);
+      text-align: left;
+    }
+    .sym-table td {
+      padding: 7px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text); vertical-align: top; line-height: 1.6;
+    }
+    .sym-table td:first-child {
+      color: var(--accent); font-weight: 600;
+      white-space: nowrap; min-width: 120px;
+    }
+    .sym-table td:last-child { color: var(--text-muted); font-size: 0.82rem; }
+
+    .math-block {
+      text-align: center; margin: 1.3em 0;
+      overflow-x: auto; overflow-y: hidden;
+      padding: 4px 0;
+    }
+
+    .theory-list {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .theory-list li {
+      font-size: 0.91rem; color: var(--text); line-height: 1.70;
+      padding-left: 26px; position: relative;
+    }
+    .theory-list li::before {
+      content: attr(data-n);
+      position: absolute; left: 0;
+      color: var(--accent); font-weight: 700; font-size: 0.80rem;
+      top: 2px;
+    }
+
+    .ref {
+      font-size: 0.77rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px; padding: 1px 7px;
+      display: inline-block; margin-left: 3px;
+    }
+
+    /* ── Controls ───────────────────────────────────────────── */
+    .ctrl {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px 28px;
+    }
+    .cg { display: flex; flex-direction: column; gap: 8px; }
+    .cg > label {
+      font-size: 0.77rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .input-row { display: flex; align-items: center; gap: 10px; }
+    .v {
+      font-size: 0.90rem; font-weight: 700; color: var(--accent);
+      min-width: 48px; text-align: right;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px; outline: none; cursor: pointer; flex: 1;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px;
+      border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 8px rgba(255,107,43,0.5); cursor: pointer;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 16px; height: 16px; border: none; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+    }
+
+    select, input[type=number] {
+      font-family: var(--font);
+      font-size: 0.92rem; font-weight: 600; padding: 8px 11px;
+      border-radius: 8px; border: 1px solid rgba(255,107,43,0.25);
+      background: rgba(255,255,255,0.05); color: var(--text);
+      outline: none; cursor: pointer; width: 100%;
+      transition: border-color 0.2s;
+    }
+    select:focus, input[type=number]:focus { border-color: var(--accent); }
+    select option { background: #1a1814; color: var(--text); }
+
+    /* ── SVG figure wrapper ─────────────────────────────────── */
+    .fig-wrap {
+      width: 100%; overflow-x: auto;
+      margin: 24px 0 6px; border-radius: 10px;
+      background: rgba(255,255,255,0.015);
+      padding: 10px 0;
+    }
+    .fig-wrap svg {
+      display: block; width: 100%; max-width: 700px;
+      margin: 0 auto; height: auto;
+    }
+    .fig-legend {
+      display: flex; flex-wrap: wrap; gap: 20px;
+      justify-content: center; margin: 4px 0 8px;
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .fig-legend span { display: inline-flex; align-items: center; gap: 8px; }
+    .leg-swatch { display: inline-block; width: 26px; height: 0; border-top: 3px solid; }
+
+    /* ── Metric grid ────────────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px; margin-top: 26px;
+    }
+    .metric {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .metric.highlight { border-color: rgba(255,107,43,0.30); }
+    .m-label {
+      font-size: 0.70rem; letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--text-muted); line-height: 1.4;
+    }
+    .m-val { font-size: 1.20rem; font-weight: 700; color: var(--accent); }
+    .m-unit { font-size: 0.78rem; color: var(--text-muted); }
+
+    .metric.hero {
+      grid-column: 1 / -1;
+      background: rgba(255,107,43,0.09);
+      border-color: rgba(255,107,43,0.55);
+      box-shadow: 0 0 40px rgba(255,107,43,0.10) inset,
+                  0 2px 16px rgba(255,107,43,0.08);
+      padding: 22px 28px;
+      flex-direction: row; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .metric.hero .m-label {
+      font-size: 0.75rem; color: var(--text); letter-spacing: 0.10em; flex: 1;
+    }
+    .metric.hero .m-val { font-size: 2.40rem; line-height: 1; }
+    .metric.hero .m-unit { font-size: 0.92rem; color: rgba(255,107,43,0.70); align-self: flex-end; margin-bottom: 4px; }
+
+    /* Warning / caution strips */
+    .warn-strip {
+      display: none; margin-top: 18px; padding: 13px 18px;
+      border-radius: 10px; font-size: 0.88rem; line-height: 1.60;
+      border-left: 3px solid;
+    }
+    .warn-strip.danger  {
+      display: block;
+      background: rgba(232,53,53,0.09); border-color: #e83535; color: #ffaaaa;
+    }
+    .warn-strip.caution {
+      display: block;
+      background: rgba(255,185,43,0.07); border-color: #ffb92b; color: #ffdd80;
+    }
+    .warn-strip.info {
+      display: block;
+      background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.30); color: var(--text-muted);
+    }
+
+    /* ── KaTeX dark-mode tint fix ───────────────────────────── */
+    .katex, .katex-display { color: var(--text) !important; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .tool-main  { padding: 36px 18px 60px; }
+      .glass-panel, .theory-card { padding: 22px 18px; }
+      .ctrl { grid-template-columns: 1fr; }
+      .part-label h2 { font-size: 1.10rem; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background blobs -->
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<main class="tool-main">
+
+  <!-- ── Tool header ─────────────────────────────────────── -->
+  <header class="tool-header animate-in" style="--delay:0.05s">
+    <div class="section-label">Thesis Tool: Modular Liquid Dispensing · Proto 2+</div>
+    <h1>Tensioned Tube-Path<br>&amp; Stroke Volume Model</h1>
+    <p>
+      An alternative path geometry for the rigid-backed peristaltic pump. The Rotor
+      Geometry Solver assumes the tube lies on the 180° wall arc; a tube pinned at
+      both ends under slight seating tension instead runs <em>straight from roller to
+      roller</em>, wrapping each roller over a short arc. This tool computes the true
+      fluid-packet length for the taut path, applies the incompressibility corrections
+      for axial pre-strain (smaller lumen, thinner wall), predicts the net volume per
+      stroke for an existing rotor, and inverts the geometry to give the corrected
+      rotor radius for a target volume.
+    </p>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       THEORY
+       ══════════════════════════════════════════════════════ -->
+  <div class="part-label animate-in" style="--delay:0.08s">
+    <span class="num">Model</span>
+    <h2>Taut Path Geometry &amp; Pre-Strain Corrections</h2>
+  </div>
+  <p class="part-summary animate-in" style="--delay:0.095s">
+    Two independent physical effects are modelled. <strong>Path:</strong> between
+    pinch points a taut tube is a straight external tangent plus a wrap of exactly
+    $\alpha/2$ around each roller: the packet length has a closed form, and the
+    roller wrap recovers most of the naive chord shortfall.
+    <strong>Pre-strain:</strong> silicone is incompressible, so axial stretch
+    $\lambda = 1+\varepsilon$ scales the lumen area by $1/\lambda$ and the wall by
+    $1/\sqrt{\lambda}$: the second effect silently consumes printed interference.
+  </p>
+
+  <!-- Theory card -->
+  <div class="theory-card animate-in" style="--delay:0.11s">
+
+    <div class="theory-section">
+      <h3>Purpose &amp; Motivation</h3>
+      <p>
+        Proto&nbsp;01 exposed that the tube path is not actually controlled: the tube was held at
+        one end only, so between rollers it floats somewhere between the wall arc (assumed by the
+        <a href="../rotor-solver/index.html" style="color:var(--accent)">Rotor Geometry Solver</a>)
+        and the taut chord. An uncontrolled path is worse than either geometry: it is a
+        stroke-to-stroke variance source, because the packet length is free to change between
+        strokes. The design decision for Proto&nbsp;2+ is to pin the tube at <em>both</em> ends
+        with a small seating strain, which makes the path deterministic, and makes <em>this</em>
+        model, not the arc model, the correct description.
+      </p>
+      <p>
+        This tool does <strong>not</strong> replace the
+        <a href="../peristaltic-roller-displaced-volume-model/index.html" style="color:var(--accent)">
+        Occlusion &amp; Displaced-Volume Model</a>. The stadium cross-section (Part&nbsp;1) and the
+        contact-length compensation $L_c$, $\Delta\mathrm{Arc} = N_c L_c$ (Part&nbsp;2) carry over
+        unchanged and are consumed here. What it replaces is one specific assumption inside the
+        Rotor Geometry Solver: the mapping from rotor radius to swept tube length,
+        $\mathrm{arcNeeded} = 2\pi R / N$.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Symbols</h3>
+      <table class="sym-table">
+        <thead><tr><th>Symbol</th><th>Meaning</th><th>Unit</th></tr></thead>
+        <tbody>
+          <tr><td>$N$</td><td>Roller count; angular spacing $\alpha = 2\pi/N$</td><td>-</td></tr>
+          <tr><td>$R$</td><td>Rotor radius to the bearing outer surface (as in the Rotor Solver)</td><td>mm</td></tr>
+          <tr><td>$R_r$</td><td>Roller (bearing) radius</td><td>mm</td></tr>
+          <tr><td>$R_{cc} = R - R_r$</td><td>Radius of the roller-<em>centre</em> circle</td><td>mm</td></tr>
+          <tr><td>$\varepsilon$, $\lambda$</td><td>Axial seating strain; stretch ratio $\lambda = 1+\varepsilon$</td><td>-</td></tr>
+          <tr><td>$d_\varepsilon,\; w_\varepsilon$</td><td>Stretched tube ID and wall $= d/\sqrt{\lambda},\; w/\sqrt{\lambda}$</td><td>mm</td></tr>
+          <tr><td>$A_\varepsilon$</td><td>Stretched lumen area $= \pi d^2 / (4\lambda)$</td><td>mm²</td></tr>
+          <tr><td>$\rho$</td><td>Wrap radius of the tube centreline on a roller $= R_r + \mathrm{OD}_\varepsilon/2$</td><td>mm</td></tr>
+          <tr><td>$L_{\text{packet}}$</td><td>Tube centreline length between adjacent pinch points (taut path)</td><td>mm</td></tr>
+          <tr><td>$G$</td><td>Printed gap $= 2w - \delta$ (prescribed from <em>unstretched</em> wall)</td><td>mm</td></tr>
+          <tr><td>$\delta_\varepsilon$</td><td>Effective interference after stretch $= 2w_\varepsilon - G$</td><td>mm</td></tr>
+          <tr><td>$L_c$</td><td>Axial contact length $= k \cdot 2\sqrt{2 R_r \delta_\varepsilon}$ (from the displaced-volume model)</td><td>mm</td></tr>
+          <tr><td>$N_c$</td><td>Rollers simultaneously engaged (2 for four rollers on a 180° arc)</td><td>-</td></tr>
+          <tr><td>$V_{\text{stroke}}$</td><td>Net delivered volume per stroke (one roller spacing of rotation)</td><td>µL</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="theory-section">
+      <h3>Packet Length on the Taut Path</h3>
+      <p>
+        Delivered volume per stroke is the fluid trapped between two adjacent pinch points,
+        so the quantity that matters is the tube <em>centreline length between pinches</em>,
+        whatever curve the tube takes. For a taut tube this curve is fully determined:
+        a straight external tangent between the wrap circles of adjacent rollers, plus a
+        wrap arc on each roller.
+      </p>
+      <p>
+        <strong>Straight segment.</strong> Adjacent rollers sit on the roller-centre circle
+        $R_{cc}$, separated by angle $\alpha$. Their wrap circles have equal radius $\rho$, so
+        the external tangent segment is parallel to the line joining the centres and has the
+        same length, the chord of the roller-centre circle:
+      </p>
+      <div class="math-block">$$L_{\text{straight}} = 2\,R_{cc}\,\sin(\alpha/2)$$</div>
+      <p>
+        <strong>Wrap arcs.</strong> At each pinch point the tube is locally tangent to the wall,
+        i.e. perpendicular to the radius through that pinch. The tangent directions at two
+        adjacent pinches therefore differ by exactly $\alpha$, and the taut tube must absorb
+        that direction change by wrapping the rollers: by symmetry, $\alpha/2$ on each side of
+        every straight segment. Per packet the total wrap is $\alpha$ at radius $\rho$:
+      </p>
+      <div class="math-block">
+        $$\boxed{\,L_{\text{packet}} \;=\; 2\,R_{cc}\sin(\alpha/2) \;+\; \rho\,\alpha\,}$$
+      </div>
+      <p>
+        The wrap term is why the naive intuition, "a chord is $\sin(\alpha/2)/(\alpha/2)
+        \approx 90\%$ of the arc, so expect $-10\%$", overstates the effect. At the
+        Proto&nbsp;01 design point the wrap recovers most of the shortfall: the taut packet is
+        only $\approx 3\%$ shorter than the wall-hugging arc, and $\approx 1\%$ shorter than
+        what the Rotor Solver assumed (see the worked comparison below).
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Pre-Strain Corrections: Incompressibility</h3>
+      <p>
+        Pinning the tube at both ends requires a small axial seating strain $\varepsilon$ so it
+        cannot go slack or wobble. Silicone is volumetrically incompressible
+        ($\nu \approx 0.5$): stretching by $\lambda = 1+\varepsilon$ shrinks every transverse
+        dimension by $1/\sqrt{\lambda}$ and the cross-sectional area by $1/\lambda$:
+      </p>
+      <div class="math-block">
+        $$d_\varepsilon = \frac{d}{\sqrt{\lambda}}, \qquad
+          w_\varepsilon = \frac{w}{\sqrt{\lambda}}, \qquad
+          A_\varepsilon = \frac{\pi d^2}{4\lambda}$$
+      </div>
+      <p>
+        Two consequences. First, the delivered volume scales down by $1/\lambda$ directly:
+        at $\varepsilon = 3\%$ that is a $-2.9\%$ volume effect, already larger than the path
+        correction. Second, and less obvious: the printed gap $G = 2w - \delta$ is prescribed
+        from the <em>unstretched</em> wall, so stretch silently eats the interference:
+      </p>
+      <div class="math-block">
+        $$\delta_\varepsilon \;=\; 2w_\varepsilon - G \;=\; \frac{2w}{\sqrt{\lambda}} - 2w + \delta$$
+      </div>
+      <p>
+        At $w = 0.85$, $\delta = 0.20$: a 3% strain reduces the effective interference to
+        0.175&nbsp;mm (still safe); occlusion would only be lost entirely at
+        $\varepsilon \approx 28\%$. Seating tension is therefore safe for occlusion, but the
+        tool checks $\delta_\varepsilon$ and warns as it approaches the caution band, because
+        the margin shrinks fast if $\delta$ was set low or the wall is thinner than assumed.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Volume per Stroke &amp; Inverse Solve</h3>
+      <p>
+        Per stroke (one roller spacing of rotation) one packet is delivered. The occlusion
+        compensation is inherited unchanged from the displaced-volume model:
+        $\Delta\mathrm{Arc}_{\text{total}} = N_c L_c$ with $L_c$ evaluated at the effective
+        interference $\delta_\varepsilon$:
+      </p>
+      <div class="math-block">
+        $$\boxed{\,V_{\text{stroke}} \;=\; A_\varepsilon
+          \left( L_{\text{packet}} - N_c\,L_c \right)\,}$$
+      </div>
+      <p>
+        Because $L_{\text{packet}}$ is <em>linear</em> in $R$, the design question inverts in
+        closed form. For a target volume $V_t$, the corrected rotor radius is:
+      </p>
+      <div class="math-block">
+        $$R^{*} \;=\; \frac{V_t / A_\varepsilon \;+\; N_c L_c \;+\; 2 R_r \sin(\alpha/2)
+        \;-\; \rho\,\alpha}{2\,\sin(\alpha/2)}$$
+      </div>
+      <p>
+        This replaces the Rotor Solver's $R = N \cdot \mathrm{arcNeeded} / (2\pi)$ for a
+        tensioned build. Feasibility checks (roller collision, hub clearance, tube length)
+        still live in the Rotor Solver: verify $R^{*}$ there after solving here.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Worked Comparison: Proto 01 Design Point</h3>
+      <p>
+        At $R = 17.7$, $R_r = 5$, $N = 4$, $d = 0.51$, $w = 0.85$, $\delta = 0.20$,
+        $k = 1.15$, $N_c = 2$ (all mm):
+      </p>
+      <table class="sym-table">
+        <thead><tr><th>Path model</th><th>Packet length</th><th>V / stroke</th><th>vs. solver</th></tr></thead>
+        <tbody>
+          <tr><td>Rotor Solver assumption</td><td>$2\pi R/4 = 27.80$ mm</td><td>4.35 µL</td><td>-</td></tr>
+          <tr><td>Wall-hugging arc (true centreline)</td><td>28.42 mm</td><td>4.48 µL</td><td>+2.2%</td></tr>
+          <tr><td>Taut path, $\varepsilon = 0$</td><td>27.55 mm</td><td>4.30 µL</td><td>−0.9%</td></tr>
+          <tr><td>Taut path, $\varepsilon = 3\%$</td><td>27.52 mm</td><td>4.25 µL</td><td>−2.3%</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">
+        Two readings. First, the path correction alone is small: it cannot explain
+        Proto&nbsp;01's −32% under-dispense, which the Proto&nbsp;01 error budget already
+        attributes to the missing occlusion and the shim over-squeeze. Second, the corrections
+        compound in the same direction, and the <em>design</em> consequence is not small: the
+        rotor radius for a true 5&nbsp;µL stroke moves from 19.72&nbsp;mm (solver) to
+        20.13&nbsp;mm (taut, $\varepsilon=0$) to <strong>20.37&nbsp;mm</strong> (taut,
+        $\varepsilon = 3\%$), a 0.65&nbsp;mm change in a printed part where 0.1&nbsp;mm is the
+        print resolution.
+      </p>
+    </div>
+
+    <div class="theory-section">
+      <h3>Assumptions &amp; Limits of Validity</h3>
+      <ol class="theory-list">
+        <li data-n="1.">
+          <strong>Tube pinned at both ends, taut.</strong>
+          The path is the minimum-length curve over the rollers. If the tube is held at one
+          end only (Proto&nbsp;01/02 as built), the geometry is indeterminate between this
+          model and the wall arc: the two bound the truth, and the difference is a
+          variance term, not a bias.
+        </li>
+        <li data-n="2.">
+          <strong>Uniform incompressible stretch.</strong>
+          Strain is assumed uniform along the pumping section and the wall volume conserved
+          ($\nu = 0.5$). Local strain concentration at the pinch points is absorbed by $k$.
+        </li>
+        <li data-n="3.">
+          <strong>Taut-string path, no bending stiffness.</strong>
+          The tube is treated as perfectly flexible at this scale: wrap radius
+          $\rho = R_r + \mathrm{OD}_\varepsilon/2$, straight segments exactly straight.
+          Bending stiffness would bulge the straights slightly outward, toward the arc,
+          so the taut path is a lower bound on packet length.
+        </li>
+        <li data-n="4.">
+          <strong>Occlusion mechanics inherited.</strong>
+          $L_c = k \cdot 2\sqrt{2 R_r \delta_\varepsilon}$ and
+          $\Delta\mathrm{Arc} = N_c L_c$ are taken from the displaced-volume model
+          unchanged, with the same $k$ calibration path (Proto gravimetry / ink-press).
+        </li>
+        <li data-n="5.">
+          <strong>Quasi-static, no backpressure, no re-recovery dynamics.</strong>
+          Same scope boundary as the sibling models. Note that with a taut path the tube
+          leaves the wall between rollers, so occlusion near the arc entry/exit deserves a
+          check on hardware: under backpressure, moments with a single engaged pinch
+          matter more than they do in free delivery.
+        </li>
+      </ol>
+    </div>
+
+    <div class="theory-section">
+      <h3>Parameters, Values &amp; Sources</h3>
+      <table class="sym-table">
+        <thead><tr><th>Parameter</th><th>Value / range</th><th>Note &amp; source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>$\varepsilon$, seating strain</td>
+            <td>2-5% recommended; slider 0-15%</td>
+            <td>Just enough to seat the tube without slack; measure with two ink marks before/after mounting</td>
+          </tr>
+          <tr>
+            <td>$d$, $w$, tube</td>
+            <td>0.51 mm ID; $w$ = 0.85 mm default (0.91 mm measured by microscope on Proto&nbsp;02)</td>
+            <td>Masterflex Puri-Clear LL 2-stop microbore; Proto&nbsp;02 cross-section measurement</td>
+          </tr>
+          <tr>
+            <td>$R_r$, roller radius</td>
+            <td>5 mm (MR105ZZ) or 8 mm (625-2RS)</td>
+            <td>Same candidates as the sibling tools; Proto&nbsp;01/02 use MR105ZZ</td>
+          </tr>
+          <tr>
+            <td>$k$, $\delta$, $N_c$</td>
+            <td>Defaults 1.15 / 0.20 mm / 2</td>
+            <td>Inherited conventions: see the Occlusion &amp; Displaced-Volume Model
+              <span class="ref">Klespitz &amp; Kovács, S&amp;A-A, 2022</span></td>
+          </tr>
+          <tr>
+            <td>Path geometry</td>
+            <td>$L_{\text{packet}} = 2R_{cc}\sin(\alpha/2) + \rho\alpha$</td>
+            <td>Derived first-principles for this thesis (external tangent + equal-wrap argument); motivated by the Proto&nbsp;01 tube-installation findings</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /theory-card -->
+
+  <!-- ══════════════════════════════════════════════════════
+       INTERACTIVE CALCULATOR + FIGURE
+       ══════════════════════════════════════════════════════ -->
+  <div class="glass-panel animate-in" id="calculator" style="--delay:0.14s">
+    <div class="panel-title">Interactive Calculator: Taut Path vs. Arc Assumption</div>
+
+    <div class="ctrl">
+      <div class="cg">
+        <label>Roller count <em>N</em></label>
+        <select id="tp-n" onchange="tpCalc()">
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+        </select>
+      </div>
+      <div class="cg">
+        <label>Rotor radius <em>R</em> (mm)</label>
+        <input type="number" id="tp-r" min="8" max="60" step="0.1" value="17.7" oninput="tpCalc()">
+      </div>
+      <div class="cg">
+        <label>Bearing OD</label>
+        <select id="tp-bod" onchange="tpCalc()">
+          <option value="10" selected>10 mm, MR105ZZ &nbsp;(R<sub>r</sub> = 5 mm)</option>
+          <option value="16">16 mm, 625-2RS &nbsp;(R<sub>r</sub> = 8 mm)</option>
+        </select>
+      </div>
+      <div class="cg">
+        <label>Tube ID <em>d</em></label>
+        <select id="tp-d" onchange="tpCalc()">
+          <option value="0.25">0.25 mm</option>
+          <option value="0.51" selected>0.51 mm</option>
+          <option value="0.76">0.76 mm</option>
+          <option value="1.02">1.02 mm</option>
+          <option value="1.14">1.14 mm</option>
+        </select>
+      </div>
+      <div class="cg">
+        <label>Wall <em>w</em> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="tp-w" min="0.4" max="1.6" step="0.05" value="0.85" oninput="tpCalc()">
+          <span class="v" id="tp-w-v">0.85</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Interference <span style="text-transform:none">δ</span> (mm)</label>
+        <div class="input-row">
+          <input type="range" id="tp-delta" min="0.02" max="0.60" step="0.02" value="0.20" oninput="tpCalc()">
+          <span class="v" id="tp-delta-v">0.20</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Seating strain <span style="text-transform:none">ε</span> (%)</label>
+        <div class="input-row">
+          <input type="range" id="tp-eps" min="0" max="15" step="0.5" value="3" oninput="tpCalc()">
+          <span class="v" id="tp-eps-v">3.0</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Inflation factor <em>k</em></label>
+        <div class="input-row">
+          <input type="range" id="tp-k" min="1.0" max="1.5" step="0.05" value="1.15" oninput="tpCalc()">
+          <span class="v" id="tp-k-v">1.15</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Rollers engaged <em>N<sub>c</sub></em></label>
+        <div class="input-row">
+          <input type="range" id="tp-nc" min="1" max="4" step="1" value="2" oninput="tpCalc()">
+          <span class="v" id="tp-nc-v">2</span>
+        </div>
+      </div>
+      <div class="cg">
+        <label>Target volume (inverse solve, µL)</label>
+        <input type="number" id="tp-vt" min="1" max="25" step="0.5" value="5" oninput="tpCalc()">
+      </div>
+    </div>
+
+    <!-- SVG figure -->
+    <div class="fig-wrap">
+      <svg id="tp-fig" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="fig-legend">
+      <span><span class="leg-swatch" style="border-color:#ff6b2b"></span> taut tube path (this model)</span>
+      <span><span class="leg-swatch" style="border-color:rgba(240,236,232,0.55); border-top-style:dashed"></span> wall-hugging arc (old assumption)</span>
+      <span><span class="leg-swatch" style="border-color:rgba(255,255,255,0.25)"></span> occlusion wall · rollers</span>
+    </div>
+
+    <!-- Results -->
+    <div class="metrics-grid">
+      <div class="metric hero">
+        <span class="m-label">Net volume per stroke: taut path, pre-strained tube</span>
+        <span class="m-val" id="tp-vs">-</span>
+        <span class="m-unit">µL</span>
+      </div>
+      <div class="metric highlight">
+        <span class="m-label">Corrected rotor radius R* for target volume</span>
+        <span class="m-val" id="tp-rstar">-</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric highlight">
+        <span class="m-label">Rotor Solver radius (arc assumption, ε = 0)</span>
+        <span class="m-val" id="tp-rsolver">-</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Packet length L<sub>packet</sub> (taut)</span>
+        <span class="m-val" id="tp-lpk">-</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Solver arc 2πR/N · wall-hugging arc</span>
+        <span class="m-val" id="tp-larc">-</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Taut path vs. solver arc</span>
+        <span class="m-val" id="tp-dpct">-</span>
+        <span class="m-unit">%</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Effective interference δ<sub>ε</sub></span>
+        <span class="m-val" id="tp-deff">-</span>
+        <span class="m-unit">mm</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Contact length L<sub>c</sub>(δ<sub>ε</sub>)</span>
+        <span class="m-val" id="tp-lc">-</span>
+        <span class="m-unit">mm / roller</span>
+      </div>
+      <div class="metric">
+        <span class="m-label">Stretched lumen area A<sub>ε</sub></span>
+        <span class="m-val" id="tp-ae">-</span>
+        <span class="m-unit">mm²</span>
+      </div>
+    </div>
+
+    <!-- Warning strips -->
+    <div class="warn-strip" id="tp-warn"></div>
+    <div class="warn-strip" id="tp-note"></div>
+  </div><!-- /glass-panel -->
+
+</main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════
+     KaTeX: CDN primary, local copy as offline fallback
+     ══════════════════════════════════════════════════════ -->
+<script>
+  function _loadScript(src, onload) {
+    var s = document.createElement('script');
+    s.src = src;
+    if (onload) s.onload = onload;
+    document.head.appendChild(s);
+  }
+  function _startRender() {
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true  },
+          { left: '$',  right: '$',  display: false }
+        ],
+        throwOnError: false,
+        errorColor: '#e83535'
+      });
+    }
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+        onerror="_loadScript('katex/katex.min.js')"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+        onerror="_loadScript('katex/auto-render.min.js', _startRender)"
+        onload="_startRender()"></script>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   TENSIONED TUBE-PATH & STROKE VOLUME MODEL
+   All formulas documented in the theory card and SPEC.md.
+════════════════════════════════════════════════════════ */
+const TP_NS = 'http://www.w3.org/2000/svg';
+
+function tpModel(p) {
+  /* p: {N, R, Rr, d, w, delta, k, Nc, eps}  → all lengths mm, volumes µL */
+  const lam  = 1 + p.eps;
+  const sq   = Math.sqrt(lam);
+  const dE   = p.d / sq;                    // stretched ID
+  const wE   = p.w / sq;                    // stretched wall
+  const odE  = dE + 2 * wE;                 // stretched OD
+  const aE   = Math.PI * p.d * p.d / (4 * lam);   // stretched lumen area
+  const G    = 2 * p.w - p.delta;           // printed gap (unstretched prescription)
+  const dEff = 2 * wE - G;                  // effective interference after stretch
+  const Lc   = dEff > 0 ? p.k * 2 * Math.sqrt(2 * p.Rr * dEff) : 0;
+  const alpha = 2 * Math.PI / p.N;
+  const rho  = p.Rr + odE / 2;              // wrap radius of tube centreline
+  const Rcc  = p.R - p.Rr;                  // roller-centre circle
+  const Lpk  = 2 * Rcc * Math.sin(alpha / 2) + rho * alpha;   // taut packet
+  const Lsol = p.R * alpha;                 // rotor-solver assumption
+  const LarcCL = (p.R + G - odE / 2) * alpha;   // wall-hugging centreline arc
+  const Vs   = aE * (Lpk - p.Nc * Lc);      // net volume per stroke, taut path
+  return { lam, dE, wE, odE, aE, G, dEff, Lc, alpha, rho, Rcc, Lpk, Lsol, LarcCL, Vs };
+}
+
+function tpInverseR(Vt, p, m) {
+  /* Closed-form R* for target volume Vt on the taut path (Lpk linear in R). */
+  const s2 = 2 * Math.sin(m.alpha / 2);
+  return (Vt / m.aE + p.Nc * m.Lc + 2 * p.Rr * Math.sin(m.alpha / 2) - m.rho * m.alpha) / s2;
+}
+
+function tpSolverR(Vt, p) {
+  /* Rotor Geometry Solver equivalent: arc assumption, unstretched tube. */
+  const A  = Math.PI * p.d * p.d / 4;
+  const Lc = p.k * 2 * Math.sqrt(2 * p.Rr * p.delta);
+  const arcNeeded = Vt / A + p.Nc * Lc;
+  return p.N * arcNeeded / (2 * Math.PI);
+}
+
+function tpRead() {
+  return {
+    N:     parseInt(document.getElementById('tp-n').value, 10),
+    R:     parseFloat(document.getElementById('tp-r').value)   || 17.7,
+    Rr:    parseFloat(document.getElementById('tp-bod').value) / 2,
+    d:     parseFloat(document.getElementById('tp-d').value),
+    w:     parseFloat(document.getElementById('tp-w').value),
+    delta: parseFloat(document.getElementById('tp-delta').value),
+    k:     parseFloat(document.getElementById('tp-k').value),
+    Nc:    parseInt(document.getElementById('tp-nc').value, 10),
+    eps:   parseFloat(document.getElementById('tp-eps').value) / 100,
+    Vt:    parseFloat(document.getElementById('tp-vt').value)  || 5
+  };
+}
+
+function tpCalc() {
+  const p = tpRead();
+  const m = tpModel(p);
+
+  document.getElementById('tp-w-v').textContent     = p.w.toFixed(2);
+  document.getElementById('tp-delta-v').textContent = p.delta.toFixed(2);
+  document.getElementById('tp-eps-v').textContent   = (p.eps * 100).toFixed(1);
+  document.getElementById('tp-k-v').textContent     = p.k.toFixed(2);
+  document.getElementById('tp-nc-v').textContent    = p.Nc;
+
+  document.getElementById('tp-vs').textContent   = m.dEff > 0 ? m.Vs.toFixed(2) : '—';
+  document.getElementById('tp-lpk').textContent  = m.Lpk.toFixed(2);
+  document.getElementById('tp-larc').textContent =
+    m.Lsol.toFixed(2) + ' · ' + m.LarcCL.toFixed(2);
+  document.getElementById('tp-dpct').textContent =
+    ((m.Lpk / m.Lsol - 1) * 100).toFixed(1);
+  document.getElementById('tp-deff').textContent = m.dEff.toFixed(3);
+  document.getElementById('tp-lc').textContent   = m.Lc.toFixed(2);
+  document.getElementById('tp-ae').textContent   = m.aE.toFixed(4);
+  document.getElementById('tp-rstar').textContent =
+    m.dEff > 0 ? tpInverseR(p.Vt, p, m).toFixed(2) : '—';
+  document.getElementById('tp-rsolver').textContent = tpSolverR(p.Vt, p).toFixed(2);
+
+  /* Warnings — mirror the sibling tool's logic, evaluated at δε */
+  const warn = document.getElementById('tp-warn');
+  const kiss = 2 * m.wE;
+  if (m.dEff <= 0) {
+    warn.className = 'warn-strip danger';
+    warn.innerHTML = '<strong>No occlusion.</strong> The seating strain has consumed the ' +
+      'printed interference (δ<sub>ε</sub> = ' + m.dEff.toFixed(3) + ' mm ≤ 0). The gap G = ' +
+      m.G.toFixed(2) + ' mm is wider than the stretched walls-kiss point 2w<sub>ε</sub> = ' +
+      kiss.toFixed(2) + ' mm — the pump will not deliver. Reduce ε or increase δ.';
+  } else if (m.dEff > 2 * m.wE) {
+    warn.className = 'warn-strip danger';
+    warn.innerHTML = '<strong>Crushing wall material.</strong> δ<sub>ε</sub> exceeds 2w<sub>ε</sub> — ' +
+      'the roller is compressing wall, not closing lumen. Expect accelerated fatigue.';
+  } else if (m.dEff < 0.10 * kiss) {
+    warn.className = 'warn-strip caution';
+    warn.innerHTML = '<strong>Marginal occlusion.</strong> δ<sub>ε</sub> = ' + m.dEff.toFixed(3) +
+      ' mm is below 10% of the stretched wall stack (' + (0.10 * kiss).toFixed(3) +
+      ' mm). Print tolerance or wall uncertainty may open a leak path.';
+  } else {
+    warn.className = 'warn-strip';
+    warn.innerHTML = '';
+  }
+
+  /* Info note at ε = 0: path indeterminate if the tube is not pinned */
+  const note = document.getElementById('tp-note');
+  if (p.eps === 0) {
+    const spread = ((m.LarcCL / m.Lpk - 1) * 100).toFixed(1);
+    note.className = 'warn-strip info';
+    note.innerHTML = 'ε = 0: with the tube pinned at one end only (Proto 01/02 as built) the ' +
+      'path is <em>indeterminate</em> between the taut chord and the wall arc — a ' + spread +
+      '% spread in packet length that becomes stroke-to-stroke variance, not a fixable bias. ' +
+      'Pin both ends with a small seating strain to make the geometry deterministic.';
+  } else {
+    note.className = 'warn-strip';
+    note.innerHTML = '';
+  }
+
+  tpDraw(p, m);
+}
+
+/* ── Top-down figure ─────────────────────────────────────── */
+function tpDraw(p, m) {
+  const svg = document.getElementById('tp-fig');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const cx = 350, cy = 255;
+  const wallOuter = m.G + p.R + 1.2;            // outer edge of wall band (mm)
+  const s = 175 / wallOuter;                     // mm → px
+  const P = (r, thDeg) => {
+    const t = thDeg * Math.PI / 180;
+    return [cx + r * s * Math.cos(t), cy - r * s * Math.sin(t)];
+  };
+  const el = (name, attrs) => {
+    const e = document.createElementNS(TP_NS, name);
+    for (const a in attrs) e.setAttribute(a, attrs[a]);
+    svg.appendChild(e);
+    return e;
+  };
+  const arcPath = (r, th1, th2) => {
+    /* top arc from th1 to th2 (degrees, th1 > th2), sweep clockwise on screen */
+    const [x1, y1] = P(r, th1), [x2, y2] = P(r, th2);
+    const large = Math.abs(th1 - th2) > 180 ? 1 : 0;
+    return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${(r*s).toFixed(1)} ${(r*s).toFixed(1)} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+  };
+
+  /* Occlusion wall — band over the top 180° */
+  el('path', {
+    d: arcPath(p.R + m.G + 0.6, 180, 0),
+    fill: 'none', stroke: 'rgba(255,255,255,0.16)',
+    'stroke-width': Math.max(3, 1.2 * s), 'stroke-linecap': 'butt'
+  });
+
+  /* Rotor hub + roller-centre circle */
+  el('circle', { cx, cy, r: Math.max(6, 0.35 * m.Rcc * s),
+    fill: 'rgba(255,255,255,0.05)', stroke: 'rgba(255,255,255,0.15)', 'stroke-width': 1 });
+  el('circle', { cx, cy, r: m.Rcc * s,
+    fill: 'none', stroke: 'rgba(255,255,255,0.10)', 'stroke-width': 1, 'stroke-dasharray': '4,5' });
+
+  /* Rollers — offset α/2 so none sits exactly on the arc boundary */
+  const aDeg = 360 / p.N;
+  const angles = [];
+  for (let i = 0; i < p.N; i++) angles.push(aDeg / 2 + i * aDeg);
+  const engaged = angles.filter(t => t > 0 && t < 180).sort((a, b) => b - a);
+  angles.forEach(t => {
+    const [x, y] = P(m.Rcc, t);
+    const on = t > 0 && t < 180;
+    el('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: p.Rr * s,
+      fill: on ? 'rgba(255,107,43,0.10)' : 'rgba(255,255,255,0.04)',
+      stroke: on ? 'rgba(255,107,43,0.45)' : 'rgba(255,255,255,0.18)',
+      'stroke-width': 1.3 });
+    el('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: Math.max(2, 0.18 * p.Rr * s),
+      fill: 'rgba(255,255,255,0.12)' });
+  });
+
+  /* Old assumption — wall-hugging centreline arc (dashed) */
+  el('path', {
+    d: arcPath(p.R + m.G - m.odE / 2, 180, 0),
+    fill: 'none', stroke: 'rgba(240,236,232,0.45)',
+    'stroke-width': 1.4, 'stroke-dasharray': '6,6'
+  });
+
+  /* Taut tube path — wraps + tangents through engaged rollers.
+     Virtual neighbours one spacing beyond each end give the entry/exit direction. */
+  if (engaged.length) {
+    const seq = [engaged[0] + aDeg, ...engaged, engaged[engaged.length - 1] - aDeg];
+    const ctr = seq.map(t => P(m.Rcc, t));
+    const rho = m.rho * s;
+    const tangentPts = [];                      // per segment: [Ta, Tb]
+    for (let i = 0; i < ctr.length - 1; i++) {
+      const [x1, y1] = ctr[i], [x2, y2] = ctr[i + 1];
+      let tx = x2 - x1, ty = y2 - y1;
+      const L = Math.hypot(tx, ty); tx /= L; ty /= L;
+      /* outward normal: away from rotor centre */
+      let nx = ty, ny = -tx;
+      const mx = (x1 + x2) / 2 - cx, my = (y1 + y2) / 2 - cy;
+      if (nx * mx + ny * my < 0) { nx = -nx; ny = -ny; }
+      tangentPts.push([[x1 + rho * nx, y1 + rho * ny], [x2 + rho * nx, y2 + rho * ny]]);
+    }
+    /* Path: start mid of first (virtual) segment → wrap each engaged roller → end mid of last */
+    const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    const f = v => v.toFixed(1);
+    const s0 = tangentPts[0], sEnd = tangentPts[tangentPts.length - 1];
+    let dPath = `M ${f(mid(s0[0], s0[1])[0])} ${f(mid(s0[0], s0[1])[1])} L ${f(s0[1][0])} ${f(s0[1][1])}`;
+    for (let i = 0; i < engaged.length; i++) {
+      const nextSeg = tangentPts[i + 1];
+      dPath += ` A ${f(rho)} ${f(rho)} 0 0 1 ${f(nextSeg[0][0])} ${f(nextSeg[0][1])}`;
+      const endPt = (i === engaged.length - 1)
+        ? mid(nextSeg[0], nextSeg[1]) : nextSeg[1];
+      dPath += ` L ${f(endPt[0])} ${f(endPt[1])}`;
+    }
+    el('path', { d: dPath, fill: 'none', stroke: '#ff6b2b',
+      'stroke-width': 2.2, 'stroke-linecap': 'round',
+      style: 'filter: drop-shadow(0 0 6px rgba(255,107,43,0.45))' });
+
+    /* Pinch markers at engaged rollers */
+    engaged.forEach(t => {
+      const [x, y] = P(m.Rcc + m.rho, t);
+      el('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.2,
+        fill: '#ff6b2b', stroke: '#0a0a0c', 'stroke-width': 1 });
+    });
+  }
+
+  /* R dimension line to first roller position */
+  const [rx, ry] = P(p.R, 90);
+  el('line', { x1: cx, y1: cy, x2: rx.toFixed(1), y2: ry.toFixed(1),
+    stroke: 'rgba(255,255,255,0.22)', 'stroke-width': 1, 'stroke-dasharray': '3,3' });
+  const lbl = el('text', { x: cx + 8, y: (cy - p.R * s / 2), 'font-size': 12,
+    fill: 'rgba(240,236,232,0.6)', 'font-family': 'system-ui,sans-serif', 'font-style': 'italic' });
+  lbl.textContent = 'R = ' + p.R.toFixed(1) + ' mm';
+
+  /* Caption */
+  const cap = el('text', { x: cx, y: 390, 'text-anchor': 'middle', 'font-size': 12,
+    fill: '#7a7068', 'font-family': 'system-ui,sans-serif' });
+  cap.textContent = 'Top-down view — ' + p.N + ' rollers, ' + engaged.length +
+    ' engaged on the 180° arc · packet = tangent runs + α/2 wraps';
+}
+
+tpCalc();
+</script>
+
+</body>
+</html>
