@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operator Interface, Live · Thesis Tools</title>
+<meta name="description" content="Every screen of the finished operator interface, captured from the device at its native 320 by 240, with every button tappable and the firmware's own screen map beside it.">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/site-nav.js"></script>
+<style>
+  /* ---------- page scaffold ---------- */
+  .tool-main { max-width: 1240px; margin: 0 auto; padding: 56px 32px 80px; display: flex; flex-direction: column; gap: 64px; position: relative; z-index: 1; }
+  .tool-header h1 { font-size: clamp(2rem, 4.4vw, 3rem); margin: 14px 0 14px; }
+  .tool-header p { color: var(--text-soft); max-width: 66ch; margin: 0; }
+  .tool-header p + p { margin-top: 10px; }
+  .tool-header b { color: var(--text); font-weight: 600; }
+  h2.display { font-family: var(--display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; font-size: clamp(1.5rem, 2.6vw, 2.1rem); margin: 0 0 12px; }
+  .lead { color: var(--text-soft); max-width: 66ch; margin: 0 0 24px; }
+  .lead b { color: var(--text); font-weight: 600; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* ---------- the stage: panel + map ---------- */
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: 28px; align-items: start; }
+  .panel-col { position: sticky; top: calc(var(--nav-h) + 20px); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .device { display: inline-flex; padding: 14px; border-radius: var(--r-md); background: #15171b; border: 1px solid rgba(255,255,255,0.09); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 60px rgba(0,0,0,0.45); align-self: flex-start; max-width: 100%; }
+  .screen { position: relative; width: calc(320px * var(--s, 2)); height: calc(240px * var(--s, 2)); background: #000; border-radius: 4px; overflow: hidden; user-select: none; -webkit-user-select: none; }
+  .screen img { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+  .screen .hot { position: absolute; inset: 0; }
+  .hot button { position: absolute; margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 3px; font: inherit; color: transparent; }
+  .hot button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .hot button::after { content: ""; position: absolute; inset: 0; border-radius: 3px; background: #000; opacity: 0; transition: opacity 90ms linear; }
+  .hot button.is-pressed::after { opacity: 0.22; }
+  .hot button.is-disabled { cursor: not-allowed; }
+  .screen.show-targets .hot button { outline: 1.5px dashed rgba(255,107,43,0.85); outline-offset: -2px; background: rgba(255,107,43,0.07); }
+  .screen.show-targets .hot button.is-disabled { outline-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.04); }
+  .hot button.is-scripted { outline: 3px solid var(--accent); outline-offset: -3px; animation: ring 700ms var(--ease) infinite alternate; }
+  @keyframes ring { from { box-shadow: 0 0 0 0 rgba(255,107,43,0.55); } to { box-shadow: 0 0 0 10px rgba(255,107,43,0); } }
+  .toast { position: absolute; left: 50%; bottom: 8%; transform: translate(-50%, 8px); max-width: 88%; padding: 8px 12px; border-radius: var(--r-sm); background: rgba(10,10,12,0.92); border: 1px solid var(--line-accent); color: var(--text); font-size: 0.78rem; line-height: 1.35; opacity: 0; pointer-events: none; transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); z-index: 3; }
+  .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+  .demo-flag { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); padding: 2px 10px; border-radius: var(--r-pill); background: rgba(10,10,12,0.85); color: var(--text); font-size: 0.7rem; font-family: var(--mono); display: none; z-index: 2; }
+  .demo-flag.is-on { display: block; }
+
+  .panel-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pb { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid rgba(255,255,255,0.18); background: transparent; color: var(--text); font: inherit; font-size: 0.85rem; cursor: pointer; transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease); }
+  .pb:hover { border-color: var(--line-accent); }
+  .pb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .pb[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #0a0a0c; font-weight: 600; }
+  .pb:disabled { opacity: 0.4; cursor: default; }
+  .seg { display: inline-flex; border: 1px solid rgba(255,255,255,0.18); border-radius: var(--r-pill); overflow: hidden; }
+  .seg .pb { border: 0; border-radius: 0; height: 34px; padding: 0 12px; }
+  .seg .pb + .pb { border-left: 1px solid rgba(255,255,255,0.12); }
+  .panel-bar .spacer { flex: 1; }
+
+  .frame-info { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: baseline; padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); font-size: 0.9rem; }
+  .frame-info .k { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .frame-info .name { color: var(--accent); }
+  .frame-info .cap { color: var(--text); }
+  .frame-info .hint { color: var(--text-soft); min-height: 1.4em; }
+  .next-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .next-chips button { height: 26px; padding: 0 10px; border-radius: var(--r-pill); border: 1px solid var(--line); background: transparent; color: var(--text-soft); font: inherit; font-size: 0.75rem; cursor: pointer; }
+  .next-chips button:hover { border-color: var(--line-accent); color: var(--text); }
+
+  .trail { display: flex; gap: 6px; overflow-x: auto; padding: 2px; scrollbar-width: thin; }
+  .trail button { flex: 0 0 auto; width: 64px; height: 48px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: #000; overflow: hidden; cursor: pointer; opacity: 0.55; transition: opacity var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease); }
+  .trail button img { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+  .trail button:hover, .trail button.is-current { opacity: 1; border-color: var(--line-accent); }
+
+  /* ---------- the map ---------- */
+  .map { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); display: flex; flex-direction: column; max-height: calc(100vh - var(--nav-h) - 40px); min-width: 0; }
+  .map__head { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .map__head h2 { font-family: var(--display); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; margin: 0; }
+  .map__head span { color: var(--text-muted); font-size: 0.75rem; font-family: var(--mono); }
+  .cond { padding: 12px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+  .cond__row { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-soft); }
+  .cond .seg .pb { height: 28px; padding: 0 9px; font-size: 0.74rem; }
+  .cond__actions { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+  .cond__actions .btn { height: 38px; padding: 0 16px; font-size: 0.85rem; }
+  .tree { list-style: none; margin: 0; padding: 8px 8px 12px; overflow: auto; scrollbar-width: thin; }
+  .tgroup > .tgroup__name { display: block; padding: 12px 8px 6px; color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .tgroup ol { list-style: none; margin: 0; padding: 0; }
+  .tnode { border-radius: var(--r-sm); border: 1px solid transparent; transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease); }
+  .tnode.is-next { border-color: rgba(255,107,43,0.28); }
+  .tnode.is-current { border-color: var(--accent); background: rgba(255,107,43,0.08); }
+  .tnode__row { display: grid; grid-template-columns: 56px 1fr auto; gap: 10px; align-items: center; width: 100%; padding: 6px 8px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: var(--r-sm); }
+  .tnode__row:hover { background: rgba(255,255,255,0.04); }
+  .tnode__row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .tnode__thumb { width: 56px; height: 42px; display: block; border-radius: 3px; image-rendering: pixelated; background: #000; }
+  .tnode__name { display: block; font-size: 0.88rem; font-weight: 600; }
+  .tnode__desc { display: block; font-size: 0.74rem; color: var(--text-soft); line-height: 1.3; }
+  .tnode__n { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); }
+  .tnode.is-next .tnode__n::before { content: "next"; color: var(--accent); margin-right: 8px; font-family: var(--font); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tnode__vars { display: none; flex-wrap: wrap; gap: 4px; padding: 0 8px 8px 74px; }
+  .tnode.is-open .tnode__vars { display: flex; }
+  .chip { height: 22px; padding: 0 8px; border-radius: var(--r-pill); border: 1px solid var(--line); background: transparent; color: var(--text-soft); font: inherit; font-family: var(--mono); font-size: 0.68rem; cursor: pointer; }
+  .chip:hover { border-color: var(--line-accent); color: var(--text); }
+  .chip.is-current { background: var(--accent); border-color: var(--accent); color: #0a0a0c; }
+
+  /* ---------- the run, end to end: a serpentine flow, three steps a row ---------- */
+  .flow { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr); grid-template-rows: auto 48px auto; gap: 0; align-items: center;
+    grid-template-areas: "s1 a1 s2 a2 s3" ". . . . a3" "s6 a5 s5 a4 s4"; }
+  .flow__step { display: block; margin: 0; border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); background: var(--surface); transition: border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
+  .flow__step:hover { border-color: var(--line-accent); transform: translateY(-3px); }
+  .flow__step:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .flow__step figure { margin: 0; }
+  .flow__step img { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; background: #000; }
+  .flow__step figcaption { padding: 12px 16px 14px; font-size: 0.86rem; line-height: 1.35; color: var(--text-soft); }
+  .flow__step figcaption b { display: block; color: var(--text); font-weight: 600; margin-bottom: 3px; }
+  .flow__step figcaption b span { font-family: var(--mono); color: var(--accent); margin-right: 8px; }
+  .flow__arrow { display: flex; align-items: center; justify-content: center; color: var(--accent); opacity: 0.8; }
+  .flow__arrow svg { width: 30px; height: 30px; display: block; transform: rotate(var(--rot, 0deg)); }
+  .flow__arrow--r { --rot: 0deg; } .flow__arrow--d { --rot: 90deg; } .flow__arrow--l { --rot: 180deg; }
+  @media (max-width: 760px) {
+    .flow { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "s1" "a1" "s2" "a2" "s3" "a3" "s4" "a4" "s5" "a5" "s6"; }
+    .flow__arrow { height: 44px; --rot: 90deg !important; }
+    .flow__step { max-width: 420px; width: 100%; justify-self: center; }
+  }
+
+  /* ---------- real, staged, faked ---------- */
+  .truth { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+  .truth__col { display: grid; gap: 16px; }
+  .glass-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 26px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+  .glass-panel--warm { background: linear-gradient(160deg, rgba(255,107,43,0.10), rgba(255,107,43,0.02)); border-color: rgba(255,107,43,0.25); }
+  .glass-panel--cool { background: linear-gradient(160deg, rgba(40,70,140,0.22), rgba(40,70,140,0.05)); border-color: rgba(120,150,220,0.22); }
+  .glass-panel h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; }
+  .glass-panel ul { margin: 0; padding-left: 18px; color: var(--text-soft); font-size: 0.92rem; line-height: 1.55; }
+  .glass-panel li + li { margin-top: 6px; }
+  .glass-panel li b { color: var(--text); font-weight: 600; }
+  .glass-panel p { color: var(--text-soft); font-size: 0.92rem; line-height: 1.55; margin: 0; }
+  .glass-panel p + p { margin-top: 10px; }
+  .glass-panel code { font-family: var(--mono); font-size: 0.85em; color: var(--text); background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1080px) { .stage { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); } }
+  @media (max-width: 900px) {
+    .stage { grid-template-columns: 1fr; }
+    .panel-col { position: static; }
+    .map { max-height: none; }
+    .tree { max-height: 62vh; border-top: 1px solid var(--line); }
+    .cond .seg { display: flex; width: 100%; }
+    .cond .seg .pb { flex: 1 1 auto; height: 36px; font-size: 0.8rem; }
+    .cond__actions .btn { flex: 1 1 auto; }
+    .strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .truth { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .tool-main { padding: 36px 16px 64px; gap: 48px; }
+    .device { padding: 8px; }
+    .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .frame-info { grid-template-columns: 1fr; }
+    .cond__row { grid-template-columns: 1fr; }
+    .panel-bar .seg[aria-label="Panel size"] { display: none; }
+    .panel-bar .spacer { display: none; }
+    .pb { height: 40px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hot button.is-scripted { animation: none; }
+    .strip a:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header class="site-nav" data-root="../../">
+  <a class="site-nav__back" href="../../index.html">Thesis Tools</a>
+  <nav class="site-nav__links" aria-label="Primary">
+    <a href="../../index.html#machine">Machine</a>
+    <a href="../../prototypes/index.html">Prototypes</a>
+    <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+  </nav>
+</header>
+<div id="instr-panel" class="instr" hidden></div>
+
+<main class="tool-main">
+
+  <header class="tool-header reveal">
+    <span class="site-label">Live Instrument &middot; User Interface Module</span>
+    <h1>The operator interface, live</h1>
+    <p>Every screen of the finished panel, captured from the device over USB at its native <b>320 by 240</b>, in the panel's own RGB565 colour. Every button on the captures is tappable and goes where the firmware goes.</p>
+    <p>The screens were rendered on the device from staged example state: PANPOC Protocol 1, 16 samples on two racks, one recipe called <b>Panpoc bind</b>. Nothing here moves a motor.</p>
+  </header>
+
+  <section class="stage reveal" id="stage" aria-label="The panel and its screen map">
+    <div class="panel-col">
+      <div class="device">
+        <div class="screen" id="screen" style="--s: 2">
+          <img id="frame" src="screens/home.png" width="320" height="240" alt="Home screen">
+          <div class="hot" id="hot"></div>
+          <div class="demo-flag" id="demoflag">DEMO</div>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="panel-bar">
+        <button class="pb" id="btn-back" type="button" title="Previous frame">&#8249; Back</button>
+        <button class="pb" id="btn-home" type="button">Home</button>
+        <div class="seg" role="group" aria-label="Panel size">
+          <button class="pb" data-scale="1" type="button">1&times;</button>
+          <button class="pb" data-scale="2" type="button" aria-pressed="true">2&times;</button>
+          <button class="pb" data-scale="3" type="button">3&times;</button>
+        </div>
+        <span class="spacer"></span>
+        <button class="pb" id="btn-targets" type="button" aria-pressed="false">Show touch targets</button>
+      </div>
+
+      <div class="frame-info">
+        <span class="k">Frame</span><span class="name mono" id="fi-name">home</span>
+        <span class="k">Shows</span><span class="cap" id="fi-cap"></span>
+        <span class="k">Tap</span><span class="hint" id="fi-hint">Hover a button to see where it leads.</span>
+        <span class="k">Leads to</span><span class="next-chips" id="fi-next"></span>
+      </div>
+
+      <div class="trail" id="trail" aria-label="Frames visited"></div>
+    </div>
+
+    <aside class="map" aria-label="Screen map">
+      <div class="map__head">
+        <h2>Screen map</h2>
+        <span id="map-count"></span>
+      </div>
+      <div class="cond" id="cond">
+        <div class="cond__row"><span>Position</span><div class="seg" data-key="homed"><button class="pb" data-v="1" type="button">At start</button><button class="pb" data-v="0" type="button">Unknown</button></div></div>
+        <div class="cond__row"><span>Card</span><div class="seg" data-key="sd"><button class="pb" data-v="1" type="button">In</button><button class="pb" data-v="0" type="button">Out</button></div></div>
+        <div class="cond__row"><span>Lines</span><div class="seg" data-key="filled"><button class="pb" data-v="1" type="button">Filled</button><button class="pb" data-v="0" type="button">Air</button></div></div>
+        <div class="cond__row"><span>Liquid</span><div class="seg" data-key="liquid"><button class="pb" data-v="ok" type="button">Enough</button><button class="pb" data-v="tight" type="button">Tight</button><button class="pb" data-v="short" type="button">Short</button></div></div>
+        <div class="cond__row"><span>Pumps</span><div class="seg" data-key="pumps"><button class="pb" data-v="6" type="button">Six</button><button class="pb" data-v="2" type="button">Two, as built</button></div></div>
+        <div class="cond__row"><span>Theme</span><div class="seg" data-key="theme"><button class="pb" data-v="light" type="button">Light</button><button class="pb" data-v="dark" type="button">Dark</button></div></div>
+        <div class="cond__row"><span>Language</span><div class="seg" data-key="lang"><button class="pb" data-v="en" type="button">EN</button><button class="pb" data-v="fr" type="button">FR</button><button class="pb" data-v="da" type="button">DA</button><button class="pb" data-v="it" type="button">IT</button><button class="pb" data-v="es" type="button">ES</button></div></div>
+        <div class="cond__actions">
+          <button class="btn" id="btn-play" type="button">Play a run</button>
+          <button class="btn btn--ghost" id="btn-fault" type="button">Stick the lane</button>
+        </div>
+      </div>
+      <ol class="tree" id="tree"></ol>
+    </aside>
+  </section>
+
+  <section class="reveal" id="run-flow" aria-labelledby="h-run">
+    <h2 class="display" id="h-run">A run, end to end</h2>
+    <p class="lead">The six frames the thesis prints as the run flow. Tap one to land on it in the panel above, then keep tapping the panel.</p>
+    <div class="flow" id="flow"></div>
+  </section>
+
+  <section class="reveal" id="truth" aria-labelledby="h-truth">
+    <h2 class="display" id="h-truth">What is real, what is staged, what this page fakes</h2>
+    <div class="truth">
+      <div class="glass-panel">
+        <h3>Real</h3>
+        <ul>
+          <li><b>Every pixel.</b> The frames are the panel's own framebuffer, read back over USB after a forced refresh and expanded from RGB565 without smoothing. White is 255, the navy is the navy the panel shows.</li>
+          <li><b>Every transition.</b> The button destinations are the firmware's own navigation table, checked against the screen handlers. Back goes where the firmware's back goes, including the paths that depend on where you came from.</li>
+          <li><b>The interlocks.</b> Position unknown blocks a run and offers a reset. A short liquid disables START RUN and relabels it REFILL FIRST. Lines that were never filled raise the question before the pumps start.</li>
+          <li><b>The three known clips.</b> "getting low" is cut to "getting lov" on the liquid card, "unknown" loses its last letter on two screens, and the lane note runs into the nozzle dots on the clear-the-lane diagram. They are in the firmware, so they are here.</li>
+        </ul>
+      </div>
+      <div class="truth__col">
+        <div class="glass-panel glass-panel--cool">
+          <h3>Staged on the device</h3>
+          <ul>
+            <li>PANPOC Protocol 1, 16 samples on two racks, the recipe Panpoc bind: 5 uL IC-RNA, 300 uL ethanol 96 %, 50 uL beads.</li>
+            <li>The battery reads 78 % because the sensing divider was designed but never fitted. The firmware says so.</li>
+            <li>Log dates count from a fixed boot time. The machine has no clock, and each record says so.</li>
+            <li>The build row on the service panel reads SIMULATOR: the capture build had the motion simulated.</li>
+          </ul>
+        </div>
+        <div class="glass-panel glass-panel--warm">
+          <h3>Faked on this page</h3>
+          <ul>
+            <li>Time. Resetting, filling, measuring and the run play through their captured phases in seconds, not the minutes the machine takes.</li>
+            <li>Repaints without a capture. Where a tap would only redraw the same screen in a state that was never captured, the panel says so instead of inventing a frame.</li>
+            <li>Languages and the dark theme were captured for the home screen, and the theme also for the run and settings screens. Elsewhere the panel stays English and light.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="provenance" aria-labelledby="h-prov">
+    <h2 class="display" id="h-prov">Provenance</h2>
+    <div class="glass-panel">
+      <p>Captured on 14 and 15 September 2026 from the ESP32-S3 board with the firmware's <code>SHOT</code> and <code>DEMO</code> console verbs, driven by <code>ui_shot.py</code> over the USB serial port. For each screen the script stages the example state, forces a full LVGL refresh, collects the flush stream into a 320 by 240 RGB565 buffer and checks it with a CRC32. All 30 screens are covered, 134 frames in total, including every paged screen, every dialog, both themes and five languages. Two frames are byte-identical to their base: the second fill attempt and the check with an unreadable level.</p>
+      <p>The 1&times; files are served from this folder unchanged. The thesis prints this page's address, so the path does not move. The earlier design rounds that led to this interface are published at <a href="../ui-prototypes/index.html" style="color: var(--accent);">Operator Interface Prototypes</a>.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="site-foot__inner">
+    <div class="site-foot__who">
+      <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+      <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+    </div>
+    <nav class="site-foot__links" aria-label="Site">
+      <a href="../../prototypes/index.html">Prototypes</a>
+      <a href="../../tools/index.html">Instruments</a>
+      <a href="../../decks/index.html">Presentations</a>
+      <a href="../../tools/thesis-timeline/index.html">Timeline</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     1. The screens, in the firmware's order (ui_nav.cpp), with their frames.
+        Frame file = screens/<id>[-<variant>].png, captured 2026-09-14/15.
+     ===================================================================== */
+  const GROUPS = ['Home', 'Liquids', 'Reset position', 'Fill lines', 'Recipes', 'A run', 'Settings', 'History'];
+  const SCREENS = [
+    { id: 'home',       g: 0, t: 'Home',                 d: 'Start a run, recipes, liquid levels',
+      base: 'The staged machine: six pumps fitted, four recipes saved, two liquids low',
+      v: { unhomed: 'The red "Position unknown" strip replaces the title; nothing runs until reset', nocard: 'The SD glyph with a red cross: no card in the slot', battlow: 'Battery at 8 %, drawn red', nobatt: 'No battery reading, "--": USB-only power', norecipes: '"None saved yet" under Recipes', allempty: 'Every bottle empty: the red "ALL EMPTY - refill first" band', twopumps: 'The machine as built: two pumps fitted, four dashes', dark: 'Dark theme, for dim rooms', fr: 'French', da: 'Danish', it: 'Italian', es: 'Spanish' } },
+    { id: 'liquids',    g: 1, t: 'Liquid levels',        d: 'Six bottles at a glance',
+      base: 'Six level cards: bottle, volume and a traffic light each', v: { mixed: 'Not set up, no sensor, no bottle and empty, on one grid' } },
+    { id: 'liquid',     g: 1, t: 'One liquid',           d: 'One bottle: rename, change, check',
+      base: 'Liquid 4, Beads: 0.8 mL in a 4 mL bottle, getting low', v: { ok: 'A green bottle, enough', low: 'Red: running low', empty: 'Empty', uncal: 'No calibration yet: no number shown', nosensor: 'No level sensor on this channel: no number shown', nobottle: 'No bottle seated: no number shown' } },
+    { id: 'bottle',     g: 1, t: 'Change bottle',        d: 'Guided bottle calibration, six steps', nobase: true,
+      v: { s0: 'Which bottle is this? Pick the printed size', s1: 'Put an EMPTY bottle in, push it down', s2: 'Measuring the empty bottle, hold still', s3: 'Now put a FULL bottle in', s4: 'Measuring the full bottle', s5: 'Full reads the same as empty: no level can be read' } },
+    { id: 'resetwarn',  g: 2, t: 'Position unknown',     d: 'Nothing runs yet',
+      base: 'Position unknown: rack lane and rack input must be reset', v: { lane: 'Only the rack lane', input: 'Only the rack input', moved: 'Homed, then moved by hand: "Moved from the start"', fromrun: 'Reached from the run path: BACK instead of NOT NOW' } },
+    { id: 'resetpick',  g: 2, t: 'Reset position',       d: 'Pick the axis to reset',
+      base: 'Both axes ticked', v: { lane: 'Rack input unticked', moved: 'Sub-line "Homed, but moved since"', unknown: 'Sub-line "Position unknown"' } },
+    { id: 'resetclear', g: 2, t: 'Before it moves',      d: 'Clear the lane before it moves',
+      base: 'Clear the rack lane and the rack input before it moves', v: { lane: 'Only the lane', input: 'Only the rack input' } },
+    { id: 'resetrun',   g: 2, t: 'Resetting',            d: 'Homing against the end stops',
+      base: 'Finding the end, 12 s left', v: { creep: 'The slow re-approach, 85 %', lane: 'Lane only', input: 'Input only' } },
+    { id: 'fill1',      g: 3, t: 'Fill lines',           d: 'Pick the lines to fill',
+      base: 'Three lines picked: 2, 3 and 4', v: { none: 'Nothing picked: NEXT reads PICK A LIQUID and is disabled', twopumps: 'As built: four "no pump" tiles' } },
+    { id: 'fill2',      g: 3, t: 'Put a rack in',        d: 'A rack of empty tubes catches the liquid',
+      base: 'Put an empty tube in each coloured position', v: {} },
+    { id: 'fill3',      g: 3, t: 'Filling',              d: 'Emptying, then refilling the lines',
+      base: 'Phase 2, refilling the line', v: { rackin: 'The rack moving in', empty: 'Phase 1, emptying the line', rackout: 'The rack going out' } },
+    { id: 'fill4',      g: 3, t: 'Check the tubes',      d: 'Did liquid come out?',
+      base: 'Is there liquid in each coloured tube?', v: { retry: 'After "No, again": the second attempt renders the same' } },
+    { id: 'recipes',    g: 4, t: 'Recipes',              d: 'The library, drawn as tubes',
+      base: 'Panpoc bind selected, drawn as a 2 mL tube', v: { empty: 'No recipes yet', p2: 'Page 2 of the list', third: 'Panpoc rinse selected' } },
+    { id: 'redit',      g: 4, t: 'Recipe editor',        d: 'Volumes per liquid, name, save',
+      base: 'Editing Panpoc bind: 355 uL in three liquids', v: { new: 'A fresh recipe', over: 'Over the 2000 uL ceiling: SAVE disabled', nudge: 'Above 1500 uL: amber total', 'modal-delete': 'Delete this recipe?' } },
+    { id: 'rkey',       g: 4, t: 'Keypad',               d: 'Numbers, with the range shown',
+      base: 'Volume of EtOH 96 % in the recipe: 30 uL', v: { bad: 'Out of range: OK disabled', empty: 'Nothing typed', mm: 'A service distance, in mm', dose: 'The service dose' } },
+    { id: 'rname',      g: 4, t: 'Keyboard',             d: 'Letters, 31 at most',
+      base: 'Naming a recipe, 9 of 31 letters', v: { empty: 'Nothing typed', liquid: 'Renaming a liquid from its card' } },
+    { id: 'picker',     g: 5, t: 'Which recipes?',       d: 'The recipes that go in this run',
+      base: 'One recipe picked', v: { none: 'No recipes saved', two: 'Two picked', p2: 'Page 2' } },
+    { id: 'assign',     g: 5, t: 'Assign tubes',         d: 'Tap the tubes each recipe fills',
+      base: 'Recipe A on all eight tubes of rack 1, 16 tubes in the run', v: { none: 'No recipe chosen yet', mixed: 'Two recipes; tubes locked by the other one', rack2: 'Rack 2, fully assigned', 'modal-remove': 'Remove from this run?' } },
+    { id: 'check',      g: 5, t: 'Pre-run check',        d: 'Time, liquid and lines, before it starts',
+      base: '6 min 05 s for 16 tubes, enough liquid', v: { short: 'Beads short: red banner, START replaced by REFILL FIRST', unfilled: 'Lines not filled: amber banner', both: 'Both banners', unknown: 'A level that cannot be read renders as the base', 'modal-tight': 'Enough liquid? Barely', 'modal-unknown': 'A level that cannot be read', 'modal-air': 'Lines not filled: fill now, or start anyway' } },
+    { id: 'checkliq',   g: 5, t: 'Liquid needed',        d: 'Needed volume per channel',
+      base: 'Per liquid: needed volume and a verdict', v: { short: 'The red "short" row', unknown: 'The "unknown" row' } },
+    { id: 'primecheck', g: 5, t: 'Before the run starts', d: 'Are the lines full? The last question',
+      base: 'Are all the lines full of liquid, with no air?', v: {} },
+    { id: 'run',        g: 5, t: 'Running',              d: 'Tube by tube, with PAUSE and STOP',
+      base: 'Tube 7 of 16, 40 %, dispensing', v: { feed: 'Feeding the first rack', move: 'Moving to the next tube', shake: 'Shaking the drop off', out: 'Pushing the rack out', rack2: 'Rack 2, tube 13', last: 'Resetting the lane at the end', dark: 'Dark theme' } },
+    { id: 'paused',     g: 5, t: 'Paused',               d: 'Stopped between tubes',
+      base: 'Paused between tubes; tube 7 finished properly', v: { low: 'Paused because a liquid ran low' } },
+    { id: 'done',       g: 5, t: 'Run finished',         d: 'Tubes, time, liquid used, receipt',
+      base: 'Run finished: 16 tubes, liquid used, saved as RUN_000042', v: { stopped: 'A stopped run', nocard: 'No card, nothing saved' } },
+    { id: 'fault',      g: 5, t: 'Problem',              d: 'A movement it could not finish',
+      base: 'The rack lane is stuck', v: { input: 'The rack input is stuck', generic: 'The default wording' } },
+    { id: 'settings',   g: 6, t: 'Settings',             d: 'Theme and language, then the service side',
+      base: 'Light or dark, language', v: { p2: 'Fill lines, Reset position, Service panel', dark: 'Dark theme' } },
+    { id: 'lang',       g: 6, t: 'Language',             d: 'Five languages',
+      base: 'Five languages; recipe and liquid names never change', v: {} },
+    { id: 'diag',       g: 6, t: 'Service panel',        d: 'Eight pages, STOP on every one',
+      base: 'Page 1, the guided demo', v: { p2: 'Pumps: one clock, per-liquid enable', p3: 'Line fill and nozzle vibration', p4: 'The two axes: home and jog', p5: 'Lane distances', p6: 'Feed distances', p7: 'Dry run', p8: 'Sensors and system', reverse: 'The service dose toggled to REVERSE' } },
+    { id: 'logs',       g: 7, t: 'Run history',          d: 'Every run on the card',
+      base: 'Three runs on the card', v: { nocard: 'No card', none: 'No runs yet', reading: 'Reading the card' } },
+    { id: 'logdetail',  g: 7, t: 'Run detail',           d: 'One run, tube by tube',
+      base: 'Run of 9 Sep 2026, 12:40: duration and liquid used', v: { p2: 'Tube by tube, page 2', p3: 'Page 3', p4: 'Page 4', p5: 'Page 5', p6: 'Page 6', p7: 'Page 7', reading: 'Reading the card', 'modal-dellog': 'Delete this log?' } }
+  ];
+  const BY_ID = {};
+  SCREENS.forEach(s => { BY_ID[s.id] = s; });
+
+  /* Where each screen's buttons lead, from the firmware sources (ui_shot.py LINKS, 2026-09-14). */
+  const LINKS = {
+    home: ['assign', 'recipes', 'liquids', 'logs', 'settings', 'resetwarn'],
+    liquids: ['liquid', 'home'], liquid: ['rname', 'bottle', 'liquids', 'check'], bottle: ['bottle', 'liquid'],
+    resetwarn: ['resetclear', 'home'], resetpick: ['resetclear', 'settings', 'home'], resetclear: ['resetrun', 'resetwarn', 'resetpick'], resetrun: ['home'],
+    fill1: ['fill2', 'settings', 'check'], fill2: ['fill3', 'fill1'], fill3: ['fill4', 'fill1'], fill4: ['fill1', 'home', 'check'],
+    recipes: ['redit', 'assign', 'home'], redit: ['rname', 'rkey', 'recipes'], rkey: ['redit', 'diag'], rname: ['redit', 'liquid'],
+    assign: ['picker', 'check', 'home', 'resetwarn'], picker: ['assign'], check: ['checkliq', 'fill1', 'liquid', 'primecheck', 'run', 'assign'],
+    checkliq: ['liquid', 'check'], primecheck: ['fill1', 'run'], run: ['paused', 'done'], paused: ['run', 'done'], done: ['home'],
+    fault: ['resetpick', 'home'], settings: ['lang', 'fill1', 'resetpick', 'diag', 'home'], lang: ['settings'], diag: ['rkey', 'settings'],
+    logs: ['logdetail', 'home'], logdetail: ['logs']
+  };
+
+  const FRAMES = {};
+  SCREENS.forEach(s => {
+    if (!s.nobase) FRAMES[s.id] = { screen: s.id, v: '', cap: s.base };
+    Object.keys(s.v).forEach(k => { FRAMES[s.id + '-' + k] = { screen: s.id, v: k, cap: s.v[k] }; });
+  });
+  const FRAME_COUNT = Object.keys(FRAMES).length;
+
+  /* =====================================================================
+     2. Machine state. Defaults are the staged machine, ready to run.
+     ===================================================================== */
+  const S = {
+    frame: 'home', history: [],
+    homed: true, sd: true, filled: true, liquid: 'ok', pumps: 6, theme: 'light', lang: 'en',
+    recipe: 'one',        // none | one | two  (recipes in the run)
+    picker: 'one',        // one | two          (ticks on the picker)
+    rack: 1, recipeSel: 0, recPage: 1, editVar: '', keyVar: '', nameVar: '', liquidVar: '',
+    liquidFrom: 'liquids', fillFrom: 'settings', kbFrom: 'redit', resetFrom: 'home', resetMask: 'both', resetManual: false,
+    fromRun: false, fillSel: 'some', cal: 0, setPage: 1, diagPage: 1, diagReverse: false, logPage: 1,
+    runIdx: 0, stopped: false, pauseLow: false, dwell: 5,
+    demo: null, timer: null, script: null, targets: false, scale: 2
+  };
+
+  const RUN_SEQ = [['run-feed', 1700], ['run', 2300], ['run-shake', 1200], ['run-move', 1400], ['run-rack2', 2300], ['run-out', 1500], ['run-last', 1600]];
+  const FILL_SEQ = [['fill3-rackin', 1500], ['fill3-empty', 1900], ['fill3', 1900], ['fill3-rackout', 1500]];
+  const DEMO_SEQ = ['home', 'recipes', 'assign', 'check', 'run-feed', 'run', 'run-move', 'paused', 'run-rack2', 'done'];
+  const LANGS = ['en', 'fr', 'da', 'it', 'es'];
+
+  /* =====================================================================
+     3. Which capture a screen shows under the current conditions.
+     ===================================================================== */
+  function resolve(id) {
+    const has = f => !!FRAMES[f];
+    switch (id) {
+      case 'home':
+        if (!S.homed) return 'home-unhomed';
+        if (!S.sd) return 'home-nocard';
+        if (S.lang !== 'en') return 'home-' + S.lang;
+        if (S.theme === 'dark') return 'home-dark';
+        if (S.pumps === 2) return 'home-twopumps';
+        return 'home';
+      case 'liquid': return 'liquid' + S.liquidVar;
+      case 'bottle': return 'bottle-s' + S.cal;
+      case 'resetwarn': return S.fromRun ? 'resetwarn-fromrun' : 'resetwarn';
+      case 'resetpick': return S.resetMask === 'lane' ? 'resetpick-lane' : 'resetpick';
+      case 'resetclear': return S.resetMask === 'lane' ? 'resetclear-lane' : 'resetclear';
+      case 'resetrun': return S.resetMask === 'lane' ? 'resetrun-lane' : 'resetrun';
+      case 'fill1':
+        if (S.pumps === 2) return 'fill1-twopumps';
+        return S.fillSel === 'none' ? 'fill1-none' : 'fill1';
+      case 'recipes':
+        if (S.recPage === 2) return 'recipes-p2';
+        return S.recipeSel === 2 ? 'recipes-third' : 'recipes';
+      case 'redit': return 'redit' + S.editVar;
+      case 'rkey': return 'rkey' + S.keyVar;
+      case 'rname': return 'rname' + S.nameVar;
+      case 'assign':
+        if (S.recipe === 'none') return 'assign-none';
+        if (S.recipe === 'two') return 'assign-mixed';
+        return S.rack === 2 ? 'assign-rack2' : 'assign';
+      case 'picker': return S.picker === 'two' ? 'picker-two' : 'picker';
+      case 'check': {
+        const short = S.liquid === 'short';
+        if (short && !S.filled) return 'check-both';
+        if (short) return 'check-short';
+        if (!S.filled) return 'check-unfilled';
+        return 'check';
+      }
+      case 'checkliq': return S.liquid === 'short' ? 'checkliq-short' : 'checkliq';
+      case 'run': return S.theme === 'dark' ? 'run-dark' : 'run';
+      case 'paused': return S.pauseLow ? 'paused-low' : 'paused';
+      case 'done': return S.stopped ? 'done-stopped' : (!S.sd ? 'done-nocard' : 'done');
+      case 'settings': return S.setPage === 2 ? 'settings-p2' : (S.theme === 'dark' ? 'settings-dark' : 'settings');
+      case 'diag':
+        if (S.diagPage === 2 && S.diagReverse) return 'diag-reverse';
+        return S.diagPage === 1 ? 'diag' : 'diag-p' + S.diagPage;
+      case 'logs': return S.sd ? 'logs' : 'logs-nocard';
+      case 'logdetail': return S.logPage === 1 ? 'logdetail' : 'logdetail-p' + S.logPage;
+      default: return has(id) ? id : id;
+    }
+  }
+
+  /* When a frame is chosen from the map, make the state agree with it. */
+  function adopt(frame) {
+    const f = FRAMES[frame]; if (!f) return;
+    const v = f.v;
+    switch (f.screen) {
+      case 'home':
+        if (v === 'unhomed') S.homed = false; else if (v === '' || v === 'twopumps' || v === 'dark' || LANGS.indexOf(v) > 0) S.homed = true;
+        if (v === 'nocard') S.sd = false; else if (v === '') S.sd = true;
+        if (LANGS.indexOf(v) > 0) S.lang = v; else if (v === '' ) S.lang = 'en';
+        if (v === 'dark') S.theme = 'dark'; else if (v === '') S.theme = 'light';
+        if (v === 'twopumps') S.pumps = 2; else if (v === '') S.pumps = 6;
+        break;
+      case 'liquid': S.liquidVar = v ? '-' + v : ''; break;
+      case 'bottle': S.cal = +v.slice(1); break;
+      case 'resetwarn': S.fromRun = v === 'fromrun'; break;
+      case 'resetpick': S.resetMask = v === 'lane' ? 'lane' : 'both'; break;
+      case 'resetclear': case 'resetrun': S.resetMask = v === 'lane' ? 'lane' : 'both'; break;
+      case 'fill1': if (v === 'twopumps') S.pumps = 2; else S.pumps = 6; S.fillSel = v === 'none' ? 'none' : 'some'; break;
+      case 'recipes': S.recPage = v === 'p2' ? 2 : 1; S.recipeSel = v === 'third' ? 2 : 0; break;
+      case 'redit': S.editVar = (v && v.indexOf('modal') < 0) ? '-' + v : ''; break;
+      case 'rkey': S.keyVar = v ? '-' + v : ''; break;
+      case 'rname': S.nameVar = v ? '-' + v : ''; break;
+      case 'assign': S.rack = v === 'rack2' ? 2 : 1; S.recipe = v === 'none' ? 'none' : (v === 'mixed' ? 'two' : 'one'); break;
+      case 'picker': S.picker = v === 'two' ? 'two' : 'one'; break;
+      case 'check':
+        if (v === 'short' || v === 'both') S.liquid = 'short'; else if (v === 'modal-tight') S.liquid = 'tight'; else if (v.indexOf('modal') < 0) S.liquid = 'ok';
+        if (v === 'unfilled' || v === 'both' || v === 'modal-air') S.filled = false; else if (v === '' || v === 'short') S.filled = true;
+        break;
+      case 'checkliq': S.liquid = v === 'short' ? 'short' : 'ok'; break;
+      case 'run': S.theme = v === 'dark' ? 'dark' : S.theme; S.runIdx = Math.max(0, RUN_SEQ.findIndex(x => x[0] === frame)); break;
+      case 'paused': S.pauseLow = v === 'low'; break;
+      case 'done': S.stopped = v === 'stopped'; if (v === 'nocard') S.sd = false; break;
+      case 'settings': S.setPage = v === 'p2' ? 2 : 1; if (v === 'dark') S.theme = 'dark'; else if (v === '') S.theme = 'light'; break;
+      case 'diag': S.diagPage = v === 'reverse' ? 2 : (v ? +v.slice(1) : 1); S.diagReverse = v === 'reverse'; break;
+      case 'logs': S.sd = v !== 'nocard'; break;
+      case 'logdetail': S.logPage = (v && v[0] === 'p') ? +v.slice(1) : 1; break;
+    }
+  }
+
+  /* =====================================================================
+     4. Navigation, timers, toasts.
+     ===================================================================== */
+  const $ = id => document.getElementById(id);
+  const img = $('frame'), hot = $('hot'), toastEl = $('toast'), screenEl = $('screen');
+  let toastT = null;
+
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add('is-on');
+    clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('is-on'), 2600);
+  }
+  function clearTimers() { if (S.timer) { clearTimeout(S.timer); S.timer = null; } }
+  function later(ms, fn) { clearTimers(); S.timer = setTimeout(() => { S.timer = null; fn(); }, ms); }
+  function chain(seq, done) {
+    let i = 0;
+    const step = () => {
+      if (i >= seq.length) { done(); return; }
+      show(seq[i][0]); const ms = seq[i][1]; i++; later(ms, step);
+    };
+    step();
+  }
+
+  function show(frame, opts) {
+    if (!FRAMES[frame]) { console.warn('no frame', frame); return; }
+    if (!(opts && opts.keepTimers)) clearTimers();
+    if (S.frame !== frame && !(opts && opts.noHistory)) S.history.push(S.frame);
+    if (S.history.length > 60) S.history.shift();
+    S.frame = frame;
+    render();
+  }
+  function nav(id, opts) { show(resolve(id), opts); }
+  function jump(frame) { S.demo = null; adopt(frame); show(frame); }
+  function goBack() {
+    if (!S.history.length) return;
+    clearTimers(); S.demo = null;
+    const f = S.history.pop(); adopt(f); show(f, { noHistory: true });
+  }
+
+  /* run and fill sequences */
+  function playRun() {
+    S.demo = null;
+    const play = () => {
+      if (S.runIdx >= RUN_SEQ.length) { S.stopped = false; nav('done'); return; }
+      const f = RUN_SEQ[S.runIdx][0];
+      show(f === 'run' && S.theme === 'dark' ? 'run-dark' : f);
+      later(RUN_SEQ[S.runIdx][1], () => { S.runIdx++; play(); });
+    };
+    play();
+  }
+  function beginRun() { S.runIdx = 0; S.stopped = false; playRun(); }
+  function startRun() { if (!S.homed) { S.fromRun = true; nav('resetwarn'); } else { S.fromRun = false; nav('assign'); } }
+  function startFromCheck() { if (S.liquid === 'tight') show('check-modal-tight'); else linesCheck(); }
+  function linesCheck() { if (!S.filled) show('check-modal-air'); else beginRun(); }
+  function startFill() { chain(FILL_SEQ, () => nav('fill4')); }
+  function startReset() {
+    if (S.resetMask === 'lane') { show('resetrun-lane'); later(2600, () => { S.homed = true; S.resetManual = false; nav('home'); }); }
+    else chain([['resetrun', 2300], ['resetrun-creep', 1700]], () => { S.homed = true; S.resetManual = false; nav('home'); });
+  }
+
+  /* the guided demo from service page 1 */
+  function startDemo() {
+    S.demo = { i: 0, paused: false };
+    demoShow();
+  }
+  function demoShow() {
+    show(DEMO_SEQ[S.demo.i]);
+    if (!S.demo.paused) later(S.dwell * 1000, () => { S.demo.i = (S.demo.i + 1) % DEMO_SEQ.length; demoShow(); });
+  }
+  function demoExit() {
+    clearTimers(); S.demo = null; S.homed = false; S.recipe = 'none';
+    nav('home'); toast('Exit reboots the board, so the position is unknown again.');
+  }
+
+  /* =====================================================================
+     5. The tappable areas, in panel pixels, from the screen builders.
+     ===================================================================== */
+  function hotspotsFor(frame) {
+    const f = FRAMES[frame]; const v = f.v; const L = [];
+    const H = (x, y, w, h, label, to, o) => { L.push(Object.assign({ x, y, w, h, label, to }, o || {})); };
+    const dis = why => ({ disabled: why });
+    const repaint = 'The panel would repaint in place here. That state was not captured.';
+    const pager = (y, page, pages, set) => {
+      H(176, y, 44, 44, 'Page up', page > 1 ? () => set(page - 1) : null, page > 1 ? null : dis('Already on the first page'));
+      H(268, y, 44, 44, 'Page down', page < pages ? () => set(page + 1) : null, page < pages ? null : dis('Already on the last page'));
+    };
+    const modal = (pl, pt, al, at) => { H(28, 140, 264, 44, pl, pt); H(16, 194, 288, 44, al, at); };
+
+    if (S.demo) {
+      H(0, 0, 107, 240, 'Previous screen of the demo', () => { S.demo.i = (S.demo.i + DEMO_SEQ.length - 1) % DEMO_SEQ.length; demoShow(); });
+      H(107, 44, 106, 196, S.demo.paused ? 'Resume the demo' : 'Pause the demo', () => { S.demo.paused = !S.demo.paused; demoShow(); });
+      H(213, 44, 107, 196, 'Next screen of the demo', () => { S.demo.i = (S.demo.i + 1) % DEMO_SEQ.length; demoShow(); });
+      H(107, 0, 149, 44, S.demo.paused ? 'Resume the demo' : 'Pause the demo', () => { S.demo.paused = !S.demo.paused; demoShow(); });
+      H(256, 0, 64, 44, 'Exit the demo, reboots the machine', demoExit);
+      return L;
+    }
+
+    switch (f.screen) {
+      case 'home':
+        if (v === 'unhomed') H(8, 30, 200, 44, 'Position unknown, RESET', () => { S.fromRun = false; nav('resetwarn'); });
+        H(216, 30, 44, 44, 'Run history', () => nav('logs'));
+        H(268, 30, 44, 44, 'Settings', () => { S.setPage = 1; nav('settings'); });
+        H(8, 82, 148, 78, 'Start a run', startRun);
+        H(164, 82, 148, 78, 'Recipes', () => { S.recPage = 1; nav('recipes'); });
+        H(8, 168, 304, 66, 'Liquids', () => nav('liquids'));
+        break;
+
+      case 'liquids': {
+        const LV = ['-ok', '-low', '-empty', '', '-uncal', '-nosensor'];
+        for (let i = 0; i < 6; i++) H(8 + (i % 3) * 103, 44 + Math.floor(i / 3) * 74, 98, 70, 'Liquid ' + (i + 1), () => { S.liquidVar = LV[i]; S.liquidFrom = 'liquids'; nav('liquid'); });
+        H(8, 192, 100, 44, 'BACK', () => nav('home'));
+        break;
+      }
+      case 'liquid':
+        H(228, 30, 84, 44, 'RENAME', () => { S.nameVar = '-liquid'; S.kbFrom = 'liquid'; nav('rname'); });
+        H(76, 138, 236, 44, 'CHANGE BOTTLE', () => { S.cal = 0; nav('bottle'); });
+        H(8, 190, 150, 44, 'BACK', () => nav(S.liquidFrom));
+        H(164, 190, 148, 44, 'CHECK LEVEL', () => { S.cal = 1; nav('bottle'); });
+        break;
+      case 'bottle': {
+        const step = +v.slice(1);
+        if (step === 0) {
+          ['40 mL', '15 mL', '4 mL'].forEach((l, k) => H(8 + k * 77, 74, 71, 48, l, () => { S.cal = 1; nav('bottle'); }));
+          H(8 + 3 * 77, 74, 71, 48, 'none', () => nav('liquid'));
+          H(8, 190, 304, 44, 'BACK', () => nav('liquid'));
+        } else if (step === 1 || step === 3) {
+          H(8, 190, 150, 44, 'CANCEL', () => nav('liquid'));
+          H(164, 190, 148, 44, 'DONE', () => {
+            if (step === 1) { S.cal = 2; nav('bottle'); later(2400, () => { S.cal = 3; nav('bottle'); }); }
+            else { S.cal = 4; nav('bottle'); later(2400, () => { S.cal = 0; S.liquidVar = '-ok'; nav('liquid'); }); }
+          });
+        } else if (step === 2 || step === 4) {
+          H(8, 190, 150, 44, 'CANCEL', () => nav('liquid'));
+          H(164, 190, 148, 44, 'MEASURING', null, dis('Measuring: the button is disabled until the reading is done. CANCEL stays live.'));
+        } else {
+          H(8, 190, 150, 44, 'BACK', () => nav('liquid'));
+          H(164, 190, 148, 44, 'TRY AGAIN', () => { S.cal = 1; nav('bottle'); });
+        }
+        break;
+      }
+
+      case 'resetwarn':
+        H(8, 190, 148, 44, v === 'fromrun' ? 'BACK' : 'NOT NOW', () => nav('home'));
+        H(164, 190, 148, 44, 'RESET NOW', () => { S.resetMask = (v === 'lane' ? 'lane' : 'both'); S.resetManual = false; nav('resetclear'); });
+        break;
+      case 'resetpick':
+        H(8, 72, 304, 48, 'Rack lane', null, dis('Unticking the lane alone was not captured.'));
+        H(8, 124, 304, 48, 'Rack input', () => { S.resetMask = S.resetMask === 'lane' ? 'both' : 'lane'; nav('resetpick'); });
+        H(8, 190, 148, 44, 'BACK', () => nav(S.resetFrom));
+        H(164, 190, 148, 44, 'NEXT', () => { S.resetManual = true; nav('resetclear'); });
+        break;
+      case 'resetclear':
+        H(8, 192, 112, 44, 'BACK', () => nav(S.resetManual ? 'resetpick' : 'resetwarn'));
+        H(128, 192, 184, 44, 'GO', startReset);
+        break;
+      case 'resetrun':
+        H(8, 194, 304, 44, 'STOP', () => { S.resetManual = false; nav('home'); toast('Stopped before the end stop: the position is still unknown.'); });
+        break;
+
+      case 'fill1':
+        for (let i = 0; i < 6; i++) {
+          const noPump = S.pumps === 2 && i >= 2;
+          H(8 + (i % 3) * 103, 72 + Math.floor(i / 3) * 54, 98, 48, 'Line ' + (i + 1), noPump ? null : () => { S.fillSel = S.fillSel === 'none' ? 'some' : 'none'; nav('fill1'); }, noPump ? dis('No pump fitted on this channel.') : null);
+        }
+        H(8, 190, 100, 44, 'BACK', () => nav(S.fromRun ? 'check' : S.fillFrom));
+        H(116, 190, 196, 44, 'NEXT', S.fillSel === 'none' ? null : () => nav('fill2'), S.fillSel === 'none' ? dis('Pick at least one line first.') : null);
+        break;
+      case 'fill2':
+        H(8, 194, 100, 44, 'BACK', () => nav('fill1'));
+        H(116, 194, 196, 44, 'START', startFill);
+        break;
+      case 'fill3':
+        H(8, 192, 304, 44, 'STOP', () => { nav('fill1'); toast('Pumps and lane stopped.'); });
+        break;
+      case 'fill4':
+        H(8, 192, 148, 44, 'NO, AGAIN', () => { nav('fill1'); toast('Second attempt: the same lines, a larger dose.'); });
+        H(164, 192, 148, 44, 'YES', () => { S.filled = true; syncCond(); if (S.fromRun) { S.fromRun = false; nav('check'); } else nav('home'); });
+        break;
+
+      case 'recipes': {
+        const page2 = v === 'p2';
+        if (v !== 'empty') {
+          for (let r = 0; r < 3; r++) {
+            const y = 34 + r * 48;
+            const sel = !page2 && r === S.recipeSel;
+            H(9, y, sel ? 92 : 138, 44, 'Recipe row ' + (r + 1), page2 ? null : (r === 1 ? null : () => { S.recipeSel = r; nav('recipes'); }), (page2 || r === 1) ? dis(repaint) : null);
+            if (sel) H(102, y, 45, 44, 'Start a run with this recipe', () => { S.recipe = 'one'; S.rack = 1; nav('assign'); });
+          }
+          H(160, 30, 152, 152, 'Open the drawing in the editor', () => { S.editVar = ''; nav('redit'); });
+        }
+        H(8, 190, 44, 44, 'BACK', () => nav('home'));
+        H(58, 190, 56, 44, 'EDIT', v === 'empty' ? null : () => { S.editVar = ''; nav('redit'); }, v === 'empty' ? dis('No recipe to edit.') : null);
+        H(120, 190, 52, 44, 'NEW', () => { S.editVar = '-new'; nav('redit'); });
+        if (v !== 'empty') pager(190, page2 ? 2 : 1, 2, p => { S.recPage = p; nav('recipes'); });
+        break;
+      }
+      case 'redit':
+        if (v === 'modal-delete') { modal('DELETE', () => { S.editVar = ''; nav('recipes'); }, 'Keep it', () => nav('redit')); break; }
+        for (let i = 0; i < 6; i++) {
+          const used = v !== 'new' && (i === 1 || i === 2 || i === 3);
+          H(58 + (i % 2) * 128, 52 + Math.floor(i / 2) * 46, 124, 44, 'Liquid ' + (i + 1) + ' volume', () => { S.kbFrom = 'redit'; S.keyVar = used ? '' : '-empty'; nav('rkey'); });
+        }
+        H(8, 192, 44, 44, 'BACK', () => nav('recipes'));
+        if (v !== 'new') H(58, 192, 44, 44, 'Delete this recipe', () => show('redit-modal-delete'));
+        H(108, 192, 110, 44, 'NAME', () => { S.nameVar = v === 'new' ? '-empty' : ''; S.kbFrom = 'redit'; nav('rname'); });
+        H(224, 192, 88, 44, v === 'over' ? 'OVER' : 'SAVE', v === 'over' ? null : () => { S.editVar = ''; nav('recipes'); }, v === 'over' ? dis('Over the 2000 uL tube ceiling: SAVE is disabled.') : null);
+        break;
+      case 'rkey': {
+        const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'DEL'];
+        keys.forEach((k, i) => {
+          let act = null, why = null;
+          if (k === 'C') act = () => { S.keyVar = '-empty'; nav('rkey'); };
+          else if (k === 'DEL') { if (v === 'bad') act = () => { S.keyVar = ''; nav('rkey'); }; else if (v === '') act = () => { S.keyVar = '-empty'; nav('rkey'); }; else why = repaint; }
+          else { if (v === 'empty') act = () => { S.keyVar = ''; nav('rkey'); }; else if (v === '') act = () => { S.keyVar = '-bad'; nav('rkey'); }; else why = repaint; }
+          H(8 + (i % 3) * 68, 48 + Math.floor(i / 3) * 48, 64, 44, k, act, why ? dis(why) : null);
+        });
+        H(214, 48, 98, 92, 'BACK', () => nav(S.kbFrom));
+        H(214, 144, 98, 92, 'OK', v === 'bad' ? null : () => nav(S.kbFrom), v === 'bad' ? dis('Out of range: OK is disabled until the value is inside the range.') : null);
+        break;
+      }
+      case 'rname': {
+        const rows = ['1234567890', 'QWERTYUIOP', 'ASDFGHJKL_', 'ZXCVBNM -.'];
+        rows.forEach((row, r) => {
+          for (let c = 0; c < 10; c++) {
+            const ch = row[c] === ' ' ? 'SP' : row[c];
+            H(5 + c * 31, 42 + r * 36, 30, 34, ch, v === 'empty' ? () => { S.nameVar = ''; nav('rname'); } : null, v === 'empty' ? null : dis('Typing beyond this frame was not captured.'));
+          }
+        });
+        H(6, 190, 72, 44, 'Shift', null, dis(repaint));
+        H(84, 190, 72, 44, 'DEL', v === '' ? () => { S.nameVar = '-empty'; nav('rname'); } : null, v === '' ? null : dis(repaint));
+        H(162, 190, 72, 44, 'CANCEL', () => nav(S.kbFrom));
+        H(240, 190, 74, 44, 'OK', () => nav(S.kbFrom));
+        break;
+      }
+
+      case 'assign':
+        if (v === 'modal-remove') { modal('REMOVE', () => { S.recipe = S.recipe === 'two' ? 'one' : 'none'; S.picker = 'one'; S.rack = 1; nav('assign'); }, 'Keep it', () => nav('assign')); break; }
+        if (v === 'none') {
+          H(8, 3, 304, 38, 'Choose a recipe', () => nav('picker'));
+        } else {
+          H(0, 0, 228, 44, 'Active recipe', null, dis('Already the active recipe.'));
+          H(230, 0, 42, 44, 'Remove this recipe from the run', () => show('assign-modal-remove'));
+          H(276, 0, 42, 44, 'Add a recipe', () => nav('picker'));
+        }
+        H(8, 50, 44, 44, 'Previous rack', v === 'none' || v === 'mixed' ? null : () => { S.rack = S.rack === 1 ? 2 : 1; nav('assign'); }, v === 'none' || v === 'mixed' ? dis(repaint) : null);
+        H(116, 50, 44, 44, 'Next rack', v === 'none' || v === 'mixed' ? null : () => { S.rack = S.rack === 1 ? 2 : 1; nav('assign'); }, v === 'none' || v === 'mixed' ? dis(repaint) : null);
+        H(168, 50, 70, 44, 'ALL', null, dis(v === 'none' ? 'Choose a recipe first.' : 'All eight tubes on this rack are already assigned.'));
+        H(244, 50, 68, 44, 'NONE', null, dis(v === 'none' ? 'Choose a recipe first.' : 'Freeing the rack was not captured.'));
+        for (let t = 0; t < 8; t++) H(8 + t * 38, 100, 38, 88, 'Tube ' + (t + 1), null, dis(v === 'none' ? 'Choose a recipe first.' : 'Toggling one tube was not captured.'));
+        H(8, 194, 100, 44, 'BACK', () => nav('home'));
+        H(116, 194, 196, 44, 'NEXT', v === 'none' ? null : () => nav('check'), v === 'none' ? dis('No tubes yet: PICK TUBES is disabled.') : null);
+        break;
+      case 'picker':
+        if (v === 'p2') {
+          for (let r = 0; r < 3; r++) H(8, 48 + r * 48, 304, 44, 'Recipe row ' + (r + 4), null, dis(repaint));
+        } else if (v !== 'none') {
+          H(8, 48, 304, 44, 'Panpoc bind', null, dis('Unticking the only picked recipe was not captured.'));
+          H(8, 96, 304, 44, 'Panpoc PBS', () => { S.picker = S.picker === 'two' ? 'one' : 'two'; nav('picker'); });
+          H(8, 144, 304, 44, 'Panpoc rinse', null, dis(repaint));
+        }
+        H(8, 194, 160, 44, 'DONE', () => { S.recipe = S.picker === 'two' ? 'two' : 'one'; S.rack = 1; nav('assign'); });
+        if (v !== 'none') pager(194, v === 'p2' ? 2 : 1, 2, p => { show(p === 2 ? 'picker-p2' : resolve('picker')); });
+        break;
+
+      case 'check': {
+        if (v === 'modal-tight' || v === 'modal-unknown') { modal('BACK', () => nav('check'), 'Start anyway', linesCheck); break; }
+        if (v === 'modal-air') { modal('FILL NOW', () => { S.fromRun = true; S.fillFrom = 'check'; nav('fill1'); }, 'Start anyway', () => nav('primecheck')); break; }
+        const short = v === 'short' || v === 'both', unfilled = v === 'unfilled' || v === 'both';
+        let y = 84;
+        if (short) { H(8, y, 304, 44, 'Not enough liquid, FIX', () => { S.liquidVar = '-low'; S.liquidFrom = 'check'; nav('liquid'); }); y += 48; }
+        if (unfilled) { H(8, y, 304, 44, 'Lines not filled, FILL', () => { S.fromRun = true; S.fillFrom = 'check'; nav('fill1'); }); y += 48; }
+        y += 16; H(8, y, 304, 30, 'Panpoc bind, 16 tubes', null, dis('The recipe row is not a button.')); y += 38;
+        if (y + 44 <= 186) H(8, y, 304, 44, 'Liquid needed', () => nav('checkliq'));
+        H(8, 190, 44, 44, 'BACK', () => nav('assign'));
+        H(58, 190, 110, 44, short ? 'REFILL FIRST' : 'START RUN', short ? null : startFromCheck, short ? dis('A liquid is short: START is disabled. Tap the red banner to fix it.') : null);
+        if (short || unfilled) pager(190, 1, 2, () => toast('Page 2 of the check holds the Liquid needed row. That page was not captured.'));
+        break;
+      }
+      case 'checkliq': {
+        const LV = ['-ok', '-ok', v === 'short' ? '-low' : ''];
+        for (let k = 0; k < 3; k++) H(8, 46 + k * 44, 304, 40, 'Liquid row ' + (k + 1), () => { S.liquidVar = LV[k]; S.liquidFrom = 'check'; nav('liquid'); });
+        H(8, 190, 160, 44, 'BACK', () => nav('check'));
+        break;
+      }
+      case 'primecheck':
+        H(8, 142, 304, 44, 'NO, fill them first', () => { S.fromRun = true; S.fillFrom = 'check'; nav('fill1'); });
+        H(8, 190, 304, 44, 'YES, they are full, start', () => { S.filled = true; syncCond(); beginRun(); });
+        break;
+      case 'run':
+        H(8, 178, 148, 52, 'PAUSE', () => { S.pauseLow = false; nav('paused'); });
+        H(164, 178, 148, 52, 'STOP', () => { S.stopped = true; nav('done'); });
+        break;
+      case 'paused':
+        H(8, 166, 98, 44, 'CONTINUE', playRun);
+        H(112, 166, 98, 44, 'SKIP IT', v === 'low' ? () => { S.runIdx++; playRun(); } : null, v === 'low' ? null : dis('SKIP IT is enabled only when a liquid ran low.'));
+        H(216, 166, 96, 44, 'STOP', () => { S.stopped = true; nav('done'); });
+        break;
+      case 'done':
+        H(8, 194, 304, 44, 'DONE', () => { S.recipe = 'none'; S.stopped = false; S.runIdx = 0; nav('home'); });
+        break;
+      case 'fault':
+        H(8, 146, 304, 44, 'RESET POSITION', () => { S.resetFrom = 'home'; S.resetMask = 'both'; nav('resetpick'); });
+        H(8, 194, 304, 44, 'OK', () => nav('home'));
+        break;
+
+      case 'settings':
+        if (v === 'p2') {
+          H(8, 28, 304, 46, 'Fill lines', () => { S.fromRun = false; S.fillFrom = 'settings'; nav('fill1'); });
+          H(8, 82, 304, 46, 'Reset position', () => { S.resetFrom = 'settings'; S.resetMask = 'both'; nav('resetpick'); });
+          H(8, 136, 304, 46, 'Service panel', () => { S.diagPage = 1; S.diagReverse = false; nav('diag'); });
+        } else {
+          H(8, 56, 148, 44, 'LIGHT', () => { S.theme = 'light'; syncCond(); nav('settings'); });
+          H(164, 56, 148, 44, 'DARK', () => { S.theme = 'dark'; syncCond(); nav('settings'); });
+          H(8, 124, 304, 46, 'Language', () => nav('lang'));
+        }
+        H(8, 190, 160, 44, 'BACK', () => nav('home'));
+        pager(190, v === 'p2' ? 2 : 1, 2, p => { S.setPage = p; nav('settings'); });
+        break;
+      case 'lang':
+        ['English', 'Français', 'Dansk', 'Italiano', 'Español'].forEach((n, i) => H(8 + (i % 2) * 156, 52 + Math.floor(i / 2) * 48, 148, 44, n, () => { S.lang = LANGS[i]; syncCond(); nav('lang'); toast(i ? 'Only the home screen was captured in ' + n + '.' : 'English.'); }));
+        H(8, 194, 148, 44, 'BACK', () => nav('settings'));
+        break;
+      case 'diag': {
+        const page = v === 'reverse' ? 2 : (v ? +v.slice(1) : 1);
+        const still = 'Would act on the hardware. Nothing moves here.';
+        if (page === 1) {
+          H(8, 84, 44, 40, 'Shorter dwell', () => { S.dwell = Math.max(1, S.dwell - 1); toast(S.dwell + ' s each (the frame keeps showing 5 s).'); });
+          H(172, 84, 44, 40, 'Longer dwell', () => { S.dwell = Math.min(30, S.dwell + 1); toast(S.dwell + ' s each (the frame keeps showing 5 s).'); });
+          H(224, 84, 88, 40, 'START the demo', startDemo);
+        } else if (page === 2) {
+          for (let i = 0; i < 6; i++) H(8 + i * 50, 70, 46, 38, 'Liquid ' + (i + 1), null, dis(i >= S.pumps ? 'No driver fitted.' : repaint));
+          H(8, 112, 148, 36, 'Dose volume', () => { S.kbFrom = 'diag'; S.keyVar = '-dose'; nav('rkey'); });
+          H(164, 112, 148, 36, S.diagReverse ? 'REVERSE' : 'FORWARD', () => { S.diagReverse = !S.diagReverse; nav('diag'); });
+          H(8, 150, 304, 36, 'DOSE', null, dis('Would dose 100 uL. Nothing is pumped here.'));
+        } else if (page === 3) {
+          H(8, 40, 148, 44, 'Line volume', () => { S.kbFrom = 'diag'; S.keyVar = '-dose'; nav('rkey'); });
+          H(164, 40, 148, 44, 'Extra dose', () => { S.kbFrom = 'diag'; S.keyVar = '-dose'; nav('rkey'); });
+          H(8, 126, 44, 40, 'Shorter burst', null, dis(repaint)); H(136, 126, 44, 40, 'Longer burst', null, dis(repaint));
+          H(184, 126, 62, 40, 'TEST', null, dis('Fires a 0.8 s burst on the machine.')); H(250, 126, 62, 40, 'OFF', null, dis(repaint));
+        } else if (page === 4) {
+          ['HOME', 'LEFT', 'RIGHT'].forEach((l, i) => H(8 + i * 102, 56, 98, 38, 'Lane ' + l, null, dis(still)));
+          ['HOME', 'FORWARD', 'BACK'].forEach((l, i) => H(8 + i * 102, 156, 98, 38, 'Input ' + l, null, dis(still)));
+        } else if (page === 5 || page === 6) {
+          const names = page === 5 ? ['Tube step', 'Rack out at', 'Jog step', 'Half-steps per mm'] : ['Rack width', 'Over-push', 'Entry push', 'Back off'];
+          names.forEach((n, i) => H(8 + (i % 2) * 156, 40 + Math.floor(i / 2) * 48, 148, 44, n, () => { S.kbFrom = 'diag'; S.keyVar = '-mm'; nav('rkey'); }));
+        } else if (page === 7) {
+          H(8, 76, 40, 40, 'Fewer racks', null, dis(repaint)); H(144, 76, 40, 40, 'More racks', null, dis(repaint));
+          H(192, 76, 120, 40, 'BOTH', null, dis(still)); H(8, 120, 148, 40, 'LANE ONLY', null, dis(still)); H(164, 120, 148, 40, 'FEED ONLY', null, dis(still));
+        }
+        H(8, 190, 64, 44, 'BACK', () => nav('settings'));
+        H(76, 190, 92, 44, 'STOP', () => toast('STOP cuts the sequence, both axes, the dose, the fill and the vibration. Nothing is moving here.'));
+        pager(190, page, 8, p => { S.diagPage = p; nav('diag'); });
+        break;
+      }
+
+      case 'logs':
+        if (v === '') for (let j = 0; j < 3; j++) H(8, 32 + j * 48, 304, 44, 'Run ' + (j + 1), () => { S.logPage = 1; nav('logdetail'); });
+        H(8, 190, 64, 44, 'BACK', () => nav('home'));
+        break;
+      case 'logdetail':
+        if (v === 'modal-dellog') { modal('DELETE', () => nav('logs'), 'Keep it', () => nav('logdetail')); break; }
+        H(8, 190, 44, 44, 'BACK', () => nav('logs'));
+        H(58, 190, 44, 44, 'Delete this log', v === 'reading' ? null : () => show('logdetail-modal-dellog'), v === 'reading' ? dis('Disabled until the record is loaded.') : null);
+        if (v !== 'reading') pager(190, S.logPage, 7, p => { S.logPage = p; nav('logdetail'); });
+        break;
+    }
+    return L;
+  }
+
+  /* =====================================================================
+     6. Rendering: the panel, the info line, the trail, the map.
+     ===================================================================== */
+  const treeNodes = {}, chipNodes = {};
+  function render() {
+    const f = FRAMES[S.frame];
+    img.src = 'screens/' + S.frame + '.png';
+    img.alt = BY_ID[f.screen].t + (f.v ? ', ' + f.cap : '');
+    $('fi-name').textContent = S.frame;
+    $('fi-cap').textContent = f.cap;
+    $('fi-hint').textContent = S.demo ? 'Demo: left third goes back, right third goes on, the middle pauses, the top-right corner exits.' : 'Hover a button to see where it leads.';
+    $('demoflag').classList.toggle('is-on', !!S.demo);
+    $('btn-back').disabled = !S.history.length;
+
+    /* hotspots */
+    hot.innerHTML = '';
+    hotspotsFor(S.frame).forEach(h => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.style.left = (h.x / 3.2) + '%'; b.style.top = (h.y / 2.4) + '%';
+      b.style.width = (h.w / 3.2) + '%'; b.style.height = (h.h / 2.4) + '%';
+      const dest = describe(h.to);
+      b.setAttribute('aria-label', h.label + (h.disabled ? ', disabled' : (dest ? ', goes to ' + dest : '')));
+      if (h.disabled) b.classList.add('is-disabled');
+      b.addEventListener('mouseenter', () => { $('fi-hint').textContent = h.disabled ? h.label + ': disabled. ' + h.disabled : h.label + (dest ? '  →  ' + dest : ''); });
+      b.addEventListener('mouseleave', () => { if (!S.demo) $('fi-hint').textContent = 'Hover a button to see where it leads.'; });
+      b.addEventListener('click', () => {
+        b.classList.add('is-pressed'); setTimeout(() => b.classList.remove('is-pressed'), 120);
+        if (h.disabled) { toast(h.disabled); return; }
+        if (h.to === null || h.to === undefined) { toast('The panel would repaint in place here. That state was not captured.'); return; }
+        setTimeout(() => { if (typeof h.to === 'function') h.to(); else jump(h.to); }, 70);
+      });
+      hot.appendChild(b);
+    });
+
+    /* next chips */
+    const next = $('fi-next'); next.innerHTML = '';
+    (LINKS[f.screen] || []).forEach(id => {
+      const c = document.createElement('button'); c.type = 'button'; c.textContent = BY_ID[id].t;
+      c.addEventListener('click', () => { S.demo = null; nav(id); });
+      next.appendChild(c);
+    });
+
+    /* trail */
+    const trail = $('trail'); trail.innerHTML = '';
+    const hist = S.history.slice(-9).concat([S.frame]);
+    hist.forEach((fr, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.title = fr;
+      if (i === hist.length - 1) b.classList.add('is-current');
+      const im = document.createElement('img'); im.src = 'screens/' + fr + '.png'; im.alt = ''; im.width = 64; im.height = 48;
+      b.appendChild(im); b.addEventListener('click', () => { if (fr !== S.frame) jump(fr); });
+      trail.appendChild(b);
+    });
+
+    /* map */
+    const reach = new Set(LINKS[f.screen] || []);
+    SCREENS.forEach(s => {
+      const n = treeNodes[s.id];
+      n.classList.toggle('is-current', s.id === f.screen);
+      n.classList.toggle('is-next', s.id !== f.screen && reach.has(s.id));
+      n.classList.toggle('is-open', s.id === f.screen);
+    });
+    Object.keys(chipNodes).forEach(k => chipNodes[k].classList.toggle('is-current', k === S.frame));
+    syncCond();
+    const cur = treeNodes[f.screen], tree = $('tree');
+    if (cur) {
+      const top = cur.offsetTop - tree.offsetTop, bottom = top + cur.offsetHeight;
+      if (top < tree.scrollTop + 8) tree.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+      else if (bottom > tree.scrollTop + tree.clientHeight - 8) tree.scrollTo({ top: bottom - tree.clientHeight + 8, behavior: 'smooth' });
+    }
+  }
+
+  function describe(to) {
+    if (typeof to === 'string') { const fr = FRAMES[to]; return fr ? BY_ID[fr.screen].t : (BY_ID[to] ? BY_ID[to].t : ''); }
+    return '';
+  }
+
+  function buildTree() {
+    const tree = $('tree');
+    GROUPS.forEach((g, gi) => {
+      const li = document.createElement('li'); li.className = 'tgroup';
+      li.innerHTML = '<span class="tgroup__name">' + g + '</span>';
+      const ol = document.createElement('ol');
+      SCREENS.filter(s => s.g === gi).forEach(s => {
+        const n = document.createElement('li'); n.className = 'tnode'; n.dataset.screen = s.id;
+        const base = s.nobase ? s.id + '-s0' : s.id;
+        const count = (s.nobase ? 0 : 1) + Object.keys(s.v).length;
+        const row = document.createElement('button'); row.type = 'button'; row.className = 'tnode__row';
+        row.innerHTML = '<img class="tnode__thumb" src="screens/' + base + '.png" alt="" loading="lazy" width="56" height="42">' +
+          '<span class="tnode__text"><span class="tnode__name">' + s.t + '</span><span class="tnode__desc">' + s.d + '</span></span>' +
+          '<span class="tnode__n">' + count + '</span>';
+        row.addEventListener('click', () => { S.demo = null; if (s.nobase) { S.cal = 0; } nav(s.id); });
+        n.appendChild(row);
+        const vars = document.createElement('div'); vars.className = 'tnode__vars';
+        const addChip = (frame, label) => {
+          const c = document.createElement('button'); c.type = 'button'; c.className = 'chip'; c.textContent = label; c.title = FRAMES[frame].cap;
+          c.addEventListener('click', () => jump(frame)); vars.appendChild(c); chipNodes[frame] = c;
+        };
+        if (!s.nobase) addChip(s.id, 'base');
+        Object.keys(s.v).forEach(k => addChip(s.id + '-' + k, k));
+        n.appendChild(vars);
+        treeNodes[s.id] = n; ol.appendChild(n);
+      });
+      li.appendChild(ol); tree.appendChild(li);
+    });
+    $('map-count').textContent = SCREENS.length + ' screens, ' + FRAME_COUNT + ' frames';
+  }
+
+  function buildStrip() {
+    const flow = [['home-twopumps', 'Start a run', 'The home screen of the machine as built'], ['picker', 'Which recipes?', 'Tick the recipes that go in this run'], ['assign', 'Assign tubes', 'Tap the tubes each recipe fills, rack by rack'], ['check', 'Pre-run check', 'Time, liquid and lines, before anything moves'], ['run-move', 'Running', 'Tube by tube, with PAUSE and STOP throughout'], ['done', 'Run finished', 'Tubes, time, liquid used, and the receipt on the card']];
+    const box = $('flow');
+    const arrowSvg = '<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 15 H25 M18 8 l8 7 -8 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const dirs = ['r', 'r', 'd', 'l', 'l'];
+    flow.forEach(([fr, t, d], i) => {
+      const a = document.createElement('a'); a.href = '#stage'; a.className = 'flow__step'; a.style.gridArea = 's' + (i + 1);
+      a.innerHTML = '<figure><img src="screens/' + fr + '.png" alt="' + t + '" loading="lazy" width="320" height="240"><figcaption><b><span>' + (i + 1) + '</span>' + t + '</b>' + d + '</figcaption></figure>';
+      a.addEventListener('click', e => { e.preventDefault(); jump(fr); $('stage').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+      box.appendChild(a);
+      if (i < flow.length - 1) {
+        const ar = document.createElement('span'); ar.className = 'flow__arrow flow__arrow--' + dirs[i]; ar.style.gridArea = 'a' + (i + 1); ar.innerHTML = arrowSvg;
+        box.appendChild(ar);
+      }
+    });
+  }
+
+  /* conditions */
+  function syncCond() {
+    document.querySelectorAll('#cond .seg').forEach(seg => {
+      const key = seg.dataset.key; const cur = S[key];
+      seg.querySelectorAll('.pb').forEach(b => {
+        const val = b.dataset.v; let on;
+        if (key === 'homed' || key === 'sd' || key === 'filled') on = (val === '1') === !!cur; else on = String(cur) === val;
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    });
+  }
+  function bindCond() {
+    document.querySelectorAll('#cond .seg').forEach(seg => {
+      const key = seg.dataset.key;
+      seg.querySelectorAll('.pb').forEach(b => b.addEventListener('click', () => {
+        const val = b.dataset.v;
+        if (key === 'homed' || key === 'sd' || key === 'filled') S[key] = val === '1';
+        else if (key === 'pumps') S[key] = +val; else S[key] = val;
+        syncCond();
+        const cur = FRAMES[S.frame];
+        clearTimers(); S.demo = null;
+        show(resolve(cur.screen), { noHistory: true });
+      }));
+    });
+    $('btn-fault').addEventListener('click', () => { clearTimers(); S.demo = null; S.homed = false; syncCond(); show('fault'); toast('The lane went further than it should without reaching the end. Pumps off.'); });
+    $('btn-play').addEventListener('click', playScript);
+  }
+
+  /* the scripted run: taps the real buttons, one after the other */
+  function playScript() {
+    if (S.script) return;
+    clearTimers(); S.demo = null;
+    S.homed = true; S.filled = true; S.liquid = 'ok'; S.recipe = 'one'; S.rack = 1; S.fromRun = false; syncCond();
+    nav('home');
+    const steps = [['Start a run', 'assign'], ['NEXT', 'check'], ['START RUN', 'run'], [null, 'done'], ['DONE', 'home']];
+    let i = 0; const btn = $('btn-play'); btn.disabled = true; S.script = true;
+    const finish = () => { S.script = null; btn.disabled = false; };
+    const waitFor = (screen, cb, t0) => {
+      t0 = t0 || Date.now();
+      if (FRAMES[S.frame].screen === screen) { cb(); return; }
+      if (Date.now() - t0 > 40000 || !S.script) { finish(); return; }
+      setTimeout(() => waitFor(screen, cb, t0), 150);
+    };
+    const step = () => {
+      if (i >= steps.length) { finish(); return; }
+      const [label, expect] = steps[i]; i++;
+      if (label === null) { waitFor(expect, () => setTimeout(step, 900)); return; }
+      const b = Array.from(hot.querySelectorAll('button')).find(x => x.getAttribute('aria-label').indexOf(label) === 0);
+      if (!b) { finish(); return; }
+      b.classList.add('is-scripted');
+      setTimeout(() => { b.click(); waitFor(expect, () => setTimeout(step, 1100)); }, 900);
+    };
+    setTimeout(step, 700);
+  }
+
+  /* panel controls */
+  function setScale(s) {
+    S.scale = s; screenEl.style.setProperty('--s', s);
+    document.querySelectorAll('[data-scale]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.scale === s ? 'true' : 'false'));
+  }
+  function fitScale() {
+    const col = document.querySelector('.panel-col'); if (!col) return;
+    const avail = col.clientWidth - 30;
+    if (avail < 320 * S.scale) screenEl.style.setProperty('--s', Math.max(0.6, Math.floor(avail / 320 * 100) / 100));
+    else screenEl.style.setProperty('--s', S.scale);
+  }
+  document.querySelectorAll('[data-scale]').forEach(b => b.addEventListener('click', () => { setScale(+b.dataset.scale); fitScale(); }));
+  $('btn-targets').addEventListener('click', () => { S.targets = !S.targets; screenEl.classList.toggle('show-targets', S.targets); $('btn-targets').setAttribute('aria-pressed', S.targets ? 'true' : 'false'); });
+  $('btn-back').addEventListener('click', goBack);
+  $('btn-home').addEventListener('click', () => { clearTimers(); S.demo = null; nav('home'); });
+  window.addEventListener('resize', fitScale);
+  document.addEventListener('keydown', e => { if (e.key === 'Backspace' && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); goBack(); } });
+
+  /* preload every frame after the page settles, so taps never wait */
+  function preload() {
+    const names = Object.keys(FRAMES); let i = 0;
+    const tick = () => { for (let k = 0; k < 6 && i < names.length; k++, i++) { const im = new Image(); im.src = 'screens/' + names[i] + '.png'; } if (i < names.length) setTimeout(tick, 60); };
+    tick();
+  }
+
+  buildTree(); buildStrip(); bindCond(); syncCond(); fitScale(); render();
+  if ('requestIdleCallback' in window) requestIdleCallback(preload); else setTimeout(preload, 1200);
+  window.UiMock = { S, FRAMES, SCREENS, LINKS, resolve, hotspotsFor, jump };
+})();
+</script>
+</body>
+</html>

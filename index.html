@@ -542,8 +542,7 @@
   <div class="stage" id="stage">
     <div class="stage__centre" id="stage-centre">
       <div class="frame">
-        <video id="machine-video" src="assets/media/video/machine-dispensing.mp4" poster="assets/media/device/validation-done.jpg" muted loop playsinline preload="metadata" aria-label="Whole-machine dispensing clip"></video>
-        <span class="stage__note mono" data-i18n="machine-note">Whole-machine clip coming</span>
+        <video id="machine-video" src="assets/media/video/machine-outdoor-run.mp4" poster="assets/media/video/machine-outdoor-run-poster.jpg" muted loop playsinline preload="metadata" aria-label="Whole-machine dispensing clip: the outdoor forty-tube run on battery, sped up"></video>
       </div>
     </div>
     <!-- Each tile is a cabinet: the finished module on top, every earlier step a drawer below it,
@@ -845,6 +844,17 @@
               </div>
               <span data-i18n="tool-ui">Operator Interface Prototypes</span>
             </a>
+            <a class="tile" href="tools/ui-mockup/index.html">
+              <div class="tm tm--ui">
+                <svg viewBox="0 0 160 100" aria-hidden="true">
+                  <rect class="tm-k" x="44" y="23" width="72" height="54" rx="6"/>
+                  <rect class="tm-ui-b" x="50" y="29" width="60" height="8" rx="2"/>
+                  <rect class="tm-ui-b" x="50" y="41" width="28" height="30" rx="3"/>
+                  <circle class="tm-ui-b" cx="96" cy="56" r="9"/>
+                </svg>
+              </div>
+              <span data-i18n="tool-ui-live">Operator Interface, Live</span>
+            </a>
           </div>
         </div>
       </div>
@@ -952,7 +962,7 @@
       <li data-stop="stop-pump"><div class="route__label"><span class="route__name" data-i18n="pump-title">Pump head</span><div class="route__pills"><a href="tools/rotor-solver/index.html" data-i18n="tool-rotor">Rotor Geometry Solver</a><a href="tools/peristaltic-roller-displaced-volume-model/index.html" data-i18n="tool-occlusion">Occlusion &amp; Displaced-Volume Model</a><a href="tools/peristaltic-tensioned-path-model/index.html" data-i18n="tool-tensioned">Tensioned Tube-Path Model</a><a href="tools/pump-testing/index.html" data-i18n="tool-testing">Pump Testing Protocol</a></div></div><button class="route__dot" type="button" aria-label="Pump head"></button></li>
       <li data-stop="stop-nozzle"><div class="route__label"><span class="route__name" data-i18n="nozzle-title">Needle and release</span></div><button class="route__dot" type="button" aria-label="Needle and release"></button></li>
       <li data-stop="stop-rack"><div class="route__label"><span class="route__name" data-i18n="rack-title">Rack under the needle</span></div><button class="route__dot" type="button" aria-label="Rack under the needle"></button></li>
-      <li data-stop="stop-screen"><div class="route__label"><span class="route__name" data-i18n="screen-title">The screen that ordered it</span><div class="route__pills"><a href="tools/ui-prototypes/index.html" data-i18n="tool-ui">Operator Interface Prototypes</a></div></div><button class="route__dot" type="button" aria-label="The screen that ordered it"></button></li>
+      <li data-stop="stop-screen"><div class="route__label"><span class="route__name" data-i18n="screen-title">The screen that ordered it</span><div class="route__pills"><a href="tools/ui-prototypes/index.html" data-i18n="tool-ui">Operator Interface Prototypes</a><a href="tools/ui-mockup/index.html" data-i18n="tool-ui-live">Operator Interface, Live</a></div></div><button class="route__dot" type="button" aria-label="The screen that ordered it"></button></li>
       <li data-stop="stop-electronics"><div class="route__label"><span class="route__name" data-i18n="elec-title">One clock for six pumps</span><div class="route__pills"><a href="tools/system-architecture-explorer/index.html" data-i18n="tool-arch">System Architecture Explorer</a><a href="tools/dispense-throughput-simulator/index.html" data-i18n="tool-throughput">Dispense Throughput Simulator</a></div></div><button class="route__dot" type="button" aria-label="One clock for six pumps"></button></li>
       <li data-stop="stop-landing"><div class="route__label"><span class="route__name" data-i18n="land-title">The droplet lands</span></div><button class="route__dot" type="button" aria-label="The droplet lands"></button></li>
     </ol>
@@ -1071,7 +1081,6 @@
         'cta-follow':       'Follow one droplet',
         'machine-title':    'It runs.',
         'machine-lead':     'Two of six channels built. Forty tubes in one unattended run.',
-        'machine-note':     'Whole-machine clip coming',
         'st-pump-1':        'First build',
         'st-pump-2':        'Fourth build, laid out',
         'st-pump-3':        'Qualified head, CAD',
@@ -1105,6 +1114,7 @@
         'tool-tensioned':   'Tensioned Tube-Path Model',
         'tool-testing':     'Pump Testing Protocol',
         'tool-ui':          'Operator Interface Prototypes',
+        'tool-ui-live':     'Operator Interface, Live',
         'tool-arch':        'System Architecture Explorer',
         'tool-throughput':  'Dispense Throughput Simulator',
         'tool-workflow':    'Spec-Driven Workflow Guide',
@@ -1176,7 +1186,6 @@
         'cta-follow':       'Segui una goccia',
         'machine-title':    'Funziona.',
         'machine-lead':     'Due canali su sei costruiti. Quaranta provette in un solo ciclo senza operatore.',
-        'machine-note':     'Video della macchina completa in arrivo',
         'st-pump-1':        'Prima versione',
         'st-pump-2':        'Quarta versione, componenti in vista',
         'st-pump-3':        'Testa qualificata, CAD',
@@ -1210,6 +1219,7 @@
         'tool-tensioned':   'Tensioned Tube-Path Model',
         'tool-testing':     'Pump Testing Protocol',
         'tool-ui':          'Operator Interface Prototypes',
+        'tool-ui-live':     'Interfaccia operatore, dal vivo',
         'tool-arch':        'System Architecture Explorer',
         'tool-throughput':  'Dispense Throughput Simulator',
         'tool-workflow':    'Spec-Driven Workflow Guide',

@@ -440,6 +440,21 @@ html.js .reveal.is-in {
   opacity: 0.4;
 }
 
+/* UI mock: the same 4:3 screen, one tile lit and a tap ring */
+.mark--panel::before {
+  left: 2px; top: 5px;
+  width: 24px; height: 18px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  opacity: 0.7;
+}
+.mark--panel::after {
+  inset: 0;
+  background:
+    linear-gradient(currentColor, currentColor) 6px 9px / 7px 10px no-repeat,
+    radial-gradient(circle, transparent 2px, currentColor 2.5px, currentColor 4px, transparent 4.5px) 15px 9px / 10px 10px no-repeat;
+}
+
 /* UI prototypes: a 4:3 screen with three blocks */
 .mark--screen::before {
   left: 2px; top: 5px;
