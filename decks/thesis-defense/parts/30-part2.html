@@ -1,0 +1,2437 @@
+<!-- ══════════════════════════════════════════════════════════════════════
+     Part II — the modules.  S11 divider · pump S12–S16 · alignment S17–S19
+     · nozzle S20–S21 · interface S22–S23 · storage S24.   Builder P2.
+
+     Dialects: A (engineering sheet) on the pump, C (stacked cards) bent on
+     the alignment / nozzle / interface / storage slides, plus four new
+     compositions written for this part and documented in the style block.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- ══ S11 · divider, Part II ══════════════════════════════════════════ -->
+<section class="slide slide--divider" id="s11" data-cue="s11" data-part="II">
+  <div class="divider__wash"></div>
+  <div class="divider__inner">
+    <div class="divider__num">Part II</div>
+    <h2 class="divider__title">The modules.</h2>
+    <p class="divider__sub">Five stops, in the order the liquid meets them.</p>
+  </div>
+
+  <!-- the journey strip: five stops that light in order, a drop running the line -->
+  <div class="jrn">
+    <svg viewBox="0 0 1088 92" width="1088" height="92" aria-hidden="true">
+      <path class="jrn-line" id="jrn-line" d="M 104 34 L 984 34" />
+      <g class="jrn-stop" data-stop="0">
+        <circle class="jrn-g" cx="104" cy="34" r="17" />
+        <path class="jrn-g" d="M 104 17 L 104 24 M 104 44 L 104 51 M 87 34 L 94 34 M 114 34 L 121 34" />
+        <text class="jrn-t" x="104" y="80">Pump</text>
+      </g>
+      <g class="jrn-stop" data-stop="1">
+        <rect class="jrn-g" x="300" y="22" width="48" height="24" rx="5" />
+        <path class="jrn-g" d="M 312 22 L 312 46 M 324 22 L 324 46 M 336 22 L 336 46" />
+        <text class="jrn-t" x="324" y="80">Alignment</text>
+      </g>
+      <g class="jrn-stop" data-stop="2">
+        <path class="jrn-g" d="M 530 20 L 558 20 L 544 48 Z" />
+        <text class="jrn-t" x="544" y="80">Needle</text>
+      </g>
+      <g class="jrn-stop" data-stop="3">
+        <rect class="jrn-g" x="740" y="18" width="48" height="32" rx="5" />
+        <path class="jrn-g" d="M 750 30 L 778 30 M 750 39 L 768 39" />
+        <text class="jrn-t" x="764" y="80">Screen</text>
+      </g>
+      <g class="jrn-stop" data-stop="4">
+        <path class="jrn-g" d="M 976 16 L 992 16 L 992 26 L 998 34 L 998 50 L 970 50 L 970 34 L 976 26 Z" />
+        <text class="jrn-t" x="984" y="80">Vial</text>
+      </g>
+      <circle class="jrn-drop" id="jrn-drop" cx="104" cy="34" r="6" />
+    </svg>
+  </div>
+
+  <div class="divider__rule"></div>
+  <aside class="notes">
+    <ul>
+      <li>From here the talk follows the liquid: pump, alignment, needle, screen, vial.</li>
+      <li>The pump comes first because it decides the dose; every other module serves it.</li>
+      <li>Nine minutes for the five stops.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S12 · the pump principle ════════════════════════════════════════ -->
+<section class="slide" id="s12" data-cue="s12" data-dialect="sheet" data-part="II"
+         data-accent="pump" style="--head-h:48px">
+  <h2 class="slide__title">Only a peristaltic pump keeps the liquid inside a tube you can throw away.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="sheet">
+    <div class="sheet__main">
+      <div class="sheet__grid"></div>
+      <span class="sheet__reg sheet__reg--tl"></span><span class="sheet__reg sheet__reg--tr"></span>
+      <span class="sheet__reg sheet__reg--bl"></span><span class="sheet__reg sheet__reg--br"></span>
+
+      <div class="sheet__figs">
+
+        <!-- fig 1 · thirty chips that thin to two, and the two grow into the finalists -->
+        <div class="sheet__fig" id="s12-f1">
+          <div class="chipfield" id="s12-field">
+            <div class="chip" id="s12-a">
+              <div class="chip__body">
+                <svg class="chip__glyph" viewBox="0 0 200 130" aria-hidden="true">
+                  <g class="mech">
+                    <path class="ln" d="M 38 84 A 62 62 0 0 1 162 84" stroke-width="3" />
+                    <path class="ln" d="M 48 84 A 52 52 0 0 1 152 84" stroke-width="3" />
+                    <path class="tube" d="M 43 84 A 57 57 0 0 1 157 84" stroke-width="7" />
+                    <path class="tube" d="M 43 84 L 43 126 M 157 84 L 157 126" stroke-width="7" />
+                    <g id="s12-rotor">
+                      <circle class="ln fillsoft" cx="100" cy="84" r="12" stroke-width="3" />
+                      <circle class="ln fillsoft" cx="58" cy="69" r="9" stroke-width="3" />
+                      <circle class="ln fillsoft" cx="81" cy="43" r="9" stroke-width="3" />
+                      <circle class="ln fillsoft" cx="119" cy="43" r="9" stroke-width="3" />
+                      <circle class="ln fillsoft" cx="142" cy="69" r="9" stroke-width="3" />
+                      <path class="ln" d="M 100 84 L 58 69 M 100 84 L 81 43 M 100 84 L 119 43 M 100 84 L 142 69" stroke-width="2" />
+                    </g>
+                  </g>
+                </svg>
+                <div class="chip__score"><span class="chip__num" id="s12-na">0</span><span class="chip__u">pts</span></div>
+                <div class="chip__bar"><span class="chip__fill" id="s12-ba"></span></div>
+                <div class="chip__label">Rotary peristaltic</div>
+              </div>
+            </div>
+            <div class="chip" id="s12-b">
+              <div class="chip__body">
+                <svg class="chip__glyph" viewBox="0 0 200 130" aria-hidden="true">
+                  <g class="mech">
+                    <path class="tube" d="M 18 84 L 182 84" stroke-width="7" />
+                    <path class="ln fillsoft" d="M 18 96 L 182 96 L 182 104 L 18 104 Z" stroke-width="3" />
+                    <g id="s12-carriage">
+                      <path class="ln fillsoft" d="M 84 34 L 116 34 L 116 66 L 84 66 Z" stroke-width="3" />
+                      <circle class="ln fillsoft" cx="100" cy="76" r="9" stroke-width="3" />
+                      <path class="ln" d="M 100 34 L 100 20" stroke-width="3" />
+                    </g>
+                    <path class="ln" d="M 34 70 L 34 98 L 54 70 L 54 98 Z" stroke-width="3" />
+                    <path class="ln" d="M 146 70 L 146 98 L 166 70 L 166 98 Z" stroke-width="3" />
+                  </g>
+                </svg>
+                <div class="chip__score"><span class="chip__num" id="s12-nb">0</span><span class="chip__u">pts</span></div>
+                <div class="chip__bar"><span class="chip__fill" id="s12-bb"></span></div>
+                <div class="chip__label">Linear pinch</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- fig 2 · the three principles, wetted boundary drawn on each -->
+        <div class="sheet__fig" id="s12-f2">
+          <div class="sheet__frame" style="width:748px;aspect-ratio:2000/659">
+            <img data-src="assets/figs/fig-pump-principles.png"
+                 alt="Three pump principles in section: a syringe with a plunger in a bore, a reciprocating diaphragm chamber with two check valves, and a peristaltic rotor whose rollers squeeze a tube against a curved track." />
+            <svg class="p2-ov" viewBox="0 0 2000 659" aria-hidden="true">
+              <path class="ln wet" id="s12-wet-a" stroke-width="13"
+                    d="M 257 270 L 482 269 L 528 320 L 585 322 L 585 335 L 527 337 L 481 388 L 257 388 Z" />
+              <path class="ln wet" id="s12-wet-b" stroke-width="13"
+                    d="M 940 430 L 940 404 L 905 404 L 875 396 L 841 361 L 832 334 L 830 299 L 846 249 L 871 224 L 905 214 L 1110 214 L 1110 175 L 1171 175 L 1171 214 L 1200 215 L 1200 404 L 1001 404 L 1001 430 Z" />
+              <path class="ln wet" id="s12-wet-c" stroke-width="15"
+                    d="M 1541 545 L 1541 337 A 129.5 129.5 0 0 1 1800 337 L 1800 545" />
+            </svg>
+            <span class="callout" id="s12-tag-a" style="left:22%;top:104%">machine wetted</span>
+            <span class="callout" id="s12-tag-b" style="left:50.8%;top:104%">machine wetted</span>
+            <span class="callout" id="s12-tag-c" style="left:83.5%;top:104%">tube only</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <ol class="sheet__rail">
+      <li class="sheet__panel" data-rev="1">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the field</span>
+        <span class="sheet__panel-t">Thirty mechanisms in six families, some of them deliberately absurd.</span>
+      </li>
+      <li class="sheet__panel" data-rev="2">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the finalists</span>
+        <span class="sheet__panel-t">Seven passed, five were developed, two were built.</span>
+      </li>
+      <li class="sheet__panel" data-rev="3">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the reason</span>
+        <span class="sheet__panel-t">No sink in the field, so nothing of the machine may touch the liquid.</span>
+      </li>
+    </ol>
+
+    <div class="sheet__readout">
+      <div class="sheet__ro" id="s12-ro1"><span class="sheet__num">30</span><span class="sheet__label">ideas on the table</span></div>
+      <div class="sheet__ro" id="s12-ro2"><span class="sheet__num">3485</span><span class="sheet__label">against 3185</span></div>
+      <div class="sheet__ro" id="s12-ro3"><span class="sheet__num">0</span><span class="sheet__label">machine parts touch the liquid</span></div>
+    </div>
+
+    <div class="sheet__timeline">
+      <div class="sheet__timeline-track"></div>
+      <div class="sheet__timeline-fill" id="s12-fill"></div>
+      <span class="sheet__stop" style="left:16.7%"></span>
+      <span class="sheet__stop" style="left:50%"></span>
+      <span class="sheet__stop" style="left:83.3%"></span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Thirty mechanisms, six families, a piano hammer and a tattoo machine among them on purpose.</li>
+      <li>Seven passed the gates, five were developed, two were built; rotary beat the linear pinch 3485 to 3185.</li>
+      <li>Accuracy did not decide it: the wetted boundary did. A syringe and a diaphragm wet the machine, and there is no sink at a border post.</li>
+      <li>In a peristaltic pump the tube is the only wetted part, and the tube is a consumable.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S13 · the design point and the three tools ══════════════════════ -->
+<section class="slide" id="s13" data-cue="s13" data-dialect="cards" data-part="II"
+         data-accent="pump" style="--head-h:48px">
+  <h2 class="slide__title">Count steps, not seconds: the dose comes from the geometry, and three tools set it.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="tool-card" id="s13-c1" data-tool="rotor"
+       data-src="../../tools/rotor-solver/index.html"
+       data-poster="assets/posters/rotor-solver.png"
+       style="left:56px; top:214px; width:364px; height:300px;">
+    <span class="tool-card__name">Rotor Geometry Solver</span>
+    <span class="tool-card__line">Which roller count is feasible.</span>
+  </div>
+  <div class="tool-card" id="s13-c2" data-tool="occlusion"
+       data-src="../../tools/peristaltic-roller-displaced-volume-model/index.html"
+       data-poster="assets/posters/occlusion-model.png"
+       style="left:452px; top:214px; width:364px; height:300px;">
+    <span class="tool-card__name">Occlusion &amp; Displaced Volume</span>
+    <span class="tool-card__line">Why the rotor grew from 15.6 to 19.70 mm.</span>
+  </div>
+  <div class="tool-card" id="s13-c3" data-tool="tensioned"
+       data-src="../../tools/peristaltic-tensioned-path-model/index.html"
+       data-poster="assets/posters/tensioned-path.png"
+       style="left:848px; top:214px; width:364px; height:300px;">
+    <span class="tool-card__name">Tensioned Tube Path</span>
+    <span class="tool-card__line">A taut tube moves the dose by at most 2 %.</span>
+  </div>
+
+  <!-- the design point, as a ladder that climbs from the bore to the rotor -->
+  <svg class="ladder" id="s13-ladder" viewBox="0 0 880 140" aria-hidden="true">
+    <path class="ladder__line" id="s13-lad-line" d="M 88 118 L 264 98 L 440 78 L 616 58 L 792 38" />
+    <g class="ladder__node" data-node="0">
+      <circle cx="88" cy="118" r="6" />
+      <text class="ladder__v" x="88" y="102">0.51 mm</text>
+      <text class="ladder__k" x="88" y="138">bore</text>
+    </g>
+    <g class="ladder__node" data-node="1">
+      <circle cx="264" cy="98" r="6" />
+      <text class="ladder__v" x="264" y="82">0.91 mm</text>
+      <text class="ladder__k" x="264" y="138">tube wall</text>
+    </g>
+    <g class="ladder__node" data-node="2">
+      <circle cx="440" cy="78" r="6" />
+      <text class="ladder__v" x="440" y="62">4</text>
+      <text class="ladder__k" x="440" y="138">rollers</text>
+    </g>
+    <g class="ladder__node" data-node="3">
+      <circle cx="616" cy="58" r="6" />
+      <text class="ladder__v" x="616" y="42">5 µL</text>
+      <text class="ladder__k" x="616" y="138">per stroke</text>
+    </g>
+    <g class="ladder__node" data-node="4">
+      <circle cx="792" cy="38" r="6" />
+      <text class="ladder__v" x="792" y="22">19.70 mm</text>
+      <text class="ladder__k" x="792" y="138">pitch radius</text>
+    </g>
+  </svg>
+
+  <aside class="notes">
+    <ul>
+      <li>The design point: 0.51 mm bore, 0.91 mm wall, four rollers, 5 µL a stroke, 19.70 mm pitch radius.</li>
+      <li>Four rollers is the smallest count that never leaves the tube open, and the largest with torque to spare at 12 V.</li>
+      <li>Open the solver, change the roller count, show the feasibility and the torque margin move.</li>
+      <li>These were built while the decisions were open, not written up afterwards.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S14 · the first pump, and the flow sensor ═══════════════════════ -->
+<section class="slide" id="s14" data-cue="s14" data-dialect="sheet" data-part="II"
+         data-accent="pump" style="--head-h:48px">
+  <h2 class="slide__title">The first pump did not seal, and the flow sensor could not tell me why.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="sheet">
+    <div class="sheet__main">
+      <div class="sheet__grid"></div>
+      <span class="sheet__reg sheet__reg--tl"></span><span class="sheet__reg sheet__reg--tr"></span>
+      <span class="sheet__reg sheet__reg--bl"></span><span class="sheet__reg sheet__reg--br"></span>
+
+      <div class="sheet__figs">
+
+        <!-- 1 · the taped head -->
+        <div class="sheet__fig" id="s14-f1">
+          <div class="sheet__frame" style="width:332px;aspect-ratio:1/1">
+            <img data-src="../../assets/media/pump/proto01-open.jpg"
+                 alt="The first pump head on the bench beside its breadboard, the printed housing held down over the rotor by a strip of orange tape." />
+            <svg class="p2-ov" viewBox="0 0 1600 1600" aria-hidden="true">
+              <ellipse class="ln" id="s14-ring" cx="1258" cy="662" rx="168" ry="226" stroke-width="13" />
+            </svg>
+            <span class="callout" id="s14-tag1" style="left:78%;top:20%">held down with tape</span>
+          </div>
+          <svg class="sheet__draw" style="width:336px;height:300px" viewBox="0 0 336 300" aria-hidden="true">
+            <text class="dk" x="12" y="30">drawn from a guessed wall</text>
+            <path class="ln soft" id="s14-g1" d="M 40 96 L 296 96" stroke-width="3" />
+            <path class="ln soft" id="s14-g2" d="M 40 150 L 296 150" stroke-width="3" />
+            <path class="ln" id="s14-gdim" d="M 168 96 L 168 150" stroke-width="5" />
+            <path class="ln" id="s14-gah" d="M 158 108 L 168 94 L 178 108 M 158 138 L 168 152 L 178 138" stroke-width="5" />
+            <text class="dv" x="186" y="130">1.75 mm</text>
+            <text class="dk" x="12" y="204">rotor 2 mm too small</text>
+            <path class="ln soft" id="s14-r1" d="M 60 246 L 176 246" stroke-width="3" />
+            <path class="ln" id="s14-r2" d="M 60 268 L 200 268" stroke-width="4" />
+            <text class="dv" x="212" y="252">17.70</text>
+            <text class="dv" x="212" y="278">19.70</text>
+          </svg>
+        </div>
+
+        <!-- 2 · the flow trace: scatter wider than the flow -->
+        <div class="sheet__fig" id="s14-f2">
+          <svg class="sheet__draw" style="width:700px;height:300px" viewBox="0 0 700 300" aria-hidden="true">
+            <rect class="band" id="s14-band" x="70" y="84.2" width="610" height="111.2" />
+            <path class="ln axis" d="M 62 20 L 62 276 M 62 276 L 688 276" stroke-width="2" />
+            <path class="ln zero" id="s14-zero" d="M 62 192.8 L 688 192.8" stroke-width="2" stroke-dasharray="6 6" />
+            <path class="ln mean" id="s14-mean" d="M 62 139.8 L 688 139.8" stroke-width="3" stroke-dasharray="14 9" />
+            <path class="ln trace" id="s14-trace" stroke-width="3"
+                  d="M 70 108 L 78 118 L 86 105 L 94 101 L 102 181 L 110 160 L 118 155 L 125 177 L 133 51 L 141 81 L 149 159 L 157 166 L 165 235 L 173 162 L 181 106 L 189 104 L 197 60 L 205 132 L 213 183 L 221 169 L 228 191 L 236 107 L 244 56 L 252 144 L 260 86 L 268 190 L 276 213 L 284 144 L 292 152 L 300 51 L 308 84 L 316 170 L 324 165 L 331 226 L 339 128 L 347 67 L 355 141 L 363 100 L 371 172 L 379 239 L 387 149 L 395 170 L 403 82 L 411 83 L 419 164 L 426 127 L 434 196 L 442 201 L 450 104 L 458 124 L 466 57 L 474 128 L 482 210 L 490 167 L 498 174 L 506 149 L 514 37 L 522 112 L 529 144 L 537 188 L 545 233 L 553 139 L 561 131 L 569 110 L 577 47 L 585 202 L 593 194 L 601 191 L 609 197 L 617 51 L 625 79 L 632 106 L 640 127 L 648 235 L 656 174 L 664 160 L 672 150 L 680 43" />
+            <text class="dk" x="62" y="14">flow signal, µL per minute</text>
+            <g id="s14-l-mean"><rect class="plate" x="556" y="117" width="132" height="24" rx="5"/><text class="dv" x="684" y="135" text-anchor="end">mean 1104</text></g>
+            <g id="s14-l-zero"><rect class="plate" x="576" y="193" width="112" height="24" rx="5"/><text class="dk" x="684" y="211" text-anchor="end">zero flow</text></g>
+            <g id="s14-l-band"><rect class="plate" x="72" y="60" width="312" height="24" rx="5"/><text class="dk" x="78" y="78">one standard deviation: 1159</text></g>
+          </svg>
+        </div>
+
+        <!-- 3 · the balance becomes the reference -->
+        <div class="sheet__fig" id="s14-f3">
+          <div class="sheet__frame" style="width:262px;aspect-ratio:1080/1385">
+            <img data-src="../../assets/media/pump/gravimetric.jpg"
+                 alt="A gloved hand holding a weigh boat on an analytical balance, the display reading 0.6943 grams." />
+            <svg class="p2-ov" viewBox="0 0 1080 1385" aria-hidden="true">
+              <path class="ln" id="s14-box" d="M 118 1016 L 600 1016 L 600 1128 L 118 1128 Z" stroke-width="12" />
+            </svg>
+          </div>
+          <svg class="sheet__draw" style="width:380px;height:300px" viewBox="0 0 380 300" aria-hidden="true">
+            <text class="dk" x="10" y="26">one millilitre, two instruments</text>
+            <text class="dv" x="10" y="72">flow 600.1 µL</text>
+            <text class="dk" id="s14-cv-f" x="374" y="72" text-anchor="end">CV 17.6 %</text>
+            <rect class="barbg" x="10" y="84" width="364" height="30" rx="6" />
+            <rect class="bar soft2" id="s14-bar-f" x="10" y="84" width="0" height="30" rx="6" />
+            <text class="dv" x="10" y="164">balance 678.0 µL</text>
+            <text class="dk" id="s14-cv-b" x="374" y="164" text-anchor="end">CV 4.5 %</text>
+            <rect class="barbg" x="10" y="176" width="364" height="30" rx="6" />
+            <rect class="bar" id="s14-bar-b" x="10" y="176" width="0" height="30" rx="6" />
+            <text class="dk" id="s14-verdict" x="10" y="256">the balance is the reference</text>
+          </svg>
+        </div>
+
+        <!-- 4 · the shortfall repeats -->
+        <div class="sheet__fig" id="s14-f4">
+          <svg class="sheet__draw" style="width:700px;height:300px" viewBox="0 0 700 300" aria-hidden="true">
+            <rect class="band" id="s14-band2" x="60" y="95" width="600" height="30" />
+            <path class="ln axis" d="M 60 262 L 660 262" stroke-width="2" />
+            <path class="ln mean" id="s14-nom" d="M 60 110 L 660 110" stroke-width="3" stroke-dasharray="14 9" />
+            <text class="dv" id="s14-nom-l" x="656" y="98" text-anchor="end">5.00 µL nominal</text>
+            <rect class="bar" id="s14-d1" x="120" y="262" width="110" height="0" rx="5" />
+            <rect class="bar" id="s14-d2" x="300" y="262" width="110" height="0" rx="5" />
+            <rect class="bar" id="s14-d3" x="480" y="262" width="110" height="0" rx="5" />
+            <text class="dv s14-dl" x="175" y="290" text-anchor="middle">3.39</text>
+            <text class="dv s14-dl" x="355" y="290" text-anchor="middle">3.39</text>
+            <text class="dv s14-dl" x="535" y="290" text-anchor="middle">3.39</text>
+            <text class="dk" x="60" y="26">the same shortfall, weighing after weighing</text>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+
+    <ol class="sheet__rail">
+      <li class="sheet__panel" data-rev="1">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">proto-01</span>
+        <span class="sheet__panel-t">A rotor 2 mm small and a gap drawn from a guessed wall.</span>
+      </li>
+      <li class="sheet__panel" data-rev="2">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the sensor</span>
+        <span class="sheet__panel-t">It scattered more widely than the flow it was measuring.</span>
+      </li>
+      <li class="sheet__panel" data-rev="3">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the balance</span>
+        <span class="sheet__panel-t">Every volume in the thesis is weighed from here on.</span>
+      </li>
+      <li class="sheet__panel" data-rev="4">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the verdict</span>
+        <span class="sheet__panel-t">The parts were wrong, not the motor.</span>
+      </li>
+    </ol>
+
+    <div class="sheet__readout">
+      <div class="sheet__ro" id="s14-ro1"><span class="sheet__num" id="s14-n1">0.00</span><span class="sheet__label">µL of a nominal 5</span></div>
+      <div class="sheet__ro" id="s14-ro2"><span class="sheet__num" id="s14-n2">0</span><span class="sheet__label">µL/min of scatter</span></div>
+      <div class="sheet__ro" id="s14-ro3"><span class="sheet__num" id="s14-n3">0.0</span><span class="sheet__label">µL weighed, three times</span></div>
+      <div class="sheet__ro" id="s14-ro4"><span class="sheet__num" id="s14-n4">0</span><span class="sheet__label">per cent short, every time</span></div>
+    </div>
+
+    <div class="sheet__timeline">
+      <div class="sheet__timeline-track"></div>
+      <div class="sheet__timeline-fill" id="s14-fill"></div>
+      <span class="sheet__stop" style="left:12.5%"></span>
+      <span class="sheet__stop" style="left:37.5%"></span>
+      <span class="sheet__stop" style="left:62.5%"></span>
+      <span class="sheet__stop" style="left:87.5%"></span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Two parameters reached the build wrong: the rotor radius and the tube wall. Shimmed with folded paper it gave 3.39 µL of a nominal 5.</li>
+      <li>The inline flow sensor read a standard deviation of 1159 µL/min about a mean of 1104, and reverse flow once in seven samples.</li>
+      <li>Head to head on one commanded millilitre: flow 600.1 µL at CV 17.6 %, balance 678.0 µL at CV 4.5 %.</li>
+      <li>The shortfall repeated, so it was geometry, not the motor. Closed-loop control was dropped here.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S15 · three more builds (dialect A, preview a.html geometry) ════ -->
+<section class="slide" id="s15" data-cue="s15" data-dialect="sheet" data-part="II"
+         data-accent="pump">
+  <h2 class="slide__title">Three more builds fixed the printing, not the physics.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="sheet">
+    <div class="sheet__main">
+      <div class="sheet__grid"></div>
+      <span class="sheet__reg sheet__reg--tl"></span><span class="sheet__reg sheet__reg--tr"></span>
+      <span class="sheet__reg sheet__reg--bl"></span><span class="sheet__reg sheet__reg--br"></span>
+
+      <div class="sheet__figs">
+
+        <!-- 1 · v2.1, the mount sat high -->
+        <div class="sheet__fig" id="s15-f1">
+          <div class="sheet__frame" style="width:748px;aspect-ratio:2400/1128">
+            <img data-src="assets/fig-v21-gap-around-arc.png"
+                 alt="Section of the v2.1 pump head with the bore centre 0.45 mm above the shaft, and the installed gap at the left end, the apex and the right end plotted against the 1.82 mm closure line." />
+            <svg class="p2-ov" viewBox="0 0 2400 1128" aria-hidden="true">
+              <path id="f1-ext1" class="ln" d="M 498 236 L 692 236" stroke-width="7"/>
+              <path id="f1-ext2" class="ln" d="M 498 331 L 692 331" stroke-width="7"/>
+              <path id="f1-dim"  class="ln" d="M 594 242 L 594 325" stroke-width="10"/>
+              <path id="f1-ah1"  class="ln" d="M 582 256 L 594 240 L 606 256" stroke-width="9"/>
+              <path id="f1-ah2"  class="ln" d="M 582 311 L 594 327 L 606 311" stroke-width="9"/>
+              <path id="f1-d1" class="ln soft" d="M 516 548 L 672 548" stroke-width="6"/>
+              <path id="f1-d2" class="ln soft" d="M 516 639 L 672 639" stroke-width="6"/>
+              <path id="f1-off"   class="ln" d="M 594 639 L 594 556" stroke-width="9"/>
+              <path id="f1-offah" class="ln" d="M 583 570 L 594 552 L 605 570" stroke-width="9"/>
+              <g id="f1-mark">
+                <path class="ln" d="M 570 639 L 618 639 M 594 615 L 594 663" stroke-width="9"/>
+              </g>
+              <path id="f1-closure" class="ln" d="M 1500 707.5 L 2345 707.5" stroke-width="9" stroke-dasharray="26 20"/>
+              <path id="f1-stem" class="ln" d="M 1933 707.5 L 1933 330" stroke-width="13"/>
+              <circle id="f1-dot" class="dot" cx="1933" cy="707.5" r="20"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 2 · v2.2, the peg tapers -->
+        <div class="sheet__fig" id="s15-f2">
+          <div class="sheet__frame" style="width:748px;aspect-ratio:2400/1219">
+            <img data-src="assets/fig-roller-peg-taper.png"
+                 alt="Two stacked bearings on a tapering printed peg tilt the roller against the track, beside the one-bearing fix with guide rims, and photographs of the two rotor halves." />
+            <svg class="p2-ov" viewBox="0 0 2400 1219" aria-hidden="true">
+              <path id="f2-tl" class="ln" d="M 508 550 L 520 252" stroke-width="9"/>
+              <path id="f2-tr" class="ln" d="M 690 550 L 672 252" stroke-width="9"/>
+              <path id="f2-tip"  class="ln soft" d="M 506 238 L 686 238" stroke-width="6"/>
+              <path id="f2-base" class="ln soft" d="M 496 566 L 702 566" stroke-width="6"/>
+              <g id="f2-roller">
+                <g id="f2-rollerG">
+                  <path class="ln" d="M 599 570 L 599 212" stroke-width="8" stroke-dasharray="30 18"/>
+                  <path class="ln soft" d="M 396 234 L 804 234 L 804 424 L 396 424 Z" stroke-width="8"/>
+                </g>
+              </g>
+              <path id="f2-fix" class="ln" d="M 1632 388 L 1998 388 A 16 16 0 0 1 2014 404 L 2014 544 A 16 16 0 0 1 1998 560 L 1632 560 A 16 16 0 0 1 1616 544 L 1616 404 A 16 16 0 0 1 1632 388 Z" stroke-width="9"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 3 · the printer, characterised on rings -->
+        <div class="sheet__fig" id="s15-f3">
+          <div class="sheet__frame" style="width:340px;aspect-ratio:1403/933">
+            <img data-src="assets/calibration-rings.jpg"
+                 alt="Four calibration rings of different diameters laid out on the printer bed in the slicer." />
+            <svg class="p2-ov" viewBox="0 0 1403 933" aria-hidden="true">
+              <ellipse id="f3-ring" class="ln" cx="862" cy="459" rx="167" ry="122" stroke-width="10"/>
+              <path id="f3-dim" class="ln" d="M 695 459 L 1029 459" stroke-width="8"/>
+              <path id="f3-dah" class="ln" d="M 711 447 L 695 459 L 711 471 M 1013 447 L 1029 459 L 1013 471" stroke-width="8"/>
+            </svg>
+          </div>
+          <div class="sheet__frame" style="width:404px;aspect-ratio:2400/1535">
+            <img data-src="assets/fig-print-compensation.png"
+                 alt="Two rules for the printer: outer diameters shrink proportionally with size, inner bores lose a fixed 0.14 mm whatever their diameter." />
+            <svg class="p2-ov" viewBox="0 0 2400 1535" aria-hidden="true">
+              <circle id="f3-outer" class="ln" cx="834" cy="598" r="305" stroke-width="16"/>
+              <circle id="f3-bore"  class="ln soft" cx="2037" cy="597" r="258" stroke-width="14"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4 · v2.3, 1.52 mm at three points -->
+        <div class="sheet__fig" id="s15-f4">
+          <div class="sheet__frame" style="width:462px;aspect-ratio:2400/1458">
+            <img data-src="assets/fig-pump-head-gap.png"
+                 alt="The assembled v2.3 pump head in CAD, with the occlusion gap and the three caliper inspection slots at the apex and at both ends of the track." />
+            <svg class="p2-ov" viewBox="0 0 2400 1458" aria-hidden="true">
+              <path id="f4-l1" class="ln" d="M 1155 112 L 1155 78" stroke-width="11"/>
+              <path id="f4-l2" class="ln" d="M 741 758 L 741 828" stroke-width="11"/>
+              <path id="f4-l3" class="ln" d="M 1591 780 L 1591 848" stroke-width="11"/>
+            </svg>
+            <span class="callout s15-tag" id="s15-tag-apex"  style="left:48.1%;top:3.6%">1.52</span>
+            <span class="callout s15-tag" id="s15-tag-left"  style="left:30.9%;top:59.5%">1.52</span>
+            <span class="callout s15-tag" id="s15-tag-right" style="left:66.3%;top:60.9%">1.52</span>
+          </div>
+          <div class="sheet__frame" style="width:274px;aspect-ratio:1088/1057">
+            <img data-src="assets/v23-render.png"
+                 alt="Render of the v2.3 pump head, the installed gap embossed on the housing face." />
+            <svg class="p2-ov" viewBox="0 0 1088 1057" aria-hidden="true">
+              <path id="f4-under" class="ln" d="M 302 300 L 716 300" stroke-width="9"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <ol class="sheet__rail">
+      <li class="sheet__panel" data-rev="1">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">v2.1</span>
+        <span class="sheet__panel-t">The mount sat 0.45 mm high, so the apex opened.</span>
+      </li>
+      <li class="sheet__panel" data-rev="2">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">v2.2</span>
+        <span class="sheet__panel-t">Printed pegs taper, so the rollers tilted and walked the tube.</span>
+      </li>
+      <li class="sheet__panel" data-rev="3">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">the printer</span>
+        <span class="sheet__panel-t">Outer sizes shrink 0.65 %, inner bores lose a fixed 0.14 mm.</span>
+      </li>
+      <li class="sheet__panel" data-rev="4">
+        <span class="sheet__panel-bar"></span>
+        <span class="sheet__panel-k">v2.3</span>
+        <span class="sheet__panel-t">Measured through three slots, and it read the same at each.</span>
+      </li>
+    </ol>
+
+    <div class="sheet__readout">
+      <div class="sheet__ro" id="s15-ro1"><span class="sheet__num" id="s15-n1">1.82</span><span class="sheet__label">mm at the apex</span></div>
+      <div class="sheet__ro" id="s15-ro2"><span class="sheet__num" id="s15-n2">0.0</span><span class="sheet__label">degrees of roller tilt</span></div>
+      <div class="sheet__ro" id="s15-ro3"><span class="sheet__num" id="s15-n3">0.00</span><span class="sheet__label">mm, predictable at last</span></div>
+      <div class="sheet__ro" id="s15-ro4"><span class="sheet__num" id="s15-n4">0.00</span><span class="sheet__label">mm, at all three points</span></div>
+    </div>
+
+    <div class="sheet__timeline">
+      <div class="sheet__timeline-track"></div>
+      <div class="sheet__timeline-fill" id="s15-fill"></div>
+      <span class="sheet__stop" style="left:12.5%"></span>
+      <span class="sheet__stop" style="left:37.5%"></span>
+      <span class="sheet__stop" style="left:62.5%"></span>
+      <span class="sheet__stop" style="left:87.5%"></span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>v2.1: the bore sat 0.45 mm above the shaft, so the gap opened to 2.22 mm at the apex against a 1.82 mm closure threshold.</li>
+      <li>v2.2: printed pegs taper 0.085 mm, two stacked bearings tilted the roller 0.6 degrees; fixed with one bearing on the wide base.</li>
+      <li>A housing drawn at 1.52 mm printed at 1.75, so the printer was characterised on rings: parts predictable to 0.10 mm.</li>
+      <li>Land on: CAD dimensions are assumptions until anchored to a physical datum.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S16 · the pump against a pipette ═══════════════════════════════ -->
+<section class="slide" id="s16" data-cue="s16" data-dialect="sheet" data-part="II"
+         data-accent="pump" style="--head-h:48px; --title-w:700px">
+  <h2 class="slide__title">The pump repeats a dose as well as a hand with a pipette.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <!-- the chart, drawn rather than pasted, so the target lands before the result -->
+  <div class="paper s16-plate">
+    <svg class="chart" id="s16-chart" viewBox="0 0 700 340" aria-hidden="true">
+      <path class="grid" d="M 76 231.3 L 684 231.3 M 76 173 L 684 173 M 76 114.6 L 684 114.6 M 76 56.4 L 684 56.4" />
+      <path class="ax" id="s16-ax" d="M 76 26 L 76 292 L 684 292" />
+      <text class="ct" x="70" y="298" text-anchor="end">0</text>
+      <text class="ct" x="70" y="237" text-anchor="end">0.2</text>
+      <text class="ct" x="70" y="179" text-anchor="end">0.4</text>
+      <text class="ct" x="70" y="121" text-anchor="end">0.6</text>
+      <text class="ct" x="70" y="62" text-anchor="end">0.8</text>
+      <text class="ct" x="152" y="318" text-anchor="middle">60</text>
+      <text class="ct" x="300" y="318" text-anchor="middle">120</text>
+      <text class="ct" x="448" y="318" text-anchor="middle">180</text>
+      <text class="ct" x="596" y="318" text-anchor="middle">240</text>
+      <text class="ct" x="684" y="318" text-anchor="end">rpm</text>
+      <text class="ct" x="76" y="16">delivered-volume CV, per cent</text>
+
+      <path class="pip" id="s16-pip" d="M 76 212.2 L 684 212.2" stroke-dasharray="3 7" />
+      <text class="pip-t" id="s16-pip-t" x="680" y="234" text-anchor="end">manual pipette, 0.27 %</text>
+
+      <path class="ser ser--a" id="s16-ser-a" d="M 152 117.6 L 300 144.2 L 448 218.1 L 596 194.5" />
+      <path class="ser ser--b" id="s16-ser-b" d="M 152 46.7 L 300 167.9 L 448 191.5 L 596 159.0" />
+      <g id="s16-pts-a">
+        <rect class="pt pt--a" x="144" y="109.6" width="16" height="16" rx="3" />
+        <rect class="pt pt--a" x="292" y="136.2" width="16" height="16" rx="3" />
+        <rect class="pt pt--a" x="440" y="210.1" width="16" height="16" rx="3" />
+        <rect class="pt pt--a" x="588" y="186.5" width="16" height="16" rx="3" />
+      </g>
+      <g id="s16-pts-b">
+        <circle class="pt pt--b" cx="152" cy="46.7" r="9" />
+        <circle class="pt pt--b" cx="300" cy="167.9" r="9" />
+        <circle class="pt pt--b" cx="448" cy="191.5" r="9" />
+        <circle class="pt pt--b" cx="596" cy="159.0" r="9" />
+      </g>
+      <text class="lg lg--a" id="s16-lg-a" x="312" y="134">100 strokes</text>
+      <text class="lg lg--b" id="s16-lg-b" x="166" y="40">300 strokes</text>
+    </svg>
+  </div>
+
+  <div class="s16-clip paper">
+    <video data-src="../../assets/media/video/pump-head.mp4"
+           poster="../../assets/media/video/pump-head-poster.jpg"
+           muted loop playsinline preload="none"></video>
+  </div>
+
+  <!-- the ledger: one cell per step, the earlier ones stay lit but step back -->
+  <div class="ledger" id="s16-ledger">
+    <div class="ledger__cell" data-cell="0">
+      <div class="ledger__v">0.27 %</div>
+      <div class="ledger__k">a hand with a pipette, same balance</div>
+    </div>
+    <div class="ledger__cell" data-cell="1">
+      <div class="ledger__v">0.25–0.34 %</div>
+      <div class="ledger__k">the pump, over 76 replicates</div>
+    </div>
+    <div class="ledger__cell" data-cell="2">
+      <div class="ledger__v"><span id="s16-n3">4.53</span> µL</div>
+      <div class="ledger__k">per stroke, 9.4 % under nominal</div>
+    </div>
+    <div class="ledger__cell" data-cell="3">
+      <div class="ledger__v"><span id="s16-n4a">3.94</span> · <span id="s16-n4b">4.10</span></div>
+      <div class="ledger__k">two heads, same files, own constants</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Draw the target first: a manual pipette on the same balance scatters 0.27 %.</li>
+      <li>The pump sits at 0.25 to 0.34 % across 76 replicates, so it repeats as well as a hand.</li>
+      <li>It is 9.4 % under nominal at 4.53 µL a stroke, a fixed geometric constant corrected once in firmware.</li>
+      <li>The sting: two heads from the identical files gave 3.94 and 4.10 µL, so each print carries its own constant.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S17 · the kinematic decision and the rack ═══════════════════════ -->
+<section class="slide" id="s17" data-cue="s17" data-dialect="fan" data-part="II"
+         data-accent="align" style="--head-h:48px">
+  <h2 class="slide__title">Move the tubes, keep the nozzles still, and let the tube spacing set the size of the machine.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <!-- composition: six sketch sheets fan onto the bench, then compress to the left -->
+  <div class="fan" id="s17-fan">
+    <div class="fan__sheet" data-sheet="0">
+      <div class="paper">
+        <img data-src="../../assets/media/alignment/sketch-1.jpg"
+             alt="Handwritten sketch sheet one: the pushing system, the in queue, the dispensing area and the out queue, with the eight-sample rack setting the module dimensions." />
+      </div>
+    </div>
+    <div class="fan__sheet" data-sheet="1">
+      <div class="paper">
+        <img data-src="../../assets/media/alignment/sketch-2.jpg"
+             alt="Handwritten sketch sheet two, exploring track layouts for the sample rack." />
+      </div>
+    </div>
+    <div class="fan__sheet" data-sheet="2">
+      <div class="paper">
+        <img data-src="../../assets/media/alignment/sketch-6.jpg"
+             alt="Handwritten sketch sheet six, on drive transmission and push orientation." />
+      </div>
+    </div>
+    <div class="fan__sheet" data-sheet="3">
+      <div class="paper">
+        <img data-src="../../assets/media/alignment/sketch-3.jpg"
+             alt="Handwritten sketch sheet three: linear two-row design, actuator and guidance options scored, and a boxed note reading cleanability is the main concern." />
+        <svg class="p2-ov" viewBox="0 0 1600 999" aria-hidden="true">
+          <path class="ln" id="s17-clean" d="M 978 666 L 1432 666 L 1432 752 L 978 752 Z" stroke-width="7" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- what the principle threw away -->
+  <div class="rejects" id="s17-rej">
+    <div class="rej"><span class="rej__t">grippers</span><svg class="rej__x" style="width:122px" viewBox="0 0 300 40" aria-hidden="true"><path class="ln" d="M 8 22 L 292 18" stroke-width="3"/></svg></div>
+    <div class="rej"><span class="rej__t">ball carriages</span><svg class="rej__x" style="width:180px" viewBox="0 0 300 40" aria-hidden="true"><path class="ln" d="M 8 20 L 292 23" stroke-width="3"/></svg></div>
+    <div class="rej"><span class="rej__t">a drive under the spills</span><svg class="rej__x" style="width:272px" viewBox="0 0 300 40" aria-hidden="true"><path class="ln" d="M 8 23 L 292 19" stroke-width="3"/></svg></div>
+    <div class="rej-note">push, never grip · clean first, build second</div>
+  </div>
+
+  <!-- the rack: the consumable that sets the footprint -->
+  <div class="s17-rack" id="s17-rack">
+    <img data-src="../../assets/media/alignment/rack.png"
+         alt="Render of the printed eight-position sample rack, the tube bores numbered one to eight along its chamfered front face." />
+    <svg class="p2-ov" viewBox="0 0 1449 781" aria-hidden="true">
+      <g id="s17-tubes">
+        <ellipse class="tube-g" cx="190"  cy="243" rx="40" ry="22" />
+        <ellipse class="tube-g" cx="337"  cy="262" rx="39" ry="22" />
+        <ellipse class="tube-g" cx="484"  cy="281" rx="38" ry="21" />
+        <ellipse class="tube-g" cx="631"  cy="300" rx="37" ry="21" />
+        <ellipse class="tube-g" cx="778"  cy="320" rx="36" ry="21" />
+        <ellipse class="tube-g" cx="924"  cy="339" rx="35" ry="20" />
+        <ellipse class="tube-g" cx="1071" cy="358" rx="34" ry="20" />
+        <ellipse class="tube-g" cx="1218" cy="377" rx="33" ry="20" />
+      </g>
+      <g id="s17-pitch">
+        <path class="ln" d="M 190 193 L 337 212" stroke-width="6" />
+        <path class="ln soft" d="M 190 193 L 190 233" stroke-width="4" />
+        <path class="ln soft" d="M 337 212 L 337 252" stroke-width="4" />
+        <path class="ln ghost" d="M 240 216 L 226 214 L 220 268 L 234 270" stroke-width="5" />
+        <path class="ln ghost" d="M 289 223 L 303 225 L 309 279 L 295 277" stroke-width="5" />
+      </g>
+      <g id="s17-span">
+        <path class="ln" d="M 190 104 L 1218 238" stroke-width="6" />
+        <path class="ln soft" d="M 190 104 L 190 183" stroke-width="4" />
+        <path class="ln soft" d="M 1218 238 L 1218 357" stroke-width="4" />
+      </g>
+    </svg>
+    <span class="callout" id="s17-tag-pitch" style="left:18.2%;top:20.5%">22 mm</span>
+    <span class="callout" id="s17-tag-span" style="left:48.6%;top:15.5%">154 mm of travel</span>
+    <span class="callout callout--ghost" id="s17-tag-jaw" style="left:6%;top:78%">room for a cap opener</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Fifty ideas with Marius, ten survived. Still nozzles mean tubing that never bends, and the rack is the progress bar.</li>
+      <li>One principle ran the module: easy to clean first, easy to build second. Push, never grip.</li>
+      <li>Eight tubes because biology counts in eights; 22 mm apart because a cap opener needs the room, measured off Pulkit&apos;s prototype.</li>
+      <li>That pitch sets 154 mm of travel, and the footprint of the whole instrument belongs to the consumable.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S18 · three builds, an alignment module that finds its own zero ══ -->
+<section class="slide" id="s18" data-cue="s18" data-dialect="accordion" data-part="II"
+         data-accent="align" style="--head-h:48px">
+  <h2 class="slide__title">Three builds made a printed alignment module that finds its own zero.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="acc" id="s18-acc">
+    <div class="acc__p" data-p="0">
+      <div class="acc__media acc__media--fit">
+        <img data-src="assets/stills/alignment-v1-stage.png"
+             alt="The v1 alignment module: a motor at rail level driving a printed pinion along a green spur rack beside an eight-position sample deck." />
+      </div>
+      <div class="acc__cap">
+        <span class="acc__k">v1</span>
+        <span class="acc__t">A printed rack and pinion indexes 22 mm, repeatably.</span>
+      </div>
+    </div>
+    <div class="acc__p" data-p="1">
+      <div class="acc__media">
+        <video data-src="../../assets/media/video/alignment-v2.mp4"
+               poster="../../assets/media/video/alignment-v2-poster.jpg"
+               muted loop playsinline preload="none"></video>
+      </div>
+      <div class="acc__cap">
+        <span class="acc__k">v2</span>
+        <span class="acc__t">The drive moved above the samples, protected by gravity.</span>
+      </div>
+    </div>
+    <div class="acc__p" data-p="2">
+      <div class="acc__media">
+        <img data-src="../../assets/media/alignment/v21-homing.jpg"
+             alt="The v2.1 alignment module on the bench: the overhead stepper driving the toothed rack, with a microswitch mounted at the left end of the rail as the home datum." />
+        <svg class="p2-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <circle class="ln" id="s18-sw" cx="262" cy="350" r="118" stroke-width="10" />
+        </svg>
+      </div>
+      <div class="acc__cap">
+        <span class="acc__k">v2.1</span>
+        <span class="acc__t">A switch and three passes: the zero lands within 0.03 mm.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="s18-bars" id="s18-bars">
+    <div class="sbar">
+      <div class="sbar__track"><div class="sbar__fill" id="s18-need"></div></div>
+      <span class="sbar__k">eight positions need</span>
+      <span class="callout" id="s18-tag-need" style="left:100%">154 mm</span>
+    </div>
+    <div class="sbar">
+      <div class="sbar__track"><div class="sbar__fill sbar__fill--short" id="s18-have"></div><div class="sbar__miss" id="s18-miss"></div></div>
+      <span class="sbar__k">the rail delivered</span>
+      <span class="callout" id="s18-tag-have" style="left:90.9%">140 mm</span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>v1 proved the printed involute rack and pinion indexes repeatably, which is why the rest could stay printed.</li>
+      <li>v2 put the motor above the sample plane: gravity protects the drive, and a seal is a wearing part that must itself be cleaned.</li>
+      <li>v2.1 added a normally-closed switch and a three-pass home: 0.03 mm repeatability, no step loss over 132 mm, homing cut from 110 s to 22 s.</li>
+      <li>One number failed, and it was geometric: 140 mm of usable rail against the 154 mm eight positions demand.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S19 · the V3 chassis ═══════════════════════════════════════════ -->
+<section class="slide" id="s19" data-cue="s19" data-dialect="cards" data-part="II"
+         data-accent="align" style="--head-h:48px">
+  <h2 class="slide__title">The final chassis queues five racks and ejects them with no extra motor.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <!-- composition: a rack glyph travels the U, on a motion path, over the plan view -->
+  <div class="s19-frame paper" id="s19-frame">
+    <img id="s19-top" data-src="../../assets/media/alignment/v3-top-annotated.png"
+         alt="Plan view of the V3 chassis, annotated: the input queue at the left with the eight-position rack on the rail, the electronics bay in the middle, the out queue at the right, and a motor holder at each end." />
+    <img id="s19-iso" data-src="../../assets/media/alignment/v3-iso.png"
+         alt="Isometric render of the V3 chassis: input queue, dispensing lane with the rack in place, electronics bay and output tray in one printed frame." />
+    <svg class="p2-ov" id="s19-ov" viewBox="0 0 2000 1081" aria-hidden="true">
+      <rect class="zone" id="s19-z0" x="270" y="470" width="560" height="400" rx="16" />
+      <rect class="zone" id="s19-z1" x="240" y="352" width="1600" height="112" rx="16" />
+      <rect class="zone" id="s19-z2" x="1250" y="480" width="560" height="390" rx="16" />
+      <g id="s19-ghost">
+        <rect class="rackg rackg--ghost" x="275" y="368" width="555" height="92" rx="18" />
+      </g>
+      <g id="s19-rack">
+        <rect class="rackg" x="275" y="368" width="555" height="92" rx="18" />
+        <circle class="rackh" cx="310" cy="414" r="19" />
+        <circle class="rackh" cx="378" cy="414" r="19" />
+        <circle class="rackh" cx="446" cy="414" r="19" />
+        <circle class="rackh" cx="514" cy="414" r="19" />
+        <circle class="rackh" cx="582" cy="414" r="19" />
+        <circle class="rackh" cx="650" cy="414" r="19" />
+        <circle class="rackh" cx="718" cy="414" r="19" />
+        <circle class="rackh" cx="786" cy="414" r="19" />
+      </g>
+    </svg>
+  </div>
+
+  <div class="s19-rail" id="s19-rail">
+    <div class="s19-row" data-row="0"><span class="s19-k">input queue</span><span class="s19-t">four racks wait</span></div>
+    <div class="s19-row" data-row="1"><span class="s19-k">dispensing lane</span><span class="s19-t">a second axis feeds the next one</span></div>
+    <div class="s19-row" data-row="2"><span class="s19-k">output tray</span><span class="s19-t">two ribs, two grooves, one last 22 mm</span></div>
+    <div class="s19-big" id="s19-big"><span class="s19-num" id="s19-n">0</span><span class="s19-nu">tubes, unattended</span></div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Input queue at the left, dispensing lane in the middle, output tray at the right: the U the rack travels.</li>
+      <li>A second transverse axis pushes the next rack onto the lane, so five racks run without a hand.</li>
+      <li>Ejection is passive: two ribs and two grooves, and the last 22 mm of the existing travel drops the rack into the tray.</li>
+      <li>Forty tubes; and the chassis stopped being a module and became the frame of the instrument.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S20 · the nozzle, rebuilt ═══════════════════════════════════════ -->
+<section class="slide" id="s20" data-cue="s20" data-dialect="cards" data-part="II"
+         data-accent="nozzle" style="--head-h:48px">
+  <h2 class="slide__title">The nozzle was rebuilt so any needle clicks in without tools.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="s20-photo paper" id="s20-photo">
+    <img data-src="../../assets/media/nozzle/as-built.jpg"
+         alt="The rebuilt nozzle module as built: two blunt needles on Luer hubs at the left, four empty seats along the printed bar, the vibration motor with its magnet and offset nuts in the middle, and an elastic band around the carrier at the right." />
+    <svg class="p2-ov" viewBox="0 0 2000 1131" aria-hidden="true">
+      <g id="s20-spin">
+        <path class="ln" d="M 1010 322 A 158 158 0 1 1 888 372" stroke-width="12" />
+        <path class="ln" d="M 862 332 L 884 378 L 932 360" stroke-width="12" />
+      </g>
+      <g id="s20-lift">
+        <path class="ln" d="M 1352 412 L 1352 628" stroke-width="11" />
+        <path class="ln" d="M 1332 438 L 1352 408 L 1372 438" stroke-width="11" />
+        <path class="ln" d="M 1332 602 L 1352 632 L 1372 602" stroke-width="11" />
+      </g>
+      <path class="ln" id="s20-band1" d="M 690 686 C 784 758 784 842 690 914" stroke-width="12" />
+      <path class="ln" id="s20-band2" d="M 1524 686 C 1618 758 1618 842 1524 914" stroke-width="12" />
+    </svg>
+    <span class="callout" id="s20-tag-ecc" style="left:50.5%;top:26%">a magnet and three nuts</span>
+    <span class="callout callout--ghost" id="s20-tag-band" style="left:38%;top:86%">two elastic bands</span>
+  </div>
+  <div class="s20-cap" id="s20-cap">Six seats in a fixed line, 22 mm apart, above the rail.</div>
+
+  <!-- what was inherited, and what was wrong with it -->
+  <div class="inh" id="s20-inh">
+    <div class="inh__row"><span class="inh__t">too weak to shake a droplet off</span><svg class="inh__x" viewBox="0 0 440 30" aria-hidden="true"><path class="ln" d="M 8 16 L 432 13" stroke-width="3"/></svg></div>
+    <div class="inh__row"><span class="inh__t">nothing to bolt it to</span><svg class="inh__x" viewBox="0 0 440 30" aria-hidden="true"><path class="ln" d="M 8 14 L 432 17" stroke-width="3"/></svg></div>
+    <div class="inh__row"><span class="inh__t">a file that could not be edited</span><svg class="inh__x" viewBox="0 0 440 30" aria-hidden="true"><path class="ln" d="M 8 17 L 432 12" stroke-width="3"/></svg></div>
+  </div>
+
+  <div class="s20-r paper" id="s20-r1">
+    <img data-src="../../assets/media/nozzle/carrier-top.png"
+         alt="Render of the needle carrier from above: a long bar with six keyed seats cut as the negative of a Luer hub, on cylindrical guide posts." />
+    <svg class="p2-ov" viewBox="0 0 1488 803" aria-hidden="true">
+      <ellipse class="ln" id="s20-seat" cx="322" cy="407" rx="52" ry="30" stroke-width="9" />
+      <g id="s20-hub">
+        <path class="ln" d="M 292 390 L 352 390 L 352 424 L 292 424 Z" stroke-width="9" />
+        <path class="ln" d="M 278 398 L 292 398 L 292 416 L 278 416 Z" stroke-width="9" />
+        <path class="ln" d="M 366 398 L 352 398 L 352 416 L 366 416 Z" stroke-width="9" />
+      </g>
+    </svg>
+  </div>
+  <div class="s20-rcap" id="s20-rcap1">The seat is a print of the needle&apos;s own hub: slip fit, first try, any gauge.</div>
+
+  <div class="s20-r paper" id="s20-r2">
+    <img data-src="../../assets/media/nozzle/holder-vibr-top.png"
+         alt="Render of the vibration holder from above: the carrier seats over guide posts, with the motor cradle at one end and the drilled band holes through the body." />
+  </div>
+  <div class="s20-rcap" id="s20-rcap2">One degree of freedom, and two bands that only bite at the limits.</div>
+
+  <aside class="notes">
+    <ul>
+      <li>It arrived working in principle and inoperative in practice, with no mounting interface and an OpenSCAD mesh that would not open.</li>
+      <li>Stop clamping the steel, start indexing the plastic: a printed negative of the moulded hub takes any gauge on a slip fit.</li>
+      <li>A magnet and three offset nuts replaced the printed arm; the carrier then walked off its posts.</li>
+      <li>Two elastic bands retain it without killing the compliance that vibration needs.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S21 · the bore decides ═════════════════════════════════════════ -->
+<section class="slide" id="s21" data-cue="s21" data-dialect="drop" data-part="II"
+         data-accent="nozzle" style="--head-h:48px; --title-w:640px">
+  <h2 class="slide__title">The needle bore decides whether a droplet forms at all.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="s21-clip paper">
+    <video data-src="../../assets/media/video/droplet-slowmo.mp4"
+           poster="../../assets/media/video/droplet-slowmo-poster.jpg"
+           muted loop playsinline preload="none"></video>
+  </div>
+
+  <!-- composition: the clip on the left, the same event drawn beside it -->
+  <svg class="s21-stage" id="s21-stage" viewBox="0 0 300 420" aria-hidden="true">
+    <path class="ln soft" d="M 132 18 L 168 18 L 168 52 L 156 62 L 156 150 L 144 150 L 144 62 L 132 52 Z" stroke-width="3" />
+    <path class="ln soft" id="s21-mouth" d="M 104 372 L 104 410 M 196 372 L 196 410" stroke-width="3" />
+    <ellipse class="ln soft" id="s21-mouth2" cx="150" cy="372" rx="46" ry="12" stroke-width="3" />
+    <path class="stream" id="s21-stream" d="M 150 150 L 150 372" stroke-width="7" />
+    <ellipse class="drop" id="s21-drop" cx="150" cy="156" rx="5" ry="5" />
+    <path class="drop-neck" id="s21-neck" d="M 150 150 L 150 158" stroke-width="5" />
+    <ellipse class="drop" id="s21-fall" cx="150" cy="200" rx="13" ry="15" />
+    <text class="s21-verdict" id="s21-verdict" x="150" y="410" text-anchor="middle">a stream</text>
+  </svg>
+
+  <div class="s21-photo paper">
+    <img data-src="../../assets/media/nozzle/needle-assortment.jpg"
+         alt="Ten blunt dispensing needles standing in a row, colour coded by gauge, the bore narrowing from left to right." />
+    <svg class="p2-ov" viewBox="0 0 2000 620" aria-hidden="true">
+      <circle class="ln" id="s21-r21" cx="1076" cy="336" r="74" stroke-width="11" />
+      <circle class="ln" id="s21-r22" cx="1236" cy="336" r="74" stroke-width="11" />
+      <circle class="ln" id="s21-r25" cx="1526" cy="336" r="74" stroke-width="11" />
+      <circle class="ln" id="s21-r27" cx="1675" cy="336" r="74" stroke-width="11" />
+    </svg>
+  </div>
+
+  <div class="bores" id="s21-bores">
+    <div class="bore" data-bore="0">
+      <svg class="bore__g" viewBox="0 0 44 44" aria-hidden="true"><circle class="bw" cx="22" cy="22" r="13"/><circle class="bi" cx="22" cy="22" r="6.3"/></svg>
+      <span class="bore__k">27 G</span><span class="bore__v">0.21 mm</span><span class="bore__x">a stream</span>
+    </div>
+    <div class="bore" data-bore="1">
+      <svg class="bore__g" viewBox="0 0 44 44" aria-hidden="true"><circle class="bw" cx="22" cy="22" r="14.8"/><circle class="bi" cx="22" cy="22" r="7.8"/></svg>
+      <span class="bore__k">25 G</span><span class="bore__v">0.26 mm</span><span class="bore__x">a stream</span>
+    </div>
+    <div class="bore" data-bore="2">
+      <svg class="bore__g" viewBox="0 0 44 44" aria-hidden="true"><circle class="bw" cx="22" cy="22" r="19.3"/><circle class="bi" cx="22" cy="22" r="12.3"/></svg>
+      <span class="bore__k">22 G</span><span class="bore__v">0.41 mm</span><span class="bore__x">a droplet</span>
+    </div>
+    <div class="bore" data-bore="3">
+      <svg class="bore__g" viewBox="0 0 44 44" aria-hidden="true"><circle class="bw" cx="22" cy="22" r="21.3"/><circle class="bi" cx="22" cy="22" r="15.3"/></svg>
+      <span class="bore__k">21 G</span><span class="bore__v">0.51 mm</span><span class="bore__x">a droplet</span>
+    </div>
+    <div class="bore" data-bore="4">
+      <svg class="bore__g" viewBox="0 0 44 44" aria-hidden="true"><circle class="bw" cx="22" cy="22" r="20"/><circle class="bi" cx="22" cy="22" r="13.5"/></svg>
+      <span class="bore__k">plastic</span><span class="bore__v">tapered</span><span class="bore__x">nine of ten, never sideways</span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Five tips, water, the same burst: the only thing changed is the bore.</li>
+      <li>At 0.21 and 0.26 mm the liquid leaves as a stream and the vibration has nothing to act on.</li>
+      <li>At 0.41 and 0.51 mm a droplet forms, grows, and the burst releases it.</li>
+      <li>Plastic tips beat every steel needle, nine of ten and never sideways; the machine still ran on 22 G steel.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S22 · the inherited screen, and the browser that checked itself ══ -->
+<section class="slide" id="s22" data-cue="s22" data-dialect="cards" data-part="II"
+         data-map="rack" style="--head-h:48px">
+  <h2 class="slide__title">The inherited screen trapped the user, so it was redrawn in a browser that checked its own buttons.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="s22-scr paper" id="s22-a">
+    <img data-src="assets/stills/ui-v1-home.png"
+         alt="The inherited main menu on the 320 by 240 panel: two large tiles, Volume Levels with a warning triangle and Run." />
+    <span class="s22-scr__cap">No way out of calibration but the power switch.</span>
+  </div>
+
+  <div class="s22-scr paper" id="s22-b">
+    <img data-src="assets/ui/ui-v22-home-twopumps.png"
+         alt="The rebuilt home screen: a Start a run tile, a Recipes tile, and a liquids band showing six bottles with two of them filled." />
+    <svg class="p2-ov" viewBox="0 0 1280 960" aria-hidden="true">
+      <rect class="mask" id="s22-fill1" x="688" y="718" width="48" height="140" rx="24" />
+      <rect class="mask" id="s22-fill2" x="773" y="718" width="48" height="140" rx="24" />
+    </svg>
+    <span class="s22-scr__cap">A picture of the machine: bottles at their fill, three rows at most.</span>
+  </div>
+
+  <div class="tt" id="s22-tt">
+    <div class="tt__row">
+      <span class="tt__box tt__box--bad" id="s22-bad"></span>
+      <span class="tt__l">25 × 14 px, as inherited</span>
+    </div>
+    <div class="tt__row">
+      <span class="tt__box tt__box--good" id="s22-good"></span>
+      <span class="tt__l">44 × 44 px, the standard, 8.9 mm on this panel</span>
+    </div>
+  </div>
+
+  <div class="s22-cands" id="s22-cands">
+    <div class="cand paper" data-cand="0">
+      <img data-src="assets/stills/ui-round1-console.png"
+           alt="Round one candidate, the console: a dense table of six channels with liquid, container, level and available volume." />
+    </div>
+    <div class="cand paper" data-cand="1">
+      <img data-src="assets/stills/ui-round1-field.png"
+           alt="Round one candidate, the field layout: fewer, larger controls sized for a gloved hand." />
+    </div>
+    <div class="cand paper" data-cand="2">
+      <img data-src="assets/stills/ui-round1-machine-state.png"
+           alt="Round one candidate, the machine-state layout: the instrument drawn as bottles and a rack rather than as a list." />
+    </div>
+  </div>
+
+  <div class="s22-audit" id="s22-audit">
+    <div class="s22-audit__v"><span id="s22-cr">6.2</span>:1</div>
+    <div class="s22-audit__k">each page measured its own contrast and its smallest button</div>
+  </div>
+
+  <div class="s22-word" id="s22-word">
+    <span class="w" id="s22-w0">tube</span>
+    <span class="w w--split" id="s22-w1">line</span>
+    <span class="w w--split" id="s22-w2">tube</span>
+    <span class="s22-wk">one word was doing two jobs</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Porting the inherited firmware was easy; finishing it was not. A calibration screen you could only leave by power-cycling ended it.</li>
+      <li>A 240-pixel canvas fits three list rows, so the interface stopped being a list and became a picture of the machine.</li>
+      <li>Nine candidates over three rounds, each page auditing itself: a 6.2:1 palette was caught before it reached the device, and became 7.1:1.</li>
+      <li>Two colleagues found in an afternoon that tube meant two things; it became line and tube.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S23 · one run, start to done ═══════════════════════════════════ -->
+<section class="slide" id="s23" data-cue="s23" data-dialect="shutter" data-part="II"
+         data-map="rack">
+  <h2 class="slide__title">One run, start to done, on one screen.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+  <i class="fragment step-cue" data-step="6"></i>
+  <i class="fragment step-cue" data-step="7"></i>
+
+  <!-- composition: six device frames arrive behind a shutter, then fold into a filmstrip -->
+  <div class="frames" id="s23-frames">
+    <figure class="fr" data-fr="0">
+      <img data-src="assets/ui/ui-v22-home-twopumps.png"
+           alt="Home screen: Start a run, Recipes, and a liquids band with two bottles filled." />
+    </figure>
+    <figure class="fr" data-fr="1">
+      <img data-src="assets/ui/ui-v22-picker.png"
+           alt="Recipe picker: the saved protocols listed three to a page." />
+    </figure>
+    <figure class="fr" data-fr="2">
+      <img data-src="assets/ui/ui-v22-assign.png"
+           alt="Assign screen: each liquid of the recipe mapped onto a physical channel." />
+    </figure>
+    <figure class="fr" data-fr="3">
+      <img data-src="assets/ui/ui-v22-check.png"
+           alt="Pre-run check: the volume each channel needs against the volume it holds." />
+    </figure>
+    <figure class="fr" data-fr="4">
+      <img data-src="assets/ui/ui-v22-run-move.png"
+           alt="Dispensing: tube 7 of 16, a progress bar at 40 per cent, moving to the next tube, with pause and stop." />
+    </figure>
+    <figure class="fr" data-fr="5">
+      <img data-src="assets/ui/ui-v22-done.png"
+           alt="Done: the run finished, with the summary and the way back to the home screen." />
+    </figure>
+  </div>
+
+  <div class="tool-card" id="s23-card" data-tool="uimockup"
+       data-src="../../tools/ui-mockup/index.html"
+       data-poster="assets/posters/ui-mockup.png"
+       style="left:360px; top:318px; width:560px; height:350px;">
+    <span class="tool-card__name">Operator Interface, Live</span>
+    <span class="tool-card__line">Start a run.</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Six screens is the whole run: home, pick, assign, check, dispense, done.</li>
+      <li>The check is the point: it compares what the recipe needs with what the bottles hold, and it can rename Start to Refill first.</li>
+      <li>Open the live card and walk one run; the machine below is doing the same thing.</li>
+      <li>The interface never shows a number it cannot stand behind.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S24 · the reagent storage, inherited ═══════════════════════════ -->
+<section class="slide" id="s24" data-cue="s24" data-dialect="cards" data-part="II"
+         data-map="store" style="--head-h:48px">
+  <h2 class="slide__title">The reagent waits in a sealed vial, read by a sensor and drawn by two needles.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="st" id="s24-c0">
+    <div class="paper st__media">
+      <img data-src="../../assets/media/storage/cartridge.jpg"
+           alt="The printed cartridge gripping a small vial by its black septum cap, a strip of copper tape crossing the cartridge face as the capacitive electrode." />
+      <svg class="p2-ov" viewBox="0 0 1200 1500" aria-hidden="true">
+        <path class="ln" id="s24-cu" d="M 322 800 L 448 640 L 800 440 L 930 400" stroke-width="16" />
+      </svg>
+    </div>
+    <div class="st__cap"><span class="st__k">cartridge</span><span class="st__t">Copper tape on the inside faces reads the level to within 5 %.</span></div>
+  </div>
+
+  <div class="st" id="s24-c1">
+    <div class="paper st__media">
+      <img data-src="../../assets/media/storage/sleeve.jpg"
+           alt="The printed sleeve seen from above, an open box with a single gold spring-loaded probe pin standing on its inner wall." />
+      <svg class="p2-ov" viewBox="0 0 1106 1382" aria-hidden="true">
+        <circle class="ln" id="s24-pin" cx="551" cy="600" r="86" stroke-width="14" />
+      </svg>
+    </div>
+    <div class="st__cap"><span class="st__k">sleeve</span><span class="st__t">Two spring pins carry the reading across whatever the cap height is.</span></div>
+  </div>
+
+  <div class="st" id="s24-c2">
+    <div class="paper st__media">
+      <img data-src="../../assets/media/storage/needle-holder.jpg"
+           alt="The needle holder: two needles standing side by side between copper contact pads, with a green syringe filter on the air line below." />
+      <svg class="p2-ov" viewBox="0 0 1200 1600" aria-hidden="true">
+        <path class="ln" id="s24-liq" d="M 520 340 L 520 560 L 470 700 L 470 980" stroke-width="14" />
+        <path class="ln soft" id="s24-air" d="M 582 70 L 582 450 L 620 900 L 470 1310 L 400 1400" stroke-width="14" />
+        <circle class="ln" id="s24-filt" cx="365" cy="1432" r="168" stroke-width="14" />
+      </svg>
+    </div>
+    <div class="st__cap"><span class="st__k">needle holder</span><span class="st__t">One needle draws the liquid, one lets air in through a 0.22 µm filter.</span></div>
+  </div>
+
+  <svg class="s24-mesh" id="s24-mesh" viewBox="0 0 1080 460" aria-hidden="true">
+    <path class="mesh" d="M 0 0 L 1080 0 M 0 115 L 1080 115 M 0 230 L 1080 230 M 0 345 L 1080 345 M 0 460 L 1080 460 M 0 0 L 0 460 M 180 0 L 180 460 M 360 0 L 360 460 M 540 0 L 540 460 M 720 0 L 720 460 M 900 0 L 900 460 M 1080 0 L 1080 460 M 0 0 L 180 115 M 360 0 L 180 115 M 360 0 L 540 115 M 720 0 L 540 115 M 720 0 L 900 115 M 1080 0 L 900 115 M 180 115 L 0 230 M 180 115 L 360 230 M 540 115 L 360 230 M 540 115 L 720 230 M 900 115 L 720 230 M 900 115 L 1080 230 M 0 230 L 180 345 M 360 230 L 180 345 M 360 230 L 540 345 M 720 230 L 540 345 M 720 230 L 900 345 M 1080 230 L 900 345 M 180 345 L 0 460 M 180 345 L 360 460 M 540 345 L 360 460 M 540 345 L 720 460 M 900 345 L 720 460 M 900 345 L 1080 460" />
+  </svg>
+  <div class="s24-meshk" id="s24-meshk">It arrived as a mesh, not a model, and that shaped the integration.</div>
+
+  <div class="s24-credit">Designed and built by Marius Schiller.</div>
+
+  <aside class="notes">
+    <ul>
+      <li>The vial is inverted and sealed by a septum that recloses after the needle leaves.</li>
+      <li>Copper tape on the cartridge is the capacitive electrode; spring pins in the sleeve carry the signal out. Two-point calibration, within 5 %.</li>
+      <li>Two needles per vial: one draws the liquid, one vents the container through a 0.22 µm filter, so the air that replaces the reagent is sterile.</li>
+      <li>It came over as an uneditable mesh, so the carrier had to be designed around the physical hardware.</li>
+    </ul>
+  </aside>
+</section>
+
+<style data-part="part2">
+/* ══════════════════════════════════════════════════════════════════════
+   Part II — slide-local CSS.  Four compositions are new to this part and
+   are named here so the rest of the deck can borrow them:
+     · "journey"  (S11) five stops that light in order, a drop running the line
+     · "chipfield"(S12) thirty chips that thin to two and grow into the finalists
+     · "fan"      (S17) loose sketch sheets that fan onto a bench and compress
+     · "accordion"(S18) three panels, the discussed one widening
+     · "rack on a motion path" (S19), "drawn droplet beside the clip" (S21),
+       "shutter to filmstrip" (S23), "wireframe over the photographs" (S24)
+   Everything is scoped to its slide id; the shared dialect classes come
+   from the head.  Nothing here is below 18 px at stage size.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── shared drawing primitives ─────────────────────────────────────── */
+#s12 .p2-ov, #s14 .p2-ov, #s15 .p2-ov, #s17 .p2-ov, #s18 .p2-ov,
+#s19 .p2-ov, #s20 .p2-ov, #s21 .p2-ov, #s22 .p2-ov, #s24 .p2-ov {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  overflow: visible; pointer-events: none;
+}
+.p2-ov .ln { fill: none; stroke: var(--t-a); stroke-linecap: round; stroke-linejoin: round; }
+.p2-ov .ln.soft  { stroke: color-mix(in srgb, var(--t-a) 55%, transparent); }
+.p2-ov .ln.ghost { stroke: color-mix(in srgb, var(--t-a) 50%, transparent); stroke-dasharray: 16 13; }
+.p2-ov .dot { fill: var(--t-a); stroke: none; }
+.sheet__frame { position: relative; }
+/* four-row rails: let every panel shrink to its equal share, so the last
+   one is not the only one that clips */
+#s14 .sheet__panel, #s15 .sheet__panel { min-height: 0; padding-top: 10px; padding-bottom: 10px; }
+
+/* the drawn panels that sit on the paper sheet beside a photograph */
+.sheet__draw { display: block; flex: none; overflow: visible; }
+.sheet__draw .ln    { fill: none; stroke: var(--t-a); stroke-linecap: round; stroke-linejoin: round; }
+.sheet__draw .ln.soft { stroke: rgba(27,34,51,0.42); }
+.sheet__draw .ln.axis { stroke: rgba(27,34,51,0.55); }
+.sheet__draw .ln.zero { stroke: rgba(27,34,51,0.38); }
+.sheet__draw .ln.mean { stroke: rgba(27,34,51,0.75); }
+.sheet__draw .band  { fill: color-mix(in srgb, var(--t-a) 15%, transparent); }
+.sheet__draw .bar   { fill: var(--t-a); }
+.sheet__draw .bar.soft2 { fill: rgba(27,34,51,0.34); }
+.sheet__draw .barbg { fill: rgba(27,34,51,0.09); }
+.sheet__draw .plate { fill: rgba(233,230,226,0.92); }
+.sheet__draw .dk { font-family: var(--mono); font-size: 18px; fill: rgba(27,34,51,0.62); }
+.sheet__draw .dv { font-family: var(--mono); font-size: 22px; font-weight: 600; fill: #1b2233;
+                   font-variant-numeric: tabular-nums; }
+
+/* ══ S11 · the journey strip ════════════════════════════════════════ */
+#s11 .divider__inner { justify-content: flex-start; padding-top: 128px; }
+#s11 .jrn { position: absolute; left: 96px; top: 452px; width: 1088px; height: 92px; }
+#s11 .jrn svg { display: block; }
+#s11 .jrn-line { fill: none; stroke: rgba(255,255,255,0.16); stroke-width: 2; stroke-linecap: round; }
+#s11 .jrn-g { fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+#s11 .jrn-t { font-family: var(--mono); font-size: 18px; font-weight: 600; letter-spacing: 0.14em;
+              fill: var(--text-muted); text-anchor: middle; }
+#s11 .jrn-drop { fill: var(--accent); }
+
+/* ══ S12 · the chip field ═══════════════════════════════════════════ */
+#s12 .chipfield { position: relative; width: 764px; height: 336px; }
+#s12 .chip {
+  position: absolute; left: 0; top: 0; width: 104px; height: 34px;
+  border-radius: 8px; background: rgba(27,34,51,0.08);
+  border: 1px solid rgba(27,34,51,0.22);
+  overflow: hidden;
+}
+#s12 .chip--big { background: #ffffff; border: 2px solid var(--t-a); border-radius: 14px; }
+#s12 .chip__body { position: absolute; inset: 0; padding: 14px 18px 12px; display: flex; flex-direction: column; }
+#s12 .chip__glyph { display: block; width: 100%; height: 132px; flex: none; }
+#s12 .chip__glyph .ln { fill: none; stroke: #1b2233; stroke-linecap: round; stroke-linejoin: round; }
+#s12 .chip__glyph .ln.fillsoft { fill: rgba(27,34,51,0.07); }
+#s12 .chip__glyph .tube { fill: none; stroke: var(--t-a); stroke-linecap: round; }
+#s12 .chip__score { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
+#s12 .chip__num { font-family: var(--mono); font-size: 38px; font-weight: 700; line-height: 1;
+                  color: #1b2233; font-variant-numeric: tabular-nums; }
+#s12 .chip__u { font-family: var(--mono); font-size: 18px; color: rgba(27,34,51,0.55); }
+#s12 .chip__bar { position: relative; height: 7px; border-radius: 4px;
+                  background: rgba(27,34,51,0.12); margin: 10px 0 10px; }
+#s12 .chip__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 4px;
+                   background: linear-gradient(90deg, var(--t-a), var(--t-b)); }
+#s12 .chip__label { font-size: 19px; color: rgba(27,34,51,0.82); }
+#s12 .p2-ov .wet { stroke-linejoin: round;
+                   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--t-a) 55%, transparent)); }
+
+/* ══ S13 · the design-point ladder ══════════════════════════════════ */
+#s13 .ladder { position: absolute; left: 56px; top: 556px; width: 880px; height: 140px; overflow: visible; }
+#s13 .ladder__line { fill: none; stroke: var(--t-a); stroke-width: 2; stroke-linecap: round; }
+#s13 .ladder__node circle { fill: var(--t-a); stroke: none; }
+#s13 .ladder__v { font-family: var(--mono); font-size: 30px; font-weight: 600; fill: var(--text);
+                  text-anchor: middle; font-variant-numeric: tabular-nums; }
+#s13 .ladder__k { font-family: var(--mono); font-size: 18px; fill: var(--text-muted);
+                  text-anchor: middle; letter-spacing: 0.08em; }
+
+/* ══ S16 · the drawn precision chart, the clip and the ledger ═══════ */
+#s16 .s16-plate { position: absolute; left: 56px; top: 214px; width: 700px; height: 340px; }
+#s16 .chart { display: block; width: 700px; height: 340px; }
+#s16 .chart .grid { fill: none; stroke: rgba(27,34,51,0.10); stroke-width: 1; }
+#s16 .chart .ax   { fill: none; stroke: rgba(27,34,51,0.55); stroke-width: 2; }
+#s16 .chart .ct   { font-family: var(--mono); font-size: 18px; fill: rgba(27,34,51,0.62); }
+#s16 .chart .pip  { fill: none; stroke: #5c6672; stroke-width: 4; stroke-linecap: round; }
+#s16 .chart .pip-t{ font-family: var(--mono); font-size: 18px; fill: #5c6672; }
+#s16 .chart .ser  { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+#s16 .chart .ser--a { stroke: var(--t-a); }
+#s16 .chart .ser--b { stroke: #1b2233; }
+#s16 .chart .pt--a  { fill: var(--t-a); }
+#s16 .chart .pt--b  { fill: #1b2233; }
+#s16 .chart .lg     { font-family: var(--mono); font-size: 18px; font-weight: 600; }
+#s16 .chart .lg--a  { fill: var(--t-a); }
+#s16 .chart .lg--b  { fill: #1b2233; }
+#s16 .s16-clip { position: absolute; left: 784px; top: 214px; width: 440px; height: 340px; background: #000; }
+#s16 .s16-clip video { display: block; width: 100%; height: 100%; object-fit: cover; }
+#s16 .ledger { position: absolute; left: 56px; top: 584px; width: 884px; height: 104px; display: flex; gap: 12px; }
+#s16 .ledger__cell { flex: 1 1 0; padding: 11px 14px; border-radius: var(--r-md);
+                     background: var(--glass-bg); border: 1px solid var(--glass-border); }
+#s16 .ledger__v { font-family: var(--mono); font-size: 28px; font-weight: 600; line-height: 1.1;
+                  color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+#s16 .ledger__k { margin-top: 7px; font-size: 18px; line-height: 1.22; color: var(--text-soft); }
+
+/* ══ S17 · the sketch fan and the rack ═════════════════════════════ */
+#s17 .fan { position: absolute; inset: 0; pointer-events: none; }
+#s17 .fan__sheet { position: absolute; left: 190px; top: 288px; width: 430px; height: 270px; }
+#s17 .fan__sheet .paper { position: absolute; inset: 0;
+  border: 1px solid rgba(255,255,255,0.16); box-shadow: 0 22px 50px rgba(0,0,0,0.55); }
+#s17 .rejects { position: absolute; left: 700px; top: 258px; width: 500px; }
+#s17 .rej { position: relative; margin-bottom: 26px; }
+#s17 .rej__t { font-size: 22px; color: var(--text); }
+#s17 .rej__x { position: absolute; left: -8px; top: 0; width: 320px; height: 34px; }
+#s17 .rej__x .ln { fill: none; stroke: var(--accent-2); stroke-linecap: round; }
+#s17 .rej-note { margin-top: 14px; font-family: var(--mono); font-size: 18px;
+                 letter-spacing: 0.08em; color: var(--t-a); }
+#s17 .s17-rack { position: absolute; left: 640px; top: 250px; width: 584px; height: 315px;
+                 background: var(--paper); border-radius: var(--r-lg); overflow: hidden;
+                 border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 22px 52px rgba(0,0,0,0.5); }
+#s17 .s17-rack > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+#s17 .tube-g { fill: color-mix(in srgb, var(--t-a) 70%, transparent); stroke: var(--t-a); stroke-width: 6; }
+
+/* ══ S18 · the accordion and the two bars ══════════════════════════ */
+#s18 .acc { position: absolute; left: 56px; top: 214px; width: 1168px; height: 366px; display: flex; gap: 16px; }
+#s18 .acc__p { position: relative; flex: 0 0 auto; width: 378px; height: 366px;
+  border-radius: var(--r-lg); overflow: hidden; background: #0d0f12;
+  border: 1px solid var(--glass-border); box-shadow: 0 22px 56px rgba(0,0,0,0.52); }
+#s18 .acc__media { position: absolute; inset: 0; }
+#s18 .acc__media img, #s18 .acc__media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+#s18 .acc__media--fit { display: flex; align-items: center; background: #f2efec; }
+#s18 .acc__media--fit img { object-fit: contain; }
+#s18 .acc__cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 20px 20px 16px;
+  background: linear-gradient(to top, rgba(8,8,10,0.95), rgba(8,8,10,0.66) 58%, rgba(8,8,10,0)); }
+#s18 .acc__k { display: block; font-family: var(--mono); font-size: 18px; font-weight: 700;
+               letter-spacing: 0.2em; text-transform: uppercase; color: var(--t-a); }
+#s18 .acc__t { display: block; margin-top: 6px; font-size: 19px; line-height: 1.25; color: var(--text); }
+#s18 .s18-bars { position: absolute; left: 56px; top: 606px; width: 884px; }
+#s18 .sbar { position: relative; height: 34px; margin-bottom: 12px; }
+#s18 .sbar__track { position: absolute; inset: 0; border-radius: var(--r-sm);
+                    background: rgba(255,255,255,0.07); overflow: hidden; }
+#s18 .sbar__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+                   background: linear-gradient(90deg, var(--t-a), var(--t-b)); }
+#s18 .sbar__fill--short { background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 78%, transparent), color-mix(in srgb, var(--t-b) 78%, transparent)); }
+#s18 .sbar__miss { position: absolute; right: 0; top: 0; bottom: 0; width: 9.1%;
+                   background: rgba(232,53,53,0); }
+#s18 .sbar__k { position: absolute; left: 16px; top: 6px; z-index: 2;
+                font-size: 19px; color: #0b0b0d; }
+#s18 .sbar .callout { top: 3px; margin-left: -12px; transform: translateX(-100%); }
+
+/* ══ S19 · the plan view, the rack on its path ═════════════════════ */
+#s19 .s19-frame { position: absolute; left: 56px; top: 214px; width: 851px; height: 460px; }
+#s19 .s19-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+#s19 #s19-iso { opacity: 0; }
+#s19 .zone { fill: color-mix(in srgb, var(--t-a) 14%, transparent);
+             stroke: var(--t-a); stroke-width: 6; }
+#s19 .rackg { fill: color-mix(in srgb, var(--t-a) 34%, transparent); stroke: var(--t-a); stroke-width: 7; }
+#s19 .rackg--ghost { fill: none; stroke: color-mix(in srgb, var(--t-a) 45%, transparent); stroke-dasharray: 22 18; }
+#s19 .rackh { fill: var(--t-a); opacity: 0.85; }
+#s19 .s19-rail { position: absolute; left: 940px; top: 220px; width: 284px; }
+#s19 .s19-row { margin-bottom: 18px; }
+#s19 .s19-k { display: block; font-family: var(--mono); font-size: 18px; font-weight: 700;
+              letter-spacing: 0.18em; text-transform: uppercase; color: var(--t-a); }
+#s19 .s19-t { display: block; margin-top: 5px; font-size: 18px; line-height: 1.3; color: var(--text-soft); }
+#s19 .s19-big { margin-top: 30px; }
+#s19 .s19-num { font-family: var(--mono); font-size: 56px; font-weight: 700; line-height: 1;
+                color: var(--text); font-variant-numeric: tabular-nums; }
+#s19 .s19-nu { display: block; margin-top: 6px; font-size: 18px; color: var(--text-soft); }
+
+/* ══ S20 · the nozzle, one frame that swaps views ══════════════════ */
+#s20 .s20-photo { position: absolute; left: 56px; top: 216px; width: 600px; height: 340px; }
+#s20 .s20-photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+#s20 .s20-cap { position: absolute; left: 56px; top: 568px; width: 600px;
+                font-size: 19px; color: var(--text-soft); }
+#s20 .inh { position: absolute; left: 684px; top: 250px; width: 540px; }
+#s20 .inh__row { position: relative; margin-bottom: 30px; }
+#s20 .inh__t { font-size: 21px; color: var(--text); }
+#s20 .inh__x { position: absolute; left: -8px; top: 2px; width: 460px; height: 30px; }
+#s20 .inh__x .ln { fill: none; stroke: var(--accent-2); stroke-linecap: round; }
+#s20 .s20-r { position: absolute; left: 684px; top: 216px; width: 540px; height: 292px; }
+#s20 .s20-r > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+#s20 .s20-rcap { position: absolute; left: 684px; top: 522px; width: 540px;
+                 font-size: 19px; line-height: 1.28; color: var(--text-soft); }
+
+/* ══ S21 · the clip, the drawn droplet, the bores ══════════════════ */
+#s21 .s21-clip { position: absolute; left: 56px; top: 214px; width: 236px; height: 420px; background: #000; }
+#s21 .s21-clip video { display: block; width: 100%; height: 100%; object-fit: cover; }
+#s21 .s21-stage { position: absolute; left: 312px; top: 214px; width: 300px; height: 420px; }
+#s21 .s21-stage .ln { fill: none; stroke: var(--t-a); stroke-linecap: round; stroke-linejoin: round; }
+#s21 .s21-stage .ln.soft { stroke: rgba(240,236,232,0.32); }
+#s21 .stream { fill: none; stroke: var(--t-a); stroke-linecap: round;
+               stroke-dasharray: 18 16; animation: s21-flow 760ms linear infinite; }
+@keyframes s21-flow { to { stroke-dashoffset: -34; } }
+#s21 .drop { fill: var(--t-a); }
+#s21 .drop-neck { fill: none; stroke: var(--t-a); stroke-linecap: round; }
+#s21 .s21-verdict { font-family: var(--mono); font-size: 20px; font-weight: 600;
+                    fill: var(--t-a); letter-spacing: 0.1em; }
+#s21 .s21-photo { position: absolute; left: 648px; top: 214px; width: 576px; height: 179px; }
+#s21 .bores { position: absolute; left: 648px; top: 418px; width: 576px; }
+#s21 .bore { display: flex; align-items: center; gap: 12px; height: 31px; opacity: 0.26; }
+#s21 .bore__g { width: 28px; height: 28px; flex: none; }
+#s21 .bore__g .bw { fill: none; stroke: rgba(240,236,232,0.42); stroke-width: 2; }
+#s21 .bore__g .bi { fill: var(--t-a); }
+#s21 .bore__k { font-family: var(--mono); font-size: 19px; font-weight: 700; color: var(--text); width: 78px; flex: none; }
+#s21 .bore__v { font-family: var(--mono); font-size: 19px; color: var(--text-soft); width: 112px; flex: none; }
+#s21 .bore__x { font-size: 19px; color: var(--text-soft); }
+
+/* ══ S22 · two screens, three candidates, one word ═════════════════ */
+#s22 .slide__title { font-size: 40px; }
+#s22 .s22-scr { position: absolute; left: 56px; top: 206px; width: 520px; height: 390px; overflow: visible; }
+#s22 .s22-scr img { border-radius: var(--r-md); }
+#s22 #s22-b { left: 486px; top: 206px; width: 400px; height: 300px; opacity: 0; }
+/* two lines of caption ended 3 px inside the candidate row below: pull the
+   caption up and drop the row a little, nothing shrinks. */
+#s22 .s22-scr__cap { position: absolute; left: 0; top: 100%; margin-top: 5px; width: 100%;
+                     font-size: 19px; line-height: 1.22; color: var(--text-soft); }
+#s22 .mask { fill: #e9e9f1; }
+#s22 .tt { position: absolute; left: 700px; top: 248px; width: 524px; }
+#s22 .tt__row { display: flex; align-items: center; gap: 22px; margin-bottom: 36px; }
+#s22 .tt__box { display: block; flex: none; border-radius: 4px; }
+#s22 .tt__box--bad { width: 50px; height: 28px; background: var(--accent-2); }
+#s22 .tt__box--good { width: 88px; height: 88px; border: 2px solid var(--accent);
+                      background: color-mix(in srgb, var(--accent) 30%, transparent); }
+#s22 .tt__l { font-size: 20px; line-height: 1.3; color: var(--text-soft); }
+#s22 .s22-cands { position: absolute; left: 56px; top: 470px; width: 880px; display: flex; gap: 20px; }
+#s22 .cand { width: 280px; height: 210px; }
+#s22 .s22-audit { position: absolute; left: 970px; top: 446px; width: 254px; }
+#s22 .s22-audit__v { font-family: var(--mono); font-size: 48px; font-weight: 700; line-height: 1;
+                     color: var(--accent-2); font-variant-numeric: tabular-nums; }
+#s22 .s22-audit__k { margin-top: 10px; font-size: 18px; line-height: 1.3; color: var(--text-soft); }
+#s22 .s22-word { position: absolute; left: 700px; top: 206px; width: 524px; height: 220px; }
+#s22 .w { position: absolute; left: 0; top: 40px; font-family: var(--display); font-weight: 700;
+          font-size: 64px; line-height: 1; letter-spacing: -0.02em; color: var(--text); }
+#s22 .s22-wk { position: absolute; left: 0; top: 152px; width: 524px;
+               font-size: 19px; line-height: 1.3; color: var(--text-soft); }
+
+/* ══ S23 · six frames behind a shutter, then a filmstrip ═══════════ */
+#s23 .frames { position: absolute; inset: 0; }
+#s23 .fr { position: absolute; margin: 0; width: 290px; height: 218px;
+  border-radius: var(--r-md); overflow: hidden; background: #0d0f12;
+  border: 1px solid var(--glass-border); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
+#s23 .fr img { display: block; width: 100%; height: 100%; object-fit: cover; }
+#s23 .fr[data-fr="0"] { left: 56px;  top: 180px; }
+#s23 .fr[data-fr="1"] { left: 352px; top: 180px; }
+#s23 .fr[data-fr="2"] { left: 648px; top: 180px; }
+#s23 .fr[data-fr="3"] { left: 56px;  top: 410px; }
+#s23 .fr[data-fr="4"] { left: 352px; top: 410px; }
+#s23 .fr[data-fr="5"] { left: 648px; top: 410px; }
+#s23 .tool-card { opacity: 0; }
+
+/* ══ S24 · three parts, and the mesh they arrived as ═══════════════ */
+#s24 .st { position: absolute; top: 204px; width: 320px; }
+#s24 #s24-c0 { left: 56px; }
+#s24 #s24-c1 { left: 396px; }
+#s24 #s24-c2 { left: 736px; }
+#s24 .st__media { position: relative; width: 320px; height: 318px; }
+#s24 .st__cap { margin-top: 14px; }
+#s24 .st__k { display: block; font-family: var(--mono); font-size: 18px; font-weight: 700;
+              letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+#s24 .st__t { display: block; margin-top: 6px; font-size: 19px; line-height: 1.28; color: var(--text-soft); }
+#s24 .s24-mesh { position: absolute; left: 56px; top: 204px; width: 1000px; height: 318px; pointer-events: none; }
+#s24 .s24-mesh .mesh { fill: none; stroke: color-mix(in srgb, var(--accent) 60%, transparent); stroke-width: 1; }
+#s24 .s24-meshk { position: absolute; left: 56px; top: 618px; width: 880px;
+                  font-size: 19px; color: var(--text); }
+#s24 .s24-credit { position: absolute; left: 56px; top: 658px; width: 880px;
+                   font-size: 18px; color: var(--text-muted); }
+
+
+/* ── initial states, so nothing flashes before its timeline is built ── */
+#s13 .tool-card { opacity: 0; }
+#s16 .ledger__cell, #s16 .s16-clip { opacity: 0; }
+#s17 .fan__sheet, #s17 .s17-rack { opacity: 0; }
+#s17 .rej, #s17 .rej-note { opacity: 0; }
+#s19 .s19-row, #s19 .s19-big { opacity: 0; }
+#s20 .s20-photo, #s20 .s20-cap, #s20 .inh, #s20 .s20-r, #s20 .s20-rcap { opacity: 0; }
+#s21 .s21-photo, #s21 .s21-stage { opacity: 0; }
+#s22 .s22-scr, #s22 .tt, #s22 .s22-cands, #s22 .s22-audit, #s22 .s22-word { opacity: 0; }
+#s23 .fr { opacity: 0; }
+#s24 .st, #s24 .s24-mesh, #s24 .s24-meshk, #s24 .s24-credit { opacity: 0; }
+
+/* ── reduced motion: the running dashes stop with everything else ── */
+@media (prefers-reduced-motion: reduce) {
+  #s21 .stream { animation: none !important; }
+}
+</style>
+
+<script data-part="part2">
+/* ══════════════════════════════════════════════════════════════════════
+   Part II — timelines.  One Deck.slide builder per slide, labels
+   step0..stepN, every selector scoped to el.  Decorative motion that is
+   not tied to a step lives in Deck.enter.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var EO = 'expo.out';
+  var PUMP = '#ff6b2b';
+
+  function q(el, s) { return el.querySelector(s); }
+  function qa(el, s) { return Array.prototype.slice.call(el.querySelectorAll(s)); }
+  function hasDraw() { return !!window.DrawSVGPlugin; }
+
+  /* hide a set of strokes before they are drawn */
+  function armDraw(nodes) {
+    if (!nodes || (nodes.length === 0)) return;
+    if (hasDraw()) window.gsap.set(nodes, { drawSVG: '0%' });
+    else window.gsap.set(nodes, { opacity: 0 });
+  }
+  /* draw them */
+  function draw(tl, nodes, at, dur, ease, stagger) {
+    if (!nodes || (nodes.length === 0)) return tl;
+    var v = { duration: dur, ease: ease || EO };
+    if (stagger) v.stagger = stagger;
+    if (hasDraw()) v.drawSVG = '100%'; else v.opacity = 1;
+    return tl.to(nodes, v, at);
+  }
+  /* a counter that survives being scrubbed in both directions */
+  function count(tl, node, from, to, digits, at, dur, ease) {
+    if (!node) return;
+    var o = { v: from };
+    node.textContent = from.toFixed(digits);
+    tl.to(o, {
+      v: to, duration: dur, ease: ease || EO,
+      onUpdate: function () { node.textContent = o.v.toFixed(digits); }
+    }, at);
+  }
+
+  /* ── dialect A helpers: one fig, one rail panel, one readout, one stop ── */
+  function sheetCtx(el) {
+    return {
+      figs:   qa(el, '.sheet__fig'),
+      panels: qa(el, '.sheet__panel'),
+      ros:    qa(el, '.sheet__ro'),
+      fill:   q(el, '.sheet__timeline-fill'),
+      dots:   qa(el, '.sheet__stop')
+    };
+  }
+  function sheetEnter(tl, c, i, at, pct) {
+    tl.to(c.figs[i], { autoAlpha: 1, duration: 0.55 }, at)
+      .from(c.figs[i].children, { scale: 0.975, duration: 0.8 }, at)
+      .to(c.panels[i], { opacity: 1, backgroundColor: 'rgba(255,107,43,0.085)', duration: 0.45 }, at)
+      .to(q(c.panels[i], '.sheet__panel-bar'), { scaleY: 1, duration: 0.55 }, at + 0.05)
+      .to(c.ros[i], { autoAlpha: 1, duration: 0.4 }, at + 0.2)
+      .to(c.fill, { width: pct, duration: 0.7 }, at)
+      .to(c.dots[i], { scale: 1.6, backgroundColor: PUMP, duration: 0.4 }, at + 0.15);
+  }
+  function sheetLeave(tl, c, i, at) {
+    tl.to(c.figs[i], { autoAlpha: 0, duration: 0.45 }, at)
+      .to(c.ros[i], { autoAlpha: 0, duration: 0.35 }, at)
+      .to(c.panels[i], { opacity: 0.66, backgroundColor: 'rgba(255,107,43,0)', duration: 0.45 }, at)
+      .to(q(c.panels[i], '.sheet__panel-bar'), { backgroundColor: 'rgba(255,107,43,0.38)', duration: 0.45 }, at)
+      .to(c.dots[i], { scale: 1, backgroundColor: 'rgba(255,107,43,0.45)', duration: 0.35 }, at);
+  }
+
+  /* ══════════════════ S11 · the journey strip ══════════════════ */
+  Deck.enter('s11', function (el, gsap) {
+    var wash = q(el, '.divider__wash');
+    var rule = q(el, '.divider__rule');
+    var head = [q(el, '.divider__num'), q(el, '.divider__title'), q(el, '.divider__sub')];
+    var line = q(el, '#jrn-line');
+    var drop = q(el, '#jrn-drop');
+    var stops = qa(el, '.jrn-stop');
+    var X = [104, 324, 544, 764, 984];
+
+    gsap.set(stops, { opacity: 0.3 });
+    gsap.set(drop, { opacity: 0, attr: { cx: 104 } });
+    armDraw([line]);
+
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.fromTo(wash, { opacity: 0 }, { opacity: 1, duration: 1.1 }, 0)
+      .fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 1.0, ease: 'power3.inOut' }, 0.15)
+      .fromTo(head, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.09 }, 0);
+    draw(tl, [line], 0.55, 0.9, 'power2.inOut');
+    tl.to(drop, { opacity: 1, duration: 0.25 }, 0.95);
+
+    X.forEach(function (x, i) {
+      var at = 1.05 + i * 0.44;
+      tl.to(drop, { attr: { cx: x }, duration: 0.42, ease: 'power2.inOut' }, at)
+        .to(stops[i], { opacity: 1, duration: 0.3 }, at + 0.26)
+        .to(qa(stops[i], '.jrn-g'), { stroke: PUMP, duration: 0.3 }, at + 0.26)
+        .to(qa(stops[i], '.jrn-t'), { fill: '#f0ece8', duration: 0.3 }, at + 0.26);
+    });
+    tl.to(drop, { opacity: 0, duration: 0.5 }, 1.05 + 4 * 0.44 + 0.5);
+    if (window.Deck && Deck.reducedMotion) tl.progress(1);
+  });
+
+  /* ══════════════════ S12 · thirty chips, two finalists ══════════════════ */
+  Deck.slide('s12', function (el, gsap) {
+    var c = sheetCtx(el);
+    var field = q(el, '#s12-field');
+    var chipA = q(el, '#s12-a');
+    var chipB = q(el, '#s12-b');
+
+    /* the other twenty-eight ideas, built here so the markup stays readable */
+    var chips = [];
+    var i, d;
+    for (i = 0; i < 30; i++) {
+      if (i === 7) { chips.push(chipA); continue; }
+      if (i === 22) { chips.push(chipB); continue; }
+      d = document.createElement('div');
+      d.className = 'chip';
+      field.appendChild(d);
+      chips.push(d);
+    }
+    function slotX(n) { return 30 + (n % 6) * 120; }
+    function slotY(n) { return 51 + Math.floor(n / 6) * 50; }
+    chips.forEach(function (ch, n) { gsap.set(ch, { x: slotX(n), y: slotY(n) }); });
+
+    var SEVEN = [3, 7, 11, 16, 19, 22, 27];
+    var FIVE  = [7, 11, 19, 22, 27];
+    var TWO   = [7, 22];
+    function others(keep) {
+      return chips.filter(function (ch, n) { return keep.indexOf(n) < 0; });
+    }
+
+    var bodyA = q(chipA, '.chip__body');
+    var bodyB = q(chipB, '.chip__body');
+    var wetA = q(el, '#s12-wet-a'), wetB = q(el, '#s12-wet-b'), wetC = q(el, '#s12-wet-c');
+    var tagA = q(el, '#s12-tag-a'), tagB = q(el, '#s12-tag-b'), tagC = q(el, '#s12-tag-c');
+
+    gsap.set([bodyA, bodyB], { opacity: 0 });
+    gsap.set([tagA, tagB, tagC], { autoAlpha: 0, scale: 0.8, xPercent: -50, transformOrigin: '50% 50%' });
+    armDraw([wetA, wetB, wetC]);
+
+    /* the sheet has two figures but three beats, so the rail is advanced
+       on its own rather than through sheetEnter */
+    function rail(tl, i, at, pct) {
+      if (i > 0) {
+        tl.to(c.ros[i - 1], { autoAlpha: 0, duration: 0.3 }, at)
+          .to(c.panels[i - 1], { opacity: 0.66, backgroundColor: 'rgba(255,107,43,0)', duration: 0.4 }, at)
+          .to(q(c.panels[i - 1], '.sheet__panel-bar'), { backgroundColor: 'rgba(255,107,43,0.38)', duration: 0.4 }, at)
+          .to(c.dots[i - 1], { scale: 1, backgroundColor: 'rgba(255,107,43,0.45)', duration: 0.35 }, at);
+      }
+      tl.to(c.panels[i], { opacity: 1, backgroundColor: 'rgba(255,107,43,0.085)', duration: 0.45 }, at)
+        .to(q(c.panels[i], '.sheet__panel-bar'), { scaleY: 1, duration: 0.5 }, at + 0.05)
+        .to(c.ros[i], { autoAlpha: 1, duration: 0.4 }, at + 0.25)
+        .to(c.fill, { width: pct, duration: 0.7 }, at)
+        .to(c.dots[i], { scale: 1.6, backgroundColor: PUMP, duration: 0.4 }, at + 0.15);
+    }
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* ── 1 · thirty ideas land on the sheet ── */
+    tl.to(c.figs[0], { autoAlpha: 1, duration: 0.55 }, 0.0);
+    rail(tl, 0, 0.0, '16.7%');
+    tl.from(chips, {
+      opacity: 0, scale: 0.7, y: '+=26', duration: 0.55,
+      stagger: { each: 0.018, from: 'random' }
+    }, 0.15);
+    tl.addLabel('step1', 1.5);
+
+    /* ── 2 · seven, five, two — and the two grow into the finalists ── */
+    rail(tl, 1, 1.6, '50%');
+    tl.to(others(SEVEN), { opacity: 0.1, duration: 0.45 }, 1.6)
+      .to(others(FIVE),  { opacity: 0.06, duration: 0.35 }, 1.95)
+      .to(others(TWO),   { opacity: 0.04, duration: 0.35 }, 2.25);
+    tl.to(chipA, {
+      x: 24, y: 36, width: 352, height: 264, backgroundColor: '#ffffff',
+      borderColor: PUMP, borderWidth: 2, borderRadius: 14, duration: 0.75, ease: 'back.out(1.3)'
+    }, 2.5)
+      .to(chipB, {
+        x: 388, y: 36, width: 352, height: 264, backgroundColor: '#ffffff',
+        borderColor: 'rgba(27,34,51,0.34)', borderWidth: 2, borderRadius: 14,
+        duration: 0.75, ease: 'back.out(1.3)'
+      }, 2.56)
+      .to([bodyA, bodyB], { opacity: 1, duration: 0.4 }, 3.05);
+    tl.to(q(el, '#s12-rotor'), { rotation: 360, svgOrigin: '100 84', duration: 1.9, ease: 'power1.inOut' }, 3.2)
+      .to(q(el, '#s12-carriage'), { x: -36, duration: 0.8, ease: 'sine.inOut' }, 3.2)
+      .to(q(el, '#s12-carriage'), { x: 0, duration: 0.8, ease: 'sine.inOut' }, 4.0)
+      .to(q(el, '#s12-ba'), { width: '87%', duration: 1.1 }, 3.2)
+      .to(q(el, '#s12-bb'), { width: '80%', duration: 1.1 }, 3.2);
+    count(tl, q(el, '#s12-na'), 0, 3485, 0, 3.2, 1.2);
+    count(tl, q(el, '#s12-nb'), 0, 3185, 0, 3.2, 1.2);
+    tl.addLabel('step2', 5.0);
+
+    /* ── 3 · where the liquid touches the machine ── */
+    tl.to(c.figs[0], { autoAlpha: 0, duration: 0.45 }, 5.1)
+      .to(c.figs[1], { autoAlpha: 1, duration: 0.55 }, 5.25)
+      .from(c.figs[1].children, { scale: 0.975, duration: 0.8 }, 5.25);
+    rail(tl, 2, 5.2, '83.3%');
+    draw(tl, [wetA], 5.8, 0.85, 'power2.inOut');
+    tl.to(tagA, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 6.4);
+    draw(tl, [wetB], 6.6, 0.85, 'power2.inOut');
+    tl.to(tagB, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 7.2);
+    tl.to([wetA, wetB], { opacity: 0.22, duration: 0.5 }, 7.55)
+      .to([tagA, tagB], { autoAlpha: 0.35, duration: 0.5 }, 7.55);
+    draw(tl, [wetC], 7.65, 0.95, 'power2.inOut');
+    tl.to(tagC, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 8.35);
+    tl.addLabel('step3', 8.95);
+
+    return tl;
+  });
+
+  /* ══════════════════ S13 · the ladder and the three tools ══════════════════ */
+  Deck.slide('s13', function (el, gsap) {
+    var line = q(el, '#s13-lad-line');
+    var nodes = qa(el, '.ladder__node');
+    var dots = nodes.map(function (g) { return q(g, 'circle'); });
+    var vals = nodes.map(function (g) { return q(g, '.ladder__v'); });
+    var keys = nodes.map(function (g) { return q(g, '.ladder__k'); });
+    var cards = [q(el, '#s13-c1'), q(el, '#s13-c2'), q(el, '#s13-c3')];
+
+    armDraw([line]);
+    gsap.set(dots, { scale: 0, transformOrigin: '50% 50%' });
+    gsap.set(vals.concat(keys), { opacity: 0 });
+    gsap.set(cards, { autoAlpha: 0, y: 34 });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · the design point climbs */
+    draw(tl, [line], 0.0, 1.1, 'power2.inOut');
+    tl.to(dots, { scale: 1, duration: 0.4, stagger: 0.14, ease: 'back.out(3)' }, 0.18)
+      .to(vals, { opacity: 1, y: 0, duration: 0.45, stagger: 0.14 }, 0.26)
+      .fromTo(vals, { y: 10 }, { y: 0, duration: 0.45, stagger: 0.14 }, 0.26)
+      .to(keys, { opacity: 1, duration: 0.4, stagger: 0.14 }, 0.34);
+    tl.addLabel('step1', 1.5);
+
+    /* 2 · the three tools rise */
+    tl.to(cards, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.12 }, 1.6)
+      .to([line].concat(dots, vals, keys), { opacity: 0.5, duration: 0.5 }, 1.7);
+    tl.addLabel('step2', 2.7);
+
+    /* 3 · the solver takes the stage */
+    tl.to(cards[0], { scale: 1.04, duration: 0.5, transformOrigin: '50% 50%' }, 2.8)
+      .to(cards[0], { boxShadow: '0 26px 76px rgba(255,107,43,0.42)', borderColor: PUMP, duration: 0.5 }, 2.8)
+      .to([cards[1], cards[2]], { autoAlpha: 0.45, duration: 0.5 }, 2.8);
+    tl.addLabel('step3', 3.6);
+
+    return tl;
+  });
+
+  /* ══════════════════ S14 · the first pump, and the sensor ══════════════════ */
+  Deck.slide('s14', function (el, gsap) {
+    var c = sheetCtx(el);
+    var ring = q(el, '#s14-ring');
+    var tag1 = q(el, '#s14-tag1');
+    var gapSet = [q(el, '#s14-g1'), q(el, '#s14-g2'), q(el, '#s14-gdim'), q(el, '#s14-gah'),
+                  q(el, '#s14-r1'), q(el, '#s14-r2')];
+    var f2 = [q(el, '#s14-zero'), q(el, '#s14-mean'), q(el, '#s14-trace')];
+    var band = q(el, '#s14-band');
+    var box = q(el, '#s14-box');
+    var f4 = [q(el, '#s14-nom')];
+    var doseBars = [q(el, '#s14-d1'), q(el, '#s14-d2'), q(el, '#s14-d3')];
+    var doseLabels = qa(el, '.s14-dl');
+
+    armDraw([ring].concat(gapSet, f2, [box], f4));
+    gsap.set(tag1, { autoAlpha: 0, scale: 0.8, transformOrigin: '50% 50%' });
+    gsap.set([band, q(el, '#s14-band2')], { opacity: 0 });
+    gsap.set([q(el, '#s14-l-mean'), q(el, '#s14-l-zero'), q(el, '#s14-l-band')], { opacity: 0 });
+    gsap.set([q(el, '#s14-cv-f'), q(el, '#s14-cv-b'), q(el, '#s14-verdict'), q(el, '#s14-nom-l')], { opacity: 0 });
+    gsap.set(doseLabels, { opacity: 0 });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · the taped head */
+    sheetEnter(tl, c, 0, 0.0, '12.5%');
+    draw(tl, [ring], 0.5, 0.8, 'power2.inOut');
+    tl.to(tag1, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 1.1);
+    draw(tl, gapSet, 0.9, 0.5, EO, 0.1);
+    count(tl, q(el, '#s14-n1'), 0, 3.39, 2, 0.7, 1.0);
+    tl.addLabel('step1', 2.0);
+
+    /* 2 · the sensor scatters wider than the flow */
+    sheetLeave(tl, c, 0, 2.1);
+    sheetEnter(tl, c, 1, 2.2, '37.5%');
+    draw(tl, [q(el, '#s14-zero')], 2.7, 0.5, 'none');
+    draw(tl, [q(el, '#s14-mean')], 2.9, 0.6, 'none');
+    tl.to(q(el, '#s14-l-mean'), { opacity: 1, duration: 0.3 }, 3.3);
+    tl.to(q(el, '#s14-l-zero'), { opacity: 1, duration: 0.3 }, 3.1);
+    draw(tl, [q(el, '#s14-trace')], 3.2, 1.7, 'none');
+    tl.to(band, { opacity: 1, duration: 0.6 }, 4.4)
+      .to(q(el, '#s14-l-band'), { opacity: 1, duration: 0.4 }, 4.6);
+    count(tl, q(el, '#s14-n2'), 0, 1159, 0, 3.3, 1.4);
+    tl.addLabel('step2', 5.2);
+
+    /* 3 · the balance becomes the reference */
+    sheetLeave(tl, c, 1, 5.3);
+    sheetEnter(tl, c, 2, 5.4, '62.5%');
+    draw(tl, [box], 5.9, 0.7, 'power2.inOut');
+    tl.to(q(el, '#s14-bar-f'), { attr: { width: 322 }, duration: 0.8 }, 6.1)
+      .to(q(el, '#s14-cv-f'), { opacity: 1, duration: 0.3 }, 6.7)
+      .to(q(el, '#s14-bar-b'), { attr: { width: 364 }, duration: 0.8 }, 6.5)
+      .to(q(el, '#s14-cv-b'), { opacity: 1, duration: 0.3 }, 7.1)
+      .to(q(el, '#s14-verdict'), { opacity: 1, duration: 0.4 }, 7.3);
+    count(tl, q(el, '#s14-n3'), 0, 678.0, 1, 5.9, 1.2);
+    tl.addLabel('step3', 7.9);
+
+    /* 4 · the same shortfall, every time */
+    sheetLeave(tl, c, 2, 8.0);
+    sheetEnter(tl, c, 3, 8.1, '87.5%');
+    draw(tl, f4, 8.6, 0.6, 'none');
+    tl.to(q(el, '#s14-nom-l'), { opacity: 1, duration: 0.3 }, 9.0)
+      .to(q(el, '#s14-band2'), { opacity: 1, duration: 0.5 }, 8.9)
+      .to(doseBars, { attr: { y: 158.3, height: 103.7 }, duration: 0.7, stagger: 0.16 }, 9.0)
+      .to(doseLabels, { opacity: 1, duration: 0.3, stagger: 0.16 }, 9.4);
+    count(tl, q(el, '#s14-n4'), 0, 32, 0, 8.7, 1.2);
+    tl.addLabel('step4', 10.3);
+
+    return tl;
+  });
+
+  /* ══════════════════ S15 · three more builds ══════════════════ */
+  Deck.slide('s15', function (el, gsap) {
+    var c = sheetCtx(el);
+    var strokes = qa(el, '.p2-ov path, .p2-ov circle, .p2-ov ellipse');
+    var dot = q(el, '#f1-dot');
+    var tags = qa(el, '.s15-tag');
+
+    armDraw(strokes);
+    if (hasDraw()) gsap.set(dot, { drawSVG: '100%' });
+    gsap.set(dot, { autoAlpha: 0 });
+    gsap.set(q(el, '#f1-mark'), { autoAlpha: 0 });
+    gsap.set(q(el, '#f2-roller'), { autoAlpha: 0 });
+    gsap.set(tags, { xPercent: -50, yPercent: -50, autoAlpha: 0, scale: 0.7, transformOrigin: '50% 50%' });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · v2.1, the mount sat high */
+    sheetEnter(tl, c, 0, 0.0, '12.5%');
+    draw(tl, [q(el, '#f1-ext1'), q(el, '#f1-ext2')], 0.35, 0.5, EO, 0.08);
+    draw(tl, [q(el, '#f1-dim'), q(el, '#f1-ah1'), q(el, '#f1-ah2')], 0.6, 0.45);
+    draw(tl, [q(el, '#f1-d1'), q(el, '#f1-d2')], 0.85, 0.45, EO, 0.07);
+    draw(tl, [q(el, '#f1-off'), q(el, '#f1-offah')], 1.05, 0.5);
+    tl.to(q(el, '#f1-mark'), { autoAlpha: 1, duration: 0.3 }, 1.15)
+      .to(q(el, '#f1-mark'), { y: -91, duration: 0.85, ease: 'expo.inOut' }, 1.25);
+    draw(tl, [q(el, '#f1-closure')], 1.45, 0.75);
+    draw(tl, [q(el, '#f1-stem')], 1.9, 0.95, 'expo.inOut');
+    tl.to(dot, { autoAlpha: 1, duration: 0.25 }, 1.9)
+      .to(dot, { attr: { cy: 330 }, duration: 0.95, ease: 'expo.inOut' }, 1.9);
+    count(tl, q(el, '#s15-n1'), 1.82, 2.22, 2, 1.9, 0.95);
+    tl.addLabel('step1', 3.0);
+
+    /* 2 · v2.2, the peg tapers */
+    sheetLeave(tl, c, 0, 3.1);
+    sheetEnter(tl, c, 1, 3.2, '37.5%');
+    draw(tl, [q(el, '#f2-tl'), q(el, '#f2-tr')], 3.7, 0.65, EO, 0.1);
+    draw(tl, [q(el, '#f2-tip'), q(el, '#f2-base')], 4.1, 0.4, EO, 0.08);
+    tl.to(q(el, '#f2-roller'), { autoAlpha: 1, duration: 0.3 }, 4.25);
+    draw(tl, qa(el, '#f2-rollerG > path'), 4.25, 0.5, EO, 0.08);
+    tl.to(q(el, '#f2-rollerG'), { rotation: -5, svgOrigin: '599 566', duration: 0.9, ease: 'power2.inOut' }, 4.75)
+      .to(q(el, '#f2-rollerG'), { rotation: 0, svgOrigin: '599 566', duration: 0.6, ease: 'back.out(2.4)' }, 5.8);
+    draw(tl, [q(el, '#f2-fix')], 6.05, 0.8);
+    count(tl, q(el, '#s15-n2'), 0, 0.6, 1, 4.75, 0.9);
+    tl.addLabel('step2', 6.9);
+
+    /* 3 · the printer */
+    sheetLeave(tl, c, 1, 7.0);
+    sheetEnter(tl, c, 2, 7.1, '62.5%');
+    draw(tl, [q(el, '#f3-ring')], 7.55, 0.9);
+    draw(tl, [q(el, '#f3-dim'), q(el, '#f3-dah')], 8.1, 0.5);
+    draw(tl, [q(el, '#f3-outer')], 7.85, 0.8);
+    tl.fromTo(q(el, '#f3-outer'), { scale: 1.055, svgOrigin: '834 598' },
+              { scale: 1, duration: 1.0, ease: 'expo.inOut' }, 8.45);
+    draw(tl, [q(el, '#f3-bore')], 8.2, 0.8);
+    tl.to(q(el, '#f3-bore'), { attr: { r: 243, 'stroke-width': 72 }, duration: 1.0, ease: 'expo.inOut' }, 8.65);
+    count(tl, q(el, '#s15-n3'), 0, 0.10, 2, 8.65, 1.0);
+    tl.addLabel('step3', 9.8);
+
+    /* 4 · v2.3, the same number at three points */
+    sheetLeave(tl, c, 2, 9.9);
+    sheetEnter(tl, c, 3, 10.0, '87.5%');
+    draw(tl, [q(el, '#f4-l1')], 10.5, 0.35);
+    tl.to(q(el, '#s15-tag-apex'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 10.72);
+    draw(tl, [q(el, '#f4-l2')], 11.0, 0.35);
+    tl.to(q(el, '#s15-tag-left'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 11.22);
+    draw(tl, [q(el, '#f4-l3')], 11.45, 0.35);
+    tl.to(q(el, '#s15-tag-right'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 11.67);
+    draw(tl, [q(el, '#f4-under')], 11.9, 0.7);
+    count(tl, q(el, '#s15-n4'), 0, 1.52, 2, 10.5, 1.1);
+    tl.addLabel('step4', 12.7);
+
+    return tl;
+  });
+
+  /* ══════════════════ S16 · the precision chart and the ledger ══════════════════ */
+  Deck.slide('s16', function (el, gsap) {
+    var ax = q(el, '#s16-ax');
+    var grid = q(el, '.grid');
+    var pip = q(el, '#s16-pip');
+    var pipT = q(el, '#s16-pip-t');
+    var serA = q(el, '#s16-ser-a'), serB = q(el, '#s16-ser-b');
+    var ptsA = qa(el, '#s16-pts-a .pt'), ptsB = qa(el, '#s16-pts-b .pt');
+    var lgA = q(el, '#s16-lg-a'), lgB = q(el, '#s16-lg-b');
+    var ticks = qa(el, '.chart .ct');
+    var cells = qa(el, '.ledger__cell');
+    var clip = q(el, '.s16-clip');
+
+    armDraw([ax, serA, serB]);
+    gsap.set(pip, { scaleX: 0, svgOrigin: '76 212.2' });
+    gsap.set([grid].concat(ticks), { opacity: 0 });
+    gsap.set([pipT, lgA, lgB], { opacity: 0 });
+    gsap.set(ptsA.concat(ptsB), { scale: 0, transformOrigin: '50% 50%' });
+    gsap.set(cells, { autoAlpha: 0, y: 18 });
+    gsap.set(clip, { autoAlpha: 0, x: 26 });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · the target, before any result */
+    draw(tl, [ax], 0.0, 0.7, 'power2.inOut');
+    tl.to([grid].concat(ticks), { opacity: 1, duration: 0.5 }, 0.35);
+    tl.to(pip, { scaleX: 1, duration: 0.9, ease: 'power2.inOut' }, 0.6);
+    tl.to(pipT, { opacity: 1, duration: 0.4 }, 1.3)
+      .to(cells[0], { autoAlpha: 1, y: 0, duration: 0.5 }, 1.2);
+    tl.addLabel('step1', 1.9);
+
+    /* 2 · the pump lands on it */
+    tl.to(clip, { autoAlpha: 1, x: 0, duration: 0.7 }, 2.0);
+    draw(tl, [serA], 2.1, 0.9, 'power2.inOut');
+    tl.to(ptsA, { scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2.6)' }, 2.35)
+      .to(lgA, { opacity: 1, duration: 0.35 }, 2.9);
+    draw(tl, [serB], 2.6, 0.9, 'power2.inOut');
+    tl.to(ptsB, { scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2.6)' }, 2.85)
+      .to(lgB, { opacity: 1, duration: 0.35 }, 3.4)
+      .to(cells[1], { autoAlpha: 1, y: 0, duration: 0.5 }, 3.1)
+      .to(cells[0], { autoAlpha: 0.55, duration: 0.4 }, 3.1);
+    tl.addLabel('step2', 3.9);
+
+    /* 3 · under nominal, and honest about it */
+    tl.to(cells[2], { autoAlpha: 1, y: 0, duration: 0.5 }, 4.0)
+      .to(cells[1], { autoAlpha: 0.55, duration: 0.4 }, 4.0);
+    count(tl, q(el, '#s16-n3'), 5.00, 4.53, 2, 4.1, 0.9);
+    tl.addLabel('step3', 4.9);
+
+    /* 4 · one constant splits into two */
+    tl.to(cells[3], { autoAlpha: 1, y: 0, duration: 0.5 }, 5.0)
+      .to(cells[2], { autoAlpha: 0.55, duration: 0.4 }, 5.0);
+    count(tl, q(el, '#s16-n4a'), 4.53, 3.94, 2, 5.15, 0.9);
+    count(tl, q(el, '#s16-n4b'), 4.53, 4.10, 2, 5.15, 0.9);
+    tl.addLabel('step4', 5.9);
+
+    return tl;
+  });
+
+  /* ══════════════════ S17 · the sketch fan and the rack ══════════════════ */
+  Deck.slide('s17', function (el, gsap) {
+    var sheets = qa(el, '.fan__sheet');
+    var rejects = qa(el, '.rej');
+    var strikes = qa(el, '.rej__x .ln');
+    var note = q(el, '.rej-note');
+    var rack = q(el, '.s17-rack');
+    var clean = q(el, '#s17-clean');
+    var tubes = qa(el, '#s17-tubes .tube-g');
+    var pitchAll = qa(el, '#s17-pitch path');
+    var pitch = pitchAll.slice(0, 3);
+    var jaw = pitchAll.slice(3);
+    var span = qa(el, '#s17-span path');
+    var tagPitch = q(el, '#s17-tag-pitch');
+    var tagSpan = q(el, '#s17-tag-span');
+    var tagJaw = q(el, '#s17-tag-jaw');
+
+    var HOME = [
+      { x: -132, y: -14, r: -8.5 },
+      { x:   40, y: -42, r:  5.5 },
+      { x:  -44, y:  36, r: -4.0 },
+      { x:  104, y:  22, r:  7.5 }
+    ];
+
+    gsap.set(el.querySelector('.fan'), { opacity: 1 });
+    sheets.forEach(function (s, i) {
+      gsap.set(s, { autoAlpha: 0, x: -620, y: HOME[i].y, rotation: -24, scale: 0.9, zIndex: 10 + i });
+    });
+    gsap.set(rejects, { autoAlpha: 0, x: 22 });
+    gsap.set(note, { autoAlpha: 0 });
+    gsap.set(rack, { autoAlpha: 0, x: 72 });
+    gsap.set(tubes, { autoAlpha: 0, y: -170 });
+    gsap.set([tagPitch, tagSpan, tagJaw], { autoAlpha: 0, scale: 0.78, transformOrigin: '0% 50%' });
+    armDraw([clean].concat(pitch, jaw, span, strikes));
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · the sheets fan onto the bench */
+    sheets.forEach(function (s, i) {
+      tl.to(s, {
+        autoAlpha: 1, x: HOME[i].x, y: HOME[i].y, rotation: HOME[i].r, scale: 1,
+        duration: 0.85, ease: 'back.out(1.15)'
+      }, 0.0 + i * 0.16);
+    });
+    tl.addLabel('step1', 1.8);
+
+    /* 2 · one principle, and what it threw away */
+    tl.to(sheets[3], { x: -44, y: -6, rotation: 0, scale: 1.05, duration: 0.7 }, 1.9)
+      .to([sheets[0], sheets[1], sheets[2]], { scale: 0.93, opacity: 0.45, duration: 0.7 }, 1.95);
+    draw(tl, [clean], 2.5, 0.75, 'power2.inOut');
+    rejects.forEach(function (r, i) {
+      tl.to(r, { autoAlpha: 1, x: 0, duration: 0.45 }, 2.9 + i * 0.3);
+      draw(tl, [strikes[i]], 3.15 + i * 0.3, 0.4, 'power2.out');
+    });
+    tl.to(note, { autoAlpha: 1, duration: 0.45 }, 4.0);
+    tl.addLabel('step2', 4.6);
+
+    /* 3 · the consumable sets the size of the machine */
+    tl.to(sheets, { x: -300, scale: 0.5, opacity: 0.32, rotation: -3, duration: 0.8, stagger: 0.04 }, 4.7)
+      .to(rejects.concat([note]), { autoAlpha: 0, duration: 0.4 }, 4.7)
+      .to(rack, { autoAlpha: 1, x: 0, duration: 0.8 }, 4.85)
+      .to(tubes, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.07, ease: 'back.out(1.8)' }, 5.35);
+    draw(tl, pitch, 6.0, 0.5, EO, 0.06);
+    tl.to(tagPitch, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 6.4);
+    draw(tl, jaw, 6.5, 0.45, EO, 0.08);
+    tl.to(tagJaw, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 6.85);
+    draw(tl, span, 7.05, 0.75, 'power2.inOut', 0.06);
+    tl.to(tagSpan, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 7.6);
+    tl.addLabel('step3', 8.1);
+
+    return tl;
+  });
+
+  /* ══════════════════ S18 · the accordion and the shortfall ══════════════════ */
+  Deck.slide('s18', function (el, gsap) {
+    var panels = qa(el, '.acc__p');
+    var caps = panels.map(function (p) { return q(p, '.acc__cap'); });
+    var sw = q(el, '#s18-sw');
+    var bars = q(el, '.s18-bars');
+    var need = q(el, '#s18-need'), have = q(el, '#s18-have'), miss = q(el, '#s18-miss');
+    var tagN = q(el, '#s18-tag-need'), tagH = q(el, '#s18-tag-have');
+    var W_BIG = 640, W_SM = 248, W_EVEN = 378;
+
+    gsap.set(panels, { width: W_EVEN, opacity: 0.42 });
+    gsap.set(caps, { autoAlpha: 0, y: 12 });
+    gsap.set(bars, { autoAlpha: 0 });
+    gsap.set([tagN, tagH], { autoAlpha: 0, scale: 0.8 });
+    armDraw([sw]);
+
+    function focus(tl, i, at) {
+      panels.forEach(function (p, j) {
+        tl.to(p, {
+          width: j === i ? W_BIG : W_SM,
+          opacity: j === i ? 1 : 0.4,
+          duration: 0.75, ease: 'power3.inOut'
+        }, at);
+        tl.to(caps[j], { autoAlpha: j === i ? 1 : 0, y: j === i ? 0 : 12, duration: 0.5 }, at + 0.2);
+      });
+    }
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    focus(tl, 0, 0.0);
+    tl.addLabel('step1', 1.2);
+
+    focus(tl, 1, 1.3);
+    tl.addLabel('step2', 2.5);
+
+    focus(tl, 2, 2.6);
+    draw(tl, [sw], 3.3, 0.7, 'power2.inOut');
+    tl.addLabel('step3', 4.0);
+
+    /* 4 · the one number that failed, and it was geometric */
+    tl.to(panels, { opacity: 0.38, duration: 0.5 }, 4.1)
+      .to(caps, { autoAlpha: 0, duration: 0.35 }, 4.1)
+      .to(bars, { autoAlpha: 1, duration: 0.4 }, 4.2)
+      .to(need, { width: '100%', duration: 0.9, ease: 'power3.inOut' }, 4.3)
+      .to(tagN, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 5.0)
+      .to(have, { width: '90.9%', duration: 0.9, ease: 'power3.inOut' }, 4.9)
+      .to(tagH, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 5.6)
+      .to(miss, { backgroundColor: 'rgba(232,53,53,0.55)', duration: 0.3, yoyo: true, repeat: 3 }, 5.8);
+    tl.addLabel('step4', 7.0);
+
+    return tl;
+  });
+
+  /* ══════════════════ S19 · the rack travels the U ══════════════════ */
+  Deck.slide('s19', function (el, gsap) {
+    var zones = [q(el, '#s19-z0'), q(el, '#s19-z1'), q(el, '#s19-z2')];
+    var rows = qa(el, '.s19-row');
+    var rack = q(el, '#s19-rack');
+    var ghost = q(el, '#s19-ghost');
+    var big = q(el, '#s19-big');
+    var top = q(el, '#s19-top'), iso = q(el, '#s19-iso'), ov = q(el, '#s19-ov');
+    var hasPath = !!window.MotionPathPlugin;
+
+    gsap.set(zones, { autoAlpha: 0 });
+    gsap.set(rows, { autoAlpha: 0, x: 16 });
+    gsap.set(rack, { autoAlpha: 0, x: 0, y: 250 });
+    gsap.set(ghost, { autoAlpha: 0, x: 0, y: 250 });
+    gsap.set(big, { autoAlpha: 0 });
+    gsap.set(iso, { autoAlpha: 0 });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · three zones */
+    zones.forEach(function (z, i) {
+      tl.to(z, { autoAlpha: 1, duration: 0.5 }, 0.0 + i * 0.28);
+      tl.to(rows[i], { autoAlpha: 1, x: 0, duration: 0.5 }, 0.1 + i * 0.28);
+    });
+    tl.addLabel('step1', 1.5);
+
+    /* 2 · a second axis lifts a rack onto the lane */
+    tl.to(rack, { autoAlpha: 1, duration: 0.4 }, 1.6);
+    if (hasPath) {
+      tl.to(rack, { motionPath: { path: [{ x: 0, y: 250 }, { x: 0, y: 0 }], curviness: 0 },
+                    duration: 0.9, ease: 'power2.inOut' }, 2.0);
+    } else {
+      tl.to(rack, { y: 0, duration: 0.9, ease: 'power2.inOut' }, 2.0);
+    }
+    tl.to(ghost, { autoAlpha: 1, duration: 0.4 }, 2.4)
+      .fromTo(ghost, { y: 380 }, { y: 250, duration: 0.8, ease: 'power2.inOut' }, 2.4);
+    tl.addLabel('step2', 3.2);
+
+    /* 3 · eight ticks along the lane, then the last 22 mm drops it */
+    tl.to(rack, { x: 944, duration: 2.0, ease: 'steps(8)' }, 3.3);
+    if (hasPath) {
+      tl.to(rack, { motionPath: { path: [{ x: 944, y: 0 }, { x: 944, y: 300 }], curviness: 0 },
+                    duration: 0.65, ease: 'power2.in' }, 5.35);
+    } else {
+      tl.to(rack, { y: 300, duration: 0.65, ease: 'power2.in' }, 5.35);
+    }
+    tl.to(rack, { opacity: 0.55, duration: 0.3 }, 5.9);
+    tl.addLabel('step3', 6.3);
+
+    /* 4 · forty tubes, and the module becomes the frame */
+    tl.to([ov], { autoAlpha: 0, duration: 0.6 }, 6.4)
+      .to(top, { autoAlpha: 0, duration: 0.9 }, 6.5)
+      .to(iso, { autoAlpha: 1, duration: 0.9 }, 6.5)
+      .to(big, { autoAlpha: 1, duration: 0.5 }, 6.9);
+    count(tl, q(el, '#s19-n'), 0, 40, 0, 6.9, 1.0);
+    tl.addLabel('step4', 7.8);
+
+    return tl;
+  });
+
+  /* ══════════════════ S20 · the nozzle, rebuilt ══════════════════ */
+  Deck.slide('s20', function (el, gsap) {
+    var photo = q(el, '.s20-photo'), cap = q(el, '.s20-cap');
+    var inh = q(el, '.inh'), inhRows = qa(el, '.inh__row'), inhX = qa(el, '.inh__x .ln');
+    var r1 = q(el, '#s20-r1'), r2 = q(el, '#s20-r2');
+    var rc1 = q(el, '#s20-rcap1'), rc2 = q(el, '#s20-rcap2');
+    var seat = q(el, '#s20-seat'), hub = q(el, '#s20-hub');
+    var hubLines = qa(el, '#s20-hub path');
+    var spin = qa(el, '#s20-spin path'), lift = qa(el, '#s20-lift path');
+    var b1 = q(el, '#s20-band1'), b2 = q(el, '#s20-band2');
+    var tagEcc = q(el, '#s20-tag-ecc'), tagBand = q(el, '#s20-tag-band');
+
+    gsap.set(photo, { autoAlpha: 0, scale: 0.985, transformOrigin: '50% 50%' });
+    gsap.set(cap, { autoAlpha: 0 });
+    gsap.set(inh, { autoAlpha: 0 });
+    gsap.set(inhRows, { autoAlpha: 0, x: 18 });
+    gsap.set([r1, r2], { autoAlpha: 0, x: 30 });
+    gsap.set([rc1, rc2], { autoAlpha: 0 });
+    gsap.set(hub, { autoAlpha: 0, y: -150 });
+    gsap.set([tagEcc, tagBand], { autoAlpha: 0, scale: 0.8, transformOrigin: '0% 50%' });
+    armDraw([seat, b1, b2].concat(hubLines, spin, lift, inhX));
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · what was handed over */
+    tl.to(photo, { autoAlpha: 1, scale: 1, duration: 0.8 }, 0.0)
+      .to(cap, { autoAlpha: 1, duration: 0.5 }, 0.5)
+      .to(inh, { autoAlpha: 1, duration: 0.3 }, 0.3);
+    inhRows.forEach(function (r, i) {
+      tl.to(r, { autoAlpha: 1, x: 0, duration: 0.45 }, 0.4 + i * 0.3);
+      draw(tl, [inhX[i]], 0.68 + i * 0.3, 0.4, 'power2.out');
+    });
+    tl.addLabel('step1', 1.9);
+
+    /* 2 · the seat is a print of the hub */
+    tl.to(inh, { autoAlpha: 0, duration: 0.4 }, 2.0)
+      .to(r1, { autoAlpha: 1, x: 0, duration: 0.7 }, 2.15);
+    draw(tl, [seat], 2.7, 0.6, 'power2.inOut');
+    draw(tl, hubLines, 3.1, 0.35, EO, 0.05);
+    tl.to(hub, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'back.out(2.2)' }, 3.1)
+      .to(seat, { strokeWidth: 16, duration: 0.18, yoyo: true, repeat: 1 }, 3.72)
+      .to(rc1, { autoAlpha: 1, duration: 0.45 }, 3.5);
+    tl.addLabel('step2', 4.3);
+
+    /* 3 · the shake, and what holds the carrier on */
+    tl.to([r1, rc1], { autoAlpha: 0, duration: 0.45 }, 4.4)
+      .to(r2, { autoAlpha: 1, x: 0, duration: 0.7 }, 4.6)
+      .to(rc2, { autoAlpha: 1, duration: 0.45 }, 5.0);
+    draw(tl, spin, 4.7, 0.8, 'power2.inOut', 0.12);
+    tl.to(tagEcc, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 5.3);
+    draw(tl, lift, 5.5, 0.4, EO, 0.08);
+    draw(tl, [b1, b2], 5.9, 0.6, EO, 0.12);
+    tl.to(tagBand, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 6.4);
+    tl.addLabel('step3', 6.9);
+
+    return tl;
+  });
+
+  /* ══════════════════ S21 · the drawn droplet beside the clip ══════════════════ */
+  Deck.slide('s21', function (el, gsap) {
+    var photo = q(el, '.s21-photo'), stage = q(el, '.s21-stage');
+    var mouth = [q(el, '#s21-mouth'), q(el, '#s21-mouth2')];
+    var rings = { g27: q(el, '#s21-r27'), g25: q(el, '#s21-r25'),
+                  g22: q(el, '#s21-r22'), g21: q(el, '#s21-r21') };
+    var rows = qa(el, '.bore');
+    var stream = q(el, '#s21-stream');
+    var drop = q(el, '#s21-drop'), neck = q(el, '#s21-neck'), fall = q(el, '#s21-fall');
+    var verdict = q(el, '#s21-verdict');
+
+    gsap.set([photo, stage], { autoAlpha: 0 });
+    gsap.set(rows, { opacity: 0.16 });
+    gsap.set([stream, drop, neck, fall], { autoAlpha: 0 });
+    gsap.set(verdict, { autoAlpha: 0 });
+    armDraw([rings.g27, rings.g25, rings.g22, rings.g21].concat(mouth));
+
+    /* one pendant-droplet cycle, drawn to the same beat as the clip */
+    function cycle(tl, at, k) {
+      tl.set(drop, { autoAlpha: 1, attr: { cx: 150, cy: 158, rx: 5, ry: 5 } }, at)
+        .set(neck, { autoAlpha: 1 }, at)
+        .set(fall, { autoAlpha: 0, attr: { cy: 190 } }, at)
+        .to(drop, { attr: { rx: 21, ry: 25, cy: 176 }, duration: 0.95 * k, ease: 'power1.inOut' }, at)
+        .to(drop, { attr: { rx: 23, ry: 31, cy: 188 }, duration: 0.3 * k, ease: 'power1.in' }, at + 0.95 * k)
+        .to(neck, { attr: { d: 'M 150 150 L 150 166' }, duration: 0.3 * k }, at + 0.95 * k)
+        .to(drop, { autoAlpha: 0, duration: 0.12 }, at + 1.26 * k)
+        .set(fall, { autoAlpha: 1 }, at + 1.26 * k)
+        .to(fall, { attr: { cy: 358 }, duration: 0.45 * k, ease: 'power2.in' }, at + 1.26 * k)
+        .to(fall, { autoAlpha: 0, duration: 0.12 }, at + 1.72 * k)
+        .set(neck, { attr: { d: 'M 150 150 L 150 158' } }, at + 1.85 * k);
+    }
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · five tips, one burst, water */
+    tl.to([photo, stage], { autoAlpha: 1, duration: 0.6, stagger: 0.1 }, 0.0)
+      .to(rows, { opacity: 0.34, duration: 0.45, stagger: 0.06 }, 0.35);
+    draw(tl, mouth, 0.5, 0.5, EO, 0.08);
+    tl.addLabel('step1', 1.3);
+
+    /* 2 · fine bores stream */
+    draw(tl, [rings.g27, rings.g25], 1.4, 0.55, 'power2.inOut', 0.14);
+    tl.to([rows[0], rows[1]], { opacity: 1, duration: 0.45 }, 1.5)
+      .to(stream, { autoAlpha: 1, duration: 0.5 }, 1.8)
+      .to(verdict, { autoAlpha: 1, duration: 0.4, onUpdate: function () { verdict.textContent = 'a stream'; } }, 1.9);
+    tl.addLabel('step2', 2.8);
+
+    /* 3 · wide bores make a droplet, and the burst releases it */
+    tl.to(stream, { autoAlpha: 0, duration: 0.35 }, 2.9)
+      .to([rows[0], rows[1]], { opacity: 0.4, duration: 0.4 }, 2.9)
+      .to([rings.g27, rings.g25], { opacity: 0.3, duration: 0.4 }, 2.9)
+      .call(function () { verdict.textContent = 'a droplet'; }, null, 3.05);
+    draw(tl, [rings.g22, rings.g21], 3.0, 0.55, 'power2.inOut', 0.14);
+    tl.to([rows[2], rows[3]], { opacity: 1, duration: 0.45 }, 3.1);
+    cycle(tl, 3.4, 1);
+    cycle(tl, 5.3, 1);
+    tl.set(drop, { autoAlpha: 1, attr: { cx: 150, cy: 172, rx: 18, ry: 22 } }, 7.05);
+    tl.addLabel('step3', 7.1);
+
+    /* 4 · the best tip tried was not steel */
+    tl.to([rows[2], rows[3]], { opacity: 0.4, duration: 0.4 }, 7.2)
+      .to(rows[4], { opacity: 1, duration: 0.45 }, 7.2)
+      .to([rings.g22, rings.g21], { opacity: 0.3, duration: 0.4 }, 7.2)
+      .call(function () { verdict.textContent = 'nine of ten'; }, null, 7.3);
+    cycle(tl, 7.4, 0.6);
+    cycle(tl, 8.6, 0.6);
+    tl.set(drop, { autoAlpha: 1, attr: { cx: 150, cy: 170, rx: 15, ry: 18 } }, 9.7);
+    tl.addLabel('step4', 9.8);
+
+    return tl;
+  });
+
+  /* ══════════════════ S22 · two screens, nine candidates, one word ══════════════════ */
+  Deck.slide('s22', function (el, gsap) {
+    var a = q(el, '#s22-a'), b = q(el, '#s22-b');
+    var capA = q(a, '.s22-scr__cap'), capB = q(b, '.s22-scr__cap');
+    var tt = q(el, '.tt'), ttRows = qa(el, '.tt__row');
+    var bad = q(el, '#s22-bad'), good = q(el, '#s22-good');
+    var cands = q(el, '.s22-cands'), candCards = qa(el, '.cand');
+    var audit = q(el, '.s22-audit'), cr = q(el, '#s22-cr'), crv = q(el, '.s22-audit__v');
+    var word = q(el, '.s22-word');
+    var w0 = q(el, '#s22-w0'), w1 = q(el, '#s22-w1'), w2 = q(el, '#s22-w2');
+    var wk = q(el, '.s22-wk');
+    var m1 = q(el, '#s22-fill1'), m2 = q(el, '#s22-fill2');
+
+    gsap.set(a, { autoAlpha: 0, scale: 0.98, transformOrigin: '0% 0%' });
+    gsap.set(b, { autoAlpha: 0 });
+    gsap.set([capA, capB], { autoAlpha: 0 });
+    gsap.set(tt, { autoAlpha: 0 });
+    gsap.set(ttRows, { autoAlpha: 0, x: 18 });
+    gsap.set(good, { scale: 0.3, transformOrigin: '0% 50%' });
+    gsap.set(cands, { autoAlpha: 0 });
+    gsap.set(candCards, { autoAlpha: 0, rotationY: -46, y: 20, transformOrigin: '50% 50%' });
+    gsap.set(audit, { autoAlpha: 0 });
+    gsap.set(word, { autoAlpha: 0 });
+    gsap.set([w1, w2], { autoAlpha: 0, x: 0 });
+    gsap.set(wk, { autoAlpha: 0 });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 · the screen that trapped the user */
+    tl.to(a, { autoAlpha: 1, scale: 1, duration: 0.7 }, 0.0)
+      .to(capA, { autoAlpha: 1, duration: 0.45 }, 0.5)
+      .to(tt, { autoAlpha: 1, duration: 0.3 }, 0.6)
+      .to(ttRows, { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.18 }, 0.7)
+      .to(good, { scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, 1.2);
+    tl.addLabel('step1', 2.0);
+
+    /* 2 · rebuilt as a picture of the machine */
+    tl.to(tt, { autoAlpha: 0, duration: 0.4 }, 2.1)
+      .to(a, { width: 400, height: 300, duration: 0.8, ease: 'power3.inOut' }, 2.15)
+      .to(b, { autoAlpha: 1, duration: 0.7 }, 2.5)
+      .to(capB, { autoAlpha: 1, duration: 0.45 }, 3.0)
+      .to(m1, { attr: { height: 20 }, duration: 0.8, ease: 'power2.out' }, 3.1)
+      .to(m2, { attr: { height: 62 }, duration: 0.8, ease: 'power2.out' }, 3.25);
+    tl.addLabel('step2', 4.1);
+
+    /* 3 · nine candidates, and a palette caught before the device */
+    tl.to(a, { left: 56, top: 188, width: 288, height: 216, duration: 0.75, ease: 'power3.inOut' }, 4.2)
+      .to(b, { left: 364, top: 188, width: 288, height: 216, duration: 0.75, ease: 'power3.inOut' }, 4.2)
+      .to([capA, capB], { autoAlpha: 0.5, duration: 0.4 }, 4.2)
+      .to(cands, { autoAlpha: 1, duration: 0.3 }, 4.7)
+      .to(candCards, { autoAlpha: 1, rotationY: 0, y: 0, duration: 0.7, stagger: 0.14 }, 4.8)
+      .to(audit, { autoAlpha: 1, duration: 0.5 }, 5.4);
+    count(tl, cr, 6.2, 7.1, 1, 5.7, 0.9);
+    tl.to(crv, { color: '#4fc38a', duration: 0.6 }, 5.9);
+    tl.addLabel('step3', 6.7);
+
+    /* 4 · one word doing two jobs */
+    tl.to(word, { autoAlpha: 1, duration: 0.4 }, 6.8)
+      .to(w0, { autoAlpha: 0, duration: 0.4 }, 7.3)
+      .to([w1, w2], { autoAlpha: 1, duration: 0.4 }, 7.3)
+      .to(w1, { x: -6, duration: 0.7, ease: 'power3.inOut' }, 7.4)
+      .to(w2, { x: 186, duration: 0.7, ease: 'power3.inOut' }, 7.4)
+      .to(wk, { autoAlpha: 1, duration: 0.45 }, 8.0);
+    tl.addLabel('step4', 8.6);
+
+    return tl;
+  });
+
+  /* ══════════════════ S23 · shutter, then filmstrip ══════════════════ */
+  Deck.slide('s23', function (el, gsap) {
+    var frs = qa(el, '.fr');
+    var card = q(el, '.tool-card');
+    var GX = [56, 352, 648], GY = [180, 410];
+
+    gsap.set(frs, { autoAlpha: 0, transformOrigin: '0% 0%',
+                    clipPath: 'inset(50% 0% 50% 0%)', scale: 0.985 });
+    gsap.set(card, { autoAlpha: 0, scale: 0.96, transformOrigin: '50% 50%' });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    /* 1 to 6 · one frame per press, each behind a shutter */
+    frs.forEach(function (f, i) {
+      var at = i * 1.0;
+      tl.to(f, { autoAlpha: 1, duration: 0.2 }, at)
+        .to(f, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.5, ease: 'power3.inOut' }, at)
+        .to(f, { scale: 1, duration: 0.55 }, at);
+      if (i) tl.to(frs.slice(0, i), { opacity: 0.62, duration: 0.4 }, at);
+      tl.addLabel('step' + (i + 1), at + 0.75);
+    });
+
+    /* 7 · the six fold into a filmstrip and the live card takes the room */
+    var at7 = 6.0;
+    frs.forEach(function (f, i) {
+      var gx = GX[i % 3], gy = GY[Math.floor(i / 3)];
+      tl.to(f, {
+        x: (56 + i * 152) - gx, y: 176 - gy, scale: 0.5, opacity: 1,
+        duration: 0.85, ease: 'power3.inOut'
+      }, at7 + i * 0.05);
+    });
+    tl.to(card, { autoAlpha: 1, scale: 1, duration: 0.7 }, at7 + 0.55);
+    tl.addLabel('step7', at7 + 1.5);
+
+    return tl;
+  });
+
+  /* ══════════════════ S24 · three parts, and the mesh ══════════════════ */
+  Deck.slide('s24', function (el, gsap) {
+    var cards = [q(el, '#s24-c0'), q(el, '#s24-c1'), q(el, '#s24-c2')];
+    var cu = q(el, '#s24-cu'), pin = q(el, '#s24-pin');
+    var liq = q(el, '#s24-liq'), air = q(el, '#s24-air'), filt = q(el, '#s24-filt');
+    var mesh = q(el, '.s24-mesh'), meshk = q(el, '.s24-meshk'), credit = q(el, '.s24-credit');
+
+    gsap.set(cards, { autoAlpha: 0, x: 46 });
+    gsap.set(mesh, { autoAlpha: 0, scale: 1.02, transformOrigin: '50% 50%' });
+    gsap.set([meshk, credit], { autoAlpha: 0 });
+    armDraw([cu, pin, liq, air, filt]);
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    tl.addLabel('step0');
+
+    tl.to(cards[0], { autoAlpha: 1, x: 0, duration: 0.75 }, 0.0)
+      .to(credit, { autoAlpha: 1, duration: 0.5 }, 0.4);
+    draw(tl, [cu], 0.55, 0.8, 'power2.inOut');
+    tl.addLabel('step1', 1.4);
+
+    tl.to(cards[1], { autoAlpha: 1, x: 0, duration: 0.75 }, 1.5);
+    draw(tl, [pin], 2.05, 0.6, 'power2.inOut');
+    tl.addLabel('step2', 2.7);
+
+    tl.to(cards[2], { autoAlpha: 1, x: 0, duration: 0.75 }, 2.8);
+    draw(tl, [liq], 3.35, 0.7, 'power2.inOut');
+    draw(tl, [air], 3.75, 0.9, 'power2.inOut');
+    draw(tl, [filt], 4.45, 0.6, 'power2.inOut');
+    tl.addLabel('step3', 5.1);
+
+    tl.to(mesh, { autoAlpha: 0.75, scale: 1, duration: 0.9 }, 5.2)
+      .to(meshk, { autoAlpha: 1, duration: 0.5 }, 5.6);
+    tl.addLabel('step4', 6.2);
+
+    return tl;
+  });
+
+})();
+</script>

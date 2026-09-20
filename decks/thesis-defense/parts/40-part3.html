@@ -1,0 +1,1790 @@
+<!-- ══════════════════════════════════════════════════════════════════════
+     Part III — the machine, wired, assembled, validated.  S25 to S36.
+     Builder P3.  Dialects: divider (S25), sheet (S26, S27, S31, S34),
+     cards (S28, S29, S30, S33), cine (S32, S35, S36).
+     Own compositions: six pulse trains merging into one clock (S27), the
+     carrier grid reorganising around the pair under discussion (S28), the
+     screen plate hinging up to 45 degrees under an eye line (S29), the
+     accuracy chart landing outside the band and then inside it (S31), the
+     four-clip mosaic with click-to-grow (S35).
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<section class="slide slide--divider" id="s25" data-cue="s25" data-part="III">
+  <div class="p3-divplate">
+    <img data-src="../../assets/media/device/top.jpg"
+         alt="The assembled instrument photographed from above: input queue at the left, dispensing lane in the middle, output queue at the right, two pump and storage carriers along the rear wall and the battery at the front left." />
+  </div>
+  <div class="p3-divscrim"></div>
+  <div class="divider__wash"></div>
+  <div class="divider__inner">
+    <div class="divider__num">Part III</div>
+    <h2 class="divider__title">One machine.</h2>
+    <p class="divider__sub">Wired, assembled, validated.</p>
+  </div>
+  <div class="divider__rule"></div>
+  <aside class="notes">
+    <ul>
+      <li>Step back from the modules: from here on there is one object.</li>
+      <li>How it was wired, how the parts were bound together, what it delivered.</li>
+      <li>Then the machine itself, in this room.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s26" data-cue="s26" data-dialect="sheet" data-part="III"
+         data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Twenty-five ways to wire six pumps, screened with two tools instead of a datasheet pile.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <p class="p3-question" id="s26-q">One small computer, a touchscreen, six pumps, two axes and a shaker.</p>
+  <span class="p3-qrule" id="s26-qrule"></span>
+
+  <div class="tool-card" id="s26-card-a"
+       data-tool="architecture"
+       data-src="../../tools/system-architecture-explorer/index.html"
+       data-poster="assets/posters/architecture-explorer.png"
+       style="left:56px; top:262px; width:556px; height:330px;">
+    <span class="tool-card__name">System Architecture Explorer</span>
+    <span class="tool-card__line">Twenty-five candidates, on real prices and real pins.</span>
+  </div>
+
+  <div class="tool-card" id="s26-card-b"
+       data-tool="throughput"
+       data-src="../../tools/dispense-throughput-simulator/index.html"
+       data-poster="assets/posters/throughput-simulator.png"
+       style="left:668px; top:262px; width:556px; height:330px;">
+    <span class="tool-card__name">Dispense Choreography Simulator</span>
+    <span class="tool-card__line">A rack of eight indexing under six nozzles.</span>
+  </div>
+
+  <p class="p3-find" id="s26-find-a" style="left:56px; width:556px;"></p>
+  <p class="p3-find" id="s26-find-b" style="left:668px; width:556px;"></p>
+
+  <aside class="notes">
+    <ul>
+      <li>The question: how does one small computer drive a screen, six pumps, two axes and a shaker?</li>
+      <li>Explorer: twenty-five candidates in four families, costed on real prices, checked against real pins. The answer was which driver, not which processor.</li>
+      <li>Simulator: the second pump buys most of the time; four more buy almost nothing.</li>
+      <li>Say: a datasheet review would have ended in whichever option I examined last. Open each card briefly.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s27" data-cue="s27" data-dialect="sheet" data-part="III"
+         data-map="rotor" style="--head-h:48px">
+  <h2 class="slide__title">One clock drives six pumps, because a dose is a number of steps.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="p3-panel paper" id="s27-fig">
+    <img data-src="assets/figs/fig-architecture-selected.png"
+         alt="The control architecture as built: one processor carrying the touchscreen and card reader, six numbered motor drivers on a shared step and direction clock with one enable line each, and a two-wire module bus carrying the level sensor controller and the port expander." />
+    <svg class="p3-ov" id="s27-ov" viewBox="180 8 1820 730" aria-hidden="true">
+      <rect id="s27-ghost" x="960" y="276" width="1038" height="152" rx="26" fill="none"
+            stroke="#ff6b2b" stroke-width="7" stroke-dasharray="22 18"/>
+      <path id="s27-bus" d="M 640 641 L 1951 641" fill="none" stroke="#ff6b2b"
+            stroke-width="13" opacity="0"/>
+      <path class="s27-tr" d="M 640 641 L 1016 641 L 1016 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <path class="s27-tr" d="M 640 641 L 1189 641 L 1189 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <path class="s27-tr" d="M 640 641 L 1361 641 L 1361 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <path class="s27-tr" d="M 640 641 L 1533 641 L 1533 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <path class="s27-tr" d="M 640 641 L 1706 641 L 1706 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <path class="s27-tr" d="M 640 641 L 1878 641 L 1878 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <g id="s27-en">
+        <circle class="s27-endot" cx="1046" cy="452" r="17" fill="#ff6b2b"/>
+        <circle class="s27-endot" cx="1219" cy="452" r="17" fill="#ff6b2b"/>
+        <circle class="s27-endot" cx="1391" cy="452" r="17" fill="#ff6b2b"/>
+        <circle class="s27-endot" cx="1563" cy="452" r="17" fill="#ff6b2b"/>
+        <circle class="s27-endot" cx="1736" cy="452" r="17" fill="#ff6b2b"/>
+        <circle class="s27-endot" cx="1908" cy="452" r="17" fill="#ff6b2b"/>
+      </g>
+      <g id="s27-stall">
+        <circle class="s27-stalled" cx="1046" cy="108" r="54" fill="none" stroke="#e83535" stroke-width="9"/>
+        <circle class="s27-stalled" cx="1219" cy="108" r="54" fill="none" stroke="#e83535" stroke-width="9"/>
+      </g>
+      <g id="s27-cap">
+        <path id="s27-cap1" d="M 1391 236 L 1391 186" fill="none" stroke="#ff6b2b" stroke-width="8"/>
+        <path id="s27-cap2" d="M 1345 186 L 1437 186 M 1345 160 L 1437 160" fill="none" stroke="#ff6b2b" stroke-width="12"/>
+        <path id="s27-cap3" d="M 1391 160 L 1391 116" fill="none" stroke="#ff6b2b" stroke-width="8"/>
+      </g>
+    </svg>
+    <span class="callout" id="s27-oos" style="left:50%; top:13%">smart drivers, out of stock</span>
+    <span class="p3-strike" id="s27-strike"></span>
+  </div>
+
+  <ol class="sheet__rail">
+    <li class="sheet__panel" data-rev="1">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">on paper</span>
+      <span class="sheet__panel-t">The best driver was out of stock and dearer, so the design adapted.</span>
+    </li>
+    <li class="sheet__panel" data-rev="2">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">as built</span>
+      <span class="sheet__panel-t">One pulse train for all six heads, one enable line each.</span>
+    </li>
+    <li class="sheet__panel" data-rev="3">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">two surprises</span>
+      <span class="sheet__panel-t">A weak adapter stalled two pumps; a motor casing radiated into the bus.</span>
+    </li>
+  </ol>
+
+  <div class="p3-frame p3-frame--dark" id="s27-bay" style="left:56px; top:536px; width:392px; height:152px;">
+    <img data-src="../../assets/media/device/electronics-bay.jpg"
+         alt="The electronics bay from above: solderless breadboards under a nest of jumper wires, with the stylus resting on the holder below." />
+  </div>
+
+  <div class="p3-read" id="s27-read" style="left:480px; top:548px; width:392px;">
+    <span class="p3-read-v" id="s27-num">8</span>
+    <span class="p3-read-u" id="s27-unit">pins</span>
+    <span class="p3-read-l" id="s27-label">instead of twelve</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The analytically best answer was unbuildable: smart drivers out of stock, about thirteen euro dearer.</li>
+      <li>Every pump meters a fixed volume per step at one speed, so one pulse train serves all six, gated by one enable line each: eight pins instead of twelve.</li>
+      <li>Two surprises: a half-amp adapter stalled two pumps, and a floating motor casing radiated into the bus until one 22 nF capacitor was bonded to it.</li>
+      <li>Breadboards here; production is a board at 24 V with charge sensing, and no firmware change.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s28" data-cue="s28" data-dialect="cards" data-part="III"
+         style="--head-h:48px" data-map="rotor">
+  <h2 class="slide__title">Each pump and its vial share one printed carrier, and the carriers hold each other.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="p3-tile" data-i="0" style="left:88px; top:206px;">
+    <img data-src="assets/stills/carrier-central-front-empty.png"
+         alt="The central carrier alone, seen from the front: an open bay for the pump head on the right and a lower bay for the reagent vial on the left." />
+    <svg class="p3-ov" viewBox="0 0 1046 683" aria-hidden="true">
+      <path id="s28-a1" d="M 600 236 L 600 416" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a1h" d="M 570 382 L 600 420 L 630 382" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a2" d="M 142 322 L 246 446" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a2h" d="M 246 400 L 252 452 L 202 442" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+    </svg>
+  </div>
+  <div class="p3-tile" data-i="1" style="left:368px; top:206px;">
+    <img data-src="assets/stills/carrier-central-back-empty.png"
+         alt="The same central carrier from behind: three upright tabs, each with one clearance hole for a horizontal screw into the chassis rear wall." />
+  </div>
+  <div class="p3-tile" data-i="2" style="left:648px; top:206px;">
+    <img data-src="assets/stills/carrier-central-front-full.png"
+         alt="The central carrier loaded: the pump head seated from above and the reagent storage module slid in from the front." />
+  </div>
+  <div class="p3-tile" data-i="3" style="left:928px; top:206px;">
+    <img data-src="assets/stills/carrier-central-back-full.png"
+         alt="The loaded central carrier from behind, the storage module standing above its pump head." />
+  </div>
+  <div class="p3-tile" data-i="4" style="left:88px; top:404px;">
+    <img data-src="assets/stills/carrier-left-front-empty.png"
+         alt="The left carrier empty, from the front: the same two bays as the central carrier." />
+  </div>
+  <div class="p3-tile" data-i="5" style="left:368px; top:404px;">
+    <img data-src="assets/stills/carrier-left-back-empty.png"
+         alt="The left carrier from behind: two upright tabs and, in place of the third, a tall flange carrying three screw holes in a column for the exterior side wall." />
+    <svg class="p3-ov" viewBox="0 0 1046 738" aria-hidden="true">
+      <ellipse id="s28-flange" cx="205" cy="500" rx="98" ry="148" fill="none"
+               stroke="#e83535" stroke-width="10"/>
+    </svg>
+  </div>
+  <div class="p3-tile" data-i="6" style="left:648px; top:404px;">
+    <img data-src="assets/stills/carrier-left-front-full.png"
+         alt="The left carrier loaded, from the front: pump head, tubing and storage module in place." />
+  </div>
+  <div class="p3-tile" data-i="7" style="left:928px; top:404px;">
+    <img data-src="assets/stills/carrier-left-back-full.png"
+         alt="The loaded left carrier from behind, the flange standing proud of the tabs." />
+  </div>
+
+  <div class="p3-frame" id="s28-m1" style="left:56px; top:206px; width:580px; height:326px;">
+    <img data-src="../../assets/media/device/carriers-rear.jpg"
+         alt="Both carriers mounted on the assembled instrument, seen from behind: each storage module standing above its own pump head, with the green air-line filters between them." />
+  </div>
+  <div class="p3-frame" id="s28-m2" style="left:652px; top:206px; width:572px; height:322px;">
+    <img data-src="../../assets/media/device/carriers-side.jpg"
+         alt="The two carriers from the side, dovetailed onto the rear wall of the chassis and interlocked with each other." />
+  </div>
+
+  <p class="p3-cap" id="s28-cap" style="left:76px; top:578px; width:880px;"></p>
+  <span class="p3-k" id="s28-kick" style="left:76px; top:548px;"></span>
+
+  <aside class="notes">
+    <ul>
+      <li>One carrier per channel: the pump drops in from above, the vial slides in from the front, and the suction line stays as short as it can be.</li>
+      <li>Two variants, identical inside: the central one screws into the rear wall, the left one adds a tall flange for the exterior side wall.</li>
+      <li>Dovetails plus horizontal screws, because an operator does not know which part is load-bearing.</li>
+      <li>Two of six channels built; the rest is capacity, not hardware.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s29" data-cue="s29" data-dialect="cards" data-part="III"
+         data-map="nozzle" style="--head-h:48px">
+  <h2 class="slide__title">The nozzle bolts to the chassis; the screen tilts to 45 degrees so you look down at it.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="p3-col" id="s29-left">
+    <div class="p3-frame" id="s29-n1" style="left:56px; top:200px; width:420px; height:236px;">
+      <img data-src="../../assets/media/nozzle/mounted-front.jpg"
+           alt="The nozzle holder fixed above the electronics bay, with two of its three screws visible and two of six needle positions fitted with Luer hubs." />
+      <svg class="p3-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <circle id="s29-s1" cx="952" cy="936" r="62" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+        <circle id="s29-s2" cx="1400" cy="936" r="62" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+        <path id="s29-br" d="M 300 780 L 300 742 L 1640 742 L 1640 780" fill="none"
+              stroke="#ff6b2b" stroke-width="10"/>
+      </svg>
+      <span class="callout" id="s29-c1" style="left:59%; top:73%">3 screws</span>
+      <span class="callout" id="s29-c2" style="left:22%; top:58%">2 of 6 positions</span>
+    </div>
+    <div class="p3-frame" id="s29-n2" style="left:56px; top:452px; width:420px; height:236px;">
+      <img data-src="../../assets/media/nozzle/lines-over-rack.jpg"
+           alt="Seen from above and behind: the dispense lines leave the two pump heads and cross the toothed drive rack to reach the needle hubs." />
+      <svg class="p3-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path id="s29-line" d="M 1290 700 C 1330 790 1350 830 1320 880" fill="none"
+              stroke="#ff6b2b" stroke-width="12"/>
+      </svg>
+      <span class="callout" id="s29-c3" style="left:36%; top:84%">450 mm, unguided</span>
+    </div>
+  </div>
+
+  <svg class="p3-diag" id="s29-diag" viewBox="0 0 675 320" aria-hidden="true">
+    <path id="s29-bench" d="M 40 268 L 640 268" fill="none" stroke="rgba(240,236,232,0.30)" stroke-width="3"/>
+    <path id="s29-bay" d="M 150 268 L 150 172 L 430 172 L 430 268" fill="none"
+          stroke="rgba(240,236,232,0.55)" stroke-width="4"/>
+    <g id="s29-plate">
+      <rect x="150" y="158" width="188" height="16" rx="7" fill="none" stroke="#ff6b2b" stroke-width="5"/>
+      <rect x="168" y="162" width="152" height="8" rx="4" fill="#ff6b2b" opacity="0.55"/>
+    </g>
+    <path id="s29-arc" d="M 270 166 A 120 120 0 0 0 235 81" fill="none" stroke="#ff6b2b"
+          stroke-width="4" stroke-dasharray="7 7"/>
+    <path id="s29-flatline" d="M 150 166 L 330 166" fill="none" stroke="rgba(240,236,232,0.30)" stroke-width="3"/>
+    <g id="s29-eye" opacity="0">
+      <circle cx="556" cy="60" r="20" fill="none" stroke="rgba(240,236,232,0.70)" stroke-width="3"/>
+      <circle cx="556" cy="60" r="7" fill="rgba(240,236,232,0.70)"/>
+      <path d="M 540 80 L 300 150" fill="none" stroke="rgba(240,236,232,0.35)" stroke-width="3" stroke-dasharray="6 8"/>
+    </g>
+    <text id="s29-deg" x="239" y="136" font-family="var(--mono)" font-size="32" font-weight="700"
+          fill="#ff6b2b" text-anchor="middle">45&#176;</text>
+    <text id="s29-under" x="40" y="306" font-family="var(--mono)" font-size="19"
+          fill="rgba(240,236,232,0.55)">below eye level, on a table or a truck bed</text>
+  </svg>
+
+  <div class="p3-frame" id="s29-d1" style="left:506px; top:200px; width:675px; height:380px;">
+    <img data-src="../../assets/media/ui/display-side.jpg"
+         alt="The 3.2 inch touchscreen in its printed holder on the front of the electronics bay, tilted up at 45 degrees, with the power switch and supply socket beneath it." />
+    <span class="callout" id="s29-c4" style="left:36%; top:38%">45&#176;</span>
+  </div>
+  <div class="p3-frame" id="s29-d2" style="left:506px; top:584px; width:214px; height:120px;">
+    <img data-src="../../assets/media/ui/display-top.jpg"
+         alt="The same holder from above: the stylus in its two clips, tethered by a coiled wire." />
+  </div>
+  <p class="p3-cap" id="s29-cap" style="left:740px; top:588px; width:210px;"></p>
+
+  <aside class="notes">
+    <ul>
+      <li>The nozzle holder needed no new part: it docks on the electronics bay, two screws down and a third horizontally into the bay wall.</li>
+      <li>450 mm of tubing leaves each pump head and crosses the toothed drive rack to its needle hub, unguided, hand-disconnectable.</li>
+      <li>The screen sits at 45 degrees because the instrument is meant to be looked down at, on a table or the bed of a truck.</li>
+      <li>Split on a sliding dovetail: adding the stylus clips cost one half-print. About ten prints in all.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s30" data-cue="s30" data-dialect="cards" data-part="III"
+         style="--head-h:48px" data-map="none">
+  <h2 class="slide__title">A published battery holder and three screws put the power on board.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="p3-panel paper" id="s30-cad" style="left:86px; top:214px; width:744px; height:356px;">
+    <img data-src="assets/figs/fig-battery-cradle-cad.png"
+         alt="The battery cradle after modification, from above and in three-quarter view: the original mounting holes filled in CAD and re-cut for M3, and the rails the pack slides onto." />
+  </div>
+
+  <div class="p3-frame" id="s30-b1" style="left:56px; top:214px; width:394px; height:222px;">
+    <img data-src="../../assets/media/device/battery-empty.jpg"
+         alt="The cradle screwed to the front chassis wall with the pack removed and lying beside it, its lead attached." />
+  </div>
+  <div class="p3-frame" id="s30-b2" style="left:466px; top:214px; width:394px; height:214px;">
+    <img data-src="../../assets/media/device/battery-loaded.jpg"
+         alt="The same cradle with the 12 volt pack seated on it and its lead running to the supply socket." />
+  </div>
+
+  <div class="p3-frame p3-frame--contain" id="s30-top" style="left:76px; top:200px; width:744px; height:419px;">
+    <img data-src="../../assets/media/device/top.jpg"
+         alt="The finished two-channel instrument from above, on the ground outdoors: input queue, dispensing lane, output queue, carriers at the rear and the battery at the front left." />
+    <svg class="p3-ov" viewBox="0 0 2000 1125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path id="s30-w" d="M 232 1046 L 1738 1046" fill="none" stroke="#ff6b2b" stroke-width="7"/>
+      <path id="s30-wt" d="M 232 1016 L 232 1076 M 1738 1016 L 1738 1076" fill="none" stroke="#ff6b2b" stroke-width="7"/>
+      <path id="s30-d" d="M 1828 330 L 1828 980" fill="none" stroke="#ff6b2b" stroke-width="7"/>
+      <path id="s30-dt" d="M 1798 330 L 1858 330 M 1798 980 L 1858 980" fill="none" stroke="#ff6b2b" stroke-width="7"/>
+      <text id="s30-wl" x="985" y="1020" font-family="var(--mono)" font-size="54" font-weight="700"
+            fill="#ff6b2b" text-anchor="middle">50 cm</text>
+      <text id="s30-dl" x="1760" y="660" font-family="var(--mono)" font-size="54" font-weight="700"
+            fill="#ff6b2b" text-anchor="end">35 cm</text>
+    </svg>
+    <span class="callout" id="s30-kg" style="left:7%; top:7%">3.3 kg</span>
+    <span class="callout callout--ghost" id="s30-h" style="left:7%; top:16%">18 cm high</span>
+  </div>
+
+  <div class="p3-frame" id="s30-in" style="left:76px; top:200px; width:744px; height:419px;">
+    <img data-src="../../assets/media/device/inside-right.jpg"
+         alt="Inside the machine on the right: the electronics bay open, the drivers and processor on solderless breadboards." />
+    <span class="callout callout--ghost" id="s30-inc" style="left:6%; top:8%">breadboards, no charge sensing</span>
+  </div>
+
+  <div class="p3-frame p3-frame--dark" id="s30-clip" style="left:76px; top:200px; width:744px; height:419px;">
+    <video data-src="../../assets/media/video/machine-outdoor-run.mp4"
+           poster="../../assets/media/video/machine-outdoor-run-poster.jpg"
+           loop playsinline preload="none" data-noauto data-sound></video>
+  </div>
+
+  <div class="p3-frame" id="s30-t1" style="left:56px; top:630px; width:140px; height:79px;">
+    <img data-src="../../assets/media/device/battery-empty.jpg" alt="" />
+  </div>
+  <div class="p3-frame" id="s30-t2" style="left:206px; top:630px; width:140px; height:79px;">
+    <img data-src="../../assets/media/device/battery-loaded.jpg" alt="" />
+  </div>
+  <div class="p3-frame" id="s30-t3" style="left:366px; top:630px; width:140px; height:79px;">
+    <img data-src="../../assets/media/device/inside-left.jpg"
+         alt="Inside the machine on the left: the input queue, its drive rack and the left carrier." />
+  </div>
+
+  <ol class="sheet__rail">
+    <li class="sheet__panel" data-rev="1">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">the cradle</span>
+      <span class="sheet__panel-t">A published holder, its holes filled and re-cut for M3.</span>
+    </li>
+    <li class="sheet__panel" data-rev="2">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">on board</span>
+      <span class="sheet__panel-t">Three horizontal screws, and the pack travels with the machine.</span>
+    </li>
+    <li class="sheet__panel" data-rev="3">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">the object</span>
+      <span class="sheet__panel-t">50 by 35 by 18 centimetres, 3.3 kilograms, two recessed handles.</span>
+    </li>
+    <li class="sheet__panel" data-rev="4">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">not yet</span>
+      <span class="sheet__panel-t">Two of six channels, breadboards, no enclosure.</span>
+    </li>
+  </ol>
+
+  <aside class="notes">
+    <ul>
+      <li>The cheapest win in the whole integration: a published DeWalt holder, holes filled in CAD and re-cut for M3, three horizontal screws.</li>
+      <li>The pack replaces the bench supply on the same connector, with no internal rewiring.</li>
+      <li>The object: 50 by 35 by 18 centimetres, 3.3 kilograms loaded, two recessed handles.</li>
+      <li>Say plainly: two of six channels, breadboards, no charge sensing, no enclosure. The outdoor run is a scenario, not a claim.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s31" data-cue="s31" data-dialect="sheet" data-part="III"
+         data-map="rotor" style="--head-h:48px">
+  <h2 class="slide__title">Calibrated on itself, the machine lands within 3.4 % of the target.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+
+  <div class="p3-chart" id="s31-chart">
+    <svg viewBox="0 0 900 404" aria-hidden="true">
+      <rect id="s31-band" x="290" y="52" width="324" height="194" rx="10"
+            fill="rgba(79,195,138,0.10)" stroke="none" opacity="0"/>
+      <path id="s31-bandl" d="M 290 52 L 290 246" fill="none" stroke="rgba(240,236,232,0.55)"
+            stroke-width="3" stroke-dasharray="9 8"/>
+      <path id="s31-bandr" d="M 614 52 L 614 246" fill="none" stroke="rgba(240,236,232,0.55)"
+            stroke-width="3" stroke-dasharray="9 8"/>
+      <path id="s31-zero" d="M 452 46 L 452 254" fill="none" stroke="rgba(240,236,232,0.28)" stroke-width="2"/>
+      <text id="s31-bandt" x="452" y="38" font-family="var(--mono)" font-size="20" font-weight="700"
+            fill="rgba(240,236,232,0.72)" text-anchor="middle">&#177;10 % allowed</text>
+
+      <rect id="s31-bar1" x="452" y="92" width="0" height="26" rx="4" fill="#e83535"/>
+      <rect id="s31-bar2" x="452" y="150" width="0" height="26" rx="4" fill="#4fc38a"/>
+      <rect id="s31-bar3" x="452" y="192" width="0" height="26" rx="4" fill="#4fc38a"/>
+
+      <text id="s31-v1" x="150" y="113" font-family="var(--mono)" font-size="26" font-weight="700"
+            fill="#e83535" text-anchor="end" opacity="0">&#8722;18 %</text>
+      <text id="s31-v2" x="386" y="171" font-family="var(--mono)" font-size="26" font-weight="700"
+            fill="#4fc38a" text-anchor="end" opacity="0">&#8722;3.4 %</text>
+      <text id="s31-v3" x="472" y="213" font-family="var(--mono)" font-size="26" font-weight="700"
+            fill="#4fc38a" text-anchor="start" opacity="0">+0.6 %</text>
+
+      <text class="s31-rl" id="s31-r1" x="880" y="112" font-family="var(--font)" font-size="19"
+            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">bench constant</text>
+      <text class="s31-rl" id="s31-r2" x="880" y="170" font-family="var(--font)" font-size="19"
+            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">channel 1</text>
+      <text class="s31-rl" id="s31-r3" x="880" y="212" font-family="var(--font)" font-size="19"
+            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">channel 2</text>
+
+      <path d="M 60 268 L 880 268" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+
+      <g id="s31-cv" opacity="0">
+        <text x="60" y="340" font-family="var(--font)" font-size="19" fill="rgba(240,236,232,0.55)">dose to dose</text>
+        <path d="M 120 356 L 620 356" fill="none" stroke="rgba(240,236,232,0.22)" stroke-width="2"/>
+        <path id="s31-pip" d="M 233 318 L 233 378" fill="none" stroke="rgba(240,236,232,0.70)"
+              stroke-width="3" stroke-dasharray="8 7"/>
+        <text x="233" y="312" font-family="var(--mono)" font-size="19" fill="rgba(240,236,232,0.70)"
+              text-anchor="middle">0.27 % by hand</text>
+        <circle class="s31-dot" cx="204" cy="356" r="9" fill="#ff6b2b"/>
+        <circle class="s31-dot" cx="540" cy="356" r="9" fill="#ff6b2b"/>
+        <text x="204" y="392" font-family="var(--mono)" font-size="19" fill="rgba(240,236,232,0.60)"
+              text-anchor="middle">0.2 %</text>
+        <text x="540" y="392" font-family="var(--mono)" font-size="19" fill="rgba(240,236,232,0.60)"
+              text-anchor="middle">1.0 %</text>
+      </g>
+
+      <g id="s31-drift" opacity="0">
+        <text x="660" y="300" font-family="var(--font)" font-size="19" fill="rgba(240,236,232,0.55)">between sessions</text>
+        <circle cx="690" cy="352" r="5" fill="rgba(240,236,232,0.55)"/>
+        <path id="s31-up" d="M 690 352 L 744 320" fill="none" stroke="#ff6b2b" stroke-width="5" stroke-linecap="round"/>
+        <path id="s31-dn" d="M 690 352 L 744 384" fill="none" stroke="#e83535" stroke-width="5" stroke-linecap="round"/>
+        <text id="s31-ut" x="756" y="326" font-family="var(--mono)" font-size="20" font-weight="700"
+              fill="#ff6b2b">+1.3 %</text>
+        <text id="s31-dt" x="756" y="392" font-family="var(--mono)" font-size="20" font-weight="700"
+              fill="#e83535">&#8722;5.0 %</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="p3-frame p3-frame--dark" id="s31-vid" style="left:984px; top:200px; width:216px; height:384px;">
+    <video data-src="../../assets/media/video/pump-gravimetric.mp4"
+           poster="../../assets/media/video/pump-gravimetric-poster.jpg"
+           muted loop playsinline preload="none"></video>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>One thousand microlitres, commanded through the whole assembled path, weighed on an analytical balance.</li>
+      <li>With the constant from the isolated pump bench it fell about eighteen per cent short; recalibrated on the instrument itself, minus 3.4 and plus 0.6 per cent.</li>
+      <li>Scatter 0.2 to 1.0 per cent, against 0.27 for a hand pipette on the same balance.</li>
+      <li>The constant moved between sessions, so a field instrument has to recalibrate itself.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s32" data-cue="s32" data-dialect="cine" data-part="III"
+         data-map="rack" style="--cine-scrim:0.55">
+  <h2 class="slide__title">Forty tubes, five racks, nobody in the room.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="p3-frame" id="s32-plate" style="left:56px; top:160px; width:708px; height:398px;">
+    <img id="s32-start" data-src="../../assets/media/device/validation-start.jpg"
+         alt="The machine before the run, seen from above: forty empty capped tubes standing in five racks in the input queue, the output queue empty." />
+    <img id="s32-done" data-src="../../assets/media/device/validation-done.jpg"
+         alt="After the run: five racks of eight tubes in the output queue, every tube carrying red dye, the screen reading done at eleven minutes six seconds." />
+    <svg class="p3-ov" id="s32-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <circle id="s32-target" cx="590" cy="258" r="76" fill="none" stroke="#ff6b2b" stroke-width="10"/>
+    </svg>
+    <span class="callout" id="s32-c5" style="left:29.5%; top:31%">5 mm</span>
+  </div>
+
+  <div class="p3-bignum" id="s32-num" style="left:788px; top:176px;">
+    <span class="p3-bignum-v" id="s32-count">0</span>
+    <span class="p3-bignum-u">tubes</span>
+  </div>
+  <p class="p3-cap" id="s32-sub" style="left:788px; top:268px; width:420px;">100 &#181;L and 75 &#181;L in every tube</p>
+  <p class="p3-cap" id="s32-miss" style="left:788px; top:268px; width:420px;">3 of 40 landed on the deck</p>
+
+  <div class="p3-frame p3-frame--dark" id="s32-vid" style="left:788px; top:318px; width:436px; height:245px;">
+    <video data-src="../../assets/media/video/machine-demo.mp4"
+           poster="../../assets/media/video/machine-demo-poster.jpg"
+           muted loop playsinline preload="none" data-noauto></video>
+  </div>
+
+  <div class="p3-frame" id="s32-t1" style="left:56px; top:580px; width:120px; height:120px;">
+    <img data-src="../../assets/media/device/sample-front.jpg"
+         alt="A tube from the first rack, filled with dyed reagent." />
+  </div>
+  <div class="p3-frame" id="s32-t2" style="left:192px; top:580px; width:120px; height:120px;">
+    <img data-src="../../assets/media/device/sample-back.jpg"
+         alt="A tube from the last rack, filled to a visually comparable level." />
+  </div>
+  <p class="p3-cap" id="s32-tcap" style="left:330px; top:596px; width:420px;">First rack and last rack, alike by eye</p>
+
+  <aside class="notes">
+    <ul>
+      <li>A dual-reagent protocol, 100 and 75 microlitres, across forty tubes in five racks, start to finish without any user help.</li>
+      <li>What made it possible was slowing the linear axes so the steppers could push a loaded five-rack magazine without stalling.</li>
+      <li>Every droplet landed inside the 5 mm target radius; three of forty wetted the deck or the lane instead.</li>
+      <li>First and last rack held comparable volumes by eye. On the bench supply, not on battery.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s33" data-cue="s33" data-dialect="cards" data-part="III"
+         data-map="rack" style="--head-h:48px">
+  <h2 class="slide__title">The failures were a tube cap, a tired battery and a leaking septum.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <article class="p3-fcard" id="s33-c0" style="left:56px; width:600px;">
+    <div class="p3-fcard-media">
+      <img data-src="../../assets/media/alignment/lid-fouling.jpg"
+           alt="Two sample tubes in a rack, their hinged caps folded back over the deck; a third cap lies flat and projects sideways past the rack wall." />
+      <svg class="p3-ov" viewBox="0 0 1600 1420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path id="s33-ref" d="M 875 760 L 875 470" fill="none" stroke="rgba(240,236,232,0.55)"
+              stroke-width="9" stroke-dasharray="20 16"/>
+        <path id="s33-arm" d="M 875 760 L 1120 560" fill="none" stroke="#9b7fe0" stroke-width="11"/>
+        <path id="s33-arc" d="M 875 610 A 150 150 0 0 1 991 665" fill="none" stroke="#9b7fe0"
+              stroke-width="9"/>
+        <g id="s33-ghost" opacity="0">
+          <circle cx="1120" cy="560" r="86" fill="none" stroke="#e83535" stroke-width="10"
+                  stroke-dasharray="18 14"/>
+          <path d="M 875 760 L 1120 560" fill="none" stroke="#e83535" stroke-width="9" stroke-dasharray="18 14"/>
+        </g>
+        <circle id="s33-drop" cx="1010" cy="960" r="34" fill="#e83535" opacity="0"/>
+      </svg>
+      <span class="callout" id="s33-deg" style="left:5%; top:13%">135&#176;</span>
+      <span class="callout" id="s33-flat" style="left:5%; top:31%">flat: it rubs the wall</span>
+    </div>
+    <div class="p3-fcard-foot">
+      <span class="p3-k">the cap</span>
+      <p>An open-loop axis loses steps against friction, and the dose lands beside the tube.</p>
+    </div>
+  </article>
+
+  <article class="p3-fcard" id="s33-c1" style="left:676px; width:254px;">
+    <div class="p3-fcard-media">
+      <img data-src="../../assets/media/device/validation-battery.jpg"
+           alt="The output queue after the battery run: two racks, sixteen tubes filled with dye, and the screen reading run stopped." />
+      <svg class="p3-ov" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <g id="s33-batt" opacity="0" transform="translate(46,232)">
+          <rect x="0" y="0" width="150" height="66" rx="9" fill="rgba(8,8,10,0.72)"
+                stroke="rgba(240,236,232,0.75)" stroke-width="4"/>
+          <rect x="150" y="20" width="12" height="26" rx="3" fill="rgba(240,236,232,0.75)"/>
+          <rect id="s33-batfill" x="8" y="8" width="134" height="50" rx="5" fill="#ff6b2b"/>
+        </g>
+        <g id="s33-rot" opacity="0">
+          <circle id="s33-rot1" cx="300" cy="266" r="30" fill="none" stroke="#e83535" stroke-width="6"/>
+          <path id="s33-rot1s" d="M 300 236 L 300 250 M 300 282 L 300 296 M 270 266 L 284 266 M 316 266 L 330 266"
+                fill="none" stroke="#e83535" stroke-width="6"/>
+          <circle id="s33-rot2" cx="392" cy="266" r="30" fill="none" stroke="#e83535" stroke-width="6"/>
+          <path id="s33-rot2s" d="M 392 236 L 392 250 M 392 282 L 392 296 M 362 266 L 376 266 M 408 266 L 422 266"
+                fill="none" stroke="#e83535" stroke-width="6"/>
+        </g>
+      </svg>
+      <span class="callout" id="s33-16" style="left:6%; top:12%">16 samples</span>
+    </div>
+    <div class="p3-fcard-foot">
+      <span class="p3-k">the battery</span>
+      <p>Two racks, then the draining pack could not hold both pumps at once.</p>
+    </div>
+  </article>
+
+  <article class="p3-fcard" id="s33-c2" style="left:950px; width:254px;">
+    <div class="p3-fcard-media p3-fcard-media--draw">
+      <svg viewBox="0 0 600 340" aria-hidden="true">
+        <circle cx="300" cy="196" r="104" fill="rgba(255,255,255,0.05)"
+                stroke="rgba(240,236,232,0.45)" stroke-width="4"/>
+        <circle cx="300" cy="196" r="76" fill="none" stroke="rgba(240,236,232,0.22)" stroke-width="2"/>
+        <g id="s33-punct">
+          <circle class="s33-p" cx="276" cy="166" r="7" fill="#ff6b2b"/>
+          <circle class="s33-p" cx="318" cy="178" r="7" fill="#ff6b2b"/>
+          <circle class="s33-p" cx="292" cy="212" r="7" fill="#ff6b2b"/>
+          <circle class="s33-p" cx="330" cy="214" r="7" fill="#ff6b2b"/>
+          <circle class="s33-p" cx="262" cy="192" r="7" fill="#ff6b2b"/>
+          <circle class="s33-p" cx="306" cy="146" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="340" cy="186" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="268" cy="230" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="310" cy="240" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="348" cy="154" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="252" cy="156" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="286" cy="246" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="326" cy="144" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="358" cy="222" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="238" cy="210" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="300" cy="186" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="272" cy="142" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="336" cy="250" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="360" cy="178" r="7" fill="#e83535"/>
+          <circle class="s33-p" cx="246" cy="178" r="7" fill="#e83535"/>
+        </g>
+        <g id="s33-needle">
+          <path d="M 300 20 L 300 104" fill="none" stroke="rgba(240,236,232,0.75)" stroke-width="9"/>
+          <path d="M 300 104 L 300 128" fill="none" stroke="rgba(240,236,232,0.75)" stroke-width="5"/>
+        </g>
+        <g id="s33-beads" opacity="0">
+          <circle cx="300" cy="136" r="11" fill="#e83535"/>
+          <circle cx="276" cy="152" r="8" fill="#e83535"/>
+          <circle cx="324" cy="150" r="7" fill="#e83535"/>
+        </g>
+        <text id="s33-ct" x="300" y="326" font-family="var(--mono)" font-size="32" font-weight="700"
+              fill="rgba(240,236,232,0.75)" text-anchor="middle">0 punctures</text>
+      </svg>
+    </div>
+    <div class="p3-fcard-foot">
+      <span class="p3-k">the septum</span>
+      <p>It reseals about five times, and not reliably past twenty.</p>
+    </div>
+  </article>
+
+  <aside class="notes">
+    <ul>
+      <li>A cap left flat projects sideways and rubs the lane wall; the axis is open-loop, so the firmware thinks the rack arrived while it lagged behind.</li>
+      <li>On the 12 volt pack the machine ran two racks, sixteen samples, then both pumps stalled together. The firmware cannot yet run one pump at a time.</li>
+      <li>The vial septum leaks after about five punctures and does not reliably reseal past twenty: that is where the spillage risk lives.</li>
+      <li>None of the three is kinematic. All three have known fixes.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s34" data-cue="s34" data-dialect="sheet" data-part="III"
+         data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Six requirements met, three partly, four waiting for an enclosure and a circuit board.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+
+  <span class="p3-k p3-ghead" data-g="1" style="left:56px;">Performance</span>
+  <span class="p3-k p3-ghead" data-g="2" style="left:292px;">Automation</span>
+  <span class="p3-k p3-ghead" data-g="3" style="left:528px;">Portability</span>
+  <span class="p3-k p3-ghead" data-g="4" style="left:764px;">Contamination</span>
+  <span class="p3-k p3-ghead" data-g="5" style="left:1000px;">Safety</span>
+
+  <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:228px;"><b>Accuracy</b><i>met</i></div>
+  <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:296px;"><b>Reproducibility</b><i>met</i></div>
+  <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:364px;"><b>Versatility</b><i>met</i></div>
+  <div class="p3-chip is-na"       data-g="1" style="left:56px;  top:432px;"><b>Feasibility</b><i>a gate, not a test</i></div>
+
+  <div class="p3-chip is-met"      data-g="2" style="left:292px; top:228px;"><b>Unattended run</b><i>met</i></div>
+  <div class="p3-chip is-untested" data-g="2" style="left:292px; top:296px;"><b>Training</b><i>not tested</i></div>
+
+  <div class="p3-chip is-excluded" data-g="3" style="left:528px; top:228px;"><b>Operating envelope</b><i>excluded</i></div>
+  <div class="p3-chip is-partly"   data-g="3" style="left:528px; top:296px;"><b>Portability</b><i>partly met</i></div>
+
+  <div class="p3-chip is-design"   data-g="4" style="left:764px; top:228px;"><b>Cross-contamination</b><i>by design</i></div>
+  <div class="p3-chip is-excluded" data-g="4" style="left:764px; top:296px;"><b>Wind</b><i>excluded</i></div>
+  <div class="p3-chip is-excluded" data-g="4" style="left:764px; top:364px;"><b>Cleanability</b><i>excluded</i></div>
+  <div class="p3-chip is-met"      data-g="4" style="left:764px; top:432px;"><b>Fluid paths</b><i>met</i></div>
+
+  <div class="p3-chip is-partly"   data-g="5" style="left:1000px; top:228px;"><b>Spillage</b><i>partly met</i></div>
+  <div class="p3-chip is-partly"   data-g="5" style="left:1000px; top:296px;"><b>Operator exposure</b><i>partly met</i></div>
+  <div class="p3-chip is-excluded" data-g="5" style="left:1000px; top:364px;"><b>Electrical safety</b><i>excluded</i></div>
+
+  <svg class="p3-wire" id="s34-wire" viewBox="0 0 1280 720" aria-hidden="true">
+    <path class="s34-ln" d="M 636 286 C 560 420 320 470 176 590" fill="none"
+          stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
+    <path class="s34-ln" d="M 872 354 C 760 470 380 500 180 592" fill="none"
+          stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
+    <path class="s34-ln" d="M 872 422 C 740 520 400 544 184 594" fill="none"
+          stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
+    <path class="s34-ln" d="M 1108 422 C 980 540 700 566 457 594" fill="none"
+          stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
+  </svg>
+
+  <div class="p3-pill" id="s34-p1" style="left:56px;  top:596px; width:232px;">an enclosure</div>
+  <div class="p3-pill" id="s34-p2" style="left:320px; top:596px; width:262px;">a circuit board</div>
+
+  <aside class="notes">
+    <ul>
+      <li>Performance: accuracy, reproducibility and versatility met; feasibility was a concept gate, not a test of the built device.</li>
+      <li>Automation: a complete forty-tube run finished without intervention. Training was deferred, so it stands as not tested.</li>
+      <li>Portability partly met, spillage and operator exposure partly met; cross-contamination is prevented by architecture, not by washing.</li>
+      <li>Four requirements are excluded honestly: they wait on an enclosure and a real circuit board, not on the mechanisms.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s35" data-cue="s35" data-dialect="cine" data-part="III" data-map="rack">
+  <h2 class="slide__title">This is the machine, and it is in the room.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="p3-clip" id="s35-v0" data-i="0" tabindex="0" role="button"
+       style="left:56px; top:176px; width:286px; height:508px;">
+    <video data-src="../../assets/media/video/machine-dispensing-portrait.mp4"
+           poster="../../assets/media/video/machine-dispensing-portrait-poster.jpg"
+           muted loop playsinline preload="none"></video>
+    <span class="p3-clip-lab">dispensing, close</span>
+  </div>
+  <div class="p3-clip" id="s35-v1" data-i="1" tabindex="0" role="button"
+       style="left:366px; top:176px; width:421px; height:237px;">
+    <video data-src="../../assets/media/video/machine-dispensing.mp4"
+           poster="../../assets/media/video/machine-dispensing-poster.jpg"
+           muted loop playsinline preload="none"></video>
+    <span class="p3-clip-lab">the droplet leaving</span>
+  </div>
+  <div class="p3-clip" id="s35-v2" data-i="2" tabindex="0" role="button"
+       style="left:803px; top:176px; width:421px; height:237px;">
+    <video data-src="../../assets/media/video/machine-demo.mp4"
+           poster="../../assets/media/video/machine-demo-poster.jpg"
+           muted loop playsinline preload="none"></video>
+    <span class="p3-clip-lab">a full run, sped up</span>
+  </div>
+  <div class="p3-clip" id="s35-v3" data-i="3" tabindex="0" role="button"
+       style="left:366px; top:429px; width:453px; height:255px;">
+    <video data-src="../../assets/media/video/machine-outdoor-run.mp4"
+           poster="../../assets/media/video/machine-outdoor-run-poster.jpg"
+           loop playsinline preload="none" data-sound></video>
+    <span class="p3-clip-lab">outdoors, on battery</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Let them run. Say only: this is what you are about to see for real.</li>
+      <li>Click any clip to grow it; Escape brings the mosaic back.</li>
+      <li>The outdoor clip carries the sound.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="s36" data-cue="s36" data-dialect="cine" data-part="demo" data-map="none">
+  <div class="p3-demoplate">
+    <img data-src="../../assets/media/device/outdoor.jpg"
+         alt="The instrument standing outdoors on battery power, racks loaded, in a representative point-of-need scenario." />
+  </div>
+  <div class="p3-demoscrim"></div>
+
+  <h2 class="slide__title" id="s36-title">The machine, live</h2>
+  <p class="p3-addr">sirsirio.github.io/thesis-tools</p>
+
+  <div class="p3-frame p3-frame--dark" id="s36-f1" style="left:334px; top:232px; width:288px; height:330px;">
+    <video data-src="../../assets/media/video/pump-head.mp4"
+           poster="../../assets/media/video/pump-head-poster.jpg"
+           muted loop playsinline preload="none" data-noauto></video>
+  </div>
+  <div class="p3-frame p3-frame--dark" id="s36-f2" style="left:658px; top:232px; width:288px; height:330px;">
+    <video data-src="../../assets/media/video/droplet-slowmo.mp4"
+           poster="../../assets/media/video/droplet-slowmo-poster.jpg"
+           muted loop playsinline preload="none" data-noauto></video>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Demo, five minutes: load a rack, pick a recipe on the screen, show the pre-run reagent check.</li>
+      <li>Run one or two tubes with dye; point at the droplet detaching; show the rack ejecting to the output queue.</li>
+      <li>The machine arrives ready: dye in the vials, a rack loaded, lines primed, caps folded back to 135 degrees.</li>
+      <li>If it misbehaves: press v here and the pump head and droplet clips play side by side.</li>
+    </ul>
+  </aside>
+</section>
+
+<style data-part="part3">
+/* ══ Part III (S25–S36), builder P3. Every rule is prefixed p3- or scoped
+      to an id, so it cannot reach another builder's slides. ══════════ */
+
+#s29-diag text, #s30-top text, #s33 svg text, .p3-chart text { font-family: var(--mono); }
+
+/* ── shared pieces ───────────────────────────────────────────────── */
+.p3-frame {
+  position: absolute;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.50);
+}
+.p3-frame img, .p3-frame video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.p3-frame--contain img, .p3-frame--contain video { object-fit: contain; }
+.p3-frame--dark { background: #0d0f12; }
+
+.p3-panel {
+  position: absolute;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.50);
+}
+.p3-ov {
+  position: absolute; left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: visible; pointer-events: none;
+}
+.p3-cap {
+  position: absolute; margin: 0;
+  font-size: 20px; line-height: 1.35;
+  color: var(--text-soft);
+  opacity: 0;
+}
+.p3-k {
+  font-family: var(--mono);
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--t-a);
+}
+.p3-read { position: absolute; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 12px; }
+.p3-read-v {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 64px; font-weight: 700; line-height: 1; letter-spacing: -0.03em;
+  background: linear-gradient(104deg, var(--t-a) 12%, var(--t-b) 96%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.p3-read-u { font-family: var(--mono); font-size: 24px; color: var(--text-muted); }
+.p3-read-l { flex: 0 0 100%; margin-top: 8px; font-size: 20px; color: var(--text-soft); }
+.p3-bignum { position: absolute; display: flex; align-items: baseline; gap: 12px; opacity: 0; }
+.p3-bignum-v {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 92px; font-weight: 700; line-height: 0.95; letter-spacing: -0.035em;
+  background: linear-gradient(104deg, var(--t-a) 12%, var(--t-b) 96%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.p3-bignum-u { font-family: var(--mono); font-size: 28px; color: var(--text-muted); }
+
+/* ── S25 · the divider zooms out of the machine ──────────────────── */
+.p3-divplate { position: absolute; inset: 0; overflow: hidden; }
+.p3-divplate img { width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+.p3-divscrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(10,10,12,0.96) 0%, rgba(10,10,12,0.80) 46%, rgba(10,10,12,0.55) 100%),
+    radial-gradient(120% 110% at 40% 46%, rgba(10,10,12,0) 30%, rgba(10,10,12,0.72) 100%);
+}
+#s25 .divider__inner, #s25 .divider__rule { z-index: 2; }
+
+/* ── S26 · the question, two live cards, two findings ────────────── */
+.p3-question {
+  position: absolute; left: 56px; top: 198px; width: 1000px; margin: 0;
+  font-size: 26px; line-height: 1.3; color: var(--text-soft); opacity: 0;
+}
+.p3-qrule {
+  position: absolute; left: 56px; top: 242px; width: 440px; height: 2px;
+  background: linear-gradient(90deg, var(--t-a), transparent);
+  transform: scaleX(0); transform-origin: 0 50%;
+}
+.p3-find {
+  position: absolute; top: 606px; margin: 0;
+  font-size: 21px; line-height: 1.3; color: var(--text); min-height: 28px;
+}
+
+/* ── S27 · the architecture sheet, cropped to the drivers ────────── */
+#s27-fig { left: 56px; top: 196px; width: 820px; height: 330px; }
+#s27-fig img { position: absolute; width: 901px; height: auto; left: -81px; top: -4px; object-fit: fill; }
+#s27-oos {
+  left: 34%; top: 79%; width: 268px;
+  margin-left: -134px; margin-top: -18px;
+  text-align: center; opacity: 0;
+}
+.p3-strike {
+  position: absolute; left: 34%; top: 79%;
+  width: 250px; height: 3px; margin-left: -125px; margin-top: -1px;
+  background: var(--paper-ink);
+  transform: scaleX(0); transform-origin: 50% 50%;
+}
+#s27-bay { opacity: 0; }
+#s27-read { opacity: 0; }
+
+/* ── S28 · the carrier grid ──────────────────────────────────────── */
+.p3-tile {
+  position: absolute; width: 264px; height: 182px;
+  border-radius: var(--r-md); overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+  transform-origin: 0 0;
+}
+.p3-tile img { display: block; width: 100%; height: 100%; object-fit: contain; }
+#s28-m1, #s28-m2 { opacity: 0; }
+#s28-kick { position: absolute; opacity: 0; }
+
+/* ── S29 · nozzle left, screen right, the plate hinging to 45° ───── */
+.p3-col { position: absolute; inset: 0; }
+#s29-n2 { opacity: 0; }
+.p3-diag { position: absolute; left: 506px; top: 200px; width: 675px; height: 320px; opacity: 0; }
+#s29-d1, #s29-d2 { opacity: 0; }
+#s29 .callout { opacity: 0; }
+
+/* ── S30 · cradle, pack, the whole object ────────────────────────── */
+#s30-b1, #s30-b2, #s30-top, #s30-in, #s30-clip,
+#s30-t1, #s30-t2, #s30-t3 { opacity: 0; }
+#s30 .callout { opacity: 0; }
+/* four rail panels in a 372 px box: let them share the height instead of
+   pushing the last one past the bottom edge. */
+#s30 .sheet__panel { min-height: 0; padding-top: 10px; padding-bottom: 10px; }
+
+/* ── S31 · the accuracy chart ────────────────────────────────────── */
+.p3-chart {
+  position: absolute; left: 56px; top: 200px; width: 900px; height: 404px;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.45);
+  overflow: hidden;
+}
+.p3-chart svg { display: block; width: 100%; height: 100%; }
+
+/* ── S32 · start, done, forty ────────────────────────────────────── */
+#s32-plate { opacity: 0; }
+#s32-done { position: absolute; left: 0; top: 0; opacity: 0; }
+#s32-vid, #s32-t1, #s32-t2 { opacity: 0; }
+#s32 .callout { opacity: 0; }
+
+/* ── S33 · three failures, one at a time ─────────────────────────── */
+.p3-fcard {
+  position: absolute; top: 200px; height: 384px;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.50);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.p3-fcard-media {
+  position: relative; width: 100%; height: 212px; flex: 0 0 auto;
+  overflow: hidden; background: #0d0f12;
+}
+.p3-fcard-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.p3-fcard-media svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.p3-fcard-media--draw { background: rgba(255,255,255,0.03); }
+.p3-fcard-foot { padding: 16px 20px; }
+.p3-fcard-foot .p3-k { display: block; margin-bottom: 8px; }
+.p3-fcard-foot p { margin: 0; font-size: 20px; line-height: 1.3; color: var(--text-soft); }
+#s33 .callout { opacity: 0; }
+
+/* ── S34 · the verdict table ─────────────────────────────────────── */
+.p3-ghead { position: absolute; top: 192px; opacity: 0; }
+.p3-chip {
+  position: absolute; width: 216px; height: 62px;
+  padding: 7px 12px;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  opacity: 0;
+}
+.p3-chip b { display: block; font-size: 19px; font-weight: 600; line-height: 1.05; color: var(--text); }
+.p3-chip i {
+  display: block; margin-top: 3px;
+  font-family: var(--mono); font-style: normal;
+  font-size: 18px; line-height: 1.1;
+  color: var(--text-muted);
+}
+.p3-chip.is-met      { background: rgba(79,195,138,0.10);  border-color: rgba(79,195,138,0.45); }
+.p3-chip.is-met i    { color: #4fc38a; }
+.p3-chip.is-design   { background: rgba(79,179,200,0.10);  border-color: rgba(79,179,200,0.45); }
+.p3-chip.is-design i { color: #4fb3c8; }
+.p3-chip.is-partly   { background: rgba(224,163,79,0.10);  border-color: rgba(224,163,79,0.45); }
+.p3-chip.is-partly i { color: #e0a34f; }
+.p3-chip.is-untested { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.16); }
+.p3-chip.is-excluded { background: rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(255,255,255,0.20); }
+.p3-chip.is-na       { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.08); }
+.p3-chip.is-na b     { color: var(--text-soft); }
+.p3-wire { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.p3-pill {
+  position: absolute; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r-pill);
+  border: 1px dashed color-mix(in srgb, var(--t-a) 50%, transparent);
+  background: rgba(255,107,43,0.08);
+  font-size: 21px; color: var(--text);
+  opacity: 0;
+}
+
+/* ── S35 · the four-clip mosaic ──────────────────────────────────── */
+.p3-clip {
+  position: absolute;
+  border-radius: var(--r-md); overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 22px 56px rgba(0,0,0,0.55);
+  cursor: pointer;
+}
+.p3-clip video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.p3-clip::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 32%);
+}
+.p3-clip:hover, .p3-clip:focus-visible { border-color: var(--t-a); outline: none; }
+.p3-clip.is-big { z-index: 60; }
+/* a grown clip reaches over the mini map's corner; the map is a sibling of
+   the slides, so it can step aside for as long as a clip is up. */
+#s35:has(.p3-clip.is-big) ~ .minimap { opacity: 0; }
+.p3-clip-lab {
+  position: absolute; left: 14px; bottom: 11px; z-index: 2;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em;
+  color: rgba(240,236,232,0.94);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.95);
+  opacity: 0;
+}
+
+/* ── S36 · the quiet demo slide ──────────────────────────────────── */
+.p3-demoplate { position: absolute; inset: 0; overflow: hidden; }
+.p3-demoplate img { width: 100%; height: 100%; object-fit: cover; opacity: 0.30; }
+.p3-demoscrim {
+  position: absolute; inset: 0;
+  background: radial-gradient(110% 100% at 50% 46%, rgba(10,10,12,0.42) 0%, rgba(10,10,12,0.92) 100%);
+}
+#s36 .slide__title {
+  left: 0; right: 0; top: 252px; width: auto;
+  text-align: center; font-size: 76px;
+}
+.p3-addr {
+  position: absolute; left: 0; right: 0; top: 372px; margin: 0;
+  text-align: center;
+  font-family: var(--mono); font-size: 26px; letter-spacing: 0.08em;
+  color: var(--t-a);
+}
+#s36-f1, #s36-f2 { opacity: 0; }
+</style>
+
+<script data-part="part3">
+/* ══ Part III (S25–S36), builder P3 ══════════════════════════════════
+   One paused timeline per slide, labels step0..stepN, plus entrance
+   hooks. Every selector is scoped to the slide element handed in. ══ */
+(function () {
+  'use strict';
+
+  var EO = 'expo.out';
+
+  function q(el, s)  { return el.querySelector(s); }
+  function qa(el, s) { return Array.prototype.slice.call(el.querySelectorAll(s)); }
+
+  /* a counter that survives scrubbing in both directions */
+  function counter(tl, node, from, to, digits, at, dur, pre, post) {
+    var o = { v: from };
+    pre = pre || ''; post = post || '';
+    node.textContent = pre + from.toFixed(digits) + post;
+    tl.to(o, {
+      v: to, duration: dur, ease: EO,
+      onUpdate: function () { node.textContent = pre + o.v.toFixed(digits) + post; }
+    }, at);
+  }
+
+  /* a line that types itself in, and types itself out on the way back */
+  function typer(tl, node, text, at, dur) {
+    var o = { i: 0 };
+    node.textContent = '';
+    tl.to(o, {
+      i: text.length, duration: dur, ease: 'none',
+      onUpdate: function () { node.textContent = text.slice(0, Math.round(o.i)); }
+    }, at);
+  }
+
+  function setText(node, s) { return function () { node.textContent = s; }; }
+
+  function litPanel(tl, panels, n, at) {
+    tl.to(panels[n], { opacity: 1, backgroundColor: 'rgba(255,107,43,0.085)', duration: 0.45 }, at)
+      .to(panels[n].querySelector('.sheet__panel-bar'), { scaleY: 1, duration: 0.5 }, at + '+=0.05');
+    if (n > 0) {
+      tl.to(panels[n - 1], { opacity: 0.5, backgroundColor: 'rgba(255,107,43,0)', duration: 0.45 }, at);
+    }
+  }
+
+  function playVid(v, sound) {
+    return function () {
+      if (!v) return;
+      if (!v.getAttribute('src') && v.getAttribute('data-src')) v.src = v.getAttribute('data-src');
+      v.muted = !sound;
+      try { v.currentTime = 0; } catch (e) {}
+      var p;
+      try { p = v.play(); } catch (e) { return; }
+      if (p && p.catch) {
+        p.catch(function () {
+          if (!v.muted) { v.muted = true; var r = v.play(); if (r && r.catch) r.catch(function () {}); }
+        });
+      }
+    };
+  }
+  function stopVid(v) { return function () { if (v) { try { v.pause(); v.currentTime = 0; } catch (e) {} } }; }
+
+  /* ═══════════════ S25 · divider, zooming out of the machine ═══════ */
+
+  Deck.slide('s25', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    tl.addLabel('step0');
+    return tl;
+  });
+
+  Deck.enter('s25', function (el, gsap) {
+    gsap.fromTo(q(el, '.p3-divplate img'),
+      { opacity: 0, scale: 1.5 }, { opacity: 0.42, scale: 1, duration: 1.9, ease: EO });
+    gsap.fromTo(q(el, '.divider__wash'), { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' });
+    gsap.fromTo(q(el, '.divider__rule'), { scaleX: 0 },
+      { scaleX: 1, duration: 1.1, ease: 'power3.inOut', delay: 0.2 });
+    gsap.fromTo([q(el, '.divider__num'), q(el, '.divider__title'), q(el, '.divider__sub')],
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.15 });
+  });
+
+  /* ═══════════════ S26 · the question and the two tools ═══════════ */
+
+  Deck.slide('s26', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    var qn = q(el, '#s26-q'), rule = q(el, '#s26-qrule');
+    var ca = q(el, '#s26-card-a'), cb = q(el, '#s26-card-b');
+    var fa = q(el, '#s26-find-a'), fb = q(el, '#s26-find-b');
+    var hints = qa(el, '.tool-card__hint');
+
+    gsap.set([ca, cb], { opacity: 0, y: 28 });
+    tl.addLabel('step0');
+
+    tl.fromTo(qn, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.65 }, 'step0')
+      .to(rule, { scaleX: 1, duration: 0.8 }, 'step0+=0.12')
+      .addLabel('step1');
+
+    tl.to(ca, { opacity: 1, y: 0, duration: 0.75 }, 'step1')
+      .to(ca, { boxShadow: '0 24px 66px rgba(255,107,43,0.30)', duration: 0.5 }, 'step1+=0.25');
+    typer(tl, fa, 'Which driver, not which processor.', 'step1+=0.55', 0.75);
+    tl.addLabel('step2');
+
+    tl.to(cb, { opacity: 1, y: 0, duration: 0.75 }, 'step2')
+      .to(cb, { boxShadow: '0 24px 66px rgba(255,107,43,0.30)', duration: 0.5 }, 'step2+=0.25');
+    typer(tl, fb, 'The second pump buys 86 % of the saving; four more buy almost nothing.', 'step2+=0.55', 1.0);
+    tl.addLabel('step3');
+
+    tl.to(qn, { opacity: 0.28, duration: 0.45 }, 'step3')
+      .to(rule, { opacity: 0.35, duration: 0.45 }, 'step3')
+      .to([ca, cb], { borderColor: 'rgba(255,107,43,0.85)', duration: 0.5 }, 'step3');
+    if (hints.length) {
+      tl.to(hints, { scale: 1.14, transformOrigin: '100% 0%', duration: 0.35, yoyo: true, repeat: 3 }, 'step3+=0.1');
+    }
+    tl.addLabel('step4');
+
+    return tl;
+  });
+
+  /* ═══════════════ S27 · six pulse trains, one clock ══════════════ */
+
+  Deck.slide('s27', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var trains = qa(el, '.s27-tr');
+    var bus    = q(el, '#s27-bus');
+    var ghost  = q(el, '#s27-ghost');
+    var oos    = q(el, '#s27-oos');
+    var strike = q(el, '#s27-strike');
+    var endots = qa(el, '.s27-endot');
+    var stalls = qa(el, '.s27-stalled');
+    var cap    = q(el, '#s27-cap');
+    var panels = qa(el, '.sheet__panel');
+    var bay    = q(el, '#s27-bay');
+    var read   = q(el, '#s27-read');
+    var numEl  = q(el, '#s27-num'), unitEl = q(el, '#s27-unit'), labEl = q(el, '#s27-label');
+
+    gsap.set(trains.concat([bus]), { strokeDasharray: '22 30', strokeDashoffset: 0 });
+    gsap.set(ghost, { opacity: 0, transformOrigin: '50% 50%' });
+    gsap.set(endots, { scale: 0, transformOrigin: '50% 50%' });
+    gsap.set(stalls, { opacity: 0, transformOrigin: '50% 50%' });
+    gsap.set(cap, { opacity: 0, y: 40 });
+
+    /* the shared clock state: one ticker paints, the timeline tweens
+       the rates, the gates and the merge factor, so every frame of the
+       merge is scrubbable in both directions. */
+    var st = el.__p3s27;
+    if (!st) {
+      st = el.__p3s27 = {
+        clock: { t: 0 }, last: 0, common: 0, on: 0, sync: 0,
+        rate: [1, 0.72, 1.26, 0.88, 1.15, 0.63],
+        gate: [1, 1, 1, 1, 1, 1],
+        off:  [0, -38, -74, -19, -95, -56]
+      };
+      st.paint = function () {
+        var dt = st.clock.t - st.last;
+        st.last = st.clock.t;
+        if (dt < 0) dt = 0;
+        st.common -= dt * 150;
+        for (var i = 0; i < trains.length; i++) {
+          st.off[i] -= dt * 150 * st.rate[i];
+          var v = st.off[i] * (1 - st.sync) + st.common * st.sync;
+          trains[i].style.strokeDashoffset = v + 'px';
+          trains[i].style.opacity = st.on * (0.18 + 0.82 * st.gate[i]);
+        }
+        bus.style.strokeDashoffset = st.common + 'px';
+        bus.style.opacity = st.on * 0.9;
+      };
+      st.paint();
+    }
+
+    tl.addLabel('step0');
+
+    /* ── step 1 · the answer on paper was out of stock ── */
+    tl.fromTo(ghost, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.7 }, 'step0')
+      .fromTo(oos, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 }, 'step0+=0.35')
+      .to(strike, { scaleX: 1, duration: 0.5, ease: 'power2.inOut' }, 'step0+=0.95')
+      .to(read, { opacity: 1, duration: 0.4 }, 'step0+=0.5')
+      .call(setText(numEl, '13'), null, 'step0+=0.5')
+      .call(setText(unitEl, 'euro dearer'), null, 'step0+=0.5')
+      .call(setText(labEl, 'and out of stock on the day'), null, 'step0+=0.5');
+    litPanel(tl, panels, 0, 'step0+=0.2');
+    tl.addLabel('step1');
+
+    /* ── step 2 · one pulse train, six enables ── */
+    tl.to([ghost, oos, strike], { opacity: 0, duration: 0.4 }, 'step1')
+      .to(st, { on: 1, duration: 0.6 }, 'step1+=0.15')
+      .to(st.rate, { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, duration: 1.5, ease: 'power2.inOut' }, 'step1+=0.7')
+      .to(st, { sync: 1, duration: 1.5, ease: 'power2.inOut' }, 'step1+=0.7')
+      .to(endots, { scale: 1, duration: 0.4, stagger: 0.09 }, 'step1+=1.1')
+      .to(st.gate, { 3: 0, 5: 0, duration: 0.6 }, 'step1+=2.3')
+      .to([endots[3], endots[5]], { scale: 0.42, opacity: 0.35, duration: 0.5 }, 'step1+=2.3')
+      .call(setText(unitEl, 'pins'), null, 'step1+=0.7')
+      .call(setText(labEl, 'instead of twelve'), null, 'step1+=0.7');
+    counter(tl, numEl, 12, 8, 0, 'step1+=0.7', 1.2);
+    litPanel(tl, panels, 1, 'step1+=0.15');
+    tl.addLabel('step2');
+
+    /* ── step 3 · a weak adapter, and a radiating motor can ── */
+    tl.to(stalls, { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2')
+      .fromTo(stalls, { scale: 1.5 }, { scale: 1, duration: 0.6, stagger: 0.12 }, 'step2')
+      .to(cap, { opacity: 1, y: 0, duration: 0.7 }, 'step2+=0.55')
+      .fromTo(bay, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7 }, 'step2+=0.3')
+      .call(setText(numEl, '22'), null, 'step2+=0.55')
+      .call(setText(unitEl, 'nF'), null, 'step2+=0.55')
+      .call(setText(labEl, 'taped to the motor casing'), null, 'step2+=0.55');
+    litPanel(tl, panels, 2, 'step2+=0.1');
+    tl.addLabel('step3');
+
+    return tl;
+  });
+
+  Deck.enter('s27', function (el, gsap) {
+    var st = el.__p3s27;
+    if (!st) return;
+    /* a presenter preview clone: paint the end state once, never start the clock */
+    if (el.dataset.preview) { st.last = st.clock.t; st.paint(); return; }
+    gsap.killTweensOf(st.clock);
+    st.last = st.clock.t;
+    gsap.to(st.clock, { t: st.clock.t + 1e6, duration: 1e6, ease: 'none', onUpdate: st.paint });
+  });
+
+  /* ═══════════════ S28 · the carrier grid reorganising ════════════ */
+
+  Deck.slide('s28', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var tiles = qa(el, '.p3-tile').sort(function (a, b) {
+      return (+a.getAttribute('data-i')) - (+b.getAttribute('data-i'));
+    });
+    var home = tiles.map(function (t) {
+      return { x: parseFloat(t.style.left), y: parseFloat(t.style.top) };
+    });
+    var BIG  = [{ x: 76, y: 226 }, { x: 476, y: 226 }];
+    var BIGS = 380 / 264;
+    var SIDES = 132 / 264;
+    var m1 = q(el, '#s28-m1'), m2 = q(el, '#s28-m2');
+    var cap = q(el, '#s28-cap'), kick = q(el, '#s28-kick');
+    var draw = qa(el, '#s28-a1, #s28-a1h, #s28-a2, #s28-a2h, #s28-flange');
+
+    gsap.set(draw, { drawSVG: '0%' });
+    gsap.set(tiles, { transformOrigin: '0 0' });
+
+    function arrange(at, focus, dur) {
+      var side = 0;
+      tiles.forEach(function (t, i) {
+        var fi = focus.indexOf(i), tx, ty, sc, op;
+        if (fi >= 0) {
+          tx = BIG[fi].x; ty = BIG[fi].y; sc = BIGS; op = 1;
+        } else {
+          var c = side % 2, r = Math.floor(side / 2); side++;
+          tx = 920 + c * 142; ty = 226 + r * 101; sc = SIDES; op = 0.5;
+        }
+        tl.to(t, { x: tx - home[i].x, y: ty - home[i].y, scale: sc, opacity: op, duration: dur || 0.85 }, at);
+      });
+    }
+    function caption(at, k, c) {
+      tl.call(setText(kick, k), null, at)
+        .call(setText(cap, c), null, at)
+        .to([kick, cap], { opacity: 1, duration: 0.4 }, at);
+    }
+
+    tl.addLabel('step0');
+
+    arrange('step0', [0, 1]);
+    caption('step0+=0.3', 'the central carrier', 'The pump drops in from above, the vial slides in from the front.');
+    tl.to(qa(el, '#s28-a1, #s28-a1h'), { drawSVG: '100%', duration: 0.55 }, 'step0+=0.65')
+      .to(qa(el, '#s28-a2, #s28-a2h'), { drawSVG: '100%', duration: 0.55 }, 'step0+=0.95');
+    tl.addLabel('step1');
+
+    tl.to(qa(el, '#s28-a1, #s28-a1h, #s28-a2, #s28-a2h'), { opacity: 0, duration: 0.3 }, 'step1');
+    arrange('step1', [2, 3]);
+    caption('step1+=0.3', 'loaded', 'One unbranched line from the vial to the nozzle, and the shortest possible suction.');
+    tl.addLabel('step2');
+
+    arrange('step2', [6, 5]);
+    caption('step2+=0.3', 'the left carrier', 'The same inside, plus a tall flange that braces against the side wall.');
+    tl.to(qa(el, '#s28-flange'), { drawSVG: '100%', duration: 0.8 }, 'step2+=0.6');
+    tl.addLabel('step3');
+
+    tl.to(tiles, { opacity: 0, scale: 0.9, duration: 0.5, stagger: 0.02 }, 'step3')
+      .fromTo([m1, m2], { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, 'step3+=0.25');
+    caption('step3+=0.5', 'mounted', 'Dovetails and horizontal screws, because an operator does not know which part is load-bearing.');
+    tl.addLabel('step4');
+
+    return tl;
+  });
+
+  /* ═══════════════ S29 · the nozzle, and the plate at 45° ═════════ */
+
+  Deck.slide('s29', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var left = q(el, '#s29-left');
+    var n1 = q(el, '#s29-n1'), n2 = q(el, '#s29-n2');
+    var diag = q(el, '#s29-diag');
+    var d1 = q(el, '#s29-d1'), d2 = q(el, '#s29-d2'), cap = q(el, '#s29-cap');
+    var deg = q(el, '#s29-deg');
+    var draw = qa(el, '#s29-s1, #s29-s2, #s29-br, #s29-line, #s29-arc');
+
+    gsap.set(draw, { drawSVG: '0%' });
+    gsap.set(deg, { opacity: 0 });
+    gsap.set(q(el, '#s29-plate'), { rotation: 0, svgOrigin: '150 166' });
+    gsap.set(n1, { opacity: 0 });
+
+    tl.addLabel('step0');
+
+    tl.fromTo(n1, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.7 }, 'step0')
+      .to(qa(el, '#s29-s1, #s29-s2'), { drawSVG: '100%', duration: 0.5, stagger: 0.12 }, 'step0+=0.45')
+      .fromTo(qa(el, '#s29-c1'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=0.75')
+      .to(qa(el, '#s29-br'), { drawSVG: '100%', duration: 0.6 }, 'step0+=1.0')
+      .fromTo(qa(el, '#s29-c2'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=1.35')
+      .addLabel('step1');
+
+    tl.fromTo(n2, { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.8 }, 'step1')
+      .to(qa(el, '#s29-line'), { drawSVG: '100%', duration: 0.7 }, 'step1+=0.5')
+      .fromTo(qa(el, '#s29-c3'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step1+=0.95')
+      .addLabel('step2');
+
+    tl.to(left, { opacity: 0.42, duration: 0.6 }, 'step2')
+      .fromTo(diag, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 'step2+=0.2')
+      .to(qa(el, '#s29-plate'), { rotation: -45, svgOrigin: '150 166', duration: 1.1, ease: 'power3.inOut' }, 'step2+=0.55')
+      .to(qa(el, '#s29-arc'), { drawSVG: '100%', duration: 0.9 }, 'step2+=0.65')
+      .to(deg, { opacity: 1, duration: 0.4 }, 'step2+=0.9')
+      .to(qa(el, '#s29-eye'), { opacity: 1, duration: 0.6 }, 'step2+=1.5');
+    counter(tl, deg, 0, 45, 0, 'step2+=0.55', 1.1, '', '°');
+    tl.addLabel('step3');
+
+    tl.to(diag, { opacity: 0, duration: 0.45 }, 'step3')
+      .fromTo(d1, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.75 }, 'step3+=0.2')
+      .fromTo(qa(el, '#s29-c4'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step3+=0.75')
+      .fromTo(d2, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6 }, 'step3+=0.5')
+      .call(setText(cap, 'About ten prints, split on a dovetail, stylus tethered.'), null, 'step3+=0.5')
+      .to(cap, { opacity: 1, duration: 0.5 }, 'step3+=0.6')
+      .addLabel('step4');
+
+    return tl;
+  });
+
+  /* ═══════════════ S30 · the cradle, the pack, the object ═════════ */
+
+  Deck.slide('s30', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var cad = q(el, '#s30-cad');
+    var b1 = q(el, '#s30-b1'), b2 = q(el, '#s30-b2');
+    var top = q(el, '#s30-top'), ins = q(el, '#s30-in'), clipF = q(el, '#s30-clip');
+    var t1 = q(el, '#s30-t1'), t2 = q(el, '#s30-t2'), t3 = q(el, '#s30-t3');
+    var kg = q(el, '#s30-kg'), hh = q(el, '#s30-h'), inc = q(el, '#s30-inc');
+    var panels = qa(el, '.sheet__panel');
+    var vid = q(el, '#s30-clip video');
+    var draw = qa(el, '#s30-w, #s30-wt, #s30-d, #s30-dt');
+    var dimT = qa(el, '#s30-wl, #s30-dl');
+
+    gsap.set(cad, { opacity: 0, y: 22 });
+    gsap.set(draw, { drawSVG: '0%' });
+    gsap.set(dimT, { opacity: 0 });
+
+    tl.addLabel('step0');
+
+    tl.to(cad, { opacity: 1, y: 0, duration: 0.8 }, 'step0');
+    litPanel(tl, panels, 0, 'step0+=0.15');
+    tl.addLabel('step1');
+
+    tl.to(cad, { opacity: 0, x: -40, duration: 0.55 }, 'step1')
+      .fromTo(b1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.7 }, 'step1+=0.2')
+      .fromTo(b2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.7 }, 'step1+=0.34');
+    litPanel(tl, panels, 1, 'step1+=0.15');
+    tl.addLabel('step2');
+
+    tl.to([b1, b2], { opacity: 0, duration: 0.45 }, 'step2')
+      .to([t1, t2], { opacity: 1, duration: 0.5, stagger: 0.08 }, 'step2+=0.3')
+      .fromTo(top, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.9 }, 'step2+=0.15')
+      .to(qa(el, '#s30-w, #s30-wt'), { drawSVG: '100%', duration: 0.7 }, 'step2+=0.8')
+      .to(qa(el, '#s30-d, #s30-dt'), { drawSVG: '100%', duration: 0.7 }, 'step2+=1.05')
+      .to(dimT, { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2+=1.15')
+      .to(kg, { opacity: 1, duration: 0.4 }, 'step2+=1.35')
+      .to(hh, { opacity: 1, duration: 0.4 }, 'step2+=1.55');
+    counter(tl, kg, 0, 3.3, 1, 'step2+=1.35', 0.9, '', ' kg');
+    litPanel(tl, panels, 2, 'step2+=0.15');
+    tl.addLabel('step3');
+
+    tl.to([kg, hh], { opacity: 0, duration: 0.3 }, 'step3')
+      .fromTo(ins, { opacity: 0 }, { opacity: 1, duration: 0.8 }, 'step3+=0.15')
+      .to(inc, { opacity: 1, duration: 0.45 }, 'step3+=0.7')
+      .to(t3, { opacity: 1, duration: 0.5 }, 'step3+=0.5')
+      .call(stopVid(vid), null, 'step3')
+      .call(playVid(vid, true), null, 'step3+=1.5')
+      .to(clipF, { opacity: 1, duration: 1.2, ease: 'power1.inOut' }, 'step3+=1.5')
+      .to(inc, { opacity: 0, duration: 0.5 }, 'step3+=1.6');
+    litPanel(tl, panels, 3, 'step3+=0.15');
+    tl.addLabel('step4');
+
+    return tl;
+  });
+
+  /* ═══════════════ S31 · the accuracy chart ═══════════════════════ */
+
+  Deck.slide('s31', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var band = q(el, '#s31-band'), bl = q(el, '#s31-bandl'), brr = q(el, '#s31-bandr');
+    var zero = q(el, '#s31-zero'), bandt = q(el, '#s31-bandt');
+    var bar1 = q(el, '#s31-bar1'), bar2 = q(el, '#s31-bar2'), bar3 = q(el, '#s31-bar3');
+    var v1 = q(el, '#s31-v1'), v2 = q(el, '#s31-v2'), v3 = q(el, '#s31-v3');
+    var r1 = q(el, '#s31-r1'), r2 = q(el, '#s31-r2'), r3 = q(el, '#s31-r3');
+    var cv = q(el, '#s31-cv'), drift = q(el, '#s31-drift');
+    var pip = q(el, '#s31-pip'), dots = qa(el, '.s31-dot');
+    var up = q(el, '#s31-up'), dn = q(el, '#s31-dn');
+    var ut = q(el, '#s31-ut'), dt = q(el, '#s31-dt');
+
+    gsap.set([bl, brr, zero, pip, up, dn], { drawSVG: '0%' });
+    gsap.set(bandt, { opacity: 0 });
+    gsap.set(dots, { scale: 0, transformOrigin: '50% 50%' });
+    gsap.set([ut, dt], { opacity: 0 });
+
+    tl.addLabel('step0');
+
+    /* ── step 1 · the requirement is drawn before any result lands ── */
+    tl.to(zero, { drawSVG: '100%', duration: 0.5 }, 'step0')
+      .to([bl, brr], { drawSVG: '100%', duration: 0.7, stagger: 0.1 }, 'step0+=0.25')
+      .to(band, { opacity: 1, duration: 0.6 }, 'step0+=0.6')
+      .to(bandt, { opacity: 1, duration: 0.5 }, 'step0+=0.8')
+      .addLabel('step1');
+
+    /* ── step 2 · the bench constant lands outside the band ── */
+    tl.to(r1, { opacity: 1, duration: 0.4 }, 'step1')
+      .fromTo(bar1, { attr: { x: 452, width: 0 } },
+                    { attr: { x: 160, width: 292 }, duration: 0.9, ease: 'power3.out' }, 'step1+=0.15')
+      .to(v1, { opacity: 1, duration: 0.4 }, 'step1+=0.75')
+      .to(bl, { stroke: '#e83535', strokeWidth: 6, duration: 0.25, yoyo: true, repeat: 3 }, 'step1+=0.55')
+      .addLabel('step2');
+
+    /* ── step 3 · calibrated on the instrument, both inside ── */
+    tl.to([r2, r3], { opacity: 1, duration: 0.4, stagger: 0.1 }, 'step2')
+      .fromTo(bar2, { attr: { x: 452, width: 0 } },
+                    { attr: { x: 397, width: 55 }, duration: 0.7 }, 'step2+=0.15')
+      .fromTo(bar3, { attr: { x: 452, width: 0 } },
+                    { attr: { x: 452, width: 10 }, duration: 0.7 }, 'step2+=0.35')
+      .to([v2, v3], { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2+=0.6')
+      .to(band, { attr: { fill: 'rgba(79,195,138,0.18)' }, duration: 0.5 }, 'step2+=0.7')
+      .addLabel('step3');
+
+    /* ── step 4 · the scatter against a hand pipette ── */
+    tl.to(cv, { opacity: 1, duration: 0.5 }, 'step3')
+      .to(pip, { drawSVG: '100%', duration: 0.6 }, 'step3+=0.25')
+      .to(dots, { scale: 1, duration: 0.5, stagger: 0.14, ease: 'back.out(2.2)' }, 'step3+=0.55')
+      .addLabel('step4');
+
+    /* ── step 5 · and the constant itself moves between sessions ── */
+    tl.to(drift, { opacity: 1, duration: 0.5 }, 'step4')
+      .to(up, { drawSVG: '100%', duration: 0.5 }, 'step4+=0.2')
+      .to(dn, { drawSVG: '100%', duration: 0.5 }, 'step4+=0.4')
+      .to([ut, dt], { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step4+=0.55')
+      .addLabel('step5');
+
+    return tl;
+  });
+
+  /* ═══════════════ S32 · forty tubes ══════════════════════════════ */
+
+  Deck.slide('s32', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var plate = q(el, '#s32-plate'), done = q(el, '#s32-done');
+    var target = q(el, '#s32-target'), c5 = q(el, '#s32-c5');
+    var numB = q(el, '#s32-num'), countN = q(el, '#s32-count');
+    var sub = q(el, '#s32-sub'), miss = q(el, '#s32-miss');
+    var vidF = q(el, '#s32-vid'), vid = q(el, '#s32-vid video');
+    var t1 = q(el, '#s32-t1'), t2 = q(el, '#s32-t2'), tcap = q(el, '#s32-tcap');
+
+    gsap.set(target, { drawSVG: '0%' });
+    gsap.set(miss, { opacity: 0 });
+
+    tl.addLabel('step0');
+
+    tl.fromTo(plate, { opacity: 0, scale: 1.03 }, { opacity: 1, scale: 1, duration: 0.9 }, 'step0')
+      .addLabel('step1');
+
+    tl.to(done, { opacity: 1, duration: 2.4, ease: 'power1.inOut' }, 'step1')
+      .to(numB, { opacity: 1, duration: 0.5 }, 'step1+=0.2')
+      .to(sub, { opacity: 1, duration: 0.5 }, 'step1+=1.9')
+      .call(stopVid(vid), null, 'step1')
+      .call(playVid(vid, false), null, 'step1+=0.4')
+      .fromTo(vidF, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8 }, 'step1+=0.4');
+    counter(tl, countN, 0, 40, 0, 'step1', 2.4);
+    tl.addLabel('step2');
+
+    tl.to(target, { drawSVG: '100%', duration: 0.8 }, 'step2')
+      .fromTo(c5, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step2+=0.6')
+      .to(sub, { opacity: 0, duration: 0.4 }, 'step2+=0.5')
+      .to(miss, { opacity: 1, duration: 0.5 }, 'step2+=0.8')
+      .addLabel('step3');
+
+    tl.fromTo([t1, t2], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, 'step3')
+      .to(tcap, { opacity: 1, duration: 0.5 }, 'step3+=0.4')
+      .addLabel('step4');
+
+    return tl;
+  });
+
+  /* ═══════════════ S33 · three failures, one at a time ════════════ */
+
+  Deck.slide('s33', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var cards = [q(el, '#s33-c0'), q(el, '#s33-c1'), q(el, '#s33-c2')];
+    var W_BIG = 600, W_SM = 254, GAP = 20, X0 = 56;
+
+    var ref = q(el, '#s33-ref'), arm = q(el, '#s33-arm'), arc = q(el, '#s33-arc');
+    var ghost = q(el, '#s33-ghost'), drop = q(el, '#s33-drop');
+    var deg = q(el, '#s33-deg'), flat = q(el, '#s33-flat');
+    var batt = q(el, '#s33-batt'), batfill = q(el, '#s33-batfill');
+    var rot = q(el, '#s33-rot'), rot1s = q(el, '#s33-rot1s'), rot2s = q(el, '#s33-rot2s');
+    var c16 = q(el, '#s33-16');
+    var punct = qa(el, '.s33-p'), needle = q(el, '#s33-needle');
+    var beads = q(el, '#s33-beads'), ct = q(el, '#s33-ct');
+
+    gsap.set([ref, arm, arc], { drawSVG: '0%' });
+    gsap.set(drop, { opacity: 0 });
+    gsap.set(punct, { scale: 0, transformOrigin: '50% 50%' });
+    gsap.set(needle, { y: -70, opacity: 0.8 });
+
+    function layout(at, active) {
+      var x = X0;
+      cards.forEach(function (c, i) {
+        var w = (i === active) ? W_BIG : W_SM;
+        tl.to(c, { left: x, width: w, opacity: (i === active) ? 1 : 0.5, duration: 0.8 }, at);
+        x += w + GAP;
+      });
+    }
+
+    tl.addLabel('step0');
+
+    /* ── step 1 · a cap left flat ── */
+    tl.to([ref, arm], { drawSVG: '100%', duration: 0.6, stagger: 0.12 }, 'step0')
+      .to(arc, { drawSVG: '100%', duration: 0.6 }, 'step0+=0.45')
+      .fromTo(deg, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=0.8')
+      .to(ghost, { opacity: 1, duration: 0.4 }, 'step0+=1.1')
+      .fromTo(ghost, { rotation: 0 }, { rotation: 46, svgOrigin: '875 760', duration: 1.0, ease: 'power2.inOut' }, 'step0+=1.2')
+      .fromTo(flat, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=2.0')
+      .fromTo(drop, { opacity: 0, y: -90 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.in' }, 'step0+=2.2');
+    tl.addLabel('step1');
+
+    /* ── step 2 · a tired battery ── */
+    tl.to([deg, flat], { opacity: 0, duration: 0.35 }, 'step1');
+    layout('step1', 1);
+    tl.to(batt, { opacity: 1, duration: 0.5 }, 'step1+=0.35')
+      .to(batfill, { attr: { width: 12 }, duration: 1.3, ease: 'power1.in' }, 'step1+=0.6')
+      .to(rot, { opacity: 1, duration: 0.4 }, 'step1+=0.7')
+      .fromTo(rot1s, { rotation: 0 }, { rotation: 300, svgOrigin: '300 266', duration: 1.6, ease: 'power4.out' }, 'step1+=0.7')
+      .fromTo(rot2s, { rotation: 0 }, { rotation: 260, svgOrigin: '392 266', duration: 1.6, ease: 'power4.out' }, 'step1+=0.7')
+      .fromTo(c16, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step1+=1.9');
+    tl.addLabel('step2');
+
+    /* ── step 3 · a septum that stops resealing ── */
+    tl.to(c16, { opacity: 0, duration: 0.35 }, 'step2');
+    layout('step2', 2);
+    tl.to(needle, { y: 0, duration: 0.45, ease: 'power3.in' }, 'step2+=0.4')
+      .to(needle, { y: -70, duration: 0.45 }, 'step2+=0.85')
+      .to(punct.slice(0, 5), { scale: 1, duration: 0.35, stagger: 0.09, ease: 'back.out(2)' }, 'step2+=0.5')
+      .to(punct.slice(5), { scale: 1, duration: 0.3, stagger: 0.045, ease: 'back.out(2)' }, 'step2+=1.3')
+      .to(beads, { opacity: 1, duration: 0.5 }, 'step2+=2.1');
+    counter(tl, ct, 0, 5, 0, 'step2+=0.5', 0.5, '', ' punctures');
+    counter(tl, ct, 5, 20, 0, 'step2+=1.3', 0.8, '', ' punctures');
+    tl.addLabel('step3');
+
+    return tl;
+  });
+
+  /* ═══════════════ S34 · the verdict table ════════════════════════ */
+
+  Deck.slide('s34', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+    var wires = qa(el, '.s34-ln');
+    var p1 = q(el, '#s34-p1'), p2 = q(el, '#s34-p2');
+
+    gsap.set(wires, { drawSVG: '0%' });
+    tl.addLabel('step0');
+
+    for (var g = 1; g <= 5; g++) {
+      var at = 'step' + (g - 1);
+      var head = q(el, '.p3-ghead[data-g="' + g + '"]');
+      var chips = qa(el, '.p3-chip[data-g="' + g + '"]');
+      tl.fromTo(head, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, at)
+        .fromTo(chips, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.09 }, at + '+=0.12');
+      if (g > 1) {
+        tl.to(qa(el, '.p3-chip[data-g="' + (g - 1) + '"]'), { opacity: 0.55, duration: 0.45 }, at);
+        tl.to(q(el, '.p3-ghead[data-g="' + (g - 1) + '"]'), { opacity: 0.5, duration: 0.45 }, at);
+      }
+      tl.addLabel('step' + g);
+    }
+
+    tl.fromTo([p1, p2], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 }, 'step4+=0.5')
+      .to(wires, { drawSVG: '100%', duration: 0.9, stagger: 0.12 }, 'step4+=0.7');
+    tl.addLabel('step5', tl.duration());
+
+    return tl;
+  });
+
+  /* ═══════════════ S35 · the four-clip mosaic ═════════════════════ */
+
+  Deck.slide('s35', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var clips = qa(el, '.p3-clip').sort(function (a, b) {
+      return (+a.getAttribute('data-i')) - (+b.getAttribute('data-i'));
+    });
+    var labs = qa(el, '.p3-clip-lab');
+    var home = clips.map(function (c) {
+      return {
+        x: parseFloat(c.style.left), y: parseFloat(c.style.top),
+        w: parseFloat(c.style.width), h: parseFloat(c.style.height)
+      };
+    });
+    var BOX = { x: 56, y: 150, w: 1168, h: 540 };
+    var big = -1;
+
+    function target(i) {
+      var s = Math.min(BOX.w / home[i].w, BOX.h / home[i].h);
+      var w = home[i].w * s, h = home[i].h * s;
+      return { x: BOX.x + (BOX.w - w) / 2, y: BOX.y + (BOX.h - h) / 2, w: w, h: h };
+    }
+    function sound(i) {
+      clips.forEach(function (c, k) {
+        var v = c.querySelector('video');
+        if (!v) return;
+        var want = (i < 0) ? (k === 3) : (k === i);
+        try {
+          v.muted = !want;
+          if (want) { var p = v.play(); if (p && p.catch) p.catch(function () { v.muted = true; }); }
+        } catch (e) {}
+      });
+    }
+    function focus(i) {
+      if (i === big) return;
+      big = i;
+      clips.forEach(function (c, k) {
+        var r = (k === i) ? target(k) : home[k];
+        var vis = (i < 0) || (k === i);
+        c.classList.toggle('is-big', k === i);
+        gsap.to(c, {
+          left: r.x, top: r.y, width: r.w, height: r.h,
+          opacity: vis ? 1 : 0, duration: 0.55, ease: EO,
+          onStart: function () { c.style.pointerEvents = vis ? 'auto' : 'none'; }
+        });
+      });
+      sound(i);
+    }
+    el.__p3focus = focus;
+
+    clips.forEach(function (c, i) {
+      c.addEventListener('click', function (e) {
+        e.stopPropagation();
+        focus(big === i ? -1 : i);
+      });
+      c.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focus(big === i ? -1 : i); }
+      });
+    });
+    /* not on a presenter preview clone: it would leak a listener per render */
+    if (!el.dataset.preview) document.addEventListener('keydown', function (e) {
+      if (big < 0) return;
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        focus(-1);
+      }
+    }, true);
+
+    tl.addLabel('step0');
+    tl.to(labs, { opacity: 1, duration: 0.5, stagger: 0.1 }, 'step0')
+      .call(focus, [-1], 'step0+=0.02')
+      .addLabel('step1');
+    tl.call(focus, [-1], 'step1+=0.02').call(focus, [1], 'step1+=0.06')
+      .to({}, { duration: 0.6 }, 'step1').addLabel('step2');
+    tl.call(focus, [1], 'step2+=0.02').call(focus, [2], 'step2+=0.06')
+      .to({}, { duration: 0.6 }, 'step2').addLabel('step3');
+    tl.call(focus, [2], 'step3+=0.02').call(focus, [3], 'step3+=0.06')
+      .to({}, { duration: 0.6 }, 'step3').addLabel('step4');
+
+    return tl;
+  });
+
+  Deck.enter('s35', function (el) {
+    if (el.__p3focus) el.__p3focus(-1);
+  });
+
+  /* ═══════════════ S36 · the demo slide, and its fallback ═════════ */
+
+  Deck.slide('s36', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var f1 = q(el, '#s36-f1'), f2 = q(el, '#s36-f2');
+    var v1 = q(el, '#s36-f1 video'), v2 = q(el, '#s36-f2 video');
+    var title = q(el, '#s36-title'), addr = q(el, '.p3-addr');
+    var shown = false;
+
+    function show(on) {
+      if (on === shown) return;
+      shown = on;
+      gsap.to([title, addr], { y: on ? -172 : 0, duration: 0.7, ease: EO });
+      gsap.to([f1, f2], { opacity: on ? 1 : 0, duration: 0.6, ease: EO, stagger: 0.08 });
+      if (on) { playVid(v1, false)(); playVid(v2, false)(); }
+      else { stopVid(v1)(); stopVid(v2)(); }
+    }
+    el.__p3fallback = show;
+
+    /* not on a presenter preview clone: it would leak a listener per render */
+    if (!el.dataset.preview) document.addEventListener('keydown', function (e) {
+      if (!window.Deck || window.Deck.cue !== 's36') return;
+      if (e.key === 'v' || e.key === 'V') { e.preventDefault(); show(!shown); }
+    });
+
+    tl.addLabel('step0');
+    return tl;
+  });
+
+  Deck.enter('s36', function (el, gsap) {
+    if (el.__p3fallback) el.__p3fallback(false);
+    gsap.fromTo(q(el, '#s36-title'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9, ease: EO });
+    gsap.fromTo(q(el, '.p3-addr'), { opacity: 0 }, { opacity: 1, duration: 0.9, delay: 0.25, ease: EO });
+    gsap.fromTo(q(el, '.p3-demoplate img'), { scale: 1.06 }, { scale: 1, duration: 2.2, ease: EO });
+  });
+
+})();
+</script>

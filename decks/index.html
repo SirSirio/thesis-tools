@@ -23,6 +23,7 @@
       flex-wrap: wrap;
       gap: 24px;
       justify-content: center;
+      align-items: flex-start;
     }
 
     .deck-card {
@@ -85,8 +86,69 @@
       }
     }
     
+    /* ── A deck with companion views: two cards drop beneath it on hover ── */
+    .deck-group {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+    }
+    .deck-group > .deck-card { max-width: none; }
+    .deck-hint {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      opacity: 0.7;
+      transition: opacity 0.32s ease, color 0.32s ease;
+    }
+    .deck-group:hover .deck-hint,
+    .deck-group:focus-within .deck-hint { color: var(--accent); opacity: 1; }
+    /* in normal flow: the drop pushes the footer down instead of covering it,
+       and the whole column stays one hover region */
+    .deck-group__drop {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 0;
+      padding-top: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(.22,.68,0,1), padding-top 0.45s cubic-bezier(.22,.68,0,1);
+    }
+    .deck-group:hover .deck-group__drop,
+    .deck-group:focus-within .deck-group__drop {
+      max-height: 480px;
+      padding-top: 12px;
+    }
+    .deck-card--sub,
+    .deck-card--sub.is-visible {
+      max-width: none;
+      padding: 22px 26px;
+      gap: 8px;
+      background: rgba(18, 16, 15, 0.94);
+      opacity: 0;
+      transform: translateY(-14px);
+      transition: opacity 0.32s cubic-bezier(.22,.68,0,1), transform 0.32s cubic-bezier(.22,.68,0,1),
+                  box-shadow 0.32s ease, border-color 0.32s ease;
+      transition-delay: 0s;
+    }
+    .deck-card--sub:nth-child(2), .deck-card--sub:nth-child(2).is-visible { transition-delay: 0.06s; }
+    .deck-group:hover .deck-card--sub,
+    .deck-group:focus-within .deck-card--sub,
+    .deck-group:hover .deck-card--sub.is-visible,
+    .deck-group:focus-within .deck-card--sub.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .deck-card--sub .deck-title { font-size: 1.05rem; }
+    .deck-card--sub .deck-desc { font-size: 0.85rem; line-height: 1.5; }
+    @media (prefers-reduced-motion: reduce) {
+      .deck-card--sub { transition: none; }
+    }
+
     @media (max-width: 600px) {
       .presentations-view { padding: 40px 20px 60px; }
+      .deck-group__drop { max-height: none; padding-top: 12px; }
+      .deck-card--sub, .deck-card--sub.is-visible { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -116,6 +178,27 @@
       <h2 class="deck-title">Lab Meeting, June 2026</h2>
       <p class="deck-desc">GSD · rotor solver · displaced-volume model · proto-01 · proto-02 · test-campaign app</p>
     </a>
+
+    <div class="deck-group">
+      <a class="deck-card" href="thesis-defense/index.html" style="--card-angle: 3deg; --delay: 0.3s;">
+        <div class="deck-date">2026-09-28</div>
+        <h2 class="deck-title">Thesis Defense, September 2026</h2>
+        <p class="deck-desc">the airport · five modules · the machine live · what it proved · what comes next</p>
+        <p class="deck-hint" aria-hidden="true">host and Italian views ▾</p>
+      </a>
+      <div class="deck-group__drop">
+        <a class="deck-card deck-card--sub" href="thesis-defense/index.html?view=presenter&amp;sync=host">
+          <div class="deck-date">Host · your laptop</div>
+          <h2 class="deck-title">Presenter view</h2>
+          <p class="deck-desc">current slide, next step, notes and timer; drives the projector and relays to the family screen</p>
+        </a>
+        <a class="deck-card deck-card--sub" href="thesis-defense/it/index.html?view=guest&amp;sync=guest">
+          <div class="deck-date">Ospiti · secondo schermo</div>
+          <h2 class="deck-title">Versione italiana</h2>
+          <p class="deck-desc">segue la presentazione in tempo reale, con le didascalie in italiano</p>
+        </a>
+      </div>
+    </div>
 
     <!-- Future decks: duplicate the card block above -->
 

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Dialect A, the engineering sheet. How it scales to the rest of the deck:
+     Photo-only slide: the paper sheet drops away and the photo takes the full left field at --r-lg, the right rail keeps one lit row and the dimension readout carries a single figure, so the frame is the same and only the fill changes.
+     Chart slide: the chart is drawn straight into the sheet as SVG instead of an image, so the same DrawSVG axis-then-series reveal and the same counting readout apply, and the rail becomes the series legend.
+     Live-tool card slide and divider: the sheet becomes the tool iframe at the same rect with the rail listing what to look at, and a divider keeps only the hairline, the title and the timeline, which slides open full width as the section marker. -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thesis defense · preview</title>
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../../../assets/site.css" />
+<script src="../../../assets/site-nav.js"></script>
+<link rel="stylesheet" href="../../../assets/deck.css" />
+<style>
+  /* ── Shared frame, deck variant (copied from decks/lab-meeting-2026-06/) ── */
+  .site-nav--deck {
+    position: absolute;
+    top: 20px; left: 20px;
+    width: auto; height: auto;
+    padding: 0; gap: 16px;
+    background: transparent;
+    border: 0;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    z-index: 300;
+  }
+  .site-nav--deck .deck-back-link { position: static; }
+  .site-nav--deck .site-nav__links { margin-left: 0; }
+  #instr-panel { top: 0; z-index: 299; }
+  #instr-panel .instr__inner { top: 72px; max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px); }
+  .deck-viewport, .deck-overview { line-height: normal; }
+  .site-foot { display: none; }
+  html, body { overflow: hidden; }
+
+  /* ── Slide frame ─────────────────────────────────────────────── */
+  .slide { font-family: var(--font); }
+  .notes { display: none; }
+  .hid { opacity: 0; visibility: hidden; }
+
+  /* The four step cues. The runtime flips data-fragment-revealed on these;
+     everything visible is driven by the GSAP timeline, so the cues themselves
+     carry no pixels. */
+  .step-cue { position: absolute; top: 0; left: 0; width: 0; height: 0; }
+
+  .s-title {
+    position: absolute;
+    left: 56px; top: 60px; width: 1080px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+    color: var(--text);
+  }
+  .s-rule {
+    position: absolute;
+    left: 56px; top: 130px; width: 1168px; height: 1px;
+    background: linear-gradient(90deg, rgba(255,107,43,0.40), rgba(255,255,255,0.10) 34%, rgba(255,255,255,0.05));
+  }
+
+  /* ── The drawing sheet ───────────────────────────────────────── */
+  .sheet {
+    position: absolute;
+    left: 56px; top: 144px; width: 800px; height: 420px;
+    border-radius: var(--r-lg);
+    background: rgba(233, 230, 226, 0.95);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 26px 64px rgba(0,0,0,0.50);
+    overflow: hidden;
+  }
+  /* 5 mm squared paper, very faint */
+  .sheet__grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(27,34,51,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(27,34,51,0.055) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: -1px -1px;
+  }
+  /* registration corners */
+  .reg { position: absolute; width: 18px; height: 18px; }
+  .reg::before, .reg::after { content: ""; position: absolute; background: rgba(255,107,43,0.55); }
+  .reg::before { width: 18px; height: 1.5px; top: 0; left: 0; }
+  .reg::after  { width: 1.5px; height: 18px; top: 0; left: 0; }
+  .reg--tl { left: 16px; top: 16px; }
+  .reg--tr { right: 16px; top: 16px; transform: scaleX(-1); }
+  .reg--bl { left: 16px; bottom: 16px; transform: scaleY(-1); }
+  .reg--br { right: 16px; bottom: 16px; transform: scale(-1); }
+
+  .figs { position: absolute; inset: 18px; }
+  .fig {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    opacity: 0; visibility: hidden;
+  }
+  .frame { position: relative; flex: none; }
+  .frame img { display: block; width: 100%; height: 100%; border-radius: 8px; }
+  .ov { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .ov .ln { fill: none; stroke: #ff6b2b; stroke-linecap: round; stroke-linejoin: round; }
+  .ov .ln--soft { stroke: rgba(255,107,43,0.55); }
+  .tag {
+    position: absolute;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 18px; font-weight: 700; line-height: 1;
+    color: #12100e;
+    background: #ff6b2b;
+    padding: 6px 10px 5px;
+    border-radius: 6px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.30);
+    opacity: 0; visibility: hidden;
+  }
+
+  /* ── The revision rail ───────────────────────────────────────── */
+  .rail {
+    position: absolute;
+    left: 888px; top: 144px; width: 336px; height: 420px;
+    list-style: none;
+    border-radius: var(--r-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .rev {
+    position: relative;
+    flex: 1 1 0;
+    padding: 14px 18px 14px 26px;
+    display: flex; flex-direction: column; justify-content: center; gap: 7px;
+    opacity: 0.3;
+  }
+  .rev + .rev { border-top: 1px solid rgba(255,255,255,0.07); }
+  .rev__bar {
+    position: absolute; left: 0; top: 10%; width: 3px; height: 80%;
+    background: #ff6b2b; border-radius: 0 3px 3px 0;
+    transform: scaleY(0); transform-origin: 50% 50%;
+  }
+  .rev__k {
+    font-family: var(--mono);
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .rev__t { font-size: 18px; line-height: 1.3; color: var(--text); }
+
+  /* ── Dimension readout ───────────────────────────────────────── */
+  .readout { position: absolute; left: 56px; top: 578px; width: 780px; height: 100px; }
+  .ro {
+    position: absolute; left: 0; top: 0;
+    display: flex; align-items: baseline; gap: 12px;
+    opacity: 0; visibility: hidden;
+  }
+  .ro__num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 96px; font-weight: 700; line-height: 1;
+    letter-spacing: -0.035em;
+    background: linear-gradient(104deg, #ff6b2b 12%, #e83535 96%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .ro__u {
+    font-family: var(--mono);
+    font-size: 26px; letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  /* ── Mini map: the liquid path, rotor lit ────────────────────── */
+  .minimap { position: absolute; left: 962px; top: 590px; width: 262px; height: 72px; }
+  .minimap svg { display: block; width: 100%; height: 100%; }
+  .mm-line { fill: none; stroke: rgba(255,255,255,0.14); stroke-width: 1.5; }
+  .mm-node { fill: none; stroke: var(--text-muted); stroke-width: 1.6; stroke-linejoin: round; }
+  .mm-live { fill: none; stroke: #ff6b2b; stroke-width: 2; }
+  .mm-halo { fill: none; stroke: rgba(255,107,43,0.28); stroke-width: 1.2; }
+
+  /* ── Four-stop timeline ──────────────────────────────────────── */
+  .tline { position: absolute; left: 56px; top: 692px; width: 1168px; height: 10px; }
+  .tline__track { position: absolute; left: 0; top: 4px; width: 100%; height: 2px; background: rgba(255,255,255,0.10); }
+  .tline__fill  { position: absolute; left: 0; top: 4px; width: 0; height: 2px; background: linear-gradient(90deg, #ff6b2b, #e83535); }
+  .tdot {
+    position: absolute; top: 1px; width: 8px; height: 8px; margin-left: -4px;
+    border-radius: 50%; background: rgba(255,255,255,0.18);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg-blobs .blob { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header class="site-nav site-nav--deck" data-root="../../../">
+    <a class="deck-back-link" href="../../index.html">← Presentations</a>
+    <nav class="site-nav__links" aria-label="Primary">
+      <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+    </nav>
+  </header>
+  <div id="instr-panel" class="instr" hidden></div>
+
+  <div class="deck-viewport">
+    <div class="deck-stage" tabindex="0">
+
+      <section class="slide slide--active" id="s15">
+
+        <h1 class="s-title">Three more builds fixed the printing, not the physics.</h1>
+        <div class="s-rule"></div>
+
+        <!-- step cues, DOM order = click order -->
+        <i class="fragment step-cue" data-step="1"></i>
+        <i class="fragment step-cue" data-step="2"></i>
+        <i class="fragment step-cue" data-step="3"></i>
+        <i class="fragment step-cue" data-step="4"></i>
+
+        <!-- ══ the drawing sheet ══ -->
+        <div class="sheet">
+          <div class="sheet__grid"></div>
+          <span class="reg reg--tl"></span><span class="reg reg--tr"></span>
+          <span class="reg reg--bl"></span><span class="reg reg--br"></span>
+
+          <div class="figs">
+
+            <!-- ── 1 · v2.1 ─────────────────────────────────────── -->
+            <div class="fig" id="fig1">
+              <div class="frame" style="width:748px;aspect-ratio:2400/1128">
+                <img src="../assets/fig-v21-gap-around-arc.png" loading="eager"
+                     alt="Section of the v2.1 pump head with the bore centre 0.45 mm above the shaft, and the installed gap at the left end, the apex and the right end plotted against the 1.82 mm closure line." />
+                <svg class="ov" viewBox="0 0 2400 1128" aria-hidden="true">
+                  <!-- apex gap dimension -->
+                  <path id="f1-ext1" class="ln" d="M 498 236 L 692 236" stroke-width="7"/>
+                  <path id="f1-ext2" class="ln" d="M 498 331 L 692 331" stroke-width="7"/>
+                  <path id="f1-dim"  class="ln" d="M 594 242 L 594 325" stroke-width="10"/>
+                  <path id="f1-ah1"  class="ln" d="M 582 256 L 594 240 L 606 256" stroke-width="9"/>
+                  <path id="f1-ah2"  class="ln" d="M 582 311 L 594 327 L 606 311" stroke-width="9"/>
+                  <!-- mount offset datums + arrow -->
+                  <path id="f1-d1" class="ln ln--soft" d="M 516 548 L 672 548" stroke-width="6"/>
+                  <path id="f1-d2" class="ln ln--soft" d="M 516 639 L 672 639" stroke-width="6"/>
+                  <path id="f1-off"   class="ln" d="M 594 639 L 594 556" stroke-width="9"/>
+                  <path id="f1-offah" class="ln" d="M 583 570 L 594 552 L 605 570" stroke-width="9"/>
+                  <g id="f1-mark" class="hid">
+                    <path class="ln" d="M 570 639 L 618 639 M 594 615 L 594 663" stroke-width="9"/>
+                  </g>
+                  <!-- the chart: closure line, then the apex stem opening -->
+                  <path id="f1-closure" class="ln" d="M 1500 707.5 L 2345 707.5" stroke-width="9" stroke-dasharray="26 20"/>
+                  <path id="f1-stem" class="ln" d="M 1933 707.5 L 1933 330" stroke-width="13"/>
+                  <circle id="f1-dot" class="hid" cx="1933" cy="707.5" r="20" fill="#ff6b2b"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- ── 2 · v2.2 ─────────────────────────────────────── -->
+            <div class="fig" id="fig2">
+              <div class="frame" style="width:748px;aspect-ratio:2400/1219">
+                <img src="../assets/fig-roller-peg-taper.png" loading="eager"
+                     alt="Two stacked bearings on a tapering printed peg tilt the roller against the track, beside the one-bearing fix with guide rims, and photographs of the two rotor halves." />
+                <svg class="ov" viewBox="0 0 2400 1219" aria-hidden="true">
+                  <path id="f2-tl" class="ln" d="M 508 550 L 520 252" stroke-width="9"/>
+                  <path id="f2-tr" class="ln" d="M 690 550 L 672 252" stroke-width="9"/>
+                  <path id="f2-tip"  class="ln ln--soft" d="M 506 238 L 686 238" stroke-width="6"/>
+                  <path id="f2-base" class="ln ln--soft" d="M 496 566 L 702 566" stroke-width="6"/>
+                  <g id="f2-roller" class="hid">
+                    <g id="f2-rollerG">
+                      <path class="ln" d="M 599 570 L 599 212" stroke-width="8" stroke-dasharray="30 18"/>
+                      <path class="ln ln--soft" d="M 396 234 L 804 234 L 804 424 L 396 424 Z" stroke-width="8"/>
+                    </g>
+                  </g>
+                  <path id="f2-fix" class="ln" d="M 1632 388 L 1998 388 A 16 16 0 0 1 2014 404 L 2014 544 A 16 16 0 0 1 1998 560 L 1632 560 A 16 16 0 0 1 1616 544 L 1616 404 A 16 16 0 0 1 1632 388 Z" stroke-width="9"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- ── 3 · the printer ──────────────────────────────── -->
+            <div class="fig" id="fig3">
+              <div class="frame" style="width:340px;aspect-ratio:1403/933">
+                <img src="../assets/calibration-rings.jpg" loading="eager"
+                     alt="Four calibration rings of different diameters laid out on the printer bed in the slicer." />
+                <svg class="ov" viewBox="0 0 1403 933" aria-hidden="true">
+                  <ellipse id="f3-ring" class="ln" cx="862" cy="459" rx="167" ry="122" stroke-width="10"/>
+                  <path id="f3-dim" class="ln" d="M 695 459 L 1029 459" stroke-width="8"/>
+                  <path id="f3-dah" class="ln" d="M 711 447 L 695 459 L 711 471 M 1013 447 L 1029 459 L 1013 471" stroke-width="8"/>
+                </svg>
+              </div>
+              <div class="frame" style="width:404px;aspect-ratio:2400/1535">
+                <img src="../assets/fig-print-compensation.png" loading="eager"
+                     alt="Two rules for the printer: outer diameters shrink proportionally with size, inner bores lose a fixed 0.14 mm whatever their diameter." />
+                <svg class="ov" viewBox="0 0 2400 1535" aria-hidden="true">
+                  <circle id="f3-outer" class="ln" cx="834" cy="598" r="305" stroke-width="16"/>
+                  <circle id="f3-bore"  class="ln ln--soft" cx="2037" cy="597" r="258" stroke-width="14"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- ── 4 · v2.3 ─────────────────────────────────────── -->
+            <div class="fig" id="fig4">
+              <div class="frame" style="width:462px;aspect-ratio:2400/1458">
+                <img src="../assets/fig-pump-head-gap.png" loading="eager"
+                     alt="The assembled v2.3 pump head in CAD, with the occlusion gap and the three caliper inspection slots at the apex and at both ends of the track." />
+                <svg class="ov" viewBox="0 0 2400 1458" aria-hidden="true">
+                  <path id="f4-l1" class="ln" d="M 1155 112 L 1155 78" stroke-width="11"/>
+                  <path id="f4-l2" class="ln" d="M 741 758 L 741 828" stroke-width="11"/>
+                  <path id="f4-l3" class="ln" d="M 1591 780 L 1591 848" stroke-width="11"/>
+                </svg>
+                <div class="tag" id="tag-apex"  style="left:48.1%;top:3.6%">1.52</div>
+                <div class="tag" id="tag-left"  style="left:30.9%;top:59.5%">1.52</div>
+                <div class="tag" id="tag-right" style="left:66.3%;top:60.9%">1.52</div>
+              </div>
+              <div class="frame" style="width:274px;aspect-ratio:1088/1057">
+                <img src="../assets/v23-render.png" loading="eager"
+                     alt="Render of the v2.3 pump head, the installed gap embossed on the housing face." />
+                <svg class="ov" viewBox="0 0 1088 1057" aria-hidden="true">
+                  <path id="f4-under" class="ln" d="M 302 300 L 716 300" stroke-width="9"/>
+                </svg>
+              </div>
+            </div>
+
+          </div><!-- /figs -->
+        </div><!-- /sheet -->
+
+        <!-- ══ revision rail ══ -->
+        <ul class="rail">
+          <li class="rev" id="rev1"><span class="rev__bar"></span>
+            <span class="rev__k">v2.1</span>
+            <span class="rev__t">the mount sat 0.45 mm high</span></li>
+          <li class="rev" id="rev2"><span class="rev__bar"></span>
+            <span class="rev__k">v2.2</span>
+            <span class="rev__t">printed pegs taper, rollers tilt</span></li>
+          <li class="rev" id="rev3"><span class="rev__bar"></span>
+            <span class="rev__k">the printer</span>
+            <span class="rev__t">outer shrinks 0.65 %, inner loses 0.14 mm</span></li>
+          <li class="rev" id="rev4"><span class="rev__bar"></span>
+            <span class="rev__k">v2.3</span>
+            <span class="rev__t">measured at three points</span></li>
+        </ul>
+
+        <!-- ══ dimension readout ══ -->
+        <div class="readout">
+          <div class="ro" id="ro1"><span class="ro__num"><span class="dig" id="n1">1.82</span></span><span class="ro__u">mm</span></div>
+          <div class="ro" id="ro2"><span class="ro__num"><span class="dig" id="n2">0.0</span>°</span></div>
+          <div class="ro" id="ro3"><span class="ro__num">±<span class="dig" id="n3">0.00</span></span><span class="ro__u">mm</span></div>
+          <div class="ro" id="ro4"><span class="ro__num"><span class="dig" id="n4">0.00</span></span><span class="ro__u">mm</span></div>
+        </div>
+
+        <!-- ══ mini map: tube → rotor → nozzle → sample ══ -->
+        <div class="minimap" aria-label="Where this sits: the rotor">
+          <svg viewBox="0 0 262 72" aria-hidden="true">
+            <path class="mm-line" d="M 48 40 L 98 40"/>
+            <path class="mm-line" d="M 134 40 L 176 40"/>
+            <path class="mm-line" d="M 204 40 L 226 40"/>
+            <rect class="mm-node" x="8" y="30" width="38" height="20" rx="10"/>
+            <path class="mm-node" d="M 18 40 L 36 40"/>
+            <circle class="mm-halo" cx="116" cy="40" r="22"/>
+            <circle class="mm-live" cx="116" cy="40" r="15"/>
+            <path class="mm-live" d="M 116 25 L 116 33 M 116 47 L 116 55 M 101 40 L 109 40 M 123 40 L 131 40"/>
+            <path class="mm-node" d="M 178 28 L 202 28 L 190 54 Z"/>
+            <rect class="mm-node" x="228" y="30" width="24" height="20" rx="5"/>
+          </svg>
+        </div>
+
+        <!-- ══ four-stop timeline ══ -->
+        <div class="tline">
+          <div class="tline__track"></div>
+          <div class="tline__fill" id="tlFill"></div>
+          <span class="tdot" id="tdot1" style="left:12.5%"></span>
+          <span class="tdot" id="tdot2" style="left:37.5%"></span>
+          <span class="tdot" id="tdot3" style="left:62.5%"></span>
+          <span class="tdot" id="tdot4" style="left:87.5%"></span>
+        </div>
+
+        <aside class="notes">
+          <ul>
+            <li>v2.1 — the mount sat 0.45 mm high, so the gap opened to 2.22 mm at the top of the arc against a 1.82 mm closure threshold. The rollers sealed at the sides and let go across the top.</li>
+            <li>v2.2 — printed pegs taper about 0.085 mm from base to tip, so two stacked bearings tilted the roller by 0.6° and it walked the tube. Fixed with one bearing on the wide base and guide rims on the rotor.</li>
+            <li>the printer — a housing drawn at 1.52 mm printed at 1.75, because printers shrink inner curves. So the printer was characterised on rings: outer sizes shrink 0.65 %, inner bores lose a fixed 0.14 mm, and parts became predictable to ±0.10 mm.</li>
+            <li>v2.3 — the seat was lowered by a measured 0.35 mm, and the installed gap read exactly 1.52 mm at the apex and at both ends of the track.</li>
+            <li>Close: CAD dimensions are assumptions until anchored to a physical datum.</li>
+          </ul>
+        </aside>
+
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <div class="site-foot__who">
+        <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+        <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+      </div>
+      <nav class="site-foot__links" aria-label="Site">
+        <a href="../../../prototypes/index.html">Prototypes</a>
+        <a href="../../../tools/index.html">Instruments</a>
+        <a href="../../../decks/index.html">Presentations</a>
+        <a href="../../../tools/thesis-timeline/index.html">Timeline</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../../../assets/deck.js"></script>
+  <script src="../../../assets/gsap/gsap.min.js"></script>
+  <script src="../../../assets/gsap/DrawSVGPlugin.min.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── Keyboard guard (BRIEF.md §7) ───────────────────────────────
+       Capture phase, so it runs before deck.js's document listener:
+       Escape closes the Instruments panel instead of toggling the
+       overview, and PageUp/PageDown (what presentation clickers send)
+       are translated into the deck's retreat/advance. */
+    document.addEventListener('keydown', function (e) {
+      var panel = document.getElementById('instr-panel');
+      if ((e.key === 'Escape' || e.key === 'Esc') && panel && !panel.hidden) {
+        var btn = document.querySelector('.site-nav__instr');
+        if (btn) { btn.click(); } else { panel.hidden = true; }
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (e.key === 'PageDown' || e.key === 'PageUp') {
+        e.preventDefault();
+        e.stopPropagation();
+        document.dispatchEvent(new KeyboardEvent('keydown', {
+          key: e.key === 'PageDown' ? 'ArrowRight' : 'ArrowLeft',
+          bubbles: true
+        }));
+      }
+    }, true);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!window.gsap) { return; }
+      gsap.registerPlugin(DrawSVGPlugin);
+
+      var slide = document.getElementById('s15');
+      var DRAW = slide.querySelectorAll('.ov path, .ov circle, .ov ellipse');
+      gsap.set(DRAW, { drawSVG: '0%' });
+      gsap.set('#f1-dot', { drawSVG: '100%' });   /* the dot is a filled marker, not a drawn line */
+      gsap.set('.tag', { xPercent: -50, yPercent: -50 });
+
+      var EO = 'expo.out';
+
+      /* one counter per step, so forward and backward renders never
+         fight over the same text node */
+      function counter(el, from, to, digits, at, dur) {
+        var o = { v: from };
+        tl.to(o, {
+          v: to, duration: dur, ease: EO,
+          onUpdate: function () { el.textContent = o.v.toFixed(digits); }
+        }, at);
+      }
+
+      var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+      tl.addLabel('step0');
+
+      /* ═══ helpers shared by every step ═══ */
+      function enter(n, fig, ro, fill, dot) {
+        var s = 's' + n;
+        tl.add(s);
+        tl.to(fig, { autoAlpha: 1, duration: 0.55 }, s)
+          .from(fig + ' .frame', { scale: 0.975, duration: 0.8 }, s)
+          .to('#rev' + n, { opacity: 1, backgroundColor: 'rgba(255,107,43,0.085)', duration: 0.45 }, s)
+          .to('#rev' + n + ' .rev__bar', { scaleY: 1, duration: 0.55 }, s + '+=0.05')
+          .to(ro, { autoAlpha: 1, duration: 0.4 }, s + '+=0.2')
+          .to('#tlFill', { width: fill, duration: 0.7 }, s)
+          .to(dot, { scale: 1.6, backgroundColor: '#ff6b2b', duration: 0.4 }, s + '+=0.15');
+        return s;
+      }
+      function leave(n, fig, ro, dot) {
+        var s = 's' + (n + 1);
+        tl.add(s);
+        tl.to(fig, { autoAlpha: 0, duration: 0.45 }, s)
+          .to(ro, { autoAlpha: 0, duration: 0.35 }, s)
+          .to('#rev' + n, { opacity: 0.68, backgroundColor: 'rgba(255,107,43,0)', duration: 0.45 }, s)
+          .to('#rev' + n + ' .rev__bar', { backgroundColor: 'rgba(255,107,43,0.38)', duration: 0.45 }, s)
+          .to(dot, { scale: 1, backgroundColor: 'rgba(255,107,43,0.45)', duration: 0.35 }, s);
+      }
+
+      /* ══════════ STEP 1 · v2.1 — the mount sat high ══════════ */
+      var s1 = enter(1, '#fig1', '#ro1', '12.5%', '#tdot1');
+      tl.to('#f1-ext1, #f1-ext2', { drawSVG: '100%', duration: 0.5, stagger: 0.08 }, s1 + '+=0.35')
+        .to('#f1-dim, #f1-ah1, #f1-ah2', { drawSVG: '100%', duration: 0.45 }, s1 + '+=0.6')
+        .to('#f1-d1, #f1-d2', { drawSVG: '100%', duration: 0.45, stagger: 0.07 }, s1 + '+=0.85')
+        .to('#f1-off, #f1-offah', { drawSVG: '100%', duration: 0.5 }, s1 + '+=1.05')
+        /* the mount offset tweens upward, shaft datum to bore datum */
+        .to('#f1-mark', { autoAlpha: 1, duration: 0.3 }, s1 + '+=1.15')
+        .to('#f1-mark', { y: -91, duration: 0.85, ease: 'expo.inOut' }, s1 + '+=1.25')
+        /* and the gap value opens, 1.82 to 2.22 */
+        .to('#f1-closure', { drawSVG: '100%', duration: 0.75 }, s1 + '+=1.45')
+        .to('#f1-stem', { drawSVG: '100%', duration: 0.95, ease: 'expo.inOut' }, s1 + '+=1.9')
+        .to('#f1-dot', { autoAlpha: 1, duration: 0.25 }, s1 + '+=1.9')
+        .to('#f1-dot', { attr: { cy: 330 }, duration: 0.95, ease: 'expo.inOut' }, s1 + '+=1.9');
+      counter(document.getElementById('n1'), 1.82, 2.22, 2, s1 + '+=1.9', 0.95);
+      tl.addLabel('step1');
+
+      /* ══════════ STEP 2 · v2.2 — the peg tapers, the roller tilts ══════════ */
+      leave(1, '#fig1', '#ro1', '#tdot1');
+      var s2 = enter(2, '#fig2', '#ro2', '37.5%', '#tdot2');
+      tl.to('#f2-tl, #f2-tr', { drawSVG: '100%', duration: 0.65, stagger: 0.1 }, s2 + '+=0.5')
+        .to('#f2-tip, #f2-base', { drawSVG: '100%', duration: 0.4, stagger: 0.08 }, s2 + '+=0.9')
+        .to('#f2-roller', { autoAlpha: 1, duration: 0.3 }, s2 + '+=1.05')
+        .to('#f2-rollerG > path', { drawSVG: '100%', duration: 0.5, stagger: 0.08 }, s2 + '+=1.05')
+        /* it tilts … */
+        .to('#f2-rollerG', { rotation: -5, svgOrigin: '599 566', duration: 0.9, ease: 'power2.inOut' }, s2 + '+=1.55')
+        /* … then snaps straight, and the one-bearing fix lights up */
+        .to('#f2-rollerG', { rotation: 0, svgOrigin: '599 566', duration: 0.6, ease: 'back.out(2.4)' }, s2 + '+=2.6')
+        .to('#f2-fix', { drawSVG: '100%', duration: 0.8 }, s2 + '+=2.85');
+      counter(document.getElementById('n2'), 0, 0.6, 1, s2 + '+=1.55', 0.9);
+      tl.addLabel('step2');
+
+      /* ══════════ STEP 3 · the printer — outer shrinks, bore loses ══════════ */
+      leave(2, '#fig2', '#ro2', '#tdot2');
+      var s3 = enter(3, '#fig3', '#ro3', '62.5%', '#tdot3');
+      tl.to('#f3-ring', { drawSVG: '100%', duration: 0.9 }, s3 + '+=0.45')
+        .to('#f3-dim, #f3-dah', { drawSVG: '100%', duration: 0.5 }, s3 + '+=1.0')
+        .to('#f3-outer', { drawSVG: '100%', duration: 0.8 }, s3 + '+=0.75')
+        /* the outer ring shrinks proportionally … */
+        .fromTo('#f3-outer', { scale: 1.055, svgOrigin: '834 598' },
+                             { scale: 1, duration: 1.0, ease: 'expo.inOut' }, s3 + '+=1.35')
+        .to('#f3-bore', { drawSVG: '100%', duration: 0.8 }, s3 + '+=1.1')
+        /* … while the inner bore thickens inward by a fixed amount */
+        .to('#f3-bore', { attr: { r: 243, 'stroke-width': 72 }, duration: 1.0, ease: 'expo.inOut' }, s3 + '+=1.55');
+      counter(document.getElementById('n3'), 0, 0.10, 2, s3 + '+=1.55', 1.0);
+      tl.addLabel('step3');
+
+      /* ══════════ STEP 4 · v2.3 — 1.52 at three points, apex first ══════════ */
+      leave(3, '#fig3', '#ro3', '#tdot3');
+      var s4 = enter(4, '#fig4', '#ro4', '87.5%', '#tdot4');
+      tl.to('#f4-l1', { drawSVG: '100%', duration: 0.35 }, s4 + '+=0.5')
+        .fromTo('#tag-apex', { scale: 0.7, autoAlpha: 0 },
+                             { scale: 1, autoAlpha: 1, duration: 0.45, ease: 'back.out(2)' }, s4 + '+=0.72')
+        .to('#f4-l2', { drawSVG: '100%', duration: 0.35 }, s4 + '+=1.0')
+        .fromTo('#tag-left', { scale: 0.7, autoAlpha: 0 },
+                             { scale: 1, autoAlpha: 1, duration: 0.45, ease: 'back.out(2)' }, s4 + '+=1.22')
+        .to('#f4-l3', { drawSVG: '100%', duration: 0.35 }, s4 + '+=1.45')
+        .fromTo('#tag-right', { scale: 0.7, autoAlpha: 0 },
+                              { scale: 1, autoAlpha: 1, duration: 0.45, ease: 'back.out(2)' }, s4 + '+=1.67')
+        .to('#f4-under', { drawSVG: '100%', duration: 0.7 }, s4 + '+=1.9');
+      counter(document.getElementById('n4'), 0, 1.52, 2, s4 + '+=0.5', 1.1);
+      tl.addLabel('step4');
+
+      /* ── drive the timeline from the runtime's fragment attributes ── */
+      var cues = Array.prototype.slice.call(slide.querySelectorAll('.fragment'));
+      var last = -1;
+      var nav = null;
+
+      function revealed() {
+        var n = 0;
+        cues.forEach(function (c) { if (c.hasAttribute('data-fragment-revealed')) n++; });
+        return n;
+      }
+      function sync() {
+        var n = revealed();
+        if (n === last) return;
+        last = n;
+        var label = 'step' + n;
+        if (nav) { nav.kill(); nav = null; }
+        if (reduced) { tl.pause(); tl.seek(label, false); return; }  /* false: let the counters' onUpdate fire */
+        nav = tl.tweenTo(label);
+      }
+
+      var mo = new MutationObserver(sync);
+      cues.forEach(function (c) {
+        mo.observe(c, { attributes: true, attributeFilter: ['data-fragment-revealed'] });
+      });
+
+      /* the slide is already active on load, so land on step0 now */
+      sync();
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,833 @@
+    </div><!-- /.deck-stage -->
+  </div><!-- /.deck-viewport -->
+
+  <div class="deck-hud">
+    <div class="deck-progress"><div class="deck-progress-fill"></div></div>
+    <div class="deck-counter">1 / 1</div>
+  </div>
+
+  <!-- Presenter panel: rendered only under ?view=presenter -->
+  <div class="pres">
+    <div class="pres__stage" id="presStage"></div>
+    <div class="pres__next">
+      <div class="pres__cap">Next step</div>
+      <div class="pres__next-frame"><div class="pres__next-inner" id="presNext"></div></div>
+    </div>
+    <div class="pres__notes">
+      <div class="pres__notes-body">
+        <h2 class="pres__notes-title" id="presTitle"></h2>
+        <div id="presNotes"></div>
+      </div>
+    </div>
+    <div class="pres__bar">
+      <div class="pres__stat"><span class="pres__stat-k">Slide</span><span class="pres__stat-v" id="presCount">1 / 1</span></div>
+      <div class="pres__stat"><span class="pres__stat-k">Step</span><span class="pres__stat-v" id="presStep">0 / 0</span></div>
+      <div class="pres__stat"><span class="pres__stat-k">Elapsed</span><span class="pres__stat-v" id="presElapsed">00:00</span></div>
+      <div class="pres__stat"><span class="pres__stat-k">Left</span><span class="pres__stat-v" id="presLeft">30:00</span></div>
+      <div class="pres__stat"><span class="pres__stat-k">Clock</span><span class="pres__stat-v" id="presClock">--:--</span></div>
+      <div class="pres__spacer pres__keys">&larr; &rarr; step &middot; r reset timer &middot; b black &middot; f full &middot; o overview</div>
+    </div>
+  </div>
+
+  <!-- Guest follow indicator: rendered only under ?view=guest -->
+  <div class="guest-dot"><span class="guest-dot__led"></span><span>seguiamo</span></div>
+
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <div class="site-foot__who">
+        <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+        <p class="site-foot__thesis">Modular automated liquid dispensing for point-of-care use</p>
+      </div>
+      <nav class="site-foot__links" aria-label="Site">
+        <a href="../../prototypes/index.html">Prototypes</a>
+        <a href="../../tools/index.html">Instruments</a>
+        <a href="../../decks/index.html">Presentations</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../../assets/deck.js"></script>
+  <script src="../../assets/gsap/gsap.min.js"></script>
+  <script src="../../assets/gsap/DrawSVGPlugin.min.js"></script>
+  <script src="../../assets/gsap/MotionPathPlugin.min.js"></script>
+  <script src="../../assets/gsap/MorphSVGPlugin.min.js"></script>
+  <script>
+    /* GSAP core plus the three vendored plugins. Registered once, here, so
+       every part script can use them without touching the tail. */
+    (function () {
+      if (!window.gsap) { console.error('[deck] GSAP core did not load'); return; }
+      var plugins = [];
+      if (window.DrawSVGPlugin)    plugins.push(window.DrawSVGPlugin);
+      if (window.MotionPathPlugin) plugins.push(window.MotionPathPlugin);
+      if (window.MorphSVGPlugin)   plugins.push(window.MorphSVGPlugin);
+      if (plugins.length) gsap.registerPlugin.apply(gsap, plugins);
+    })();
+  </script>
+  <script>
+  /* ══════════════════════════════════════════════════════════════════════
+     Thesis defense deck — infrastructure tail.
+
+     Owns everything the slide parts are allowed to assume:
+       · the fragment-to-timeline driver (Deck.slide builders, tweenTo)
+       · the Deck.enter entrance hooks
+       · lazy media with one-slide lookahead, video autoplay and sound
+       · the live tool cards (grow, focus handoff, Escape, backdrop)
+       · the mini map
+       · the three views (?view=stage|presenter|guest)
+       · the sync client (BroadcastChannel always, ntfy under ?sync=)
+     Slide parts never edit this file.
+     ══════════════════════════════════════════════════════════════════════ */
+  (function () {
+    'use strict';
+
+    var TOPIC   = 'svf-defense-20260928-k7q2m9x4';
+    var CHANNEL = 'deck:thesis-defense';
+    var DECK_ID = 'thesis-defense';
+    var PLAN_S  = 30 * 60;   /* 25 minutes of slides plus the 5 minute demo */
+
+    var params    = new URLSearchParams(location.search);
+    var view      = params.get('view') || 'stage';
+    if (view !== 'presenter' && view !== 'guest') view = 'stage';
+    var syncRole  = params.get('sync');           /* 'host' | 'guest' | null */
+    var reduce    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.body.setAttribute('data-view', view);
+
+    var slides = [];
+    var stage  = null;
+    var timelines = new WeakMap();
+    var prevIdx = -1;
+
+    /* ── 1 · Timelines ─────────────────────────────────────────────── */
+
+    function buildTimeline(el) {
+      if (timelines.has(el)) return timelines.get(el);
+      var cue = el.getAttribute('data-cue');
+      var fn  = cue && window.Deck.builderFor ? window.Deck.builderFor(cue) : null;
+      var tl  = null;
+      if (fn && window.gsap) {
+        try {
+          tl = fn(el, window.gsap) || null;
+          if (tl && tl.pause) tl.pause();
+        } catch (err) {
+          console.error('[deck] timeline builder failed for ' + cue, err);
+          tl = null;
+        }
+      }
+      timelines.set(el, tl);
+      return tl;
+    }
+
+    /* The nearest existing step label at or below n, so a builder may skip
+       labels without the driver throwing. */
+    function labelAt(tl, n) {
+      var labels = tl.labels || {};
+      for (var i = n; i >= 0; i--) {
+        if (labels['step' + i] !== undefined) return 'step' + i;
+      }
+      return null;
+    }
+
+    function driveTimeline(el, step, entering) {
+      var tl = timelines.get(el);
+      if (!tl) return;
+      var lbl = labelAt(tl, step);
+      if (lbl === null) return;
+      if (tl.__tween) { tl.__tween.kill(); tl.__tween = null; }
+      if (entering || reduce) {
+        tl.pause();
+        tl.seek(lbl, false);
+      } else {
+        tl.__tween = tl.tweenTo(lbl);
+      }
+    }
+
+    function runEnterHooks(el) {
+      var cue = el.getAttribute('data-cue');
+      if (!cue || !window.Deck.entersFor) return;
+      window.Deck.entersFor(cue).forEach(function (fn) {
+        try { fn(el, window.gsap); } catch (err) { console.error('[deck] enter hook failed for ' + cue, err); }
+      });
+    }
+
+    /* ── 2 · Lazy media ────────────────────────────────────────────── */
+
+    function lazyNodes(el) {
+      return Array.prototype.filter.call(
+        el.querySelectorAll('img[data-src], video[data-src], iframe[data-src]'),
+        function (m) { return !m.closest('.tool-card'); }
+      );
+    }
+
+    function loadSlideMedia(idx) {
+      var el = slides[idx];
+      if (!el) return;
+      lazyNodes(el).forEach(function (m) {
+        if (!m.getAttribute('src')) m.setAttribute('src', m.getAttribute('data-src'));
+      });
+    }
+
+    function unloadSlideMedia(idx) {
+      var el = slides[idx];
+      if (!el) return;
+      lazyNodes(el).forEach(function (m) {
+        if (!m.getAttribute('src')) return;
+        if (m.tagName === 'VIDEO') {
+          try { m.pause(); } catch (e) {}
+          m.removeAttribute('src');
+          try { m.load(); } catch (e) {}
+        } else {
+          m.removeAttribute('src');
+        }
+      });
+    }
+
+    function ensureMedia(idx) {
+      loadSlideMedia(idx);
+      loadSlideMedia(idx + 1);
+      for (var j = 0; j < slides.length; j++) {
+        if (Math.abs(j - idx) > 2) unloadSlideMedia(j);
+      }
+    }
+
+    function playVideos(el) {
+      el.querySelectorAll('video').forEach(function (v) {
+        if (v.hasAttribute('data-noauto')) return;
+        if (!v.getAttribute('src') && v.getAttribute('data-src')) v.src = v.getAttribute('data-src');
+        v.muted = !v.hasAttribute('data-sound');
+        try { v.currentTime = 0; } catch (e) {}
+        var p;
+        try { p = v.play(); } catch (e) { return; }
+        if (p && p.catch) {
+          p.catch(function () {
+            /* autoplay with sound refused before the first gesture: drop to muted */
+            if (!v.muted) { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function () {}); }
+          });
+        }
+      });
+    }
+
+    function pauseVideos(el) {
+      el.querySelectorAll('video').forEach(function (v) {
+        try { v.pause(); } catch (e) {}
+      });
+    }
+
+    /* ── 3 · Live tool cards ───────────────────────────────────────── */
+
+    var grownCard = null;
+    var backdrop  = null;
+
+    function growCard(card) {
+      if (grownCard) return;
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'tool-backdrop';
+        backdrop.addEventListener('click', shrinkCard);
+      }
+      stage.appendChild(backdrop);
+      void backdrop.offsetWidth;
+      backdrop.classList.add('is-on');
+
+      var frame = card.querySelector('iframe');
+      if (!frame) {
+        frame = document.createElement('iframe');
+        var name = card.querySelector('.tool-card__name');
+        frame.setAttribute('title', name ? name.textContent : 'Tool');
+        frame.src = card.getAttribute('data-src') || 'about:blank';
+        card.appendChild(frame);
+        frame.addEventListener('load', function () {
+          /* Same-origin tools: let Escape inside the iframe close the card too. */
+          try {
+            frame.contentDocument.addEventListener('keydown', function (e) {
+              if (e.key === 'Escape') { e.preventDefault(); shrinkCard(); }
+            });
+          } catch (e) {}
+        });
+      }
+      card.classList.add('is-grown');
+      document.body.setAttribute('data-demo-active', '');
+      grownCard = card;
+      setTimeout(function () { try { frame.focus(); } catch (e) {} }, 560);
+    }
+
+    function shrinkCard() {
+      if (!grownCard) return;
+      grownCard.classList.remove('is-grown');
+      grownCard = null;
+      document.body.removeAttribute('data-demo-active');
+      if (backdrop) {
+        backdrop.classList.remove('is-on');
+        var b = backdrop;
+        setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 560);
+      }
+      if (stage) stage.focus();
+    }
+
+    function wireToolCards() {
+      document.querySelectorAll('.tool-card').forEach(function (card) {
+        var poster = card.getAttribute('data-poster');
+        if (poster) card.style.backgroundImage = 'url("' + poster + '")';
+        if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        if (!card.querySelector('.tool-card__hint')) {
+          var hint = document.createElement('span');
+          hint.className = 'tool-card__hint';
+          hint.textContent = 'Open live';
+          card.appendChild(hint);
+        }
+        if (!card.querySelector('.tool-card__shade')) {
+          var shade = document.createElement('span');
+          shade.className = 'tool-card__shade';
+          card.insertBefore(shade, card.firstChild);
+        }
+        card.addEventListener('click', function (e) {
+          /* deck.js deactivates its own iframe panels on any stray document
+             click while data-demo-active is set; keep ours out of its way. */
+          e.stopPropagation();
+          if (!card.classList.contains('is-grown')) growCard(card);
+        });
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); growCard(card); }
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (!grownCard) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          shrinkCard();
+        }
+      }, true);
+    }
+
+    /* ── 4 · Mini map ──────────────────────────────────────────────── */
+
+    var THREAD = { pump: '#ff6b2b', align: '#9b7fe0', nozzle: '#4fb3c8' };
+    var NODE_BY_ACCENT = { pump: 'rotor', align: 'rack', nozzle: 'nozzle' };
+    var mapEl = null;
+
+    function renderMinimap() {
+      mapEl = document.createElement('div');
+      mapEl.className = 'minimap';
+      mapEl.setAttribute('aria-hidden', 'true');
+      mapEl.innerHTML =
+        '<svg viewBox="0 0 262 72">' +
+          '<path class="mm-line" d="M 48 40 L 98 40"/>' +
+          '<path class="mm-line" d="M 134 40 L 176 40"/>' +
+          '<path class="mm-line" d="M 204 40 L 226 40"/>' +
+          '<g data-node="store">' +
+            '<rect class="mm-node" x="8" y="30" width="38" height="20" rx="10"/>' +
+            '<path class="mm-node" d="M 18 40 L 36 40"/>' +
+          '</g>' +
+          '<circle class="mm-halo" data-halo="rotor" cx="116" cy="40" r="22"/>' +
+          '<g data-node="rotor">' +
+            '<circle class="mm-node" cx="116" cy="40" r="15"/>' +
+            '<path class="mm-node" d="M 116 25 L 116 33 M 116 47 L 116 55 M 101 40 L 109 40 M 123 40 L 131 40"/>' +
+          '</g>' +
+          '<g data-node="nozzle">' +
+            '<path class="mm-node" d="M 178 28 L 202 28 L 190 54 Z"/>' +
+          '</g>' +
+          '<g data-node="rack">' +
+            '<rect class="mm-node" x="228" y="30" width="24" height="20" rx="5"/>' +
+          '</g>' +
+          '<text class="mm-part" x="8" y="66"></text>' +
+        '</svg>';
+      stage.appendChild(mapEl);
+    }
+
+    var PART_NAME = {
+      open: '', I: 'Part I', II: 'Part II', III: 'Part III',
+      demo: 'Live demo', disc: 'Discussion', close: '', backup: 'Backup'
+    };
+
+    function updateMinimap(el) {
+      if (!mapEl) return;
+      var part   = el.getAttribute('data-part') || '';
+      var accent = el.getAttribute('data-accent') || '';
+      var want   = el.getAttribute('data-map');
+      var live   = want || NODE_BY_ACCENT[accent] || null;
+      var off    = want === 'none' || el.classList.contains('slide--divider') ||
+                   part === '' || part === 'open' || part === 'close';
+
+      mapEl.hidden = !!off;
+      if (off) return;
+
+      mapEl.style.setProperty('--mm-a', THREAD[accent] || 'var(--accent)');
+      mapEl.querySelectorAll('[data-node]').forEach(function (g) {
+        g.querySelectorAll('.mm-node').forEach(function (n) {
+          n.classList.toggle('is-live', g.getAttribute('data-node') === live);
+        });
+      });
+      var halo = mapEl.querySelector('[data-halo]');
+      if (halo) halo.classList.toggle('is-live', halo.getAttribute('data-halo') === live);
+      var label = mapEl.querySelector('.mm-part');
+      if (label) label.textContent = PART_NAME[part] !== undefined ? PART_NAME[part] : part;
+    }
+
+    /* ── 5 · Nav auto-hide ─────────────────────────────────────────── */
+
+    function wireNavIdle() {
+      var t;
+      function wake() {
+        document.body.removeAttribute('data-nav-idle');
+        clearTimeout(t);
+        t = setTimeout(function () { document.body.setAttribute('data-nav-idle', ''); }, 3000);
+      }
+      document.addEventListener('mousemove', wake);
+      document.addEventListener('mousedown', wake);
+      wake();
+    }
+
+    /* ── 6 · Presenter view ────────────────────────────────────────── */
+
+    var pres = {};
+    var timerStart = null;
+    var viewport = null;
+
+    function fitPanel() {
+      if (view !== 'presenter' || !viewport || !stage) return;
+      var w = viewport.clientWidth, h = viewport.clientHeight;
+      if (!w || !h) return;
+      var s = Math.min(w / 1280, h / 720);
+      stage.style.position = 'absolute';
+      stage.style.left = '0px';
+      stage.style.top = '0px';
+      stage.style.transform = 'translate(' + ((w - 1280 * s) / 2) + 'px,' +
+                              ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
+    }
+
+    function setupPresenter() {
+      pres = {
+        stage:  document.getElementById('presStage'),
+        next:   document.getElementById('presNext'),
+        title:  document.getElementById('presTitle'),
+        notes:  document.getElementById('presNotes'),
+        count:  document.getElementById('presCount'),
+        step:   document.getElementById('presStep'),
+        elapsed:document.getElementById('presElapsed'),
+        left:   document.getElementById('presLeft'),
+        clock:  document.getElementById('presClock')
+      };
+      if (pres.stage && viewport) pres.stage.appendChild(viewport);
+
+      /* Registered after deck.js's own resize handler, so this one wins. */
+      window.addEventListener('resize', fitPanel);
+      fitPanel();
+      setTimeout(fitPanel, 60);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'r' || e.key === 'R') { timerStart = Date.now(); tickClock(); }
+        else if (timerStart === null) { timerStart = Date.now(); }
+      });
+
+      setInterval(tickClock, 500);
+      tickClock();
+    }
+
+    function mmss(total) {
+      var sign = total < 0 ? '-' : '';
+      total = Math.abs(Math.round(total));
+      var m = Math.floor(total / 60), s = total % 60;
+      return sign + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function tickClock() {
+      if (view !== 'presenter' || !pres.clock) return;
+      var now = new Date();
+      pres.clock.textContent =
+        (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' +
+        (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+      var el = timerStart === null ? 0 : (Date.now() - timerStart) / 1000;
+      pres.elapsed.textContent = mmss(el);
+      var left = PLAN_S - el;
+      pres.left.textContent = mmss(left);
+      pres.left.classList.toggle('is-over', left < 0);
+      pres.left.classList.toggle('is-close', left >= 0 && left < 300);
+    }
+
+    /* ── 6b · The next-state preview ───────────────────────────────
+
+       The panel answers one question: what will the projector look like after
+       the next press, once that step's motion has settled? A static clone with
+       the fragments ticked on cannot answer it, because almost every slide is
+       driven by a GSAP timeline, so the target state is rebuilt instead:
+
+         · the target is this slide at step n+1 while fragments are left,
+           otherwise the next slide at step 0, and "end of deck" past the last;
+         · the clone is built from a pristine snapshot, never from the live
+           slide, because several builders read inline left/top/width/height as
+           their home geometry and the live slide's are mid-animation;
+         · the slide's registered builder runs on the clone, the returned
+           timeline is seeked to the target label, and the entrance hook runs
+           after it, exactly as a real entry would leave the slide;
+         · everything the two of them started is then fast-forwarded to its end
+           and killed, so the clone holds final styles and nothing keeps ticking
+           behind the panel.
+
+       The builder and the hook run inside a gsap.context scoped to the clone,
+       so the next render reverts the previous one. Nothing here may touch the
+       live stage: builders scope every selector to their element, which is why
+       the clone may keep the ids the parts' #sNN CSS depends on. */
+
+    var pristine = [];      /* untouched copy of every slide, taken at init */
+    var preview  = null;    /* the gsap.context holding the preview on screen */
+
+    function killPreview() {
+      if (!preview) return;
+      var p = preview; preview = null;
+      if (p.tl)  { try { p.tl.kill(); } catch (e) {} }
+      if (p.ctx) { try { p.ctx.revert(); } catch (e) {} }
+    }
+
+    /* Finish and kill what the preview left running: the entrance hook's
+       tweens, and anything else started outside the preview timeline. Three
+       things are deliberately left alone, because touching them would undo the
+       seek:
+         · the timeline itself, which is holding the target state;
+         · its children, which the seek already rendered where they belong —
+           finishing one would drag a future step onto the clone;
+         · anything already at its end, above all the builder's opening
+           gsap.set() calls, which would re-apply the slide's rest state. */
+    function settlePreview(ctx, tl, clone) {
+      var list = [];
+      /* Walk the parent chain rather than ask the timeline for its children:
+         a stagger wraps its tweens in a sub-timeline that getChildren does not
+         hand back, and finishing one of those would reveal the next step. */
+      function ownedByTimeline(a) {
+        for (var p = a, i = 0; p && i < 64; p = p.parent, i++) if (p === tl) return true;
+        return false;
+      }
+      function add(a) {
+        if (!a || a === tl || ownedByTimeline(a)) return;
+        try { if (!a.totalProgress || a.totalProgress() >= 1) return; } catch (e) { return; }
+        if (list.indexOf(a) < 0) list.push(a);
+      }
+      if (ctx && ctx.data) ctx.data.forEach(add);
+      var running = [];
+      try { running = window.gsap.globalTimeline.getChildren(true, true, true); } catch (e) {}
+      running.forEach(function (a) {
+        if (!a || !a.targets) return;
+        var ts;
+        try { ts = a.targets(); } catch (e) { return; }
+        for (var i = 0; i < ts.length; i++) {
+          var t = ts[i];
+          if (t && t.nodeType === 1 && clone.contains(t)) { add(a); return; }
+        }
+      });
+      /* totalProgress(1) moves the playhead, which is what makes the jump
+         stick through the next tick; rendering by hand would not. */
+      list.forEach(function (a) {
+        try { if (a.totalProgress) a.totalProgress(1); else if (a.progress) a.progress(1); } catch (e) {}
+      });
+      /* GSAP queues a fresh tween's first paint for the next tick, and killing
+         cancels a queued paint, so the clone would keep its from-state. One
+         tick flushes the queue; it advances the live stage by the frame it was
+         going to advance by anyway, and only then is it safe to kill. */
+      try { window.gsap.ticker.tick(); } catch (e) {}
+      list.forEach(function (a) { try { a.kill(); } catch (e) {} });
+      if (tl) { try { tl.kill(); } catch (e) {} }
+    }
+
+    /* Render an animation at a time whatever GSAP's lazy queue thinks. */
+    function forceRender(a, t) {
+      if (!a || !a.render || !isFinite(t)) return;
+      try { a.render(t, false, true); } catch (e) {}
+    }
+
+    function renderNext(d) {
+      if (!pres.next) return;
+      killPreview();
+
+      var host = pres.next;
+      host.innerHTML = '';
+      var frame = host.parentNode;
+      host.style.transform = 'scale(' + (frame.clientWidth / 1280) + ')';
+
+      var idx = d.slide - 1, srcIdx = -1, target = 0, cap = 'Next';
+      if (d.step < d.steps) {
+        srcIdx = idx; target = d.step + 1;
+        cap = 'Next: step ' + target + ' of ' + d.steps + ' on this slide';
+      } else if (idx + 1 < slides.length) {
+        srcIdx = idx + 1; target = 0;
+        var nt = slides[srcIdx].querySelector('.slide__title, .divider__title');
+        cap = 'Next slide ' + (srcIdx + 1) + ' — ' +
+              (nt ? nt.textContent.trim() : (slides[srcIdx].getAttribute('data-cue') || ''));
+      }
+      var capEl = document.querySelector('.pres__next .pres__cap');
+      if (capEl) capEl.textContent = cap;
+      if (srcIdx < 0) {
+        host.innerHTML = '<div class="pres__next-end">End of deck</div>';
+        host.style.transform = 'none';
+        return;
+      }
+
+      /* Every part scopes its CSS with #sNN and #sNN-thing, so the ids have to
+         survive the clone or the preview loses every rule the slide depends on
+         (fills, positions, initial opacities). The clone sits after the stage in
+         the document, so getElementById and url(#…) still resolve to the live
+         slide, and no part script selects outside its own element. */
+      var src   = pristine[srcIdx] || slides[srcIdx];
+      var clone = src.cloneNode(true);
+      var cue   = clone.getAttribute('data-cue');
+      /* The panel is not the stage and the clone inherits from it, so the
+         frame's body line-height would relayout text the stage sets loose.
+         Pin it to whatever the stage inherits. */
+      if (stage) { try { clone.style.lineHeight = getComputedStyle(stage).lineHeight; } catch (e) {} }
+      clone.dataset.preview = '1';          /* builders skip their live clocks */
+      clone.classList.remove('slide--leaving');
+      clone.classList.add('slide--active');
+      clone.querySelectorAll('.fragment').forEach(function (f, i) {
+        if (i < target) f.setAttribute('data-fragment-revealed', '');
+        else f.removeAttribute('data-fragment-revealed');
+      });
+      clone.querySelectorAll('aside.notes').forEach(function (n) { n.parentNode.removeChild(n); });
+      clone.querySelectorAll('iframe').forEach(function (n) { n.parentNode.removeChild(n); });
+      clone.querySelectorAll('.tool-card').forEach(function (c) { c.classList.remove('is-grown'); });
+      /* A video keeps its element, and with it every `… video` CSS rule the
+         parts wrote, but loses both sources: it paints its poster, asks the
+         network for nothing, and a builder's play() on it is a no-op. */
+      clone.querySelectorAll('video').forEach(function (v) {
+        v.removeAttribute('src');
+        v.removeAttribute('data-src');
+        v.removeAttribute('autoplay');
+        v.muted = true;
+      });
+      clone.querySelectorAll('img[data-src]').forEach(function (im) {
+        if (!im.getAttribute('src')) im.src = im.getAttribute('data-src');
+      });
+      /* In the document before the builder runs, so anything that measures or
+         draws an SVG length sees a laid-out element. */
+      host.appendChild(clone);
+
+      var fn    = (cue && window.Deck.builderFor) ? window.Deck.builderFor(cue) : null;
+      var hooks = (cue && window.Deck.entersFor)  ? window.Deck.entersFor(cue)  : [];
+      if (!window.gsap || (!fn && !hooks.length)) return;
+
+      var tl = null;
+      var ctx = window.gsap.context(function () {
+        if (fn) {
+          try { tl = fn(clone, window.gsap) || null; }
+          catch (err) { console.error('[deck] preview builder failed for ' + cue, err); tl = null; }
+        }
+        if (tl) {
+          try {
+            tl.pause();
+            var lbl = labelAt(tl, target);
+            if (lbl !== null) tl.seek(lbl, false);
+            else if (target > 0) tl.progress(1, false);
+            forceRender(tl, tl.totalTime());
+          } catch (err) { console.error('[deck] preview seek failed for ' + cue, err); }
+        }
+        hooks.forEach(function (h) {
+          try { h(clone, window.gsap); }
+          catch (err) { console.error('[deck] preview enter hook failed for ' + cue, err); }
+        });
+      }, clone);
+
+      settlePreview(ctx, tl, clone);
+      preview = { ctx: ctx, tl: null };
+    }
+
+    function updatePresenter(d) {
+      if (view !== 'presenter') return;
+      var el = slides[d.slide - 1];
+      pres.count.textContent = d.slide + ' / ' + d.count;
+      pres.step.textContent  = d.step + ' / ' + d.steps;
+      var t = el.querySelector('.slide__title, .divider__title');
+      pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
+      var notes = el.querySelector('aside.notes');
+      pres.notes.innerHTML = notes ? notes.innerHTML
+        : '<p class="pres__notes-empty">No notes for this slide.</p>';
+      renderNext(d);
+      tickClock();
+    }
+
+    /* ── 7 · Guest view ────────────────────────────────────────────── */
+
+    var dotEl = null, dotTimer = null;
+    function markLive() {
+      if (!dotEl) return;
+      dotEl.classList.add('is-live');
+      clearTimeout(dotTimer);
+      dotTimer = setTimeout(function () { dotEl.classList.remove('is-live'); }, 20000);
+    }
+
+    /* ── 8 · Sync ──────────────────────────────────────────────────── */
+
+    var sid = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    var seq = 0;
+    var seen = Object.create(null);
+    var bc = null;
+    var pendingMsg = null, coalesce = null, lastSent = null;
+    var booted = false;      /* the first state is the page's own, never pushed */
+    var hasMoved = false;    /* this window has navigated at least once */
+
+    function makeMsg(d) {
+      return { v: 1, deck: DECK_ID, sid: sid, cue: d.cue, slide: d.slide, step: d.step, seq: ++seq, t: Date.now() };
+    }
+
+    function send(m) {
+      lastSent = m;
+      if (bc) { try { bc.postMessage(m); } catch (e) {} }
+      if (syncRole === 'host') {
+        try {
+          fetch('https://ntfy.sh/' + TOPIC, { method: 'POST', body: JSON.stringify(m) })
+            .catch(function () { /* the deck keeps working without the relay */ });
+        } catch (e) {}
+      }
+    }
+
+    var coalesceR = null, pendingRemote = null;
+    /* A state this window applied from another window (the projector driven while the
+       presenter window is the host, or the reverse) still goes to the relay, but never
+       back onto the BroadcastChannel, or the two windows would echo each other. */
+    function relayRemote(d) {
+      pendingRemote = d;
+      if (coalesceR) return;
+      coalesceR = setTimeout(function () {
+        coalesceR = null;
+        var d2 = pendingRemote; pendingRemote = null;
+        if (!d2) return;
+        var m = makeMsg(d2); lastSent = m;
+        try {
+          fetch('https://ntfy.sh/' + TOPIC, { method: 'POST', body: JSON.stringify(m) })
+            .catch(function () {});
+        } catch (e) {}
+      }, 120);
+    }
+
+    function broadcast(d) {
+      if (d.remote) { if (syncRole === 'host') relayRemote(d); return; }
+      if (!booted) { booted = true; return; }
+      hasMoved = true;
+      pendingMsg = d;
+      if (coalesce) return;
+      coalesce = setTimeout(function () {
+        coalesce = null;
+        var d2 = pendingMsg; pendingMsg = null;
+        if (d2) send(makeMsg(d2));
+      }, 120);
+    }
+
+    function applyRemote(m) {
+      if (!m || m.deck !== DECK_ID) return;
+      if (m.sid === sid) return;
+      /* A window that has just opened asks where the talk is. Only a window
+         that is actually driving answers, so two fresh windows cannot shove
+         their own opening slide onto each other. */
+      if (m.hello) {
+        if (syncRole === 'host' || hasMoved) send(makeMsg(window.Deck.state));
+        return;
+      }
+      if (m.t && Date.now() - m.t > 120000) return;
+      var last = seen[m.sid];
+      if (last !== undefined && m.seq <= last) return;
+      seen[m.sid] = m.seq;
+      markLive();
+      if (m.cue && window.Deck.goToCue && window.Deck.goToCue(m.cue, m.step, true)) return;
+      if (m.slide) window.Deck.goToState(m.slide, m.step, true);
+    }
+
+    function setupSync() {
+      if ('BroadcastChannel' in window) {
+        bc = new BroadcastChannel(CHANNEL);
+        bc.onmessage = function (e) { applyRemote(e.data); };
+        setTimeout(function () {
+          try { bc.postMessage({ v: 1, deck: DECK_ID, sid: sid, hello: true, t: Date.now() }); } catch (e) {}
+        }, 250);
+      }
+      if (syncRole === 'host') {
+        setInterval(function () {
+          var d = window.Deck.state;
+          send(makeMsg(d));
+        }, 15000);
+      }
+      if (syncRole === 'guest') {
+        try {
+          var es = new EventSource('https://ntfy.sh/' + TOPIC + '/sse?since=2m');
+          es.onmessage = function (e) {
+            try {
+              var env = JSON.parse(e.data);
+              if (env.event && env.event !== 'message') return;
+              if (!env.message) return;
+              applyRemote(JSON.parse(env.message));
+            } catch (err) {}
+          };
+          es.onerror = function () { /* EventSource reconnects on its own */ };
+        } catch (e) {}
+      }
+    }
+
+    /* ── 9 · The state handler ─────────────────────────────────────── */
+
+    function onState(d) {
+      var idx = d.slide - 1;
+      var el  = slides[idx];
+      if (!el) return;
+      var entering = idx !== prevIdx;
+
+      if (entering) {
+        if (prevIdx >= 0 && slides[prevIdx]) {
+          var prevEl = slides[prevIdx];
+          var prevTl = timelines.get(prevEl);
+          if (prevTl) {
+            if (prevTl.__tween) { prevTl.__tween.kill(); prevTl.__tween = null; }
+            prevTl.pause();
+          }
+          pauseVideos(prevEl);
+        }
+        ensureMedia(idx);
+      }
+
+      buildTimeline(el);
+      driveTimeline(el, d.step, entering);
+
+      if (entering) {
+        runEnterHooks(el);
+        playVideos(el);
+        prevIdx = idx;
+      }
+
+      updateMinimap(el);
+      updatePresenter(d);
+      broadcast(d);
+    }
+
+    /* ── 10 · Init ─────────────────────────────────────────────────── */
+
+    function init() {
+      slides   = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+      stage    = document.querySelector('.deck-stage');
+      viewport = document.querySelector('.deck-viewport');
+      dotEl    = document.querySelector('.guest-dot');
+      if (!stage || !slides.length) return;
+
+      renderMinimap();
+      wireToolCards();
+      if (view === 'stage') wireNavIdle();
+      if (view === 'presenter') {
+        /* Taken here, after the tool cards are furnished and before the first
+           builder has run, so every preview clone starts from a virgin slide. */
+        pristine = slides.map(function (s) { return s.cloneNode(true); });
+        setupPresenter();
+      }
+      setupSync();
+
+      document.addEventListener('deck:state', function (e) { onState(e.detail); });
+
+      /* deck.js emitted its first state inside its own DOMContentLoaded
+         handler, which ran before this one, so bootstrap from Deck.state. */
+      onState(Object.assign({ remote: false }, window.Deck.state));
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+</body>
+</html>

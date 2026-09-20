@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thesis defense · preview</title>
+
+  <!-- Dialect "stacked cards" scales to the rest of the deck like this:
+       photo-only and divider slides use ONE card at the active pose (same glass, same kicker) with the image full-bleed inside it and the number slot empty, so the divider is simply a pile of one;
+       chart slides put the plot inside the card frame in place of the raster and animate the series with the same in-card overlay layer, while the number slot carries the headline figure;
+       live-tool slides swap the card's frame for the tool iframe and keep the pile, so "the tool" is just another sheet on the bench that can be lifted to the front and tucked back afterwards. -->
+
+  <link rel="stylesheet" href="../../../assets/style.css" />
+  <link rel="stylesheet" href="../../../assets/site.css" />
+  <script src="../../../assets/site-nav.js"></script>
+  <link rel="stylesheet" href="../../../assets/deck.css" />
+
+  <style>
+    /* ── Shared frame, deck variant (copied from decks/lab-meeting-2026-06) ──
+       The 64px sticky bar would push the 100vh deck viewport below the fold,
+       so the frame nav is rendered as a compact corner bar in the deck's own
+       back-link position. The Instruments panel hangs from the top of the
+       page, above the slides, only while open. */
+    .site-nav--deck {
+      position: absolute;
+      top: 20px; left: 20px;
+      width: auto; height: auto;
+      padding: 0; gap: 16px;
+      background: transparent;
+      border: 0;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      z-index: 300;
+    }
+    .site-nav--deck .deck-back-link { position: static; }
+    .site-nav--deck .site-nav__links { margin-left: 0; }
+    #instr-panel { top: 0; z-index: 299; }
+    #instr-panel .instr__inner { top: 72px; max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px); }
+    .deck-viewport, .deck-overview { line-height: normal; }
+    .site-foot { display: none; }
+    html, body { overflow: hidden; }
+
+    /* ── Slide: title ─────────────────────────────────────────────── */
+    .s-title {
+      position: absolute;
+      left: 64px; top: 44px;
+      width: 820px;
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 46px;
+      line-height: 1.1;
+      letter-spacing: -0.012em;
+      color: var(--text);
+    }
+
+    /* ── The pile ─────────────────────────────────────────────────── */
+    .pile { position: absolute; inset: 0; }
+
+    .card {
+      position: absolute;
+      left: 652px; top: 428px;
+      width: 540px; height: 464px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--r-lg);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+      will-change: transform;
+    }
+
+    .card__kicker {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      flex: 0 0 auto;
+    }
+
+    .card__frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      flex: 0 0 auto;
+      border-radius: var(--r-md);
+      overflow: hidden;
+      background: #f6f3f0;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+    }
+    .card__frame img {
+      display: block;
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+
+    .card__foot { margin-top: auto; flex: 0 0 auto; }
+
+    .card__num {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 96px;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .card__num .u {
+      font-size: 0.62em;
+      letter-spacing: 0;
+      margin-left: 0.14em;
+      color: var(--text-soft);
+    }
+    .card__label {
+      margin-top: 6px;
+      font-size: 21px;
+      line-height: 1.3;
+      color: var(--text-soft);
+    }
+
+    /* ── In-card overlay layer (drawn on top of the raster, never a redraw) ── */
+    .ov {
+      position: absolute;
+      pointer-events: none;
+      overflow: visible;
+    }
+    /* Each overlay is placed on the exact box object-fit:contain gives the
+       figure inside the 2:1 frame, in percent, so it follows the card as it
+       grows, tucks and fans. */
+    .ov--1 { left: 0;      top: 3.00%; width: 100%;    height: 94.00%; }
+    .ov--2 { left: 0.78%;  top: 0;     width: 98.44%;  height: 100%; }
+    .ov--3 { left: 12.41%; top: 0;     width: 75.19%;  height: 100%; }
+    .ov--4 { left: 8.85%;  top: 0;     width: 82.30%;  height: 100%; }
+
+    .ov line, .ov circle, .ov ellipse, .ov path, .ov rect {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ov .ov-ghost { stroke: rgba(26, 30, 42, 0.55); stroke-width: 3; }
+    .ov .ov-t {
+      font-family: var(--mono);
+      font-size: 44px;
+      font-weight: 700;
+      fill: var(--accent);
+      stroke: #ffffff;
+      stroke-width: 7;
+      paint-order: stroke fill;
+      stroke-linejoin: round;
+    }
+
+    /* ── Mini map: the line mark, stroke only, rotor node lit ─────── */
+    .minimap { position: absolute; right: 58px; bottom: 44px; }
+    .minimap .mm-line { fill: none; stroke: rgba(255, 255, 255, 0.22); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .minimap .mm-hot  { fill: none; stroke: var(--accent); stroke-width: 1.8; }
+    .minimap .mm-dot  { fill: var(--accent); stroke: none; }
+
+    /* ── Step markers: logical only, the GSAP timeline does the work ── */
+    .stepmark { position: absolute; left: -9999px; width: 0; height: 0; }
+
+    /* ── Speaker notes: presenter view only, never on stage ───────── */
+    .notes { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header class="site-nav site-nav--deck" data-root="../../../">
+    <a class="deck-back-link" href="../../index.html">← Presentations</a>
+    <nav class="site-nav__links" aria-label="Primary">
+      <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+    </nav>
+  </header>
+  <div id="instr-panel" class="instr" hidden></div>
+
+  <div class="deck-viewport">
+    <div class="deck-stage" tabindex="0">
+
+      <section class="slide slide--active" id="s15">
+
+        <h1 class="s-title">Three more builds fixed the printing, not the physics.</h1>
+
+        <div class="pile" id="pile">
+
+          <!-- ── card 1 · v2.1 ─────────────────────────────────────── -->
+          <article class="card" id="card-0">
+            <div class="card__kicker">v2.1</div>
+            <div class="card__frame">
+              <img src="../assets/fig-v21-gap-around-arc.png" loading="eager"
+                   alt="Section through the v2.1 pump head with the bore centre sitting 0.45 mm above the shaft, beside a stem plot of the installed gap at the left end, the apex and the right end against the 1.82 mm closure line." />
+              <svg class="ov ov--1" viewBox="0 0 1000 470" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <line id="c1-rise" x1="246" y1="268" x2="246" y2="233" />
+                <circle id="c1-ring" cx="246" cy="268" r="12" />
+                <line id="c1-thresh" x1="612" y1="296" x2="995" y2="296" stroke-dasharray="14 10" stroke-width="4" />
+                <line id="c1-stem" x1="804" y1="296" x2="804" y2="146" stroke-width="6" />
+                <circle id="c1-dot" cx="804" cy="146" r="11" style="fill:#ff6b2b;stroke:none" />
+                <text id="c1-val" class="ov-t" x="836" y="300">1.82</text>
+              </svg>
+            </div>
+            <div class="card__foot">
+              <div class="card__num">2.22<span class="u">mm</span></div>
+              <div class="card__label">the mount sat 0.45 mm high</div>
+            </div>
+          </article>
+
+          <!-- ── card 2 · v2.2 ─────────────────────────────────────── -->
+          <article class="card" id="card-1">
+            <div class="card__kicker">v2.2</div>
+            <div class="card__frame">
+              <img src="../assets/fig-roller-peg-taper.png" loading="eager"
+                   alt="Two rotor sections: on the left a printed peg tapering from base to tip with two stacked bearings and a tilted roller, on the right one bearing on the wide base with guide rims, and photographs of both rotor halves." />
+              <svg class="ov ov--2" viewBox="0 0 1000 508" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <line id="c2-axis" class="ov-ghost" x1="251" y1="232" x2="251" y2="92" stroke-dasharray="9 7" />
+                <line id="c2-pegl" x1="217" y1="228" x2="217" y2="104" stroke-width="4" />
+                <line id="c2-pegr" x1="286" y1="228" x2="286" y2="104" stroke-width="4" />
+                <rect id="c2-roller" x="172" y="98" width="160" height="80" rx="7" />
+                <path id="c2-fix" d="M678 262 L678 272 L833 272 L833 262" />
+              </svg>
+            </div>
+            <div class="card__foot">
+              <div class="card__num">0.6°</div>
+              <div class="card__label">printed pegs taper, rollers tilt</div>
+            </div>
+          </article>
+
+          <!-- ── card 3 · the printer ──────────────────────────────── -->
+          <article class="card" id="card-2">
+            <div class="card__kicker">the printer</div>
+            <div class="card__frame">
+              <img src="../assets/calibration-rings.jpg" loading="eager"
+                   alt="The printer bed carrying the printed calibration rings: three small rings and one large ring with a concentric bore, used to characterise outer shrink and inner bore loss." />
+              <svg class="ov ov--3" viewBox="0 0 1000 665" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <ellipse id="c3-outer" cx="612" cy="322" rx="132" ry="88" stroke-dasharray="14 10" stroke-width="4" />
+                <ellipse id="c3-inner" cx="610" cy="322" rx="62" ry="40" style="stroke:#e83535" stroke-width="3" />
+              </svg>
+            </div>
+            <div class="card__foot">
+              <div class="card__num">±0.10<span class="u">mm</span></div>
+              <div class="card__label">outer shrinks 0.65 %, inner loses 0.14 mm</div>
+            </div>
+          </article>
+
+          <!-- ── card 4 · v2.3 ─────────────────────────────────────── -->
+          <article class="card" id="card-3">
+            <div class="card__kicker">v2.3</div>
+            <div class="card__frame">
+              <img src="../assets/fig-pump-head-gap.png" loading="eager"
+                   alt="The assembled v2.3 pump head in CAD, the rotor inside its 180 degree track, with the three caliper inspection slots marked at the apex and at both ends of the track." />
+              <svg class="ov ov--4" viewBox="0 0 1000 608" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <ellipse class="c4-tick" id="c4-a" cx="479" cy="78" rx="56" ry="31" />
+                <ellipse class="c4-tick" id="c4-b" cx="308" cy="279" rx="56" ry="31" />
+                <ellipse class="c4-tick" id="c4-c" cx="669" cy="280" rx="56" ry="31" />
+                <path class="c4-lead" id="c4-la" d="M535 70 L596 58" stroke-width="4" />
+                <path class="c4-lead" id="c4-lb" d="M262 305 L206 336" stroke-width="4" />
+                <path class="c4-lead" id="c4-lc" d="M716 305 L780 338" stroke-width="4" />
+                <text class="ov-t c4-v" id="c4-va" x="604" y="70" text-anchor="start">1.52</text>
+                <text class="ov-t c4-v" id="c4-vb" x="196" y="358" text-anchor="end">1.52</text>
+                <text class="ov-t c4-v" id="c4-vc" x="790" y="360" text-anchor="start">1.52</text>
+              </svg>
+            </div>
+            <div class="card__foot">
+              <div class="card__num">1.52<span class="u">mm</span></div>
+              <div class="card__label">measured at three points</div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- ── mini map: tube · rotor · nozzle · sample, rotor lit ──── -->
+        <svg class="minimap" width="168" height="44" viewBox="0 0 168 44" aria-hidden="true">
+          <path class="mm-line" d="M27 22 H49" />
+          <path class="mm-line" d="M75 22 H101" />
+          <path class="mm-line" d="M110 27 V 34" />
+          <path class="mm-line" d="M110 40 H 133" />
+          <!-- tube / reservoir -->
+          <path class="mm-line" d="M11 13 h13 v18 h-13 z" />
+          <path class="mm-line" d="M11 19 h13" />
+          <!-- rotor, lit -->
+          <circle class="mm-hot" cx="62" cy="22" r="11.5" />
+          <circle class="mm-dot" cx="62" cy="14" r="2" />
+          <circle class="mm-dot" cx="70" cy="22" r="2" />
+          <circle class="mm-dot" cx="62" cy="30" r="2" />
+          <circle class="mm-dot" cx="54" cy="22" r="2" />
+          <!-- nozzle -->
+          <path class="mm-line" d="M103 13 h14 l-7 13 z" />
+          <!-- sample rack -->
+          <path class="mm-line" d="M136 34 h21 v9 h-21 z" />
+          <path class="mm-line" d="M143 34 v9" />
+          <path class="mm-line" d="M150 34 v9" />
+        </svg>
+
+        <!-- ── clicker steps: DOM order is step order ──────────────── -->
+        <i class="fragment stepmark" aria-hidden="true"></i>
+        <i class="fragment stepmark" aria-hidden="true"></i>
+        <i class="fragment stepmark" aria-hidden="true"></i>
+        <i class="fragment stepmark" aria-hidden="true"></i>
+
+        <aside class="notes">
+          <ul>
+            <li>The mount sat 0.45 mm high, so the gap opened to 2.22 mm at the top of the arc against a 1.82 mm closure threshold. The rollers sealed at the sides and let go across the top.</li>
+            <li>Printed pegs taper about 0.085 mm from base to tip, so two stacked bearings tilted the roller by 0.6° and it walked the tube. Fixed with one bearing on the wide base and guide rims on the rotor.</li>
+            <li>A housing drawn at 1.52 mm printed at 1.75, because printers shrink inner curves. So the printer was characterised on rings: outer sizes shrink 0.65 %, inner bores lose a fixed 0.14 mm, and parts became predictable to ±0.10 mm.</li>
+            <li>The seat was lowered by a measured 0.35 mm, and the installed gap read exactly 1.52 mm at the apex and at both ends of the track.</li>
+            <li>CAD dimensions are assumptions until anchored to a physical datum.</li>
+          </ul>
+        </aside>
+
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <div class="site-foot__who">
+        <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+        <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+      </div>
+      <nav class="site-foot__links" aria-label="Site">
+        <a href="../../../prototypes/index.html">Prototypes</a>
+        <a href="../../../tools/index.html">Instruments</a>
+        <a href="../../../decks/index.html">Presentations</a>
+        <a href="../../../tools/thesis-timeline/index.html">Timeline</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../../../assets/deck.js"></script>
+  <script src="../../../assets/gsap/gsap.min.js"></script>
+  <script src="../../../assets/gsap/DrawSVGPlugin.min.js"></script>
+  <script>
+  /* Deck-local script. The shared runtime (deck.js) owns stepping: it toggles
+     data-fragment-revealed on the four .stepmark fragments. Everything below
+     only watches that attribute and drives ONE GSAP timeline with labels
+     step0..step4. deck.css and deck.js are untouched (D-01). */
+  (function () {
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ── 1. Keyboard guard (BRIEF.md §7) ───────────────────────────
+         Capture phase, so Escape closes the Instruments panel instead of
+         reaching deck.js and toggling the overview; PageUp/PageDown from a
+         clicker are translated into the deck's retreat/advance keys. */
+      var panel = document.getElementById('instr-panel');
+      var instrBtn = document.querySelector('.site-nav__instr');
+      window.addEventListener('keydown', function (e) {
+        if ((e.key === 'Escape' || e.key === 'Esc') && panel && !panel.hidden) {
+          panel.hidden = true;
+          if (instrBtn) { instrBtn.setAttribute('aria-expanded', 'false'); instrBtn.focus(); }
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        if (e.key === 'PageDown' || e.key === 'PageUp') {
+          e.preventDefault();
+          e.stopPropagation();
+          document.dispatchEvent(new KeyboardEvent('keydown', {
+            key: e.key === 'PageDown' ? 'ArrowRight' : 'ArrowLeft',
+            bubbles: true
+          }));
+        }
+      }, true);
+
+      if (typeof gsap === 'undefined') return;
+      if (typeof DrawSVGPlugin !== 'undefined') gsap.registerPlugin(DrawSVGPlugin);
+      var hasDraw = (typeof DrawSVGPlugin !== 'undefined');
+
+      /* ── 2. Geometry of the pile ─────────────────────────────────── */
+      var cards = [0, 1, 2, 3].map(function (i) { return document.getElementById('card-' + i); });
+      if (cards.some(function (c) { return !c; })) return;
+
+      /* resting pose of each sheet on the bench */
+      var HOME = [
+        { x: -92, y: -26, r: -7.0 },
+        { x:  62, y: -12, r:  5.4 },
+        { x: -42, y:  24, r: -4.0 },
+        { x:  94, y:  34, r:  7.0 }
+      ];
+      /* the row the pile fans into on step 4 (offsets from the pile centre, 660) */
+      var FAN_X = [-475, -172, 132, 435];
+      var PILE = { w: 540, h: 464, pad: 22, num: 96, label: 21 };
+      var FAN  = { w: 290, h: 300, pad: 18, num: 46, label: 18 };
+
+      var q = function (sel) { return document.querySelector(sel); };
+      var qa = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
+
+      /* ── 3. Resting state (label step0) ──────────────────────────── */
+      cards.forEach(function (card, i) {
+        gsap.set(card, {
+          xPercent: -50, yPercent: -50,
+          x: HOME[i].x, y: HOME[i].y, rotation: HOME[i].r,
+          scale: 0.95,
+          opacity: [0.92, 0.44, 0.34, 0.27][i],
+          zIndex: 40 - i * 10,
+          borderColor: 'rgba(255,107,43,0.18)',
+          filter: 'saturate(0.62) brightness(0.6)',
+          transformOrigin: '50% 50%'
+        });
+      });
+
+      /* overlays start empty */
+      var drawables = ['#c1-rise', '#c1-thresh', '#c1-stem',
+                       '#c2-pegl', '#c2-pegr', '#c2-roller', '#c2-fix',
+                       '#c4-a', '#c4-b', '#c4-c', '#c4-la', '#c4-lb', '#c4-lc'];
+      if (hasDraw) gsap.set(drawables, { drawSVG: '0%' });
+      else gsap.set(drawables, { opacity: 0 });
+
+      gsap.set('#c1-ring', { opacity: 0, attr: { cy: 268 } });
+      gsap.set('#c1-dot', { scale: 0, transformOrigin: '50% 50%', svgOrigin: '804 146' });
+      gsap.set('#c1-val', { opacity: 0, attr: { y: 300 } });
+      gsap.set('#c2-axis', { opacity: 0 });
+      gsap.set('#c2-roller', { rotation: 0, svgOrigin: '252 178' });
+      gsap.set('#c3-outer', { opacity: 0, attr: { rx: 132, ry: 88 } });
+      gsap.set('#c3-inner', { opacity: 0, attr: { rx: 62, ry: 40 }, strokeWidth: 3 });
+      gsap.set('.c4-v', { opacity: 0 });
+
+      /* ── 4. One timeline, labels step0 … step4 ───────────────────── */
+      var tl = gsap.timeline({ paused: true });
+      tl.addLabel('step0', 0);
+
+      /* lift card i to the front, tuck the rest back down with a soft settle */
+      function pose(i, at) {
+        tl.to(cards[i], {
+          x: 0, y: -10, rotation: 0, scale: 1.06, opacity: 1,
+          zIndex: 60,
+          borderColor: 'rgba(255,107,43,0.50)',
+          filter: 'saturate(1) brightness(1)',
+          duration: 0.60, ease: 'expo.out'
+        }, at);
+        cards.forEach(function (c, j) {
+          if (j === i) return;
+          tl.to(c, {
+            x: HOME[j].x, y: HOME[j].y, rotation: HOME[j].r,
+            scale: 0.92,
+            opacity: j < i ? 0.52 : 0.32,
+            zIndex: j < i ? 30 + j : 10 + j,
+            borderColor: 'rgba(255,107,43,0.18)',
+            filter: j < i ? 'saturate(0.78) brightness(0.7)' : 'saturate(0.58) brightness(0.55)',
+            duration: 0.78, ease: 'back.out(1.5)'
+          }, at + 0.05);
+        });
+      }
+
+      function draw(sel, at, dur, ease) {
+        if (hasDraw) tl.fromTo(sel, { drawSVG: '0%' }, { drawSVG: '100%', duration: dur, ease: ease || 'expo.out' }, at);
+        else tl.to(sel, { opacity: 1, duration: dur, ease: ease || 'expo.out' }, at);
+      }
+
+      /* ── step 1 · v2.1 — the mount offset rises, the gap opens ───── */
+      pose(0, 0);
+      draw('#c1-thresh', 0.42, 0.55, 'none');
+      tl.to('#c1-ring', { opacity: 1, duration: 0.2 }, 0.50)
+        .to('#c1-ring', { attr: { cy: 233 }, duration: 0.55, ease: 'expo.out' }, 0.58);
+      draw('#c1-rise', 0.58, 0.55);
+      draw('#c1-stem', 0.80, 0.70, 'power2.inOut');
+      tl.to('#c1-val', { opacity: 1, duration: 0.18 }, 0.80)
+        .to('#c1-val', { attr: { y: 168 }, duration: 0.70, ease: 'power2.inOut' }, 0.80);
+      var gapVal = { v: 1.82 };
+      var gapEl = q('#c1-val');
+      tl.to(gapVal, {
+        v: 2.22, duration: 0.70, ease: 'power2.inOut',
+        onUpdate: function () { gapEl.textContent = gapVal.v.toFixed(2); }
+      }, 0.80);
+      tl.to('#c1-dot', { scale: 1, duration: 0.45, ease: 'back.out(3)' }, 1.44);
+      tl.addLabel('step1', 1.75);
+
+      /* ── step 2 · v2.2 — the peg tapers, the roller tilts, then snaps ── */
+      pose(1, 1.90);
+      tl.to('#c2-axis', { opacity: 1, duration: 0.25 }, 2.30);
+      draw('#c2-pegl', 2.32, 0.40);
+      draw('#c2-pegr', 2.32, 0.40);
+      tl.to('#c2-pegl', { attr: { x2: 223 }, duration: 0.50, ease: 'expo.out' }, 2.70)
+        .to('#c2-pegr', { attr: { x2: 280 }, duration: 0.50, ease: 'expo.out' }, 2.70);
+      draw('#c2-roller', 2.66, 0.45);
+      tl.to('#c2-roller', { rotation: 7.5, duration: 0.55, ease: 'power2.inOut' }, 3.00)
+        .to('#c2-roller', { rotation: 0, duration: 0.60, ease: 'back.out(3.2)' }, 3.62);
+      draw('#c2-fix', 3.86, 0.50);
+      tl.addLabel('step2', 4.40);
+
+      /* ── step 3 · the printer — outer shrinks, inner bore thickens ── */
+      pose(2, 4.55);
+      tl.to('#c3-outer', { opacity: 1, duration: 0.25 }, 4.96)
+        .to('#c3-outer', { attr: { rx: 122, ry: 81 }, duration: 0.80, ease: 'power2.inOut' }, 5.04);
+      tl.to('#c3-inner', { opacity: 1, duration: 0.25 }, 5.20)
+        .to('#c3-inner', { attr: { rx: 52, ry: 33 }, strokeWidth: 13, duration: 0.85, ease: 'power2.inOut' }, 5.28);
+      tl.addLabel('step3', 6.25);
+
+      /* ── step 4 · v2.3 — 1.52 at three points, then the pile fans out ── */
+      pose(3, 6.40);
+      draw('#c4-a', 6.82, 0.42);
+      tl.to('#c4-va', { opacity: 1, duration: 0.28 }, 7.02);
+      draw('#c4-la', 6.98, 0.30);
+      draw('#c4-b', 7.10, 0.42);
+      draw('#c4-lb', 7.26, 0.30);
+      tl.to('#c4-vb', { opacity: 1, duration: 0.28 }, 7.30);
+      draw('#c4-c', 7.38, 0.42);
+      draw('#c4-lc', 7.54, 0.30);
+      tl.to('#c4-vc', { opacity: 1, duration: 0.28 }, 7.58);
+
+      /* the fan: every sheet laid out in a row, the whole story at once */
+      var FAN_AT = 8.05;
+      cards.forEach(function (c, j) {
+        tl.to(c, {
+          x: FAN_X[j], y: -12, rotation: 0, scale: 1,
+          width: FAN.w, height: FAN.h, padding: FAN.pad + 'px',
+          opacity: 1,
+          zIndex: 20 + j,
+          borderColor: j === 3 ? 'rgba(255,107,43,0.50)' : 'rgba(255,107,43,0.22)',
+          filter: 'saturate(1) brightness(1)',
+          duration: 0.85, ease: 'back.out(1.25)'
+        }, FAN_AT + j * 0.06);
+        tl.to(c.querySelector('.card__num'), { fontSize: FAN.num, duration: 0.7, ease: 'expo.out' }, FAN_AT + j * 0.06);
+        tl.to(c.querySelector('.card__label'), { fontSize: FAN.label, minHeight: 47, duration: 0.7, ease: 'expo.out' }, FAN_AT + j * 0.06);
+      });
+      /* the annotation numerals would fall below 18 px in the fan, so they
+         step back and leave only the drawn geometry on the figures */
+      tl.to('.ov text', { opacity: 0, duration: 0.4, ease: 'none' }, FAN_AT);
+      tl.addLabel('step4', FAN_AT + 1.15);
+
+      /* ── 5. Drive the timeline from the runtime's fragment attribute ── */
+      var marks = qa('.stepmark');
+      var navTween = null;
+
+      function revealedCount() {
+        return marks.filter(function (m) { return m.hasAttribute('data-fragment-revealed'); }).length;
+      }
+
+      function goto(n) {
+        var label = 'step' + n;
+        if (reduce) { tl.seek(label); tl.pause(); return; }
+        if (navTween) navTween.kill();
+        navTween = tl.tweenTo(label);
+      }
+
+      var current = -1;
+      function sync() {
+        var n = revealedCount();
+        if (n === current) return;
+        current = n;
+        goto(n);
+      }
+
+      var mo = new MutationObserver(sync);
+      marks.forEach(function (m) {
+        mo.observe(m, { attributes: true, attributeFilter: ['data-fragment-revealed'] });
+      });
+
+      /* the slide is already active on load: land on the resting pile */
+      sync();
+    });
+  })();
+  </script>
+</body>
+</html>

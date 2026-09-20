@@ -1,0 +1,938 @@
+<!-- ══════════════════════════════════════════════════════════════════════
+     Part 60 — Backup slides B01 to B23. Builder P4.
+
+     Deliberately uniform and deliberately quiet: a hard cut (220 ms fade,
+     no entrance choreography), a "Backup" kicker top right, two to four
+     facts as label-and-number rows on the left, and the figure or the table
+     on the right. Where the report has little, the slide stays light. No
+     number on any of these slides is invented; each one is in the thesis.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- B01 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b01" data-cue="b01" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The volume range was read out of five protocols, not estimated.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">4 of 5</span><span class="bk__t">protocols work between single-digit microlitres and about one millilitre, on three to six liquids</span></div>
+    <div class="bk__f"><span class="bk__v">5 – 1000 µL</span><span class="bk__t">the reference protocol alone, across six reagents</span></div>
+    <div class="bk__f"><span class="bk__v">5 into 45 µL</span><span class="bk__t">twice in succession — precision changes inside one protocol, not only between them</span></div>
+    <div class="bk__f"><span class="bk__v">1 kept out</span><span class="bk__t">the soil protocol stays in the table as the case that marks where the scope stops</span></div>
+  </div>
+
+  <div class="bk__media">
+    <table class="bk__tbl">
+      <thead><tr><th>Field</th><th>Protocol</th><th class="n">Liquids</th><th class="n">Range</th></tr></thead>
+      <tbody>
+        <tr><td>Clinical, veterinary</td><td>Magnetic-bead RNA extraction</td><td class="n">6</td><td class="n">5 – 1000 µL</td></tr>
+        <tr><td>Plant molecular</td><td>Thermo-osmotic DNA extraction</td><td class="n">3</td><td class="n">5 – 250 µL</td></tr>
+        <tr><td>Water chemistry</td><td>Colorimetric phosphate assay</td><td class="n">3</td><td class="n">20 – 600 µL</td></tr>
+        <tr><td>Agriculture</td><td>Lateral-flow immunoassay</td><td class="n">6</td><td class="n">2.5 – 1000 µL</td></tr>
+        <tr class="bk__tr--out"><td>Soil chemistry</td><td>Pipette-tip extraction</td><td class="n">2</td><td class="n">300 µL – 10 mL</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap">the last row is out of scope on purpose</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Five field-deployable protocols read in full, one per field of analysis. No review aggregates dispensed volumes across protocol types.</li>
+      <li>Accuracy is a property the device must vary across a run, not hold at one value.</li>
+      <li>The soil protocol aspirates as well as dispenses and uses a pipette tip as the vessel — kept in to mark the boundary.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B02 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b02" data-cue="b02" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Forty tubes is a field site&rsquo;s day, not a laboratory&rsquo;s.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">40</span><span class="bk__t">tubes in one unattended load — about 2.5× the reference batch, about 4× a typical portable instrument</span></div>
+    <div class="bk__f"><span class="bk__v">55 – 110</span><span class="bk__t">samples a day across single-operator and staffed field deployments</span></div>
+    <div class="bk__f"><span class="bk__v">1000×</span><span class="bk__t">the gap to centralized capacity — because a deployed unit serves only the samples its own site generates</span></div>
+  </div>
+
+  <div class="bk__media">
+    <table class="bk__tbl">
+      <thead><tr><th>Deployment</th><th class="n">Samples</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>Point-of-care devices under development</td><td class="n">&lt; 10</td><td>per run</td></tr>
+        <tr><td>Reference protocol prototype</td><td class="n">16</td><td>per run</td></tr>
+        <tr><td>Portable nutrient platform, cruise</td><td class="n">55</td><td>one campaign day</td></tr>
+        <tr><td>Portable qPCR, malaria surveillance</td><td class="n">≈ 60</td><td>per day, derived</td></tr>
+        <tr><td>Staffed mobile laboratory</td><td class="n">110</td><td>per day, four scientists</td></tr>
+        <tr class="bk__tr--out"><td>Centralized pooled testing hub</td><td class="n">&gt; 8000</td><td>per day</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap">per-run and per-day figures must not be added</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Nine reported deployments, separated into per-run and per-day figures.</li>
+      <li>The explanation is the queue, not the machine.</li>
+      <li>The evidence is concentrated in clinical work; soil chemistry contributes none.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B03 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b03" data-cue="b03" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Random error shrinks with chained doses; systematic error never does.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">1 / √n</span><span class="bk__t">the random component as a fraction of the delivered volume; the systematic offset never changes</span></div>
+    <div class="bk__f"><span class="bk__v">20 aliquots</span><span class="bk__t">at 200 µL the random part has fallen to about a fifth; the systematic part is exactly where it started</span></div>
+    <div class="bk__f"><span class="bk__v">+11 %</span><span class="bk__t">the worked instrument ran high at every volume tested, on a 0.1 µL per-aliquot standard deviation</span></div>
+    <div class="bk__f"><span class="bk__v">2 limits</span><span class="bk__t">correlated faults break the 1/√n law, and serial dilutions compound multiplicatively</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig bk__fig--tall">
+      <img data-src="assets/figs/fig-error-types-b.png"
+           alt="Random and systematic error of a dispenser as a target volume is assembled from repeated 10 microlitre aliquots: the random curve decays, the systematic line stays flat." />
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>An instrument built this way grows more repeatable as the requested volume rises, and no more accurate at all.</li>
+      <li>Which is exactly why per-channel calibration constants matter more than per-stroke precision.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B04 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b04" data-cue="b04" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The printer was characterized only after two measurement designs failed.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">2 unknowns</span><span class="bk__t">shrinkage bars gave one equation for a scale and an offset at once — mathematically unidentifiable</span></div>
+    <div class="bk__f"><span class="bk__v">0.23 mm</span><span class="bk__t">the single-rotor fit nailed the bearing span and made an internal arc this much too wide</span></div>
+    <div class="bk__f"><span class="bk__v">3 rings</span><span class="bk__t">concentric rings decoupled external from internal features; the two slopes differ by over eight standard errors</span></div>
+    <div class="bk__f"><span class="bk__v">±0.10 mm</span><span class="bk__t">95 % prediction interval from 20 to 90 mm; the out-of-sample pump housing agreed within 0.01 mm</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig">
+      <img data-src="assets/figs/fig-printer-calibration.png"
+           alt="Deviation against nominal diameter with a least-squares line per feature class; the pump head is marked as an open diamond, measured after fitting." />
+    </div>
+    <span class="bk__cap">external d = 1.0065·target − 0.07 · internal d = target + 0.14</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Two failed designs are the point: the third worked because it separated the feature classes.</li>
+      <li>Transferring the method to another printer is about twenty caliper readings and twenty minutes.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B05 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b05" data-cue="b05" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The inline flow sensor fails at exactly the volumes that matter.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts bk__facts--wide">
+    <div class="bk__f"><span class="bk__v">2.78 %</span><span class="bk__t">CV on ten 100 µL deliveries from a commercial syringe pump — no replicate flagged</span></div>
+    <div class="bk__f"><span class="bk__v">22.72 %</span><span class="bk__t">CV from the same pump at 5 µL; ten of eleven replicates flagged for backflow, one outlier at 2.00 µL</span></div>
+    <div class="bk__f"><span class="bk__v">the cause</span><span class="bk__t">fluid compliance and sensor response time distort the signal at microlitre scale, so gravimetry replaced it</span></div>
+  </div>
+
+  <div class="bk__pair">
+    <div class="paper bk__fig"><img data-src="assets/stills/app-flow-traces.png"
+      alt="Ten clean 100 microlitre deliveries automatically segmented from the flow trace, nothing flagged." /></div>
+    <div class="paper bk__fig"><img data-src="assets/stills/app-flow-traces-flagged.png"
+      alt="The same pump at 5 microlitres: the flow trace is dominated by backflow excursions and almost every replicate is flagged." /></div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The sensor was not wrong about the pump; it was wrong about the volume.</li>
+      <li>This is why every number in the pump chapters is gravimetric.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B06 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b06" data-cue="b06" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Per-stroke volume is a regression slope, not a single weighing.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">10 – 300</span><span class="bk__t">strokes per calibration line; the per-stroke volume is its slope</span></div>
+    <div class="bk__f"><span class="bk__v">5 mg</span><span class="bk__t">one stroke on the balance, against a 0.1 mg noise floor — a single weighing cannot carry the number</span></div>
+    <div class="bk__f"><span class="bk__v">calculated</span><span class="bk__t">evaporation corrected on the commanded duration, not wall-clock, so a slow balance reading cannot corrupt it</span></div>
+    <div class="bk__f"><span class="bk__v">randomized</span><span class="bk__t">full run-order randomization spreads drift, temperature and tubing fatigue across conditions</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig bk__fig--wide">
+      <img data-src="assets/stills/app-grav-calibration.png"
+           alt="Delivered volume against commanded strokes at several speeds; the slope of each line is the per-stroke volume and the intercept a fixed offset." />
+    </div>
+    <span class="bk__cap">residual standard errors are reported instead of R², which sits near unity across wide stroke ranges</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Actuation is commanded in rotor strokes, never in volume, so the command path is decoupled from calibration.</li>
+      <li>Large non-zero intercepts are flagged as evaporation or droplet break-off, not as pump properties.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B07 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b07" data-cue="b07" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The syringe pump was rejected on measured performance, not on preference.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">108</span><span class="bk__t">dispenses over thirteen conditions and two barrels, on a commercial instrument rather than a home build</span></div>
+    <div class="bk__f"><span class="bk__v">+94.3 %</span><span class="bk__t">delivery error at 1 µL on the 10 mL barrel</span></div>
+    <div class="bk__f"><span class="bk__v">−29.0 %</span><span class="bk__t">at 500 µL on the 20 mL barrel, where the 10 mL barrel was −3.8 %: error scales with bore</span></div>
+    <div class="bk__f"><span class="bk__v">68 vs 38</span><span class="bk__t">category score, the two barrels; the small-volume, slow-flow cell is the weakest on both</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig">
+      <img data-src="assets/stills/app-syringe-category-score.png"
+           alt="Both syringe barrels scored by volume and flow-rate category and traffic-lighted, the 10 mL barrel at 68 against the 20 mL barrel at 38." />
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The principle was tested, not my ability to build one.</li>
+      <li>Wider bores magnify lead-screw positioning tolerance — that is a property of the mechanism.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B08 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b08" data-cue="b08" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Rotary beat the linear pump on hygiene and size after both passed the accuracy gate.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">3485 / 3185</span><span class="bk__t">weighted totals, rotary against the linear chamber pump</span></div>
+    <div class="bk__f"><span class="bk__v">380 of 610</span><span class="bk__t">of the points rotary gained came from footprint, mass and cleanability alone</span></div>
+    <div class="bk__f"><span class="bk__v">30 points</span><span class="bk__t">all the linear pump&rsquo;s better accuracy and reproducibility were worth: both had cleared the ±10 % gate</span></div>
+    <div class="bk__f"><span class="bk__v">check valves</span><span class="bk__t">multi-reagent reciprocating pumping needs an array of them: wetted moving elements, fluid traps, a cleaning burden</span></div>
+  </div>
+
+  <div class="bk__media">
+    <table class="bk__tbl">
+      <thead><tr><th>Criterion</th><th class="n">Weight</th><th class="n">Rotary</th><th class="n">Linear</th></tr></thead>
+      <tbody>
+        <tr><td>Footprint</td><td class="n">80</td><td class="n">5</td><td class="n">3</td></tr>
+        <tr><td>Lightweight</td><td class="n">60</td><td class="n">5</td><td class="n">3</td></tr>
+        <tr><td>Cleanable</td><td class="n">50</td><td class="n">3</td><td class="n">1</td></tr>
+        <tr><td>Low maintenance</td><td class="n">70</td><td class="n">3</td><td class="n">4</td></tr>
+        <tr><td>Accuracy</td><td class="n">10</td><td class="n">3</td><td class="n">5</td></tr>
+        <tr><td>Reproducibility</td><td class="n">5</td><td class="n">3</td><td class="n">5</td></tr>
+        <tr class="bk__tr--tot"><td>Weighted total</td><td class="n"></td><td class="n">3485</td><td class="n">3185</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap">throughput was missing from the historical matrix; it would have widened the margin</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Accuracy and reproducibility are pass/fail gates, so they rank almost nothing afterwards.</li>
+      <li>Batch runs took about thirty minutes longer on the linear pump, which the matrix never scored.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B09 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b09" data-cue="b09" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Four rollers is the only count that satisfies geometry, backflow and torque at once.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts bk__facts--wide">
+    <div class="bk__f"><span class="bk__v">0.51 mm</span><span class="bk__t">the only tested bore feasible from three to twelve rollers; wider bores hit the hub boss, narrower ones run too long</span></div>
+    <div class="bk__f"><span class="bk__v">3 fails</span><span class="bk__t">three rollers leave the path unoccluded during transitions, opening it to hydrostatic backflow</span></div>
+    <div class="bk__f"><span class="bk__v">0.67×</span><span class="bk__t">torque derating at 12 V and 2000 steps per second; 24 V removes it</span></div>
+  </div>
+
+  <div class="bk__tblwide">
+    <table class="bk__tbl">
+      <thead><tr><th class="n">Rollers</th><th class="n">Engaged</th><th class="n">Rotor R</th><th class="n">Margin 12 V</th><th class="n">Margin 24 V</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="n">3</td><td class="n">1</td><td class="n">14.8 mm</td><td class="n">5.40</td><td class="n">8.11</td><td>backflow</td></tr>
+        <tr class="bk__tr--sel"><td class="n">4</td><td class="n">2</td><td class="n">19.7 mm</td><td class="n">2.03</td><td class="n">3.05</td><td>adequate</td></tr>
+        <tr><td class="n">5</td><td class="n">2</td><td class="n">24.7 mm</td><td class="n">1.62</td><td class="n">2.43</td><td>tight</td></tr>
+        <tr><td class="n">6</td><td class="n">3</td><td class="n">29.6 mm</td><td class="n">0.90</td><td class="n">1.35</td><td>stalls at 12 V</td></tr>
+        <tr><td class="n">8</td><td class="n">4</td><td class="n">39.5 mm</td><td class="n">0.51</td><td class="n">0.76</td><td>stalls</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap">torque margin against a worst-case 200 g compression load per roller</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Four is the smallest count that keeps two rollers engaged across a 180° track.</li>
+      <li>Six and above stall at 12 V, so the ceiling is torque, not geometry.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B10 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b10" data-cue="b10" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">A tube that stretches straight changes the dose by at most 2.2 %.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">10 % → 2 %</span><span class="bk__t">a chord-only argument suggests a ten per cent loss; including the roller wrap collapses it to a few per cent</span></div>
+    <div class="bk__f"><span class="bk__v">4.89 – 5.11 µL</span><span class="bk__t">the whole span of stroke volume across four path assumptions</span></div>
+    <div class="bk__f"><span class="bk__v">0.7 mm</span><span class="bk__t">the spread in required rotor radius, 19.70 to 20.37 mm — below the print tolerance, so the baseline was kept</span></div>
+    <div class="bk__f"><span class="bk__v">28 %</span><span class="bk__t">axial pre-strain the seal survives, against the 2 to 5 % of manual tube insertion</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig">
+      <img data-src="assets/stills/tool-tensioned-path.png"
+           alt="Two candidate tube paths for a four-roller rotor: the straight-with-wrap path solid and the circular arc dashed, about two per cent apart in volume." />
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>This model exists to bound an assumption, not to change the design.</li>
+      <li>Its answer was that the assumption did not matter at the printer&rsquo;s tolerance.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B11 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b11" data-cue="b11" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Fifty alignment concepts were narrowed on six sketch sheets, and only one was built.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts bk__facts--wide">
+    <div class="bk__f"><span class="bk__v">50 → 10 → 1</span><span class="bk__t">concepts generated, survivors of the qualitative screen, and builds</span></div>
+    <div class="bk__f"><span class="bk__v">17 · 17 · 9</span><span class="bk__t">side-push and top-push tied; bottom-push scored nine on fluid ingress. Side-push was built first, top-push adopted in v2</span></div>
+    <div class="bk__f"><span class="bk__v">23 → 24</span><span class="bk__t">the handwritten transmission total was an arithmetic error; the corrected 24 is set in type on the plate and disclosed</span></div>
+  </div>
+
+  <div class="bk__pair">
+    <div class="paper bk__fig"><img data-src="assets/stills/alignment-sketch-4-push-direction-scoring.png"
+      alt="Hand-drawn sheet scoring four push orientations for the rack, one to five across the differentiating criteria." /></div>
+    <div class="paper bk__fig"><img data-src="assets/stills/alignment-sketch-5-mechanism-scoring.png"
+      alt="Hand-drawn sheet scoring the drive transmissions, rack and pinion against lead screw and belt." /></div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Criteria hierarchy was declared before scoring: cleanability first, feasibility second.</li>
+      <li>This is exactly the breadth-on-paper the discussion criticises.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B12 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b12" data-cue="b12" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Citation integrity was solved by architecture, not by trusting the model.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">471</span><span class="bk__t">citations audited across eleven systematic reviews, with extensive fabrication</span></div>
+    <div class="bk__f"><span class="bk__v">1 in 30</span><span class="bk__t">references hallucinated by the best model in a 120-prompt audit</span></div>
+    <div class="bk__f"><span class="bk__v">7 databases</span><span class="bk__t">queried in parallel, deduplicated and rank-fused; a cross-encoder then reads forty and returns twelve</span></div>
+    <div class="bk__f"><span class="bk__v">0 automatic</span><span class="bk__t">no reference enters the bibliography without manual inspection; thirty-two vendor datasheets were gathered by hand</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig">
+      <img data-src="assets/figs/fig-cite-search-pipeline.png"
+           alt="The citation pipeline: seven databases in parallel, deduplication into unique works, reciprocal rank fusion, a cross-encoder reading forty and returning twelve, then manual approval." />
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>A fabricated citation has no physical backstop, so retrieval was taken away from the model entirely.</li>
+      <li>The model only ever sees records the pipeline returned.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B13 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b13" data-cue="b13" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The pump constant does not transfer between heads.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">4.53 µL</span><span class="bk__t">per stroke on the characterized bench head, at 180 rpm</span></div>
+    <div class="bk__f"><span class="bk__v">3.94 / 4.10</span><span class="bk__t">microlitres per stroke from the two integrated heads, printed from the identical qualified files</span></div>
+    <div class="bk__f"><span class="bk__v">≈ 10 %</span><span class="bk__t">both assembled heads under-deliver against the bench head, and the measured gap alone does not explain it</span></div>
+    <div class="bk__f"><span class="bk__v">+1.3 / −5.0 %</span><span class="bk__t">shift between sessions with lines re-primed and the supply changed: field instruments need on-device recalibration</span></div>
+  </div>
+
+  <div class="bk__media">
+    <table class="bk__tbl">
+      <thead><tr><th>Head</th><th class="n">Gap</th><th class="n">µL / stroke</th><th class="n">vs 4.53</th><th class="n">CV</th></tr></thead>
+      <tbody>
+        <tr><td>Bench, characterized</td><td class="n">1.52 mm</td><td class="n">4.53</td><td class="n">—</td><td class="n">0.25 – 0.34 %</td></tr>
+        <tr><td>Channel 1, as built</td><td class="n">1.45 mm</td><td class="n">3.94</td><td class="n">−19.5 %</td><td class="n">1.04 %</td></tr>
+        <tr><td>Channel 2, as built</td><td class="n">1.52 mm</td><td class="n">4.10</td><td class="n">−17.8 %</td><td class="n">2.94 %</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap">on their own constants both channels land inside ±10 %: −3.4 % and +0.6 %</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Channel 2 matches the bench head&rsquo;s measured occlusion gap and still under-delivers.</li>
+      <li>Live suspects: the unmeasured rotor radius, tubing batch variance, tube fatigue, back pressure, feed-line restriction.</li>
+      <li>Each channel therefore carries its own calibration constant.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B14 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b14" data-cue="b14" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Six pumps on twenty-one pins works only because the step clock is shared.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts bk__facts--narrow">
+    <div class="bk__f"><span class="bk__v">1 + 1 + 6</span><span class="bk__t">one step line and one direction line for all six drivers, then six dedicated enables on native pins for single-instruction cut-off</span></div>
+    <div class="bk__f"><span class="bk__v">19 of 21</span><span class="bk__t">GPIO assigned, two free; the alignment axes and limit switches moved onto an I/O expander</span></div>
+    <div class="bk__f"><span class="bk__v">3 · 2 · 2</span><span class="bk__t">serial ports, I²C and SPI controllers — the second ceiling is peripheral instances, not pins</span></div>
+  </div>
+
+  <div class="tool-card" data-tool="arch"
+       data-src="../../tools/system-architecture-explorer/index.html"
+       data-poster="assets/posters/architecture-explorer.png"
+       style="left:600px; top:196px; width:624px; height:268px;">
+    <span class="tool-card__name">System Architecture Explorer</span>
+    <span class="tool-card__line">Twenty-five candidates, costed and audited against the pin budget.</span>
+  </div>
+
+  <div class="paper bk__fig" style="position:absolute; left:677px; top:478px; width:470px; height:205px;">
+    <img data-src="assets/stills/tool-pin-budget.png"
+         alt="The tool's term-by-term pin budget: screen, card reader, sensors, bus, drivers, microstepping and vibration, summed against the pins available." />
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The vendor board-support package&rsquo;s default I²C pins overlapped two SPI chip selects; firmware binds them explicitly.</li>
+      <li>A smart driver allowing four devices per serial line would need two lines for six drivers and leave the console with none.</li>
+      <li>Open the explorer and sort by free pins if pressed.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B15 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b15" data-cue="b15" data-part="backup" data-map="none">
+  <h2 class="slide__title">The whole electronics bill is about &euro;248.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">€248</span><span class="bk__t">the complete electronics and electromechanical inventory, one Danish distributor, July 2026, including VAT</span></div>
+    <div class="bk__f"><span class="bk__v">€103</span><span class="bk__t">the control electronics alone, without motors and the external supply</span></div>
+    <div class="bk__f"><span class="bk__v">17 of 26</span><span class="bk__t">components quoted from a listing; two supplies are the nearest stocked wattage and seven carry unsourced estimates</span></div>
+    <div class="bk__f"><span class="bk__v">2 of 6</span><span class="bk__t">channels wired: each future driver must be installed with its pull-up, or an undriven enable defaults to active</span></div>
+  </div>
+
+  <div class="bk__media">
+    <table class="bk__tbl">
+      <thead><tr><th class="n">Qty</th><th>Component</th><th>Role</th><th class="n">Unit</th></tr></thead>
+      <tbody>
+        <tr><td class="n">6</td><td>NEMA17 stepper</td><td>Pump drive</td><td class="n">€14.41</td></tr>
+        <tr><td class="n">6</td><td>DRV8825 driver</td><td>Pump driver module</td><td class="n">€6.87</td></tr>
+        <tr><td class="n">1</td><td>ILI9341 display with touch</td><td>Operator touchscreen</td><td class="n">€23.32</td></tr>
+        <tr><td class="n">2</td><td>28BYJ-48 with ULN2003</td><td>Alignment axes</td><td class="n">€5.86</td></tr>
+        <tr><td class="n">1</td><td>MCP23017 I/O expander</td><td>Alignment and homing I/O</td><td class="n">€6.53</td></tr>
+        <tr><td class="n">1</td><td>MPR121 touch controller</td><td>Liquid-level sensing</td><td class="n">€6.37</td></tr>
+        <tr><td class="n">1</td><td>Benchtop DC supply</td><td>Motor and system supply</td><td class="n">€31.66</td></tr>
+        <tr class="bk__tr--tot"><td class="n"></td><td>Complete inventory</td><td>twelve line items</td><td class="n">≈ €248</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap">the ordering between architectures is the durable output; the absolute figures are not</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Every displayed figure inherits the confidence of its weakest input.</li>
+      <li>The motors and the touchscreen dominate the bill.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B16 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b16" data-cue="b16" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Battery runtime is governed by firmware discipline: 10 % duty turns one hour into eight.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">&lt; 1 h</span><span class="bk__t">an 86 Wh pack with six drivers continuously energized — idle power is the real constraint</span></div>
+    <div class="bk__f"><span class="bk__v">8 h</span><span class="bk__t">the same pack with drivers disabled between bursts, about 10 % average duty</span></div>
+    <div class="bk__f"><span class="bk__v">no back-drive</span><span class="bk__t">peristaltic rollers pinch the tube closed, so rotors hold position mechanically with the coils unpowered</span></div>
+    <div class="bk__f"><span class="bk__v">16 samples</span><span class="bk__t">two full racks on the 12 V tool battery before concurrent pump actuation stalled both motors</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig">
+      <img data-src="assets/figs/fig-power-tree.png"
+           alt="The power tree: one 12 volt supply feeding the stepper drivers and the microcontroller, a 3.3 volt logic domain from the onboard regulator, and a dedicated 5 volt rail for the vibration motor." />
+    </div>
+    <span class="bk__cap">the production target is an 86 Wh USB-C power bank, below the 100 Wh carry-on limit</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The firmware rule that follows: only one pump at a time under low battery, and the homing routines run sequentially.</li>
+      <li>The current build has no state-of-charge monitor, which is why the battery run ended where it did.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B17 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b17" data-cue="b17" data-part="backup" data-map="none" style="--head-h:96px">
+  <h2 class="slide__title">The device is laboratory equipment, not an IVD, and that changes the paperwork, not the hardware.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">Art. 2</span><span class="bk__t">the in-vitro diagnostics regulation applies to specimens taken from the human body; this instrument examines nothing</span></div>
+    <div class="bk__f"><span class="bk__v">Art. 2(4)</span><span class="bk__t">the accessory pathway needs an intent tied to particular named devices, which a protocol-independent dispenser does not have</span></div>
+    <div class="bk__f"><span class="bk__v">identical</span><span class="bk__t">below the two particular standards, both pathways impose the same physical engineering obligations</span></div>
+  </div>
+
+  <div class="bk__media">
+    <table class="bk__tbl">
+      <thead><tr><th>What applies</th><th>Consequence</th></tr></thead>
+      <tbody>
+        <tr><td>IVDR (EU) 2017/746</td><td>out of scope: no human specimen is examined, no particular device is named</td></tr>
+        <tr><td>Class A, if it were an accessory</td><td>the lowest of four risk classes, and the only one that is self-certifiable</td></tr>
+        <tr><td>General laboratory products</td><td>classification guidance puts them outside scope, the manual pipette being the canonical case</td></tr>
+        <tr><td>Machinery Directive 2006/42/EC</td><td>applies until January 2027, then Regulation (EU) 2023/1230</td></tr>
+        <tr><td>Battery Regulation (EU) 2023/1542</td><td>from February 2027 portable batteries must be user-removable — a constraint on the enclosure</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Choosing the lighter pathway changes the paperwork, not the hardware.</li>
+      <li>Supplying the dispenser alongside a reader for validated tests would move it toward accessory status.</li>
+      <li>Battery safety, EMC and leaching are carried as later-phase considerations, not retrofitted into the requirement tables.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B18 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b18" data-cue="b18" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The project ran late exactly as its own March risk register predicted.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts bk__facts--narrow">
+    <div class="bk__f"><span class="bk__v">2 risks</span><span class="bk__t">the March plan named task delays and late-stage integration bottlenecks; both materialized</span></div>
+    <div class="bk__f"><span class="bk__v">6 weeks</span><span class="bk__t">of shipping delay on the pump tubing derailed incremental integration and forced parallel module tracks</span></div>
+    <div class="bk__f"><span class="bk__v">1 module</span><span class="bk__t">had reached maturity when my partner finished, and it was not adapted for integration</span></div>
+    <div class="bk__f"><span class="bk__v">09:00 – 22:00</span><span class="bk__t">weekends included, for the final two months — the front end held, everything after the first prototype ran late</span></div>
+  </div>
+
+  <div class="tool-card" data-tool="timeline"
+       data-src="../../tools/thesis-timeline/index.html"
+       data-poster="assets/posters/thesis-timeline.png"
+       style="left:600px; top:196px; width:624px; height:430px;">
+    <span class="tool-card__name">Thesis Roadmap &amp; Timeline</span>
+    <span class="tool-card__line">Plan against outcome, February to the 19 September hand-in.</span>
+  </div>
+  <span class="bk__cap" style="position:absolute; left:600px; top:644px; width:624px">the March plan was never revised when the date moved; both tracks are drawn against the same deadline</span>
+
+  <aside class="notes">
+    <ul>
+      <li>The one decision I would reverse: engineering the pump from scratch before running the open-source landscape search.</li>
+      <li>I compromised on isolated module perfection to deliver a functioning prototype.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B19 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b19" data-cue="b19" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The septum, the vent and the drained line are where the contamination risk lives.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">5 → 20</span><span class="bk__t">punctures: spillage risk begins after about five, and there is no reliable reseal past twenty</span></div>
+    <div class="bk__f"><span class="bk__v">never closes</span><span class="bk__t">the vent stays open through a 0.22 µm filter, so volatile reagent evaporates; production needs a pinch valve</span></div>
+    <div class="bk__f"><span class="bk__v">drainable</span><span class="bk__t">the path reverses into the vial, but leaves microdroplets in the lumen and retention in the nozzle fitting</span></div>
+    <div class="bk__f"><span class="bk__v">by design</span><span class="bk__t">cross-contamination is prevented architecturally: one unbranched line per reagent and a non-contact air gap</span></div>
+  </div>
+
+  <div class="bk__trio">
+    <div class="bk__shot"><img data-src="../../assets/media/storage/cartridge.jpg"
+      alt="The printed cartridge gripping a reagent vial, the septum cap facing down." /></div>
+    <div class="bk__shot"><img data-src="../../assets/media/storage/sleeve.jpg"
+      alt="The printed sleeve that slides over the needle holder and aligns the two needles into the septum." /></div>
+    <div class="bk__shot"><img data-src="../../assets/media/storage/needle-holder.jpg"
+      alt="The needle holder carrying the liquid needle and the air vent needle." /></div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Two needles per vial: one draws reagent, one vents the container so extraction does not stall.</li>
+      <li>Lines cannot be switched between chemicals without a thorough wash or replacement.</li>
+      <li>Every wetted part is replaceable, which is why the fluid-path requirement passes.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B20 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b20" data-cue="b20" data-part="backup" data-map="none" style="--head-h:96px">
+  <h2 class="slide__title">What the AI got wrong: the CAD assembly, the error-budget weights, planning words leaking into prose.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__three">
+    <article class="bk__c">
+      <span class="kicker">The CAD assembly</span>
+      <span class="bk__cv">3 h</span>
+      <span class="bk__ct">of steering produced a small drafting board of simple parts. The alignment assembly was not feasible at all. Verifying a live parametric model against a spec worked; generating one did not.</span>
+    </article>
+    <article class="bk__c">
+      <span class="kicker">The error budget</span>
+      <span class="bk__cv">by hand</span>
+      <span class="bk__ct">The tolerance terms in the pump&rsquo;s analytical error budget were misweighted, and the weighting was corrected by hand.</span>
+    </article>
+    <article class="bk__c">
+      <span class="kicker">The prose</span>
+      <span class="bk__cv">a script</span>
+      <span class="bk__ct">Planning language from the loaded project documents leaked into the writing, so an external checking script was added to catch it.</span>
+    </article>
+  </div>
+
+  <span class="bk__cap bk__cap--full">the assistant&rsquo;s self-assessment was never accepted as verification</span>
+
+  <aside class="notes">
+    <ul>
+      <li>The failure mode is never a crash: it is a plausible answer that quietly breaks an unstated constraint.</li>
+      <li>Every claim was anchored to an external arbiter — a balance, a bench test, an API or a hand calculation.</li>
+      <li>The thesis has no figure for this; these are the three named failures.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B21 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b21" data-cue="b21" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The requirement verdicts, one row per requirement with the basis.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__wide">
+    <table class="bk__tbl bk__tbl--verdict">
+      <thead><tr><th>Group</th><th>Requirement</th><th>Verdict</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>Performance</td><td>Accuracy</td><td><span class="bk__vd bk__vd--met">Met</span></td><td>±10 % once each channel carries its own constant</td></tr>
+        <tr><td>Performance</td><td>Reproducibility</td><td><span class="bk__vd bk__vd--met">Met</span></td><td>CV 0.2 – 1.0 %, comparable to manual pipetting</td></tr>
+        <tr><td>Performance</td><td>Versatility</td><td><span class="bk__vd bk__vd--met">Met *</span></td><td>Two reagents tested, 5 – 1000 µL, a full forty-tube run</td></tr>
+        <tr><td>Performance</td><td>Feasibility</td><td><span class="bk__vd bk__vd--na">n/a</span></td><td>A concept-selection gate, not a test of the built device</td></tr>
+        <tr><td>Automation</td><td>Unattended operation</td><td><span class="bk__vd bk__vd--met">Met</span></td><td>A complete forty-tube run finished without intervention</td></tr>
+        <tr><td>Automation</td><td>Training</td><td><span class="bk__vd bk__vd--nt">Not tested</span></td><td>Deferred; the two-person evaluation argues it at lower strength</td></tr>
+        <tr><td>Portability</td><td>Operating envelope</td><td><span class="bk__vd bk__vd--exc">Excluded</span></td><td>No enclosure or climate control on the prototype</td></tr>
+        <tr><td>Portability</td><td>Portability</td><td><span class="bk__vd bk__vd--part">Partly met</span></td><td>A battery run reached two racks; the complete run used mains</td></tr>
+        <tr><td>Contamination</td><td>Cross-contamination</td><td><span class="bk__vd bk__vd--met">By design</span></td><td>A dedicated line per reagent and non-contact dispensing</td></tr>
+        <tr><td>Contamination</td><td>Wind</td><td><span class="bk__vd bk__vd--exc">Excluded</span></td><td>No enclosure, and the requirement is not reproducible as written</td></tr>
+        <tr><td>Contamination</td><td>Cleanability</td><td><span class="bk__vd bk__vd--exc">Excluded</span></td><td>Fused-filament PLA parts are not a cleanable surface</td></tr>
+        <tr><td>Contamination</td><td>Fluid paths</td><td><span class="bk__vd bk__vd--met">Met</span></td><td>Every wetted part is replaceable, and the line is drainable</td></tr>
+        <tr><td>Safety</td><td>Spillage</td><td><span class="bk__vd bk__vd--part">Partly met</span></td><td>A few droplets on the rack; the septum leaks after repeated puncture</td></tr>
+        <tr><td>Safety</td><td>Operator exposure</td><td><span class="bk__vd bk__vd--part">Partly met</span></td><td>No contact while dispensing, but the rack carries droplets</td></tr>
+        <tr><td>Safety</td><td>Electrical safety</td><td><span class="bk__vd bk__vd--exc">Excluded</span></td><td>Breadboard electronics; the low-battery lockout is unmet by design</td></tr>
+      </tbody>
+    </table>
+    <span class="bk__cap bk__cap--full">6 met · 3 partly met · 4 excluded · 1 not tested · 1 n/a · * the 5 µL lower bound is not yet validated</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Uncalibrated, delivery fell roughly 18 % short; recalibrated on the instrument, −3.4 % and +0.6 %.</li>
+      <li>The excluded rows all trace back to two missing things: an enclosure and a circuit board.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B22 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b22" data-cue="b22" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The two-person usability test, what it found and what it cannot claim.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">2 colleagues</span><span class="bk__t">neither of whom had seen the version, and neither of whom is a prospective user</span></div>
+    <div class="bk__f"><span class="bk__v">3 systematic</span><span class="bk__t">weaknesses, not isolated bugs: back and cancel placement, drag-scroll friction, and one word meaning two things</span></div>
+    <div class="bk__f"><span class="bk__v">&ldquo;tube&rdquo;</span><span class="bk__t">meant both the liquid path and the sample container — a conflation I could not catch alone</span></div>
+    <div class="bk__f"><span class="bk__v">still open</span><span class="bk__t">the training requirement stays untested: no one outside the project has operated the machine</span></div>
+  </div>
+
+  <div class="bk__pair bk__pair--screens">
+    <div class="bk__shot bk__shot--ui"><img data-src="../../assets/media/ui/screen-home.png"
+      alt="The home screen of the operator interface: two large tiles for starting a run and opening recipes, above a reagent level band." /></div>
+    <div class="bk__shot bk__shot--ui"><img data-src="../../assets/media/ui/screen-recipes.png"
+      alt="The recipe list as a fixed three-item page with discrete pagination buttons and a permanent bottom action bar." /></div>
+    <span class="bk__cap" style="position:absolute; left:0; top:246px; width:100%">v2.1 answered all three: paged three-item lists, a permanent action bar, and &ldquo;tube&rdquo; split into &ldquo;line&rdquo; and &ldquo;tube&rdquo;</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Eight commercial embedded medical devices were reviewed; none use drag gestures on small resistive panels.</li>
+      <li>What it cannot claim: it is two people inside the project, not a walk-up trial.</li>
+      <li>A complete first-time-user trial is one of the two tests that must come first.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B23 ───────────────────────────────────────────────────────────── -->
+<section class="slide bk" id="b23" data-cue="b23" data-part="backup" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The roller flattens the tube: the occlusion model in full.</h2>
+  <div class="slide__rule"></div>
+  <span class="bk__tag">Backup</span>
+
+  <div class="bk__facts">
+    <div class="bk__f"><span class="bk__v">bore cancels</span><span class="bk__t">the withheld volume divided by the lumen area leaves the contact length alone: the bore cancels out</span></div>
+    <div class="bk__f"><span class="bk__v">6.51 mm</span><span class="bk__t">compensating arc: a 3.25 mm contact length under each of two engaged rollers, on top of a 24.48 mm delivering arc</span></div>
+    <div class="bk__f"><span class="bk__v">+26 %</span><span class="bk__t">the rotor grows from 15.6 mm to 19.7 mm; without the compensation it under-delivers by about a fifth</span></div>
+    <div class="bk__f"><span class="bk__v">3.4 µL/mm</span><span class="bk__t">volume sensitivity to gap error, on a 1.62 mm nominal printed gap</span></div>
+  </div>
+
+  <div class="bk__media">
+    <div class="paper bk__fig">
+      <img data-src="assets/figs/fig-roller-footprint.png"
+           alt="The roller footprint: the tube flattened into a stadium cross-section under the roller, with the contact length and the residual lumen marked." />
+    </div>
+    <span class="bk__cap">occlusion is a local physical state, so the model computes a residual area rather than quoting a percentage</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The cancellation is the model&rsquo;s real result: compensation depends only on roller radius and pinch depth.</li>
+      <li>The model assumes complete occlusion and zero backpressure; beyond a gap wider than the wall stack it does not apply.</li>
+    </ul>
+  </aside>
+</section>
+
+<style data-part="p4-backups">
+/* ══ Part 60 · backups ═══════════════════════════════════════════════
+   One layout for twenty-three slides: a kicker top right, facts on the
+   left, the figure or the table on the right. Nothing animates. */
+
+.slide.bk { --title-w: 1000px; }
+.slide.bk .kicker { font-size: 18px; letter-spacing: 0.18em; }
+
+.slide.bk .bk__tag {
+  position: absolute; right: 56px; top: 66px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+.slide.bk .bk__tag::before {
+  content: ""; position: absolute; left: -18px; top: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: color-mix(in srgb, var(--t-a) 70%, transparent);
+}
+
+/* facts column */
+.slide.bk .bk__facts {
+  position: absolute; left: 56px; top: calc(196px + var(--head-h));
+  width: 540px;
+}
+.slide.bk .bk__facts--wide   { width: 1168px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 32px; }
+.slide.bk .bk__facts--narrow { width: 528px; }
+.slide.bk .bk__f {
+  padding: 11px 0 13px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+.slide.bk .bk__facts--wide .bk__f { border-top-color: rgba(255,255,255,0.14); }
+.slide.bk .bk__v {
+  display: block;
+  font-family: var(--mono); font-size: 29px; font-weight: 600;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.05;
+  background: linear-gradient(104deg, var(--t-a) 10%, var(--t-b) 92%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.slide.bk .bk__t {
+  display: block; margin-top: 6px;
+  font-size: 19px; line-height: 1.32; color: var(--text-soft);
+}
+
+/* media column */
+.slide.bk .bk__media {
+  position: absolute; left: 636px; top: calc(196px + var(--head-h));
+  width: 588px;
+}
+.slide.bk .bk__wide {
+  position: absolute; left: 56px; top: calc(194px + var(--head-h)); width: 1168px;
+}
+.slide.bk .bk__tblwide { position: absolute; left: 56px; top: 424px; width: 1168px; }
+.slide.bk .bk__fig {
+  width: 100%; height: 378px;
+  padding: 12px;
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+.slide.bk .bk__fig img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.slide.bk .bk__fig--tall { height: 438px; }
+.slide.bk .bk__fig--wide { height: 190px; }
+.slide.bk .bk__cap {
+  display: block; margin-top: 14px;
+  font-family: var(--mono); font-size: 18px; line-height: 1.35;
+  color: var(--text-muted);
+}
+.slide.bk .bk__cap--full { position: absolute; left: 56px; top: 664px; width: 1168px; margin: 0; }
+
+/* two panels, side by side, under a full-width fact row */
+.slide.bk .bk__pair {
+  position: absolute; left: 56px; top: 452px; width: 1168px; height: 250px;
+}
+.slide.bk .bk__pair .bk__fig {
+  position: absolute; top: 0; width: 568px; height: 240px;
+}
+.slide.bk .bk__pair .bk__fig:nth-of-type(1) { left: 0; }
+.slide.bk .bk__pair .bk__fig:nth-of-type(2) { left: 600px; }
+.slide.bk .bk__pair--screens {
+  left: 636px; top: calc(196px + var(--head-h)); width: 588px; height: 400px;
+}
+.slide.bk .bk__pair--screens .bk__shot { position: absolute; top: 0; width: 280px; height: 210px; }
+.slide.bk .bk__pair--screens .bk__shot:nth-of-type(1) { left: 0; }
+.slide.bk .bk__pair--screens .bk__shot:nth-of-type(2) { left: 308px; }
+
+/* three photographs in a row */
+.slide.bk .bk__trio { position: absolute; left: 636px; top: calc(196px + var(--head-h)); width: 588px; height: 402px; }
+.slide.bk .bk__trio .bk__shot { position: absolute; top: 0; width: 182px; height: 402px; }
+.slide.bk .bk__trio .bk__shot:nth-of-type(1) { left: 0; }
+.slide.bk .bk__trio .bk__shot:nth-of-type(2) { left: 203px; }
+.slide.bk .bk__trio .bk__shot:nth-of-type(3) { left: 406px; }
+
+.slide.bk .bk__shot {
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: #0d0f12;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+}
+.slide.bk .bk__shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.slide.bk .bk__shot--ui { background: #f6f3f0; }
+.slide.bk .bk__shot--ui img { object-fit: contain; }
+
+/* three text cards, for the slides where the report carries no figure */
+.slide.bk .bk__three {
+  position: absolute; left: 56px; top: calc(206px + var(--head-h)); width: 1168px; height: 392px;
+}
+.slide.bk .bk__c {
+  position: absolute; top: 0; width: 368px; height: 100%;
+  padding: 22px 24px;
+  display: flex; flex-direction: column; gap: 12px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+.slide.bk .bk__c:nth-of-type(1) { left: 0; }
+.slide.bk .bk__c:nth-of-type(2) { left: 400px; }
+.slide.bk .bk__c:nth-of-type(3) { left: 800px; }
+.slide.bk .bk__cv {
+  font-family: var(--mono); font-size: 40px; font-weight: 600;
+  letter-spacing: -0.02em; color: var(--text);
+}
+.slide.bk .bk__ct { font-size: 20px; line-height: 1.4; color: var(--text-soft); }
+
+/* tables */
+.slide.bk .bk__tbl {
+  width: 100%; border-collapse: collapse;
+  font-size: 18px; line-height: 1.3;
+}
+.slide.bk .bk__tbl th {
+  padding: 0 18px 9px 0; text-align: left; vertical-align: bottom;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid color-mix(in srgb, var(--t-a) 34%, transparent);
+}
+.slide.bk .bk__tbl td {
+  padding: 9px 18px 9px 0; vertical-align: top;
+  color: var(--text-soft);
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.slide.bk .bk__tbl th.n, .slide.bk .bk__tbl td.n {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  white-space: nowrap; color: var(--text);
+}
+.slide.bk .bk__tbl th.n { color: var(--text-muted); }
+.slide.bk .bk__tr--out td { color: var(--text-muted); opacity: 0.72; }
+.slide.bk .bk__tr--tot td { color: var(--text); border-top-color: color-mix(in srgb, var(--t-a) 40%, transparent); }
+.slide.bk .bk__tr--sel td { color: var(--text); background: color-mix(in srgb, var(--t-a) 12%, transparent); }
+
+#b20 .bk__three { height: 352px; }
+#b20 .bk__cap--full { top: 676px; }
+#b14 .bk__fig { }
+#b21 .bk__wide { top: 204px; }
+#b21 .bk__cap--full { position: static; width: 100%; margin-top: 12px; }
+.slide.bk .bk__tbl--verdict { font-size: 18px; line-height: 1.16; table-layout: fixed; }
+.slide.bk .bk__tbl--verdict th:nth-child(1), .slide.bk .bk__tbl--verdict td:nth-child(1) { width: 140px; }
+.slide.bk .bk__tbl--verdict th:nth-child(2), .slide.bk .bk__tbl--verdict td:nth-child(2) { width: 230px; }
+.slide.bk .bk__tbl--verdict th:nth-child(3), .slide.bk .bk__tbl--verdict td:nth-child(3) { width: 150px; }
+.slide.bk .bk__tbl--verdict th { padding-bottom: 7px; }
+.slide.bk .bk__tbl--verdict td { padding: 3px 12px 3px 0; }
+.slide.bk .bk__tbl--verdict .bk__vd { padding: 1px 8px 0; line-height: 1.1; }
+.slide.bk .bk__vd {
+  display: inline-block; padding: 3px 9px 2px;
+  border-radius: var(--r-sm);
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  white-space: nowrap;
+}
+.slide.bk .bk__vd--met  { color: #7fe0ad; background: rgba(79,195,138,0.14); }
+.slide.bk .bk__vd--part { color: #f0bf6a; background: rgba(224,163,63,0.14); }
+.slide.bk .bk__vd--exc  { color: #9aa0ab; background: rgba(154,160,171,0.12); }
+.slide.bk .bk__vd--nt   { color: #b6a0e8; background: rgba(155,127,224,0.14); }
+.slide.bk .bk__vd--na   { color: var(--text-muted); background: rgba(255,255,255,0.05); }
+
+/* B14 and B18 carry a live tool card beside their facts */
+#b14 .bk__facts, #b18 .bk__facts { width: 528px; }
+</style>
+
+<script data-part="p4-backups">
+/* ══ Part 60 · backups ═══════════════════════════════════════════════
+   Hard cuts: a 220 ms fade of the slide's content on entry and nothing
+   else. No fragments, so no step timelines. */
+(function () {
+  'use strict';
+
+  var CUES = ['b01','b02','b03','b04','b05','b06','b07','b08','b09','b10','b11','b12',
+              'b13','b14','b15','b16','b17','b18','b19','b20','b21','b22','b23'];
+
+  CUES.forEach(function (cue) {
+    Deck.enter(cue, function (el, gsap) {
+      var bits = el.querySelectorAll(':scope > *:not(.notes)');
+      if (!bits.length) return;
+      gsap.fromTo(bits, { opacity: 0 }, { opacity: 1, duration: 0.22, ease: 'none', overwrite: 'auto' });
+    });
+  });
+})();
+</script>

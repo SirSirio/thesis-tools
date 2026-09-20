@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thesis defense · preview</title>
+
+  <!-- How the cinematic cut scales to the rest of the deck:
+       photo-only slide — same plate and scrim, no number block, the title alone over the bottom scrim and the Ken Burns left running;
+       chart slide — the chart becomes the plate, the one drawn stroke becomes the single trend line or threshold, and the 160 px number reads the result off it;
+       live-tool card and divider — the tool iframe takes the plate and the filmstrip carries the screens already visited; a divider drops the number, centres the title and draws one rule under it. -->
+
+  <link rel="stylesheet" href="../../../assets/style.css" />
+  <link rel="stylesheet" href="../../../assets/site.css" />
+  <script src="../../../assets/site-nav.js"></script>
+  <link rel="stylesheet" href="../../../assets/deck.css" />
+
+  <style>
+    /* ── Shared frame, deck variant (copied from decks/lab-meeting-2026-06) ── */
+    .site-nav--deck {
+      position: absolute;
+      top: 20px; left: 20px;
+      width: auto; height: auto;
+      padding: 0; gap: 16px;
+      background: transparent;
+      border: 0;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      z-index: 300;
+    }
+    .site-nav--deck .deck-back-link { position: static; }
+    .site-nav--deck .site-nav__links { margin-left: 0; }
+    #instr-panel { top: 0; z-index: 299; }
+    #instr-panel .instr__inner { top: 72px; max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px); }
+    .deck-viewport, .deck-overview { line-height: normal; }
+    .site-foot { display: none; }
+    html, body { overflow: hidden; }
+
+    /* ══ The cinematic cut ══════════════════════════════════════════════
+       One image at a time on a paper plate, nearly full bleed, under a
+       scrim that darkens the bottom third so the very large number can sit
+       on the image itself. Builds already shown shrink into the filmstrip. */
+
+    .cine { font-family: var(--font); }
+
+    /* The four .fragment wrappers are triggers only: deck.css would fade and
+       lift them, GSAP owns their opacity instead. */
+    .cine-shot.fragment { opacity: 0; transform: none; transition: none; }
+
+    .cine-shots { position: absolute; inset: 0; z-index: 1; }
+    .cine-shot  { position: absolute; inset: 0; margin: 0; }
+
+    .cine-media {
+      position: absolute;
+      left: 50%; top: 436px;
+      height: 512px; width: auto;
+      transform: translate(-50%, -50%);
+      background: #e9e7e4;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--r-lg);
+      box-shadow: 0 34px 96px rgba(0, 0, 0, 0.62);
+      overflow: hidden;
+    }
+    .cine-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+    /* Ken Burns: a 4 % drift that keeps running slowly while the step is shown. */
+    @keyframes cine-kb {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to   { transform: translate(-50%, -50%) scale(1.04) translateY(-5px); }
+    }
+    .cine-shot.is-live .cine-media { animation: cine-kb 22s linear both; }
+
+    /* The one drawn stroke, overlaid on the raster figure, never redrawing it. */
+    .cine-draw {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 0 10px rgba(255, 107, 43, 0.6));
+    }
+    .cine-draw .stroke {
+      fill: none;
+      stroke: var(--accent);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Scrim: over the plate, under every piece of type. */
+    .cine-scrim {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background:
+        linear-gradient(to top,
+          rgba(8, 8, 10, 0.94) 0%,
+          rgba(8, 8, 10, 0.90) 12%,
+          rgba(8, 8, 10, 0.74) 26%,
+          rgba(8, 8, 10, 0.40) 38%,
+          rgba(8, 8, 10, 0.08) 50%,
+          rgba(8, 8, 10, 0) 58%),
+        /* lower third: the pad the number and label sit on */
+        radial-gradient(700px 470px at 0% 104%,
+          rgba(8, 8, 10, 0.95) 0%,
+          rgba(8, 8, 10, 0.78) 45%,
+          rgba(8, 8, 10, 0) 100%),
+        radial-gradient(132% 112% at 52% 40%,
+          rgba(8, 8, 10, 0) 46%,
+          rgba(8, 8, 10, 0.45) 100%);
+    }
+
+    .cine-title {
+      /* clears the deck-variant nav, which sits at top 20 left 20 */
+      position: absolute; left: 56px; top: 66px; z-index: 4;
+      margin: 0; max-width: 940px;
+      font-family: var(--display);
+      font-size: 44px; font-weight: 700;
+      line-height: 1.11; letter-spacing: -0.018em;
+      color: var(--text);
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .cine-text { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+
+    .cine-kicker {
+      position: absolute; left: 58px; top: 440px;
+      font-family: var(--mono); font-size: 19px; font-weight: 500;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--accent);
+    }
+    .cine-num {
+      position: absolute; left: 52px; bottom: 96px;
+      display: flex; align-items: baseline; gap: 14px;
+      transform-origin: 0% 100%;
+    }
+    .cine-num .v {
+      font-family: var(--mono); font-size: 160px; font-weight: 600;
+      line-height: 0.86; letter-spacing: -0.035em;
+      font-variant-numeric: tabular-nums;
+      color: #ffffff;
+      text-shadow: 0 10px 44px rgba(0, 0, 0, 0.75);
+    }
+    .cine-num .u {
+      font-family: var(--mono); font-size: 46px; font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+    }
+    .cine-label {
+      position: absolute; left: 56px; bottom: 52px;
+      font-size: 21px; line-height: 1.3;
+      color: rgba(240, 236, 232, 0.93);
+      text-shadow: 0 4px 22px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Filmstrip: the builds already shown, along the bottom edge. */
+    .cine-strip {
+      position: absolute; left: 660px; bottom: 56px; z-index: 4;
+      display: flex; gap: 12px;
+    }
+    .cine-thumb {
+      width: 96px; height: 56px;
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      background: #e9e7e4;
+      border: 1px solid rgba(255, 107, 43, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+    }
+    .cine-thumb img { display: block; width: 100%; height: 100%; object-fit: contain; opacity: 0.8; }
+
+    /* Mini map: the site's line mark, stroke only, rotor node lit. */
+    .cine-map {
+      position: absolute; right: 52px; bottom: 58px; z-index: 4;
+      width: 150px; height: 38px; opacity: 0.8;
+    }
+    .cine-map .line    { fill: none; stroke: rgba(240, 236, 232, 0.34); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cine-map .here    { fill: none; stroke: var(--accent); stroke-width: 2.4; }
+    .cine-map .here-dot{ fill: var(--accent); stroke: none; }
+
+    .notes { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cine-shot.is-live .cine-media { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header class="site-nav site-nav--deck" data-root="../../../">
+    <a class="deck-back-link" href="../../index.html">← Presentations</a>
+    <nav class="site-nav__links" aria-label="Primary">
+      <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+    </nav>
+  </header>
+  <div id="instr-panel" class="instr" hidden></div>
+
+  <div class="deck-viewport">
+    <div class="deck-stage" tabindex="0">
+
+      <section class="slide slide--active cine">
+
+        <!-- ░░ The four builds, one image at a time ░░ -->
+        <div class="cine-shots">
+
+          <figure class="fragment cine-shot">
+            <div class="cine-media" style="aspect-ratio: 2400 / 1128;">
+              <img src="../assets/fig-v21-gap-around-arc.png" loading="eager"
+                   alt="Section through the v2.1 pump head with the bore centre sitting 0.45 mm above the shaft, beside the installed gap measured at the left end, the apex and the right end against the 1.82 mm closure line." />
+              <svg class="cine-draw" viewBox="0 0 2400 1128" preserveAspectRatio="none" aria-hidden="true">
+                <path class="stroke" stroke-width="16" d="M245 513 A351 351 0 0 1 937 513" />
+              </svg>
+            </div>
+          </figure>
+
+          <figure class="fragment cine-shot">
+            <div class="cine-media" style="aspect-ratio: 2400 / 1219;">
+              <img src="../assets/fig-roller-peg-taper.png" loading="eager"
+                   alt="Section of the free roller on its tapered printed peg with two stacked bearings tilting it, beside the corrected build on one bearing with guide rims, with photographs of both rotor halves." />
+              <svg class="cine-draw" viewBox="0 0 2400 1219" preserveAspectRatio="none" aria-hidden="true">
+                <path class="stroke" stroke-width="18" d="M330 310 L900 273" />
+              </svg>
+            </div>
+          </figure>
+
+          <figure class="fragment cine-shot">
+            <div class="cine-media" style="aspect-ratio: 1403 / 933;">
+              <img src="../assets/calibration-rings.jpg" loading="eager"
+                   alt="The printed calibration rings laid out on the build plate, the coupon the printer was characterised on." />
+              <svg class="cine-draw" viewBox="0 0 1403 933" preserveAspectRatio="none" aria-hidden="true">
+                <path class="stroke" stroke-width="12"
+                      d="M684 458 A174 125 0 0 1 1032 458 A174 125 0 0 1 684 458" />
+              </svg>
+            </div>
+          </figure>
+
+          <figure class="fragment cine-shot">
+            <div class="cine-media" style="aspect-ratio: 2400 / 1458;">
+              <img src="../assets/fig-pump-head-gap.png" loading="eager"
+                   alt="The assembled v2.3 pump head in CAD, with the three caliper slots at the apex and at both ends of the track where the occlusion gap is read." />
+              <svg class="cine-draw" viewBox="0 0 2400 1458" preserveAspectRatio="none" aria-hidden="true">
+                <polyline class="stroke" stroke-width="21" points="1284,198 1329,240 1404,140" />
+                <polyline class="stroke" stroke-width="21" points="480,666 525,708 600,608" />
+                <polyline class="stroke" stroke-width="21" points="1734,666 1779,708 1854,608" />
+              </svg>
+            </div>
+          </figure>
+
+        </div>
+
+        <div class="cine-scrim" aria-hidden="true"></div>
+
+        <h2 class="cine-title">Three more builds fixed the printing,<br />not the physics.</h2>
+
+        <!-- ░░ Number and label, one set per build ░░ -->
+        <div class="cine-text">
+          <div class="cine-kicker">v2.1</div>
+          <div class="cine-num"><span class="v">2.22</span><span class="u">mm</span></div>
+          <div class="cine-label">the mount sat 0.45 mm high</div>
+        </div>
+        <div class="cine-text">
+          <div class="cine-kicker">v2.2</div>
+          <div class="cine-num"><span class="v">0.6°</span></div>
+          <div class="cine-label">printed pegs taper, rollers tilt</div>
+        </div>
+        <div class="cine-text">
+          <div class="cine-kicker">the printer</div>
+          <div class="cine-num"><span class="v">±0.10</span><span class="u">mm</span></div>
+          <div class="cine-label">outer shrinks 0.65 %, inner loses 0.14 mm</div>
+        </div>
+        <div class="cine-text">
+          <div class="cine-kicker">v2.3</div>
+          <div class="cine-num"><span class="v">1.52</span><span class="u">mm</span></div>
+          <div class="cine-label">measured at three points</div>
+        </div>
+
+        <!-- ░░ Filmstrip: the builds already shown ░░ -->
+        <div class="cine-strip" aria-hidden="true">
+          <div class="cine-thumb"><img src="../assets/fig-v21-gap-around-arc.png" alt="" /></div>
+          <div class="cine-thumb"><img src="../assets/fig-roller-peg-taper.png" alt="" /></div>
+          <div class="cine-thumb"><img src="../assets/calibration-rings.jpg" alt="" /></div>
+        </div>
+
+        <!-- ░░ Mini map: tube, rotor, nozzle, sample — the rotor lit ░░ -->
+        <svg class="cine-map" viewBox="0 0 150 38" role="img" aria-label="You are here: the rotor, between the tube and the nozzle">
+          <g class="line">
+            <path d="M3 19 H24" />
+            <path d="M52 19 H74" />
+            <path d="M78 6 L94 20 L110 6" />
+            <path d="M94 20 V30" />
+            <path d="M118 4 h26 v15 a13 13 0 0 1 -26 0 z" />
+          </g>
+          <g class="here"><circle cx="38" cy="19" r="13" /></g>
+          <g class="here-dot">
+            <circle cx="38" cy="10.5" r="2.5" /><circle cx="38" cy="27.5" r="2.5" />
+            <circle cx="29.5" cy="19" r="2.5" /><circle cx="46.5" cy="19" r="2.5" />
+          </g>
+        </svg>
+
+        <aside class="notes">
+          <ul>
+            <li>v2.1 — The mount sat 0.45 mm high, so the gap opened to 2.22 mm at the top of the arc against a 1.82 mm closure threshold. The rollers sealed at the sides and let go across the top.</li>
+            <li>v2.2 — Printed pegs taper about 0.085 mm from base to tip, so two stacked bearings tilted the roller by 0.6° and it walked the tube. Fixed with one bearing on the wide base and guide rims on the rotor.</li>
+            <li>the printer — A housing drawn at 1.52 mm printed at 1.75, because printers shrink inner curves. So the printer was characterised on rings: outer sizes shrink 0.65 %, inner bores lose a fixed 0.14 mm, and parts became predictable to ±0.10 mm.</li>
+            <li>v2.3 — The seat was lowered by a measured 0.35 mm, and the installed gap read exactly 1.52 mm at the apex and at both ends of the track.</li>
+            <li>Close on: CAD dimensions are assumptions until anchored to a physical datum.</li>
+          </ul>
+        </aside>
+
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <div class="site-foot__who">
+        <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+        <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications</p>
+      </div>
+      <nav class="site-foot__links" aria-label="Site">
+        <a href="../../../prototypes/index.html">Prototypes</a>
+        <a href="../../../tools/index.html">Instruments</a>
+        <a href="../../../decks/index.html">Presentations</a>
+        <a href="../../../tools/thesis-timeline/index.html">Timeline</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../../../assets/gsap/gsap.min.js"></script>
+  <script src="../../../assets/gsap/DrawSVGPlugin.min.js"></script>
+  <script src="../../../assets/deck.js"></script>
+  <script>
+    /* Deck-local (shared deck.js untouched, D-01): one GSAP timeline for the
+       slide, labelled step1..step4, driven from a MutationObserver on the
+       runtime's data-fragment-revealed attributes. Plus the capture-phase key
+       guard from BRIEF.md section 7. */
+    (function () {
+
+      /* ── Key guard ─────────────────────────────────────────────────── */
+      document.addEventListener('keydown', function (e) {
+        var panel = document.getElementById('instr-panel');
+        var btn = document.querySelector('.site-nav__instr');
+        if ((e.key === 'Escape' || e.key === 'Esc') && panel && !panel.hidden) {
+          /* close the panel here, so deck.js never sees the key and toggles
+             the overview underneath it */
+          e.preventDefault();
+          e.stopPropagation();
+          if (btn) btn.click();
+          return;
+        }
+        if (e.key === 'PageDown' || e.key === 'PageUp') {
+          /* clickers send these: map them onto the deck's advance/retreat */
+          e.preventDefault();
+          e.stopPropagation();
+          document.dispatchEvent(new KeyboardEvent('keydown', {
+            key: e.key === 'PageDown' ? 'ArrowRight' : 'ArrowLeft',
+            bubbles: true
+          }));
+        }
+      }, true);
+
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.gsap) return;
+        var reduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var hasDraw = !!window.DrawSVGPlugin;
+        if (hasDraw) gsap.registerPlugin(window.DrawSVGPlugin);
+
+        var slide = document.querySelector('.cine');
+        if (!slide) return;
+        var shots  = [].slice.call(slide.querySelectorAll('.cine-shot'));
+        var texts  = [].slice.call(slide.querySelectorAll('.cine-text'));
+        var thumbs = [].slice.call(slide.querySelectorAll('.cine-thumb'));
+        if (!shots.length) return;
+
+        var parts = texts.map(function (t) {
+          return {
+            k: t.querySelector('.cine-kicker'),
+            n: t.querySelector('.cine-num'),
+            l: t.querySelector('.cine-label')
+          };
+        });
+        var strokes = shots.map(function (s) {
+          return [].slice.call(s.querySelectorAll('.stroke'));
+        });
+
+        /* ── Initial state ───────────────────────────────────────────── */
+        gsap.set(shots, { opacity: 0 });
+        parts.forEach(function (p) { gsap.set([p.k, p.n, p.l], { opacity: 0 }); });
+        gsap.set(thumbs, { opacity: 0, scale: 1.7, transformOrigin: '50% 50%' });
+        strokes.forEach(function (g) {
+          g.forEach(function (p) {
+            if (hasDraw) { gsap.set(p, { drawSVG: '0%' }); return; }
+            var len = 1200;
+            try { len = p.getTotalLength() || 1200; } catch (err) {}
+            p.__len = len;
+            gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+          });
+        });
+
+        function drawStroke(tl, p, at) {
+          if (hasDraw) {
+            tl.fromTo(p, { drawSVG: '0%' },
+                         { drawSVG: '100%', duration: 0.85, ease: 'power2.inOut' }, at);
+          } else {
+            tl.fromTo(p, { strokeDashoffset: p.__len },
+                         { strokeDashoffset: 0, duration: 0.85, ease: 'power2.inOut' }, at);
+          }
+        }
+
+        /* ── One timeline, labels step1..step4 ───────────────────────── */
+        var tl = gsap.timeline({ paused: true });
+        tl.addLabel('start', 0);
+
+        shots.forEach(function (shot, i) {
+          var t = tl.duration();
+          var p = parts[i];
+
+          if (i > 0) {
+            var prev = parts[i - 1];
+            tl.to(shots[i - 1], { opacity: 0, duration: 1.2, ease: 'power1.inOut' }, t);
+            tl.to([prev.k, prev.n, prev.l],
+                  { opacity: 0, y: -22, duration: 0.45, ease: 'power2.in' }, t);
+            /* the build just shown shrinks into the filmstrip */
+            tl.to(thumbs[i - 1],
+                  { opacity: 1, scale: 1, duration: 0.85, ease: 'expo.out' }, t + 0.45);
+          }
+
+          /* the 1200 ms crossfade */
+          tl.to(shot, { opacity: 1, duration: 1.2, ease: 'power1.inOut' }, t);
+
+          /* the one drawn stroke on the image */
+          strokes[i].forEach(function (s, k) { drawStroke(tl, s, t + 0.7 + k * 0.2); });
+
+          /* the number lands after the image */
+          tl.fromTo(p.k, { opacity: 0, y: 16 },
+                         { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, t + 0.95);
+          tl.fromTo(p.n, { opacity: 0, y: 46, scale: 1.06 },
+                         { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'expo.out' }, t + 1.1);
+          tl.fromTo(p.l, { opacity: 0, y: 14 },
+                         { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, t + 1.35);
+
+          tl.addLabel('step' + (i + 1), tl.duration());
+        });
+
+        /* ── Ken Burns runs on whichever build is on screen ──────────── */
+        function setLive(k) {
+          shots.forEach(function (s, i) {
+            var on = !reduce && i === k - 1;
+            s.classList.toggle('is-live', on);
+            if (on) {
+              var m = s.querySelector('.cine-media');
+              m.style.animation = 'none';
+              void m.offsetWidth;            /* restart the drift from frame 0 */
+              m.style.animation = '';
+            }
+          });
+        }
+
+        /* ── Driven by the runtime's fragment attributes ─────────────── */
+        var current = -1;
+        function goToStep(k) {
+          if (k === current) return;
+          current = k;
+          var label = k <= 0 ? 'start' : 'step' + k;
+          if (reduce) tl.seek(label); else tl.tweenTo(label);
+          setLive(k);
+        }
+
+        var mo = new MutationObserver(function () {
+          var k = 0;
+          shots.forEach(function (s) { if (s.hasAttribute('data-fragment-revealed')) k++; });
+          goToStep(k);
+        });
+        shots.forEach(function (s) {
+          mo.observe(s, { attributes: true, attributeFilter: ['data-fragment-revealed'] });
+        });
+
+        /* the slide is already active on load */
+        tl.pause(0);
+        goToStep(0);
+      });
+    })();
+  </script>
+</body>
+</html>
