@@ -8,6 +8,382 @@
      number on any of these slides is invented; each one is in the thesis.
      ══════════════════════════════════════════════════════════════════════ -->
 
+<!-- s12 ─────────────────────────────────────────────────────
+     Moved out of the talk 2026-09-21 (was talk slide 18, part II).
+     It keeps id/data-cue "s12": appendix membership is data-part="backup",
+     never the cue prefix, so the sync protocol, CONTENT.md and every
+     #s12 rule keep addressing it. Its hoisted CSS block and its timeline
+     builders stay in parts/30-part2.html — see SLIDE-ORDER.md.
+     The slide itself: the three metering principles on one wide plate,
+     with the wetted boundary drawn on each in turn. ───────────────── -->
+<section class="slide" id="s12" data-cue="s12" data-dialect="plate" data-part="backup" data-topic="pump"
+         data-accent="pump" style="--head-h:48px">
+  <h2 class="slide__title">Only a peristaltic pump keeps the liquid inside a tube you can throw away.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="s12-plate paper" id="s12-plate">
+    <div class="s12-plate__fig">
+      <img data-src="assets/figs/fig-pump-principles.png"
+           alt="Three metering principles in section: a) a syringe, plunger face and bore; b) a reciprocating diaphragm chamber between two check valves; c) a peristaltic rotor whose rollers occlude a tube against a curved track." />
+      <svg class="p2-ov" viewBox="0 0 2000 659" aria-hidden="true">
+        <path class="ln wet" id="s12-wet-a" stroke-width="12"
+              d="M 257 270 L 482 269 L 528 320 L 585 322 L 585 335 L 527 337 L 481 388 L 257 388 Z" />
+        <path class="ln wet" id="s12-wet-b" stroke-width="12"
+              d="M 940 430 L 940 404 L 905 404 L 875 396 L 841 361 L 832 334 L 830 299 L 846 249 L 871 224 L 905 214 L 1110 214 L 1110 175 L 1171 175 L 1171 214 L 1200 215 L 1200 404 L 1001 404 L 1001 430 Z" />
+        <path class="ln wet" id="s12-wet-c" stroke-width="14"
+              d="M 1541 545 L 1541 337 A 129.5 129.5 0 0 1 1800 337 L 1800 545" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="prin" id="s12-p-a">
+    <span class="callout prin__tag" id="s12-tag-a">machine wetted</span>
+    <p class="prin__t">The plunger face and the bore hold the reagent.</p>
+  </div>
+  <!-- narrowed from the shared 360 px: at full width this caption's
+       first line ran to within 8 px of the third column and the two
+       read as one line.  320 px gives it the same gutter the first
+       two columns have. -->
+  <div class="prin" id="s12-p-b" style="width:320px">
+    <span class="callout prin__tag" id="s12-tag-b">machine wetted</span>
+    <p class="prin__t">So do the diaphragm and both check valve leaflets.</p>
+  </div>
+  <div class="prin" id="s12-p-c">
+    <span class="callout prin__tag" id="s12-tag-c">tube only</span>
+    <p class="prin__t">Only the tube touches the liquid, and the tube is thrown away.</p>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Three ways to move a few microlitres: push a plunger down a bore, flex a diaphragm between two check valves, or squeeze a tube.</li>
+      <li>In the first two the machine itself is wetted — plunger, barrel, diaphragm, valve leaflets all hold the reagent.</li>
+      <li>Accuracy did not decide this: a laboratory syringe pump stayed within nominal from 20 µL upward. The wash did. A border post has no sink.</li>
+      <li>Peristalsis closes the wetted boundary on the tube alone, and the tube is a consumable.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- s39 ────────────────────────────────────
+     Moved out of the talk 2026-09-22 (Sirio: "only focus on AI, and make
+     it more simple, and put it on the appendix. NO bullshit about
+     timeline").  The timeline of the writing phase went with the move;
+     what is left is the AI contrast alone — what the assistant was
+     decisive for against the boundary that stayed physical, and the
+     quotation from ch. 13 that closes it.
+     It keeps id/data-cue "s39": appendix membership is data-part="backup",
+     never the cue prefix.  Its hoisted CSS block and its timeline builder
+     stay in parts/50-discussion.html — see SLIDE-ORDER.md §4. ────── -->
+<section class="slide" id="s39" data-cue="s39" data-dialect="loop"
+         data-part="backup" data-topic="disc" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The AI was the foundation of the digital work; the physical work stayed in my hands.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="d39">
+    <div class="paper d39__paper">
+      <img data-src="assets/figs/fig-ai-working-loop.png"
+           alt="The design, build, test and learn loop with documentation at its centre; a dashed note beside Build reads printing and assembly by hand." />
+      <svg class="d39__mark" viewBox="0 0 2000 925" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <rect id="d39-box"  x="1092" y="68"  width="482" height="240" rx="18" />
+        <rect id="d39-hand" x="1592" y="108" width="364" height="152" rx="14" stroke-dasharray="14 12" />
+      </svg>
+      <span class="callout callout--ghost d39__tag" id="d39-tag">by hand</span>
+    </div>
+
+    <div class="d39__rail">
+      <span class="kicker" style="left:800px; top:196px">Decisive for</span>
+      <span class="d39__chip" style="left:800px; top:224px">Literature research</span>
+      <span class="d39__chip" style="left:800px; top:268px">Experimental protocols</span>
+      <span class="d39__chip" style="left:800px; top:312px">Measurement analysis</span>
+      <span class="d39__chip" style="left:800px; top:356px">Firmware</span>
+      <span class="d39__chip" style="left:800px; top:400px">Technical specifications</span>
+
+      <span class="kicker kicker--muted d39__bk" style="left:800px; top:470px">The boundary</span>
+      <span class="d39__chip d39__chip--off" style="left:800px;  top:498px; width:200px">Printing</span>
+      <span class="d39__chip d39__chip--off" style="left:1016px; top:498px; width:200px">Assembly</span>
+      <span class="d39__chip d39__chip--off" style="left:800px;  top:542px; width:200px">Wiring</span>
+      <span class="d39__chip d39__chip--off" style="left:1016px; top:542px; width:200px">Lab testing</span>
+      <span class="d39__bnote" style="left:800px; top:598px">and the CAD assembly it could not build</span>
+    </div>
+
+    <div class="q-over" id="d39-quote">
+      <div class="q-over__in">
+        <div class="q-over__rule"></div>
+        <p class="q-over__t q-over__t--sm">“Without AI embedded across the entire engineering workflow, completing an integrated prototype and this depth of experimental validation within a master’s thesis timeline would not have been possible.”</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Decisive for literature, protocols, data analysis, firmware and specifications — a foundation, not an accessory.</li>
+      <li>The boundary was purely physical: printing, assembly, wiring, laboratory testing — and the CAD assembly it could not build.</li>
+      <li>Which is the whole claim: without it, an integrated prototype validated to this depth would not have fitted inside a master’s thesis.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B25 ·  the reader's hardware ledger ─────────────────────────────
+     Backs S41 (pair the dispenser with a reader). Dialect "ledger":
+     every readout is billed against the same five slots — light in,
+     filter, detector, heat, also needs — so the demand pattern reads
+     straight down the page and the empty slots are the argument.
+     The fourth column of the source table, the judgement for THIS
+     machine, is deliberately not in the ledger: it rises into a wide
+     band at the foot at 23 px, one readout per click, so the column
+     that matters most is the only text set large. ───────────────── -->
+<section class="slide" id="b25" data-cue="b25" data-dialect="ledger" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Six readouts could fit a portable reader, and each one is a different bill of hardware.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+  <i class="fragment step-cue" data-step="6"></i>
+
+  <div class="ro-wrap">
+
+    <div class="ro-hd">
+      <span style="left:0">Readout</span>
+      <span style="left:216px">Light in</span>
+      <span style="left:406px">Filter</span>
+      <span style="left:596px">Detector</span>
+      <span style="left:786px">Heat</span>
+      <span style="left:976px">Also needs</span>
+    </div>
+    <div class="ro-hrule"></div>
+
+    <span class="ro-hl" id="b25-hl"></span>
+
+    <div class="ro-row" style="top:240px">
+      <span class="ro-nm">Fluorescence</span>
+      <span class="ro-c" style="left:216px">blue LED</span>
+      <span class="ro-c" style="left:406px">two filters</span>
+      <span class="ro-c" style="left:596px">photodiode</span>
+      <span class="ro-c" style="left:786px">65 &deg;C block</span>
+      <span class="ro-c" style="left:976px">dark box</span>
+    </div>
+
+    <div class="ro-row" style="top:284px">
+      <span class="ro-nm">Colorimetric</span>
+      <span class="ro-c" style="left:216px">LEDs</span>
+      <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
+      <span class="ro-c" style="left:596px">photodiode</span>
+      <span class="ro-c" style="left:786px">65 &deg;C block</span>
+      <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
+    </div>
+
+    <div class="ro-row" style="top:328px">
+      <span class="ro-nm">Turbidimetry</span>
+      <span class="ro-c" style="left:216px">650 nm LED</span>
+      <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
+      <span class="ro-c" style="left:596px">photodiode</span>
+      <span class="ro-c" style="left:786px">65 &deg;C block</span>
+      <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
+    </div>
+
+    <div class="ro-row" style="top:372px">
+      <span class="ro-nm">Lateral flow</span>
+      <span class="ro-c" style="left:216px">white LED</span>
+      <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
+      <span class="ro-c" style="left:596px">camera</span>
+      <span class="ro-c ro-c--off" style="left:786px">&mdash;</span>
+      <span class="ro-c" style="left:976px">strip holder</span>
+    </div>
+
+    <div class="ro-row" style="top:416px">
+      <span class="ro-nm">Electrochemical</span>
+      <span class="ro-c ro-c--off" style="left:216px">&mdash;</span>
+      <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
+      <span class="ro-c" style="left:596px">potentiostat</span>
+      <span class="ro-c ro-c--off" style="left:786px">&mdash;</span>
+      <span class="ro-c" style="left:976px">printed strip</span>
+    </div>
+
+    <span class="ro-gatelab">Borderline &middot; more box than a portable module has</span>
+    <span class="ro-gateline"></span>
+
+    <div class="ro-row ro-row--edge" style="top:486px">
+      <span class="ro-nm">Chemiluminescence</span>
+      <span class="ro-c" style="left:216px">the label</span>
+      <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
+      <span class="ro-c" style="left:596px">PMT or SiPM</span>
+      <span class="ro-c ro-c--off" style="left:786px">&mdash;</span>
+      <span class="ro-c" style="left:976px">light-tight box</span>
+    </div>
+
+    <div class="ro-band">
+      <p class="ro-lead" id="b25-lead">The dispenser assembles the reaction; the reader is what turns it into a number.</p>
+
+      <div class="ro-jd">
+        <span class="ro-jk">Fluorescence &middot; excite blue, read the green that comes back</span>
+        <span class="ro-ja">RT-LAMP &middot; RPA &middot; qPCR &middot; CRISPR</span>
+        <p class="ro-jt">Best sensitivity per euro, and PANPOC&rsquo;s own assay already works this way. The heater sets the battery, not the optics.</p>
+      </div>
+
+      <div class="ro-jd">
+        <span class="ro-jk">Colorimetric &middot; the pH drops and the mix turns pink to yellow</span>
+        <span class="ro-ja">LAMP &middot; gold-bead immunoassays</span>
+        <p class="ro-jt">The cheapest reader that works &mdash; but a crude sample can suppress the colour change and read as a false negative.</p>
+      </div>
+
+      <div class="ro-jd">
+        <span class="ro-jk">Turbidimetry &middot; the reaction clouds the tube as it runs</span>
+        <span class="ro-ja">LAMP only</span>
+        <p class="ro-jt">Weak, and it reads LAMP and nothing else. It is on the list because the parts are the ones colorimetry already needs.</p>
+      </div>
+
+      <div class="ro-jd">
+        <span class="ro-jk">Lateral flow &middot; read the test line against the control line</span>
+        <span class="ro-ja">immunoassay strips</span>
+        <p class="ro-jt">No heater at all, the lowest power draw. Its hard part is registering the strip, not the optics &mdash; what the alignment module already does.</p>
+      </div>
+
+      <div class="ro-jd">
+        <span class="ro-jk">Electrochemical &middot; binding becomes a current at an electrode</span>
+        <span class="ro-ja">enzyme and binding assays</span>
+        <p class="ro-jt">No optics at all, so light, turbidity and colour stop mattering &mdash; arguably the best fit for what this dispenser hands over.</p>
+      </div>
+
+      <div class="ro-jd">
+        <span class="ro-jk">Chemiluminescence and ECL &middot; the label emits its own light</span>
+        <span class="ro-ja">immunoassay labels</span>
+        <p class="ro-jt">The borderline case: no lamp to power, but it wants a photomultiplier and a genuinely light-tight chamber.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Frame first: the dispenser assembles the reaction, the reader does the signal transduction. Five modalities are reachable inside a portable module, a sixth is borderline, and everything else &mdash; magnetic GMR, surface plasmon resonance, Raman, nanopore &mdash; needs custom silicon or lab-grade optics and is out.</li>
+      <li><strong>1 &middot; fluorescence</strong> &mdash; a dye intercalates or a probe is unquenched as amplicon accumulates; excite blue, read the longer-wavelength emission, and the Stokes shift lets a filter pull a weak signal off a strong source. Real-time, so it gives a time-to-positive. This is what PANPOC itself uses: probe-based multiplex fluorescent LAMP, developed at DTU. Commercially it is GeneXpert, cobas liat, and Abbott ID NOW. The battery argument is that the heater block, not the optics, dominates the power budget.</li>
+      <li><strong>2 &middot; colorimetric</strong> &mdash; LAMP in a weakly buffered mix drops the pH and phenol red turns yellow; visible by eye, quantified as a ratio of two LED channels. Gold nanoparticles are the immunoassay version, red dispersed and blue aggregated. Cheapest possible reader, and its weakness is this thesis&rsquo;s own argument in miniature: a crude, high-buffer sample suppresses the colour change and reads as a false negative, so it is only as good as the preparation.</li>
+      <li><strong>3 &middot; turbidimetry</strong> &mdash; LAMP&rsquo;s pyrophosphate precipitates with magnesium and clouds the tube (Mori 2001). Eiken sells it as the Loopamp Realtime Turbidimeter. Same LED-and-photodiode hardware as colorimetry, but LAMP-only and the weakest signal of the set.</li>
+      <li><strong>4 &middot; lateral flow</strong> &mdash; wicked strip, labelled antibody captured at a test line, reflectance measured against the control line. White LED and a camera, no heater, so the lowest power of the six. The hard part is mechanical registration of the strip rather than the optics, which is exactly the competence the alignment module demonstrates. Good line if asked what is adjacent to this work.</li>
+      <li><strong>5 &middot; electrochemical</strong> &mdash; no light path at all. Hold an electrode at a fixed potential and measure the current from a redox mediator, the glucose-meter lineage, or watch charge-transfer resistance rise as mass binds. A potentiostat is one IC now. Immune to ambient light, turbidity and colour, so a bead-laden crude lysate does not matter. Costs: strip-to-strip variation needs a calibration code, electrodes foul, and electron transfer is temperature-dependent. The blood-glucose meter is the proof that this class scales to a battery-powered, untrained-user product.</li>
+      <li><strong>6 &middot; chemiluminescence and ECL</strong> &mdash; the label emits its own light, so there is no lamp; ECL switches it on electrically, which is how Roche&rsquo;s Elecsys platform works. But a photomultiplier or SiPM and a genuinely light-tight chamber are more box than a portable module has, so it sits on the edge rather than inside the set.</li>
+      <li>If asked <em>why not just use a phone</em>: a phone gives a camera and compute for free, but no control of exposure geometry, no filters and no heater. It covers lateral flow and colorimetry, nothing below them.</li>
+      <li>If asked <em>what the dispenser buys the reader</em>: every one of these assumes the reaction mix was assembled correctly. The reader is the cheap half; preparation is the hard half. That is this thesis&rsquo;s argument restated from the detection side.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- B26 · model first or prototypes first ─────────────────────
+     Built 2026-09-22 (Sirio: "Slide 45 mentions the modelling of
+     prototyping [...] make a slide about modelling on this topic:
+     modelling and just try and error").  S38 carries only the first
+     half of the thesis's strategy table, depth against breadth; this
+     is the second half, model first against prototypes first, from
+     ch. 13 §"Analytical models versus physical prototypes" and the
+     lower rows of tab:strategies.  Dialect "loop": the two strategies
+     are not a pair of columns but the two halves of one cycle — the
+     model hands dimensions to the builds, the builds hand back
+     measurements that calibrate the model — and the whole point of
+     the section is that the return arm was never closed.  So the
+     return arrow is drawn with a break in it and an × in the gap,
+     and it is the ±0.10 mm printer that closes it.  Nothing in the
+     SVG is text: labels are HTML chips over the overlay. ────── -->
+<section class="slide" id="b26" data-cue="b26" data-dialect="loop" data-part="backup"
+         data-topic="pump" data-accent="pump" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">A model gives a reasoned starting point; systematic prototyping is what makes the output dependable.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+
+  <p class="mp-lead">Derive the dimensions from a model before building, or build many variants and derive the model from the data.</p>
+
+  <!-- the cycle: two strategies, two arms, one of which was never closed -->
+  <svg class="mp-arc" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true">
+    <path class="mp-ln" id="b26-fwd"  d="M 528 320 L 740 320"/>
+    <path class="mp-hd" id="b26-fwdh" d="M 732 312 L 752 320 L 732 328 Z"/>
+
+    <path class="mp-ln mp-ln--ret" id="b26-retA" d="M 752 400 L 672 400"/>
+    <path class="mp-ln mp-ln--ret" id="b26-retB" d="M 608 400 L 528 400"/>
+    <path class="mp-ln mp-ln--ret" id="b26-retM" d="M 672 400 L 608 400"/>
+    <path class="mp-hd" id="b26-reth" d="M 536 392 L 516 400 L 536 408 Z"/>
+
+    <g class="mp-x" id="b26-x">
+      <path d="M 628 388 L 652 412"/>
+      <path d="M 652 388 L 628 412"/>
+    </g>
+  </svg>
+
+  <span class="mp-arclab" id="b26-lab-fwd">dimensions to<br>start from</span>
+  <span class="mp-arclab mp-arclab--ret" id="b26-lab-ret">measurements that<br>calibrate the model</span>
+
+  <div class="mp-panel" id="b26-model" style="left:56px">
+    <h3 class="mp-pt">Model first</h3>
+    <div class="mp-prule"></div>
+    <p class="mp-up"><i>+</i>A reasoned set of dimensions to start from</p>
+    <p class="mp-dn"><i>&minus;</i>Worth only as much as its validation, which needs many builds</p>
+  </div>
+
+  <div class="mp-panel" id="b26-proto" style="left:764px">
+    <h3 class="mp-pt">Prototypes first</h3>
+    <div class="mp-prule"></div>
+    <p class="mp-up"><i>+</i>Measures the real part across a spread of dimensions</p>
+    <p class="mp-dn"><i>&minus;</i>Needs printing precise enough that results reflect the dimensions, not the printer</p>
+  </div>
+
+  <!-- the foot band: one beat per click, always in the same place -->
+  <div class="mp-frule"></div>
+
+  <div class="mp-f" id="b26-f1">
+    <p class="mp-ft">For the pump I took the model-first path, because choosing rotor diameters and occlusion gaps without a model would have been guesswork.</p>
+  </div>
+
+  <div class="mp-f" id="b26-f2">
+    <p class="mp-ft" style="width:640px">The model was never experimentally validated. The builds went into getting parts to print as drawn rather than into testing its predictions.</p>
+    <div class="mp-num" style="left:700px">
+      <span class="kicker kicker--muted">Target</span>
+      <span class="mp-nv">5.0 &micro;L<i class="mp-strike" id="b26-strike"></i></span>
+    </div>
+    <div class="mp-num" style="left:912px">
+      <span class="kicker kicker--muted">Delivered</span>
+      <span class="mp-nv">3.94 / 4.10 &micro;L</span>
+    </div>
+  </div>
+
+  <div class="mp-f" id="b26-f3">
+    <span class="mp-big">&plusmn;0.10 mm</span>
+    <p class="mp-ft" style="left:268px; width:900px">is how closely a printed part matches its drawing, not how the liquid behaves. That repeatability is what now makes a real sweep of rotor diameters and occlusion gaps worth running.</p>
+    <span class="mp-chip" style="left:268px; top:122px">the v2.3 housing hit its nominal 1.52 mm gap</span>
+  </div>
+
+  <div class="mp-f" id="b26-f4">
+    <p class="mp-fc">The two are complementary: the model gives the starting point, a systematic sweep calibrates it, and pumps can then be printed for a chosen volume per stroke.</p>
+    <span class="mp-open">still open &middot; tube bores other than 0.51 mm &middot; liquids other than water &middot; ten-hour runs with gravimetric checks either side</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>The other half of the strategy table on the discussion slide: dimensions can be derived from a model before building, or found by building many variants and deriving the model from the data.</li>
+      <li>Model first buys a reasoned set of dimensions to start from, and is worth only as much as its validation — which itself needs many builds. Prototypes first measures the real part across a spread of dimensions, but needs printing precise enough that the results reflect the dimensions rather than the printer.</li>
+      <li>I chose model first for the pump: picking rotor diameters and occlusion gaps without a model would have been guesswork.</li>
+      <li>But the model was never experimentally validated — the builds went into getting parts to print as drawn — so the 5 µL target was never reached: 3.94 and 4.10 µL on the two integrated heads.</li>
+      <li>The ±0.10 mm figure is a manufacturing tolerance, not fluidic behaviour: how closely a printed part matches its CAD drawing once the compensation rules are applied, confirmed when the v2.3 housing achieved its nominal 1.52 mm occlusion gap.</li>
+      <li>That is exactly what makes the return arm practical now: differences between test rotors would reflect deliberate geometry rather than print scatter, so a systematic sweep can calibrate the model and pumps can be printed for a chosen volume per stroke.</li>
+      <li>Still untested: tube bores other than 0.51 mm, liquids other than water, and ten-hour runs with gravimetric checks either side to quantify drift from tubing wear.</li>
+      <li>Conclusion: the two approaches are complementary — the model provides a reasoned starting point, systematic physical prototyping makes the output dependable.</li>
+    </ul>
+  </aside>
+</section>
+
 <!-- B01 ───────────────────────────────────────────────────────────── -->
 <section class="slide bk" id="b01" data-cue="b01" data-part="backup" data-map="none" style="--head-h:48px">
   <h2 class="slide__title">The volume range was read out of five protocols, not estimated.</h2>
@@ -737,6 +1113,355 @@
   </aside>
 </section>
 
+<section class="slide" id="b24" data-cue="b24" data-dialect="sheet" data-part="backup"
+         data-map="none" style="--head-h:48px">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <h2 class="slide__title">A dose can miss the target in two independent ways, and no single pipette covers the range.</h2>
+  <div class="slide__rule"></div>
+
+  <div class="pa-wrap">
+    <svg class="pa-svg" viewBox="0 0 1280 720" aria-hidden="true">
+
+      <!-- ── board 1 · accurate and precise ───────────────────────── -->
+      <g class="pa-board" transform="translate(240,330)">
+        <circle class="pa-f pa-f1" r="112"/>
+        <circle class="pa-f pa-f2" r="86"/>
+        <circle class="pa-f pa-f3" r="58"/>
+        <circle class="pa-f pa-f4" r="30"/>
+        <circle class="pa-ring pa-ring--out" r="114.5"/>
+        <circle class="pa-ring" r="86"/>
+        <circle class="pa-ring" r="58"/>
+        <circle class="pa-ring" r="30"/>
+        <g class="pa-plus"><path d="M -11 0 H 11"/><path d="M 0 -11 V 11"/></g>
+        <g class="pa-shots" id="pa-s1">
+          <circle class="pa-shot pa-shot--hit" cx="-7" cy="-5" r="7"/>
+          <circle class="pa-shot pa-shot--hit" cx="6"  cy="-8" r="7"/>
+          <circle class="pa-shot pa-shot--hit" cx="9"  cy="4"  r="7"/>
+          <circle class="pa-shot pa-shot--hit" cx="-4" cy="9"  r="7"/>
+          <circle class="pa-shot pa-shot--hit" cx="2"  cy="-1" r="7"/>
+          <circle class="pa-shot pa-shot--hit" cx="-10" cy="2" r="7"/>
+        </g>
+        <g class="pa-cross" id="pa-x1">
+          <path d="M -15 -14 L 13 14"/>
+          <path d="M -15 14 L 13 -14"/>
+        </g>
+      </g>
+
+      <!-- ── board 2 · accurate, not precise · the random spread ──── -->
+      <g class="pa-board" transform="translate(640,330)">
+        <circle class="pa-f pa-f1" r="112"/>
+        <circle class="pa-f pa-f2" r="86"/>
+        <circle class="pa-f pa-f3" r="58"/>
+        <circle class="pa-f pa-f4" r="30"/>
+        <circle class="pa-ring pa-ring--out" r="114.5"/>
+        <circle class="pa-ring" r="86"/>
+        <circle class="pa-ring" r="58"/>
+        <circle class="pa-ring" r="30"/>
+        <g class="pa-plus"><path d="M -11 0 H 11"/><path d="M 0 -11 V 11"/></g>
+        <circle class="pa-sd" id="pa-sd" cx="-3" cy="5" r="62"/>
+        <g class="pa-shots" id="pa-s2">
+          <circle class="pa-shot pa-shot--miss" cx="-55" cy="-16" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="-25" cy="-35" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="12"  cy="-48" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="51"  cy="-30" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="67"  cy="7"   r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="35"  cy="39"  r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="-5"  cy="60"  r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="-41" cy="41"  r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="-64" cy="25"  r="7"/>
+        </g>
+        <g class="pa-cross" id="pa-x2">
+          <path d="M -17 -9 L 11 19"/>
+          <path d="M -17 19 L 11 -9"/>
+        </g>
+      </g>
+
+      <!-- ── board 3 · precise, not accurate · the systematic offset ─ -->
+      <g class="pa-board" transform="translate(1040,330)">
+        <circle class="pa-f pa-f1" r="112"/>
+        <circle class="pa-f pa-f2" r="86"/>
+        <circle class="pa-f pa-f3" r="58"/>
+        <circle class="pa-f pa-f4" r="30"/>
+        <circle class="pa-ring pa-ring--out" r="114.5"/>
+        <circle class="pa-ring" r="86"/>
+        <circle class="pa-ring" r="58"/>
+        <circle class="pa-ring" r="30"/>
+        <g class="pa-plus"><path d="M -11 0 H 11"/><path d="M 0 -11 V 11"/></g>
+        <path class="pa-arr" id="pa-ar-ln" d="M 9.6 -8.7 L 39.3 -35.5"/>
+        <path class="pa-arrh" id="pa-ar-hd" d="M 45.2 -40.9 L 44.0 -30.3 L 34.6 -40.7 Z"/>
+        <g class="pa-shots" id="pa-s3">
+          <circle class="pa-shot pa-shot--miss" cx="46" cy="-53" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="58" cy="-45" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="52" cy="-40" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="44" cy="-43" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="60" cy="-54" r="7"/>
+          <circle class="pa-shot pa-shot--miss" cx="54" cy="-48" r="7"/>
+        </g>
+        <g class="pa-cross" id="pa-x3">
+          <path d="M 38 -61 L 66 -33"/>
+          <path d="M 38 -33 L 66 -61"/>
+        </g>
+      </g>
+
+      <!-- ── the span underneath ──────────────────────────────────── -->
+      <path class="pa-div" id="pa-div" d="M 56 540 H 1224"/>
+      <path class="pa-brk" id="pa-brk" d="M 180 600 V 588 H 1100 V 600"/>
+      <path class="pa-ax"  id="pa-ax"  d="M 180 646 H 1100"/>
+      <g id="pa-tks">
+        <path class="pa-tk" d="M 180 646 V 658"/>
+        <path class="pa-tk" d="M 300.3 646 V 653"/>
+        <path class="pa-tk" d="M 700.2 646 V 653"/>
+        <path class="pa-tk" d="M 1100 646 V 658"/>
+      </g>
+    </svg>
+
+    <div class="pa-lab" id="pa-l1" style="left:70px">
+      <span class="pa-nm">Accurate and precise</span>
+      <span class="pa-sub">neither error</span>
+    </div>
+    <div class="pa-lab" id="pa-l2" style="left:470px">
+      <span class="pa-nm">Accurate, not precise</span>
+      <span class="pa-sub">random error</span>
+    </div>
+    <div class="pa-lab" id="pa-l3" style="left:870px">
+      <span class="pa-nm">Precise, not accurate</span>
+      <span class="pa-sub">systematic error</span>
+    </div>
+
+    <div class="pa-brklab" id="pa-brklab">
+      <span class="pa-bv num num--grad">200&nbsp;&times;</span>
+      <span class="pa-bk">one protocol</span>
+    </div>
+
+    <span class="pa-tile pa-tile--one" id="pa-tile1" style="left:180px; width:400px"></span>
+    <span class="pa-tile pa-tile--ghost" style="left:584px; width:396px"></span>
+    <span class="pa-tile pa-tile--ghost" style="left:984px; width:116px"></span>
+    <div class="pa-tilelab" id="pa-tilelab">
+      <span class="pa-tv">&asymp;&nbsp;10&nbsp;&times;</span>
+      <span class="pa-tu">one pipette</span>
+    </div>
+
+    <span class="pa-tkl" style="left:120px">5&nbsp;&micro;L</span>
+    <span class="pa-tkl" style="left:240.3px">10</span>
+    <span class="pa-tkl" style="left:640.2px">100</span>
+    <span class="pa-tkl" style="left:1040px">1000&nbsp;&micro;L</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Two things can go wrong with a dose, and they are independent. Accuracy is the systematic offset from the true volume; precision is the random scatter between repeats. The thesis reports both, so both have to be on the table.</li>
+      <li>Middle board: the average lands on the true volume, but no two doses match &mdash; random error, which is what the dashed ring measures. Right board: every dose matches the last, and all of them are wrong by the same amount &mdash; systematic error, which is what the arrow measures, from the true centre to the mean.</li>
+      <li>Underneath: the protocol asks for 5 &micro;L to 1000 &micro;L inside one procedure. Dividing one by the other is a two-hundred-fold span &mdash; that is my own arithmetic on the protocol volumes, not a published figure. A single air-displacement channel holds its precision across only about one order of magnitude, so covering that span by hand means exchanging tips or whole tools part-way through.</li>
+      <li>And it is not a question of skill: across 20 laboratory professionals, dispensing scatter rose from 0.2 % at 1 mL to 5.7 % at 10 &micro;L, and years of experience made no difference (Lippi et al. 2017). The requirement I set for the machine is &plusmn;10 % of target, with maximum absolute deviation no more than 10 &micro;L.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- s04c ───  Moved out of the talk 2026-09-21 (was talk slide 8,
+     part I, the gap). Keeps id/data-cue "s04c" on the s12 precedent. -->
+<section class="slide" id="s04c" data-cue="s04c" data-dialect="cine" data-part="backup" data-topic="gap" data-map="none"
+         style="--head-h:48px">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+  <i class="fragment step-cue" data-step="6"></i>
+  <i class="fragment step-cue" data-step="7"></i>
+  <i class="fragment step-cue" data-step="8"></i>
+  <i class="fragment step-cue" data-step="9"></i>
+
+  <h2 class="slide__title">The reference protocol comes from PANPOC, a portable detector for respiratory viruses.</h2>
+  <div class="slide__rule"></div>
+
+  <p class="pan-lead">Before PANPOC can read a swab, a bench has to turn it into purified RNA.</p>
+
+  <!-- the thesis figure, redrawn on paper and played rather than printed -->
+  <div class="paper pan-plate" id="s04c-plate">
+    <svg class="pan-svg" viewBox="0 0 536 344" width="536" height="344" aria-hidden="true">
+      <defs>
+        <clipPath id="s04c-bore">
+          <path d="M 84 52 V 258 L 138 293 L 192 258 V 52 Z"/>
+        </clipPath>
+      </defs>
+
+      <!-- the liquid column, clipped to the tube bore; its top edge is the level -->
+      <g clip-path="url(#s04c-bore)">
+        <rect class="pan-liq" id="s04c-liq" x="82" y="302" width="112" height="330"/>
+      </g>
+
+      <!-- sample background: open circles, seated inside the lysed volume -->
+      <circle class="pan-bg" cx="108" cy="197" r="5"/>
+      <circle class="pan-bg" cx="101" cy="235" r="5"/>
+      <circle class="pan-bg" cx="126" cy="221" r="5"/>
+      <circle class="pan-bg" cx="139" cy="166" r="5"/>
+      <circle class="pan-bg" cx="103" cy="167" r="5"/>
+      <circle class="pan-bg" cx="166" cy="208" r="5"/>
+      <circle class="pan-bg" cx="177" cy="232" r="5"/>
+      <circle class="pan-bg" cx="119" cy="272" r="5"/>
+      <circle class="pan-bg" cx="145" cy="180" r="5"/>
+      <circle class="pan-bg" cx="132" cy="238" r="5"/>
+
+      <!-- magnetic beads: ringed discs, at rest where the bind volume puts them -->
+      <circle class="pan-bead" cx="153" cy="129" r="8.5"/>
+      <circle class="pan-bead" cx="136" cy="209" r="8.5"/>
+      <circle class="pan-bead" cx="139" cy="239" r="8.5"/>
+      <circle class="pan-bead" cx="117" cy="187" r="8.5"/>
+      <circle class="pan-bead" cx="128" cy="101" r="8.5"/>
+      <circle class="pan-bead" cx="117" cy="236" r="8.5"/>
+      <circle class="pan-bead" cx="102" cy="140" r="8.5"/>
+      <circle class="pan-bead" cx="147" cy="271" r="8.5"/>
+
+      <!-- target RNA: filled discs -->
+      <circle class="pan-rna" cx="145" cy="195" r="5"/>
+      <circle class="pan-rna" cx="155" cy="251" r="5"/>
+      <circle class="pan-rna" cx="146" cy="240" r="5"/>
+      <circle class="pan-rna" cx="176" cy="256" r="5"/>
+      <circle class="pan-rna" cx="152" cy="214" r="5"/>
+      <circle class="pan-rna" cx="155" cy="166" r="5"/>
+
+      <!-- the internal control: light blue, so it never reads as the target -->
+      <circle class="pan-ctrl" cx="119" cy="254" r="5"/>
+      <circle class="pan-ctrl" cx="116" cy="174" r="5"/>
+
+      <!-- the magnet, drawn under the tube wall so the wall reads in front of it -->
+      <g id="s04c-mag">
+        <path class="pan-mag" d="M 202 160 H 262 A 39 39 0 0 1 262 238 H 202"/>
+        <path class="pan-pole" d="M 202 160 H 226"/>
+        <path class="pan-pole" d="M 202 238 H 226"/>
+      </g>
+
+      <!-- the tube -->
+      <path class="pan-tube" d="M 62 48 H 80"/>
+      <path class="pan-tube" d="M 196 48 H 214"/>
+      <path class="pan-tube" d="M 80 48 V 260 L 138 298 L 196 260 V 48"/>
+
+      <!-- the two markers that carry a measured volume in and out -->
+      <circle class="pan-din"  id="s04c-din"  cx="138" cy="18" r="6"/>
+      <circle class="pan-dout" id="s04c-dout" cx="138" cy="18" r="6"/>
+
+      <!-- drying -->
+      <path class="pan-wisp" d="M 106 40 c 6 -8 -6 -14 0 -22"/>
+      <path class="pan-wisp" d="M 138 34 c 6 -8 -6 -14 0 -22"/>
+      <path class="pan-wisp" d="M 170 42 c 6 -8 -6 -14 0 -22"/>
+
+      <!-- the legend the printed figure carries, with the control added.
+           Only the swatches are SVG.  The four labels are HTML chips
+           below, outside the svg: Chrome paints <text> at its unscaled
+           position when the viewBox scale is exactly 1, which put the
+           words through the right edge of the plate. -->
+      <g class="pan-leg">
+        <circle class="pan-dot-rna" cx="336" cy="112" r="5"/>
+      </g>
+      <g class="pan-leg">
+        <circle class="pan-dot-ctrl" cx="336" cy="156" r="5"/>
+      </g>
+      <g class="pan-leg">
+        <circle class="pan-dot-bg" cx="336" cy="200" r="5"/>
+      </g>
+      <g class="pan-leg">
+        <circle class="pan-dot-bead" cx="336" cy="244" r="8.5"/>
+      </g>
+    </svg>
+
+    <!-- the legend labels, as HTML over the plate.  The plate and the
+         viewBox are 1:1 (536 x 344), so these are the same coordinates
+         the swatches use: left 358, centred on each swatch's cy. -->
+    <span class="pan-legt" style="top:98px">target molecule</span>
+    <span class="pan-legt" style="top:142px">internal control</span>
+    <span class="pan-legt" style="top:186px">everything else</span>
+    <span class="pan-legt" style="top:230px">magnetic bead</span>
+  </div>
+
+  <!-- the seven stages; the four that place a volume carry the accent -->
+  <div class="pan-lad" id="s04c-lad">
+    <div class="pan-row pan-row--add" style="top:264px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">1</span>
+      <span class="pan-rt">Release and lyse</span>
+      <span class="pan-rs">guanidine thiocyanate opens the cells</span>
+      <span class="pan-rc pan-rc--add">add</span>
+    </div>
+    <div class="pan-row pan-row--add" style="top:314px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">2</span>
+      <span class="pan-rt">Add the control</span>
+      <span class="pan-rs">known synthetic RNA</span>
+      <span class="pan-rc pan-rc--add">add</span>
+    </div>
+    <div class="pan-row pan-row--add" style="top:364px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">3</span>
+      <span class="pan-rt">Bind</span>
+      <span class="pan-rs">ethanol; target sticks to the beads</span>
+      <span class="pan-rc pan-rc--add">add</span>
+    </div>
+    <div class="pan-row pan-row--flat" style="top:414px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">4</span>
+      <span class="pan-rt">Capture and discard</span>
+      <span class="pan-rs">magnet holds the beads</span>
+      <span class="pan-rc">remove</span>
+    </div>
+    <div class="pan-row pan-row--both" style="top:464px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">5</span>
+      <span class="pan-rt">Wash, twice</span>
+      <span class="pan-rs">70&nbsp;% ethanol, captured each time</span>
+      <span class="pan-rc pan-rc--both">add + remove</span>
+    </div>
+    <div class="pan-row pan-row--flat" style="top:514px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">6</span>
+      <span class="pan-rt">Dry</span>
+      <span class="pan-rs">ethanol evaporates</span>
+      <span class="pan-rc pan-rc--none">untouched</span>
+    </div>
+    <div class="pan-row pan-row--add" style="top:564px">
+      <i class="pan-rw"></i>
+      <i class="pan-rb"></i>
+      <span class="pan-rn">7</span>
+      <span class="pan-rt">Elute</span>
+      <span class="pan-rs">water frees the target</span>
+      <span class="pan-rc pan-rc--add">add</span>
+    </div>
+  </div>
+
+  <p class="pan-magline" id="s04c-magline">The magnet is what removes the centrifuge: the beads stay pinned while the liquid is drawn off.</p>
+
+  <p class="pan-cred" id="s04c-cred">Horizon Europe project PAIR &middot; bead protocol from DTU Bioengineering</p>
+
+  <div class="pan-end" id="s04c-end">
+    <span class="pan-endbar" id="s04c-endbar"></span>
+    <p class="pan-quote" id="s04c-quote">Detection can travel to the gate;<br>the upstream preparation cannot.</p>
+    <p class="pan-frag" id="s04c-frag">every volume in that preparation is placed by hand, at a bench</p>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li><strong>1 &middot; the plate</strong> &mdash; PANPOC is the portable instrument PAIR is building: influenza, SARS-CoV-2, anything with pandemic potential, meant for sites such as airports and border controls. That is the hall we started in. Before it can read a swab, a bench has to turn that swab into purified RNA. This is the thesis figure redrawn &mdash; one tube, seven stages, and the legend for what is floating in it.</li>
+      <li><strong>2 &middot; release and lyse</strong> &mdash; the swab is agitated in guanidine thiocyanate. That breaks the cells open and stops the enzymes that would otherwise destroy the RNA. A volume goes in, and the tube now holds the sample and everything else that came off the swab.</li>
+      <li><strong>3 &middot; add the control</strong> &mdash; a known quantity of synthetic RNA, the light blue one. It is there so a negative result can be told apart from a failed extraction: if the control does not come through, the run failed.</li>
+      <li><strong>4 &middot; bind</strong> &mdash; ethanol, and silica-coated magnetic beads. The RNA sticks to the bead surface; everything else stays loose in the liquid.</li>
+      <li><strong>5 &middot; capture and discard</strong> &mdash; a magnet pins the beads to the tube wall and the liquid is pipetted away, carrying everything that did not bind. That magnet is what removes the centrifuge, and it is the reason this protocol can leave a laboratory at all.</li>
+      <li><strong>6 &middot; wash, twice</strong> &mdash; 70 % ethanol in, captured again, drawn off again. Twice.</li>
+      <li><strong>7 &middot; dry</strong> &mdash; residual ethanol evaporates. Nothing added, nothing taken away; the one stage that only waits.</li>
+      <li><strong>8 &middot; elute</strong> &mdash; the magnet comes off, water is added, the RNA releases back into solution. That is what finally goes to the detector.</li>
+      <li><strong>9 &middot; the close</strong> &mdash; now look at the right-hand column. Four of those seven stages are a measured volume going in, and a fifth adds as well as removes. A general device for sample preparation is a device that places measured volumes; that is the whole job. Detection can travel to the gate; the upstream preparation cannot, because every volume in that preparation is placed by hand, at a bench.</li>
+    </ul>
+  </aside>
+</section>
+
 <style data-part="p4-backups">
 /* ══ Part 60 · backups ═══════════════════════════════════════════════
    One layout for twenty-three slides: a kicker top right, facts on the
@@ -915,6 +1640,510 @@
 
 /* B14 and B18 carry a live tool card beside their facts */
 #b14 .bk__facts, #b18 .bk__facts { width: 528px; }
+/* ---- b24 · precision and accuracy (was Part I) ---- */
+/* ══ S04e · accuracy and precision, then the span ══════════════════════
+   Everything is scoped to #b24. The boards keep the printed figure's
+   palette because every mark that matters (navy shots, dark-red mean
+   cross, grey true centre) sits on the light rings, never on the dark
+   stage; only the type is restated in the deck's own colours. */
+#b24 .pa-wrap { position: absolute; inset: 0; }
+#b24 .pa-svg  { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* the rings */
+#b24 .pa-f1 { fill: #7b93bd; }
+#b24 .pa-f2 { fill: #a4bad9; }
+#b24 .pa-f3 { fill: #c7d7ea; }
+#b24 .pa-f4 { fill: #fbf2dc; }
+#b24 .pa-ring { fill: none; stroke: #ffffff; stroke-width: 4; }
+#b24 .pa-ring--out { stroke-width: 6; }
+
+/* the true centre, the shots, the mean */
+#b24 .pa-plus path { fill: none; stroke: #8f8f8f; stroke-width: 5.4; }
+#b24 .pa-shot { fill: #16223f; stroke: #ffffff; stroke-width: 1.6; }
+/* a dose that lands on target reads green, one that misses reads red */
+#b24 .pa-shot--hit  { fill: #1f8a4c; }
+#b24 .pa-shot--miss { fill: #c1332d; }
+#b24 .pa-cross path { fill: none; stroke: #b01c1c; stroke-width: 9; stroke-linecap: round; }
+
+/* random error: a dashed ring, so it is never drawn, only faded in */
+#b24 .pa-sd {
+  fill: none; stroke: #1f2c4d; stroke-width: 3.2;
+  stroke-dasharray: 13 10;
+}
+/* systematic error: an arrow from the true centre to the mean */
+#b24 .pa-arr  { fill: none; stroke: #16223f; stroke-width: 3.4; stroke-linecap: round; }
+#b24 .pa-arrh { fill: #16223f; stroke: none; }
+
+/* the three captions */
+#b24 .pa-lab { position: absolute; top: 462px; width: 340px; text-align: center; }
+#b24 .pa-nm {
+  display: block;
+  font-family: var(--display); font-weight: 700;
+  font-size: 25px; line-height: 1.1; letter-spacing: -0.015em;
+  color: var(--text); white-space: nowrap;
+}
+#b24 .pa-sub {
+  display: block; margin-top: 11px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--t-a); white-space: nowrap;
+}
+
+/* ── the span, small, underneath ────────────────────────────────── */
+#b24 .pa-div { fill: none; stroke: rgba(240,236,232,0.13); stroke-width: 1; }
+#b24 .pa-brk { fill: none; stroke: color-mix(in srgb, var(--t-a) 70%, transparent); stroke-width: 2; stroke-linecap: round; }
+#b24 .pa-ax, #b24 .pa-tk { fill: none; stroke: rgba(240,236,232,0.40); stroke-width: 1.6; stroke-linecap: round; }
+
+#b24 .pa-brklab {
+  position: absolute; left: 440px; top: 551px; width: 400px;
+  text-align: center; white-space: nowrap;
+}
+#b24 .pa-bv {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 26px; font-weight: 700; letter-spacing: -0.01em;
+}
+#b24 .pa-bk {
+  margin-left: 12px;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* the solid band animates width, never scaleX: a scaled band squashes
+   its border, and the ghosts beside it are dashed */
+#b24 .pa-tile { position: absolute; top: 610px; height: 28px; box-sizing: border-box; border-radius: 5px; }
+#b24 .pa-tile--one {
+  border: 1px solid color-mix(in srgb, var(--t-a) 70%, transparent);
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 34%, transparent),
+    color-mix(in srgb, var(--t-b) 22%, transparent));
+}
+#b24 .pa-tile--ghost {
+  border: 1px dashed rgba(240,236,232,0.32);
+  background: rgba(240,236,232,0.05);
+}
+#b24 .pa-tilelab {
+  position: absolute; left: 230px; top: 615px; width: 300px;
+  text-align: center; white-space: nowrap;
+}
+#b24 .pa-tv {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 18px; font-weight: 700; color: #ffffff;
+}
+#b24 .pa-tu {
+  margin-left: 10px;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.05em;
+  color: rgba(240,236,232,0.82);
+}
+#b24 .pa-tkl {
+  position: absolute; top: 662px; width: 120px;
+  text-align: center;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.04em;
+  color: var(--text-muted); white-space: nowrap;
+}
+
+/* ══ B26 · dialect "loop" · model first or prototypes first ══════════
+   Two strategy panels sitting at the two ends of one cycle, with the
+   arms between them: dimensions out to the builds, measurements back
+   to the model.  The return arm is drawn in three pieces so it can be
+   shown broken — the model was never validated — and then closed by
+   the printer's ±0.10 mm repeatability.  The foot band holds one beat
+   per click, every beat in the same place, so nothing on the slide
+   moves except the argument.  Everything is scoped to #b26, and the
+   SVG overlay carries no <text>: its labels are the HTML chips. */
+#b26 .mp-lead {
+  position: absolute; left: 56px; top: 198px; margin: 0; width: 1168px;
+  font-size: 23px; line-height: 1.34; color: var(--text-soft);
+  opacity: 0;
+}
+
+/* ── the two strategies ────────────────────────────────── */
+#b26 .mp-panel {
+  /* both panels are pinned to the same height so their bottom edges line
+     up either side of the cycle, whatever their text measures */
+  position: absolute; top: 250px; width: 460px; height: 218px;
+  box-sizing: border-box;
+  padding: 18px 22px 20px;
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid var(--glass-border);
+  opacity: 0;
+}
+#b26 .mp-pt {
+  margin: 0;
+  font-family: var(--display); font-weight: 700;
+  font-size: 28px; line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--text);
+}
+#b26 .mp-prule {
+  margin: 13px 0 14px; height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 46%, transparent), rgba(255,255,255,0.07));
+}
+#b26 .mp-up, #b26 .mp-dn {
+  position: relative; margin: 0 0 0 26px;
+  font-size: 20px; line-height: 1.3;
+}
+#b26 .mp-up { color: var(--text); }
+#b26 .mp-dn { margin-top: 13px; color: var(--text-muted); }
+#b26 .mp-up i, #b26 .mp-dn i {
+  position: absolute; left: -26px; top: 0;
+  font-family: var(--mono); font-style: normal; font-weight: 700; font-size: 20px;
+}
+#b26 .mp-up i { color: var(--t-a); }
+#b26 .mp-dn i { color: var(--text-muted); }
+
+/* ── the two arms ────────────────────────────────────── */
+#b26 .mp-arc { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; }
+#b26 .mp-ln {
+  fill: none; stroke: var(--t-a); stroke-width: 3;
+  stroke-linecap: round;
+}
+#b26 .mp-ln--ret { stroke: #7a7068; }
+#b26 .mp-hd { fill: var(--t-a); stroke: none; }
+#b26 .mp-x path {
+  fill: none; stroke: var(--t-b); stroke-width: 4; stroke-linecap: round;
+}
+#b26 .mp-arclab {
+  position: absolute; left: 516px; top: 264px; width: 248px;
+  text-align: center;
+  font-family: var(--mono); font-size: 18px; line-height: 1.34;
+  letter-spacing: 0.02em; color: var(--text-muted);
+  opacity: 0;
+}
+#b26 .mp-arclab--ret { top: 414px; }
+
+/* ── the foot band ─────────────────────────────────── */
+#b26 .mp-frule {
+  position: absolute; left: 56px; top: 494px; width: 1168px; height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 48%, transparent), rgba(255,255,255,0.08));
+  opacity: 0;
+}
+#b26 .mp-f { position: absolute; left: 56px; top: 516px; width: 1168px; opacity: 0; }
+#b26 .mp-ft {
+  position: absolute; left: 0; top: 0; margin: 0; width: 1168px;
+  font-size: 24px; line-height: 1.34; color: var(--text-soft);
+}
+#b26 .mp-num { position: absolute; top: -4px; display: flex; flex-direction: column; gap: 8px; }
+#b26 .mp-nv {
+  position: relative; display: inline-block;
+  font-family: var(--mono); font-size: 34px; font-weight: 600;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.03em;
+  white-space: nowrap; color: var(--text);
+}
+#b26 .mp-strike {
+  position: absolute; left: -4px; top: 54%; height: 3px; width: calc(100% + 8px);
+  background: var(--t-b); border-radius: 2px;
+  transform: scaleX(0); transform-origin: 0 50%;
+}
+#b26 .mp-big {
+  position: absolute; left: 0; top: -8px;
+  font-family: var(--mono); font-size: 40px; font-weight: 600;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.03em;
+  white-space: nowrap; color: var(--t-a);
+}
+#b26 .mp-chip {
+  position: absolute; top: 96px;
+  font-family: var(--mono); font-size: 19px; letter-spacing: 0.02em;
+  white-space: nowrap; color: var(--text-muted);
+}
+#b26 .mp-fc {
+  position: absolute; left: 0; top: -6px; margin: 0; width: 1168px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 30px; line-height: 1.22; letter-spacing: -0.02em;
+  color: var(--text);
+}
+#b26 .mp-open {
+  position: absolute; left: 0; top: 96px; width: 1168px;
+  font-family: var(--mono); font-size: 19px; line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--t-a) 70%, #f0ece8);
+}
+
+/* ---- s04c ---- */
+/* ══ S04c · PANPOC, and what a real protocol is ════════════════════════
+   The thesis's magnetic-bead figure redrawn as inline SVG on a paper
+   plate, with the same conventions it prints: grey tube, pale liquid,
+   filled discs for target RNA, open circles for everything else, ringed
+   discs for beads, a black horseshoe magnet at the wall. Two departures
+   from the print: the internal control is light blue so it never reads
+   as the target, and the four stages that place a measured volume carry
+   the accent, because that is what the machine later has to do. One tube
+   plays the whole sequence instead of six panels standing still; the
+   seven stages run as a ladder beside it, one clicker press each. Print
+   labels keep a serif so the plate reads as the printed figure. */
+
+#s04c .pan-lead {
+  position: absolute; left: 56px; top: 200px; margin: 0; width: 1100px;
+  font-size: 26px; line-height: 1.34; color: var(--text);
+  opacity: 0;
+}
+
+/* ── the paper plate ──────────────────────────────────────────────── */
+#s04c .pan-plate {
+  position: absolute; left: 56px; top: 264px;
+  width: 536px; height: 344px;
+  z-index: 2;
+  box-shadow: 0 26px 62px rgba(0,0,0,0.52);
+  opacity: 0;
+}
+#s04c .pan-svg { position: absolute; left: 0; top: 0; display: block; }
+
+#s04c .pan-tube {
+  fill: none; stroke: #7d848c; stroke-width: 2.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+#s04c .pan-liq { fill: #dbe6f3; }
+
+#s04c .pan-rna,  #s04c .pan-dot-rna  { fill: #1f2d50; }
+#s04c .pan-bg,   #s04c .pan-dot-bg   { fill: none; stroke: #aeb4bd; stroke-width: 1.9; }
+#s04c .pan-bead, #s04c .pan-dot-bead { fill: #6f6f6f; stroke: #1f2d50; stroke-width: 3; }
+/* the internal control: light blue on the pale liquid, rimmed so it
+   still reads against the plate when the tube is empty */
+#s04c .pan-ctrl, #s04c .pan-dot-ctrl { fill: #7ec8e3; stroke: #1f7fa3; stroke-width: 2.2; }
+
+#s04c .pan-mag  { fill: none; stroke: #2e2e2e; stroke-width: 26; stroke-linecap: butt; }
+#s04c .pan-pole { fill: none; stroke: #929292; stroke-width: 26; stroke-linecap: butt; }
+
+/* the measured volume going in carries the accent; the one drawn off is grey */
+#s04c .pan-din  { fill: #e05a18; opacity: 0; }
+#s04c .pan-dout { fill: #8d939b; opacity: 0; }
+
+#s04c .pan-wisp {
+  fill: none; stroke: #9aa6b4; stroke-width: 2;
+  stroke-linecap: round; opacity: 0;
+}
+
+/* The plate is a facsimile of a print figure, so its labels keep a serif.
+   They are HTML chips laid over the plate, not SVG <text>: in a viewBox
+   whose internal scale is 1 Chrome paints glyphs at the unscaled offset
+   and they walked off the right edge of the paper. */
+#s04c .pan-legt {
+  position: absolute; left: 358px; height: 28px; line-height: 28px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 20px; color: #3a3f46;
+  white-space: nowrap; pointer-events: none; z-index: 1;
+}
+
+/* ── the seven stages ─────────────────────────────────────────────── */
+#s04c .pan-lad { position: absolute; left: 624px; top: 0; width: 592px; height: 720px; z-index: 2; }
+#s04c .pan-row { position: absolute; left: 0; width: 592px; height: 46px; opacity: 0; }
+
+/* the wash behind a row: the accent panel is what marks a stage that
+   places a volume, and it is the first child so everything paints on it */
+#s04c .pan-rw {
+  position: absolute; left: -26px; right: -8px; top: -5px; bottom: -5px;
+  border-radius: 0 13px 13px 0;
+  background: transparent;
+  opacity: 0;
+}
+#s04c .pan-row--add .pan-rw {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 24%, transparent),
+    color-mix(in srgb, var(--t-a) 8%, transparent) 58%,
+    transparent 94%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t-a) 22%, transparent);
+}
+#s04c .pan-row--both .pan-rw {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 11%, transparent),
+    transparent 62%);
+}
+
+#s04c .pan-rb {
+  position: absolute; left: -20px; top: 3px; width: 3px; height: 40px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--t-a), var(--t-b));
+  transform: scaleY(0); transform-origin: 50% 50%;
+}
+#s04c .pan-row--add .pan-rb { left: -21px; width: 5px; }
+#s04c .pan-row--flat .pan-rb {
+  background: linear-gradient(180deg, rgba(240,236,232,0.52), rgba(240,236,232,0.20));
+}
+
+#s04c .pan-rn {
+  position: absolute; left: 0; top: 1px; width: 26px;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 20px; font-weight: 700; color: var(--t-a);
+}
+#s04c .pan-row--flat .pan-rn { color: var(--text-soft); }
+
+#s04c .pan-rt {
+  position: absolute; left: 36px; top: 0;
+  font-size: 22px; line-height: 1.1; color: var(--text); white-space: nowrap;
+}
+#s04c .pan-row--add .pan-rt { font-weight: 600; }
+#s04c .pan-rs {
+  position: absolute; left: 36px; top: 24px;
+  font-size: 18px; line-height: 1.2; color: var(--text-muted); white-space: nowrap;
+}
+#s04c .pan-rc {
+  position: absolute; right: 0; top: 8px;
+  padding: 5px 13px 4px;
+  border-radius: var(--r-pill, 999px);
+  border: 1px solid rgba(240,236,232,0.26);
+  background: transparent;
+  font-family: var(--mono); font-size: 18px; line-height: 1.2;
+  color: var(--text-soft); white-space: nowrap;
+}
+#s04c .pan-rc--add {
+  border-color: color-mix(in srgb, var(--t-a) 82%, transparent);
+  background: color-mix(in srgb, var(--t-a) 32%, transparent);
+  color: var(--text); font-weight: 600;
+}
+#s04c .pan-rc--both {
+  border-color: color-mix(in srgb, var(--t-a) 52%, transparent);
+  background: color-mix(in srgb, var(--t-a) 10%, transparent);
+  color: var(--text);
+}
+#s04c .pan-rc--none {
+  border: 1px dashed rgba(240,236,232,0.28);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+/* ── the two quiet lines at the foot ──────────────────────────────── */
+#s04c .pan-magline {
+  position: absolute; left: 56px; top: 638px; margin: 0; width: 1120px;
+  font-size: 21px; line-height: 1.3; color: var(--text);
+  opacity: 0;
+}
+#s04c .pan-cred {
+  position: absolute; left: 56px; top: 682px; margin: 0; width: 800px;
+  font-family: var(--mono); font-size: 18px; line-height: 1.3;
+  letter-spacing: 0.01em; color: var(--text-muted);
+  opacity: 0;
+}
+
+/* ── the closing statement ────────────────────────────────────────────
+   It takes the plate's footprint, not the whole stage, so the ladder
+   stays lit on the right with the adding stages still standing out. */
+#s04c .pan-end { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; }
+#s04c .pan-endbar {
+  position: absolute; left: 56px; top: 292px; width: 0; height: 3px;
+  background: linear-gradient(90deg, var(--t-a), var(--t-b));
+}
+#s04c .pan-quote {
+  position: absolute; left: 56px; top: 320px; margin: 0; width: 528px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 30px; line-height: 1.2; letter-spacing: -0.02em;
+  color: var(--text);
+  text-shadow: 0 6px 28px rgba(0,0,0,0.7);
+}
+#s04c .pan-frag {
+  position: absolute; left: 56px; top: 448px; margin: 0; width: 512px;
+  font-family: var(--mono); font-size: 19px; line-height: 1.42;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--t-a) 72%, #f0ece8);
+}
+
+/* ══ B25 · dialect "ledger" · the reader's bill of hardware ═══════════
+   Six readouts, five fixed slots each, always in the same five columns,
+   so the eye reads the pattern of filled and empty slots down the page
+   rather than parsing six sentences. Everything is scoped to #b25.
+   The judgement column of the source table is NOT in the ledger: it is
+   the payload, so it gets the whole width of the foot band at 23 px,
+   one readout per click, with a lit rule travelling down the rows. */
+#b25 .ro-wrap { position: absolute; inset: 0; }
+
+/* column headers */
+#b25 .ro-hd { position: absolute; left: 56px; top: 202px; width: 1168px; height: 24px; }
+#b25 .ro-hd span {
+  position: absolute; top: 0;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  white-space: nowrap; color: var(--text-muted);
+}
+#b25 .ro-hrule {
+  position: absolute; left: 56px; top: 232px; width: 1168px; height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 48%, transparent), rgba(255,255,255,0.08));
+}
+
+/* the lit rule that travels to the row being talked about */
+#b25 .ro-hl {
+  position: absolute; left: 44px; top: 240px; width: 1192px; height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 17%, transparent), transparent 64%);
+  box-shadow: inset 3px 0 0 var(--t-a);
+  opacity: 0;
+}
+
+/* one row per readout */
+#b25 .ro-row {
+  position: absolute; left: 56px; width: 1168px; height: 44px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+#b25 .ro-nm {
+  position: absolute; left: 0; top: 10px; width: 206px;
+  font-size: 21px; font-weight: 600; line-height: 1.1;
+  color: var(--text);
+}
+#b25 .ro-c {
+  position: absolute; top: 7px;
+  display: inline-block; padding: 4px 11px 5px;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-family: var(--mono); font-size: 18px; line-height: 1.2;
+  white-space: nowrap; color: var(--text);
+}
+#b25 .ro-c--off {
+  padding: 4px 0 5px; border: 0; background: none;
+  font-size: 19px; color: rgba(255,255,255,0.20);
+}
+
+/* the borderline gate, and the one row that sits past it */
+#b25 .ro-gatelab {
+  position: absolute; left: 56px; top: 461px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.06em; white-space: nowrap;
+  color: #e0a34f;
+}
+#b25 .ro-gateline {
+  position: absolute; left: 596px; top: 471px; width: 628px; height: 0;
+  border-top: 1px dashed rgba(224,163,79,0.42);
+}
+#b25 .ro-row--edge { border-top: 0; }
+#b25 .ro-row--edge .ro-nm { color: var(--text-soft); }
+/* the borderline row warms only its FILLED cells.  An empty cell keeps
+   the dim, background-free treatment it has in every other row --- the
+   :not() takes it out of this rule instead of fighting it on weight,
+   which is what used to paint a capsule around the dash. */
+#b25 .ro-row--edge .ro-c:not(.ro-c--off) {
+  border-style: dashed; border-color: rgba(224,163,79,0.34);
+  background: rgba(224,163,79,0.05); color: var(--text-soft);
+}
+
+/* the foot band · the column that matters, set large */
+#b25 .ro-band { position: absolute; left: 56px; top: 560px; width: 1168px; height: 102px; }
+#b25 .ro-band::before {
+  content: ""; position: absolute; left: 0; top: -18px; width: 1168px; height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 48%, transparent), rgba(255,255,255,0.08));
+}
+#b25 .ro-lead {
+  position: absolute; left: 0; top: 26px; margin: 0; width: 1060px;
+  font-size: 23px; line-height: 1.33; color: var(--text-soft);
+}
+#b25 .ro-jd { position: absolute; left: 0; top: 0; width: 1168px; opacity: 0; }
+#b25 .ro-jk {
+  position: absolute; left: 0; top: 0; max-width: 760px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.05em; white-space: nowrap;
+  color: var(--t-a);
+}
+#b25 .ro-ja {
+  position: absolute; right: 0; top: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.04em;
+  white-space: nowrap; color: var(--text-muted);
+}
+#b25 .ro-jt {
+  position: absolute; left: 0; top: 34px; margin: 0; width: 1060px;
+  font-size: 23px; line-height: 1.33; color: var(--text);
+}
+
 </style>
 
 <script data-part="p4-backups">
@@ -934,5 +2163,516 @@
       gsap.fromTo(bits, { opacity: 0 }, { opacity: 1, duration: 0.22, ease: 'none', overwrite: 'auto' });
     });
   });
+/* ---- b24 · precision and accuracy (was Part I) ---- */
+/* ══════════════════════════════════════════════════════════════════════
+   S04e · the two errors, then the span.
+   Four steps: one board per step, then the span underneath.
+   Every selector is scoped to `el`: the presenter view clones slides.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* the boards themselves are entrance motion, replayed on every entry */
+Deck.enter('b24', function (el, gsap) {
+  var boards = Array.prototype.slice.call(el.querySelectorAll('.pa-board'));
+  if (!boards.length) return;
+  gsap.fromTo(boards,
+    { opacity: 0, scale: 0.94, transformOrigin: '50% 50%' },
+    { opacity: 1, scale: 1, duration: 0.8, stagger: 0.09, ease: 'expo.out' });
+});
+
+Deck.slide('b24', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var all = function (s) { return Array.prototype.slice.call(el.querySelectorAll(s)); };
+  var one = function (s) { return el.querySelector(s); };
+
+  /* board geometry is scenery, not animation: pinned here so entering at
+     any step, and the presenter's clone, always show complete boards */
+  gsap.set(all('.pa-f'), { opacity: 1, scale: 1, transformOrigin: '50% 50%' });
+  gsap.set(all('.pa-ring'), { drawSVG: '0% 100%' });
+  gsap.set(all('.pa-plus path'), { drawSVG: '100%' });
+
+  var shots = [all('#pa-s1 .pa-shot'), all('#pa-s2 .pa-shot'), all('#pa-s3 .pa-shot')];
+  var cross = [one('#pa-x1'), one('#pa-x2'), one('#pa-x3')];
+  var labs  = [one('#pa-l1'), one('#pa-l2'), one('#pa-l3')];
+  var sd    = one('#pa-sd');
+  var arrLn = one('#pa-ar-ln');
+  var arrHd = one('#pa-ar-hd');
+
+  var div    = one('#pa-div');
+  var brk    = one('#pa-brk');
+  var brkLab = one('#pa-brklab');
+  var ax     = one('#pa-ax');
+  var tks    = all('.pa-tk');
+  var tkls   = all('.pa-tkl');
+  var tile1  = one('#pa-tile1');
+  var ghosts = all('.pa-tile--ghost');
+  var tileLab = one('#pa-tilelab');
+
+  var tileW = parseFloat(tile1.style.width) || 400;
+
+  /* nothing dashed is ever drawn — DrawSVG owns stroke-dasharray, so the
+     scatter ring and the ghost bands are faded in — and the solid band
+     animates width, not scaleX, so its border stays a hairline */
+  gsap.set(shots[0].concat(shots[1], shots[2]),
+    { opacity: 0, scale: 0.25, y: -16, transformOrigin: '50% 50%' });
+  gsap.set(cross, { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
+  gsap.set(labs, { opacity: 0, y: 14 });
+  gsap.set(sd, { opacity: 0 });
+  gsap.set(arrLn, { drawSVG: '0%' });
+  gsap.set(arrHd, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' });
+
+  gsap.set([div, brk, ax].concat(tks), { drawSVG: '0%' });
+  gsap.set([brkLab, tileLab], { opacity: 0 });
+  gsap.set(tkls, { opacity: 0, y: 8 });
+  gsap.set(tile1, { width: 0, opacity: 0 });
+  gsap.set(ghosts, { opacity: 0 });
+
+  tl.addLabel('step0');
+
+  /* 1 · both errors small: six doses land on top of each other, on the mark */
+  tl.to(shots[0], { opacity: 1, scale: 1, y: 0, duration: 0.42,
+                    stagger: 0.07, ease: 'back.out(2.2)' }, 'step0');
+  tl.to(cross[0], { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, 'step0+=0.62');
+  tl.to(labs[0], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step0+=0.75');
+  tl.addLabel('step1');
+
+  /* 2 · random error alone: the mean is still right, the doses are not,
+         and the dashed ring is the spread being measured */
+  tl.to(shots[1], { opacity: 1, scale: 1, y: 0, duration: 0.42,
+                    stagger: 0.06, ease: 'back.out(2.2)' }, 'step1');
+  tl.to(cross[1], { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, 'step1+=0.7');
+  tl.to(sd, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 'step1+=0.85');
+  tl.to(labs[1], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step1+=0.95');
+  tl.addLabel('step2');
+
+  /* 3 · systematic error alone: the doses agree with each other and all
+         miss by the same amount — the arrow is that offset */
+  tl.to(shots[2], { opacity: 1, scale: 1, y: 0, duration: 0.42,
+                    stagger: 0.07, ease: 'back.out(2.2)' }, 'step2');
+  tl.to(cross[2], { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, 'step2+=0.62');
+  tl.to(arrLn, { drawSVG: '100%', duration: 0.55, ease: 'power2.out' }, 'step2+=0.8');
+  tl.to(arrHd, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2.4)' }, 'step2+=1.25');
+  tl.to(labs[2], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step2+=0.95');
+  tl.addLabel('step3');
+
+  /* 4 · and underneath, the span one procedure asks for against the span
+         one pipette holds: the bracket, then the band tiled along it */
+  tl.to(div, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut' }, 'step3');
+  tl.to(ax, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut' }, 'step3+=0.15');
+  tl.to(tks, { drawSVG: '100%', duration: 0.25, stagger: 0.05 }, 'step3+=0.5');
+  tl.to(tkls, { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'expo.out' }, 'step3+=0.6');
+  tl.to(brk, { drawSVG: '100%', duration: 0.75, ease: 'power2.inOut' }, 'step3+=0.75');
+  tl.to(brkLab, { opacity: 1, duration: 0.45 }, 'step3+=1.15');
+  tl.to(tile1, { width: tileW, duration: 0.65, ease: 'power2.out', opacity: 1 }, 'step3+=1.35');
+  tl.to(tileLab, { opacity: 1, duration: 0.4 }, 'step3+=1.75');
+  tl.to(ghosts, { opacity: 1, duration: 0.45, stagger: 0.14 }, 'step3+=1.85');
+  tl.addLabel('step4');
+
+  return tl;
+});
+
+/* ---- s04c ---- */
+/* ── S04c · the PANPOC protocol: the printed figure, played ──────────
+   Nine steps, one clicker press each: the plate arrives, then the seven
+   stages one at a time, then the close. Two rules govern the drawing:
+     · the liquid level is the surface, and nothing floats above it —
+       every particle position is generated inside the bore below the
+       level it belongs to. The single exception is a bead held on the
+       wall by the magnet while the liquid is drawn off, which is what
+       actually happens;
+     · the four stages that place a measured volume carry the accent —
+       row wash, chip and the orange marker that falls into the tube.
+   Nothing dashed is ever drawn (the "untouched" chip only fades) and
+   nothing with a border is scaled. Every selector is scoped to el.
+   ══════════════════════════════════════════════════════════════════ */
+Deck.slide('s04c', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+
+  var lead    = el.querySelector('.pan-lead');
+  var plate   = el.querySelector('#s04c-plate');
+  var magline = el.querySelector('#s04c-magline');
+  var cred    = el.querySelector('#s04c-cred');
+
+  var liq   = el.querySelector('#s04c-liq');
+  var mag   = el.querySelector('#s04c-mag');
+  var din   = el.querySelector('#s04c-din');
+  var dout  = el.querySelector('#s04c-dout');
+  var tube  = el.querySelectorAll('.pan-tube');
+  var bg    = el.querySelectorAll('.pan-bg');
+  var beads = el.querySelectorAll('.pan-bead');
+  var rna   = el.querySelectorAll('.pan-rna');
+  var ctrl  = el.querySelectorAll('.pan-ctrl');
+  var wisp  = el.querySelectorAll('.pan-wisp');
+  var legs  = el.querySelectorAll('.pan-leg');
+  var legt  = el.querySelectorAll('.pan-legt');   /* the HTML labels, paired by index */
+
+  var rows   = el.querySelectorAll('.pan-row');
+  var bars   = el.querySelectorAll('.pan-rb');
+  var washes = el.querySelectorAll('.pan-rw');
+
+  var end   = el.querySelector('#s04c-end');
+  var ebar  = el.querySelector('#s04c-endbar');
+  var quote = el.querySelector('#s04c-quote');
+  var frag  = el.querySelector('#s04c-frag');
+
+  /* ── the levels, as the top edge of the liquid rect ───────────────
+     Smaller y is a fuller tube. EMPTY sits below the cone tip, so the
+     tube reads dry. Every coordinate table below was generated inside
+     the bore for the level it is used at, so no particle can surface. */
+  var EMPTY = 296;     /* dry */
+  var L_LYSE  = 140;   /* 1 · lysis buffer */
+  var L_CTRL  = 131;   /* 2 · plus the control spike */
+  var L_BIND  =  76;   /* 3 · plus ethanol */
+  var L_WASH  =  96;   /* 5 · each wash charge */
+  var L_RESID = 262;   /* 5 → 6 · the ethanol the dry step drives off */
+  var L_ELUTE = 136;   /* 7 · the elution water */
+
+  /* after lysis: everything the swab brought, inside the lysed volume */
+  var A_BG   = [[108,197],[101,235],[126,221],[139,166],[103,167],[166,208],[177,232],[119,272],[145,180],[132,238]];
+  var A_RNA  = [[145,195],[155,251],[146,240],[176,256],[152,214],[155,166]];
+  var A_CTRL = [[119,254],[116,174]];
+
+  /* after the ethanol: the same contents spread through a fuller tube */
+  var B_BEAD = [[153,129],[136,209],[139,239],[117,187],[128,101],[117,236],[102,140],[147,271]];
+  var B_BG   = [[175,119],[142,178],[137,158],[161,231],[158,200],[136,119],[167,261],[126,170],[103,102],[180,225]];
+  var B_RNA  = [[175,159],[165,109],[153,219],[109,253],[120,143],[177,142]];
+  var B_CTRL = [[163,246],[96,234]];
+
+  /* binding: one docking spot beside each bead, target first, control last */
+  var DOCK   = [[163,139],[149,204],[153,239],[104,182],[114,101],[103,236],[115,146],[160,266]];
+
+  /* the magnet's column on the wall, and the cargo that rides with it */
+  var WALL_B = [], WALL_R = [], i;
+  for (i = 0; i < 8; i++) { WALL_B.push([178, 152 + i * 15]); WALL_R.push([161, 152 + i * 15]); }
+
+  /* what does not bind leaves through the tip with the liquid */
+  var DRAIN  = [[136,282],[140,282],[134,280],[142,280],[137,284],[139,278],[135,276],[141,276],[138,286],[136,274]];
+
+  /* after elution: released from the wall, back inside the water */
+  var F_BEAD = [[143,209],[136,261],[139,179],[161,228],[162,169],[102,235],[161,268],[100,176]];
+  var F_RNA  = [[100,217],[135,159],[167,207],[119,209],[115,192],[113,155]];
+  var F_CTRL = [[118,247],[116,169]];
+
+  function n(node, a) { return parseFloat(node.getAttribute(a)); }
+  function at(label, t) { return label + '+=' + t; }
+
+  /* move a set of circles to absolute plate coordinates */
+  function moveTo(list, targets, dur, ease, stag, label, t) {
+    for (var k = 0; k < list.length && k < targets.length; k++) {
+      tl.to(list[k], {
+        x: targets[k][0] - n(list[k], 'cx'),
+        y: targets[k][1] - n(list[k], 'cy'),
+        duration: dur, ease: ease
+      }, at(label, t + k * stag));
+    }
+  }
+
+  function level(to, dur, ease, label, t) {
+    tl.to(liq, { attr: { y: to }, duration: dur, ease: ease }, at(label, t));
+  }
+
+  /* a measured volume going in: the accent marker falls to the present
+     surface and is gone by the time the level answers. fromTo keeps it
+     deterministic when the driver seeks rather than plays. */
+  function pourIn(surface, label, t) {
+    tl.fromTo(din, { y: 0, opacity: 0 },
+      { opacity: 1, duration: 0.12, ease: 'none' }, at(label, t));
+    tl.fromTo(din, { y: 0 },
+      { y: surface - 30, duration: 0.36, ease: 'power2.in' }, at(label, t + 0.04));
+    tl.to(din, { opacity: 0, duration: 0.14, ease: 'none' }, at(label, t + 0.36));
+  }
+
+  /* and one going out, grey, rising off the surface and clear of the tube */
+  function drawOff(surface, label, t) {
+    tl.fromTo(dout, { y: surface - 30, opacity: 0 },
+      { opacity: 1, duration: 0.12, ease: 'none' }, at(label, t));
+    tl.fromTo(dout, { y: surface - 30 },
+      { y: -26, duration: 0.40, ease: 'power2.out' }, at(label, t + 0.04));
+    tl.to(dout, { opacity: 0, duration: 0.14, ease: 'none' }, at(label, t + 0.38));
+  }
+
+  /* the live row brightens and grows its bar; the one before it steps back */
+  function light(idx, label, t) {
+    tl.to(rows[idx], { opacity: 1, duration: 0.30, ease: 'power2.out' }, at(label, t));
+    tl.to(bars[idx], { scaleY: 1, duration: 0.42, ease: 'expo.out' }, at(label, t));
+    tl.to(washes[idx], { opacity: 1, duration: 0.40, ease: 'power2.out' }, at(label, t + 0.04));
+    if (idx > 0) tl.to(rows[idx - 1], { opacity: 0.48, duration: 0.35 }, at(label, t));
+  }
+
+  /* ── start state · every piece of scenery pinned here, never in an
+        enter hook, so seeking to a step can never catch it half built ── */
+  gsap.set([lead, plate, magline, cred, end], { opacity: 0 });
+  gsap.set(rows, { opacity: 0, y: 12 });
+  gsap.set(bars, { scaleY: 0 });
+  gsap.set(washes, { opacity: 0 });
+  gsap.set(tube, { drawSVG: '0%' });
+  gsap.set(legs, { opacity: 0, x: 14 });
+  gsap.set(legt, { opacity: 0, x: 14 });
+  gsap.set(liq, { attr: { y: EMPTY }, fill: '#dbe6f3' });
+  gsap.set(bg,    { opacity: 0, scale: 0.4, x: 0, y: 0, transformOrigin: '50% 50%' });
+  gsap.set(rna,   { opacity: 0, scale: 0.3, x: 0, y: 0, transformOrigin: '50% 50%' });
+  gsap.set(ctrl,  { opacity: 0, scale: 0.3, x: 0, y: -14, transformOrigin: '50% 50%' });
+  gsap.set(beads, { opacity: 0, scale: 0.3, x: 0, y: 0, transformOrigin: '50% 50%' });
+  gsap.set(mag,  { opacity: 0, x: 170 });
+  gsap.set(wisp, { opacity: 0, y: 0 });
+  gsap.set([din, dout], { opacity: 0, y: 0 });
+  gsap.set(ebar, { width: 0 });
+  gsap.set([quote, frag], { opacity: 0, y: 20 });
+
+  tl.addLabel('step0');
+
+  /* ── 1 · the protocol arrives on paper ───────────────────────── */
+  tl.to(lead, { opacity: 1, duration: 0.50, ease: 'power2.out' }, 'step0');
+  tl.fromTo(plate, { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'expo.out' }, 'step0+=0.10');
+  tl.to(tube, { drawSVG: '100%', duration: 0.62, stagger: 0.07, ease: 'power2.out' }, 'step0+=0.34');
+  tl.to(legs, { opacity: 1, x: 0, duration: 0.42, stagger: 0.07, ease: 'expo.out' }, 'step0+=0.56');
+  tl.to(legt, { opacity: 1, x: 0, duration: 0.42, stagger: 0.07, ease: 'expo.out' }, 'step0+=0.56');
+  tl.to(rows, { opacity: 0.30, y: 0, duration: 0.42, stagger: 0.045, ease: 'expo.out' }, 'step0+=0.62');
+  tl.to(cred, { opacity: 1, duration: 0.45 }, 'step0+=0.95');
+  tl.addLabel('step1');
+
+  /* ── 2 · stage 1 · release and lyse · ADDS ───────────────────── */
+  light(0, 'step1', 0);
+  pourIn(EMPTY, 'step1', 0.05);
+  level(L_LYSE, 0.80, 'power2.out', 'step1', 0.42);
+  tl.to(bg,  { opacity: 1, scale: 1, duration: 0.34, stagger: 0.026, ease: 'back.out(1.6)' }, 'step1+=1.04');
+  tl.to(rna, { opacity: 1, scale: 1, duration: 0.34, stagger: 0.045, ease: 'back.out(1.8)' }, 'step1+=1.16');
+  tl.addLabel('step2');
+
+  /* ── 3 · stage 2 · add the control · ADDS ────────────────────── */
+  light(1, 'step2', 0);
+  pourIn(L_LYSE, 'step2', 0.05);
+  level(L_CTRL, 0.45, 'power2.out', 'step2', 0.44);
+  tl.to(ctrl, { opacity: 1, scale: 1, y: 0, duration: 0.65, stagger: 0.16, ease: 'back.out(1.3)' }, 'step2+=0.56');
+  tl.addLabel('step3');
+
+  /* ── 4 · stage 3 · bind · ADDS ───────────────────────────────── */
+  light(2, 'step3', 0);
+  pourIn(L_CTRL, 'step3', 0.05);
+  level(L_BIND, 0.70, 'power2.out', 'step3', 0.44);
+  moveTo(bg,   B_BG,   0.72, 'power1.inOut', 0.018, 'step3', 0.50);
+  moveTo(rna,  B_RNA,  0.72, 'power1.inOut', 0.025, 'step3', 0.50);
+  moveTo(ctrl, B_CTRL, 0.72, 'power1.inOut', 0.025, 'step3', 0.50);
+  tl.to(beads, { opacity: 1, scale: 1, duration: 0.42, stagger: 0.045, ease: 'back.out(1.5)' }, 'step3+=0.90');
+  moveTo(rna,  DOCK.slice(0, 6), 0.55, 'power2.inOut', 0.035, 'step3', 1.42);
+  moveTo(ctrl, DOCK.slice(6, 8), 0.55, 'power2.inOut', 0.035, 'step3', 1.42);
+  tl.addLabel('step4');
+
+  /* ── 5 · stage 4 · capture and discard · REMOVES ─────────────── */
+  light(3, 'step4', 0);
+  tl.to(mag, { opacity: 1, duration: 0.22 }, 'step4');
+  tl.to(mag, { x: 0, duration: 0.70, ease: 'expo.out' }, 'step4');
+  moveTo(beads, WALL_B, 0.70, 'power2.inOut', 0.022, 'step4', 0.40);
+  moveTo(rna,   WALL_R.slice(0, 6), 0.70, 'power2.inOut', 0.022, 'step4', 0.40);
+  moveTo(ctrl,  WALL_R.slice(6, 8), 0.70, 'power2.inOut', 0.022, 'step4', 0.40);
+  tl.to(magline, { opacity: 1, duration: 0.45, ease: 'power2.out' }, 'step4+=0.80');
+  /* the unbound material leaves through the tip before the level follows */
+  moveTo(bg, DRAIN, 0.50, 'power2.in', 0.012, 'step4', 1.00);
+  tl.to(bg, { opacity: 0, duration: 0.30, ease: 'power1.in' }, 'step4+=1.22');
+  drawOff(L_BIND, 'step4', 1.05);
+  level(EMPTY, 0.82, 'power2.in', 'step4', 1.40);
+  tl.addLabel('step5');
+
+  /* ── 6 · stage 5 · wash, twice · ADDS AND REMOVES ────────────── */
+  light(4, 'step5', 0);
+  tl.to(liq, { fill: '#e1ebe8', duration: 0.30 }, 'step5+=0.05');
+  pourIn(EMPTY, 'step5', 0.05);
+  level(L_WASH, 0.40, 'power2.out', 'step5', 0.42);
+  drawOff(L_WASH, 'step5', 0.80);
+  level(EMPTY,   0.40, 'power2.in',  'step5', 0.95);
+  level(L_WASH,  0.38, 'power2.out', 'step5', 1.42);
+  level(L_RESID, 0.38, 'power2.in',  'step5', 1.86);
+  tl.addLabel('step6');
+
+  /* ── 7 · stage 6 · dry · UNTOUCHED ───────────────────────────── */
+  light(5, 'step6', 0);
+  level(EMPTY, 0.55, 'power1.inOut', 'step6', 0.10);
+  tl.to(wisp, { opacity: 0.75, duration: 0.35, stagger: 0.10, ease: 'power1.out' }, 'step6+=0.15');
+  tl.to(wisp, { opacity: 0, y: -16, duration: 0.55, stagger: 0.10, ease: 'power1.in' }, 'step6+=0.72');
+  tl.addLabel('step7');
+
+  /* ── 8 · stage 7 · elute · ADDS ──────────────────────────────────
+     Water first, so the pinned column is under the surface before the
+     magnet lets go; only then do the beads disperse. */
+  light(6, 'step7', 0);
+  pourIn(EMPTY, 'step7', 0.05);
+  tl.to(liq, { fill: '#dbe6f3', duration: 0.30 }, 'step7+=0.10');
+  level(L_ELUTE, 0.70, 'power2.out', 'step7', 0.44);
+  tl.to(mag, { x: 170, duration: 0.55, ease: 'power2.in' }, 'step7+=1.18');
+  tl.to(mag, { opacity: 0, duration: 0.22 }, 'step7+=1.50');
+  moveTo(beads, F_BEAD, 0.78, 'power1.inOut', 0.026, 'step7', 1.30);
+  moveTo(rna,   F_RNA,  0.82, 'power1.inOut', 0.032, 'step7', 1.40);
+  moveTo(ctrl,  F_CTRL, 0.82, 'power1.inOut', 0.032, 'step7', 1.40);
+  tl.addLabel('step8');
+
+  /* ── 9 · the gap the whole project sits in ───────────────────────
+     The plate steps back and the four adding stages come back to full
+     strength, so the closing line has something to point at. */
+  tl.to([lead, magline], { opacity: 0, duration: 0.42 }, 'step8');
+  tl.to(plate, { opacity: 0.09, duration: 0.60, ease: 'power2.inOut' }, 'step8+=0.05');
+  tl.to(legs, { opacity: 0, duration: 0.45 }, 'step8');
+  tl.to(legt, { opacity: 0, duration: 0.45 }, 'step8');
+  tl.to(cred, { opacity: 0.35, duration: 0.45 }, 'step8');
+  tl.to([rows[0], rows[1], rows[2], rows[6]], { opacity: 1, duration: 0.50, ease: 'power2.out' }, 'step8+=0.12');
+  tl.to([washes[0], washes[1], washes[2], washes[6]], { opacity: 1, duration: 0.50 }, 'step8+=0.12');
+  tl.to([bars[0], bars[1], bars[2], bars[6]], { scaleY: 1, duration: 0.40 }, 'step8+=0.12');
+  tl.to(rows[4], { opacity: 0.66, duration: 0.50 }, 'step8+=0.12');
+  tl.to(washes[4], { opacity: 1, duration: 0.50 }, 'step8+=0.12');
+  tl.to([rows[3], rows[5]], { opacity: 0.20, duration: 0.50, ease: 'power2.inOut' }, 'step8+=0.12');
+  tl.to(end, { opacity: 1, duration: 0.22 }, 'step8+=0.32');
+  tl.to(ebar, { width: 88, duration: 0.55, ease: 'power2.out' }, 'step8+=0.40');
+  tl.to(quote, { opacity: 1, y: 0, duration: 0.75, ease: 'expo.out' }, 'step8+=0.60');
+  tl.to(frag, { opacity: 1, y: 0, duration: 0.55, ease: 'expo.out' }, 'step8+=1.00');
+  tl.addLabel('step9');
+
+  return tl;
+});
+
+/* the rule under the title draws itself on every entry */
+Deck.enter('s04c', function (el, gsap) {
+  var rule = el.querySelector('.slide__rule');
+  if (!rule) return;
+  gsap.fromTo(rule, { scaleX: 0 },
+    { scaleX: 1, duration: 0.9, ease: 'expo.out', transformOrigin: '0% 50%' });
+});
+
+
+/* ── B25 · the reader's bill of hardware ─────────────────────────────
+   Six steps, one per readout. The ledger stays on screen the whole
+   time; a lit rule travels down to the row under discussion, the other
+   rows drop back, and that readout's judgement — the column that is
+   not in the table — rises into the foot band at full size. */
+Deck.slide('b25', function (el, gsap) {
+  var rows = Array.prototype.slice.call(el.querySelectorAll('.ro-row'));
+  var jds  = Array.prototype.slice.call(el.querySelectorAll('.ro-jd'));
+  var hl   = el.querySelector('.ro-hl');
+  var lead = el.querySelector('.ro-lead');
+  var tops = rows.map(function (r) { return parseFloat(r.style.top) || 0; });
+
+  var tl = gsap.timeline({ paused: true });
+  tl.addLabel('step0', 0);
+
+  var at = 0;
+  rows.forEach(function (row, i) {
+    if (i === 0) tl.to(lead, { opacity: 0, duration: 0.26 }, at);
+    tl.to(hl, { opacity: 1, y: tops[i] - tops[0], duration: 0.46, ease: 'power2.inOut' }, at);
+    rows.forEach(function (r, k) {
+      tl.to(r, { opacity: k === i ? 1 : 0.4, duration: 0.42 }, at);
+    });
+    if (i > 0) tl.to(jds[i - 1], { opacity: 0, y: -10, duration: 0.24 }, at);
+    tl.fromTo(jds[i], { opacity: 0, y: 12 },
+                      { opacity: 1, y: 0, duration: 0.44, ease: 'power2.out' }, at + 0.20);
+    at += 0.68;
+    tl.addLabel('step' + (i + 1), at);
+  });
+
+  return tl;
+});
+
+/* the rule under the title draws itself on every entry */
+Deck.enter('b25', function (el, gsap) {
+  var rule = el.querySelector('.slide__rule');
+  if (!rule) return;
+  gsap.fromTo(rule, { scaleX: 0 },
+    { scaleX: 1, duration: 0.9, ease: 'expo.out', transformOrigin: '0% 50%' });
+});
+
+/* ══ B26 · model first or prototypes first ═══════════════════════
+   Five clicks.  The cycle is built and then broken: the outward arm
+   draws when the pump goes model-first, the return arm draws in two
+   pieces with an × in the gap when the model turns out never to have
+   been validated, and the gap closes when the printer's repeatability
+   makes the sweep practical.  Selectors are scoped to `el` because the
+   presenter view clones slides. */
+Deck.slide('b26', function (el, gsap) {
+  var one = function (q) { return el.querySelector(q); };
+
+  var lead   = one('.mp-lead');
+  var model  = one('#b26-model');
+  var proto  = one('#b26-proto');
+  var fwd    = one('#b26-fwd');
+  var fwdh   = one('#b26-fwdh');
+  var retA   = one('#b26-retA');
+  var retB   = one('#b26-retB');
+  var retM   = one('#b26-retM');
+  var reth   = one('#b26-reth');
+  var xmark  = one('#b26-x');
+  var labF   = one('#b26-lab-fwd');
+  var labR   = one('#b26-lab-ret');
+  var frule  = one('.mp-frule');
+  var strike = one('#b26-strike');
+  var fs     = [one('#b26-f1'), one('#b26-f2'), one('#b26-f3'), one('#b26-f4')];
+
+  gsap.set([fwd, retA, retB, retM], { drawSVG: '0%' });
+  gsap.set([fwdh, reth], { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' });
+  gsap.set(xmark, { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
+  gsap.set([labF, labR], { opacity: 0 });
+  gsap.set([model, proto], { opacity: 0, y: 18 });
+  gsap.set(lead, { opacity: 0, y: 10 });
+  gsap.set(frule, { opacity: 0 });
+  gsap.set(fs, { opacity: 0, y: 12 });
+  gsap.set(strike, { scaleX: 0 });
+
+  var tl = gsap.timeline({ paused: true });
+  tl.addLabel('step0');
+
+  /* 1 · the two strategies, with what each buys and what it costs */
+  tl.to(lead, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out' }, 'step0')
+    .to(model, { opacity: 1, y: 0, duration: 0.55, ease: 'expo.out' }, 'step0+=0.18')
+    .to(proto, { opacity: 1, y: 0, duration: 0.55, ease: 'expo.out' }, 'step0+=0.30')
+    .addLabel('step1');
+
+  /* 2 · the pump went model-first: the outward arm */
+  tl.to(proto, { opacity: 0.45, duration: 0.4, ease: 'none' }, 'step1')
+    .to(fwd, { drawSVG: '100%', duration: 0.6, ease: 'power2.out' }, 'step1+=0.10')
+    .to(fwdh, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.4)' }, 'step1+=0.62')
+    .to(labF, { opacity: 1, duration: 0.4 }, 'step1+=0.50')
+    .to(frule, { opacity: 1, duration: 0.4 }, 'step1+=0.30')
+    .to(fs[0], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step1+=0.40')
+    .addLabel('step2');
+
+  /* 3 · the return arm was never closed */
+  tl.to(fs[0], { opacity: 0, y: -10, duration: 0.28 }, 'step2')
+    .to(retA, { drawSVG: '100%', duration: 0.42, ease: 'power2.out' }, 'step2+=0.10')
+    .to(retB, { drawSVG: '100%', duration: 0.42, ease: 'power2.out' }, 'step2+=0.22')
+    .to(xmark, { opacity: 1, scale: 1, duration: 0.36, ease: 'back.out(2.6)' }, 'step2+=0.58')
+    .to(labR, { opacity: 1, duration: 0.4 }, 'step2+=0.40')
+    .fromTo(fs[1], { opacity: 0, y: 12 },
+                   { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step2+=0.34')
+    .to(strike, { scaleX: 1, duration: 0.48, ease: 'power3.inOut' }, 'step2+=0.80')
+    .addLabel('step3');
+
+  /* 4 · ±0.10 mm printing closes the gap */
+  tl.to(fs[1], { opacity: 0, y: -10, duration: 0.28 }, 'step3')
+    .to(xmark, { opacity: 0, scale: 0.4, duration: 0.3 }, 'step3+=0.10')
+    .to(retM, { drawSVG: '100%', duration: 0.5, ease: 'power2.inOut' }, 'step3+=0.34')
+    .to([retA, retB, retM], { stroke: '#ff6b2b', duration: 0.5 }, 'step3+=0.34')
+    .to(reth, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2.4)' }, 'step3+=0.80')
+    .to(labR, { color: '#c9c0b8', duration: 0.5 }, 'step3+=0.40')
+    .to(proto, { opacity: 1, duration: 0.45, ease: 'none' }, 'step3+=0.20')
+    .to(model, { opacity: 0.55, duration: 0.45, ease: 'none' }, 'step3+=0.20')
+    .fromTo(fs[2], { opacity: 0, y: 12 },
+                   { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step3+=0.34')
+    .addLabel('step4');
+
+  /* 5 · both arms lit: the two approaches are one cycle */
+  tl.to(fs[2], { opacity: 0, y: -10, duration: 0.28 }, 'step4')
+    .to([model, proto], { opacity: 1, duration: 0.45, ease: 'none' }, 'step4')
+    .to(labF, { color: '#c9c0b8', duration: 0.4 }, 'step4')
+    .fromTo(fs[3], { opacity: 0, y: 12 },
+                   { opacity: 1, y: 0, duration: 0.55, ease: 'expo.out' }, 'step4+=0.30')
+    .addLabel('step5');
+
+  return tl;
+});
+
+/* the rule under the title draws itself on every entry */
+Deck.enter('b26', function (el, gsap) {
+  var rule = el.querySelector('.slide__rule');
+  if (!rule) return;
+  gsap.fromTo(rule, { scaleX: 0 },
+    { scaleX: 1, duration: 0.9, ease: 'expo.out', transformOrigin: '0% 50%' });
+});
+
 })();
 </script>

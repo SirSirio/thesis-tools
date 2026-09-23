@@ -1,11 +1,6 @@
     </div><!-- /.deck-stage -->
   </div><!-- /.deck-viewport -->
 
-  <div class="deck-hud">
-    <div class="deck-progress"><div class="deck-progress-fill"></div></div>
-    <div class="deck-counter">1 / 1</div>
-  </div>
-
   <!-- Presenter panel: rendered only under ?view=presenter -->
   <div class="pres">
     <div class="pres__stage" id="presStage"></div>
@@ -24,8 +19,18 @@
       <div class="pres__stat"><span class="pres__stat-k">Step</span><span class="pres__stat-v" id="presStep">0 / 0</span></div>
       <div class="pres__stat"><span class="pres__stat-k">Elapsed</span><span class="pres__stat-v" id="presElapsed">00:00</span></div>
       <div class="pres__stat"><span class="pres__stat-k">Left</span><span class="pres__stat-v" id="presLeft">30:00</span></div>
-      <div class="pres__stat"><span class="pres__stat-k">Clock</span><span class="pres__stat-v" id="presClock">--:--</span></div>
-      <div class="pres__spacer pres__keys">&larr; &rarr; step &middot; r reset timer &middot; b black &middot; f full &middot; o overview</div>
+      <div class="pres__stat pres__stat--seg"><span class="pres__stat-k" id="presBandK">Part</span><span class="pres__stat-v pres__seg is-idle" id="presBand">––:––</span></div>
+      <div class="pres__stat pres__stat--seg"><span class="pres__stat-k" id="presTopicK">Section</span><span class="pres__stat-v pres__seg is-idle" id="presTopic">––:––</span></div>
+      <div class="pres__prog" id="presProg">
+        <div class="pres__prog-track">
+          <div class="pres__prog-fill" id="presProgFill"></div>
+          <span class="pres__prog-pct" id="presProgPct">0 %</span>
+        </div>
+        <span class="pres__prog-n" id="presProgN">1 / 1</span>
+      </div>
+      <a class="pres__report" id="presReport" href="rehearsal.html" target="_blank"
+         rel="noopener" title="How long each part actually took">Rehearsal &rarr;</a>
+      <div class="pres__keys">&larr; &rarr; step &middot; a d slide &middot; r timer &middot; b black &middot; f full &middot; o overview</div>
     </div>
   </div>
 
@@ -36,7 +41,7 @@
     <div class="site-foot__inner">
       <div class="site-foot__who">
         <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
-        <p class="site-foot__thesis">Modular automated liquid dispensing for point-of-care use</p>
+        <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the &micro;L scale for Biological Applications</p>
       </div>
       <nav class="site-foot__links" aria-label="Site">
         <a href="../../prototypes/index.html">Prototypes</a>
@@ -45,6 +50,220 @@
       </nav>
     </div>
   </footer>
+
+  <style data-part="tail">
+  /* ══════════════════════════════════════════════════════════════════════
+     Tail CSS — the appendix hue and the grouped overview.
+     Added 2026-09-21 with the slide taxonomy; the contract is SLIDE-ORDER.md.
+     It lives here, next to the script that uses it, because every part's
+     style block is hoisted into the one document head; the tail's is emitted
+     last, so these rules win over deck.css and over the parts.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  /* One cool slate, nowhere near the orange accent or the violet/teal module
+     threads. It means exactly one thing: reference material, not the talk. */
+  :root { --appendix: #8b99ad; }
+
+  /* ── The corner counter ────────────────────────────────────────────
+     Talk slides keep the plain number; an appendix slide reads A01, A02, …
+     in the slate, so a glance at the corner says "we are off the script". */
+  .slide-no.is-appendix {
+    color: color-mix(in srgb, var(--appendix) 88%, #f0ece8);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── The overview, regrouped ───────────────────────────────────────
+     deck.js (shared, never edited) builds one flat grid of .deck-overview-thumb
+     nodes. The tail script moves those same nodes — click handlers intact —
+     into a band → topic → grid tree. These rules lay that tree out. */
+  .deck-overview-header { margin-bottom: 26px !important; text-align: left !important; }
+  .deck-overview-header .site-title { font-size: 1.7rem !important; }
+  .deck-overview-header .site-label { margin-bottom: 4px !important; }
+
+  .deck-overview-grid.is-grouped {
+    display: block;
+    gap: 0;
+    max-width: 1560px;
+  }
+
+  .ovband { margin: 0 0 40px; }
+  .ovband:last-child { margin-bottom: 8px; }
+  .ovband__head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin: 0 0 18px; padding-bottom: 9px;
+    border-bottom: 2px solid color-mix(in srgb, var(--accent) 62%, transparent);
+  }
+  .ovband__name {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 700; font-size: 27px; line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .ovband__n {
+    margin-left: auto;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .ovband--appendix .ovband__head {
+    border-bottom-color: color-mix(in srgb, var(--appendix) 70%, transparent);
+  }
+  .ovband--appendix .ovband__name {
+    color: color-mix(in srgb, var(--appendix) 82%, #f0ece8);
+  }
+
+  .ovtopic { margin: 0 0 22px; }
+  .ovtopic:last-child { margin-bottom: 0; }
+  .ovtopic__head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 10px; }
+  .ovtopic__name {
+    margin: 0; font-family: var(--font);
+    font-size: 16px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--text-soft);
+  }
+  .ovtopic__ch {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .ovtopic__ch::before { content: "·"; margin-right: 7px; }
+  .ovtopic__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(206px, 1fr));
+    gap: 15px;
+  }
+
+  /* The badge has to hold "A01" now, so it is a pill rather than a disc. */
+  .deck-overview-badge {
+    width: auto !important; min-width: 30px;
+    padding: 0 9px; border-radius: 15px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+  }
+
+  /* An appendix thumb: same slate, dimmed clone, its own border. Present,
+     legible, and obviously not part of the talk. */
+  .deck-overview-thumb.is-appendix {
+    border-color: color-mix(in srgb, var(--appendix) 52%, transparent);
+    border-style: dashed;
+    background: rgba(139,153,173,0.05);
+  }
+  .deck-overview-thumb.is-appendix:hover { border-color: var(--appendix); }
+  .deck-overview-thumb.is-appendix .deck-overview-clone {
+    opacity: 0.55; filter: saturate(0.45);
+  }
+  .deck-overview-thumb.is-appendix .deck-overview-badge {
+    background: var(--appendix); color: #0f1319;
+  }
+
+  /* The clones render imperfectly today (a separate, later job), so every
+     thumb also carries its own title. That is what makes a slide findable. */
+  .ovcap {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 9;
+    padding: 22px 50px 8px 10px;
+    font-family: var(--font); font-size: 11.5px; line-height: 1.25;
+    color: rgba(240,236,232,0.92);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    background: linear-gradient(to top, rgba(8,8,10,0.94) 42%, rgba(8,8,10,0));
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .ovcap__t {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ovcap__cue {
+    display: block;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .deck-overview-thumb.is-appendix .ovcap__cue {
+    color: color-mix(in srgb, var(--appendix) 86%, #f0ece8);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .deck-overview-thumb { transition: none !important; }
+  }
+
+  /* ══ The frame gets its own space ═══════════════════════════════════
+     Added 2026-09-21. The deck nav (00-head section 1) is one absolutely
+     positioned bar at top left carrying "← Presentations" and the
+     Instruments trigger. On a slide it landed on the module mark and beside
+     the title; in the overview it crowded the OVERVIEW pill and the deck
+     title, both of which start at 60/80 px. Two different answers:
+
+       a slide is shown   nothing but the slide and a back arrow. The
+                          Instruments trigger and its panel are gone — this
+                          is a presentation, not a website. The arrow keeps
+                          the idle fade, so a fullscreen run shows nothing.
+       the overview       the frame takes a reserved strip across the top
+                          and the overview's own header starts below it.
+                          Instruments may stay: this is a browsing view.
+
+     Both live here rather than in 00-head.html, which another session owns:
+     every part's style block is hoisted into the one head in part order and
+     the tail's is emitted last, so these win on equal specificity. */
+
+  /* ── a · while a slide is shown ────────────────────────────────── */
+
+  /* The website half of the frame, off. */
+  body:not([data-overview]) .site-nav--deck .site-nav__links,
+  body:not([data-overview]) #instr-panel { display: none; }
+
+  /* The back arrow sits in the stage's empty left gutter. The stage is
+     1280 × 720 scaled by s = min(W/1280, H/720) from its top left, and the
+     module mark is the leftmost thing on it at x = 56, so the mark's page
+     left is tx + 56·s. A 32 px control at (8, 10) ends at x = 40 and clears
+     the mark at every window this deck will ever meet; below about 900 px
+     wide at exactly 16:9 they would touch, which is far under stage size. */
+  body:not([data-overview]) .site-nav--deck {
+    top: 10px; left: 8px; gap: 0;
+  }
+  body:not([data-overview]) .site-nav--deck .deck-back-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: var(--r-pill, 999px);
+    border: 1px solid var(--glass-border);
+    background: rgba(10,10,12,0.55);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    color: var(--accent);
+    font-size: 0;                 /* the "← Presentations" label, off stage */
+    transition: background var(--dur-fast) var(--ease),
+                border-color var(--dur-fast) var(--ease);
+  }
+  /* The glyph is drawn, not typed, so the link keeps its real text (and its
+     aria-label, set in the tail script) for anything that reads the page. */
+  body:not([data-overview]) .site-nav--deck .deck-back-link::before {
+    content: "\2190";
+    font-family: var(--mono); font-size: 17px; line-height: 1;
+  }
+  body:not([data-overview]) .site-nav--deck .deck-back-link:hover {
+    background: rgba(255,107,43,0.16);
+    border-color: var(--accent);
+    opacity: 1;
+  }
+
+  /* ── b · while the overview is open ────────────────────────────── */
+
+  body[data-overview] .site-nav--deck {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    width: auto; height: 64px;
+    display: flex; align-items: center; gap: 20px;
+    padding: 0 80px;                       /* the overview's own gutter */
+    background: rgba(10,10,12,0.78);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 310;                          /* above the panel's 299 */
+  }
+  /* Browsing is not presenting: the strip does not fade out under him. */
+  body[data-overview][data-nav-idle] .site-nav--deck {
+    opacity: 1; pointer-events: auto;
+  }
+  /* The strip is fixed and the overview is the scroller, so the overview
+     reserves the height instead of sliding its first band underneath. */
+  .deck-overview { padding-top: 88px; }
+  </style>
 
   <script src="../../assets/deck.js"></script>
   <script src="../../assets/gsap/gsap.min.js"></script>
@@ -84,6 +303,155 @@
     var CHANNEL = 'deck:thesis-defense';
     var DECK_ID = 'thesis-defense';
     var PLAN_S  = 30 * 60;   /* 25 minutes of slides plus the 5 minute demo */
+
+    /* == 0 . The slide taxonomy =========================================
+       The single source of truth for how the deck is ORGANISED, as opposed
+       to how it is ordered in the file. Two levels:
+
+         band   the part of the presentation - the strongly marked division
+         topic  the thesis chapter inside that part - the sub-grouping
+
+       Edit this table and the overview regroups itself; nothing else reads
+       the order. The prose version, with the recipes for adding or moving a
+       slide, is decks/thesis-defense/SLIDE-ORDER.md - keep the two in step.
+
+       Rules that are easy to get wrong:
+         - A slide is an APPENDIX slide when it carries data-part="backup".
+           Never the cue prefix: s12 sits in the appendix and keeps its cue,
+           because cues are stable addresses (sync protocol, CONTENT.md,
+           CONTENT-IT.md, #sNN CSS, Deck.slide builders).
+         - `key` is what a slide's data-topic attribute names. data-topic wins
+           over this table, so a slide that moves parts carries its own group.
+         - Consecutive rows with the same `band` are one band block.
+         - A slide whose cue is absent here inherits the group of the nearest
+           preceding slide in the file that has one; an unmapped backup slide
+           falls into "not yet sorted". Other sessions add and remove slides,
+           so nothing may ever vanish from the overview.
+       =================================================================== */
+    /* ── 0b · The speaking plan ────────────────────────────────────
+       Sirio's budget, 30 minutes in total. The opening has no line of its
+       own, so it is spoken inside Part I's seven minutes; change PART_I
+       here and give 'Opening' its own row if that ever stops being true.
+       Longest band name first: 'Part I' is a prefix of 'Part II'.
+       =============================================================== */
+    var BAND_PLAN = [
+      { match: 'Part III',   name: 'Part III', secs:  5 * 60 },
+      { match: 'Part II',    name: 'Part II',  secs: 10 * 60 },
+      { match: 'Part I',     name: 'Part I',   secs:  7 * 60 },
+      { match: 'Live demo',  name: 'Demo',     secs:  3 * 60 },
+      { match: 'Discussion', name: 'Close',    secs:  5 * 60 },
+      { match: 'Opening',    name: 'Part I',   secs: null }   /* folded into Part I */
+    ];
+
+    function bandPlan(band) {
+      for (var i = 0; i < BAND_PLAN.length; i++) {
+        if (band.indexOf(BAND_PLAN[i].match) === 0) return BAND_PLAN[i];
+      }
+      return null;
+    }
+
+    var SLIDE_ORDER = [
+      { band: 'Opening',
+        key: 'open',      topic: '',                                thesis: '',
+        cues: ['s00', 's01', 's02', 's04', 's03'] },
+
+      { band: 'Part I \u2014 Why this machine, and how I worked',
+        key: 'gap',       topic: 'The gap',                         thesis: 'chapters 1\u20132',
+        cues: ['s05', 's05b', 's06', 's04b', 's04c'] },
+      { band: 'Part I \u2014 Why this machine, and how I worked',
+        key: 'req',       topic: 'Requirements and decomposition',  thesis: 'chapter 5',
+        cues: ['s07', 's07b', 's10'] },
+      { band: 'Part I \u2014 Why this machine, and how I worked',
+        key: 'method',    topic: 'Method, and working with an AI',  thesis: 'chapters 3\u20134',
+        cues: ['s09a', 's09b', 's08a', 's08', 's09'] },
+
+      { band: 'Part II \u2014 The modules',
+        key: 'pump',      topic: 'Pump module',                     thesis: 'chapter 6',
+        cues: ['s11', 's12b', 's13', 's14', 's15', 's16', 's12', 'b26'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'alignment', topic: 'Alignment module',                thesis: 'chapter 7',
+        cues: ['s17', 's18', 's19'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'nozzle',    topic: 'Nozzle module',                   thesis: 'chapter 8',
+        cues: ['s20', 's21'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'ui',        topic: 'User interface module',           thesis: 'chapter 9',
+        cues: ['s22', 's23'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'storage',   topic: 'Reagent storage',                 thesis: '',
+        cues: ['s24'] },
+
+      { band: 'Part III \u2014 The machine',
+        key: 'arch',      topic: 'System architecture and electronics', thesis: 'chapter 10',
+        cues: ['s25', 's26', 's27'] },
+      { band: 'Part III \u2014 The machine',
+        key: 'integ',     topic: 'Integration',                     thesis: 'chapter 11',
+        cues: ['s28', 's29', 's30', 's30b'] },
+      { band: 'Part III \u2014 The machine',
+        key: 'valid',     topic: 'System-level validation',         thesis: 'chapter 12',
+        cues: ['s31', 's32', 's33', 's34', 's35'] },
+
+      { band: 'Live demo',
+        key: 'demo',      topic: '',                                thesis: '',
+        cues: ['s36'] },
+
+      { band: 'Discussion and close',
+        key: 'disc',      topic: 'Discussion and reflection',       thesis: 'chapter 13',
+        cues: ['s37a', 's37', 's38', 's39'] },
+      { band: 'Discussion and close',
+        key: 'outlook',   topic: 'Conclusion and outlook',          thesis: 'chapter 14',
+        cues: ['s40', 's41', 'b25'] },
+      { band: 'Discussion and close',
+        key: 'closing',   topic: 'Closing',                         thesis: '',
+        cues: ['s42', 's43'] },
+
+      /* b01-b24 are UNREVISED: Sirio has not looked at them yet, so they are
+         deliberately left in one flat band in their current order. When he
+         revises one, give it a data-topic and move its cue into that topic's
+         list above - nothing else changes. */
+      { band: 'Appendix \u2014 not yet sorted',
+        key: 'unsorted',  topic: '',                                thesis: '',
+        cues: ['b01','b02','b03','b04','b05','b06','b07','b08','b09','b10','b11','b12',
+               'b13','b14','b15','b16','b17','b18','b19','b20','b21','b22','b23','b24'] }
+    ];
+
+    /* cue -> group index, data-topic key -> group index, and the catch-all. */
+    var GROUP_BY_CUE = Object.create(null);
+    var GROUP_BY_KEY = Object.create(null);
+    var UNSORTED_GI  = SLIDE_ORDER.length - 1;
+    (function () {
+      for (var i = 0; i < SLIDE_ORDER.length; i++) {
+        var g = SLIDE_ORDER[i];
+        if (g.key) GROUP_BY_KEY[g.key] = i;
+        if (g.key === 'unsorted') UNSORTED_GI = i;
+        for (var j = 0; j < g.cues.length; j++) {
+          if (GROUP_BY_CUE[g.cues[j]] !== undefined) {
+            console.warn('[deck] SLIDE_ORDER lists ' + g.cues[j] + ' twice');
+          }
+          GROUP_BY_CUE[g.cues[j]] = i;
+        }
+      }
+    })();
+
+    var groupOf = [];   /* per slide index: its index into SLIDE_ORDER */
+
+    /* Resolved once, in file order, so the fallback can look backwards. */
+    function measureGroups() {
+      groupOf = [];
+      var last = 0;
+      slides.forEach(function (el) {
+        var cue    = el.getAttribute('data-cue') || '';
+        var topic  = el.getAttribute('data-topic') || '';
+        var backup = el.getAttribute('data-part') === 'backup';
+        var gi;
+        if (topic && GROUP_BY_KEY[topic] !== undefined)   gi = GROUP_BY_KEY[topic];
+        else if (GROUP_BY_CUE[cue] !== undefined)         gi = GROUP_BY_CUE[cue];
+        else if (backup)                                  gi = UNSORTED_GI;
+        else                                              gi = last;   /* nearest preceding */
+        groupOf.push(gi);
+        last = gi;
+      });
+    }
 
     var params    = new URLSearchParams(location.search);
     var view      = params.get('view') || 'stage';
@@ -302,68 +670,335 @@
       }, true);
     }
 
-    /* ── 4 · Mini map ──────────────────────────────────────────────── */
+    /* ── 4 · Section rail ──────────────────────────────────────────
+       Where we are in the talk, on every slide but the hold screen. The
+       five sections are exactly the five rows of the contents slide, and
+       the mapping comes from each slide's own data-part, so the rail can
+       never disagree with the deck. */
 
     var THREAD = { pump: '#ff6b2b', align: '#9b7fe0', nozzle: '#4fb3c8' };
-    var NODE_BY_ACCENT = { pump: 'rotor', align: 'rack', nozzle: 'nozzle' };
-    var mapEl = null;
+    var SECTIONS = ['Part I', 'Part II', 'Part III-A', 'Live demo', 'Part III-B'];
+    var PART_SECTION = { I: 0, II: 1, III: 2, demo: 3, disc: 4, close: 4 };
+    var railEl = null;
 
-    function renderMinimap() {
-      mapEl = document.createElement('div');
-      mapEl.className = 'minimap';
-      mapEl.setAttribute('aria-hidden', 'true');
-      mapEl.innerHTML =
-        '<svg viewBox="0 0 262 72">' +
-          '<path class="mm-line" d="M 48 40 L 98 40"/>' +
-          '<path class="mm-line" d="M 134 40 L 176 40"/>' +
-          '<path class="mm-line" d="M 204 40 L 226 40"/>' +
-          '<g data-node="store">' +
-            '<rect class="mm-node" x="8" y="30" width="38" height="20" rx="10"/>' +
-            '<path class="mm-node" d="M 18 40 L 36 40"/>' +
-          '</g>' +
-          '<circle class="mm-halo" data-halo="rotor" cx="116" cy="40" r="22"/>' +
-          '<g data-node="rotor">' +
-            '<circle class="mm-node" cx="116" cy="40" r="15"/>' +
-            '<path class="mm-node" d="M 116 25 L 116 33 M 116 47 L 116 55 M 101 40 L 109 40 M 123 40 L 131 40"/>' +
-          '</g>' +
-          '<g data-node="nozzle">' +
-            '<path class="mm-node" d="M 178 28 L 202 28 L 190 54 Z"/>' +
-          '</g>' +
-          '<g data-node="rack">' +
-            '<rect class="mm-node" x="228" y="30" width="24" height="20" rx="5"/>' +
-          '</g>' +
-          '<text class="mm-part" x="8" y="66"></text>' +
-        '</svg>';
-      stage.appendChild(mapEl);
+    function renderSecRail() {
+      railEl = document.createElement('div');
+      railEl.className = 'secrail';
+      railEl.setAttribute('aria-hidden', 'true');
+      var pips = '';
+      for (var i = 0; i < SECTIONS.length; i++) pips += '<i></i>';
+      railEl.innerHTML =
+        '<span class="secrail__name"></span>' +
+        '<span class="secrail__pips">' + pips + '</span>';
+      stage.appendChild(railEl);
     }
 
-    var PART_NAME = {
-      open: '', I: 'Part I', II: 'Part II', III: 'Part III',
-      demo: 'Live demo', disc: 'Discussion', close: '', backup: 'Backup'
-    };
-
-    function updateMinimap(el) {
-      if (!mapEl) return;
+    function updateSecRail(el) {
+      if (!railEl) return;
       var part   = el.getAttribute('data-part') || '';
       var accent = el.getAttribute('data-accent') || '';
+
+      /* the hold screen is before the talk; it shows nothing */
+      if (el.getAttribute('data-talk') === 'no') { railEl.hidden = true; return; }
+      railEl.hidden = false;
+
+      var backup = part === 'backup';
+      var live   = backup ? -1 : (PART_SECTION[part] === undefined ? -1 : PART_SECTION[part]);
+
+      railEl.style.setProperty('--sr-a', THREAD[accent] || 'var(--accent)');
+      railEl.classList.toggle('is-appendix', backup);
+      railEl.classList.toggle('is-live', live >= 0);
+
+      var pips = railEl.querySelectorAll('.secrail__pips i');
+      for (var i = 0; i < pips.length; i++) {
+        pips[i].classList.toggle('is-live', !backup && i === live);
+        pips[i].classList.toggle('is-done', !backup && live >= 0 && i < live);
+      }
+      var name = railEl.querySelector('.secrail__name');
+      if (name) {
+        name.textContent = backup ? 'appendix'
+                         : (live >= 0 ? SECTIONS[live] : 'opening');
+      }
+    }
+
+    /* ── 4b · Slide number ─────────────────────────────────────────
+       Taken from the slide's POSITION in the talk, so moving a section
+       needs no rename anywhere. The hold screen opts out with
+       data-talk="no"; appendix slides number separately as A01, A02, ...
+       in the appendix slate, so the corner says at a glance whether we
+       are still on the script. See SLIDE-ORDER.md. */
+
+    var noEl = null;
+
+    function renderSlideNo() {
+      noEl = document.createElement('div');
+      noEl.className = 'slide-no';
+      noEl.setAttribute('aria-hidden', 'true');
+      stage.appendChild(noEl);
+    }
+
+    function updateSlideNo(el) {
+      if (!noEl) return;
+      var i = slides.indexOf(el);
+      var mine = talkNo[i] || 0;
+      var back = backupNo[i] || 0;
+      if (!mine && !back) { noEl.hidden = true; return; }
+      noEl.hidden = false;
+      noEl.textContent = mine ? String(mine) : 'A' + ('0' + back).slice(-2);
+      noEl.classList.toggle('is-appendix', !mine);
+    }
+
+    /* ── 4c · Module mark ──────────────────────────────────────────
+       A module slide says which module it is, top left, with the same
+       drawing the site uses. data-map wins; otherwise the thread accent
+       decides. Slides with neither carry no mark. */
+
+    var MODULE_BY_ACCENT = { pump: 'rotor', align: 'rack', nozzle: 'nozzle' };
+    var MODULE_NAME = { store: 'storage', rotor: 'pump', nozzle: 'nozzle', rack: 'alignment',
+                        ui: 'user interface',
+                        electronics: 'architecture & electronics',
+                        integration: 'integration', validation: 'validation' };
+    var MODULE_GLYPH = {
+      store: '<path class="mk-solid" d="M -6 -3 V 9 a 3 3 0 0 0 3 3 H 3 a 3 3 0 0 0 3 -3 V -3 Z"/>' +
+             '<path class="mk-node" d="M -7 -15 H 7"/>' +
+             '<path class="mk-node" d="M -6 -15 V 9 a 3 3 0 0 0 3 3 H 3 a 3 3 0 0 0 3 -3 V -15"/>',
+      rotor: '<circle class="mk-node" cx="0" cy="0" r="12"/>' +
+             '<circle class="mk-node" cx="0" cy="-12" r="3.2"/>' +
+             '<circle class="mk-node" cx="12" cy="0" r="3.2"/>' +
+             '<circle class="mk-node" cx="0" cy="12" r="3.2"/>' +
+             '<circle class="mk-node" cx="-12" cy="0" r="3.2"/>',
+      nozzle: '<path class="mk-node" d="M -7 -15 H 7 L 2 -1 H -2 Z"/>' +
+              '<path class="mk-solid" d="M 0 1 c 4 5 6 8 6 10 a 6 6 0 0 1 -12 0 c 0 -2 2 -5 6 -10 z"/>',
+      rack:  '<path class="mk-node" d="M -8 -15 V -3 M 0 -15 V -3 M 8 -15 V -3"/>' +
+             '<path class="mk-node" d="M -15 -3 H 15 V 9 a 3 3 0 0 1 -3 3 H -12 a 3 3 0 0 1 -3 -3 Z"/>',
+      /* user interface — the panel on its stand, with the touch target lit.
+         Same drawing as the fourth stop of the Part II journey strip (s11). */
+      ui:    '<rect class="mk-node" x="-15" y="-14" width="30" height="22" rx="3"/>' +
+             '<path class="mk-node" d="M -10 -7 H 3 M -10 -1 H -2"/>' +
+             '<circle class="mk-solid" cx="7" cy="1" r="3.2"/>' +
+             '<path class="mk-node" d="M 0 8 V 12 M -8 12 H 8"/>',
+
+      /* ── Part III, added 2026-09-22.  Same hand as the four module marks
+            above: the -18 -18 36 36 box, mk-node for the stroked outline,
+            mk-solid for the few filled nodes, nothing smaller than r 2.6. ── */
+
+      /* electronics — system architecture and electronics are ONE subject in
+         this deck (Sirio, 2026-09-22), so they share ONE mark: the processor
+         package with its legs, over the bus, over the things it drives. */
+      electronics: '<rect class="mk-node" x="-10" y="-16" width="20" height="13" rx="2.5"/>' +
+             '<circle class="mk-solid" cx="-5" cy="-11" r="2.6"/>' +
+             '<path class="mk-node" d="M 0 -3 V 2 M -12 2 H 12 M -12 2 V 7 M 0 2 V 7 M 12 2 V 7"/>' +
+             '<rect class="mk-solid" x="-15" y="7" width="6" height="9" rx="1.6"/>' +
+             '<rect class="mk-solid" x="-3" y="7" width="6" height="9" rx="1.6"/>' +
+             '<rect class="mk-solid" x="9" y="7" width="6" height="9" rx="1.6"/>',
+
+      /* integration — one case, the modules seated inside it */
+      integration: '<rect class="mk-node" x="-15" y="-12" width="30" height="24" rx="3.5"/>' +
+             '<path class="mk-node" d="M -4 -12 V 12 M -4 0 H 15"/>' +
+             '<circle class="mk-solid" cx="-9.5" cy="5" r="2.8"/>',
+
+      /* validation — measurements landing inside the band */
+      validation: '<path class="mk-node" d="M -15 -10 H 15 M -15 10 H 15"/>' +
+             '<circle class="mk-solid" cx="-9" cy="-3" r="2.8"/>' +
+             '<circle class="mk-solid" cx="0" cy="3" r="2.8"/>' +
+             '<circle class="mk-solid" cx="9" cy="-1" r="2.8"/>'
+    };
+
+    /* ONE SOURCE for the module symbols.  The Part II divider (s11) draws the
+       same four modules in its journey strip and builds its glyphs from this
+       map through window.Deck.marks, so the corner mark and the divider can
+       never drift into two different drawings of one module.  Anything reading
+       it must treat the -18 -18 36 36 viewBox and the mk-node / mk-solid
+       classes as part of the contract. */
+    if (window.Deck) {
+      window.Deck.marks = MODULE_GLYPH;
+      window.Deck.mark = function (key) { return MODULE_GLYPH[key] || ''; };
+      window.Deck.markBox = '-18 -18 36 36';
+    }
+
+    var markEl = null;
+
+    function renderModMark() {
+      markEl = document.createElement('div');
+      markEl.className = 'modmark';
+      markEl.setAttribute('aria-hidden', 'true');
+      markEl.innerHTML = '<svg viewBox="-18 -18 36 36"></svg><span class="modmark__name"></span>';
+      stage.appendChild(markEl);
+    }
+
+    function updateModMark(el) {
+      if (!markEl) return;
       var want   = el.getAttribute('data-map');
-      var live   = want || NODE_BY_ACCENT[accent] || null;
-      var off    = want === 'none' || el.classList.contains('slide--divider') ||
-                   part === '' || part === 'open' || part === 'close';
+      var accent = el.getAttribute('data-accent') || '';
+      var key    = (want && want !== 'none') ? want : MODULE_BY_ACCENT[accent];
+      if (want === 'none' || !key || !MODULE_GLYPH[key]) { markEl.hidden = true; return; }
+      markEl.hidden = false;
+      markEl.style.setProperty('--mk-a', THREAD[accent] || 'var(--accent)');
+      markEl.querySelector('svg').innerHTML = MODULE_GLYPH[key];
+      markEl.querySelector('.modmark__name').textContent = MODULE_NAME[key] || '';
+    }
 
-      mapEl.hidden = !!off;
-      if (off) return;
+    /* ── 4d · The overview: numbering, appendix marking, regrouping ──
+       deck.js is SHARED with decks/lab-meeting-2026-06/ and is never edited.
+       It builds one FLAT grid of .deck-overview-thumb nodes, each holding a
+       clone, a badge and a click handler closed over that slide's index.
 
-      mapEl.style.setProperty('--mm-a', THREAD[accent] || 'var(--accent)');
-      mapEl.querySelectorAll('[data-node]').forEach(function (g) {
-        g.querySelectorAll('.mm-node').forEach(function (n) {
-          n.classList.toggle('is-live', g.getAttribute('data-node') === live);
-        });
+       This deck wants that grid grouped by the taxonomy in section 0, so the
+       tail post-processes it in two passes:
+
+         labelOverview    pins each thumb's slide index on the node (after
+                          regrouping, DOM position no longer implies it),
+                          rewrites the badge to the talk number or A01...,
+                          marks appendix thumbs, and adds a title caption
+                          because the clones render imperfectly today;
+         regroupOverview  MOVES those same nodes -- never rebuilds them, so
+                          every click closure survives -- into
+                          band > topic > grid containers.
+
+       The overview is built lazily on the first press of o or Escape, hence
+       the observer. See SLIDE-ORDER.md. */
+
+    function labelOverview(root) {
+      var thumbs = root.querySelectorAll('.deck-overview-thumb');
+      for (var i = 0; i < thumbs.length; i++) {
+        var th = thumbs[i];
+        var el = slides[i];
+        th.setAttribute('data-idx', i);
+        var mine = talkNo[i] || 0;
+        var back = backupNo[i] || 0;
+        th.classList.toggle('is-appendix', !!back);
+        var badge = th.querySelector('.deck-overview-badge');
+        if (badge) {
+          badge.textContent = mine ? String(mine)
+                            : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
+        }
+        /* One line of address plus the slide's own title: with the clones
+           half-drawn, this is what actually makes a slide findable. */
+        if (el && !th.querySelector('.ovcap')) {
+          var ttl = el.querySelector('.slide__title, .divider__title');
+          var cap = document.createElement('div');
+          cap.className = 'ovcap';
+          var cueEl = document.createElement('span');
+          cueEl.className = 'ovcap__cue';
+          cueEl.textContent = el.getAttribute('data-cue') || '';
+          cap.appendChild(cueEl);
+          var ttlEl = document.createElement('span');
+          ttlEl.className = 'ovcap__t';
+          ttlEl.textContent = ttl ? ttl.textContent.trim() : '';
+          cap.appendChild(ttlEl);
+          th.appendChild(cap);
+        }
+      }
+    }
+
+    function regroupOverview(root) {
+      var grid = root.querySelector('.deck-overview-grid');
+      if (!grid || grid.classList.contains('is-grouped')) return;
+      var thumbs = Array.prototype.slice.call(grid.querySelectorAll('.deck-overview-thumb'));
+      if (!thumbs.length) return;
+
+      /* Two buckets per group: inside a topic the talk slides come first,
+         then that topic's appendix slides. */
+      var talkBucket = [], backBucket = [], gi;
+      for (gi = 0; gi < SLIDE_ORDER.length; gi++) { talkBucket.push([]); backBucket.push([]); }
+      thumbs.forEach(function (th) {
+        var i = parseInt(th.getAttribute('data-idx'), 10);
+        var g = groupOf[i];
+        if (g === undefined || !talkBucket[g]) g = UNSORTED_GI;
+        (backupNo[i] ? backBucket : talkBucket)[g].push(th);
       });
-      var halo = mapEl.querySelector('[data-halo]');
-      if (halo) halo.classList.toggle('is-live', halo.getAttribute('data-halo') === live);
-      var label = mapEl.querySelector('.mm-part');
-      if (label) label.textContent = PART_NAME[part] !== undefined ? PART_NAME[part] : part;
+
+      var frag = document.createDocumentFragment();
+      var band = null, bandName = null, bandN = null, bandCount = 0;
+
+      function closeBand() {
+        if (band && bandN) {
+          bandN.textContent = bandCount + (bandCount === 1 ? ' slide' : ' slides');
+        }
+      }
+
+      for (gi = 0; gi < SLIDE_ORDER.length; gi++) {
+        var grp  = SLIDE_ORDER[gi];
+        var list = talkBucket[gi].concat(backBucket[gi]);
+        if (!list.length) continue;
+
+        if (grp.band !== bandName) {
+          closeBand();
+          bandName  = grp.band;
+          bandCount = 0;
+          band = document.createElement('section');
+          band.className = 'ovband';
+          if (gi === UNSORTED_GI) band.classList.add('ovband--appendix');
+          var head = document.createElement('div');
+          head.className = 'ovband__head';
+          var h2 = document.createElement('h2');
+          h2.className = 'ovband__name';
+          h2.textContent = bandName;
+          bandN = document.createElement('span');
+          bandN.className = 'ovband__n';
+          head.appendChild(h2);
+          head.appendChild(bandN);
+          band.appendChild(head);
+          frag.appendChild(band);
+        }
+        bandCount += list.length;
+
+        var topic = document.createElement('div');
+        topic.className = 'ovtopic';
+        if (grp.topic) {
+          var thead = document.createElement('div');
+          thead.className = 'ovtopic__head';
+          var h3 = document.createElement('h3');
+          h3.className = 'ovtopic__name';
+          h3.textContent = grp.topic;
+          thead.appendChild(h3);
+          if (grp.thesis) {
+            var ch = document.createElement('span');
+            ch.className = 'ovtopic__ch';
+            ch.textContent = grp.thesis;
+            thead.appendChild(ch);
+          }
+          topic.appendChild(thead);
+        } else {
+          topic.classList.add('ovtopic--bare');
+        }
+        var tgrid = document.createElement('div');
+        tgrid.className = 'ovtopic__grid';
+        list.forEach(function (th) { tgrid.appendChild(th); });   /* move, not clone */
+        topic.appendChild(tgrid);
+        band.appendChild(topic);
+      }
+      closeBand();
+
+      grid.textContent = '';                 /* the thumbs are already in frag */
+      grid.classList.add('is-grouped');
+      grid.appendChild(frag);
+    }
+
+    function dressOverview(root) {
+      try {
+        labelOverview(root);
+        regroupOverview(root);
+      } catch (err) {
+        /* A broken grouping must never cost him the overview itself. */
+        console.error('[deck] overview grouping failed', err);
+      }
+    }
+
+    function watchOverview() {
+      var existing = document.querySelector('.deck-overview');
+      if (existing) dressOverview(existing);
+      new MutationObserver(function (muts) {
+        for (var i = 0; i < muts.length; i++) {
+          var added = muts[i].addedNodes;
+          for (var j = 0; j < added.length; j++) {
+            var n = added[j];
+            if (n.nodeType === 1 && n.classList && n.classList.contains('deck-overview')) {
+              dressOverview(n);
+            }
+          }
+        }
+      }).observe(document.body, { childList: true });
     }
 
     /* ── 5 · Nav auto-hide ─────────────────────────────────────────── */
@@ -378,6 +1013,73 @@
       document.addEventListener('mousemove', wake);
       document.addEventListener('mousedown', wake);
       wake();
+    }
+
+    /* ── 5b · A and D jump whole slides ────────────────────────────
+       The arrows walk clicker STEPS: they reveal the fragments inside a
+       slide before moving on. A and D ignore the animation entirely and
+       land on the neighbouring slide at step 0 — a second pair of keys for
+       getting somewhere, the way a game moves you left and right.
+
+       Deliberately consistent with the arrows: the deck is one flat
+       sequence, so walking off the last talk slide walks into the appendix
+       here exactly as the right arrow already does. Nothing at the ends.
+
+       Guarded, because this deck has live tool pages inside iframes and an
+       "a" typed into the rotor solver must not move the talk:
+         · any modifier held hands the key back to the browser;
+         · a grown tool card owns the keyboard (deck.js does the same with
+           body[data-demo-active]);
+         · a focused field, of any kind, keeps its letters.
+       The guest view is left alone: a guest follows its host. */
+
+    function isTypingTarget(t) {
+      if (!t || t.nodeType !== 1) return false;
+      if (t.isContentEditable) return true;
+      var tag = t.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    }
+
+    function wireSlideJump() {
+      document.addEventListener('keydown', function (e) {
+        var k = e.key;
+        if (k !== 'a' && k !== 'A' && k !== 'd' && k !== 'D') return;
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        if (document.body.hasAttribute('data-demo-active')) return;
+        if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
+        if (!window.Deck || !window.Deck.goToState) return;
+
+        var here = window.Deck.slideNo;
+        var to   = (k === 'd' || k === 'D') ? here + 1 : here - 1;
+        e.preventDefault();
+        if (to < 1 || to > window.Deck.count) return;   /* the ends hold */
+        window.Deck.goToState(to, 0);
+      });
+    }
+
+    /* ── 5c · The frame, on a slide and in the overview ────────────
+       The CSS above does the layout; this does the two things CSS cannot.
+       The back arrow is drawn as a glyph, so it is named here rather than
+       read out as its own arrow character. And the Instruments panel is
+       display:none on a slide, so a panel left open in the overview would
+       still count as open to deck.js's Escape handler after a thumb was
+       clicked — close it as the overview closes. */
+
+    function wireFrame() {
+      var back = document.querySelector('.site-nav--deck .deck-back-link');
+      if (back && !back.hasAttribute('aria-label')) {
+        back.setAttribute('aria-label', 'Back to presentations');
+        back.setAttribute('title', 'Back to presentations');
+      }
+      var panel = document.getElementById('instr-panel');
+      var btn   = document.querySelector('.site-nav--deck .site-nav__instr');
+      if (!panel) return;
+      new MutationObserver(function () {
+        if (document.body.hasAttribute('data-overview')) return;
+        if (panel.hidden) return;
+        panel.hidden = true;
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }).observe(document.body, { attributes: true, attributeFilter: ['data-overview'] });
     }
 
     /* ── 6 · Presenter view ────────────────────────────────────────── */
@@ -407,8 +1109,15 @@
         count:  document.getElementById('presCount'),
         step:   document.getElementById('presStep'),
         elapsed:document.getElementById('presElapsed'),
+        band:   document.getElementById('presBand'),
+        bandK:  document.getElementById('presBandK'),
+        topic:  document.getElementById('presTopic'),
+        topicK: document.getElementById('presTopicK'),
         left:   document.getElementById('presLeft'),
-        clock:  document.getElementById('presClock')
+        prog:     document.getElementById('presProg'),
+        progFill: document.getElementById('presProgFill'),
+        progPct:  document.getElementById('presProgPct'),
+        progN:    document.getElementById('presProgN')
       };
       if (pres.stage && viewport) pres.stage.appendChild(viewport);
 
@@ -418,8 +1127,12 @@
       setTimeout(fitPanel, 60);
 
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'r' || e.key === 'R') { timerStart = Date.now(); tickClock(); }
-        else if (timerStart === null) { timerStart = Date.now(); }
+        if (e.key === 'r' || e.key === 'R') {
+        timerStart = Date.now();
+        bandAt = topicAt = Date.now();
+        resetRun();
+        tickClock();
+      }
       });
 
       setInterval(tickClock, 500);
@@ -433,18 +1146,153 @@
       return sign + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
     }
 
+    /* ── The two pacing timers ─────────────────────────────────────
+       Each counts down the budget for the thing he is in the middle of: the
+       part, and the section inside it. A section's share of its part is its
+       fraction of that part's spoken slides, worked out from SLIDE_ORDER, so
+       moving a slide between sections re-balances them without a second
+       table to maintain. Backup slides never reset either timer — answering
+       a question is not a new section. */
+    var segSecs = [];                 /* per SLIDE_ORDER index: its budget */
+    var bandName = '', bandSecs = 0, bandAt = 0;
+    var topicGi = -1, topicAt = 0;
+
+    function measurePlan() {
+      var talkIn = [], i;
+      for (i = 0; i < SLIDE_ORDER.length; i++) talkIn.push(0);
+      slides.forEach(function (el, idx) {
+        if (el.getAttribute('data-part') === 'backup') return;
+        if (el.getAttribute('data-talk') === 'no') return;
+        talkIn[groupOf[idx]]++;
+      });
+      /* every group that shares a part shares that part's budget */
+      var totalIn = {};
+      for (i = 0; i < SLIDE_ORDER.length; i++) {
+        var pl = bandPlan(SLIDE_ORDER[i].band);
+        if (!pl) continue;
+        totalIn[pl.name] = (totalIn[pl.name] || 0) + talkIn[i];
+      }
+      segSecs = [];
+      for (i = 0; i < SLIDE_ORDER.length; i++) {
+        var p = bandPlan(SLIDE_ORDER[i].band);
+        var whole = p ? partSecs(p.name) : 0;
+        var share = p && totalIn[p.name] ? talkIn[i] / totalIn[p.name] : 0;
+        segSecs.push(whole * share);
+      }
+    }
+
+    function partSecs(name) {
+      for (var i = 0; i < BAND_PLAN.length; i++) {
+        if (BAND_PLAN[i].name === name && BAND_PLAN[i].secs) return BAND_PLAN[i].secs;
+      }
+      return 0;
+    }
+
+    /* ── The rehearsal record ──────────────────────────────────────
+       Every stretch he spends inside one section is written down as a visit,
+       so the report can add them up afterwards. Going back to a section adds
+       a second visit rather than overwriting the first, and time on a backup
+       slide belongs to whatever section he came from — a question is not a
+       new section. Kept in localStorage so the report is a separate page. */
+    var RUN_KEY = 'thesisDeckRun', RUNS_KEY = 'thesisDeckRuns';
+
+    /* One name per section, used by both the recorder and the plan. Groups
+       with no topic of their own (the opening, the demo) go by their band. */
+    function sectionName(gi) {
+      return SLIDE_ORDER[gi].topic || SLIDE_ORDER[gi].band;
+    }
+    var runVisits = [], runStartedAt = null, visit = null;
+
+    function saveRun() {
+      if (!runStartedAt) return;
+      var plan = { parts: {}, sections: {} };
+      for (var i = 0; i < BAND_PLAN.length; i++) {
+        if (BAND_PLAN[i].secs) plan.parts[BAND_PLAN[i].name] = BAND_PLAN[i].secs;
+      }
+      for (i = 0; i < SLIDE_ORDER.length; i++) {
+        if (segSecs[i]) plan.sections[sectionName(i)] = segSecs[i];
+      }
+      var open = visit ? [{ part: visit.part, section: visit.section,
+                            ms: Date.now() - visit.at, open: true }] : [];
+      try {
+        localStorage.setItem(RUN_KEY, JSON.stringify({
+          startedAt: runStartedAt, savedAt: Date.now(),
+          visits: runVisits.concat(open), plan: plan
+        }));
+      } catch (e) { /* private window, blocked storage: the talk still runs */ }
+    }
+
+    function closeVisit() {
+      if (!visit) return;
+      var ms = Date.now() - visit.at;
+      if (ms > 400) runVisits.push({ part: visit.part, section: visit.section, ms: ms });
+      visit = null;
+    }
+
+    /* `r` starts a fresh run and files the previous one in the history. */
+    function resetRun() {
+      closeVisit();
+      if (runStartedAt && runVisits.length) {
+        try {
+          var hist = JSON.parse(localStorage.getItem(RUNS_KEY) || '[]');
+          hist.unshift(JSON.parse(localStorage.getItem(RUN_KEY) || 'null'));
+          localStorage.setItem(RUNS_KEY, JSON.stringify(hist.filter(Boolean).slice(0, 10)));
+        } catch (e) { /* nothing to keep */ }
+      }
+      runVisits = []; runStartedAt = Date.now(); visit = null;
+      try { localStorage.removeItem(RUN_KEY); } catch (e) {}
+    }
+
+    /* Called on every state change: notices when he has walked into a new
+       part or a new section and restarts that clock. */
+    function markSegment(idx) {
+      var el = slides[idx];
+      if (!el || el.getAttribute('data-part') === 'backup') return;
+      var gi = groupOf[idx];
+      var pl = bandPlan(SLIDE_ORDER[gi].band);
+      if (!pl) return;
+      if (pl.name !== bandName) {
+        bandName = pl.name; bandSecs = partSecs(pl.name); bandAt = Date.now();
+      }
+      if (gi !== topicGi) { topicGi = gi; topicAt = Date.now(); }
+
+      var sec = sectionName(gi);
+      if (!visit || visit.section !== sec || visit.part !== pl.name) {
+        closeVisit();
+        if (runStartedAt === null) runStartedAt = Date.now();
+        visit = { part: pl.name, section: sec, at: Date.now() };
+      }
+      saveRun();
+    }
+
+    function paint(node, left, running) {
+      node.textContent = running ? mmss(left) : '\u2013\u2013:\u2013\u2013';
+      node.classList.toggle('is-idle', !running);
+      node.classList.toggle('is-warn', running && left > 30 && left <= 60);
+      node.classList.toggle('is-near', running && left >= 0 && left <= 30);
+      node.classList.toggle('is-over', running && left < 0);
+    }
+
+    /* Kept the name because several call sites use it. */
     function tickClock() {
-      if (view !== 'presenter' || !pres.clock) return;
-      var now = new Date();
-      pres.clock.textContent =
-        (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' +
-        (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+      if (view !== 'presenter' || !pres.elapsed) return;
       var el = timerStart === null ? 0 : (Date.now() - timerStart) / 1000;
       pres.elapsed.textContent = mmss(el);
       var left = PLAN_S - el;
       pres.left.textContent = mmss(left);
       pres.left.classList.toggle('is-over', left < 0);
       pres.left.classList.toggle('is-close', left >= 0 && left < 300);
+
+      if (!pres.band) return;
+      var running = timerStart !== null && bandName !== '';
+      if (pres.bandK) pres.bandK.textContent = bandName || 'Part';
+      if (pres.topicK) {
+        pres.topicK.textContent = topicGi >= 0 ? (SLIDE_ORDER[topicGi].topic || bandName) : 'Section';
+      }
+      if (running) saveRun();
+      paint(pres.band, bandSecs - (Date.now() - bandAt) / 1000, running);
+      paint(pres.topic, (segSecs[topicGi] || 0) - (Date.now() - topicAt) / 1000,
+            running && topicGi >= 0);
     }
 
     /* ── 6b · The next-state preview ───────────────────────────────
@@ -631,17 +1479,92 @@
     }
 
     function updatePresenter(d) {
+      if (!segSecs.length) measurePlan();
+      markSegment(d && d.slide !== undefined ? d.slide - 1 : 0);
       if (view !== 'presenter') return;
       var el = slides[d.slide - 1];
-      pres.count.textContent = d.slide + ' / ' + d.count;
+      /* The clock starts when the talk does, not when the deck opens: the
+         hold screen can sit on the projector for as long as he likes. */
+      if (timerStart === null && el && el.getAttribute('data-talk') !== 'no') {
+        timerStart = Date.now();
+      }
+      var cue = el ? (el.getAttribute('data-cue') || '') : '';
+      var mine = talkNo[d.slide - 1] || 0;
+      var back = backupNo[d.slide - 1] || 0;
+      pres.count.textContent = mine
+        ? mine + ' / ' + talkCount
+        : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
       pres.step.textContent  = d.step + ' / ' + d.steps;
       var t = el.querySelector('.slide__title, .divider__title');
       pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
       var notes = el.querySelector('aside.notes');
       pres.notes.innerHTML = notes ? notes.innerHTML
         : '<p class="pres__notes-empty">No notes for this slide.</p>';
+      updateProgress(d);
       renderNext(d);
       tickClock();
+    }
+
+    /* ── 6b · Progress through the talk ────────────────────────────
+       Counted in clicker positions, not in slides: a slide with five steps
+       is five presses of the talk, not one press. Backup slides are not
+       part of the talk, so they are left out of the total; standing on one
+       holds the bar where the talk left it and says so. */
+
+    var backupNo  = [];  /* per slide index: its number among the backups */
+    var progTotal = 0;   /* clicker positions in the talk */
+    var progAt    = [];  /* per slide index: positions before it, -1 = outside */
+    var talkNo    = [];  /* per slide index: its number within the talk, 0 = outside */
+    var talkCount = 0;   /* how many slides the talk itself has */
+
+    /* Everything here counts the TALK, never the file: the hold screen sits
+       before it and the backups sit after it, so neither is in any total the
+       presenter panel shows. */
+    function measureProgress() {
+      var n = 0, k = 0, b = 0;
+      progAt = [];
+      talkNo = [];
+      backupNo = [];
+      slides.forEach(function (el) {
+        var cue = el.getAttribute('data-cue') || '';
+        var isBackup = /^b/i.test(cue) || el.getAttribute('data-part') === 'backup';
+        if (isBackup || el.getAttribute('data-talk') === 'no') {
+          progAt.push(-1);
+          talkNo.push(0);
+          backupNo.push(isBackup ? ++b : 0);
+          return;
+        }
+        backupNo.push(0);
+        progAt.push(n);
+        n += el.querySelectorAll('.fragment').length + 1;
+        talkNo.push(++k);
+      });
+      progTotal = n;
+      talkCount = k;
+    }
+
+    function updateProgress(d) {
+      if (!pres.prog) return;
+      var el = slides[d.slide - 1];
+      var base = progAt[d.slide - 1];
+      if (base === undefined || base < 0) {
+        /* Appendix membership is data-part="backup", never the cue prefix:
+           s12 sits in the appendix and keeps its cue. SLIDE-ORDER.md. */
+        var appendix = !!backupNo[d.slide - 1];
+        pres.prog.classList.add('is-appendix');
+        pres.progN.textContent = appendix ? 'appendix' : 'not started';
+        if (!appendix) {
+          pres.progFill.style.width = '0%';
+          pres.progPct.textContent = '0 %';
+        }
+        return;
+      }
+      pres.prog.classList.remove('is-appendix');
+      var at  = base + d.step + 1;
+      var pct = progTotal ? Math.round(at / progTotal * 100) : 0;
+      pres.progFill.style.width = pct + '%';
+      pres.progPct.textContent  = pct + ' %';
+      pres.progN.textContent    = at + ' / ' + progTotal;
     }
 
     /* ── 7 · Guest view ────────────────────────────────────────────── */
@@ -790,7 +1713,9 @@
         prevIdx = idx;
       }
 
-      updateMinimap(el);
+      updateSecRail(el);
+      updateModMark(el);
+      updateSlideNo(el);
       updatePresenter(d);
       broadcast(d);
     }
@@ -804,9 +1729,15 @@
       dotEl    = document.querySelector('.guest-dot');
       if (!stage || !slides.length) return;
 
-      renderMinimap();
+      measureProgress();
+      measureGroups();
+      renderSecRail();
+      watchOverview();
+      renderModMark();
+      renderSlideNo();
       wireToolCards();
-      if (view === 'stage') wireNavIdle();
+      if (view !== 'guest') wireSlideJump();
+      if (view === 'stage') { wireNavIdle(); wireFrame(); }
       if (view === 'presenter') {
         /* Taken here, after the tool cards are furnished and before the first
            builder has run, so every preview clone starts from a virgin slide. */

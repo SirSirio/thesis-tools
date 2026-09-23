@@ -1,12 +1,13 @@
 <!-- ══════════════════════════════════════════════════════════════════════
-     Part III — the machine, wired, assembled, validated.  S25 to S36.
-     Builder P3.  Dialects: divider (S25), sheet (S26, S27, S31, S34),
-     cards (S28, S29, S30, S33), cine (S32, S35, S36).
-     Own compositions: six pulse trains merging into one clock (S27), the
-     carrier grid reorganising around the pair under discussion (S28), the
-     screen plate hinging up to 45 degrees under an eye line (S29), the
-     accuracy chart landing outside the band and then inside it (S31), the
-     four-clip mosaic with click-to-grow (S35).
+     Part III — the machine, wired, assembled, validated.  S25 to S36,
+     plus S30b (added 2026-09-22).
+     Builder P3.  Dialects: divider (S25), sheet (S26, S31, S34), plates
+     (S27), record (S28, S29, S30, S30b), cards (S33), cine (S32, S35, S36).
+     Own compositions: two whole figures presented one at a time (S27), the
+     accumulating bottom record of what the integration produced, each
+     picture flying down into its slot (S28 to S30b), the accuracy chart
+     landing outside the band and then inside it (S31), the four-clip
+     mosaic with click-to-grow (S35).
      ══════════════════════════════════════════════════════════════════════ -->
 
 <section class="slide slide--divider" id="s25" data-cue="s25" data-part="III">
@@ -17,23 +18,54 @@
   <div class="p3-divscrim"></div>
   <div class="divider__wash"></div>
   <div class="divider__inner">
-    <div class="divider__num">Part III</div>
+    <div class="divider__num">Part III-A</div>
     <h2 class="divider__title">One machine.</h2>
     <p class="divider__sub">Wired, assembled, validated.</p>
   </div>
+
+  <!-- the journey strip, the same concept as the Part II divider (s11): three
+       stops, the drop travelling the line and lighting each one in turn.  The
+       stops carry NO glyph paths of their own; each is an empty <g> filled on
+       entry from window.Deck.marks (parts/99-tail.html, MODULE_GLYPH), so the
+       divider and the corner mark of s26 to s34 can never drift apart.  The
+       mark box is -18 -18 36 36, translated to the stop and scaled to the
+       strip.  Architecture and electronics are one subject and share one
+       mark (Sirio, 2026-09-22). -->
+  <div class="p3-jrn">
+    <svg viewBox="0 0 1088 116" width="1088" height="116" aria-hidden="true">
+      <path class="p3-jrn-line" id="s25-jrn-line" d="M 180 34 L 908 34" />
+
+      <g class="p3-jrn-stop" data-stop="0" data-mark="electronics">
+        <g class="p3-jrn-mark" transform="translate(180 32) scale(1.111)"></g>
+        <text class="p3-jrn-t" x="180" y="80">System Architecture</text>
+        <text class="p3-jrn-t" x="180" y="104">&amp; Electronics</text>
+      </g>
+      <g class="p3-jrn-stop" data-stop="1" data-mark="integration">
+        <g class="p3-jrn-mark" transform="translate(544 32) scale(1.111)"></g>
+        <text class="p3-jrn-t" x="544" y="80">Integration</text>
+      </g>
+      <g class="p3-jrn-stop" data-stop="2" data-mark="validation">
+        <g class="p3-jrn-mark" transform="translate(908 32) scale(1.111)"></g>
+        <text class="p3-jrn-t" x="908" y="80">Validation</text>
+      </g>
+
+      <circle class="p3-jrn-drop" id="s25-jrn-drop" cx="180" cy="34" r="6" />
+    </svg>
+  </div>
+
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
       <li>Step back from the modules: from here on there is one object.</li>
-      <li>How it was wired, how the parts were bound together, what it delivered.</li>
+      <li>Three stops: how it was wired, how the parts were bound together, what it delivered.</li>
       <li>Then the machine itself, in this room.</li>
     </ul>
   </aside>
 </section>
 
 <section class="slide" id="s26" data-cue="s26" data-dialect="sheet" data-part="III"
-         data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">Twenty-five ways to wire six pumps, screened with two tools instead of a datasheet pile.</h2>
+         data-map="electronics" style="--head-h:48px">
+  <h2 class="slide__title">Twenty-five system architectures screened with two interactive tools.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -41,7 +73,7 @@
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
 
-  <p class="p3-question" id="s26-q">One small computer, a touchscreen, six pumps, two axes and a shaker.</p>
+  <p class="p3-question" id="s26-q">One microcontroller driving a screen, six pumps, two axes, and a vibration motor.</p>
   <span class="p3-qrule" id="s26-qrule"></span>
 
   <div class="tool-card" id="s26-card-a"
@@ -67,109 +99,95 @@
 
   <aside class="notes">
     <ul>
-      <li>The question: how does one small computer drive a screen, six pumps, two axes and a shaker?</li>
-      <li>Explorer: twenty-five candidates in four families, costed on real prices, checked against real pins. The answer was which driver, not which processor.</li>
-      <li>Simulator: the second pump buys most of the time; four more buy almost nothing.</li>
+      <li>The question: one microcontroller driving a screen, six pumps, two axes and a nozzle vibration motor.</li>
+      <li>Explorer: twenty-five system architectures in four families, costed on real prices, audited against real pins. Pins and driver intelligence decided it, not cost &#8212; a dumb driver makes the processor toggle a pin for every microstep, six of them need twelve lines and only seven are left once the screen and card reader are wired, and every candidate that fits the pin budget lands within about 10 % of the others on price.</li>
+      <li>Simulator: the second pump captures 86 % of the time savings; the four after it yield diminishing returns.</li>
       <li>Say: a datasheet review would have ended in whichever option I examined last. Open each card briefly.</li>
     </ul>
   </aside>
 </section>
 
-<section class="slide" id="s27" data-cue="s27" data-dialect="sheet" data-part="III"
-         data-map="rotor" style="--head-h:48px">
+<!-- ══ S27 · two figures, whole, one after the other.  Rebuilt 2026-09-22 on
+     Sirio's note: no side rail, no cropping, no signal animation, almost no
+     text.  The control architecture comes up whole, steps back, and the power
+     tree takes the stage — first as built, then with the production design
+     fading in on top of it.  Dialect "plates": one figure at its own aspect
+     ratio, object-fit contain, grown and shrunk, never cropped. ══════════ -->
+<section class="slide" id="s27" data-cue="s27" data-dialect="plates" data-part="III"
+         data-map="electronics" style="--head-h:48px">
   <h2 class="slide__title">One clock drives six pumps, because a dose is a number of steps.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
 
-  <div class="p3-panel paper" id="s27-fig">
-    <img data-src="assets/figs/fig-architecture-selected.png"
-         alt="The control architecture as built: one processor carrying the touchscreen and card reader, six numbered motor drivers on a shared step and direction clock with one enable line each, and a two-wire module bus carrying the level sensor controller and the port expander." />
-    <svg class="p3-ov" id="s27-ov" viewBox="180 8 1820 730" aria-hidden="true">
-      <rect id="s27-ghost" x="960" y="276" width="1038" height="152" rx="26" fill="none"
-            stroke="#ff6b2b" stroke-width="7" stroke-dasharray="22 18"/>
-      <path id="s27-bus" d="M 640 641 L 1951 641" fill="none" stroke="#ff6b2b"
-            stroke-width="13" opacity="0"/>
-      <path class="s27-tr" d="M 640 641 L 1016 641 L 1016 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-      <path class="s27-tr" d="M 640 641 L 1189 641 L 1189 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-      <path class="s27-tr" d="M 640 641 L 1361 641 L 1361 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-      <path class="s27-tr" d="M 640 641 L 1533 641 L 1533 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-      <path class="s27-tr" d="M 640 641 L 1706 641 L 1706 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-      <path class="s27-tr" d="M 640 641 L 1878 641 L 1878 418" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-      <g id="s27-en">
-        <circle class="s27-endot" cx="1046" cy="452" r="17" fill="#ff6b2b"/>
-        <circle class="s27-endot" cx="1219" cy="452" r="17" fill="#ff6b2b"/>
-        <circle class="s27-endot" cx="1391" cy="452" r="17" fill="#ff6b2b"/>
-        <circle class="s27-endot" cx="1563" cy="452" r="17" fill="#ff6b2b"/>
-        <circle class="s27-endot" cx="1736" cy="452" r="17" fill="#ff6b2b"/>
-        <circle class="s27-endot" cx="1908" cy="452" r="17" fill="#ff6b2b"/>
-      </g>
-      <g id="s27-stall">
-        <circle class="s27-stalled" cx="1046" cy="108" r="54" fill="none" stroke="#e83535" stroke-width="9"/>
-        <circle class="s27-stalled" cx="1219" cy="108" r="54" fill="none" stroke="#e83535" stroke-width="9"/>
-      </g>
-      <g id="s27-cap">
-        <path id="s27-cap1" d="M 1391 236 L 1391 186" fill="none" stroke="#ff6b2b" stroke-width="8"/>
-        <path id="s27-cap2" d="M 1345 186 L 1437 186 M 1345 160 L 1437 160" fill="none" stroke="#ff6b2b" stroke-width="12"/>
-        <path id="s27-cap3" d="M 1391 160 L 1391 116" fill="none" stroke="#ff6b2b" stroke-width="8"/>
-      </g>
-    </svg>
-    <span class="callout" id="s27-oos" style="left:50%; top:13%">smart drivers, out of stock</span>
-    <span class="p3-strike" id="s27-strike"></span>
-  </div>
+  <figure class="p3-plate" id="s27-ctrl">
+    <div class="p3-plate-box paper" style="aspect-ratio: 2000 / 1266;">
+      <img data-src="assets/figs/fig-architecture-selected.png"
+           alt="The control architecture as built: one processor carrying the touchscreen and card reader, six numbered motor drivers on a shared step and direction clock with one enable line each, and a two-wire module bus carrying the level-sensor controller and the port expander." />
+    </div>
+    <figcaption class="p3-plate-cap"><span class="p3-k">Control</span></figcaption>
+  </figure>
 
-  <ol class="sheet__rail">
-    <li class="sheet__panel" data-rev="1">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">on paper</span>
-      <span class="sheet__panel-t">The best driver was out of stock and dearer, so the design adapted.</span>
-    </li>
-    <li class="sheet__panel" data-rev="2">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">as built</span>
-      <span class="sheet__panel-t">One pulse train for all six heads, one enable line each.</span>
-    </li>
-    <li class="sheet__panel" data-rev="3">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">two surprises</span>
-      <span class="sheet__panel-t">A weak adapter stalled two pumps; a motor casing radiated into the bus.</span>
-    </li>
-  </ol>
-
-  <div class="p3-frame p3-frame--dark" id="s27-bay" style="left:56px; top:536px; width:392px; height:152px;">
-    <img data-src="../../assets/media/device/electronics-bay.jpg"
-         alt="The electronics bay from above: solderless breadboards under a nest of jumper wires, with the stylus resting on the holder below." />
-  </div>
-
-  <div class="p3-read" id="s27-read" style="left:480px; top:548px; width:392px;">
-    <span class="p3-read-v" id="s27-num">8</span>
-    <span class="p3-read-u" id="s27-unit">pins</span>
-    <span class="p3-read-l" id="s27-label">instead of twelve</span>
-  </div>
+  <figure class="p3-plate" id="s27-pwr">
+    <div class="p3-plate-box paper" style="aspect-ratio: 2000 / 1125;">
+      <img class="p3-plate-a" data-src="assets/figs/fig-power-tree-as-built.png"
+           alt="The power tree as built: a twelve-volt tool battery or bench supply through the switch to the twelve-volt rail, which feeds the six pump drivers, the two alignment motors and the processor board, and through a converter the five-volt rail for the vibration motor." />
+      <img class="p3-plate-b" data-src="assets/figs/fig-power-tree-production.png"
+           alt="The same power tree with the production design added: a twenty-four-volt battery pack, a twenty-four-volt motor rail feeding the six pump drivers, and a step-down stage ahead of the twelve-volt rail." />
+    </div>
+    <figcaption class="p3-plate-cap">
+      <span class="p3-k">Power</span>
+      <span class="p3-state">
+        <b class="p3-st p3-st--a">as built</b>
+        <b class="p3-st p3-st--b">production</b>
+      </span>
+    </figcaption>
+  </figure>
 
   <aside class="notes">
     <ul>
-      <li>The analytically best answer was unbuildable: smart drivers out of stock, about thirteen euro dearer.</li>
-      <li>Every pump meters a fixed volume per step at one speed, so one pulse train serves all six, gated by one enable line each: eight pins instead of twelve.</li>
-      <li>Two surprises: a half-amp adapter stalled two pumps, and a floating motor casing radiated into the bus until one 22 nF capacitor was bonded to it.</li>
-      <li>Breadboards here; production is a board at 24 V with charge sensing, and no firmware change.</li>
+      <li>Two pictures: what carries the signals, and what carries the power.</li>
+      <li>Signals: one processor, one shared step-and-direction clock for all six pump heads, one enable line each. A dose is a number of steps, so they can share the clock. The slower parts hang off a two-wire bus.</li>
+      <li>Power as built: one 12 V rail from a tool battery or the bench supply, and a converter for the 5 V rail.</li>
+      <li>Production: a regulated USB-C power bank feeding a 24 V motor rail, with a step-down ahead of the board &#8212; a raw pack sags under motor load, which is what stalled the prototype. The fitted 16 V bulk capacitors have to be replaced before that rail can go in.</li>
     </ul>
   </aside>
 </section>
 
-<section class="slide" id="s28" data-cue="s28" data-dialect="cards" data-part="III"
-         style="--head-h:48px" data-map="rotor">
+<!-- ══ S28 · the pump and storage carrier.  Rebuilt 2026-09-22 on Sirio's
+     note: one category of integration hardware at a time, in depth, and
+     then its one representative picture shrinks into a bar along the
+     bottom and stays there for the rest of Part III-A.  Every picture is
+     shown whole in a box carrying its own pixel ratio — shrunk, never
+     cropped.  Dialect "record". ═══════════════════════════════════════ -->
+<section class="slide" id="s28" data-cue="s28" data-dialect="record" data-part="III"
+         style="--head-h:48px" data-map="integration">
   <h2 class="slide__title">Each pump and its vial share one printed carrier, and the carriers hold each other.</h2>
   <div class="slide__rule"></div>
 
+  <!-- Six, not five (Sirio, 2026-09-23): the slide rests on its title alone
+       and the pair of carrier renders arrives on the first press. -->
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+  <i class="fragment step-cue" data-step="6"></i>
 
-  <div class="p3-tile" data-i="0" style="left:88px; top:206px;">
+  <!-- The kicker is a STACK of labels crossfaded in place, never one node
+       whose text is rewritten: GSAP .call() only fires forward, so a
+       rewritten label strands the later wording on the backward walk.
+       Same idiom as the S27 state pill (.p3-st--a / .p3-st--b). -->
+  <span class="p3-k p3-ik" id="s28-kick">
+    <b class="p3-kk">the central carrier</b>
+    <b class="p3-kk">loaded</b>
+    <b class="p3-kk">the left carrier</b>
+    <b class="p3-kk">mounted on the machine</b>
+  </span>
+
+  <!-- the central carrier, empty: front and back -->
+  <div class="p3-shot" id="s28-a0" style="left:188px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-front-empty.png"
          alt="The central carrier alone, seen from the front: an open bay for the pump head on the right and a lower bay for the reagent vial on the left." />
     <svg class="p3-ov" viewBox="0 0 1046 683" aria-hidden="true">
@@ -178,64 +196,78 @@
       <path id="s28-a2" d="M 142 322 L 246 446" fill="none" stroke="#ff6b2b" stroke-width="13"/>
       <path id="s28-a2h" d="M 246 400 L 252 452 L 202 442" fill="none" stroke="#ff6b2b" stroke-width="13"/>
     </svg>
+    <span class="callout" id="s28-c1" style="left:46%; top:12%">pump, from above</span>
+    <span class="callout" id="s28-c2" style="left:1%; top:32%">vial, from the front</span>
   </div>
-  <div class="p3-tile" data-i="1" style="left:368px; top:206px;">
+  <div class="p3-shot" id="s28-b0" style="left:663px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-back-empty.png"
          alt="The same central carrier from behind: three upright tabs, each with one clearance hole for a horizontal screw into the chassis rear wall." />
   </div>
-  <div class="p3-tile" data-i="2" style="left:648px; top:206px;">
+
+  <!-- the central carrier, loaded -->
+  <div class="p3-shot" id="s28-a1f" style="left:188px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-front-full.png"
          alt="The central carrier loaded: the pump head seated from above and the reagent storage module slid in from the front." />
+    <span class="callout callout--ghost" id="s28-c3" style="left:2%; top:84%">the shortest suction line</span>
   </div>
-  <div class="p3-tile" data-i="3" style="left:928px; top:206px;">
+  <div class="p3-shot" id="s28-b1f" style="left:663px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-back-full.png"
          alt="The loaded central carrier from behind, the storage module standing above its pump head." />
   </div>
-  <div class="p3-tile" data-i="4" style="left:88px; top:404px;">
-    <img data-src="assets/stills/carrier-left-front-empty.png"
-         alt="The left carrier empty, from the front: the same two bays as the central carrier." />
+
+  <!-- the left carrier: the same inside, plus the tall flange -->
+  <div class="p3-shot" id="s28-a2f" style="left:204px; top:224px; width:397px; height:280px;">
+    <img data-src="assets/stills/carrier-left-front-full.png"
+         alt="The left carrier loaded, from the front: pump head, tubing and storage module in place." />
   </div>
-  <div class="p3-tile" data-i="5" style="left:368px; top:404px;">
+  <div class="p3-shot" id="s28-b2e" style="left:679px; top:224px; width:397px; height:280px;">
     <img data-src="assets/stills/carrier-left-back-empty.png"
          alt="The left carrier from behind: two upright tabs and, in place of the third, a tall flange carrying three screw holes in a column for the exterior side wall." />
     <svg class="p3-ov" viewBox="0 0 1046 738" aria-hidden="true">
       <ellipse id="s28-flange" cx="205" cy="500" rx="98" ry="148" fill="none"
                stroke="#e83535" stroke-width="10"/>
     </svg>
-  </div>
-  <div class="p3-tile" data-i="6" style="left:648px; top:404px;">
-    <img data-src="assets/stills/carrier-left-front-full.png"
-         alt="The left carrier loaded, from the front: pump head, tubing and storage module in place." />
-  </div>
-  <div class="p3-tile" data-i="7" style="left:928px; top:404px;">
-    <img data-src="assets/stills/carrier-left-back-full.png"
-         alt="The loaded left carrier from behind, the flange standing proud of the tabs." />
+    <span class="callout callout--ghost" id="s28-c4" style="left:2%; top:5%">flange into the side wall</span>
   </div>
 
-  <div class="p3-frame" id="s28-m1" style="left:56px; top:206px; width:580px; height:326px;">
+  <!-- both carriers on the machine -->
+  <div class="p3-shot" id="s28-m1" style="left:120px; top:224px; width:497px; height:280px;">
     <img data-src="../../assets/media/device/carriers-rear.jpg"
          alt="Both carriers mounted on the assembled instrument, seen from behind: each storage module standing above its own pump head, with the green air-line filters between them." />
+    <span class="callout callout--ghost" id="s28-c5" style="left:3%; top:6%">every screw horizontal</span>
   </div>
-  <div class="p3-frame" id="s28-m2" style="left:652px; top:206px; width:572px; height:322px;">
+  <div class="p3-shot" id="s28-m2" style="left:663px; top:224px; width:497px; height:280px;">
     <img data-src="../../assets/media/device/carriers-side.jpg"
          alt="The two carriers from the side, dovetailed onto the rear wall of the chassis and interlocked with each other." />
+    <span class="callout callout--ghost" id="s28-c6" style="left:3%; top:6%">2 of 6 channels</span>
   </div>
 
-  <p class="p3-cap" id="s28-cap" style="left:76px; top:578px; width:880px;"></p>
-  <span class="p3-k" id="s28-kick" style="left:76px; top:548px;"></span>
+  <!-- the integration record: what has been shown so far, and the one
+       picture this slide adds to it.  Same four slots on S28 to S30b. -->
+  <div class="p3-bar" aria-hidden="true">
+    <span class="p3-bar-rule" id="s28-barrule"></span>
+    <div class="p3-bar-it" data-b="1" data-own="1" style="left:56px; --t-a:#ff6b2b; --t-b:#e83535">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/device/carriers-rear.jpg" alt="" /></span>
+      <span class="callout callout--lite">Pump and storage carrier</span>
+    </div>
+  </div>
 
   <aside class="notes">
     <ul>
-      <li>One carrier per channel: the pump drops in from above, the vial slides in from the front, and the suction line stays as short as it can be.</li>
+      <li>One carrier per channel: the pump drops in from above, the storage module slides in from the front, and the suction line stays as short as it can be.</li>
       <li>Two variants, identical inside: the central one screws into the rear wall, the left one adds a tall flange for the exterior side wall.</li>
       <li>Dovetails plus horizontal screws, because an operator does not know which part is load-bearing.</li>
       <li>Two of six channels built; the rest is capacity, not hardware.</li>
+      <li>From here the bottom of the slide keeps one picture of everything the integration produced.</li>
     </ul>
   </aside>
 </section>
 
-<section class="slide" id="s29" data-cue="s29" data-dialect="cards" data-part="III"
-         data-map="nozzle" style="--head-h:48px">
+<!-- ══ S29 · two categories, one beat each for the nozzle (shown already
+     in Part II, so one picture) and three for the screen holder.  Both
+     take their place in the bottom record. ═════════════════════════ -->
+<section class="slide" id="s29" data-cue="s29" data-dialect="record" data-part="III"
+         data-map="integration" style="--head-h:48px">
   <h2 class="slide__title">The nozzle bolts to the chassis; the screen tilts to 45 degrees so you look down at it.</h2>
   <div class="slide__rule"></div>
 
@@ -244,66 +276,79 @@
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
 
-  <div class="p3-col" id="s29-left">
-    <div class="p3-frame" id="s29-n1" style="left:56px; top:200px; width:420px; height:236px;">
-      <img data-src="../../assets/media/nozzle/mounted-front.jpg"
-           alt="The nozzle holder fixed above the electronics bay, with two of its three screws visible and two of six needle positions fitted with Luer hubs." />
-      <svg class="p3-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <circle id="s29-s1" cx="952" cy="936" r="62" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-        <circle id="s29-s2" cx="1400" cy="936" r="62" fill="none" stroke="#ff6b2b" stroke-width="11"/>
-        <path id="s29-br" d="M 300 780 L 300 742 L 1640 742 L 1640 780" fill="none"
-              stroke="#ff6b2b" stroke-width="10"/>
-      </svg>
-      <span class="callout" id="s29-c1" style="left:59%; top:73%">3 screws</span>
-      <span class="callout" id="s29-c2" style="left:22%; top:58%">2 of 6 positions</span>
-    </div>
-    <div class="p3-frame" id="s29-n2" style="left:56px; top:452px; width:420px; height:236px;">
-      <img data-src="../../assets/media/nozzle/lines-over-rack.jpg"
-           alt="Seen from above and behind: the dispense lines leave the two pump heads and cross the toothed drive rack to reach the needle hubs." />
-      <svg class="p3-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <path id="s29-line" d="M 1290 700 C 1330 790 1350 830 1320 880" fill="none"
-              stroke="#ff6b2b" stroke-width="12"/>
-      </svg>
-      <span class="callout" id="s29-c3" style="left:36%; top:84%">450 mm, unguided</span>
-    </div>
+  <span class="p3-k p3-ik" id="s29-kick">
+    <b class="p3-kk">the nozzle, in place</b>
+    <b class="p3-kk">the screen and stylus holder</b>
+    <b class="p3-kk">on the front of the machine</b>
+  </span>
+
+  <!-- the nozzle: one picture, because the module itself was shown in Part II -->
+  <div class="p3-shot" id="s29-n1" style="left:392px; top:224px; width:497px; height:280px;">
+    <img data-src="../../assets/media/nozzle/mounted-front.jpg"
+         alt="The nozzle holder fixed above the electronics bay, with two of its three screws visible and two of six needle positions fitted with Luer hubs." />
+    <svg class="p3-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <circle id="s29-s1" cx="952" cy="936" r="62" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <circle id="s29-s2" cx="1400" cy="936" r="62" fill="none" stroke="#ff6b2b" stroke-width="11"/>
+      <path id="s29-br" d="M 300 780 L 300 742 L 1640 742 L 1640 780" fill="none"
+            stroke="#ff6b2b" stroke-width="10"/>
+    </svg>
+    <span class="callout callout--ghost" id="s29-c0" style="left:3%; top:5%">no new part</span>
+    <!-- Two rings, three screws: the third is driven horizontally into the
+         wall of the electronics bay and is not in this frame (thesis ch. 11,
+         "The nozzle in place"), so the chip says so rather than reading as a
+         miscount. -->
+    <span class="callout" id="s29-c1" style="left:41%; top:89%">3 screws, 1 hidden</span>
+    <span class="callout" id="s29-c2" style="left:20%; top:50%">2 of 6 positions</span>
   </div>
 
-  <svg class="p3-diag" id="s29-diag" viewBox="0 0 675 320" aria-hidden="true">
-    <path id="s29-bench" d="M 40 268 L 640 268" fill="none" stroke="rgba(240,236,232,0.30)" stroke-width="3"/>
-    <path id="s29-bay" d="M 150 268 L 150 172 L 430 172 L 430 268" fill="none"
-          stroke="rgba(240,236,232,0.55)" stroke-width="4"/>
-    <g id="s29-plate">
-      <rect x="150" y="158" width="188" height="16" rx="7" fill="none" stroke="#ff6b2b" stroke-width="5"/>
-      <rect x="168" y="162" width="152" height="8" rx="4" fill="#ff6b2b" opacity="0.55"/>
-    </g>
-    <path id="s29-arc" d="M 270 166 A 120 120 0 0 0 235 81" fill="none" stroke="#ff6b2b"
-          stroke-width="4" stroke-dasharray="7 7"/>
-    <path id="s29-flatline" d="M 150 166 L 330 166" fill="none" stroke="rgba(240,236,232,0.30)" stroke-width="3"/>
-    <g id="s29-eye" opacity="0">
-      <circle cx="556" cy="60" r="20" fill="none" stroke="rgba(240,236,232,0.70)" stroke-width="3"/>
-      <circle cx="556" cy="60" r="7" fill="rgba(240,236,232,0.70)"/>
-      <path d="M 540 80 L 300 150" fill="none" stroke="rgba(240,236,232,0.35)" stroke-width="3" stroke-dasharray="6 8"/>
-    </g>
-    <text id="s29-deg" x="239" y="136" font-family="var(--mono)" font-size="32" font-weight="700"
-          fill="#ff6b2b" text-anchor="middle">45&#176;</text>
-    <text id="s29-under" x="40" y="306" font-family="var(--mono)" font-size="19"
-          fill="rgba(240,236,232,0.55)">below eye level, on a table or a truck bed</text>
-  </svg>
+  <!-- the screen and stylus holder, in CAD.  The thesis figure of this part
+       carries its own printed labels, which are about eight pixels at this
+       size; the two clean renders are used instead and annotated with the
+       deck's own chips. -->
+  <div class="p3-shot" id="s29-d0a" style="left:230px; top:224px; width:388px; height:280px;">
+    <img data-src="../../assets/media/ui/display-holder-cad-front.png"
+         alt="The display holder in CAD, seen from the face the screen board screws to: the recessed pockets for the components behind the board, the holes for the pin headers and the cutout for the card reader." />
+    <span class="callout callout--ghost" id="s29-c3" style="left:3%; top:4%">about ten prints</span>
+  </div>
+  <div class="p3-shot" id="s29-d0b" style="left:664px; top:224px; width:387px; height:280px;">
+    <img data-src="../../assets/media/ui/display-holder-cad-side.png"
+         alt="The same holder in three-quarter view: the upper half with the two stylus clips, the sliding dovetail between the halves and the two screw holes that were used." />
+    <span class="callout callout--ghost" id="s29-c4" style="left:3%; top:4%">split on a dovetail</span>
+  </div>
 
-  <div class="p3-frame" id="s29-d1" style="left:506px; top:200px; width:675px; height:380px;">
+  <!-- and on the machine, at 45 degrees -->
+  <div class="p3-shot" id="s29-d1" style="left:165px; top:224px; width:497px; height:280px;">
     <img data-src="../../assets/media/ui/display-side.jpg"
          alt="The 3.2 inch touchscreen in its printed holder on the front of the electronics bay, tilted up at 45 degrees, with the power switch and supply socket beneath it." />
-    <span class="callout" id="s29-c4" style="left:36%; top:38%">45&#176;</span>
+    <span class="callout" id="s29-c5" style="left:34%; top:36%">45&#176;</span>
   </div>
-  <div class="p3-frame" id="s29-d2" style="left:506px; top:584px; width:214px; height:120px;">
+  <div class="p3-shot" id="s29-d2" style="left:708px; top:249px; width:406px; height:229px;">
     <img data-src="../../assets/media/ui/display-top.jpg"
          alt="The same holder from above: the stylus in its two clips, tethered by a coiled wire." />
+    <span class="callout callout--ghost" id="s29-c6" style="left:4%; top:6%">stylus, tethered</span>
   </div>
-  <p class="p3-cap" id="s29-cap" style="left:740px; top:588px; width:210px;"></p>
+
+  <!-- the integration record: what has been shown so far, and the one
+       picture this slide adds to it.  Same four slots on S28 to S30b. -->
+  <div class="p3-bar" aria-hidden="true">
+    <span class="p3-bar-rule" id="s29-barrule"></span>
+    <div class="p3-bar-it" data-b="1" style="left:56px; --t-a:#ff6b2b; --t-b:#e83535">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/device/carriers-rear.jpg" alt="" /></span>
+      <span class="callout callout--lite">Pump and storage carrier</span>
+    </div>
+    <div class="p3-bar-it" data-b="2" data-own="1" style="left:356px; --t-a:#4fb3c8; --t-b:#3a7bd5">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/nozzle/mounted-front.jpg" alt="" /></span>
+      <span class="callout callout--lite">Nozzle in place</span>
+    </div>
+    <div class="p3-bar-it" data-b="3" data-own="1" style="left:656px; --t-a:#9b7fe0; --t-b:#5a8fd8">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/ui/display-side.jpg" alt="" /></span>
+      <span class="callout callout--lite">Screen and stylus holder</span>
+    </div>
+  </div>
 
   <aside class="notes">
     <ul>
-      <li>The nozzle holder needed no new part: it docks on the electronics bay, two screws down and a third horizontally into the bay wall.</li>
+      <li>The nozzle holder needed no new part: it docks on the electronics bay, two screws down and a third horizontally into the bay wall. You saw the module itself in Part II.</li>
       <li>450 mm of tubing leaves each pump head and crosses the toothed drive rack to its needle hub, unguided, hand-disconnectable.</li>
       <li>The screen sits at 45 degrees because the instrument is meant to be looked down at, on a table or the bed of a truck.</li>
       <li>Split on a sliding dovetail: adding the stylus clips cost one half-print. About ten prints in all.</li>
@@ -311,105 +356,152 @@
   </aside>
 </section>
 
-<section class="slide" id="s30" data-cue="s30" data-dialect="cards" data-part="III"
-         style="--head-h:48px" data-map="none">
+<!-- ══ S30 · the battery cradle, the fourth and last thing integration
+     produced.  The whole-machine picture that used to sit here now opens
+     S30b, where the completed record stands under it. ═══════════════ -->
+<section class="slide" id="s30" data-cue="s30" data-dialect="record" data-part="III"
+         style="--head-h:48px" data-map="integration">
   <h2 class="slide__title">A published battery holder and three screws put the power on board.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
   <i class="fragment step-cue" data-step="3"></i>
-  <i class="fragment step-cue" data-step="4"></i>
 
-  <div class="p3-panel paper" id="s30-cad" style="left:86px; top:214px; width:744px; height:356px;">
-    <img data-src="assets/figs/fig-battery-cradle-cad.png"
-         alt="The battery cradle after modification, from above and in three-quarter view: the original mounting holes filled in CAD and re-cut for M3, and the rails the pack slides onto." />
+  <span class="p3-k p3-ik" id="s30-kick">
+    <b class="p3-kk">the cradle</b>
+    <b class="p3-kk">on board</b>
+    <b class="p3-kk">on battery, outdoors</b>
+  </span>
+
+  <!-- the clean render, not the thesis figure: that figure carries printed
+       labels that are unreadable at this size (same reason as S29). -->
+  <div class="p3-shot" id="s30-cad" style="left:495px; top:224px; width:290px; height:280px;">
+    <img data-src="../../assets/media/device/battery-cradle-cad.png"
+         alt="The battery cradle after modification, in three-quarter view: the original mounting holes filled in CAD and re-cut for M3, and the rails the pack slides onto." />
+    <span class="callout callout--ghost" id="s30-c0" style="left:3%; top:4%">re-cut for M3</span>
   </div>
 
-  <div class="p3-frame" id="s30-b1" style="left:56px; top:214px; width:394px; height:222px;">
+  <div class="p3-shot" id="s30-b1" style="left:111px; top:224px; width:497px; height:280px;">
     <img data-src="../../assets/media/device/battery-empty.jpg"
          alt="The cradle screwed to the front chassis wall with the pack removed and lying beside it, its lead attached." />
+    <span class="callout callout--ghost" id="s30-c1" style="left:3%; top:6%">3 horizontal screws</span>
   </div>
-  <div class="p3-frame" id="s30-b2" style="left:466px; top:214px; width:394px; height:214px;">
+  <div class="p3-shot" id="s30-b2" style="left:654px; top:224px; width:515px; height:280px;">
     <img data-src="../../assets/media/device/battery-loaded.jpg"
          alt="The same cradle with the 12 volt pack seated on it and its lead running to the supply socket." />
+    <span class="callout callout--ghost" id="s30-c2" style="left:3%; top:6%">the bench supply&#8217;s own socket</span>
   </div>
 
-  <div class="p3-frame p3-frame--contain" id="s30-top" style="left:76px; top:200px; width:744px; height:419px;">
-    <img data-src="../../assets/media/device/top.jpg"
-         alt="The finished two-channel instrument from above, on the ground outdoors: input queue, dispensing lane, output queue, carriers at the rear and the battery at the front left." />
-    <svg class="p3-ov" viewBox="0 0 2000 1125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <path id="s30-w" d="M 232 1046 L 1738 1046" fill="none" stroke="#ff6b2b" stroke-width="7"/>
-      <path id="s30-wt" d="M 232 1016 L 232 1076 M 1738 1016 L 1738 1076" fill="none" stroke="#ff6b2b" stroke-width="7"/>
-      <path id="s30-d" d="M 1828 330 L 1828 980" fill="none" stroke="#ff6b2b" stroke-width="7"/>
-      <path id="s30-dt" d="M 1798 330 L 1858 330 M 1798 980 L 1858 980" fill="none" stroke="#ff6b2b" stroke-width="7"/>
-      <text id="s30-wl" x="985" y="1020" font-family="var(--mono)" font-size="54" font-weight="700"
-            fill="#ff6b2b" text-anchor="middle">50 cm</text>
-      <text id="s30-dl" x="1760" y="660" font-family="var(--mono)" font-size="54" font-weight="700"
-            fill="#ff6b2b" text-anchor="end">35 cm</text>
-    </svg>
-    <span class="callout" id="s30-kg" style="left:7%; top:7%">3.3 kg</span>
-    <span class="callout callout--ghost" id="s30-h" style="left:7%; top:16%">18 cm high</span>
-  </div>
-
-  <div class="p3-frame" id="s30-in" style="left:76px; top:200px; width:744px; height:419px;">
-    <img data-src="../../assets/media/device/inside-right.jpg"
-         alt="Inside the machine on the right: the electronics bay open, the drivers and processor on solderless breadboards." />
-    <span class="callout callout--ghost" id="s30-inc" style="left:6%; top:8%">breadboards, no charge sensing</span>
-  </div>
-
-  <div class="p3-frame p3-frame--dark" id="s30-clip" style="left:76px; top:200px; width:744px; height:419px;">
+  <div class="p3-shot p3-shot--dark" id="s30-clip" style="left:391px; top:224px; width:497px; height:280px;">
     <video data-src="../../assets/media/video/machine-outdoor-run.mp4"
            poster="../../assets/media/video/machine-outdoor-run-poster.jpg"
            loop playsinline preload="none" data-noauto data-sound></video>
   </div>
 
-  <div class="p3-frame" id="s30-t1" style="left:56px; top:630px; width:140px; height:79px;">
-    <img data-src="../../assets/media/device/battery-empty.jpg" alt="" />
+  <!-- the integration record: what has been shown so far, and the one
+       picture this slide adds to it.  Same four slots on S28 to S30b. -->
+  <div class="p3-bar" aria-hidden="true">
+    <span class="p3-bar-rule" id="s30-barrule"></span>
+    <div class="p3-bar-it" data-b="1" style="left:56px; --t-a:#ff6b2b; --t-b:#e83535">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/device/carriers-rear.jpg" alt="" /></span>
+      <span class="callout callout--lite">Pump and storage carrier</span>
+    </div>
+    <div class="p3-bar-it" data-b="2" style="left:356px; --t-a:#4fb3c8; --t-b:#3a7bd5">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/nozzle/mounted-front.jpg" alt="" /></span>
+      <span class="callout callout--lite">Nozzle in place</span>
+    </div>
+    <div class="p3-bar-it" data-b="3" style="left:656px; --t-a:#9b7fe0; --t-b:#5a8fd8">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/ui/display-side.jpg" alt="" /></span>
+      <span class="callout callout--lite">Screen and stylus holder</span>
+    </div>
+    <div class="p3-bar-it" data-b="4" data-own="1" style="left:956px; --t-a:#4fc38a; --t-b:#3aa87a">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/device/battery-loaded.jpg" alt="" /></span>
+      <span class="callout callout--lite">Battery cradle</span>
+    </div>
   </div>
-  <div class="p3-frame" id="s30-t2" style="left:206px; top:630px; width:140px; height:79px;">
-    <img data-src="../../assets/media/device/battery-loaded.jpg" alt="" />
-  </div>
-  <div class="p3-frame" id="s30-t3" style="left:366px; top:630px; width:140px; height:79px;">
-    <img data-src="../../assets/media/device/inside-left.jpg"
-         alt="Inside the machine on the left: the input queue, its drive rack and the left carrier." />
-  </div>
-
-  <ol class="sheet__rail">
-    <li class="sheet__panel" data-rev="1">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">the cradle</span>
-      <span class="sheet__panel-t">A published holder, its holes filled and re-cut for M3.</span>
-    </li>
-    <li class="sheet__panel" data-rev="2">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">on board</span>
-      <span class="sheet__panel-t">Three horizontal screws, and the pack travels with the machine.</span>
-    </li>
-    <li class="sheet__panel" data-rev="3">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">the object</span>
-      <span class="sheet__panel-t">50 by 35 by 18 centimetres, 3.3 kilograms, two recessed handles.</span>
-    </li>
-    <li class="sheet__panel" data-rev="4">
-      <span class="sheet__panel-bar"></span>
-      <span class="sheet__panel-k">not yet</span>
-      <span class="sheet__panel-t">Two of six channels, breadboards, no enclosure.</span>
-    </li>
-  </ol>
 
   <aside class="notes">
     <ul>
       <li>The cheapest win in the whole integration: a published DeWalt holder, holes filled in CAD and re-cut for M3, three horizontal screws.</li>
       <li>The pack replaces the bench supply on the same connector, with no internal rewiring.</li>
-      <li>The object: 50 by 35 by 18 centimetres, 3.3 kilograms loaded, two recessed handles.</li>
-      <li>Say plainly: two of six channels, breadboards, no charge sensing, no enclosure. The outdoor run is a scenario, not a claim.</li>
+      <li>That is the fourth and last thing the integration produced: the record along the bottom is now complete.</li>
+      <li>The outdoor run is a scenario, not a claim — there is no enclosure yet. Say so plainly while it plays.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ══ S30b · the finished machine, standing on the completed record.
+     Added 2026-09-22 on Sirio's note: "the next slide should be basically
+     a copy of the bottom, and then showing here the picture with the
+     dimension and weight".  The whole-machine picture and its two numbers
+     came off S30.  The dimensions are annotated with HTML chips over the
+     plate, never SVG <text> — see PUNCHLIST (x). ════════════════════ -->
+<section class="slide" id="s30b" data-cue="s30b" data-dialect="record" data-part="III"
+         style="--head-h:48px" data-map="integration">
+  <h2 class="slide__title">Four joints turn the modules into one object of 3.3 kilograms.</h2>
+  <div class="slide__rule"></div>
+
+  <!-- One step, not two (Sirio, 2026-09-23): the closing lines and the
+       "still missing" chips came off, which emptied the second beat. -->
+  <i class="fragment step-cue" data-step="1"></i>
+
+  <span class="p3-k p3-ik" id="s30b-kick">the finished machine</span>
+
+  <div class="p3-shot" id="s30b-top" style="left:56px; top:224px; width:497px; height:280px;">
+    <img data-src="../../assets/media/device/top.jpg"
+         alt="The finished two-channel instrument from above, on the ground outdoors: input queue on the left, dispensing lane in the middle, output queue on the right, the two pump and storage carriers along the rear wall and the battery at the front left." />
+    <svg class="p3-ov" viewBox="0 0 2000 1125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path id="s30b-w" d="M 232 1046 L 1738 1046" fill="none" stroke="#ff6b2b" stroke-width="9"/>
+      <path id="s30b-wt" d="M 232 1010 L 232 1082 M 1738 1010 L 1738 1082" fill="none" stroke="#ff6b2b" stroke-width="9"/>
+      <path id="s30b-d" d="M 1828 330 L 1828 980" fill="none" stroke="#ff6b2b" stroke-width="9"/>
+      <path id="s30b-dt" d="M 1792 330 L 1864 330 M 1792 980 L 1864 980" fill="none" stroke="#ff6b2b" stroke-width="9"/>
+    </svg>
+    <span class="callout" id="s30b-cw" style="left:41%; top:81%">50 cm</span>
+    <span class="callout" id="s30b-cd" style="left:71%; top:54%">35 cm</span>
+    <span class="callout callout--ghost" id="s30b-ch" style="left:3%; top:5%">18 cm high</span>
+  </div>
+
+  <!-- The weight is now the whole right-hand column, so it is enlarged and
+       centred on the picture band instead of sitting at the top of a column
+       with two lines and three chips under it. -->
+  <div class="p3-bignum" id="s30b-kg" style="left:606px; top:296px;">
+    <span class="p3-bignum-v">0.0</span><span class="p3-bignum-u">kg</span>
+  </div>
+
+  <!-- the integration record: what has been shown so far, and the one
+       picture this slide adds to it.  Same four slots on S28 to S30b. -->
+  <div class="p3-bar" aria-hidden="true">
+    <span class="p3-bar-rule" id="s30b-barrule"></span>
+    <div class="p3-bar-it" data-b="1" style="left:56px; --t-a:#ff6b2b; --t-b:#e83535">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/device/carriers-rear.jpg" alt="" /></span>
+      <span class="callout callout--lite">Pump and storage carrier</span>
+    </div>
+    <div class="p3-bar-it" data-b="2" style="left:356px; --t-a:#4fb3c8; --t-b:#3a7bd5">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/nozzle/mounted-front.jpg" alt="" /></span>
+      <span class="callout callout--lite">Nozzle in place</span>
+    </div>
+    <div class="p3-bar-it" data-b="3" style="left:656px; --t-a:#9b7fe0; --t-b:#5a8fd8">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/ui/display-side.jpg" alt="" /></span>
+      <span class="callout callout--lite">Screen and stylus holder</span>
+    </div>
+    <div class="p3-bar-it" data-b="4" style="left:956px; --t-a:#4fc38a; --t-b:#3aa87a">
+      <span class="p3-bar-fr"><img data-src="../../assets/media/device/battery-loaded.jpg" alt="" /></span>
+      <span class="callout callout--lite">Battery cradle</span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Everything along the bottom is what the integration produced: the carrier, the nozzle mount, the screen holder, the battery cradle.</li>
+      <li>Together they make one object: 50 by 35 by 18 centimetres, 3.3 kilograms.</li>
+      <li>The battery accounts for 5.5 cm of the depth; the storage modules set the height.</li>
     </ul>
   </aside>
 </section>
 
 <section class="slide" id="s31" data-cue="s31" data-dialect="sheet" data-part="III"
-         data-map="rotor" style="--head-h:48px">
+         data-map="validation" style="--head-h:48px">
   <h2 class="slide__title">Calibrated on itself, the machine lands within 3.4 % of the target.</h2>
   <div class="slide__rule"></div>
 
@@ -420,84 +512,93 @@
   <i class="fragment step-cue" data-step="5"></i>
 
   <div class="p3-chart" id="s31-chart">
-    <svg viewBox="0 0 900 404" aria-hidden="true">
-      <rect id="s31-band" x="290" y="52" width="324" height="194" rx="10"
+    <svg viewBox="0 0 820 404" aria-hidden="true">
+      <rect id="s31-band" x="268" y="52" width="320" height="194" rx="10"
             fill="rgba(79,195,138,0.10)" stroke="none" opacity="0"/>
-      <path id="s31-bandl" d="M 290 52 L 290 246" fill="none" stroke="rgba(240,236,232,0.55)"
+      <path id="s31-bandl" d="M 268 52 L 268 246" fill="none" stroke="rgba(240,236,232,0.55)"
             stroke-width="3" stroke-dasharray="9 8"/>
-      <path id="s31-bandr" d="M 614 52 L 614 246" fill="none" stroke="rgba(240,236,232,0.55)"
+      <path id="s31-bandr" d="M 588 52 L 588 246" fill="none" stroke="rgba(240,236,232,0.55)"
             stroke-width="3" stroke-dasharray="9 8"/>
-      <path id="s31-zero" d="M 452 46 L 452 254" fill="none" stroke="rgba(240,236,232,0.28)" stroke-width="2"/>
-      <text id="s31-bandt" x="452" y="38" font-family="var(--mono)" font-size="20" font-weight="700"
-            fill="rgba(240,236,232,0.72)" text-anchor="middle">&#177;10 % allowed</text>
+      <path id="s31-zero" d="M 428 46 L 428 254" fill="none" stroke="rgba(240,236,232,0.28)" stroke-width="2"/>
+      <text id="s31-bandt" x="428" y="38" font-size="20" font-weight="700"
+            fill="rgba(240,236,232,0.72)" text-anchor="middle">10 % limit</text>
 
-      <rect id="s31-bar1" x="452" y="92" width="0" height="26" rx="4" fill="#e83535"/>
-      <rect id="s31-bar2" x="452" y="150" width="0" height="26" rx="4" fill="#4fc38a"/>
-      <rect id="s31-bar3" x="452" y="192" width="0" height="26" rx="4" fill="#4fc38a"/>
+      <rect id="s31-bar1" x="428" y="92" width="0" height="26" rx="4" fill="#e83535"/>
+      <rect id="s31-bar2" x="428" y="150" width="0" height="26" rx="4" fill="#4fc38a"/>
+      <rect id="s31-bar3" x="428" y="192" width="0" height="26" rx="4" fill="#4fc38a"/>
 
-      <text id="s31-v1" x="150" y="113" font-family="var(--mono)" font-size="26" font-weight="700"
-            fill="#e83535" text-anchor="end" opacity="0">&#8722;18 %</text>
-      <text id="s31-v2" x="386" y="171" font-family="var(--mono)" font-size="26" font-weight="700"
-            fill="#4fc38a" text-anchor="end" opacity="0">&#8722;3.4 %</text>
-      <text id="s31-v3" x="472" y="213" font-family="var(--mono)" font-size="26" font-weight="700"
+      <text id="s31-v1" x="128" y="113" font-size="26" font-weight="700"
+            fill="#e83535" text-anchor="end" opacity="0">&#8776;&#8722;18 %</text>
+      <text id="s31-v2" x="452" y="171" font-size="26" font-weight="700"
+            fill="#4fc38a" text-anchor="start" opacity="0">&#8722;3.4 %</text>
+      <text id="s31-v3" x="452" y="213" font-size="26" font-weight="700"
             fill="#4fc38a" text-anchor="start" opacity="0">+0.6 %</text>
 
-      <text class="s31-rl" id="s31-r1" x="880" y="112" font-family="var(--font)" font-size="19"
-            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">bench constant</text>
-      <text class="s31-rl" id="s31-r2" x="880" y="170" font-family="var(--font)" font-size="19"
-            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">channel 1</text>
-      <text class="s31-rl" id="s31-r3" x="880" y="212" font-family="var(--font)" font-size="19"
-            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">channel 2</text>
+      <!-- the keyword: recalibration, bracketing the two channels -->
+      <path id="s31-brk" d="M 256 150 H 234 V 218 H 256" fill="none" stroke="#ff6b2b"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text id="s31-brkt" x="222" font-size="22" font-weight="700"
+            fill="#ff6b2b" text-anchor="end" opacity="0"><tspan x="222" y="177">after</tspan><tspan x="222" y="205">recalibration</tspan></text>
 
-      <path d="M 60 268 L 880 268" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+      <text class="s31-rl" id="s31-r1" x="788" font-size="19"
+            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0"><tspan x="788" y="100">with the bench</tspan><tspan x="788" y="124">constant</tspan></text>
+      <text class="s31-rl" id="s31-r2" x="788" y="170" font-size="19"
+            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">Channel 1</text>
+      <text class="s31-rl" id="s31-r3" x="788" y="212" font-size="19"
+            fill="rgba(240,236,232,0.80)" text-anchor="end" opacity="0">Channel 2</text>
 
-      <g id="s31-cv" opacity="0">
-        <text x="60" y="340" font-family="var(--font)" font-size="19" fill="rgba(240,236,232,0.55)">dose to dose</text>
-        <path d="M 120 356 L 620 356" fill="none" stroke="rgba(240,236,232,0.22)" stroke-width="2"/>
-        <path id="s31-pip" d="M 233 318 L 233 378" fill="none" stroke="rgba(240,236,232,0.70)"
-              stroke-width="3" stroke-dasharray="8 7"/>
-        <text x="233" y="312" font-family="var(--mono)" font-size="19" fill="rgba(240,236,232,0.70)"
-              text-anchor="middle">0.27 % by hand</text>
-        <circle class="s31-dot" cx="204" cy="356" r="9" fill="#ff6b2b"/>
-        <circle class="s31-dot" cx="540" cy="356" r="9" fill="#ff6b2b"/>
-        <text x="204" y="392" font-family="var(--mono)" font-size="19" fill="rgba(240,236,232,0.60)"
-              text-anchor="middle">0.2 %</text>
-        <text x="540" y="392" font-family="var(--mono)" font-size="19" fill="rgba(240,236,232,0.60)"
-              text-anchor="middle">1.0 %</text>
-      </g>
-
-      <g id="s31-drift" opacity="0">
-        <text x="660" y="300" font-family="var(--font)" font-size="19" fill="rgba(240,236,232,0.55)">between sessions</text>
-        <circle cx="690" cy="352" r="5" fill="rgba(240,236,232,0.55)"/>
-        <path id="s31-up" d="M 690 352 L 744 320" fill="none" stroke="#ff6b2b" stroke-width="5" stroke-linecap="round"/>
-        <path id="s31-dn" d="M 690 352 L 744 384" fill="none" stroke="#e83535" stroke-width="5" stroke-linecap="round"/>
-        <text id="s31-ut" x="756" y="326" font-family="var(--mono)" font-size="20" font-weight="700"
-              fill="#ff6b2b">+1.3 %</text>
-        <text id="s31-dt" x="756" y="392" font-family="var(--mono)" font-size="20" font-weight="700"
-              fill="#e83535">&#8722;5.0 %</text>
-      </g>
+      <path d="M 48 268 L 788 268" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
     </svg>
+
+    <!-- Repeatability, stated so it says what the number IS and what it is
+         of (Sirio, 2026-09-23: "what is that dose to dose thing?").  It used
+         to be two unlabelled dots at 0.2 % and 1.0 %, a range that mixed the
+         isolated bench head with one of the two installed ones.  What the
+         thesis actually publishes per channel is the CV of the three
+         1000 uL doses in tab:pump-two-heads, ch. 6 "The module in the
+         machine": 1.04 % on Channel 1, 2.94 % on Channel 2.
+
+         HTML over the plate, deliberately not SVG <text>: this chart's
+         viewBox is 1:1 with its box, which is the exact case where Chrome
+         lays the glyphs out at the pre-scale CTM and paints them off their
+         own measured box. -->
+    <div class="s31-cv" id="s31-cv">
+      <span class="s31-cv-k">Coefficient of variation, three doses of 1000 &#181;L on each channel</span>
+      <span class="s31-cv-r">
+        <span class="s31-cv-i"><b>Channel 1</b><i>1.04 %</i></span>
+        <span class="s31-cv-i"><b>Channel 2</b><i>2.94 %</i></span>
+      </span>
+    </div>
   </div>
 
-  <div class="p3-frame p3-frame--dark" id="s31-vid" style="left:984px; top:200px; width:216px; height:384px;">
-    <video data-src="../../assets/media/video/pump-gravimetric.mp4"
-           poster="../../assets/media/video/pump-gravimetric-poster.jpg"
+  <div class="p3-frame p3-frame--dark" id="s31-vid" style="left:908px; top:200px; width:316px; height:178px;">
+    <video data-src="../../assets/media/video/machine-dispensing.mp4"
+           poster="../../assets/media/video/machine-dispensing-poster.jpg"
            muted loop playsinline preload="none"></video>
+    <span class="callout" id="s31-vc" style="left:12px; bottom:12px;">weighed in the tube</span>
+  </div>
+
+  <div class="p3-strokes" id="s31-stroke" style="left:908px; top:402px; width:316px; height:202px;">
+    <span class="p3-k">per stroke</span>
+    <span class="p3-srow"><b>Channel 1</b><i>3.94 &#181;L</i></span>
+    <span class="p3-srow"><b>Channel 2</b><i>4.10 &#181;L</i></span>
+    <p class="p3-snote">about 10 % less than the isolated bench head</p>
   </div>
 
   <aside class="notes">
     <ul>
-      <li>One thousand microlitres, commanded through the whole assembled path, weighed on an analytical balance.</li>
-      <li>With the constant from the isolated pump bench it fell about eighteen per cent short; recalibrated on the instrument itself, minus 3.4 and plus 0.6 per cent.</li>
-      <li>Scatter 0.2 to 1.0 per cent, against 0.27 for a hand pipette on the same balance.</li>
-      <li>The constant moved between sessions, so a field instrument has to recalibrate itself.</li>
+      <li>A commanded 1000 &#181;L through the whole assembled path, into tared tubes standing in the rack &#8212; capped and weighed as they stood, not on a boat.</li>
+      <li>On the constant from the isolated pump bench it fell about 18 % short. Recalibrating that constant on the assembled instrument is the whole story: &#8722;3.4 % and +0.6 %, both inside the 10 % limit.</li>
+      <li>Assembled, the heads give 3.94 and 4.10 &#181;L a stroke, about 10 % less than the bench head &#8212; that is the shortfall the recalibration absorbs.</li>
+      <li>Dose to dose, on the assembled machine: a coefficient of variation of 1.04 % on Channel 1 and 2.94 % on Channel 2, three doses of a commanded 1000 &#181;L each. The isolated bench head managed about 0.3 %, so most of that spread is the installed line, not the rotor.</li>
+      <li>Not on the slide, say it: between sessions the constants moved +1.3 % and &#8722;5.0 %, which is why a field instrument has to be able to recalibrate itself.</li>
     </ul>
   </aside>
 </section>
 
 <section class="slide" id="s32" data-cue="s32" data-dialect="cine" data-part="III"
-         data-map="rack" style="--cine-scrim:0.55">
-  <h2 class="slide__title">Forty tubes, five racks, nobody in the room.</h2>
+         data-map="validation" style="--cine-scrim:0.55; --head-h:48px">
+  <h2 class="slide__title">Unattended dispensing validated across five racks and forty tubes.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -505,78 +606,92 @@
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
 
-  <div class="p3-frame" id="s32-plate" style="left:56px; top:160px; width:708px; height:398px;">
+  <div class="p3-frame p3-frame--dark p3-frame--contain" id="s32-plate"
+       style="left:56px; top:206px; width:668px; height:376px;">
     <img id="s32-start" data-src="../../assets/media/device/validation-start.jpg"
          alt="The machine before the run, seen from above: forty empty capped tubes standing in five racks in the input queue, the output queue empty." />
     <img id="s32-done" data-src="../../assets/media/device/validation-done.jpg"
-         alt="After the run: five racks of eight tubes in the output queue, every tube carrying red dye, the screen reading done at eleven minutes six seconds." />
-    <svg class="p3-ov" id="s32-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <circle id="s32-target" cx="590" cy="258" r="76" fill="none" stroke="#ff6b2b" stroke-width="10"/>
-    </svg>
-    <span class="callout" id="s32-c5" style="left:29.5%; top:31%">5 mm</span>
+         alt="After the run: five racks of eight tubes in the output queue, every tube carrying red dye, the screen reporting the batch done." />
   </div>
 
-  <div class="p3-bignum" id="s32-num" style="left:788px; top:176px;">
+  <div class="p3-bignum" id="s32-num" style="left:756px; top:210px;">
     <span class="p3-bignum-v" id="s32-count">0</span>
     <span class="p3-bignum-u">tubes</span>
   </div>
-  <p class="p3-cap" id="s32-sub" style="left:788px; top:268px; width:420px;">100 &#181;L and 75 &#181;L in every tube</p>
-  <p class="p3-cap" id="s32-miss" style="left:788px; top:268px; width:420px;">3 of 40 landed on the deck</p>
+  <p class="p3-cap" id="s32-sub" style="left:756px; top:306px; width:468px;">100 &#181;L and 75 &#181;L in every tube</p>
 
-  <div class="p3-frame p3-frame--dark" id="s32-vid" style="left:788px; top:318px; width:436px; height:245px;">
+  <div class="p3-frame p3-frame--dark" id="s32-vid" style="left:756px; top:346px; width:384px; height:216px;">
     <video data-src="../../assets/media/video/machine-demo.mp4"
            poster="../../assets/media/video/machine-demo-poster.jpg"
            muted loop playsinline preload="none" data-noauto></video>
   </div>
 
-  <div class="p3-frame" id="s32-t1" style="left:56px; top:580px; width:120px; height:120px;">
+  <div class="p3-frame" id="s32-t1" style="left:56px; top:596px; width:84px; height:84px;">
     <img data-src="../../assets/media/device/sample-front.jpg"
          alt="A tube from the first rack, filled with dyed reagent." />
   </div>
-  <div class="p3-frame" id="s32-t2" style="left:192px; top:580px; width:120px; height:120px;">
+  <div class="p3-frame" id="s32-t2" style="left:150px; top:596px; width:84px; height:84px;">
     <img data-src="../../assets/media/device/sample-back.jpg"
          alt="A tube from the last rack, filled to a visually comparable level." />
   </div>
-  <p class="p3-cap" id="s32-tcap" style="left:330px; top:596px; width:420px;">First rack and last rack, alike by eye</p>
+  <p class="p3-cap" id="s32-tcap" style="left:250px; top:624px; width:440px;">First rack and last rack, alike by eye</p>
+
+  <!-- A different fact, in its own place and its own register: what left a
+       tube and did not land in one.  It is a count of droplets, not of
+       tubes, and the cap fouling of S33 is counted apart from it. -->
+  <aside class="p3-aside" id="s32-miss" style="left:756px; top:580px; width:468px;">
+    <span class="p3-k p3-aside-k">off target</span>
+    <b>3 droplets wetted the rack or the lane</b>
+    <i>counted apart from the cap fouling</i>
+  </aside>
 
   <aside class="notes">
     <ul>
       <li>A dual-reagent protocol, 100 and 75 microlitres, across forty tubes in five racks, start to finish without any user help.</li>
       <li>What made it possible was slowing the linear axes so the steppers could push a loaded five-rack magazine without stalling.</li>
-      <li>Every droplet landed inside the 5 mm target radius; three of forty wetted the deck or the lane instead.</li>
       <li>First and last rack held comparable volumes by eye. On the bench supply, not on battery.</li>
+      <li>A separate fact, and it is droplets, not tubes: apart from the cap fouling &#8212; which is counted on its own, and comes next &#8212; three droplets wetted the rack deck or the lane instead of falling into a tube.</li>
+      <li>If asked for a run time: the thesis does not report one.</li>
     </ul>
   </aside>
 </section>
 
 <section class="slide" id="s33" data-cue="s33" data-dialect="cards" data-part="III"
-         data-map="rack" style="--head-h:48px">
-  <h2 class="slide__title">The failures were a tube cap, a tired battery and a leaking septum.</h2>
+         data-map="validation" style="--head-h:40px">
+  <h2 class="slide__title">The three failure modes were cap friction, battery depletion, and septum leakage.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
   <i class="fragment step-cue" data-step="3"></i>
 
-  <article class="p3-fcard" id="s33-c0" style="left:56px; width:600px;">
-    <div class="p3-fcard-media">
+  <!-- The cap card carries a 1600 x 1420 photograph, so it is the one card
+       whose geometry follows the picture: the media box is the image's own
+       ratio and the image is contained, never cropped.  That makes it the
+       narrow card of the three, and the row is centred around it. -->
+  <article class="p3-fcard p3-fcard--fit" id="s33-c0"
+           style="left:174px; width:384px; height:480px;">
+    <div class="p3-fcard-media" style="height:340px;">
       <img data-src="../../assets/media/alignment/lid-fouling.jpg"
            alt="Two sample tubes in a rack, their hinged caps folded back over the deck; a third cap lies flat and projects sideways past the rack wall." />
-      <svg class="p3-ov" viewBox="0 0 1600 1420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <path id="s33-ref" d="M 875 760 L 875 470" fill="none" stroke="rgba(240,236,232,0.55)"
-              stroke-width="9" stroke-dasharray="20 16"/>
-        <path id="s33-arm" d="M 875 760 L 1120 560" fill="none" stroke="#9b7fe0" stroke-width="11"/>
-        <path id="s33-arc" d="M 875 610 A 150 150 0 0 1 991 665" fill="none" stroke="#9b7fe0"
-              stroke-width="9"/>
-        <g id="s33-ghost" opacity="0">
-          <circle cx="1120" cy="560" r="86" fill="none" stroke="#e83535" stroke-width="10"
-                  stroke-dasharray="18 14"/>
-          <path d="M 875 760 L 1120 560" fill="none" stroke="#e83535" stroke-width="9" stroke-dasharray="18 14"/>
-        </g>
-        <circle id="s33-drop" cx="1010" cy="960" r="34" fill="#e83535" opacity="0"/>
+      <!-- Both caps are in the frame now that the picture is not cropped, so
+           the annotation is a straight comparison read off the pixels: the
+           cap at (828, 338) is folded back and standing clear of the deck,
+           the cap at (1165, 548) is lying flat, projecting sideways from its
+           tube towards the lane wall that runs down the top right.  Shapes
+           only, no SVG text. -->
+      <svg class="p3-ov" viewBox="0 0 1600 1420" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <ellipse id="s33-good" cx="828" cy="338" rx="132" ry="122" fill="none"
+                 stroke="#4fc38a" stroke-width="12"/>
+        <ellipse id="s33-bad" cx="1165" cy="548" rx="152" ry="114" fill="none"
+                 stroke="#e83535" stroke-width="12"/>
+        <path id="s33-reach" d="M 1300 494 L 1416 431" fill="none" stroke="#e83535"
+              stroke-width="11" stroke-linecap="round"/>
+        <path id="s33-reachh" d="M 1376 428 L 1420 428 L 1412 470" fill="none" stroke="#e83535"
+              stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span class="callout" id="s33-deg" style="left:5%; top:13%">135&#176;</span>
-      <span class="callout" id="s33-flat" style="left:5%; top:31%">flat: it rubs the wall</span>
+      <span class="callout callout--ghost" id="s33-deg" style="left:25%; top:4%">135&#176;, folded back</span>
+      <span class="callout" id="s33-flat" style="left:33%; top:60%">flat: it rubs the wall</span>
     </div>
     <div class="p3-fcard-foot">
       <span class="p3-k">the cap</span>
@@ -584,24 +699,33 @@
     </div>
   </article>
 
-  <article class="p3-fcard" id="s33-c1" style="left:676px; width:254px;">
+  <!-- Like the cap card, this one carries its photograph whole: the picture
+       is 2000 x 1126, so the ACTIVE media box is 600 x 338 (its own ratio)
+       and the image is object-fit: contain.  The overlay viewBox carries the
+       same ratio, so the drawing tracks the picture at every card width and
+       stays on the empty bench to the right of the machine. -->
+  <article class="p3-fcard p3-fcard--fit" id="s33-c1" style="left:578px; width:254px;">
     <div class="p3-fcard-media">
       <img data-src="../../assets/media/device/validation-battery.jpg"
            alt="The output queue after the battery run: two racks, sixteen tubes filled with dye, and the screen reading run stopped." />
-      <svg class="p3-ov" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <g id="s33-batt" opacity="0" transform="translate(46,232)">
-          <rect x="0" y="0" width="150" height="66" rx="9" fill="rgba(8,8,10,0.72)"
-                stroke="rgba(240,236,232,0.75)" stroke-width="4"/>
-          <rect x="150" y="20" width="12" height="26" rx="3" fill="rgba(240,236,232,0.75)"/>
-          <rect id="s33-batfill" x="8" y="8" width="134" height="50" rx="5" fill="#ff6b2b"/>
+      <svg class="p3-ov" viewBox="0 0 600 338" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <g id="s33-batt" opacity="0" transform="translate(454,111)">
+          <rect x="0" y="0" width="88" height="40" rx="7" fill="rgba(8,8,10,0.78)"
+                stroke="rgba(240,236,232,0.80)" stroke-width="3"/>
+          <rect x="88" y="12" width="8" height="16" rx="2" fill="rgba(240,236,232,0.80)"/>
+          <rect id="s33-batfill" x="5" y="5" width="78" height="30" rx="4" fill="#ff6b2b"/>
         </g>
         <g id="s33-rot" opacity="0">
-          <circle id="s33-rot1" cx="300" cy="266" r="30" fill="none" stroke="#e83535" stroke-width="6"/>
-          <path id="s33-rot1s" d="M 300 236 L 300 250 M 300 282 L 300 296 M 270 266 L 284 266 M 316 266 L 330 266"
-                fill="none" stroke="#e83535" stroke-width="6"/>
-          <circle id="s33-rot2" cx="392" cy="266" r="30" fill="none" stroke="#e83535" stroke-width="6"/>
-          <path id="s33-rot2s" d="M 392 236 L 392 250 M 392 282 L 392 296 M 362 266 L 376 266 M 408 266 L 422 266"
-                fill="none" stroke="#e83535" stroke-width="6"/>
+          <g id="s33-rotA">
+            <circle cx="474" cy="211" r="24" fill="none" stroke="#e83535" stroke-width="5"/>
+            <path id="s33-rotAs" d="M 474 187 L 474 197 M 474 225 L 474 235 M 450 211 L 460 211 M 488 211 L 498 211"
+                  fill="none" stroke="#e83535" stroke-width="5"/>
+          </g>
+          <g id="s33-rotB">
+            <circle cx="536" cy="211" r="24" fill="none" stroke="#e83535" stroke-width="5"/>
+            <path id="s33-rotBs" d="M 536 187 L 536 197 M 536 225 L 536 235 M 512 211 L 522 211 M 550 211 L 560 211"
+                  fill="none" stroke="#e83535" stroke-width="5"/>
+          </g>
         </g>
       </svg>
       <span class="callout" id="s33-16" style="left:6%; top:12%">16 samples</span>
@@ -612,7 +736,7 @@
     </div>
   </article>
 
-  <article class="p3-fcard" id="s33-c2" style="left:950px; width:254px;">
+  <article class="p3-fcard" id="s33-c2" style="left:852px; width:254px;">
     <div class="p3-fcard-media p3-fcard-media--draw">
       <svg viewBox="0 0 600 340" aria-hidden="true">
         <circle cx="300" cy="196" r="104" fill="rgba(255,255,255,0.05)"
@@ -650,7 +774,7 @@
           <circle cx="324" cy="150" r="7" fill="#e83535"/>
         </g>
         <text id="s33-ct" x="300" y="326" font-family="var(--mono)" font-size="32" font-weight="700"
-              fill="rgba(240,236,232,0.75)" text-anchor="middle">0 punctures</text>
+              fill="rgba(240,236,232,0.75)" text-anchor="middle" opacity="0">0 punctures</text>
       </svg>
     </div>
     <div class="p3-fcard-foot">
@@ -670,8 +794,8 @@
 </section>
 
 <section class="slide" id="s34" data-cue="s34" data-dialect="sheet" data-part="III"
-         data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">Six requirements met, three partly, four waiting for an enclosure and a circuit board.</h2>
+         data-map="validation" style="--head-h:0px">
+  <h2 class="slide__title">Requirement Evaluation</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -679,6 +803,9 @@
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
   <i class="fragment step-cue" data-step="5"></i>
+  <!-- Six, not five (Sirio, 2026-09-23): the pills and the leader lines are
+       a verdict of their own and must not ride on the Safety column's beat. -->
+  <i class="fragment step-cue" data-step="6"></i>
 
   <span class="p3-k p3-ghead" data-g="1" style="left:56px;">Performance</span>
   <span class="p3-k p3-ghead" data-g="2" style="left:292px;">Automation</span>
@@ -688,8 +815,9 @@
 
   <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:228px;"><b>Accuracy</b><i>met</i></div>
   <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:296px;"><b>Reproducibility</b><i>met</i></div>
-  <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:364px;"><b>Versatility</b><i>met</i></div>
+  <div class="p3-chip is-met"      data-g="1" style="left:56px;  top:364px;"><b>Versatility</b><i>met *</i></div>
   <div class="p3-chip is-na"       data-g="1" style="left:56px;  top:432px;"><b>Feasibility</b><i>a gate, not a test</i></div>
+  <p class="p3-fnote" id="s34-fn" style="left:56px; top:508px; width:660px;">* the 5 &#181;L lower bound is not yet validated, but is expected to pass</p>
 
   <div class="p3-chip is-met"      data-g="2" style="left:292px; top:228px;"><b>Unattended run</b><i>met</i></div>
   <div class="p3-chip is-untested" data-g="2" style="left:292px; top:296px;"><b>Training</b><i>not tested</i></div>
@@ -706,72 +834,102 @@
   <div class="p3-chip is-partly"   data-g="5" style="left:1000px; top:296px;"><b>Operator exposure</b><i>partly met</i></div>
   <div class="p3-chip is-excluded" data-g="5" style="left:1000px; top:364px;"><b>Electrical safety</b><i>excluded</i></div>
 
+  <!-- Rewired 2026-09-22 (Sirio: "they go over the text"), re-routed the same
+       day when Cleanability got a destination of its own, and re-routed once
+       more (Sirio: the lines crowd each other) so that every gutter carries
+       exactly one vertical.  Orthogonal throughout: a chip leaves by a FREE
+       edge, drops down a GUTTER between two chip columns (columns occupy
+       56-272, 292-508, 528-744, 764-980, 1000-1216), and reaches its pill
+       below the y 494 chip floor and above the y 596 pill line.
+
+       Three destinations, two collector rails and one straight drop:
+         y 552  Operating envelope (RIGHT edge, x 744) and Wind (LEFT edge,
+                x 764) enter the SAME gutter and share one trunk down x 754
+                -> Enclosure, centre x 206.  Same destination, so one bus:
+                the two 10 px stubs T on to it from opposite sides, each
+                running in the clear gap between two chips.
+         y 574  Cleanability (RIGHT edge, x 980) then has the 980-1000 gutter
+                to itself and sits centred in it, at x 990
+                -> Cleanable materials, centre x 640.
+         none   Electrical safety leaves its own bottom edge at x 1074 and
+                falls straight into Circuit Board (PCB), centre x 1074 - a
+                rail would only have added two corners.
+       No line crosses another, and no two verticals share a gutter, so
+       nothing runs alongside anything.  The Versatility footnote ends at
+       y 531, 21 px above the first rail.  Draw order is stubs before the
+       trunk they land on, for the DrawSVG stagger. -->
   <svg class="p3-wire" id="s34-wire" viewBox="0 0 1280 720" aria-hidden="true">
-    <path class="s34-ln" d="M 636 286 C 560 420 320 470 176 590" fill="none"
+    <!-- operating envelope + wind -> Enclosure, sharing the x 754 gutter -->
+    <path class="s34-ln" d="M 744 259 H 754 V 552" fill="none"
           stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
-    <path class="s34-ln" d="M 872 354 C 760 470 380 500 180 592" fill="none"
+    <path class="s34-ln" d="M 764 327 H 754 V 552" fill="none"
           stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
-    <path class="s34-ln" d="M 872 422 C 740 520 400 544 184 594" fill="none"
+    <path class="s34-ln" d="M 754 552 H 206 V 590" fill="none"
           stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
-    <path class="s34-ln" d="M 1108 422 C 980 540 700 566 457 594" fill="none"
+    <!-- cleanability -> Cleanable materials, alone in the x 990 gutter -->
+    <path class="s34-ln" d="M 980 395 H 990 V 574" fill="none"
+          stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
+    <path class="s34-ln" d="M 990 574 H 640 V 590" fill="none"
+          stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
+    <!-- electrical safety -> Circuit Board (PCB) -->
+    <path class="s34-ln" d="M 1074 426 V 590" fill="none"
           stroke="rgba(240,236,232,0.45)" stroke-width="2" stroke-dasharray="2 8"/>
   </svg>
 
-  <div class="p3-pill" id="s34-p1" style="left:56px;  top:596px; width:232px;">an enclosure</div>
-  <div class="p3-pill" id="s34-p2" style="left:320px; top:596px; width:262px;">a circuit board</div>
+  <div class="p3-pill" id="s34-p1" style="left:56px;  top:596px; width:300px;">Enclosure</div>
+  <div class="p3-pill" id="s34-p3" style="left:490px; top:596px; width:300px;">Cleanable materials</div>
+  <div class="p3-pill" id="s34-p2" style="left:924px; top:596px; width:300px;">Circuit Board (PCB)</div>
 
   <aside class="notes">
     <ul>
-      <li>Performance: accuracy, reproducibility and versatility met; feasibility was a concept gate, not a test of the built device.</li>
+      <li>Performance: accuracy and reproducibility met; versatility met with an asterisk, because the 5 microlitre lower bound has not been validated yet. Feasibility was a concept gate, not a test of the built device.</li>
       <li>Automation: a complete forty-tube run finished without intervention. Training was deferred, so it stands as not tested.</li>
       <li>Portability partly met, spillage and operator exposure partly met; cross-contamination is prevented by architecture, not by washing.</li>
-      <li>Four requirements are excluded honestly: they wait on an enclosure and a real circuit board, not on the mechanisms.</li>
+      <li>Four are excluded honestly, and not for the same reason: two wait on an enclosure, one on a real circuit board, and one on a material that can be sanitised. PLA is not a cleanable surface &#8212; a field machine needs metal or polypropylene on the sliding faces. None of the four waits on the mechanisms.</li>
     </ul>
   </aside>
 </section>
 
-<section class="slide" id="s35" data-cue="s35" data-dialect="cine" data-part="III" data-map="rack">
-  <h2 class="slide__title">This is the machine, and it is in the room.</h2>
+<section class="slide" id="s35" data-cue="s35" data-dialect="cine" data-part="III" data-map="none">
+  <h2 class="slide__title">The machine is operational and ready to run live.</h2>
   <div class="slide__rule"></div>
 
-  <i class="fragment step-cue" data-step="1"></i>
-  <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
-  <i class="fragment step-cue" data-step="4"></i>
+  <!-- No clicker steps by design (Sirio, 2026-09-22): a plain click moves to
+       the next slide, and a clip only grows when it is clicked itself. -->
 
   <div class="p3-clip" id="s35-v0" data-i="0" tabindex="0" role="button"
        style="left:56px; top:176px; width:286px; height:508px;">
     <video data-src="../../assets/media/video/machine-dispensing-portrait.mp4"
            poster="../../assets/media/video/machine-dispensing-portrait-poster.jpg"
            muted loop playsinline preload="none"></video>
-    <span class="p3-clip-lab">dispensing, close</span>
+    <span class="p3-clip-lab">nozzle close-up</span>
   </div>
   <div class="p3-clip" id="s35-v1" data-i="1" tabindex="0" role="button"
        style="left:366px; top:176px; width:421px; height:237px;">
     <video data-src="../../assets/media/video/machine-dispensing.mp4"
            poster="../../assets/media/video/machine-dispensing-poster.jpg"
            muted loop playsinline preload="none"></video>
-    <span class="p3-clip-lab">the droplet leaving</span>
+    <span class="p3-clip-lab">motor spinning</span>
   </div>
   <div class="p3-clip" id="s35-v2" data-i="2" tabindex="0" role="button"
        style="left:803px; top:176px; width:421px; height:237px;">
     <video data-src="../../assets/media/video/machine-demo.mp4"
            poster="../../assets/media/video/machine-demo-poster.jpg"
            muted loop playsinline preload="none"></video>
-    <span class="p3-clip-lab">a full run, sped up</span>
+    <span class="p3-clip-lab">timelapse run</span>
   </div>
   <div class="p3-clip" id="s35-v3" data-i="3" tabindex="0" role="button"
-       style="left:366px; top:429px; width:453px; height:255px;">
+       style="left:568px; top:429px; width:453px; height:255px;">
     <video data-src="../../assets/media/video/machine-outdoor-run.mp4"
            poster="../../assets/media/video/machine-outdoor-run-poster.jpg"
            loop playsinline preload="none" data-sound></video>
-    <span class="p3-clip-lab">outdoors, on battery</span>
+    <span class="p3-clip-lab">battery run outdoors</span>
   </div>
 
   <aside class="notes">
     <ul>
       <li>Let them run. Say only: this is what you are about to see for real.</li>
-      <li>Click any clip to grow it; Escape brings the mosaic back.</li>
+      <li>One press moves on. Click a clip only if you want to point at it; Escape brings the mosaic back.</li>
       <li>The outdoor clip carries the sound.</li>
     </ul>
   </aside>
@@ -784,7 +942,7 @@
   </div>
   <div class="p3-demoscrim"></div>
 
-  <h2 class="slide__title" id="s36-title">The machine, live</h2>
+  <h2 class="slide__title" id="s36-title">Live Demo</h2>
   <p class="p3-addr">sirsirio.github.io/thesis-tools</p>
 
   <div class="p3-frame p3-frame--dark" id="s36-f1" style="left:334px; top:232px; width:288px; height:330px;">
@@ -809,10 +967,10 @@
 </section>
 
 <style data-part="part3">
-/* ══ Part III (S25–S36), builder P3. Every rule is prefixed p3- or scoped
+/* ══ Part III (S25–S36 and S30b), builder P3. Every rule is prefixed p3-
       to an id, so it cannot reach another builder's slides. ══════════ */
 
-#s29-diag text, #s30-top text, #s33 svg text, .p3-chart text { font-family: var(--mono); }
+#s33 svg text, .p3-chart text { font-family: var(--mono); }
 
 /* ── shared pieces ───────────────────────────────────────────────── */
 .p3-frame {
@@ -878,7 +1036,21 @@
     linear-gradient(90deg, rgba(10,10,12,0.96) 0%, rgba(10,10,12,0.80) 46%, rgba(10,10,12,0.55) 100%),
     radial-gradient(120% 110% at 40% 46%, rgba(10,10,12,0) 30%, rgba(10,10,12,0.72) 100%);
 }
-#s25 .divider__inner, #s25 .divider__rule { z-index: 2; }
+#s25 .divider__inner, #s25 .divider__rule, #s25 .p3-jrn { z-index: 2; }
+/* the journey strip: the Part II divider's concept (s11), three stops.
+   The stop glyphs are the shared module marks, drawn in their own
+   -18 -18 36 36 box and scaled 1.111 here, so the stroke is pre-divided by
+   that scale to land at the 2 px the strip is drawn with. */
+#s25 .divider__inner { justify-content: flex-start; padding-top: 118px; }
+#s25 .p3-jrn { position: absolute; left: 96px; top: 442px; width: 1088px; height: 116px; }
+#s25 .p3-jrn svg { display: block; overflow: visible; }
+#s25 .p3-jrn-line { fill: none; stroke: rgba(255,255,255,0.16); stroke-width: 2; stroke-linecap: round; }
+#s25 .p3-jrn-mark .mk-node { fill: none; stroke: var(--text-muted); stroke-width: 1.8;
+                             stroke-linejoin: round; stroke-linecap: round; }
+#s25 .p3-jrn-mark .mk-solid { fill: var(--text-muted); stroke: none; }
+#s25 .p3-jrn-t { font-family: var(--mono); font-size: 18px; font-weight: 600; letter-spacing: 0.14em;
+                 fill: var(--text-muted); text-anchor: middle; }
+#s25 .p3-jrn-drop { fill: var(--accent); }
 
 /* ── S26 · the question, two live cards, two findings ────────────── */
 .p3-question {
@@ -895,54 +1067,134 @@
   font-size: 21px; line-height: 1.3; color: var(--text); min-height: 28px;
 }
 
-/* ── S27 · the architecture sheet, cropped to the drivers ────────── */
-#s27-fig { left: 56px; top: 196px; width: 820px; height: 330px; }
-#s27-fig img { position: absolute; width: 901px; height: auto; left: -81px; top: -4px; object-fit: fill; }
-#s27-oos {
-  left: 34%; top: 79%; width: 268px;
-  margin-left: -134px; margin-top: -18px;
-  text-align: center; opacity: 0;
+/* ── S27 · two whole figures, presented one at a time ────────────── */
+/* dialect "plates": the figure box carries the figure's OWN aspect ratio and
+   the image is object-fit: contain, so growing or shrinking the box can never
+   crop the drawing.  Only left/top/width are tweened; the height follows. */
+.p3-plate { position: absolute; margin: 0; }
+.p3-plate-box {
+  position: relative; width: 100%;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.50);
 }
-.p3-strike {
-  position: absolute; left: 34%; top: 79%;
-  width: 250px; height: 3px; margin-left: -125px; margin-top: -1px;
-  background: var(--paper-ink);
-  transform: scaleX(0); transform-origin: 50% 50%;
+.p3-plate-box img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 14px;
+  box-sizing: border-box;
 }
-#s27-bay { opacity: 0; }
-#s27-read { opacity: 0; }
+.p3-plate-cap {
+  display: flex; align-items: center; gap: 14px;
+  margin-top: 14px; min-height: 30px;
+}
+.p3-state { position: relative; display: inline-block; }
+.p3-st {
+  font-family: var(--mono); font-size: 18px; font-weight: 700; line-height: 1;
+  color: var(--text); white-space: nowrap;
+  padding: 6px 11px 5px;
+  border-radius: var(--r-pill);
+  background: rgba(10,10,12,0.72);
+  border: 1px solid color-mix(in srgb, var(--t-a) 45%, transparent);
+}
+.p3-st--b { position: absolute; left: 0; top: 0; }
 
-/* ── S28 · the carrier grid ──────────────────────────────────────── */
-.p3-tile {
-  position: absolute; width: 264px; height: 182px;
+/* ══ The integration record (S28, S29, S30, S30b) ═══════════════════
+   Dialect "record".  One category at a time in the upper band, in depth,
+   and then the single picture that stands for it flies down into a bar
+   along the bottom and stays there.  The bar is the same four slots on
+   all four slides: the ones already earned are simply present at step 0,
+   so it never restarts from empty, and the one a slide earns is the only
+   one that animates.  One colour per category, dark ink on a light chip.
+   Upper band: kicker 196, pictures 224 to 504.  Bar band: rule 516,
+   frames 532 to 632, chips 640 to 669 — all of it above y 684, where the
+   section rail and the slide number live. */
+
+/* a picture shown whole: the box carries the image's OWN pixel ratio and
+   the image is object-fit: contain, so it is shrunk, never cropped. */
+.p3-shot {
+  position: absolute;
   border-radius: var(--r-md); overflow: hidden;
   background: var(--paper);
   border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.50);
+}
+.p3-shot > img, .p3-shot > video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.p3-shot--dark { background: #0d0f12; }
+
+.p3-ik { position: absolute; left: 56px; top: 196px; }
+/* The kicker stack: every label a slide will show, rendered as siblings on
+   top of one another, exactly one of them lit.  The step timeline crossfades
+   between them, so the label scrubs correctly in BOTH directions. */
+.p3-kk {
+  position: absolute; left: 0; top: 0;
+  font: inherit; letter-spacing: inherit; text-transform: inherit;
+  color: inherit; white-space: nowrap;
+  opacity: 0;
+}
+.p3-kk:first-child { opacity: 1; }
+
+.p3-bar { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; pointer-events: none; }
+.p3-bar-rule {
+  position: absolute; left: 56px; top: 516px; width: 1168px; height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04));
+}
+.p3-bar-it { position: absolute; top: 532px; width: 178px; }
+.p3-bar-fr {
+  display: block; position: relative;
+  width: 178px; height: 100px;
+  border-radius: var(--r-sm); overflow: hidden;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid color-mix(in srgb, var(--t-a) 46%, rgba(255,255,255,0.10));
+  box-shadow: 0 12px 28px rgba(0,0,0,0.48);
   transform-origin: 0 0;
 }
-.p3-tile img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s28-m1, #s28-m2 { opacity: 0; }
-#s28-kick { position: absolute; opacity: 0; }
+.p3-bar-fr > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.p3-bar-it > .callout { left: 0; top: 108px; }
+/* the slot this slide earns starts empty; the earlier ones are just there */
+.p3-bar-it[data-own] .p3-bar-fr, .p3-bar-it[data-own] > .callout { opacity: 0; }
 
-/* ── S29 · nozzle left, screen right, the plate hinging to 45° ───── */
-.p3-col { position: absolute; inset: 0; }
-#s29-n2 { opacity: 0; }
-.p3-diag { position: absolute; left: 506px; top: 200px; width: 675px; height: 320px; opacity: 0; }
-#s29-d1, #s29-d2 { opacity: 0; }
-#s29 .callout { opacity: 0; }
+/* ── S28 · the pump and storage carrier ──────────────────────────── */
+/* Unlike S29 and S30, NOTHING on this board is lit at rest: the opening
+   pair of renders is a beat of its own, so step 0 is the title and its
+   rule alone.  That includes the first kicker label, which the global
+   .p3-kk:first-child rule would otherwise leave standing. */
+#s28 .p3-shot { opacity: 0; }
+#s28 #s28-kick .p3-kk:first-child { opacity: 0; }
+#s28 .p3-shot .callout { opacity: 0; }
+/* the rule under the bar arrives with the first picture that lands on it */
+#s28 .p3-bar-rule { opacity: 0; }
 
-/* ── S30 · cradle, pack, the whole object ────────────────────────── */
-#s30-b1, #s30-b2, #s30-top, #s30-in, #s30-clip,
-#s30-t1, #s30-t2, #s30-t3 { opacity: 0; }
-#s30 .callout { opacity: 0; }
-/* four rail panels in a 372 px box: let them share the height instead of
-   pushing the last one past the bottom edge. */
-#s30 .sheet__panel { min-height: 0; padding-top: 10px; padding-bottom: 10px; }
+/* ── S29 · the nozzle, then the screen and stylus holder ─────────── */
+#s29 .p3-shot { opacity: 0; }
+#s29 #s29-n1 { opacity: 1; }
+/* the opening picture's own annotations are owned by the entry hook, so the
+   step timeline never touches them and the two cannot fight */
+#s29 #s29-n1 .callout { opacity: 0; }
+#s29 #s29-d0a .callout, #s29 #s29-d0b .callout,
+#s29 #s29-d1 .callout, #s29 #s29-d2 .callout { opacity: 0; }
+
+/* ── S30 · the battery cradle ────────────────────────────────────── */
+#s30 .p3-shot { opacity: 0; }
+#s30 #s30-cad { opacity: 1; }
+#s30 .p3-shot .callout { opacity: 0; }
+
+/* ── S30b · the finished machine on the completed record ─────────── */
+#s30b .callout { opacity: 0; }
+#s30b .p3-bar-it > .callout { opacity: 1; }
+/* Sirio, 2026-09-23: the two closing lines and the "still missing" chips
+   came off the slide, so the right column holds the weight alone.  Enlarged
+   and centred in that column, vertically on the 224-504 picture band, so
+   the deletion does not read as a hole. */
+#s30b-kg { width: 618px; justify-content: center; }
+#s30b-kg .p3-bignum-v { font-size: 140px; }
+#s30b-kg .p3-bignum-u { font-size: 40px; }
 
 /* ── S31 · the accuracy chart ────────────────────────────────────── */
 .p3-chart {
-  position: absolute; left: 56px; top: 200px; width: 900px; height: 404px;
+  position: absolute; left: 56px; top: 200px; width: 820px; height: 404px;
   border-radius: var(--r-lg);
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -952,11 +1204,77 @@
 }
 .p3-chart svg { display: block; width: 100%; height: 100%; }
 
+/* The repeatability strip under the chart's divider.  Plain HTML on top of
+   the plate, in the chart's own 1:1 pixel space: label on one line, then
+   the two per-channel figures big enough to read in one look. */
+.s31-cv { position: absolute; left: 48px; top: 286px; width: 740px; opacity: 0; }
+.s31-cv-k {
+  display: block; font-size: 19px; line-height: 1.3;
+  color: var(--text-muted);
+}
+.s31-cv-r { display: flex; align-items: baseline; gap: 76px; margin-top: 14px; }
+.s31-cv-i { display: flex; align-items: baseline; gap: 14px; }
+.s31-cv-i b { font-size: 20px; font-weight: 600; color: var(--text-soft); }
+.s31-cv-i i {
+  font-style: normal;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 38px; font-weight: 700; letter-spacing: -0.02em;
+  background: linear-gradient(104deg, #ff6b2b 12%, #e83535 96%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* the per-stroke panel under the clip, right column */
+.p3-strokes {
+  position: absolute;
+  display: flex; flex-direction: column;
+  padding: 18px 20px;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.45);
+  opacity: 0;
+}
+.p3-strokes .p3-k { margin-bottom: 12px; }
+.p3-srow {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; margin-bottom: 6px;
+}
+.p3-srow b { font-weight: 500; font-size: 19px; color: var(--text-soft); }
+.p3-srow i {
+  font-style: normal;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 26px; font-weight: 700; line-height: 1.18; color: var(--text);
+}
+.p3-snote {
+  margin: 12px 0 0;
+  font-size: 18px; line-height: 1.25;
+  color: var(--text-soft);
+}
+
 /* ── S32 · start, done, forty ────────────────────────────────────── */
 #s32-plate { opacity: 0; }
 #s32-done { position: absolute; left: 0; top: 0; opacity: 0; }
 #s32-vid, #s32-t1, #s32-t2 { opacity: 0; }
-#s32 .callout { opacity: 0; }
+/* A fact that belongs to the slide but not to the headline number: its own
+   frame, its own label, its own place.  Used on S32 for the off-target
+   droplets, which are droplets and not tubes. */
+.p3-aside {
+  position: absolute;
+  padding: 10px 18px 12px;
+  border-radius: var(--r-md);
+  border: 1px dashed rgba(240,236,232,0.26);
+  border-left: 3px solid color-mix(in srgb, var(--t-b) 75%, transparent);
+  background: rgba(255,255,255,0.035);
+  opacity: 0;
+}
+.p3-aside-k { display: block; margin-bottom: 6px; color: var(--text-muted); }
+.p3-aside b { display: block; font-size: 20px; font-weight: 600; line-height: 1.25; color: var(--text); }
+.p3-aside i {
+  display: block; margin-top: 4px;
+  font-style: normal; font-size: 18px; line-height: 1.3; color: var(--text-muted);
+}
 
 /* ── S33 · three failures, one at a time ─────────────────────────── */
 .p3-fcard {
@@ -974,6 +1292,9 @@
   overflow: hidden; background: #0d0f12;
 }
 .p3-fcard-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* A card whose media box carries the picture's own ratio: shrink it, never
+   crop it. */
+.p3-fcard--fit .p3-fcard-media img { object-fit: contain; }
 .p3-fcard-media svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 .p3-fcard-media--draw { background: rgba(255,255,255,0.03); }
 .p3-fcard-foot { padding: 16px 20px; }
@@ -1008,6 +1329,12 @@
 .p3-chip.is-excluded { background: rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(255,255,255,0.20); }
 .p3-chip.is-na       { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.08); }
 .p3-chip.is-na b     { color: var(--text-soft); }
+.p3-fnote {
+  position: absolute; margin: 0;
+  font-size: 18px; line-height: 1.3;
+  color: var(--text-muted);
+  opacity: 0;
+}
 .p3-wire { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
 .p3-pill {
   position: absolute; height: 52px;
@@ -1054,20 +1381,21 @@
   background: radial-gradient(110% 100% at 50% 46%, rgba(10,10,12,0.42) 0%, rgba(10,10,12,0.92) 100%);
 }
 #s36 .slide__title {
-  left: 0; right: 0; top: 252px; width: auto;
-  text-align: center; font-size: 76px;
+  left: 0; right: 0; top: 242px; width: auto;
+  text-align: center; font-size: 88px;
 }
+/* the address stays, but secondary to the two words: Sirio, 2026-09-22 */
 .p3-addr {
-  position: absolute; left: 0; right: 0; top: 372px; margin: 0;
+  position: absolute; left: 0; right: 0; top: 368px; margin: 0;
   text-align: center;
-  font-family: var(--mono); font-size: 26px; letter-spacing: 0.08em;
-  color: var(--t-a);
+  font-family: var(--mono); font-size: 20px; letter-spacing: 0.10em;
+  color: color-mix(in srgb, var(--t-a) 55%, var(--text-muted));
 }
 #s36-f1, #s36-f2 { opacity: 0; }
 </style>
 
 <script data-part="part3">
-/* ══ Part III (S25–S36), builder P3 ══════════════════════════════════
+/* ══ Part III (S25–S36 and S30b), builder P3 ══════════════════════════════════
    One paused timeline per slide, labels step0..stepN, plus entrance
    hooks. Every selector is scoped to the slide element handed in. ══ */
 (function () {
@@ -1099,7 +1427,16 @@
     }, at);
   }
 
-  function setText(node, s) { return function () { node.textContent = s; }; }
+
+  /* How many clicker steps are revealed on this slide right now.  The runtime
+     seeks the step timeline to its label and THEN calls the entry hook, so an
+     entry hook that animates something the step timeline also owns has to
+     stand down when we arrive in the middle of a slide — walking backwards
+     from the next one, or building the presenter's next-step preview, where
+     the clone carries the same attribute. */
+  function stepOf(el) {
+    return el.querySelectorAll('.fragment[data-fragment-revealed]').length;
+  }
 
   function litPanel(tl, panels, n, at) {
     tl.to(panels[n], { opacity: 1, backgroundColor: 'rgba(255,107,43,0.085)', duration: 0.45 }, at)
@@ -1135,13 +1472,51 @@
   });
 
   Deck.enter('s25', function (el, gsap) {
-    gsap.fromTo(q(el, '.p3-divplate img'),
-      { opacity: 0, scale: 1.5 }, { opacity: 0.42, scale: 1, duration: 1.9, ease: EO });
-    gsap.fromTo(q(el, '.divider__wash'), { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' });
-    gsap.fromTo(q(el, '.divider__rule'), { scaleX: 0 },
-      { scaleX: 1, duration: 1.1, ease: 'power3.inOut', delay: 0.2 });
-    gsap.fromTo([q(el, '.divider__num'), q(el, '.divider__title'), q(el, '.divider__sub')],
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.15 });
+    var ACC  = '#ff6b2b';
+    var line = q(el, '#s25-jrn-line');
+    var drop = q(el, '#s25-jrn-drop');
+    var stops = qa(el, '.p3-jrn-stop');
+    var X = [180, 544, 908];
+
+    /* build each stop's glyph from the shared module marks.  Idempotent, so
+       replaying the hook (and the presenter view's clone) costs nothing. */
+    stops.forEach(function (g) {
+      var host = q(g, '.p3-jrn-mark');
+      var key  = g.getAttribute('data-mark');
+      if (!host || !key) return;
+      var mk = (window.Deck && Deck.marks && Deck.marks[key]) || '';
+      if (mk && host.innerHTML !== mk) host.innerHTML = mk;
+    });
+
+    gsap.set(stops, { opacity: 0.3 });
+    gsap.set(drop, { opacity: 0, attr: { cx: X[0] } });
+    if (line) gsap.set(line, { drawSVG: '0%' });
+
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.fromTo(q(el, '.p3-divplate img'),
+        { opacity: 0, scale: 1.5 }, { opacity: 0.42, scale: 1, duration: 1.9, ease: EO }, 0)
+      .fromTo(q(el, '.divider__wash'), { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' }, 0)
+      .fromTo(q(el, '.divider__rule'), { scaleX: 0 },
+        { scaleX: 1, duration: 1.1, ease: 'power3.inOut' }, 0.2)
+      .fromTo([q(el, '.divider__num'), q(el, '.divider__title'), q(el, '.divider__sub')],
+        { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, 0.15);
+
+    if (line) tl.to(line, { drawSVG: '100%', duration: 0.9, ease: 'power2.inOut' }, 0.55);
+    tl.to(drop, { opacity: 1, duration: 0.25 }, 0.95);
+
+    X.forEach(function (x, i) {
+      var at = 1.05 + i * 0.52;
+      tl.to(drop, { attr: { cx: x }, duration: 0.46, ease: 'power2.inOut' }, at)
+        .to(stops[i], { opacity: 1, duration: 0.3 }, at + 0.28)
+        .to(qa(stops[i], '.p3-jrn-t'), { fill: '#f0ece8', duration: 0.3 }, at + 0.28);
+      /* the marks are stroked outlines plus filled nodes; only tween the set
+         that exists, or GSAP warns about an empty target */
+      var nodes = qa(stops[i], '.mk-node'), solids = qa(stops[i], '.mk-solid');
+      if (nodes.length)  tl.to(nodes,  { stroke: ACC, duration: 0.3 }, at + 0.28);
+      if (solids.length) tl.to(solids, { fill: ACC, duration: 0.3 }, at + 0.28);
+    });
+    tl.to(drop, { opacity: 0, duration: 0.5 }, 1.05 + 2 * 0.52 + 0.55);
+    if (window.Deck && Deck.reducedMotion) tl.progress(1);
   });
 
   /* ═══════════════ S26 · the question and the two tools ═══════════ */
@@ -1162,12 +1537,12 @@
 
     tl.to(ca, { opacity: 1, y: 0, duration: 0.75 }, 'step1')
       .to(ca, { boxShadow: '0 24px 66px rgba(255,107,43,0.30)', duration: 0.5 }, 'step1+=0.25');
-    typer(tl, fa, 'Which driver, not which processor.', 'step1+=0.55', 0.75);
+    typer(tl, fa, 'Pins and driver intelligence decided it, not cost.', 'step1+=0.55', 0.9);
     tl.addLabel('step2');
 
     tl.to(cb, { opacity: 1, y: 0, duration: 0.75 }, 'step2')
       .to(cb, { boxShadow: '0 24px 66px rgba(255,107,43,0.30)', duration: 0.5 }, 'step2+=0.25');
-    typer(tl, fb, 'The second pump buys 86 % of the saving; four more buy almost nothing.', 'step2+=0.55', 1.0);
+    typer(tl, fb, 'The second pump captures 86 % of time savings; further pumps yield diminishing returns.', 'step2+=0.55', 1.15);
     tl.addLabel('step3');
 
     tl.to(qn, { opacity: 0.28, duration: 0.45 }, 'step3')
@@ -1181,279 +1556,375 @@
     return tl;
   });
 
-  /* ═══════════════ S27 · six pulse trains, one clock ══════════════ */
+  /* ═══════════════ S27 · two figures, whole, in sequence ═════════ */
 
   Deck.slide('s27', function (el, gsap) {
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
 
-    var trains = qa(el, '.s27-tr');
-    var bus    = q(el, '#s27-bus');
-    var ghost  = q(el, '#s27-ghost');
-    var oos    = q(el, '#s27-oos');
-    var strike = q(el, '#s27-strike');
-    var endots = qa(el, '.s27-endot');
-    var stalls = qa(el, '.s27-stalled');
-    var cap    = q(el, '#s27-cap');
-    var panels = qa(el, '.sheet__panel');
-    var bay    = q(el, '#s27-bay');
-    var read   = q(el, '#s27-read');
-    var numEl  = q(el, '#s27-num'), unitEl = q(el, '#s27-unit'), labEl = q(el, '#s27-label');
+    var ctrl = q(el, '#s27-ctrl');
+    var pwr  = q(el, '#s27-pwr');
+    var prod = q(el, '#s27-pwr .p3-plate-b');
+    var stA  = q(el, '#s27-pwr .p3-st--a');
+    var stB  = q(el, '#s27-pwr .p3-st--b');
 
-    gsap.set(trains.concat([bus]), { strokeDasharray: '22 30', strokeDashoffset: 0 });
-    gsap.set(ghost, { opacity: 0, transformOrigin: '50% 50%' });
-    gsap.set(endots, { scale: 0, transformOrigin: '50% 50%' });
-    gsap.set(stalls, { opacity: 0, transformOrigin: '50% 50%' });
-    gsap.set(cap, { opacity: 0, y: 40 });
+    /* the two geometries: presented big, then stepped back */
+    var C_BIG = { left: 280, top: 192, width: 720 };
+    var C_SML = { left: 56,  top: 312, width: 330 };
+    var P_BIG = { left: 420, top: 192, width: 790 };
 
-    /* the shared clock state: one ticker paints, the timeline tweens
-       the rates, the gates and the merge factor, so every frame of the
-       merge is scrubbable in both directions. */
-    var st = el.__p3s27;
-    if (!st) {
-      st = el.__p3s27 = {
-        clock: { t: 0 }, last: 0, common: 0, on: 0, sync: 0,
-        rate: [1, 0.72, 1.26, 0.88, 1.15, 0.63],
-        gate: [1, 1, 1, 1, 1, 1],
-        off:  [0, -38, -74, -19, -95, -56]
-      };
-      st.paint = function () {
-        var dt = st.clock.t - st.last;
-        st.last = st.clock.t;
-        if (dt < 0) dt = 0;
-        st.common -= dt * 150;
-        for (var i = 0; i < trains.length; i++) {
-          st.off[i] -= dt * 150 * st.rate[i];
-          var v = st.off[i] * (1 - st.sync) + st.common * st.sync;
-          trains[i].style.strokeDashoffset = v + 'px';
-          trains[i].style.opacity = st.on * (0.18 + 0.82 * st.gate[i]);
-        }
-        bus.style.strokeDashoffset = st.common + 'px';
-        bus.style.opacity = st.on * 0.9;
-      };
-      st.paint();
-    }
+    gsap.set(ctrl, { left: C_BIG.left, top: C_BIG.top, width: C_BIG.width });
+    gsap.set(pwr,  { left: P_BIG.left, top: P_BIG.top, width: P_BIG.width,
+                     opacity: 0, y: 22 });
+    gsap.set(prod, { opacity: 0 });
+    gsap.set(stB,  { opacity: 0 });
 
     tl.addLabel('step0');
 
-    /* ── step 1 · the answer on paper was out of stock ── */
-    tl.fromTo(ghost, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.7 }, 'step0')
-      .fromTo(oos, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 }, 'step0+=0.35')
-      .to(strike, { scaleX: 1, duration: 0.5, ease: 'power2.inOut' }, 'step0+=0.95')
-      .to(read, { opacity: 1, duration: 0.4 }, 'step0+=0.5')
-      .call(setText(numEl, '13'), null, 'step0+=0.5')
-      .call(setText(unitEl, 'euro dearer'), null, 'step0+=0.5')
-      .call(setText(labEl, 'and out of stock on the day'), null, 'step0+=0.5');
-    litPanel(tl, panels, 0, 'step0+=0.2');
-    tl.addLabel('step1');
+    /* ── step 1 · the control figure steps back, the power tree comes up ── */
+    tl.to(ctrl, { left: C_SML.left, top: C_SML.top, width: C_SML.width,
+                  duration: 0.9 }, 'step0')
+      .to(pwr,  { opacity: 1, y: 0, duration: 0.8 }, 'step0+=0.28')
+      .addLabel('step1');
 
-    /* ── step 2 · one pulse train, six enables ── */
-    tl.to([ghost, oos, strike], { opacity: 0, duration: 0.4 }, 'step1')
-      .to(st, { on: 1, duration: 0.6 }, 'step1+=0.15')
-      .to(st.rate, { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, duration: 1.5, ease: 'power2.inOut' }, 'step1+=0.7')
-      .to(st, { sync: 1, duration: 1.5, ease: 'power2.inOut' }, 'step1+=0.7')
-      .to(endots, { scale: 1, duration: 0.4, stagger: 0.09 }, 'step1+=1.1')
-      .to(st.gate, { 3: 0, 5: 0, duration: 0.6 }, 'step1+=2.3')
-      .to([endots[3], endots[5]], { scale: 0.42, opacity: 0.35, duration: 0.5 }, 'step1+=2.3')
-      .call(setText(unitEl, 'pins'), null, 'step1+=0.7')
-      .call(setText(labEl, 'instead of twelve'), null, 'step1+=0.7');
-    counter(tl, numEl, 12, 8, 0, 'step1+=0.7', 1.2);
-    litPanel(tl, panels, 1, 'step1+=0.15');
-    tl.addLabel('step2');
-
-    /* ── step 3 · a weak adapter, and a radiating motor can ── */
-    tl.to(stalls, { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2')
-      .fromTo(stalls, { scale: 1.5 }, { scale: 1, duration: 0.6, stagger: 0.12 }, 'step2')
-      .to(cap, { opacity: 1, y: 0, duration: 0.7 }, 'step2+=0.55')
-      .fromTo(bay, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7 }, 'step2+=0.3')
-      .call(setText(numEl, '22'), null, 'step2+=0.55')
-      .call(setText(unitEl, 'nF'), null, 'step2+=0.55')
-      .call(setText(labEl, 'taped to the motor casing'), null, 'step2+=0.55');
-    litPanel(tl, panels, 2, 'step2+=0.1');
-    tl.addLabel('step3');
+    /* ── step 2 · the production design fades in over the as-built plate ── */
+    tl.to(prod, { opacity: 1, duration: 0.8 }, 'step1')
+      .to(stA,  { opacity: 0, duration: 0.3 }, 'step1+=0.12')
+      .to(stB,  { opacity: 1, duration: 0.4 }, 'step1+=0.3')
+      .addLabel('step2');
 
     return tl;
   });
 
   Deck.enter('s27', function (el, gsap) {
-    var st = el.__p3s27;
-    if (!st) return;
-    /* a presenter preview clone: paint the end state once, never start the clock */
-    if (el.dataset.preview) { st.last = st.clock.t; st.paint(); return; }
-    gsap.killTweensOf(st.clock);
-    st.last = st.clock.t;
-    gsap.to(st.clock, { t: st.clock.t + 1e6, duration: 1e6, ease: 'none', onUpdate: st.paint });
+    gsap.fromTo(q(el, '#s27-ctrl'),
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.85, ease: EO });
   });
 
-  /* ═══════════════ S28 · the carrier grid reorganising ════════════ */
+  /* ═══════════════ The integration record: the bottom bar ═════════
+     Every S28 to S30b slide carries the same four slots.  The ones the
+     talk has already earned are simply present; the one this slide earns
+     flies out of the picture above it and shrinks into its slot.  `from`
+     is the picture it leaves, in slide coordinates. ════════════════ */
+
+  var BAR_X = { 1: 56, 2: 356, 3: 656, 4: 956 };
+  var BAR_W = 178, BAR_H = 100, BAR_Y = 532;
+
+  /* A position offset that survives a label that already carries one:
+     off('step1+=0.1', 0.26) is 'step1+=0.360', not the silently truncated
+     'step1+=0.1+=0.26' that GSAP resolves straight back to step1+0.1. */
+  function off(at, d) {
+    if (typeof at === 'number') return at + d;
+    var i = at.indexOf('+=');
+    if (i < 0) return at + '+=' + d;
+    return at.slice(0, i) + '+=' + (parseFloat(at.slice(i + 2)) + d).toFixed(3);
+  }
+
+  /* tl: the slide timeline · el: the slide · n: slot · src: {x,y,w} of the
+     picture it flies out of · at: label or time to start on. */
+  function barDrop(tl, el, gsap, n, src, at) {
+    var it   = q(el, '.p3-bar-it[data-b="' + n + '"]');
+    var fr   = it && q(it, '.p3-bar-fr');
+    var chip = it && q(it, '.callout');
+    var rule = q(el, '.p3-bar-rule');
+    if (!it || !fr) return;
+    var sc = src.w / BAR_W;
+    /* immediateRender must be off: these `from` states are visible and
+       displaced, and the runtime seeks this timeline to step 0 on entry.
+       That alone is not enough.  A tween whose start time IS a resting
+       label still renders at progress 0 there, which parked a full-size
+       copy of the thumbnail on top of the source photograph -- and over
+       that photograph's callouts -- a whole beat early, forwards and
+       backwards.  So the frame's OPACITY is a tween of its own that is 0
+       at progress 0: at every resting clicker position the parked copy is
+       invisible, while the flight still reads as the picture shrinking
+       into its slot. */
+    tl.fromTo(it, { x: src.x - BAR_X[n], y: src.y - BAR_Y },
+                  { x: 0, y: 0, duration: 0.95, ease: 'power3.inOut', immediateRender: false }, at)
+      .fromTo(fr, { scale: sc },
+                  { scale: 1, duration: 0.95, ease: 'power3.inOut', immediateRender: false }, at)
+      .fromTo(fr, { opacity: 0 },
+                  { opacity: 1, duration: 0.26, ease: 'none', immediateRender: false }, at)
+      .fromTo(chip, { opacity: 0, y: 10 },
+                    { opacity: 1, y: 0, duration: 0.4, immediateRender: false }, off(at, 0.72));
+    if (rule) tl.to(rule, { opacity: 1, duration: 0.5 }, off(at, 0.25));
+  }
+
+  /* ═══════════════ S28 · the pump and storage carrier ═════════════ */
 
   Deck.slide('s28', function (el, gsap) {
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
 
-    var tiles = qa(el, '.p3-tile').sort(function (a, b) {
-      return (+a.getAttribute('data-i')) - (+b.getAttribute('data-i'));
-    });
-    var home = tiles.map(function (t) {
-      return { x: parseFloat(t.style.left), y: parseFloat(t.style.top) };
-    });
-    var BIG  = [{ x: 76, y: 226 }, { x: 476, y: 226 }];
-    var BIGS = 380 / 264;
-    var SIDES = 132 / 264;
-    var m1 = q(el, '#s28-m1'), m2 = q(el, '#s28-m2');
-    var cap = q(el, '#s28-cap'), kick = q(el, '#s28-kick');
-    var draw = qa(el, '#s28-a1, #s28-a1h, #s28-a2, #s28-a2h, #s28-flange');
+    var a0 = q(el, '#s28-a0'),  b0  = q(el, '#s28-b0');
+    var a1 = q(el, '#s28-a1f'), b1  = q(el, '#s28-b1f');
+    var a2 = q(el, '#s28-a2f'), b2  = q(el, '#s28-b2e');
+    var m1 = q(el, '#s28-m1'),  m2  = q(el, '#s28-m2');
+    var kks  = qa(el, '#s28-kick .p3-kk');
+    var arrows = qa(el, '#s28-a1, #s28-a1h, #s28-a2, #s28-a2h');
 
-    gsap.set(draw, { drawSVG: '0%' });
-    gsap.set(tiles, { transformOrigin: '0 0' });
+    gsap.set(qa(el, '#s28-a1, #s28-a1h, #s28-a2, #s28-a2h, #s28-flange'), { drawSVG: '0%' });
 
-    function arrange(at, focus, dur) {
-      var side = 0;
-      tiles.forEach(function (t, i) {
-        var fi = focus.indexOf(i), tx, ty, sc, op;
-        if (fi >= 0) {
-          tx = BIG[fi].x; ty = BIG[fi].y; sc = BIGS; op = 1;
-        } else {
-          var c = side % 2, r = Math.floor(side / 2); side++;
-          tx = 920 + c * 142; ty = 226 + r * 101; sc = SIDES; op = 0.5;
-        }
-        tl.to(t, { x: tx - home[i].x, y: ty - home[i].y, scale: sc, opacity: op, duration: dur || 0.85 }, at);
-      });
+    function pop(nodes, at) {
+      tl.fromTo(nodes, { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, at);
     }
-    function caption(at, k, c) {
-      tl.call(setText(kick, k), null, at)
-        .call(setText(cap, c), null, at)
-        .to([kick, cap], { opacity: 1, duration: 0.4 }, at);
+    function swap(outs, ins, at, ki) {
+      tl.to(outs, { opacity: 0, duration: 0.42 }, at)
+        .fromTo(ins, { opacity: 0, scale: 0.97 },
+          { opacity: 1, scale: 1, duration: 0.7 }, off(at, 0.22));
+      kicker(at, ki);
+    }
+    /* The kicker is a stack of sibling labels, one lit at a time: crossfade
+       between them so every backward position shows the label that belongs
+       to it.  Rewriting one node's text with .call() does not reverse. */
+    function kicker(at, i) {
+      if (!i || !kks[i] || !kks[i - 1]) return;
+      tl.to(kks[i - 1], { opacity: 0, duration: 0.25 }, at)
+        .fromTo(kks[i], { opacity: 0 },
+          { opacity: 1, duration: 0.35, immediateRender: false }, off(at, 0.26));
     }
 
     tl.addLabel('step0');
 
-    arrange('step0', [0, 1]);
-    caption('step0+=0.3', 'the central carrier', 'The pump drops in from above, the vial slides in from the front.');
-    tl.to(qa(el, '#s28-a1, #s28-a1h'), { drawSVG: '100%', duration: 0.55 }, 'step0+=0.65')
-      .to(qa(el, '#s28-a2, #s28-a2h'), { drawSVG: '100%', duration: 0.55 }, 'step0+=0.95');
+    /* 1 · the pair of renders arrives.  Step 0 is the title and its rule
+           and nothing else (Sirio, 2026-09-23): the empty-carrier pair used
+           to be parked on the board from the moment the slide opened.  No
+           entry hook on this slide, so the CSS keeps the board dark and
+           this fromTo is the only thing that lights it — which also means
+           walking backwards returns it to bare. */
+    tl.fromTo([a0, b0], { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.14 }, 'step0');
+    tl.fromTo(kks[0], { opacity: 0 },
+      { opacity: 1, duration: 0.45, immediateRender: false }, 'step0+=0.34');
     tl.addLabel('step1');
 
-    tl.to(qa(el, '#s28-a1, #s28-a1h, #s28-a2, #s28-a2h'), { opacity: 0, duration: 0.3 }, 'step1');
-    arrange('step1', [2, 3]);
-    caption('step1+=0.3', 'loaded', 'One unbranched line from the vial to the nozzle, and the shortest possible suction.');
+    /* 2 · how it loads: the pump from above, the vial from the front */
+    tl.to(qa(el, '#s28-a1, #s28-a1h'), { drawSVG: '100%', duration: 0.5 }, 'step1');
+    pop(q(el, '#s28-c1'), 'step1+=0.36');
+    tl.to(qa(el, '#s28-a2, #s28-a2h'), { drawSVG: '100%', duration: 0.5 }, 'step1+=0.5');
+    pop(q(el, '#s28-c2'), 'step1+=0.86');
     tl.addLabel('step2');
 
-    arrange('step2', [6, 5]);
-    caption('step2+=0.3', 'the left carrier', 'The same inside, plus a tall flange that braces against the side wall.');
-    tl.to(qa(el, '#s28-flange'), { drawSVG: '100%', duration: 0.8 }, 'step2+=0.6');
+    /* 3 · loaded */
+    tl.to(arrows, { opacity: 0, duration: 0.3 }, 'step2')
+      .to(qa(el, '#s28-c1, #s28-c2'), { opacity: 0, duration: 0.3 }, 'step2');
+    swap([a0, b0], [a1, b1], 'step2+=0.1', 1);
+    pop(q(el, '#s28-c3'), 'step2+=0.85');
     tl.addLabel('step3');
 
-    tl.to(tiles, { opacity: 0, scale: 0.9, duration: 0.5, stagger: 0.02 }, 'step3')
-      .fromTo([m1, m2], { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, 'step3+=0.25');
-    caption('step3+=0.5', 'mounted', 'Dovetails and horizontal screws, because an operator does not know which part is load-bearing.');
+    /* 4 · the left carrier, and the flange that braces it */
+    swap([a1, b1], [a2, b2], 'step3', 2);
+    tl.to(qa(el, '#s28-flange'), { drawSVG: '100%', duration: 0.8 }, 'step3+=0.8');
+    pop(q(el, '#s28-c4'), 'step3+=1.2');
+    tl.addLabel('step4');
+
+    /* 5 · both of them on the machine */
+    swap([a2, b2], [m1, m2], 'step4', 3);
+    pop(qa(el, '#s28-c5, #s28-c6'), 'step4+=0.85');
+    tl.addLabel('step5');
+
+    /* 6 · and the carrier takes its place in the record */
+    barDrop(tl, el, gsap, 1, { x: 120, y: 224, w: 497 }, 'step5');
+    tl.addLabel('step6');
+
+    return tl;
+  });
+
+  /* ═══════════════ S29 · the nozzle, then the screen holder ══════ */
+
+  /* the opening picture arrives on every entry: the two fitted needle
+     positions ring themselves, the holder's span is bracketed, the chips
+     land.  Nothing here is touched by the step timeline. */
+  Deck.enter('s29', function (el, gsap) {
+    var n1  = q(el, '#s29-n1');
+    var ring = qa(el, '#s29-s1, #s29-s2, #s29-br');
+    var chips = qa(el, '#s29-c0, #s29-c1, #s29-c2');
+    if (stepOf(el) > 0) {          /* arrived mid-slide: settle, do not replay */
+      gsap.set(ring, { drawSVG: '100%' });
+      gsap.set(chips, { opacity: 1, scale: 1 });
+      return;
+    }
+    gsap.set(ring, { drawSVG: '0%' });
+    gsap.set(chips, { opacity: 0 });
+    var t = gsap.timeline({ defaults: { ease: EO } });
+    t.fromTo(n1, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.8 }, 0)
+     .fromTo(q(el, '#s29-c0'), { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 0.45)
+     .to(qa(el, '#s29-s1, #s29-s2'), { drawSVG: '100%', duration: 0.5, stagger: 0.12 }, 0.6)
+     .fromTo(q(el, '#s29-c2'), { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 0.95)
+     .to(qa(el, '#s29-br'), { drawSVG: '100%', duration: 0.6 }, 1.1)
+     .fromTo(q(el, '#s29-c1'), { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 1.45);
+  });
+
+  Deck.slide('s29', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var n1 = q(el, '#s29-n1');
+    var d0 = qa(el, '#s29-d0a, #s29-d0b');
+    var d1 = q(el, '#s29-d1'), d2 = q(el, '#s29-d2');
+    var kks = qa(el, '#s29-kick .p3-kk');
+
+    function pop(nodes, at) {
+      tl.fromTo(nodes, { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, at);
+    }
+    /* The kicker is a stack of sibling labels, one lit at a time: crossfade
+       between them so every backward position shows the label that belongs
+       to it.  Rewriting one node's text with .call() does not reverse. */
+    function kicker(at, i) {
+      if (!i || !kks[i] || !kks[i - 1]) return;
+      tl.to(kks[i - 1], { opacity: 0, duration: 0.25 }, at)
+        .fromTo(kks[i], { opacity: 0 },
+          { opacity: 1, duration: 0.35, immediateRender: false }, off(at, 0.26));
+    }
+
+    tl.addLabel('step0');
+
+    /* 1 · the nozzle takes its place in the record.  The photograph stays
+           on screen while its thumbnail flies down — the same shape as
+           S28's last beat — so this clicker position is not an empty band. */
+    barDrop(tl, el, gsap, 2, { x: 392, y: 224, w: 497 }, 'step0');
+    tl.addLabel('step1');
+
+    /* 2 · the screen and stylus holder, in CAD.  Now the nozzle leaves. */
+    tl.to(n1, { opacity: 0, duration: 0.5 }, 'step1');
+    tl.fromTo(d0, { opacity: 0, scale: 0.97 },
+      { opacity: 1, scale: 1, duration: 0.75, stagger: 0.12 }, 'step1+=0.3');
+    kicker('step1', 1);
+    pop(qa(el, '#s29-c3, #s29-c4'), 'step1+=0.9');
+    tl.addLabel('step2');
+
+    /* 3 · and on the front of the machine, at 45 degrees */
+    tl.to(d0, { opacity: 0, duration: 0.45 }, 'step2')
+      .fromTo(d1, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.75 }, 'step2+=0.2')
+      .fromTo(d2, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.6 }, 'step2+=0.45');
+    kicker('step2', 2);
+    pop(q(el, '#s29-c5'), 'step2+=0.8');
+    pop(q(el, '#s29-c6'), 'step2+=1.0');
+    tl.addLabel('step3');
+
+    /* 4 · the holder takes its place in the record; the pictures stay,
+           because this is the last beat of the slide */
+    barDrop(tl, el, gsap, 3, { x: 165, y: 224, w: 497 }, 'step3');
     tl.addLabel('step4');
 
     return tl;
   });
 
-  /* ═══════════════ S29 · the nozzle, and the plate at 45° ═════════ */
+  /* ═══════════════ S30 · the battery cradle ══════════════════════ */
 
-  Deck.slide('s29', function (el, gsap) {
-    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
-
-    var left = q(el, '#s29-left');
-    var n1 = q(el, '#s29-n1'), n2 = q(el, '#s29-n2');
-    var diag = q(el, '#s29-diag');
-    var d1 = q(el, '#s29-d1'), d2 = q(el, '#s29-d2'), cap = q(el, '#s29-cap');
-    var deg = q(el, '#s29-deg');
-    var draw = qa(el, '#s29-s1, #s29-s2, #s29-br, #s29-line, #s29-arc');
-
-    gsap.set(draw, { drawSVG: '0%' });
-    gsap.set(deg, { opacity: 0 });
-    gsap.set(q(el, '#s29-plate'), { rotation: 0, svgOrigin: '150 166' });
-    gsap.set(n1, { opacity: 0 });
-
-    tl.addLabel('step0');
-
-    tl.fromTo(n1, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.7 }, 'step0')
-      .to(qa(el, '#s29-s1, #s29-s2'), { drawSVG: '100%', duration: 0.5, stagger: 0.12 }, 'step0+=0.45')
-      .fromTo(qa(el, '#s29-c1'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=0.75')
-      .to(qa(el, '#s29-br'), { drawSVG: '100%', duration: 0.6 }, 'step0+=1.0')
-      .fromTo(qa(el, '#s29-c2'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=1.35')
-      .addLabel('step1');
-
-    tl.fromTo(n2, { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.8 }, 'step1')
-      .to(qa(el, '#s29-line'), { drawSVG: '100%', duration: 0.7 }, 'step1+=0.5')
-      .fromTo(qa(el, '#s29-c3'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step1+=0.95')
-      .addLabel('step2');
-
-    tl.to(left, { opacity: 0.42, duration: 0.6 }, 'step2')
-      .fromTo(diag, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 'step2+=0.2')
-      .to(qa(el, '#s29-plate'), { rotation: -45, svgOrigin: '150 166', duration: 1.1, ease: 'power3.inOut' }, 'step2+=0.55')
-      .to(qa(el, '#s29-arc'), { drawSVG: '100%', duration: 0.9 }, 'step2+=0.65')
-      .to(deg, { opacity: 1, duration: 0.4 }, 'step2+=0.9')
-      .to(qa(el, '#s29-eye'), { opacity: 1, duration: 0.6 }, 'step2+=1.5');
-    counter(tl, deg, 0, 45, 0, 'step2+=0.55', 1.1, '', '°');
-    tl.addLabel('step3');
-
-    tl.to(diag, { opacity: 0, duration: 0.45 }, 'step3')
-      .fromTo(d1, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.75 }, 'step3+=0.2')
-      .fromTo(qa(el, '#s29-c4'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step3+=0.75')
-      .fromTo(d2, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6 }, 'step3+=0.5')
-      .call(setText(cap, 'About ten prints, split on a dovetail, stylus tethered.'), null, 'step3+=0.5')
-      .to(cap, { opacity: 1, duration: 0.5 }, 'step3+=0.6')
-      .addLabel('step4');
-
-    return tl;
+  Deck.enter('s30', function (el, gsap) {
+    if (stepOf(el) > 0) {          /* the cradle belongs to the step timeline here */
+      gsap.set(q(el, '#s30-c0'), { opacity: 1, scale: 1 });
+      return;
+    }
+    gsap.fromTo(q(el, '#s30-cad'), { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: EO });
+    gsap.fromTo(q(el, '#s30-c0'), { opacity: 0, scale: 0.82 },
+      { opacity: 1, scale: 1, duration: 0.4, delay: 0.5, ease: 'back.out(2)' });
   });
-
-  /* ═══════════════ S30 · the cradle, the pack, the object ═════════ */
 
   Deck.slide('s30', function (el, gsap) {
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
 
     var cad = q(el, '#s30-cad');
     var b1 = q(el, '#s30-b1'), b2 = q(el, '#s30-b2');
-    var top = q(el, '#s30-top'), ins = q(el, '#s30-in'), clipF = q(el, '#s30-clip');
-    var t1 = q(el, '#s30-t1'), t2 = q(el, '#s30-t2'), t3 = q(el, '#s30-t3');
-    var kg = q(el, '#s30-kg'), hh = q(el, '#s30-h'), inc = q(el, '#s30-inc');
-    var panels = qa(el, '.sheet__panel');
+    var clipF = q(el, '#s30-clip');
     var vid = q(el, '#s30-clip video');
-    var draw = qa(el, '#s30-w, #s30-wt, #s30-d, #s30-dt');
-    var dimT = qa(el, '#s30-wl, #s30-dl');
+    var kks = qa(el, '#s30-kick .p3-kk');
 
-    gsap.set(cad, { opacity: 0, y: 22 });
-    gsap.set(draw, { drawSVG: '0%' });
-    gsap.set(dimT, { opacity: 0 });
+    function pop(nodes, at) {
+      tl.fromTo(nodes, { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, at);
+    }
+    /* The kicker is a stack of sibling labels, one lit at a time: crossfade
+       between them so every backward position shows the label that belongs
+       to it.  Rewriting one node's text with .call() does not reverse. */
+    function kicker(at, i) {
+      if (!i || !kks[i] || !kks[i - 1]) return;
+      tl.to(kks[i - 1], { opacity: 0, duration: 0.25 }, at)
+        .fromTo(kks[i], { opacity: 0 },
+          { opacity: 1, duration: 0.35, immediateRender: false }, off(at, 0.26));
+    }
 
     tl.addLabel('step0');
 
-    tl.to(cad, { opacity: 1, y: 0, duration: 0.8 }, 'step0');
-    litPanel(tl, panels, 0, 'step0+=0.15');
+    /* 1 · the cradle on the machine, empty and loaded */
+    tl.to(cad, { opacity: 0, x: -36, duration: 0.5 }, 'step0')
+      .fromTo(b1, { opacity: 0, x: 34 }, { opacity: 1, x: 0, duration: 0.7 }, 'step0+=0.22')
+      .fromTo(b2, { opacity: 0, x: 34 }, { opacity: 1, x: 0, duration: 0.7 }, 'step0+=0.36');
+    kicker('step0', 1);
+    pop(q(el, '#s30-c1'), 'step0+=0.8');
+    pop(q(el, '#s30-c2'), 'step0+=0.95');
     tl.addLabel('step1');
 
-    tl.to(cad, { opacity: 0, x: -40, duration: 0.55 }, 'step1')
-      .fromTo(b1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.7 }, 'step1+=0.2')
-      .fromTo(b2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.7 }, 'step1+=0.34');
-    litPanel(tl, panels, 1, 'step1+=0.15');
+    /* 2 · and the fourth and last piece joins the record; the pair stays
+           on screen so this clicker position is not a blank band */
+    barDrop(tl, el, gsap, 4, { x: 654, y: 224, w: 515 }, 'step1');
     tl.addLabel('step2');
 
-    tl.to([b1, b2], { opacity: 0, duration: 0.45 }, 'step2')
-      .to([t1, t2], { opacity: 1, duration: 0.5, stagger: 0.08 }, 'step2+=0.3')
-      .fromTo(top, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.9 }, 'step2+=0.15')
-      .to(qa(el, '#s30-w, #s30-wt'), { drawSVG: '100%', duration: 0.7 }, 'step2+=0.8')
-      .to(qa(el, '#s30-d, #s30-dt'), { drawSVG: '100%', duration: 0.7 }, 'step2+=1.05')
-      .to(dimT, { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2+=1.15')
-      .to(kg, { opacity: 1, duration: 0.4 }, 'step2+=1.35')
-      .to(hh, { opacity: 1, duration: 0.4 }, 'step2+=1.55');
-    counter(tl, kg, 0, 3.3, 1, 'step2+=1.35', 0.9, '', ' kg');
-    litPanel(tl, panels, 2, 'step2+=0.15');
+    /* 3 · the pack travels with the machine */
+    tl.to([b1, b2], { opacity: 0, duration: 0.5 }, 'step2')
+      .fromTo(clipF, { opacity: 0, scale: 0.97 },
+      { opacity: 1, scale: 1, duration: 0.9, ease: 'power1.inOut' }, 'step2+=0.1')
+      .call(stopVid(vid), null, 'step2')
+      .call(playVid(vid, true), null, 'step2+=0.35');
+    kicker('step2', 2);
     tl.addLabel('step3');
 
-    tl.to([kg, hh], { opacity: 0, duration: 0.3 }, 'step3')
-      .fromTo(ins, { opacity: 0 }, { opacity: 1, duration: 0.8 }, 'step3+=0.15')
-      .to(inc, { opacity: 1, duration: 0.45 }, 'step3+=0.7')
-      .to(t3, { opacity: 1, duration: 0.5 }, 'step3+=0.5')
-      .call(stopVid(vid), null, 'step3')
-      .call(playVid(vid, true), null, 'step3+=1.5')
-      .to(clipF, { opacity: 1, duration: 1.2, ease: 'power1.inOut' }, 'step3+=1.5')
-      .to(inc, { opacity: 0, duration: 0.5 }, 'step3+=1.6');
-    litPanel(tl, panels, 3, 'step3+=0.15');
-    tl.addLabel('step4');
+    return tl;
+  });
+
+  /* ═══════════════ S30b · the finished machine ═══════════════════ */
+
+  /* the record is complete on entry: the plate rises and the four chips
+     acknowledge themselves left to right.  The step timeline never touches
+     the bar on this slide, so the two cannot fight. */
+  Deck.enter('s30b', function (el, gsap) {
+    var chips = qa(el, '.p3-bar-it > .callout');
+    if (stepOf(el) > 0) {
+      gsap.set(q(el, '#s30b-top'), { opacity: 1, y: 0 });
+      gsap.set(chips, { y: 0 });
+      gsap.set(qa(el, '.p3-bar-fr'), { scale: 1 });
+      return;
+    }
+    var t = gsap.timeline({ defaults: { ease: EO } });
+    t.fromTo(q(el, '#s30b-top'), { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.85 }, 0)
+     .fromTo(chips, { y: 6 }, { y: 0, duration: 0.42, stagger: 0.09 }, 0.35)
+     .fromTo(qa(el, '.p3-bar-fr'), { scale: 0.965 },
+        { scale: 1, duration: 0.42, stagger: 0.09 }, 0.35);
+  });
+
+  Deck.slide('s30b', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
+
+    var kgv  = q(el, '#s30b-kg .p3-bignum-v');
+    var kg   = q(el, '#s30b-kg');
+    var lead = qa(el, '#s30b-w, #s30b-wt, #s30b-d, #s30b-dt');
+
+    gsap.set(lead, { drawSVG: '0%' });
+
+    function pop(nodes, at) {
+      tl.fromTo(nodes, { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, at);
+    }
+
+    tl.addLabel('step0');
+
+    /* 1 · how big, and how heavy */
+    tl.to(qa(el, '#s30b-w, #s30b-wt'), { drawSVG: '100%', duration: 0.65 }, 'step0');
+    pop(q(el, '#s30b-cw'), 'step0+=0.5');
+    tl.to(qa(el, '#s30b-d, #s30b-dt'), { drawSVG: '100%', duration: 0.65 }, 'step0+=0.35');
+    pop(q(el, '#s30b-cd'), 'step0+=0.85');
+    pop(q(el, '#s30b-ch'), 'step0+=1.05');
+    /* The weight lands with the leaders and counts up over a beat of its
+       own length, so the single step is not over before he has finished
+       reading the three dimensions out. */
+    tl.to(kg, { opacity: 1, duration: 0.45 }, 'step0+=0.75');
+    counter(tl, kgv, 0, 3.3, 1, 'step0+=0.8', 1.15, '', '');
+    tl.addLabel('step1', tl.duration());
 
     return tl;
   });
@@ -1468,19 +1939,16 @@
     var bar1 = q(el, '#s31-bar1'), bar2 = q(el, '#s31-bar2'), bar3 = q(el, '#s31-bar3');
     var v1 = q(el, '#s31-v1'), v2 = q(el, '#s31-v2'), v3 = q(el, '#s31-v3');
     var r1 = q(el, '#s31-r1'), r2 = q(el, '#s31-r2'), r3 = q(el, '#s31-r3');
-    var cv = q(el, '#s31-cv'), drift = q(el, '#s31-drift');
-    var pip = q(el, '#s31-pip'), dots = qa(el, '.s31-dot');
-    var up = q(el, '#s31-up'), dn = q(el, '#s31-dn');
-    var ut = q(el, '#s31-ut'), dt = q(el, '#s31-dt');
+    var brk = q(el, '#s31-brk'), brkt = q(el, '#s31-brkt');
+    var strokes = q(el, '#s31-stroke');
+    var cv = q(el, '#s31-cv');
 
-    gsap.set([bl, brr, zero, pip, up, dn], { drawSVG: '0%' });
+    gsap.set([bl, brr, zero, brk], { drawSVG: '0%' });
     gsap.set(bandt, { opacity: 0 });
-    gsap.set(dots, { scale: 0, transformOrigin: '50% 50%' });
-    gsap.set([ut, dt], { opacity: 0 });
 
     tl.addLabel('step0');
 
-    /* ── step 1 · the requirement is drawn before any result lands ── */
+    /* ── step 1 · the limit is drawn before any result lands ── */
     tl.to(zero, { drawSVG: '100%', duration: 0.5 }, 'step0')
       .to([bl, brr], { drawSVG: '100%', duration: 0.7, stagger: 0.1 }, 'step0+=0.25')
       .to(band, { opacity: 1, duration: 0.6 }, 'step0+=0.6')
@@ -1489,34 +1957,35 @@
 
     /* ── step 2 · the bench constant lands outside the band ── */
     tl.to(r1, { opacity: 1, duration: 0.4 }, 'step1')
-      .fromTo(bar1, { attr: { x: 452, width: 0 } },
-                    { attr: { x: 160, width: 292 }, duration: 0.9, ease: 'power3.out' }, 'step1+=0.15')
+      .fromTo(bar1, { attr: { x: 428, width: 0 } },
+                    { attr: { x: 140, width: 288 }, duration: 0.9, ease: 'power3.out' }, 'step1+=0.15')
       .to(v1, { opacity: 1, duration: 0.4 }, 'step1+=0.75')
       .to(bl, { stroke: '#e83535', strokeWidth: 6, duration: 0.25, yoyo: true, repeat: 3 }, 'step1+=0.55')
       .addLabel('step2');
 
-    /* ── step 3 · calibrated on the instrument, both inside ── */
-    tl.to([r2, r3], { opacity: 1, duration: 0.4, stagger: 0.1 }, 'step2')
-      .fromTo(bar2, { attr: { x: 452, width: 0 } },
-                    { attr: { x: 397, width: 55 }, duration: 0.7 }, 'step2+=0.15')
-      .fromTo(bar3, { attr: { x: 452, width: 0 } },
-                    { attr: { x: 452, width: 10 }, duration: 0.7 }, 'step2+=0.35')
-      .to([v2, v3], { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2+=0.6')
-      .to(band, { attr: { fill: 'rgba(79,195,138,0.18)' }, duration: 0.5 }, 'step2+=0.7')
+    /* ── step 3 · recalibration, then both channels inside ── */
+    tl.to(brk, { drawSVG: '100%', duration: 0.6 }, 'step2')
+      .to(brkt, { opacity: 1, duration: 0.45 }, 'step2+=0.3')
+      .to([r2, r3], { opacity: 1, duration: 0.4, stagger: 0.1 }, 'step2+=0.5')
+      .fromTo(bar2, { attr: { x: 428, width: 0 } },
+                    { attr: { x: 374, width: 54 }, duration: 0.7 }, 'step2+=0.6')
+      .fromTo(bar3, { attr: { x: 428, width: 0 } },
+                    { attr: { x: 428, width: 10 }, duration: 0.7 }, 'step2+=0.8')
+      .to([v2, v3], { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step2+=1.05')
+      .to(band, { attr: { fill: 'rgba(79,195,138,0.18)' }, duration: 0.5 }, 'step2+=1.15')
       .addLabel('step3');
 
-    /* ── step 4 · the scatter against a hand pipette ── */
-    tl.to(cv, { opacity: 1, duration: 0.5 }, 'step3')
-      .to(pip, { drawSVG: '100%', duration: 0.6 }, 'step3+=0.25')
-      .to(dots, { scale: 1, duration: 0.5, stagger: 0.14, ease: 'back.out(2.2)' }, 'step3+=0.55')
+    /* ── step 4 · what each assembled head actually gives per stroke ── */
+    tl.fromTo(strokes, { opacity: 0, y: 14 },
+                       { opacity: 1, y: 0, duration: 0.55 }, 'step3')
       .addLabel('step4');
 
-    /* ── step 5 · and the constant itself moves between sessions ── */
-    tl.to(drift, { opacity: 1, duration: 0.5 }, 'step4')
-      .to(up, { drawSVG: '100%', duration: 0.5 }, 'step4+=0.2')
-      .to(dn, { drawSVG: '100%', duration: 0.5 }, 'step4+=0.4')
-      .to([ut, dt], { opacity: 1, duration: 0.4, stagger: 0.12 }, 'step4+=0.55')
-      .addLabel('step5');
+    /* ── step 5 · how repeatable one channel is, dose to dose ── */
+    tl.fromTo(cv, { opacity: 0, y: 12 },
+                  { opacity: 1, y: 0, duration: 0.55 }, 'step4')
+      .fromTo(qa(el, '.s31-cv-i'), { opacity: 0, y: 14 },
+                  { opacity: 1, y: 0, duration: 0.5, stagger: 0.16, immediateRender: false }, 'step4+=0.3')
+      .addLabel('step5', tl.duration());
 
     return tl;
   });
@@ -1527,20 +1996,17 @@
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
 
     var plate = q(el, '#s32-plate'), done = q(el, '#s32-done');
-    var target = q(el, '#s32-target'), c5 = q(el, '#s32-c5');
     var numB = q(el, '#s32-num'), countN = q(el, '#s32-count');
     var sub = q(el, '#s32-sub'), miss = q(el, '#s32-miss');
     var vidF = q(el, '#s32-vid'), vid = q(el, '#s32-vid video');
     var t1 = q(el, '#s32-t1'), t2 = q(el, '#s32-t2'), tcap = q(el, '#s32-tcap');
-
-    gsap.set(target, { drawSVG: '0%' });
-    gsap.set(miss, { opacity: 0 });
 
     tl.addLabel('step0');
 
     tl.fromTo(plate, { opacity: 0, scale: 1.03 }, { opacity: 1, scale: 1, duration: 0.9 }, 'step0')
       .addLabel('step1');
 
+    /* ── step 1 · the run completes: forty tubes, both reagents ── */
     tl.to(done, { opacity: 1, duration: 2.4, ease: 'power1.inOut' }, 'step1')
       .to(numB, { opacity: 1, duration: 0.5 }, 'step1+=0.2')
       .to(sub, { opacity: 1, duration: 0.5 }, 'step1+=1.9')
@@ -1550,15 +2016,18 @@
     counter(tl, countN, 0, 40, 0, 'step1', 2.4);
     tl.addLabel('step2');
 
-    tl.to(target, { drawSVG: '100%', duration: 0.8 }, 'step2')
-      .fromTo(c5, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step2+=0.6')
-      .to(sub, { opacity: 0, duration: 0.4 }, 'step2+=0.5')
-      .to(miss, { opacity: 1, duration: 0.5 }, 'step2+=0.8')
+    /* ── step 2 · first rack against last rack.  (The 5 mm target radius and
+       its ring came off on Sirio's note, 2026-09-22: "remove that thing, it
+       doesn't matter.") ── */
+    tl.fromTo([t1, t2], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, 'step2')
+      .to(tcap, { opacity: 1, duration: 0.5 }, 'step2+=0.4')
       .addLabel('step3');
 
-    tl.fromTo([t1, t2], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, 'step3')
-      .to(tcap, { opacity: 1, duration: 0.5 }, 'step3+=0.4')
-      .addLabel('step4');
+    /* ── step 3 · a separate fact in a separate block: the droplets that
+       missed.  Three droplets, not three tubes; the rack or the lane, not
+       "the deck"; and the cap fouling is counted apart from it. ── */
+    tl.fromTo(miss, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 'step3')
+      .addLabel('step4', tl.duration());
 
     return tl;
   });
@@ -1569,64 +2038,122 @@
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
 
     var cards = [q(el, '#s33-c0'), q(el, '#s33-c1'), q(el, '#s33-c2')];
-    var W_BIG = 600, W_SM = 254, GAP = 20, X0 = 56;
+    var medias = cards.map(function (c) { return c.querySelector('.p3-fcard-media'); });
 
-    var ref = q(el, '#s33-ref'), arm = q(el, '#s33-arm'), arc = q(el, '#s33-arc');
-    var ghost = q(el, '#s33-ghost'), drop = q(el, '#s33-drop');
+    /* Per-card geometry.  The cap card is narrow because its photograph is
+       nearly square and is contained, not cropped; the other two keep the
+       600 px stage they were built for.  The row is centred, so the narrow
+       card does not leave the board lopsided. */
+    var ACT  = [ { w: 384, h: 480, mh: 340 },
+                 { w: 600, h: 480, mh: 338 },
+                 { w: 600, h: 384, mh: 212 } ];
+    var IDLE = { w: 254, h: 384, mh: 212 };
+    var GAP = 20, STAGE = 1280;
+
+    function geo(i, active) { return (i === active) ? ACT[i] : IDLE; }
+    function rowX0(active) {
+      var tot = GAP * 2;
+      for (var i = 0; i < 3; i++) tot += geo(i, active).w;
+      return Math.round((STAGE - tot) / 2);
+    }
+
+    var good = q(el, '#s33-good'), bad = q(el, '#s33-bad');
+    var reach = q(el, '#s33-reach'), reachh = q(el, '#s33-reachh');
     var deg = q(el, '#s33-deg'), flat = q(el, '#s33-flat');
     var batt = q(el, '#s33-batt'), batfill = q(el, '#s33-batfill');
-    var rot = q(el, '#s33-rot'), rot1s = q(el, '#s33-rot1s'), rot2s = q(el, '#s33-rot2s');
+    var rot = q(el, '#s33-rot');
+    var rotA = q(el, '#s33-rotA'), rotB = q(el, '#s33-rotB');
+    var rotAs = q(el, '#s33-rotAs'), rotBs = q(el, '#s33-rotBs');
+    var ROTA = '474 211', ROTB = '536 211';
     var c16 = q(el, '#s33-16');
+    /* Each photo card's overlay retires WITH the card: a collapsed card is
+       dimmed and re-fitted, so a drawing left lit on it is both too strong
+       and no longer over the thing it was measured against. */
+    var capOv = q(el, '#s33-c0 .p3-ov'), batOv = q(el, '#s33-c1 .p3-ov');
     var punct = qa(el, '.s33-p'), needle = q(el, '#s33-needle');
     var beads = q(el, '#s33-beads'), ct = q(el, '#s33-ct');
 
-    gsap.set([ref, arm, arc], { drawSVG: '0%' });
-    gsap.set(drop, { opacity: 0 });
+    gsap.set([good, bad], { drawSVG: '0%' });
+    gsap.set([reach, reachh], { drawSVG: '0%' });
     gsap.set(punct, { scale: 0, transformOrigin: '50% 50%' });
     gsap.set(needle, { y: -70, opacity: 0.8 });
+    gsap.set([cards[1], cards[2]], { opacity: 0.5 });
 
     function layout(at, active) {
-      var x = X0;
+      var x = rowX0(active);
       cards.forEach(function (c, i) {
-        var w = (i === active) ? W_BIG : W_SM;
-        tl.to(c, { left: x, width: w, opacity: (i === active) ? 1 : 0.5, duration: 0.8 }, at);
-        x += w + GAP;
+        var g = geo(i, active);
+        tl.to(c, { left: x, width: g.w, height: g.h,
+                   opacity: (i === active) ? 1 : 0.5, duration: 0.8 }, at);
+        tl.to(medias[i], { height: g.mh, duration: 0.8 }, at);
+        x += g.w + GAP;
       });
     }
 
     tl.addLabel('step0');
 
-    /* ── step 1 · a cap left flat ── */
-    tl.to([ref, arm], { drawSVG: '100%', duration: 0.6, stagger: 0.12 }, 'step0')
-      .to(arc, { drawSVG: '100%', duration: 0.6 }, 'step0+=0.45')
-      .fromTo(deg, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=0.8')
-      .to(ghost, { opacity: 1, duration: 0.4 }, 'step0+=1.1')
-      .fromTo(ghost, { rotation: 0 }, { rotation: 46, svgOrigin: '875 760', duration: 1.0, ease: 'power2.inOut' }, 'step0+=1.2')
-      .fromTo(flat, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=2.0')
-      .fromTo(drop, { opacity: 0, y: -90 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.in' }, 'step0+=2.2');
+    /* ── step 1 · one cap against the other.  Beat one: the cap that is
+       folded back, standing clear of the deck.  Beat two: the cap left flat,
+       reaching sideways for the lane wall.  The difference between the two
+       is the whole animation. ── */
+    tl.to(good, { drawSVG: '100%', duration: 0.7 }, 'step0+=0.15')
+      .fromTo(deg, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=0.7')
+      .to(bad, { drawSVG: '100%', duration: 0.7 }, 'step0+=1.5')
+      .to(reach, { drawSVG: '100%', duration: 0.45 }, 'step0+=2.1')
+      .to(reachh, { drawSVG: '100%', duration: 0.3 }, 'step0+=2.45')
+      .fromTo(flat, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step0+=2.2');
     tl.addLabel('step1');
 
-    /* ── step 2 · a tired battery ── */
-    tl.to([deg, flat], { opacity: 0, duration: 0.35 }, 'step1');
+    /* ── step 2 · a tired battery, in the order it happened (Sirio,
+       2026-09-22): full pack, both heads turning; the pack drains and both
+       seize; then one alone turns — the run the firmware cannot yet ask
+       for. ── */
+    tl.to([deg, flat, capOv], { opacity: 0, duration: 0.35 }, 'step1');
     layout('step1', 1);
-    tl.to(batt, { opacity: 1, duration: 0.5 }, 'step1+=0.35')
-      .to(batfill, { attr: { width: 12 }, duration: 1.3, ease: 'power1.in' }, 'step1+=0.6')
-      .to(rot, { opacity: 1, duration: 0.4 }, 'step1+=0.7')
-      .fromTo(rot1s, { rotation: 0 }, { rotation: 300, svgOrigin: '300 266', duration: 1.6, ease: 'power4.out' }, 'step1+=0.7')
-      .fromTo(rot2s, { rotation: 0 }, { rotation: 260, svgOrigin: '392 266', duration: 1.6, ease: 'power4.out' }, 'step1+=0.7')
-      .fromTo(c16, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step1+=1.9');
+
+    /* phase 1 · full, and both heads running */
+    tl.to(batt, { opacity: 1, duration: 0.45 }, 'step1+=0.3')
+      .to(rot, { opacity: 1, duration: 0.4 }, 'step1+=0.5')
+      .fromTo(rotAs, { rotation: 0 }, { rotation: 300, svgOrigin: ROTA, duration: 1.3, ease: 'none' }, 'step1+=0.55')
+      .fromTo(rotBs, { rotation: 0 }, { rotation: 300, svgOrigin: ROTB, duration: 1.3, ease: 'none' }, 'step1+=0.55');
+
+    /* phase 2 · the pack drains and both seize: a fast, small judder, and
+       spokes that twitch without ever coming round */
+    tl.to(batfill, { attr: { width: 7 }, duration: 1.3, ease: 'power1.in' }, 'step1+=1.5')
+      .to(rotA, { x: 2.2, y: -1.6, duration: 0.055, repeat: 15, yoyo: true, ease: 'none' }, 'step1+=1.9')
+      .to(rotB, { x: -2.2, y: 1.6, duration: 0.05, repeat: 17, yoyo: true, ease: 'none' }, 'step1+=1.9')
+      .to(rotAs, { rotation: 307, svgOrigin: ROTA, duration: 0.085, repeat: 9, yoyo: true, ease: 'none' }, 'step1+=1.9')
+      .to(rotBs, { rotation: 293, svgOrigin: ROTB, duration: 0.075, repeat: 11, yoyo: true, ease: 'none' }, 'step1+=1.9')
+      .to([rotA, rotB], { x: 0, y: 0, duration: 0.18 }, 'step1+=2.95');
+
+    /* phase 3 · one stays dead, the other turns alone */
+    tl.to(rotA, { opacity: 0.4, duration: 0.4 }, 'step1+=3.15')
+      .to(rotBs, { rotation: 653, svgOrigin: ROTB, duration: 1.7, ease: 'none' }, 'step1+=3.15')
+      .fromTo(c16, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step1+=3.3');
     tl.addLabel('step2');
 
-    /* ── step 3 · a septum that stops resealing ── */
-    tl.to(c16, { opacity: 0, duration: 0.35 }, 'step2');
+    /* ── step 3 · a septum that stops resealing.  The needle drives far
+       enough to enter the disc, holds there, withdraws, and does it again:
+       five visible punctures, then the rest at speed.  y 44 puts the tip at
+       172 in the card's viewBox, inside the 104 r disc centred at 196. ── */
+    tl.to([c16, batOv], { opacity: 0, duration: 0.35 }, 'step2');
     layout('step2', 2);
-    tl.to(needle, { y: 0, duration: 0.45, ease: 'power3.in' }, 'step2+=0.4')
-      .to(needle, { y: -70, duration: 0.45 }, 'step2+=0.85')
-      .to(punct.slice(0, 5), { scale: 1, duration: 0.35, stagger: 0.09, ease: 'back.out(2)' }, 'step2+=0.5')
-      .to(punct.slice(5), { scale: 1, duration: 0.3, stagger: 0.045, ease: 'back.out(2)' }, 'step2+=1.3')
-      .to(beads, { opacity: 1, duration: 0.5 }, 'step2+=2.1');
-    counter(tl, ct, 0, 5, 0, 'step2+=0.5', 0.5, '', ' punctures');
-    counter(tl, ct, 5, 20, 0, 'step2+=1.3', 0.8, '', ' punctures');
+    tl.to(ct, { opacity: 1, duration: 0.35 }, 'step2+=0.3');
+
+    var DIP0 = 0.45, DIPGAP = 0.52;
+    for (var d = 0; d < 5; d++) {
+      var t0 = 'step2+=' + (DIP0 + d * DIPGAP).toFixed(2);
+      var t1 = 'step2+=' + (DIP0 + d * DIPGAP + 0.18).toFixed(2);
+      var t2 = 'step2+=' + (DIP0 + d * DIPGAP + 0.34).toFixed(2);
+      tl.to(needle, { y: 44, duration: 0.18, ease: 'power3.in' }, t0)
+        .to(needle, { y: -70, duration: 0.18, ease: 'power2.out' }, t2)
+        .to(punct[d], { scale: 1, duration: 0.22, ease: 'back.out(2)' }, t1);
+      /* the readout counts what is on the disc, one mark per entry */
+      counter(tl, ct, d, d + 1, 0, t1, 0.12, '', d === 0 ? ' puncture' : ' punctures');
+    }
+    tl.to(punct.slice(5), { scale: 1, duration: 0.28, stagger: 0.045, ease: 'back.out(2)' }, 'step2+=3.25')
+      .to(beads, { opacity: 1, duration: 0.5 }, 'step2+=4.10');
+    counter(tl, ct, 5, 20, 0, 'step2+=3.25', 0.8, '', ' punctures');
     tl.addLabel('step3');
 
     return tl;
@@ -1637,7 +2164,8 @@
   Deck.slide('s34', function (el, gsap) {
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
     var wires = qa(el, '.s34-ln');
-    var p1 = q(el, '#s34-p1'), p2 = q(el, '#s34-p2');
+    var fn = q(el, '#s34-fn');
+    var p1 = q(el, '#s34-p1'), p2 = q(el, '#s34-p2'), p3 = q(el, '#s34-p3');
 
     gsap.set(wires, { drawSVG: '0%' });
     tl.addLabel('step0');
@@ -1648,16 +2176,23 @@
       var chips = qa(el, '.p3-chip[data-g="' + g + '"]');
       tl.fromTo(head, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, at)
         .fromTo(chips, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.09 }, at + '+=0.12');
+      if (g === 1) tl.to(fn, { opacity: 1, duration: 0.45 }, at + '+=0.55');
       if (g > 1) {
         tl.to(qa(el, '.p3-chip[data-g="' + (g - 1) + '"]'), { opacity: 0.55, duration: 0.45 }, at);
         tl.to(q(el, '.p3-ghead[data-g="' + (g - 1) + '"]'), { opacity: 0.5, duration: 0.45 }, at);
       }
+      if (g === 2) tl.to(fn, { opacity: 0.55, duration: 0.45 }, at);
       tl.addLabel('step' + g);
     }
 
-    tl.fromTo([p1, p2], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 }, 'step4+=0.5')
-      .to(wires, { drawSVG: '100%', duration: 0.9, stagger: 0.12 }, 'step4+=0.7');
-    tl.addLabel('step5', tl.duration());
+    /* ── step 6 · the three things the excluded rows are waiting on.
+       They used to ride on the Safety beat; Sirio reads the Safety column
+       out loud first, so the pills and their leader lines wait for a press
+       of their own.  The loop above has already parked 'step5' at the end
+       of the Safety tweens, so that column is fully settled here. ── */
+    tl.fromTo([p1, p3, p2], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 }, 'step5+=0.15')
+      .to(wires, { drawSVG: '100%', duration: 0.9, stagger: 0.12 }, 'step5+=0.45');
+    tl.addLabel('step6', tl.duration());
 
     return tl;
   });
@@ -1670,7 +2205,6 @@
     var clips = qa(el, '.p3-clip').sort(function (a, b) {
       return (+a.getAttribute('data-i')) - (+b.getAttribute('data-i'));
     });
-    var labs = qa(el, '.p3-clip-lab');
     var home = clips.map(function (c) {
       return {
         x: parseFloat(c.style.left), y: parseFloat(c.style.top),
@@ -1732,22 +2266,19 @@
       }
     }, true);
 
+    /* No step labels beyond step0: the slide has no clicker steps, so a plain
+       press advances to the demo slide.  A clip grows only when it is clicked
+       (Sirio, 2026-09-22).  The label reveal lives in the entry hook below. */
     tl.addLabel('step0');
-    tl.to(labs, { opacity: 1, duration: 0.5, stagger: 0.1 }, 'step0')
-      .call(focus, [-1], 'step0+=0.02')
-      .addLabel('step1');
-    tl.call(focus, [-1], 'step1+=0.02').call(focus, [1], 'step1+=0.06')
-      .to({}, { duration: 0.6 }, 'step1').addLabel('step2');
-    tl.call(focus, [1], 'step2+=0.02').call(focus, [2], 'step2+=0.06')
-      .to({}, { duration: 0.6 }, 'step2').addLabel('step3');
-    tl.call(focus, [2], 'step3+=0.02').call(focus, [3], 'step3+=0.06')
-      .to({}, { duration: 0.6 }, 'step3').addLabel('step4');
 
     return tl;
   });
 
-  Deck.enter('s35', function (el) {
+  Deck.enter('s35', function (el, gsap) {
+    var labs = qa(el, '.p3-clip-lab');
     if (el.__p3focus) el.__p3focus(-1);
+    gsap.set(labs, { opacity: 0 });
+    gsap.to(labs, { opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.2, ease: EO });
   });
 
   /* ═══════════════ S36 · the demo slide, and its fallback ═════════ */

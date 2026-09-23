@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rehearsal timings · Thesis Defense</title>
+<!--
+  Reads the run the deck wrote to localStorage while it was being presented
+  (key `thesisDeckRun`, history in `thesisDeckRuns`) and lays it against the
+  plan. Deliberately standalone: it is a rehearsal tool, not a page of the
+  site, so it carries no shared frame and no build step.
+-->
+<style>
+  :root {
+    --bg: #0a0a0c; --panel: rgba(255,255,255,0.035);
+    --line: rgba(255,255,255,0.10);
+    --text: #f0ece8; --soft: #b9b2ab; --muted: #7a7068;
+    --ok: #5bd98a; --warn: #e9c341; --over: #ff5a4d;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    --ease: cubic-bezier(.22,.68,0,1);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 56px 40px 80px; background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 17px; line-height: 1.5;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .sub { color: var(--muted); font-family: var(--mono); font-size: 16px; margin: 0 0 34px; }
+
+  .totals { display: flex; gap: 40px; flex-wrap: wrap; margin: 0 0 36px;
+            padding: 22px 26px; background: var(--panel);
+            border: 1px solid var(--line); border-radius: 18px; }
+  .tot-k { display: block; font-family: var(--mono); font-size: 14px;
+           letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .tot-v { font-family: var(--mono); font-size: 32px; font-weight: 600;
+           font-variant-numeric: tabular-nums; }
+
+  .part { margin: 0 0 30px; }
+  .part-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 12px; }
+  .part-name { font-size: 22px; font-weight: 600; }
+  .part-num { font-family: var(--mono); font-variant-numeric: tabular-nums;
+              font-size: 19px; color: var(--soft); }
+  .delta { font-family: var(--mono); font-size: 17px; font-weight: 600;
+           font-variant-numeric: tabular-nums; }
+
+  .row { display: grid; grid-template-columns: 1fr 250px 130px;
+         align-items: center; gap: 16px; padding: 9px 0;
+         border-top: 1px solid var(--line); }
+  .row--part { border-top: 0; }
+  .row-name { color: var(--soft); }
+  .row--part .row-name { color: var(--text); font-weight: 600; }
+  .track { position: relative; height: 12px; border-radius: 6px;
+           background: rgba(255,255,255,0.07); overflow: visible; }
+  .fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 6px; }
+  .planmark { position: absolute; top: -4px; width: 2px; height: 20px;
+              background: rgba(255,255,255,0.55); }
+  .nums { font-family: var(--mono); font-size: 16px; text-align: right;
+          font-variant-numeric: tabular-nums; color: var(--soft); }
+
+  .ok { color: var(--ok); } .warn { color: var(--warn); } .over { color: var(--over); }
+  .bg-ok { background: var(--ok); } .bg-warn { background: var(--warn); }
+  .bg-over { background: var(--over); }
+
+  .empty { padding: 40px 30px; background: var(--panel);
+           border: 1px dashed var(--line); border-radius: 18px; color: var(--soft); }
+  .empty code { font-family: var(--mono); color: var(--text); }
+  .foot { margin-top: 44px; display: flex; gap: 14px; align-items: center; }
+  button, .lnk {
+    font-family: var(--mono); font-size: 16px; color: var(--soft);
+    background: none; border: 1px solid var(--line); border-radius: 999px;
+    padding: 9px 18px; cursor: pointer; text-decoration: none;
+    transition: color 160ms var(--ease), border-color 160ms var(--ease);
+  }
+  button:hover, .lnk:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+  .hist { margin-top: 40px; }
+  .hist h2 { font-size: 19px; margin: 0 0 10px; }
+  .hist li { font-family: var(--mono); font-size: 15px; color: var(--muted);
+             list-style: none; padding: 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+(function () {
+  var RUN_KEY = 'thesisDeckRun', RUNS_KEY = 'thesisDeckRuns';
+
+  function mmss(s) {
+    var neg = s < 0; s = Math.abs(Math.round(s));
+    var m = Math.floor(s / 60), r = s % 60;
+    return (neg ? '−' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function signed(s) { return (s > 0 ? '+' : s < 0 ? '−' : '±') + mmss(Math.abs(s)).replace('−',''); }
+
+  /* Over budget is the thing worth seeing, so only overruns go red; coming in
+     early is fine and stays green. Within ten per cent either way is on plan. */
+  function grade(actual, planned) {
+    if (!planned) return '';
+    var d = actual - planned;
+    if (d > planned * 0.25) return 'over';
+    if (d > planned * 0.10) return 'warn';
+    return 'ok';
+  }
+
+  function read(key, dflt) {
+    try { return JSON.parse(localStorage.getItem(key) || dflt); }
+    catch (e) { return JSON.parse(dflt); }
+  }
+
+  var run = read(RUN_KEY, 'null');
+  var app = document.getElementById('app');
+
+  if (!run || !run.visits || !run.visits.length) {
+    app.innerHTML =
+      '<h1>Rehearsal timings</h1>' +
+      '<p class="sub">Nothing recorded yet.</p>' +
+      '<div class="empty"><p>Open the deck in presenter view ' +
+      '(<code>?view=presenter</code>), press <code>r</code> to start the clock, and ' +
+      'talk through it. Every part and section you walk into is timed as you go; ' +
+      'come back here afterwards and the run will be waiting.</p>' +
+      '<p>Pressing <code>r</code> again files the run away and starts a fresh one.</p></div>' +
+      '<div class="foot"><a class="lnk" href="index.html?view=presenter">Open presenter view</a></div>';
+    return;
+  }
+
+  /* add the visits up, keeping the plan's order rather than the visit order */
+  var bySec = {}, byPart = {}, total = 0;
+  run.visits.forEach(function (v) {
+    bySec[v.section] = (bySec[v.section] || 0) + v.ms / 1000;
+    byPart[v.part] = (byPart[v.part] || 0) + v.ms / 1000;
+    total += v.ms / 1000;
+  });
+
+  var plannedTotal = 0, parts = [];
+  Object.keys(run.plan.parts).forEach(function (p) { plannedTotal += run.plan.parts[p]; });
+
+  /* one row per part, its sections nested, in the order the plan lists them */
+  var seen = {};
+  run.visits.forEach(function (v) {
+    if (!seen[v.part]) { seen[v.part] = { name: v.part, secs: [], seenSec: {} }; parts.push(seen[v.part]); }
+    if (!seen[v.part].seenSec[v.section]) {
+      seen[v.part].seenSec[v.section] = 1;
+      seen[v.part].secs.push(v.section);
+    }
+  });
+
+  var maxScale = Math.max(total, plannedTotal);
+  parts.forEach(function (p) {
+    maxScale = Math.max(maxScale, byPart[p.name] || 0, run.plan.parts[p.name] || 0);
+  });
+
+  function bar(actual, planned, scale) {
+    var g = grade(actual, planned);
+    var w = Math.min(100, (actual / scale) * 100);
+    var pm = planned ? Math.min(100, (planned / scale) * 100) : null;
+    return '<div class="track">' +
+      '<div class="fill bg-' + (g || 'ok') + '" style="width:' + w.toFixed(1) + '%"></div>' +
+      (pm === null ? '' : '<div class="planmark" style="left:' + pm.toFixed(1) + '%"></div>') +
+      '</div>';
+  }
+
+  var started = new Date(run.startedAt);
+  var html = '<h1>Rehearsal timings</h1>' +
+    '<p class="sub">' + started.toLocaleDateString() + ' &middot; started ' +
+    started.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) +
+    (run.visits.some(function (v) { return v.open; }) ? ' &middot; still running' : '') +
+    '</p>';
+
+  var dTot = total - plannedTotal;
+  html += '<div class="totals">' +
+    '<div><span class="tot-k">Spoken</span><span class="tot-v">' + mmss(total) + '</span></div>' +
+    '<div><span class="tot-k">Planned</span><span class="tot-v" style="color:var(--soft)">' + mmss(plannedTotal) + '</span></div>' +
+    '<div><span class="tot-k">Difference</span><span class="tot-v ' + grade(total, plannedTotal) + '">' + signed(dTot) + '</span></div>' +
+    '</div>';
+
+  parts.forEach(function (p) {
+    var a = byPart[p.name] || 0, pl = run.plan.parts[p.name] || 0;
+    var g = grade(a, pl);
+    html += '<div class="part"><div class="row row--part">' +
+      '<div class="row-name">' + p.name + '</div>' +
+      bar(a, pl, maxScale) +
+      '<div class="nums"><span class="' + g + '">' + mmss(a) + '</span> / ' + mmss(pl) +
+      ' <span class="delta ' + g + '">' + signed(a - pl) + '</span></div>' +
+      '</div>';
+    p.secs.forEach(function (s) {
+      var sa = bySec[s] || 0, sp = run.plan.sections[s] || 0;
+      var sg = grade(sa, sp);
+      html += '<div class="row"><div class="row-name">' + s + '</div>' +
+        bar(sa, sp, maxScale) +
+        '<div class="nums"><span class="' + sg + '">' + mmss(sa) + '</span> / ' + mmss(sp) +
+        ' <span class="delta ' + sg + '">' + signed(sa - sp) + '</span></div></div>';
+    });
+    html += '</div>';
+  });
+
+  var hist = read(RUNS_KEY, '[]');
+  if (hist.length) {
+    html += '<div class="hist"><h2>Earlier runs</h2><ul>';
+    hist.forEach(function (h) {
+      if (!h || !h.visits) return;
+      var t = 0; h.visits.forEach(function (v) { t += v.ms / 1000; });
+      html += '<li>' + new Date(h.startedAt).toLocaleString() + ' &mdash; ' + mmss(t) + '</li>';
+    });
+    html += '</ul></div>';
+  }
+
+  html += '<div class="foot">' +
+    '<a class="lnk" href="index.html?view=presenter">Back to presenter view</a>' +
+    '<button id="clear">Clear all runs</button>' +
+    '<span class="sub" style="margin:0">The white tick on each bar is the plan.</span>' +
+    '</div>';
+
+  app.innerHTML = html;
+
+  document.getElementById('clear').addEventListener('click', function () {
+    try { localStorage.removeItem(RUN_KEY); localStorage.removeItem(RUNS_KEY); } catch (e) {}
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>

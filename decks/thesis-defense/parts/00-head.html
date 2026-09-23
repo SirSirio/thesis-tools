@@ -305,10 +305,6 @@ body[data-view="guest"] .deck-hud { display: none; }
       rgba(8, 8, 10, calc(0.40 * var(--cine-scrim))) 38%,
       rgba(8, 8, 10, calc(0.08 * var(--cine-scrim))) 50%,
       rgba(8, 8, 10, 0) 58%),
-    radial-gradient(700px 470px at 0% 104%,
-      rgba(8, 8, 10, calc(0.95 * var(--cine-scrim))) 0%,
-      rgba(8, 8, 10, calc(0.78 * var(--cine-scrim))) 45%,
-      rgba(8, 8, 10, 0) 100%),
     radial-gradient(132% 112% at 52% 40%,
       rgba(8, 8, 10, 0) 46%,
       rgba(8, 8, 10, calc(0.45 * var(--cine-scrim))) 100%);
@@ -563,45 +559,134 @@ body[data-view="guest"] .deck-hud { display: none; }
 }
 .tool-backdrop.is-on { opacity: 1; }
 
-/* ── Mini map: the liquid path, the node for this slide lit ────────── */
-.minimap {
+/* ── Section rail: where we are in the talk ─────────────────────────
+   Five pips, one per row of the contents slide, the live one lit and
+   named. It sits on the page number's line, bottom right, small and
+   quiet: an orientation cue, not content. */
+.secrail {
   position: absolute;
-  right: 56px; bottom: 58px;
-  width: 262px; height: 72px;
+  right: 66px; bottom: 14px;
   z-index: 5;
-  opacity: 0.9;
+  display: flex; flex-direction: row-reverse; align-items: center; gap: 11px;
+  pointer-events: none;
   transition: opacity var(--dur) var(--ease);
+}
+.secrail[hidden] { display: none; }
+.secrail__name {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+.secrail.is-live .secrail__name {
+  color: color-mix(in srgb, var(--sr-a, var(--accent)) 84%, #f0ece8);
+}
+.secrail__pips { display: flex; align-items: center; gap: 5px; }
+.secrail__pips i {
+  display: block; width: 17px; height: 4px; border-radius: 2px;
+  background: rgba(240,236,232,0.20);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.55);
+  transition: background var(--dur-fast) var(--ease), width var(--dur-fast) var(--ease);
+}
+.secrail__pips i.is-done { background: rgba(240,236,232,0.42); }
+.secrail__pips i.is-live { background: var(--sr-a, var(--accent)); width: 27px; }
+.secrail.is-appendix .secrail__pips i { background: rgba(240,236,232,0.16); width: 17px; }
+
+/* ── Module mark: which module this slide belongs to ────────────────
+   Top left, in the strip above the titles, so a module slide announces
+   itself without the title having to say it. Only on module slides. */
+.modmark {
+  position: absolute;
+  left: 56px; top: 12px;
+  z-index: 5;
+  display: flex; align-items: center; gap: 10px;
   pointer-events: none;
 }
-.minimap[hidden] { display: none; }
-.minimap svg { display: block; width: 100%; height: 100%; }
-.minimap .mm-line { fill: none; stroke: rgba(255,255,255,0.14); stroke-width: 1.5; stroke-linecap: round; }
-.minimap .mm-node { fill: none; stroke: var(--text-muted); stroke-width: 1.6; stroke-linejoin: round; }
-.minimap .mm-node.is-live { stroke: var(--mm-a, var(--accent)); stroke-width: 2; }
-.minimap .mm-halo { fill: none; stroke: color-mix(in srgb, var(--mm-a, var(--accent)) 28%, transparent); stroke-width: 1.2; opacity: 0; }
-.minimap .mm-halo.is-live { opacity: 1; }
-.minimap .mm-part {
-  font-family: var(--mono); font-size: 11px; font-weight: 700;
-  letter-spacing: 0.22em; text-transform: uppercase;
-  fill: var(--text-muted);
+.modmark[hidden] { display: none; }
+.modmark svg { display: block; width: 26px; height: 26px; overflow: visible; }
+.modmark .mk-node {
+  fill: none; stroke: var(--mk-a, var(--accent)); stroke-width: 2.1;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.modmark .mk-solid { fill: color-mix(in srgb, var(--mk-a, var(--accent)) 80%, transparent); stroke: none; }
+.modmark__name {
+  font-family: var(--mono); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--mk-a, var(--accent)) 80%, #f0ece8);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 
-/* ══ 9 · HUD ═════════════════════════════════════════════════════════
-   deck.css parks the HUD bottom centre, where dialect A's stop timeline and
-   dialect B's label both live. On this deck it sits in the top right corner,
-   small and faint, clear of every dialect, and fades out while presenting. */
-.deck-hud {
-  top: 14px; right: 18px;
-  bottom: auto; left: auto;
-  transform: none;
-  gap: 10px;
-  padding: 7px 14px;
-  border-radius: var(--r-pill);
-  opacity: 0.5;
+/* ── Slide zero: the hold screen ────────────────────────────────────
+   Quiet on purpose. The rotor turns forever, the halo breathes, and
+   nothing else moves; both stop under prefers-reduced-motion. */
+#s00 .s00 {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 30px;
 }
-.deck-hud .deck-progress { width: 72px; height: 4px; }
-.deck-hud .deck-counter { font-family: var(--mono); font-size: 0.78rem; }
-.deck-hud.hud-idle { opacity: 0.14; }
+#s00 .s00-mark { width: 176px; height: 176px; overflow: visible; }
+#s00 .s00-rotor { transform-origin: 60px 60px; animation: s00-turn 26s linear infinite; }
+#s00 .s00-rm, #s00 .s00-rd {
+  fill: none; stroke: var(--accent); stroke-width: 3.2;
+  opacity: 0.92;
+}
+#s00 .s00-halo {
+  fill: none; stroke: color-mix(in srgb, var(--accent) 26%, transparent);
+  stroke-width: 1.4; transform-origin: 60px 60px;
+  animation: s00-breathe 7s ease-in-out infinite;
+}
+#s00 .s00-title {
+  margin: 0; text-align: center; max-width: 980px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 34px; line-height: 1.18; letter-spacing: -0.02em;
+  color: var(--text-soft, #cfc8c2);
+}
+#s00 .s00-sub {
+  margin: 0; text-align: center;
+  font-size: 22px; line-height: 1.3; color: var(--text-muted);
+}
+#s00 .s00-who {
+  margin: 0; font-family: var(--mono);
+  font-size: 19px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+@keyframes s00-turn { to { transform: rotate(360deg); } }
+@keyframes s00-breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.55; }
+  50%      { transform: scale(1.06); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #s00 .s00-rotor, #s00 .s00-halo { animation: none; }
+}
+
+/* ── Slide number: on every slide, so a question can name one ───────
+   Bottom right, outside the 56px content gutter, in the bleed margin no
+   dialect writes into. Faint, but with a shadow so it still reads when a
+   full-bleed photo sits under it. */
+.slide-no {
+  position: absolute;
+  right: 26px; bottom: 15px;
+  z-index: 6;
+  font-family: var(--mono);
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(240,236,232,0.55);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.75);
+  pointer-events: none;
+  -webkit-user-select: none; user-select: none;
+}
+.slide-no[hidden] { display: none; }
+
+/* ══ 9 · HUD ═════════════════════════════════════════════════════════
+   This deck has no HUD. deck.css parks a progress bar and a slide counter
+   bottom centre and earlier revisions moved them to the top right corner;
+   both are now gone from the projected deck, because every slide carries
+   its own number and the presenter view has its own progress bar. The
+   runtime's three lookups for these elements are all null-guarded, so the
+   markup is simply absent rather than hidden. */
 
 /* ══ 10 · Presenter view ═════════════════════════════════════════════ */
 .pres { display: none; }
@@ -610,7 +695,7 @@ body[data-view="presenter"] .pres {
   display: grid;
   position: fixed; inset: 0;
   grid-template-columns: minmax(0, 56fr) minmax(0, 44fr);
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 30vh) minmax(0, 1fr) auto;
   gap: 14px;
   padding: 14px;
   font-family: var(--font);
@@ -627,8 +712,8 @@ body[data-view="presenter"] .deck-viewport {
 body[data-view="presenter"] .deck-hud { display: none; }
 body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
 
-.pres__stage { grid-column: 1; grid-row: 1; aspect-ratio: 16 / 9; min-height: 0; }
-.pres__next  { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; min-height: 0; }
+.pres__stage { grid-column: 1; grid-row: 1; aspect-ratio: 16 / 9; min-height: 0; justify-self: center; }
+.pres__next  { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; min-height: 0; align-items: center; }
 .pres__notes { grid-column: 1 / -1; grid-row: 2; min-height: 0; overflow: auto; }
 .pres__bar   { grid-column: 1 / -1; grid-row: 3; }
 
@@ -685,7 +770,7 @@ body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
   margin: 0 0 10px;
 }
 .pres__bar {
-  display: flex; align-items: center; gap: 26px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px;
   padding: 12px 18px;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -701,8 +786,79 @@ body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
 .pres__stat-v { font-size: 26px; font-weight: 600; color: var(--text); }
 .pres__stat-v.is-over { color: var(--accent-2); }
 .pres__stat-v.is-close { color: var(--accent); }
+
+/* The two pacing timers. They answer one question each — am I still inside
+   the budget for this part, and for this section of it — so they carry the
+   only colour on the bar. Green while there is room, yellow with a minute
+   left, dark orange with thirty seconds, red once the budget is spent. */
+.pres__seg { font-variant-numeric: tabular-nums; color: #5bd98a; }
+.pres__seg.is-warn { color: #e9c341; }
+.pres__seg.is-near { color: #e2761b; }
+.pres__seg.is-over { color: #ff5a4d; }
+.pres__seg.is-idle { color: var(--text-muted); }
+.pres__stat--seg .pres__stat-k {
+  max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Everything that is not a pacing timer steps back, so the eye lands on the
+   two that matter while he is speaking. */
+#presElapsed, #presLeft { color: var(--text-muted); font-weight: 500; }
+#presElapsed.is-over, #presLeft.is-over,
+#presElapsed.is-close, #presLeft.is-close { color: var(--text-soft); }
+.pres__bar .pres__prog { opacity: 0.5; }
+.pres__bar .pres__keys { opacity: 0.7; }
+
+/* Opens the timing report for the run just spoken. */
+.pres__report {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  font-family: var(--mono); font-size: 17px; letter-spacing: 0.04em;
+  color: var(--text-soft); text-decoration: none; white-space: nowrap;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+.pres__report:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 65%, transparent); }
 .pres__spacer { margin-left: auto; }
-.pres__keys { font-size: 12px; letter-spacing: 0.1em; color: var(--text-muted); }
+/* the key hints drop to their own line so the progress bar can stretch */
+.pres__keys { flex: 1 1 100%; font-size: 12px; letter-spacing: 0.1em; color: var(--text-muted); }
+
+/* Progress through the talk, counted in clicker positions rather than in
+   slides: a slide with five steps is five presses of the talk, not one.
+   The appendix is not part of the talk, so it is left out of the total and
+   holds the bar where the talk left it. */
+.pres__prog { flex: 1 1 260px; display: flex; align-items: center; gap: 14px; min-width: 0; }
+.pres__prog-track {
+  position: relative; flex: 1 1 auto;
+  height: 24px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.pres__prog-fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 220ms var(--ease);
+}
+.pres__prog-pct {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.18em;
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+}
+.pres__prog-n {
+  flex: 0 0 auto; min-width: 104px; text-align: right;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 20px; font-weight: 600; color: var(--text);
+}
+.pres__prog.is-appendix { opacity: 0.5; }
+.pres__prog.is-appendix .pres__prog-n {
+  font-size: 15px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted);
+}
 
 /* ══ 11 · Guest view ═════════════════════════════════════════════════ */
 .guest-dot { display: none; }
@@ -729,7 +885,7 @@ body[data-view="guest"] .guest-dot {
 @media (prefers-reduced-motion: reduce) {
   .bg-blobs .blob { animation: none !important; }
   .cine__shot.is-live .cine__img { animation: none !important; }
-  .tool-card, .tool-backdrop, .minimap, .site-nav--deck { transition: none !important; }
+  .tool-card, .tool-backdrop, .secrail, .modmark, .site-nav--deck { transition: none !important; }
   .slide, .fragment { transition: none !important; }
 }
 </style>

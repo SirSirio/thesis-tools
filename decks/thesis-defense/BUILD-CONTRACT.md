@@ -40,9 +40,11 @@ Each part file is a plain HTML fragment: its `<section class="slide">` elements,
 </section>
 ```
 
-- `id` and `data-cue` are `s01` to `s43` and `b01` to `b23`, fixed by CONTENT.md; the Italian deck reuses them.
+- `id` and `data-cue` are `s01` to `s43` and `b01` to `b24`, fixed by CONTENT.md; the Italian deck reuses them. A cue is a **stable address** (sync protocol, hash, `Deck.slide`/`Deck.enter`, `CONTENT.md`, `CONTENT-IT.md`): it never changes to say where a slide sits. `s12` keeps its cue although it now lives in the appendix.
 - `data-dialect`: `sheet`, `cards`, `cine`, or a new name the builder invents (document it in the part's style block comment).
-- `data-part`: `open`, `I`, `II`, `III`, `demo`, `disc`, `close`, `backup`. Drives the mini map.
+- `data-part`: `open`, `I`, `II`, `III`, `demo`, `disc`, `close`, `backup`. Drives the mini map, the section rail and the band a slide falls into in the overview. **`data-part="backup"` is the one thing that makes a slide an appendix slide** — never the cue prefix.
+- `data-topic`: optional, the topic key a slide belongs to (`pump`, `alignment`, `nozzle`, `ui`, `storage`, `arch`, `integ`, `valid`, …). It overrides the cue table, so a slide moved into the appendix carries its group with it. Required on any slide you move out of the talk.
+- **How the deck is organised — the band/topic taxonomy behind the overview, the numbering, the appendix hue, and the recipes for adding a slide, moving one into the appendix or adding a topic — is `SLIDE-ORDER.md`. Read it before you move, add or renumber a slide; the table there and the `SLIDE_ORDER` array in `parts/99-tail.html` are the same thing written twice and must stay in step.**
 - `data-accent`: `pump`, `align`, `nozzle`, or absent. Sets the thread colour on that slide only.
 - Steps: one `.fragment` marker per clicker step, in order. The runtime reveals them; the infra script watches them and drives the slide's timeline to label `step1`, `step2`, … Builders may also put content inside `.fragment` elements when a plain CSS reveal is enough (the runtime's own fade), but the timeline is the primary mechanism.
 - `aside.notes`: two to four short bullets, the "Say" line expanded; shown only in the presenter view.

@@ -4,11 +4,35 @@
 
 Status: built and verified 2026-09-20 (English host deck), Revision 1 (Sirio's first notes) and Revision 2 (presenter preview) applied the same day; Italian guest deck (`it/index.html`) not yet built. Handoff notes in `BRIEF.md` section 0. Content and per-slide design are in `CONTENT.md` (v3.1, 43 slides plus 23 backups); requirements and decisions in `BRIEF.md`; the build rules in `BUILD-CONTRACT.md` and `BUILDER-REFERENCE.md`.
 
+## 0. Slide numbering, after the September 21 restructure
+
+The number a slide shows is its **position among the talk's slides**, not its cue.
+Cues are stable identifiers (the sync key, and the Italian deck's key) and no longer
+track the running order, so a section can be moved between or within part files with
+no rename anywhere. The hold screen opts out with `data-talk="no"`; backups number
+separately as B01…B23.
+
+Opening and Part I run, in order:
+`s00` hold · `s01` cover · `s02` the arrivals hall · `s04` the field laboratory ·
+`s03` contents · `s05` Part I divider · `s06` the gap · `s04b` the volume range ·
+`s04d` the span · `s04c` PANPOC · `s07` the design problem and the gates ·
+`s07a` the modules on the machine · `s07b` how they relate · `s10` the hierarchy ·
+`s09b` 3D printing · `s08` the house · `s09` the working environment.
+
+`s04b`, `s04d` and `s04c` sit in `20-part1.html` while their rules and builders stay
+in `10-opening.html`'s hoisted blocks, shared with `s04` through the `.s04fam` class.
+`s07` and `s07a` share `.s07fam` the same way. The assembler hoists every
+`data-part` block wherever it lives, so the split costs nothing.
+
+**Trap:** the assembler finds those blocks by regex. Writing either tag name in prose
+inside a part file makes it swallow the rest of the file. `assemble.py` now warns.
+
 ## 1. Structure
 
 | Block | Slides | Minutes |
 |---|---|---|
-| Opening: the arrivals hall, the problem, contents | S01 to S04 | 2 |
+| Hold screen (not part of the talk: no number, no rail, no timer) | S00 | — |
+| Opening: the arrivals hall, contents, still by hand | S01 to S04 | 2 |
 | Part I: why this machine, and how I worked | S05 to S10 | 4 |
 | Part II: the modules (pump, alignment, nozzle, interface, storage) | S11 to S24 | 9 |
 | Part III: the machine, wired, assembled, validated | S25 to S35 | 5.5 |
@@ -30,10 +54,11 @@ The shared deck runtime `assets/deck.css` and `assets/deck.js` (1280 by 720 stag
 - `window.Deck`: `slideNo`, `index`, `step`, `count`, `steps`, `cue`, `el`, `state`; `goToState(slide, step, remote)`, `goToCue(cue, step, remote)`, `advance()`, `retreat()`, `overview()`, `blackout()`, `fullscreen()`; `slide(cue, builder)` registers a GSAP timeline builder, `enter(cue, fn)` an entrance hook. `window.Deck` exists synchronously so part scripts can register during parsing.
 - `deck:state` CustomEvent on `document` after every navigation, `detail: {slide, step, cue, count, steps, remote}`.
 - Hash `#/<slide>/<step>`, 1-based slide, read on load and `hashchange`, written with `replaceState`.
-- Keys: arrows, Space, Backspace, PageUp, PageDown, Home, End, digits then Enter, `b` blackout, `f` fullscreen, `o` overview, `r` presenter timer reset, Escape (Instruments panel, then a grown tool card, then the overview).
+- Keys: arrows, Space, Backspace, PageUp, PageDown walk **clicker steps**; `a` and `d` (deck-local, in the tail) jump a whole **slide** at a time, landing at step 0 and ignoring the fragments — `d` forward, `a` back, both no-ops at the ends, both walking into the appendix exactly as the right arrow does. Then Home, End, digits then Enter, `b` blackout, `f` fullscreen, `o` overview, `r` presenter timer reset, Escape (Instruments panel, then a grown tool card, then the overview).
+- `a` and `d` are ignored when a modifier is held, while a tool card is grown (`body[data-demo-active]`), and while focus is in an `input`, `textarea`, `select` or a contenteditable — the live tool pages take typing. They are bound in the stage and presenter views only; the guest view follows its host.
 - Overview clones show a video's poster instead of the video.
 
-Deck-local (tail script): one GSAP timeline per slide, built lazily on first entry, driven to `step<n>` labels by a MutationObserver on the fragments (`tweenTo`, or `seek` under reduced motion and on backward entry); lazy media (`data-src` on `img`, `video`, `iframe`; one-slide lookahead; unloaded beyond two slides); video autoplay on entry and pause on leave, `data-sound` for the one clip per slide that plays with audio; tool cards that grow to 1200 by 648 on click and load their iframe then; the mini map rendered once and lit per `data-part` and `data-accent`; the corner nav fading after 3 s of stillness; the HUD moved top right.
+Deck-local (tail script): one GSAP timeline per slide, built lazily on first entry, driven to `step<n>` labels by a MutationObserver on the fragments (`tweenTo`, or `seek` under reduced motion and on backward entry); lazy media (`data-src` on `img`, `video`, `iframe`; one-slide lookahead; unloaded beyond two slides); video autoplay on entry and pause on leave, `data-sound` for the one clip per slide that plays with audio; tool cards that grow to 1200 by 648 on click and load their iframe then; the section rail rendered once and lit per `data-part` (five pips, one per row of the contents slide: Part I, Part II, Part III, live demo, what I learned; `disc` and `close` share the last, `open` lights none, `backup` dims all and reads "appendix") in the free strip above the titles at top right, hidden only on the hold screen; the slide number in the bottom right corner of every slide, read from the cue (`s07` renders `7`, `b01` renders `B01`) so it survives a slide being inserted ahead of the deck, and opted out of with `data-no="none"`; the corner nav fading after 3 s of stillness; the HUD moved top right. **The frame has its own space (2026-09-21).** While a slide is shown the frame is one 32 px back arrow at the window's top left (`aria-label` “Back to presentations”), clear of the stage's module mark at `x = 56` in stage coordinates, and it keeps the idle fade, so a fullscreen run shows nothing; the Instruments trigger and its panel are `display:none`, because a talk is not a website. While the overview is open the frame becomes a fixed 64 px glass strip across the top with the Instruments link on it, the overview reserves 88 px of top padding so its header and first band of thumbnails start below the strip, and the strip does not fade while he is browsing. The rules live in the tail's `<style data-part="tail">`, which the assembler hoists last and which therefore overrides `00-head.html` section 1 on equal specificity.
 
 Motion: GSAP core 3.15 with DrawSVG, MotionPath and MorphSVG, all vendored in `assets/gsap/`; CSS transitions for simple reveals. `prefers-reduced-motion` jumps every timeline to its end state.
 
@@ -57,7 +82,7 @@ Plan for the day: stage window `index.html?sync=host` on the projector, presente
 |---|---|---|
 | S09 | the site | address and QR (`assets/qr-site.svg`) |
 | S13 | Rotor Geometry Solver, Occlusion and Displaced-Volume Model, Tensioned Tube-Path Model | three tool cards, click to grow; Sirio opens the solver live |
-| S23 | Operator Interface, Live | tool card |
+| S23 | Live User Interface | tool card |
 | S26 | System Architecture Explorer, Dispense Throughput Simulator | two tool cards; both opened briefly |
 | B14, B18 | Architecture Explorer, Thesis Timeline | tool cards |
 

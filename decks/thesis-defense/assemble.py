@@ -100,6 +100,18 @@ def main() -> int:
     if dupes:
         print(f"warning: duplicate data-cue values: {', '.join(dupes)}", file=sys.stderr)
 
+    # The style/script hoist is regex driven, so writing those tag names in
+    # prose inside a part file makes the assembler swallow everything after
+    # it. That failure is silent apart from the slide count, so name it.
+    for path in files:
+        if path.name in ("00-head.html", "99-tail.html"):
+            continue
+        body = STYLE_RE.sub("", SCRIPT_RE.sub("", path.read_text(encoding="utf-8")))
+        for tag in ("<style", "<script"):
+            if tag in body:
+                print(f"warning: {path.name} mentions {tag!r} outside a "
+                      f"data-part block; the hoist will mis-parse it", file=sys.stderr)
+
     return 0
 
 
