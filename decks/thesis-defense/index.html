@@ -11707,7 +11707,7 @@ body[data-view="guest"] .guest-dot {
       pres.notes.querySelectorAll('.notes-it').forEach(function (n) { n.parentNode.removeChild(n); });
       var body  = pres.notes.closest('.pres__notes-body') || pres.notes.parentNode;
       pres.notes.querySelectorAll('li:not([data-step])').forEach(function (li) {
-        if (/^\s*if asked\s*:/i.test(li.textContent)) li.classList.add('is-aside');
+        if (/^\s*if asked\b/i.test(li.textContent)) li.classList.add('is-aside');
       });
       var items = pres.notes.querySelectorAll('li[data-step]');
       if (body) body.classList.toggle('has-steps', items.length > 0);
