@@ -31,7 +31,7 @@
     { title: 'Interface', items: [
       { name: 'Operator Interface Prototypes', href: 'tools/ui-prototypes/index.html', mark: 'screen',
         line: 'Nine candidate interfaces over five design rounds, at the panel’s native 320 by 240.' },
-      { name: 'Operator Interface, Live', href: 'tools/ui-mockup/index.html', mark: 'panel',
+      { name: 'Live User Interface', href: 'tools/ui-mockup/index.html', mark: 'panel',
         line: 'Every screen of the finished panel, captured from the device, with every button tappable.' }
     ]},
     { title: 'Method', items: [

@@ -1516,7 +1516,7 @@ body[data-view="guest"] .guest-dot {
    of it, and what has to leave before the test can read anything. Abstract
    on purpose — the bead protocol itself is a separate slide, and this one is
    the concept. */
-#s05b .sp-stage { position: absolute; top: 262px; width: 320px; }
+#s05b .sp-stage { position: absolute; top: 228px; width: 320px; }
 #s05b .sp-stage[data-n="1"] { left: 96px; }
 #s05b .sp-stage[data-n="2"] { left: 480px; }
 #s05b .sp-stage[data-n="3"] { left: 864px; }
@@ -1524,20 +1524,30 @@ body[data-view="guest"] .guest-dot {
 #s05b .sp-cap {
   margin: 20px 0 0; text-align: center;
   font-size: 26px; line-height: 1.25; color: var(--text);
+  /* two lines' worth for all three, so the row sits on one baseline even
+     though only the first caption fits on a single line */
+  min-height: 65px;
 }
 #s05b .sp-cell, #s05b .sp-shard {
   fill: none; stroke: rgba(240, 236, 232, 0.46); stroke-width: 2.4;
   stroke-linecap: round;
 }
 #s05b .sp-target circle { fill: var(--accent); }
-#s05b .sp-junk circle { fill: rgba(240, 236, 232, 0.24); }
-#s05b .sp-drain {
-  fill: none; stroke: rgba(240, 236, 232, 0.34);
+/* the grey is the second protagonist — at 0.24 it did not survive a
+   projector, and “separated from everything else” needs the everything else */
+#s05b .sp-junk circle { fill: rgba(240, 236, 232, 0.42); }
+#s05b .sp-drain, #s05b .sp-basin {
+  fill: none; stroke: rgba(240, 236, 232, 0.5);
   stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
 }
+/* This is the hinge of the slide — the sentence that turns a biology
+   explainer into the reason the machine exists — so it is set as a
+   conclusion, not as a fourth caption. */
 #s05b .sp-close {
-  position: absolute; left: 96px; top: 596px; margin: 0;
-  font-size: 30px; line-height: 1.3; color: var(--text);
+  position: absolute; left: 96px; top: 600px; margin: 0;
+  padding-left: 22px;
+  border-left: 3px solid var(--accent);
+  font-size: 32px; line-height: 1.25; color: var(--text);
 }
 
 /* ---- s07b ---- */
@@ -4456,16 +4466,16 @@ body[data-view="guest"] .guest-dot {
 
   <div class="sp-stage" data-n="2">
     <svg class="sp-art" viewBox="0 0 320 200" aria-hidden="true">
-      <path class="sp-shard" id="sp-shard-l" d="M 150 46 A 54 54 0 0 0 150 154"/>
-      <path class="sp-shard" id="sp-shard-r" d="M 172 48 A 54 54 0 0 1 172 152"/>
+      <path class="sp-shard" id="sp-shard-l" d="M 160 46 A 54 54 0 0 0 160 154"/>
+      <path class="sp-shard" id="sp-shard-r" d="M 160 46 A 54 54 0 0 1 160 154"/>
       <g class="sp-target" data-g="2">
-        <circle cx="208" cy="78" r="8"/><circle cx="232" cy="104" r="8"/>
-        <circle cx="212" cy="130" r="8"/><circle cx="240" cy="70" r="8"/>
+        <circle cx="252" cy="74" r="8"/><circle cx="278" cy="100" r="8"/>
+        <circle cx="254" cy="126" r="8"/><circle cx="284" cy="62" r="8"/>
       </g>
       <g class="sp-junk" data-g="2">
-        <circle cx="88" cy="72" r="7"/><circle cx="72" cy="118" r="7"/>
-        <circle cx="106" cy="152" r="7"/><circle cx="64" cy="166" r="7"/>
-        <circle cx="120" cy="50" r="7"/>
+        <circle cx="52" cy="62" r="7"/><circle cx="268" cy="70" r="7"/>
+        <circle cx="66" cy="148" r="7"/><circle cx="262" cy="152" r="7"/>
+        <circle cx="160" cy="186" r="7"/>
       </g>
     </svg>
     <p class="sp-cap">Separated from everything else</p>
@@ -4474,14 +4484,15 @@ body[data-view="guest"] .guest-dot {
   <div class="sp-stage" data-n="3">
     <svg class="sp-art" viewBox="0 0 320 200" aria-hidden="true">
       <g class="sp-target" data-g="3">
-        <circle cx="120" cy="82" r="8"/><circle cx="150" cy="96" r="8"/>
-        <circle cx="126" cy="120" r="8"/><circle cx="156" cy="128" r="8"/>
+        <circle cx="106" cy="80" r="8"/><circle cx="136" cy="94" r="8"/>
+        <circle cx="112" cy="118" r="8"/><circle cx="142" cy="126" r="8"/>
       </g>
-      <path class="sp-drain" id="sp-drain" d="M 236 54 V 158"/>
-      <path class="sp-drain" id="sp-drainhd" d="M 226 148 L 236 162 L 246 148"/>
+      <path class="sp-drain" id="sp-drain" d="M 240 46 V 132"/>
+      <path class="sp-drain" id="sp-drainhd" d="M 230 122 L 240 138 L 250 122"/>
+      <path class="sp-basin" id="sp-basin" d="M 206 168 H 274"/>
       <g class="sp-junk" data-g="3">
-        <circle cx="236" cy="74" r="7"/><circle cx="236" cy="104" r="7"/>
-        <circle cx="236" cy="132" r="7"/>
+        <circle cx="222" cy="160" r="7"/><circle cx="240" cy="162" r="7"/>
+        <circle cx="258" cy="160" r="7"/>
       </g>
     </svg>
     <p class="sp-cap">And the chemistry washed out</p>
@@ -6021,10 +6032,10 @@ body[data-view="guest"] .guest-dot {
       </div>
     </div>
     <div class="acc__p" data-p="2">
-      <div class="acc__media">
+      <div class="acc__media acc__media--fit">
         <img data-src="../../assets/media/alignment/v21-homing.jpg"
              alt="The v2.1 alignment module on the bench: the overhead stepper driving the toothed rack, with a microswitch mounted at the left end of the rail as the home datum." />
-        <svg class="p2-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <svg class="p2-ov" viewBox="0 0 2000 1126" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           <circle class="ln" id="s18-sw" cx="262" cy="350" r="118" stroke-width="10" />
         </svg>
       </div>
@@ -7111,7 +7122,7 @@ body[data-view="guest"] .guest-dot {
            style="left:174px; width:384px; height:480px;">
     <div class="p3-fcard-media" style="height:340px;">
       <img data-src="../../assets/media/alignment/lid-fouling.jpg"
-           alt="Two sample tubes in a rack, their hinged caps folded back over the deck; a third cap lies flat and projects sideways past the rack wall." />
+           alt="Sample tubes in a rack. One hinged cap is folded back clear of the deck, marked in green; another lies flat and projects sideways towards the alignment lane wall, marked in red." />
       <!-- Both caps are in the frame now that the picture is not cropped, so
            the annotation is a straight comparison read off the pixels: the
            cap at (828, 338) is folded back and standing clear of the deck,
@@ -11638,7 +11649,8 @@ Deck.slide('s05b', function (el, gsap) {
   gsap.set(stages, { opacity: 0 });
   gsap.set(caps, { opacity: 0, y: 10 });
   gsap.set(cell, { drawSVG: '0%' });
-  gsap.set(shards, { drawSVG: '50% 50%' });
+  gsap.set(shards, { drawSVG: '50% 50%', x: 0 });
+  gsap.set(q('#sp-basin'), { drawSVG: '0%' });
   gsap.set(drain, { drawSVG: '0%' });
   gsap.set(close, { opacity: 0, y: 12 });
   [1, 2, 3].forEach(function (n) {
@@ -11659,10 +11671,13 @@ Deck.slide('s05b', function (el, gsap) {
 
   /* 2 \u00b7 it is broken open and the target pulled clear */
   tl.to(stages[1], { opacity: 1, duration: 0.3 }, 'step1')
-    .to(shards, { drawSVG: '0% 100%', duration: 0.7, ease: 'power2.inOut' }, 'step1')
-    .to(dots(2, 'sp-junk'), { opacity: 1, scale: 1, duration: 0.4, stagger: 0.05 }, 'step1+=0.3')
-    .fromTo(dots(2, 'sp-target'), { x: -56 },
-      { x: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.08 }, 'step1+=0.45')
+    .to(dots(2, 'sp-junk'), { opacity: 1, scale: 1, duration: 0.4, stagger: 0.05 }, 'step1')
+    .to(shards, { drawSVG: '0% 100%', duration: 0.6, ease: 'power2.inOut' }, 'step1')
+    /* the halves swing apart, or the two arcs read as one dashed ring */
+    .to(shards[0], { x: -22, duration: 0.6, ease: 'power2.out' }, 'step1+=0.45')
+    .to(shards[1], { x: 22, duration: 0.6, ease: 'power2.out' }, 'step1+=0.45')
+    .fromTo(dots(2, 'sp-target'), { x: -96 },
+      { x: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.08 }, 'step1+=0.5')
     .to(caps[1], { opacity: 1, y: 0, duration: 0.45 }, 'step1+=0.95')
     .addLabel('step2');
 
@@ -11670,9 +11685,11 @@ Deck.slide('s05b', function (el, gsap) {
   tl.to(stages[2], { opacity: 1, duration: 0.3 }, 'step2')
     .to(dots(3, 'sp-target'), { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 }, 'step2+=0.1')
     .to(drain, { drawSVG: '100%', duration: 0.55, ease: 'power2.inOut' }, 'step2+=0.4')
-    .fromTo(dots(3, 'sp-junk'), { y: -26 },
-      { y: 34, opacity: 1, scale: 1, duration: 0.8, stagger: 0.12 }, 'step2+=0.5')
-    .to(dots(3, 'sp-junk'), { opacity: 0, duration: 0.4, stagger: 0.12 }, 'step2+=1.05')
+    .to(q('#sp-basin'), { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, 'step2+=0.85')
+    /* the waste comes to rest in the basin and stays there: he will stand on
+       this frame and talk, so the finished picture has to carry the idea */
+    .fromTo(dots(3, 'sp-junk'), { y: -86 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.85, stagger: 0.12, ease: 'power2.in' }, 'step2+=0.55')
     .to(caps[2], { opacity: 1, y: 0, duration: 0.45 }, 'step2+=1.0')
     .to(close, { opacity: 1, y: 0, duration: 0.55 }, 'step2+=1.3')
     .addLabel('step3');

@@ -1,4 +1,4 @@
-# Operator Interface, Live: tool spec
+# Live User Interface: tool spec
 
 `tools/ui-mockup/index.html`. An interactive mock of the finished operator interface (firmware `src/ui/`, V2.2, ESP32-S3 + ILI9341 + XPT2046), built on the device-captured frame set rather than an HTML rebuild, with a two-way linked screen map beside the panel.
 
