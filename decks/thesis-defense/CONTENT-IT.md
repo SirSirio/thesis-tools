@@ -422,7 +422,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Tre cose sono andate storte, nessuna nella meccanica dei movimenti, e ognuna ha una soluzione nota.
 - Un tappo lasciato piatto sfrega contro la parete, il motore perde passi senza accorgersene, e la goccia cade accanto alla provetta.
 - A batteria ha completato due rack, sedici campioni. Poi la batteria si è scaricata, le due pompe si sono bloccate, e il programma non sa ancora farne girare una sola.
-- Il terzo riguarda il contenitore di Marius: la sua guarnizione di gomma comincia a perdere dopo circa cinque forature dell'ago.
+- Il terzo riguarda lo stoccaggio del reagente di Marius: la sua guarnizione di gomma comincia a perdere dopo circa cinque forature dell'ago.
 
 ### 40 · `s34` — valutazione dei requisiti
 - Ora i requisiti, un gruppo alla volta.
@@ -456,10 +456,10 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Un modulo si può sviluppare in profondità o in ampiezza.
 - Profondità vuol dire costruire tante volte la stessa idea, ma se ne sceglie la forma prima di provare le altre.
 - Ampiezza vuol dire costruire più idee, ma una prova frettolosa può fallire per la costruzione, non per l'idea.
-- La pompa le ha avute tutte e due: Marius ha costruito una pompa lineare, io ho provato una pompa a siringa, e ho costruito quattro volte quella peristaltica rotativa.
+- La pompa le ha avute tutte e due: Marius ha costruito una pompa lineare, io ho provato una pompa a siringa, e ho costruito quattro volte quella peristaltica.
 - L'allineamento ha avuto ampiezza solo sulla carta: una cinquantina di idee, una costruita, anche se è il modulo che decide quanto è grande la macchina.
 - E il modello della pompa non è mai stato verificato: puntava a 5 µL per colpo, e le due pompe ne danno meno.
-- *Se chiesto:* le due pompe danno 3,94 e 4,10 µL a colpo. La pompa rotativa ha battuto quella lineare 3485 a 3185 nel punteggio. Con la stampa ora precisa a ±0,10 mm, vale la pena fare una vera serie di prove sui rotori.
+- *Se chiesto:* le due pompe danno 3,94 e 4,10 µL a colpo. La mia pompa peristaltica ha battuto quella lineare di Marius 3485 a 3185 nel punteggio. Con la stampa ora precisa a ±0,10 mm, vale la pena fare una vera serie di prove sui rotori.
 
 ### 46 · `s40` — il prossimo prototipo parte dai moduli, nell'ordine in cui la geometria dipende
 - Il prossimo prototipo dovrebbe partire dai moduli, in ordine.
