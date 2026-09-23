@@ -197,6 +197,10 @@ understand. On point."**
   with a `.notes-it__title` and the same step numbers, no meta line and no "If asked".
   `CONTENT-IT.md` mirrors the Italian, one numbered line per click.
 - **Rule 15 still holds:** a caption compresses what the thesis says; it never adds to it.
+- **When he quotes a line to change, grep for it everywhere** — speaker notes, the Italian
+  twin, and the slide's own on-screen text. "Caption" can mean any of them, and the same
+  sentence often lives in two. Changing only the notes once left the old line on the
+  projector and on the live site.
 
 ---
 
