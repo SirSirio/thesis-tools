@@ -40,22 +40,30 @@
 
     /* ---- 1. Breath one ---- */
     #opening { min-height: 100svh; min-height: 640px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; text-align: center; padding-top: 24px; }
-    .hero-rotor { width: 100%; max-width: 620px; display: flex; justify-content: center; align-items: center; }
-    .hero-rotor svg { display: block; overflow: visible; width: 100%; max-width: 620px !important; max-height: 46svh; height: auto; }
-    .hero-vessel { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 107, 43, 0.30); stroke-width: 1.4; }
-    .hero-vessel-cap { fill: rgba(255, 255, 255, 0.07); stroke: rgba(255, 107, 43, 0.35); stroke-width: 1.2; }
-    .hero-vessel-tick { stroke: rgba(255, 255, 255, 0.20); stroke-width: 1; }
-    .hero-vessel-liquid { fill: var(--accent); opacity: 0.16; }
-    .hero-cap-flap { fill: rgba(255, 255, 255, 0.08); stroke: rgba(255, 107, 43, 0.40); stroke-width: 1.2; }
-    .hero-cap-hinge { fill: var(--accent); opacity: 0.7; }
-    .hero-rotor-disc { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 107, 43, 0.30); stroke-width: 1; }
-    .hero-roller { fill: rgba(255, 107, 43, 0.18); stroke: var(--accent); stroke-width: 2; }
-    .hero-hub { fill: var(--accent); opacity: 0.85; }
-    .hero-tube-wall { fill: none; stroke: rgba(255, 255, 255, 0.14); stroke-width: 11; stroke-linecap: round; }
-    .hero-tube-liquid { fill: none; stroke: var(--accent); stroke-opacity: 0.22; stroke-width: 7; stroke-linecap: round; }
-    .hero-tube-slug { fill: none; stroke: url(#hero-packet-grad); stroke-width: 6; stroke-linecap: round; }
-    .hero-needle { stroke: rgba(255, 255, 255, 0.55); stroke-width: 2.6; stroke-linecap: round; }
-    .hero-droplet { fill: url(#hero-packet-grad); opacity: 0; }
+    .hero-rotor { width: 100%; max-width: 680px; display: flex; justify-content: center; align-items: center; }
+    .hero-rotor svg { display: block; overflow: visible; width: 100%; max-height: 44svh; height: auto; }
+    /* The hero pump: the defense deck's peristaltic figure, extended upstream to a reservoir.
+       Same stroke weights and orange family; everything is in viewBox units (the SVG scales). */
+    .hp__disc     { fill: rgba(255, 255, 255, 0.035); stroke: rgba(255, 107, 43, 0.30); stroke-width: 1.5; }
+    .hp__wedge    { fill: rgba(255, 107, 43, 0.20); stroke: rgba(255, 107, 43, 0.55); stroke-width: 1.5; }
+    .hp__arm      { fill: none; stroke: rgba(255, 107, 43, 0.32); stroke-width: 7; stroke-linecap: round; }
+    .hp__track    { fill: rgba(255, 255, 255, 0.055); stroke: rgba(255, 255, 255, 0.2); stroke-width: 1.5; stroke-linejoin: round; }
+    .hp__liq      { fill: rgba(255, 107, 43, 0.26); }
+    .hp__flow     { fill: none; stroke: rgba(255, 214, 190, 0.55); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 7 70.488; }
+    .hp__wall     { fill: none; stroke: rgba(240, 236, 232, 0.7); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+    .hp__roller circle:first-child { fill: rgba(38, 22, 16, 0.34); stroke: var(--accent); stroke-width: 2.5; }
+    .hp__seal     { fill: none; stroke: #fff4ec; stroke-width: 5; stroke-linecap: round; }
+    .hp__tick     { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+    .hp__axle, .hp__hub { fill: var(--accent); }
+    .hp__hub-pin  { fill: #0f0c0b; }
+    .hp__nhub, .hp__cap { fill: rgba(240, 236, 232, 0.16); stroke: rgba(240, 236, 232, 0.62); stroke-width: 2; }
+    .hp__cap-rib  { fill: none; stroke: rgba(240, 236, 232, 0.34); stroke-width: 1.5; stroke-linecap: round; }
+    .hp__needle   { fill: none; stroke: rgba(240, 236, 232, 0.75); stroke-width: 4; stroke-linecap: round; }
+    .hp__rt, .hp__res-glass { fill: none; stroke: rgba(240, 236, 232, 0.6); stroke-width: 2.5; stroke-linejoin: round; }
+    .hp__rt-rim   { fill: none; stroke: rgba(240, 236, 232, 0.6); stroke-width: 4; stroke-linecap: round; }
+    .hp__res-body { fill: rgba(255, 255, 255, 0.04); }
+    .hp__res-liq  { fill: rgba(255, 107, 43, 0.26); }
+    .hp__res-surf { fill: none; stroke: rgba(255, 138, 76, 0.75); stroke-width: 2; stroke-linecap: round; }
     .opening__line { max-width: 20ch; margin: 0 auto; text-wrap: balance; color: var(--text); }
     html.js .opening__line, html.js .hero-rotor { opacity: 0; transform: translateY(14px); animation: fade-in var(--dur) var(--ease) forwards; }
     html.js .opening__line { animation-delay: 240ms; }
@@ -1299,213 +1307,289 @@
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
 
-    // ---- Hero fluidic-path motif (carried over unchanged from the previous landing page) ----
-    // Hand-built SVG, built once via a template string and assigned through innerHTML.
-    // Real proto-02 geometry (N=4, R=19.7mm rotor radius, 5mm MR105ZZ roller radius, 180 degree
-    // tube-wrap contact arc on TOP of the rotor). One continuous tube path: a dip tube inside the
-    // 50ml Falcon-style source, up through its screw cap, a Bezier sweep that enters the pump wrap
-    // tangentially, 180 degrees over the top, tangential exit, then a smooth curve down into a short
-    // rigid needle above the open 1.5ml Eppendorf-style collection tube.
-    // buildHeroRotor() only builds the static markup + geometry; all motion lives in initHeroMotion(),
-    // driven by ONE GSAP timeline (gsap core, locally vendored at assets/gsap/gsap.min.js).
-    const cosd = a => Math.cos(a * Math.PI / 180);
-    const sind = a => Math.sin(a * Math.PI / 180);
+    // ---- Hero motif: the pump, from a reservoir into a tube ----
+    // Rebuilt from the defense deck's peristaltic figure (decks/thesis-defense, window.PumpAnim),
+    // re-implemented here with plain SVG maths and GSAP core only, and extended upstream: a dip
+    // tube draws the liquid out of a reagent bottle, over into the pump, 180 degrees under the
+    // rotor, up and over to the needle, one drop per stroke into a receiving tube.
+    //
+    // Geometry, in viewBox units: rotor centre (250,175); four rollers 90 degrees apart on pitch
+    // radius R, roller radius RR (R / RR = 5, so a roller's own spin closes after one rotor turn);
+    // tube centreline radius 148 in the 180 degree track, walls at +-12. R + RR reaches past the
+    // point where the walls meet, so a roller in the track always seals the tube.
+    // Motion: the rotor turns counter-clockwise on screen, so a roller enters the track at the
+    // left (inlet) and leaves at the right (outlet), the way the liquid goes. One stroke is one
+    // quarter turn; at every hold the rollers sit at 3, 6 and 9 o'clock, two sealed pockets in
+    // the track, and the stroke sweeps the one next to the outlet out as one drop. The bottle
+    // gives up what the tube receives; after four strokes the receiving tube is swapped and the
+    // bottle level eases back, so t = LOOP draws exactly what t = 0 draws.
+    // Everything is a pure function of one loop time t (render(t)); one GSAP core tween drives t.
+    (function heroPump() {
+      const root = document.getElementById('hero-rotor');
+      if (!root || typeof gsap === 'undefined') return;
+      const PA = {
+        CX: 250, CY: 175, RC: 148, RR: 158 / 6, R: 158 * 5 / 6,
+        HALF: 12, WALL: 1.5, CLOSED: 9, DS: 2,
+        STROKE: 1.6, HOLD: 1.0, N: 4, SWAP: 1.2,
+        STATIC_T: 4.85,              // reduced motion: the hold after stroke 2, two drops landed
+        RES_Y0: 214, RES_STEP: 3.5,  // bottle surface at t = 0, and its drop per stroke
+        TIP: 240, RT_BOT: 417.5, RT_STEP: 17
+      };
+      PA.CYCLE = PA.STROKE + PA.HOLD;
+      PA.LOOP = PA.N * PA.CYCLE + PA.SWAP;
+      PA.P = PA.RC * Math.PI / 2;   // one pitch of tube along the centreline arc
 
-    function buildHeroRotor() {
-      const N = 4;        // roller count
-      const R = 19.7;      // rotor radius, mm: proto-02 design value (N_c=2 corrected)
-      const rollerR = 5;   // MR105ZZ bearing radius, mm (10mm OD)
-      const f = v => v.toFixed(2);
+      const clamp = v => v < 0 ? 0 : (v > 1 ? 1 : v);
+      const smooth = (a, b, v) => { const x = clamp((v - a) / (b - a)); return x * x * (3 - 2 * x); };
+      const ease = v => 0.5 - 0.5 * Math.cos(Math.PI * clamp(v));
+      const fmt = n => (Math.round(n * 100) / 100).toString();
 
-      // Pump (rotor) geometry
-      const pcx = 380, pcy = 150;  // pump centre, SVG user-space
-      const OUTER = 64;            // visual budget for R + rollerR, in SVG user units
-      const scale = OUTER / (R + rollerR);
-      const Rpx = R * scale;
-      const rrPx = rollerR * scale;
+      // The tube centreline in the direction the liquid flows, cut where the measurements need it.
+      const CL_A = 'M -120 356 V 84 C -120 60 -104 44 -80 44 H 36 C 70 44 90 70 96 100'; // inlet ramp starts
+      const CL_L = CL_A + ' C 100.8 124 102 150 102 175';                                  // 180 degree arc starts
+      const CL = CL_L + ' A 148 148 0 0 0 398 175 C 398 150 399.2 124 404 100 '
+               + 'C 410 70 430 44 464 44 H 494 C 510 44 520 54 520 70 V 200';              // out to the needle hub
+      const BOTTLE = 'M -142 132 V 146 C -142 155 -172 157 -172 173 V 364 Q -172 380 -156 380 '
+                   + 'H -84 Q -68 380 -68 364 V 173 C -68 157 -98 155 -98 146 V 132 Z';
 
-      // 4 rollers at 90 degree spacing on the pitch circle, first at top (-90 degrees)
-      let rollers = '';
-      for (let i = 0; i < N; i++) {
-        const ang = -90 + i * 360 / N;
-        const x = pcx + Rpx * cosd(ang);
-        const y = pcy + Rpx * sind(ang);
-        rollers += `<circle class="hero-roller" cx="${f(x)}" cy="${f(y)}" r="${f(rrPx)}" />`;
+      const roller = '<g class="hp__roller"><circle r="26.333" /><path class="hp__tick" d="M 0 -6 V -20" />'
+                   + '<circle class="hp__axle" r="4.5" /></g>';
+      root.innerHTML =
+        '<svg class="hp" viewBox="-196 8 758 418" aria-hidden="true" focusable="false">' +
+          '<defs>' +
+            '<linearGradient id="hp-pkg" x1="0" y1="0" x2="1" y2="1">' +
+              '<stop offset="0" stop-color="#ff8a4c" /><stop offset="1" stop-color="#e83535" />' +
+            '</linearGradient>' +
+            '<clipPath id="hp-resclip"><path d="' + BOTTLE + '" /></clipPath>' +
+            '<clipPath id="hp-rtclip"><path d="M 497.5 286 V 377.5 L 520 417.5 L 542.5 377.5 V 286 Z" /></clipPath>' +
+            '<path id="hp-cl" d="' + CL + '" /><path id="hp-clA" d="' + CL_A + '" /><path id="hp-clL" d="' + CL_L + '" />' +
+          '</defs>' +
+          '<path class="hp__res-body" d="' + BOTTLE + '" />' +
+          '<rect class="hp__res-liq" id="hp-res-liq" x="-176" y="214" width="112" height="170" clip-path="url(#hp-resclip)" />' +
+          '<path class="hp__res-surf" id="hp-res-surf" d="M -169 214 H -71" />' +
+          '<circle class="hp__disc" cx="250" cy="175" r="112" />' +
+          '<path class="hp__wedge" id="hp-wedge" d="" />' +
+          '<g id="hp-arms"><path class="hp__arm" d="M 250 175 H 381.667 M 250 175 V 306.667 M 250 175 H 118.333 M 250 175 V 43.333" /></g>' +
+          '<g>' +
+            '<path class="hp__track" id="hp-track" d="" />' +
+            '<path class="hp__liq" id="hp-liq" d="" />' +
+            '<path class="hp__flow" id="hp-flow-in" d="" />' +
+            '<path class="hp__flow" id="hp-flow-out" d="" />' +
+            '<path id="hp-pk0" d="" fill="url(#hp-pkg)" /><path id="hp-pk1" d="" fill="url(#hp-pkg)" /><path id="hp-pk2" d="" fill="url(#hp-pkg)" />' +
+            '<path class="hp__wall" id="hp-wall-o" d="" />' +
+            '<path class="hp__wall" id="hp-wall-i" d="" />' +
+          '</g>' +
+          '<path class="hp__res-glass" d="' + BOTTLE + '" />' +
+          '<rect class="hp__cap" x="-150" y="106" width="60" height="27" rx="5" />' +
+          '<path class="hp__cap-rib" d="M -140 112 V 127 M -100 112 V 127" />' +
+          roller + roller + roller + roller +
+          '<path class="hp__seal" id="hp-seal" d="" />' +
+          '<circle class="hp__hub" cx="250" cy="175" r="17" /><circle class="hp__hub-pin" cx="250" cy="175" r="5" />' +
+          '<rect class="hp__nhub" x="510" y="198" width="20" height="11" rx="2.5" />' +
+          '<path class="hp__needle" d="M 520 209 V 240" />' +
+          '<circle id="hp-drop" cx="520" cy="240" r="0" fill="url(#hp-pkg)" />' +
+          '<g id="hp-rt">' +
+            '<rect id="hp-rt-liq" x="490" y="417.5" width="60" height="4" clip-path="url(#hp-rtclip)" fill="url(#hp-pkg)" />' +
+            '<path class="hp__rt" d="M 496 286 V 378 L 520 420 L 544 378 V 286" />' +
+            '<path class="hp__rt-rim" d="M 489 285 H 551" />' +
+          '</g>' +
+        '</svg>';
+
+      const byId = name => root.querySelector('#hp-' + name);
+      const cl = byId('cl');
+      if (!cl || !cl.getTotalLength) return;
+
+      // Sample the centreline once: point, normal, arc length.
+      const len = cl.getTotalLength(), n = Math.floor(len / PA.DS);
+      const px = [], py = [], nx = [], ny = [], ss = [];
+      for (let i = 0; i <= n; i++) {
+        const s = (i === n) ? len : i * PA.DS;
+        const a = cl.getPointAtLength(Math.max(0, s - 0.5)), b = cl.getPointAtLength(Math.min(len, s + 0.5));
+        const p = cl.getPointAtLength(s);
+        const dx = b.x - a.x, dy = b.y - a.y, dl = Math.sqrt(dx * dx + dy * dy) || 1;
+        px.push(p.x); py.push(p.y); nx.push(-dy / dl); ny.push(dx / dl); ss.push(s);
       }
-      const rotorGroup = `<g id="hero-rotor-group">
-        <circle class="hero-hub" cx="${pcx}" cy="${pcy}" r="${f(rrPx * 0.45)}" />
-        ${rollers}
-      </g>`;
+      const sA = byId('clA').getTotalLength();   // inlet ramp starts
+      const sL = byId('clL').getTotalLength();   // 180 degree arc starts
+      const sR = sL + 2 * PA.P;                   // 180 degree arc ends
+      const sB = sR + (sL - sA);                  // outlet ramp ends
+      const idx = s => Math.max(0, Math.min(n, Math.round(s / PA.DS)));
+      const pt = (k, off) => (px[k] + nx[k] * off).toFixed(2) + ' ' + (py[k] + ny[k] * off).toFixed(2);
+      const line = (k0, k1, off) => { let d = ''; for (let k = k0; k <= k1; k++) d += (k === k0 ? 'M ' : ' L ') + pt(k, off); return d; };
 
-      // Wrap endpoints: both sit exactly on the horizontal through the pump centre; the tube's
-      // control points on either side are placed directly below each endpoint (same x), which
-      // forces a vertical, tangent-to-the-pitch-circle approach and departure.
-      const wrapLeftX = pcx - Rpx, wrapRightX = pcx + Rpx;
+      // Static parts: outer wall, track band, the flow marks' lines.
+      byId('wall-o').setAttribute('d', line(0, n, PA.HALF));
+      const t0 = idx(sA - 14), t1 = idx(sB + 14);
+      let tr = '';
+      for (let k = t0; k <= t1; k++) tr += (k === t0 ? 'M ' : ' L ') + pt(k, PA.HALF + PA.WALL);
+      for (let k = t1; k >= t0; k--) tr += ' L ' + pt(k, PA.HALF + 24);
+      byId('track').setAttribute('d', tr + ' Z');
+      const fin = byId('flow-in'), fout = byId('flow-out');
+      fin.setAttribute('d', line(idx(8), idx(sA - 6), 0));
+      fout.setAttribute('d', line(idx(sB + 6), n - 3, 0));
 
-      // 50ml Falcon-style source (screw cap, ticks, conical bottom, liquid pooled into the cone), far left
-      const srcX0 = 30, srcX1 = 100, srcCx = (srcX0 + srcX1) / 2;
-      const capX0 = 27, capX1 = 103, capY0 = 20, capY1 = 38;
-      const bodyTop = 38, bodyBottom = 190;
-      const coneTipY = bodyBottom + Math.round((bodyBottom - bodyTop) / 4); // ~228, cone ~1/4 of body height
-      const liquidTop = bodyBottom - 60;
-      let ticks = '';
-      const tickCount = 5;
-      for (let i = 0; i < tickCount; i++) {
-        const ty = bodyTop + (bodyBottom - bodyTop) * (i + 1) / (tickCount + 1);
-        ticks += `<line class="hero-vessel-tick" x1="${srcX1 - 10}" y1="${f(ty)}" x2="${srcX1}" y2="${f(ty)}" />`;
+      const liq = byId('liq'), wallI = byId('wall-i'), seal = byId('seal');
+      const pks = [byId('pk0'), byId('pk1'), byId('pk2')];
+      const rollers = root.querySelectorAll('.hp__roller');
+      const arms = byId('arms'), wedge = byId('wedge');
+      const drop = byId('drop'), rt = byId('rt'), rtLiq = byId('rt-liq');
+      const resLiq = byId('res-liq'), resSurf = byId('res-surf');
+      const inner = new Array(n + 1);
+      const eng = { PA, sL, sR };
+
+      // A packet's brightness from where it is, in pitches from the inlet end of the arc:
+      // forming (dark), sealed in the inlet quarter (faint), next out (full), leaving (fading).
+      function pkAlpha(pos) {
+        if (pos < -0.25 || pos >= 2) return 0;
+        if (pos < 0)   return 0.3 * smooth(-0.25, 0, pos);
+        if (pos < 1)   return 0.3 + 0.7 * smooth(0.45, 1, pos);
+        if (pos < 1.5) return 1;
+        return 1 - smooth(1.5, 2, pos);
       }
-      const sourceVessel = `
-        <path class="hero-vessel" d="M ${srcX0} ${bodyBottom} L ${srcCx} ${coneTipY} L ${srcX1} ${bodyBottom} Z" />
-        <rect class="hero-vessel" x="${srcX0}" y="${bodyTop}" width="${srcX1 - srcX0}" height="${bodyBottom - bodyTop}" rx="6" />
-        <path class="hero-vessel-liquid" d="M ${srcX0} ${bodyBottom} L ${srcCx} ${coneTipY} L ${srcX1} ${bodyBottom} Z" />
-        <rect class="hero-vessel-liquid" x="${srcX0 + 3}" y="${liquidTop}" width="${srcX1 - srcX0 - 6}" height="${bodyBottom - liquidTop}" rx="4" />
-        ${ticks}
-        <rect class="hero-vessel-cap" x="${capX0}" y="${capY0}" width="${capX1 - capX0}" height="${capY1 - capY0}" rx="3" />
-        <line class="hero-vessel-tick" x1="${capX0 + 5}" y1="26" x2="${capX1 - 5}" y2="26" />
-        <line class="hero-vessel-tick" x1="${capX0 + 5}" y1="32" x2="${capX1 - 5}" y2="32" />`;
-
-      // Dip tube: starts just above the conical bottom, rises straight up through the vessel and exits just above the cap.
-      const dipStart = { x: srcCx, y: coneTipY - 16 };
-      const capExit  = { x: srcCx, y: capY0 - 6 };
-
-      // 1.5ml Eppendorf-style collection tube (short shoulder, aggressive taper, small liquid pooled
-      // at the tip, open snap cap on a hinge), far right. Kept smaller and slimmer than the source.
-      const dstX0 = 583, dstX1 = 617, dstCx = (dstX0 + dstX1) / 2;
-      const shoulderTop = 228, shoulderBottom = 242;
-      const eppTipY = shoulderBottom + 50; // aggressive taper: 50 over a 34-wide shoulder
-      const liqFrac = 0.46; // liquid surface sits 46% of the way down the cone, a small pool at the tip
-      const liqY = shoulderBottom + (eppTipY - shoulderBottom) * liqFrac;
-      const halfWidthAtLiqY = ((dstX1 - dstX0) / 2) * (1 - liqFrac);
-      // Open lid: hinged at the tube's own top rim, a short flap rotated 45 degrees off horizontal.
-      const hinge = { x: dstX1, y: shoulderTop };
-      const capFlapLen = 22;
-      const destVessel = `
-        <path class="hero-vessel" d="M ${dstX0} ${shoulderBottom} L ${dstCx} ${eppTipY} L ${dstX1} ${shoulderBottom} Z" />
-        <rect class="hero-vessel" x="${dstX0}" y="${shoulderTop}" width="${dstX1 - dstX0}" height="${shoulderBottom - shoulderTop}" rx="4" />
-        <path class="hero-vessel-liquid" d="M ${f(dstCx - halfWidthAtLiqY)} ${f(liqY)} L ${f(dstCx + halfWidthAtLiqY)} ${f(liqY)} L ${dstCx} ${eppTipY} Z" />
-        <rect class="hero-cap-flap" x="${hinge.x - capFlapLen}" y="${hinge.y - 4}" width="${capFlapLen}" height="8" rx="3" transform="rotate(135 ${hinge.x} ${hinge.y})" />
-        <circle class="hero-cap-hinge" cx="${hinge.x}" cy="${hinge.y}" r="2.4" />`;
-
-      // Needle: short, rigid, straight, visually distinct from the soft tube. Positioned above the
-      // open Eppendorf's shoulder, tip clear of it by a small air gap.
-      const needleTop = { x: dstCx, y: 195 };
-      const needleTip = { x: dstCx, y: shoulderTop - 8 };
-      const needleLine = `<line class="hero-needle" x1="${needleTop.x}" y1="${needleTop.y}" x2="${needleTip.x}" y2="${needleTip.y}" />`;
-      const dropletCircle = `<circle class="hero-droplet" id="hero-droplet" cx="${needleTip.x}" cy="${needleTip.y}" r="4.5" />`;
-
-      // One continuous path, no elbows: dip tube (straight) -> smooth Bezier into the wrap, arriving
-      // vertically -> 180 degree top wrap -> smooth Bezier departing vertically into the needle-top
-      // hand-off, arriving vertically there too.
-      // preWrapD is the same initial two segments, stopping exactly where the wrap arc begins. It is
-      // rendered nowhere (display:none); it exists so initHeroMotion() can call .getTotalLength() on
-      // it to measure the real arc-length position where the wrap starts (pinch registration).
-      const preWrapD = `M ${dipStart.x} ${dipStart.y} `
-        + `L ${capExit.x} ${capExit.y} `
-        + `C ${capExit.x} ${capExit.y - 20}, ${f(wrapLeftX)} ${f(pcy + 25)}, ${f(wrapLeftX)} ${pcy}`;
-      const tubeD = preWrapD + ` `
-        + `A ${f(Rpx)} ${f(Rpx)} 0 0 0 ${f(wrapRightX)} ${pcy} `
-        + `C ${f(wrapRightX)} ${f(pcy + 35)}, ${needleTop.x} ${needleTop.y - 20}, ${needleTop.x} ${needleTop.y}`;
-
-      const html = `<svg viewBox="0 0 700 320" width="100%" style="max-width:580px;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-        <defs>
-          <linearGradient id="hero-packet-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="var(--accent)"/>
-            <stop offset="100%" stop-color="var(--accent-2)"/>
-          </linearGradient>
-        </defs>
-        ${sourceVessel}
-        ${destVessel}
-        <path class="hero-tube-wall" d="${tubeD}" />
-        <path class="hero-tube-liquid" d="${tubeD}" />
-        <path class="hero-tube-slug" id="hero-tube-slug" d="${tubeD}" />
-        <path id="hero-tube-prewrap" d="${preWrapD}" style="display:none" />
-        ${needleLine}
-        ${dropletCircle}
-        <circle class="hero-rotor-disc" cx="${pcx}" cy="${pcy}" r="${f(Rpx)}" />
-        ${rotorGroup}
-      </svg>`;
-
-      return { html, geo: { Rpx, rrPx, needleTip } };
-    }
-
-    // GSAP-driven motion. ONE timeline drives the rotor rotation and the slug highlight's
-    // stroke-dashoffset. Rotor spin and liquid flow are driven by two INDEPENDENT constants,
-    // ROTOR_SIGN and FLOW_SIGN: liquid must always advance Falcon -> needle.
-    // Sync spec (derived numerically at runtime from the real, DOM-measured tube geometry):
-    //   slug linear speed = roller tangential speed at the wrap radius = 2*pi*Rpx per rotor period T
-    //   slug spacing      = a quarter of the wrap circumference, matching the 90 degree roller spacing
-    // Pinch registration: dashoffset0 is chosen so a start-of-dash slug boundary sits exactly at the
-    // wrap's entry arc-length position (measured via the hidden #hero-tube-prewrap path) at t=0.
-    function initHeroMotion(geo) {
-      const rotorGroupEl = document.getElementById('hero-rotor-group');
-      const slugEl = document.getElementById('hero-tube-slug');
-      const dropletEl = document.getElementById('hero-droplet');
-      const preWrapEl = document.getElementById('hero-tube-prewrap');
-      if (!rotorGroupEl || !slugEl || !dropletEl || typeof gsap === 'undefined') return;
-
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      const ROTOR_SIGN = -1; // -1 = counter-clockwise on screen
-      const FLOW_SIGN = 1;   // +1 = liquid advances inlet(Falcon) -> outlet(needle)
-      const T = 4; // rotor period, seconds
-      const circumference = 2 * Math.PI * geo.Rpx;
-      const spacing = circumference / 4;
-      const slugDash = 10;
-      slugEl.setAttribute('stroke-dasharray', `${slugDash.toFixed(2)} ${(spacing - slugDash).toFixed(2)}`);
-
-      const sWrapStart = preWrapEl ? preWrapEl.getTotalLength() : 0;
-      // A roller occludes the tube completely at its contact point, so each slug is the pocket
-      // trapped between two consecutive rollers: centre the dash in the gap.
-      const pocketOffset = spacing / 2 - slugDash / 2;
-      const dashOffset0 = -((((sWrapStart + pocketOffset) % spacing) + spacing) % spacing);
-
-      const totalLen = slugEl.getTotalLength();
-      const speed = circumference / T;
-      const transitTime = totalLen / speed;   // time for liquid to travel the full tube length once
-      const dropCycle = T / 4;                // matches the roller-spaced slug cadence
-      const dropDelay = transitTime % dropCycle;   // in [0, dropCycle) by construction
-
-      const tl = gsap.timeline({ repeat: -1, defaults: { ease: 'none' }, paused: true });
-      tl.fromTo(rotorGroupEl, { rotation: 0 }, { rotation: ROTOR_SIGN * 360, duration: T, transformOrigin: '50% 50%' }, 0);
-      tl.fromTo(slugEl, { strokeDashoffset: dashOffset0 }, { strokeDashoffset: dashOffset0 - FLOW_SIGN * circumference, duration: T }, 0);
-
-      // Droplet release(s), timed so a drop detaches when a slug reaches the needle tip. The loop
-      // condition guarantees no child tween's end time ever exceeds T.
-      const dropDuration = dropCycle * 0.6;
-      for (let k = 0, pos = dropDelay; pos + dropDuration <= T && k < 4; k++, pos += dropCycle) {
-        tl.fromTo(dropletEl,
-          { attr: { cy: geo.needleTip.y }, opacity: 0 },
-          {
-            keyframes: {
-              '0%':   { opacity: 0 },
-              '15%':  { opacity: 1 },
-              '75%':  { attr: { cy: geo.needleTip.y + 18 }, opacity: 1 },
-              '100%': { attr: { cy: geo.needleTip.y + 22 }, opacity: 0 }
-            },
-            duration: dropDuration,
-            ease: 'power1.in'
-          },
-          pos);
+      // The lumen between the walls, zero wherever a roller seals it.
+      function lumen(k0, k1) {
+        let d = '';
+        for (let h = k0; h <= k1; h++) d += (h === k0 ? 'M ' : ' L ') + pt(h, Math.min(inner[h] + PA.WALL, PA.HALF - PA.WALL));
+        for (let h = k1; h >= k0; h--) d += ' L ' + pt(h, PA.HALF - PA.WALL);
+        return d + ' Z';
       }
 
-      if (prefersReducedMotion) {
-        // Freeze on a legible static frame rather than hiding the scene.
-        tl.progress(0.15).pause();
-        gsap.set(dropletEl, { attr: { cy: geo.needleTip.y + 6 }, opacity: 1 });
-        return;
+      function render(t) {
+        t = ((t % PA.LOOP) + PA.LOOP) % PA.LOOP;
+        let S = 0, strokeNow = -1, pNow = 0;
+        for (let k = 0; k < PA.N; k++) {
+          const raw = clamp((t - k * PA.CYCLE) / PA.STROKE);
+          S += ease(raw);
+          if (t >= k * PA.CYCLE && t < (k + 1) * PA.CYCLE) { strokeNow = k; pNow = ease(raw); }
+        }
+        const rot = -90 * S;          // SVG degrees, negative = counter-clockwise on screen
+        const D = PA.P * S;           // how far the liquid has moved
+
+        // Rotor and rollers (rolling on the tube, so each spins the other way).
+        arms.setAttribute('transform', 'rotate(' + fmt(rot) + ' ' + PA.CX + ' ' + PA.CY + ')');
+        const qx = [], qy = [];
+        for (let k = 0; k < 4; k++) {
+          const ang = (90 * k + rot) * Math.PI / 180;
+          qx[k] = PA.CX + PA.R * Math.cos(ang); qy[k] = PA.CY + PA.R * Math.sin(ang);
+          rollers[k].setAttribute('transform', 'translate(' + fmt(qx[k]) + ' ' + fmt(qy[k]) + ') rotate(' +
+            fmt((-rot * PA.R / PA.RR + 45 * k) % 360) + ')');
+        }
+
+        // The inner wall, pushed out wherever a roller reaches into the tube.
+        const RR2 = PA.RR * PA.RR;
+        let wi = '';
+        for (let m = 0; m <= n; m++) {
+          let off = -PA.HALF;
+          for (let k = 0; k < 4; k++) {
+            const Dx = px[m] - qx[k], Dy = py[m] - qy[k];
+            if (Dx * Dx + Dy * Dy > 2500) continue;
+            const dn = Dx * nx[m] + Dy * ny[m];
+            const disc = dn * dn - (Dx * Dx + Dy * Dy) + RR2;
+            if (disc > 0) { const reach = -dn + Math.sqrt(disc) + PA.WALL; if (reach > off) off = reach; }
+          }
+          if (off > PA.CLOSED) off = PA.CLOSED;
+          inner[m] = off;
+          wi += (m === 0 ? 'M ' : ' L ') + pt(m, off);
+        }
+        wallI.setAttribute('d', wi);
+
+        // The seals: every run of samples where the walls meet, shown as one bright bar.
+        let sl = '', run = -1;
+        const closedAt = [];
+        for (let m = 0; m <= n + 1; m++) {
+          const shut = m <= n && inner[m] >= PA.CLOSED - 0.01;
+          if (shut && run < 0) run = m;
+          if (!shut && run >= 0) { sl += line(run, m - 1, PA.HALF - 1.5); closedAt.push(ss[(run + m - 1) >> 1]); run = -1; }
+        }
+        seal.setAttribute('d', sl);
+        eng.closedAt = closedAt;
+
+        liq.setAttribute('d', lumen(0, n));
+
+        // The packets riding with the liquid, one pitch long each.
+        let used = 0;
+        for (let j = -5; j <= 2 && used < 3; j++) {
+          const pos = j + S, al = pkAlpha(pos);
+          if (al <= 0.004) continue;
+          const k0 = idx(sL + PA.P * pos), k1 = idx(sL + PA.P * (pos + 1));
+          if (k1 - k0 < 2) continue;
+          pks[used].setAttribute('d', lumen(k0, k1));
+          pks[used].setAttribute('opacity', al.toFixed(3));
+          used++;
+        }
+        for (; used < 3; used++) { pks[used].setAttribute('d', ''); pks[used].setAttribute('opacity', '0'); }
+
+        // Flow marks move with the liquid in the free tube (period P / 3, so every stroke closes).
+        fin.style.strokeDashoffset = fmt(-D);
+        fout.style.strokeDashoffset = fmt(-D);
+
+        // The quarter turn, swept behind the arm that starts at six o'clock.
+        let wa = 0, wo = 0;
+        if (strokeNow >= 0) {
+          const inHold = t - strokeNow * PA.CYCLE - PA.STROKE;
+          wa = 90 * pNow;
+          wo = inHold < 0 ? 1 : 1 - smooth(PA.HOLD - 0.32, PA.HOLD, inHold);
+        }
+        if (wa < 0.5 || wo <= 0.004) { wedge.setAttribute('d', ''); }
+        else {
+          const e = (90 - wa) * Math.PI / 180;
+          wedge.setAttribute('d', 'M 250 175 L 250 275 A 100 100 0 0 0 ' +
+            fmt(250 + 100 * Math.cos(e)) + ' ' + fmt(175 + 100 * Math.sin(e)) + ' Z');
+          wedge.setAttribute('opacity', wo.toFixed(3));
+        }
+
+        // The drop grows at the needle through the stroke, falls, lands.
+        const swapAt = PA.N * PA.CYCLE, FALL = 0.34;
+        let level = 0;
+        for (let k = 0; k < PA.N; k++) level += ease((t - (k * PA.CYCLE + PA.STROKE + FALL)) / 0.25);
+        if (t >= swapAt + 0.5) level = 0;
+        const surf = PA.RT_BOT - PA.RT_STEP * level;
+        rtLiq.setAttribute('y', fmt(surf));
+        rtLiq.setAttribute('height', fmt(Math.max(0, PA.RT_BOT + 2.5 - surf)));
+        let dr = 0, dy2 = PA.TIP;
+        if (strokeNow >= 0) {
+          const ts = t - strokeNow * PA.CYCLE;
+          if (ts < PA.STROKE) { dr = 10.5 * Math.pow(pNow, 1 / 3); dy2 = PA.TIP + dr * 0.9; }
+          else if (ts < PA.STROKE + FALL) {
+            const f = Math.pow((ts - PA.STROKE) / FALL, 2);
+            dr = 10.5; dy2 = PA.TIP + 9.5 + f * (surf - PA.TIP - 9.5);
+          }
+        }
+        drop.setAttribute('r', fmt(dr));
+        drop.setAttribute('cy', fmt(dy2));
+
+        // The receiving tube is swapped once four strokes are in it; the bottle eases back with it.
+        const out = smooth(swapAt + 0.1, swapAt + 0.5, t), back = smooth(swapAt + 0.7, swapAt + 1.1, t);
+        const vis = t < swapAt + 0.5 ? 1 - out : back;
+        rt.setAttribute('opacity', vis.toFixed(3));
+        rt.setAttribute('transform', 'translate(0 ' + fmt(t < swapAt + 0.5 ? 14 * out : -10 * (1 - back)) + ')');
+        const resY = PA.RES_Y0 + PA.RES_STEP * (S - PA.N * smooth(swapAt + 0.3, swapAt + 1.1, t));
+        resLiq.setAttribute('y', fmt(resY));
+        resLiq.setAttribute('height', fmt(384 - resY));
+        resSurf.setAttribute('d', 'M -169 ' + fmt(resY) + ' H -71');
+        eng.resY = resY; eng.S = S;
       }
 
-      tl.play();
-      // Brief spin-up feel: ramp the whole timeline's playback rate from a standstill to normal speed.
-      gsap.fromTo(tl, { timeScale: 0 }, { timeScale: 1, duration: 0.6, ease: 'power2.out' });
-    }
+      const clock = { t: 0 };
+      const loop = gsap.to(clock, {
+        t: PA.LOOP, duration: PA.LOOP, ease: 'none', repeat: -1, paused: true,
+        onUpdate: () => render(clock.t)
+      });
+      eng.render = render; eng.loop = loop;
+      root.__hp = eng;   // a handle for seeking the figure from a verification script
 
-    const heroRotorEl = document.getElementById('hero-rotor');
-    if (heroRotorEl) {
-      const built = buildHeroRotor();
-      heroRotorEl.innerHTML = built.html;
-      initHeroMotion(built.geo);
-    }
+      if (prefersReducedMotion) { render(PA.STATIC_T); return; }
+      render(0);
+
+      // Play only while the hero is on screen, once the CSS fade-in has begun.
+      let onScreen = true, started = false;
+      const sync = () => { if (started && onScreen && !document.hidden) loop.play(); else loop.pause(); };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(entries => { onScreen = entries[0].isIntersecting; sync(); }).observe(root);
+      }
+      document.addEventListener('visibilitychange', sync);
+      gsap.delayedCall(0.45, () => { started = true; sync(); });
+    })();
 
     // Apply the stored language once the DOM is complete.
     applyLang(currentLang);
