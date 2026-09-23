@@ -8,6 +8,7 @@ You are taking over **Part III** of Sirio Feltrin's DTU master's thesis defense 
 
 ## 1 · Read these before touching anything
 
+0. **`ASSISTANT-GUIDE.md`** — the standing working agreement for every part chat: the role, delegation, how Sirio wants to be answered, the part/chapter division, editing limits, content rules, verification and the traps. Read it first; this handover only adds what is specific to Part III.
 1. `BRIEF.md` section 0 — handoff state, how to run the deck, the standing rules.
 2. `SLIDE-ORDER.md` — the taxonomy that decides where every slide lives, what makes a slide an appendix slide (`data-part="backup"`, never the cue prefix), the `A01…` numbering, and the recipes for adding, moving or renumbering a slide. Read it before you move anything.
 3. `BUILD-CONTRACT.md` and `BUILDER-REFERENCE.md` — how to write a part, the timeline API (`Deck.slide`, `Deck.enter`, `window.Deck`, `Deck.marks`), and the verification you owe.
