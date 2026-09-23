@@ -366,7 +366,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Entrambi gli strumenti sono pagine vere, che si possono aprire dal vivo.
 - *Se chiesto del prezzo:* ogni opzione con abbastanza collegamenti costa entro il 10 % circa delle altre.
 
-### 32 · `s27` — un solo clock muove sei pompe, perché una dose è un numero di passi
+### 32 · `s27` — un solo microcontrollore comanda tutta la macchina
 - Un solo microcontrollore comanda tutto: lo schermo, le sei pompe, i due motori dell'allineamento, il motorino a vibrazione e i sensori di livello.
 - Com'è costruita, tutto parte da un'unica linea a 12 volt, da una batteria per utensili o dall'alimentatore da banco.
 - Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.
