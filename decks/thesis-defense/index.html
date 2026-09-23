@@ -1533,6 +1533,17 @@ body[data-view="guest"] .guest-dot {
   stroke-linecap: round;
 }
 #s05b .sp-target circle { fill: var(--accent); }
+/* one pointer, so nobody has to guess which dots are the thing being looked for */
+#s05b .sp-lead {
+  fill: none; stroke: var(--accent); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* filled, not a 2px chevron: an open head disappears on a projector */
+#s05b .sp-lead--hd { fill: var(--accent); stroke: none; }
+#s05b .sp-leadtx {
+  font-family: var(--mono); font-size: 20px; fill: var(--accent);
+  text-anchor: end;
+}
 /* the grey is the second protagonist — at 0.24 it did not survive a
    projector, and “separated from everything else” needs the everything else */
 #s05b .sp-junk circle { fill: rgba(240, 236, 232, 0.42); }
@@ -2855,8 +2866,8 @@ body[data-view="guest"] .guest-dot {
 #s38 .d38__shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* the pump column: three concepts, one frame each, nothing cropped.
-   Frame heights are equal and widths follow each picture, so object-fit:
-   contain fills the box without trimming any photograph. */
+   Each frame is set to its own picture's ratio in the markup, so
+   object-fit: contain fills the box without trimming any photograph. */
 #s38 .d38__slot {
   position: absolute;
   overflow: hidden;
@@ -2867,10 +2878,6 @@ body[data-view="guest"] .guest-dot {
 }
 #s38 .d38__slot img,
 #s38 .d38__slot video { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s38 .d38__slot svg { display: block; width: 100%; height: 100%; }
-#s38 .d38-ln   { fill: none; stroke: var(--text); stroke-linejoin: round; stroke-linecap: round; }
-#s38 .d38-soft { fill: rgba(255,255,255,0.10); }
-#s38 .d38-tube { fill: none; stroke: var(--t-a); stroke-linecap: round; }
 #s38 .d38__tag {
   position: absolute; left: 10px; bottom: 10px;
   padding: 3px 11px; border-radius: 999px;
@@ -3167,20 +3174,29 @@ body[data-view="guest"] .guest-dot {
 }
 #s43 .d43__k { position: absolute; left: 96px; }
 #s43 .d43__nm { position: absolute; left: 96px; font-size: 24px; line-height: 1.2; color: var(--text-soft); }
-/* The right-hand column is one stack on the 1002 px axis: code plate,
-   address, mark.  The plate came down from 292 to 224 on 2026-09-23
-   (Sirio: make the QR smaller) — 192 px of code over 29 modules, 6.6 px
-   a module at stage scale, 9.9 px on a 1920 projector, still an easy
-   read for a phone — and the column was re-centred around it. */
-#s43 .d43__qr {
-  position: absolute; left: 890px; top: 168px; width: 224px; height: 224px;
-  padding: 16px; box-shadow: 0 18px 44px rgba(0,0,0,0.55);
+/* The right-hand column is one stack on the 1002 px axis — the mark's own
+   axis — and since 2026-09-23 it holds the invitation rather than a code
+   plate and an address.  "Questions?" takes the left column's masthead
+   verbatim: same display face, same 76 px, same top 182, same 300 px rule
+   34 px below the word.  The one difference is colour: the word is the
+   accent gradient, so the warm half of the slide is the half that is
+   asking, and the turning mark below it belongs to the same column.
+   The box is centred on 1002 and 420 wide, which keeps the word inside
+   the 96 px right margin at this size. */
+#s43 .d43__q {
+  position: absolute; left: 792px; top: 182px; width: 420px; margin: 0;
+  text-align: center;
+  font-family: var(--display); font-weight: 700;
+  font-size: 76px; line-height: 1; letter-spacing: -0.03em;
+  color: var(--t-a);
+  background: linear-gradient(96deg, var(--t-a) 8%, var(--t-b) 92%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-#s43 .d43__qr svg { display: block; width: 100%; height: 100%; }
-#s43 .d43__qr rect { fill: #12100e; }
-#s43 .d43__url {
-  position: absolute; left: 792px; top: 416px; width: 420px; text-align: center;
-  font-family: var(--mono); font-size: 21px; letter-spacing: 0.02em; color: var(--text);
+#s43 .d43__qrule {
+  position: absolute; left: 852px; top: 292px; width: 300px; height: 2px;
+  background: linear-gradient(90deg, var(--t-a), var(--t-b));
+  transform: scaleX(0); transform-origin: 50% 50%;
 }
 /* The mark: S00's rules, unchanged, re-scoped to this slide.  Stroked
    rotor and stroked dots in the accent at 3.2, the halo breathing on
@@ -3381,6 +3397,99 @@ body[data-view="guest"] .guest-dot {
 
 /* B14 and B18 carry a live tool card beside their facts */
 #b14 .bk__facts, #b18 .bk__facts { width: 528px; }
+/* ---- b13 · two weighing sessions, kept apart ---------------------
+   Everything is scoped to #b13.  The two cards are structurally
+   identical -- same five columns in the same order -- so the eye
+   compares them row for row and the only differences it can find are
+   the ones the chips declare.  Session 1 carries the accent edge
+   because it is the published pair; Session 2 carries a neutral one.
+   Nothing here is SVG: chips and tables are HTML over the plate. */
+#b13 .b13-shared {
+  position: absolute; left: 56px; top: 202px; width: 1168px; margin: 0;
+  font-family: var(--mono); font-size: 18px; line-height: 1.35;
+  letter-spacing: 0.02em; color: var(--text-muted);
+}
+#b13 .bk__facts--wide { top: 244px; }
+#b13 .bk__f { padding-bottom: 10px; }
+
+#b13 .b13-sessions {
+  position: absolute; left: 56px; top: 372px; width: 1168px; height: 254px;
+}
+#b13 .b13-s {
+  position: absolute; top: 0; width: 568px; height: 100%;
+  padding: 16px 20px 16px 22px;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+#b13 .b13-s::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+#b13 .b13-s--a { left: 0; }
+#b13 .b13-s--b { left: 600px; }
+#b13 .b13-s--a::before { background: linear-gradient(180deg, var(--t-a), var(--t-b)); }
+#b13 .b13-s--b::before { background: rgba(240,236,232,0.45); }
+
+#b13 .b13-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+#b13 .b13-nm {
+  font-family: var(--mono); font-size: 20px; font-weight: 700;
+  letter-spacing: 0.01em; line-height: 1.25; color: var(--text); white-space: nowrap;
+}
+#b13 .b13-ch {
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.25;
+  color: var(--text-muted); white-space: nowrap;
+}
+
+#b13 .b13-cond { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 6px 8px; }
+#b13 .b13-cond > span {
+  padding: 3px 9px 2px;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-family: var(--mono); font-size: 18px; line-height: 1.2;
+  color: var(--text-soft); white-space: nowrap;
+}
+
+#b13 .b13-tbl {
+  width: 100%; margin-top: 11px;
+  border-collapse: collapse; table-layout: fixed;
+  font-family: var(--mono); font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+#b13 .b13-tbl col.c1 { width: 130px; }
+#b13 .b13-tbl col.c2 { width: 114px; }
+#b13 .b13-tbl col.c3 { width: 114px; }
+#b13 .b13-tbl col.c4 { width: 82px; }
+#b13 .b13-tbl col.c5 { width: 86px; }
+#b13 .b13-tbl th {
+  padding: 0 0 6px; text-align: right; vertical-align: bottom;
+  font-size: 18px; font-weight: 700; line-height: 1.14;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid color-mix(in srgb, var(--t-a) 34%, transparent);
+}
+#b13 .b13-tbl td {
+  padding: 7px 0 6px; text-align: right;
+  line-height: 1.25; color: var(--text); white-space: nowrap;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+#b13 .b13-tbl .b13-u {
+  display: block; text-transform: none;
+  letter-spacing: 0.01em; font-weight: 700;
+}
+#b13 .b13-tbl th:first-child, #b13 .b13-tbl td:first-child { text-align: left; }
+#b13 .b13-s--b .b13-tbl th { border-bottom-color: rgba(240,236,232,0.26); }
+
+#b13 .b13-foot {
+  position: absolute; left: 56px; top: 638px; width: 1168px; margin: 0;
+  font-family: var(--mono); font-size: 18px; line-height: 1.35;
+  color: var(--text-muted);
+}
+
 /* ---- b24 · precision and accuracy (was Part I) ---- */
 /* ══ S04e · accuracy and precision, then the span ══════════════════════
    Everything is scoped to #b24. The boards keep the printed figure's
@@ -4441,7 +4550,7 @@ body[data-view="guest"] .guest-dot {
 <!-- ░░ S05b · What sample preparation is ░░ three steps -->
 <section class="slide" id="s05b" data-cue="s05b" data-dialect="cards" data-part="I"
          data-map="none" style="--head-h:48px; --title-w:1000px">
-  <h2 class="slide__title">The target arrives locked inside, and the chemistry that frees it must then be washed out.</h2>
+  <h2 class="slide__title">Sample preparation is what turns a raw swab into something a test can read.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -4455,6 +4564,14 @@ body[data-view="guest"] .guest-dot {
         <circle cx="140" cy="84" r="8"/><circle cx="180" cy="92" r="8"/>
         <circle cx="150" cy="118" r="8"/><circle cx="182" cy="122" r="8"/>
       </g>
+      <!-- The dot is (140,84) r=8. The head's apex stands off 3 units from its
+           edge, i.e. 11 from the centre, at (139.2,73), so head and dot stay two
+           objects on a projector. The head is a FILLED triangle 11 long and 8.4
+           wide, built on the leader's end tangent (0.2747,0.9615), and the
+           leader stops 2 units inside it so the stroke never pokes through. -->
+      <path class="sp-lead" id="sp-lead" d="M 96 26 C 120 30 130.7 43.3 136.7 64.3"/>
+      <path class="sp-lead sp-lead--hd" id="sp-leadhd" d="M 139.2 73 L 132.1 63.6 L 140.2 61.3 Z"/>
+      <text class="sp-leadtx" x="88" y="32">target</text>
       <g class="sp-junk" data-g="1">
         <circle cx="52" cy="62" r="7"/><circle cx="268" cy="70" r="7"/>
         <circle cx="66" cy="148" r="7"/><circle cx="262" cy="152" r="7"/>
@@ -7000,22 +7117,28 @@ body[data-view="guest"] .guest-dot {
     </svg>
 
     <!-- Repeatability, stated so it says what the number IS and what it is
-         of (Sirio, 2026-09-23: "what is that dose to dose thing?").  It used
-         to be two unlabelled dots at 0.2 % and 1.0 %, a range that mixed the
-         isolated bench head with one of the two installed ones.  What the
-         thesis actually publishes per channel is the CV of the three
-         1000 uL doses in tab:pump-two-heads, ch. 6 "The module in the
-         machine": 1.04 % on Channel 1, 2.94 % on Channel 2.
+         of (Sirio, 2026-09-23: "what is that dose to dose thing?").  These
+         are the CVs of the very same three doses per channel the bars above
+         are computed from: the 180 rpm session of 2026-09-10, both channels
+         on the 3 A mains supply, both carrying the 4.08 uL/stroke constant,
+         n = 3 after the fourth dose of each channel is excluded for
+         reservoir exhaustion -- 0.71 % on Channel 1, 0.37 % on Channel 2,
+         the pair chapter 12 publishes beside -3.4 % and +0.6 %.  The 1.04 %
+         and 2.94 % that stood here until 2026-09-23 were the LATER session
+         (battery, one pump at a time, each head on its own constant), so the
+         slide was splicing two campaigns.  The between-session drift stays
+         in the speaker notes, where it is the argument for on-device
+         recalibration.
 
          HTML over the plate, deliberately not SVG <text>: this chart's
          viewBox is 1:1 with its box, which is the exact case where Chrome
          lays the glyphs out at the pre-scale CTM and paints them off their
          own measured box. -->
     <div class="s31-cv" id="s31-cv">
-      <span class="s31-cv-k">Coefficient of variation, three doses of 1000 &#181;L on each channel</span>
+      <span class="s31-cv-k">Coefficient of variation, three consecutive 1000 &#181;L doses on each channel, one session</span>
       <span class="s31-cv-r">
-        <span class="s31-cv-i"><b>Channel 1</b><i>1.04 %</i></span>
-        <span class="s31-cv-i"><b>Channel 2</b><i>2.94 %</i></span>
+        <span class="s31-cv-i"><b>Channel 1</b><i>0.71 %</i></span>
+        <span class="s31-cv-i"><b>Channel 2</b><i>0.37 %</i></span>
       </span>
     </div>
   </div>
@@ -7039,8 +7162,8 @@ body[data-view="guest"] .guest-dot {
       <li>A commanded 1000 &#181;L through the whole assembled path, into tared tubes standing in the rack &#8212; capped and weighed as they stood, not on a boat.</li>
       <li>On the constant from the isolated pump bench it fell about 18 % short. Recalibrating that constant on the assembled instrument is the whole story: &#8722;3.4 % and +0.6 %, both inside the 10 % limit.</li>
       <li>Assembled, the heads give 3.94 and 4.10 &#181;L a stroke, about 10 % less than the bench head &#8212; that is the shortfall the recalibration absorbs.</li>
-      <li>Dose to dose, on the assembled machine: a coefficient of variation of 1.04 % on Channel 1 and 2.94 % on Channel 2, three doses of a commanded 1000 &#181;L each. The isolated bench head managed about 0.3 %, so most of that spread is the installed line, not the rotor.</li>
-      <li>Not on the slide, say it: between sessions the constants moved +1.3 % and &#8722;5.0 %, which is why a field instrument has to be able to recalibrate itself.</li>
+      <li>Dose to dose, in that same session: a coefficient of variation of 0.71 % on Channel 1 and 0.37 % on Channel 2 &#8212; the same three consecutive doses of a commanded 1000 &#181;L the bars are computed from, through the whole assembled path. For scale, a hand micropipette measured 0.27 % on the same balance — but at 50 &#181;L, not 1000 &#181;L, so it is the same order rather than a like-for-like win.</li>
+      <li>Not on the slide, say it: that is repeatability inside one session. Across sessions &#8212; lines re-primed, run from the battery &#8212; the constants moved +1.3 % and &#8722;5.0 %, which is why a field instrument has to be able to recalibrate itself.</li>
     </ul>
   </aside>
 </section>
@@ -7561,45 +7684,50 @@ body[data-view="guest"] .guest-dot {
       <span class="kicker">Pump — breadth and depth</span>
       <span class="d38__bd">3 concepts, 4 builds</span>
 
-      <div class="d38__slot" style="left:56px; top:475px; width:175px; height:135px">
-        <svg viewBox="0 -12 200 154" aria-hidden="true">
-          <path class="d38-tube" d="M 14 78 L 186 78" stroke-width="7" />
-          <path class="d38-ln" d="M 30 66 L 30 90 L 52 66 L 52 90 Z" stroke-width="3" />
-          <path class="d38-ln" d="M 148 66 L 148 90 L 170 66 L 170 90 Z" stroke-width="3" />
-          <path class="d38-ln d38-soft" d="M 14 104 L 186 104 L 186 112 L 14 112 Z" stroke-width="3" />
-          <path class="d38-ln d38-soft" d="M 84 30 L 116 30 L 116 60 L 84 60 Z" stroke-width="3" />
-          <circle class="d38-ln d38-soft" cx="100" cy="69" r="9" stroke-width="3" />
-          <path class="d38-ln" d="M 100 30 L 100 16" stroke-width="3" />
-        </svg>
+      <!-- Row geometry, 2026-09-23.  The schematic that stood in for the
+           linear pinch pump is gone: Sirio's photograph of Marius's build
+           arrived (973 x 611, ratio 1.5925) and the row was rebalanced
+           around its landscape shape rather than the photograph being
+           forced into the old 175 px box.  Three frames bottom-aligned on
+           y 610, 35 px apart, spanning 56 to 611:
+
+             230 x 146   photo   1.5925 landscape   top 464
+             105 x 186   video   9:16    portrait   top 424
+             150 x 146   render  1.0293  near-square top 464
+
+           Every frame carries the picture's own ratio, so object-fit:
+           contain fills it with no letterbox and nothing is cropped.  The
+           two stills share a height; the portrait clip is the tall one in
+           the middle, which is what makes the row read as a row.  Each
+           caption is centred on the frame it names. -->
+      <div class="d38__slot" style="left:56px; top:464px; width:230px; height:146px">
+        <img data-src="../../assets/media/pump/MariusPump.png"
+             alt="Photograph of Marius's linear pinch pump: the lead screw, the carriage that pinches the tubing, the printed end pieces and the stepper motor." />
       </div>
-      <span class="d38__cap" style="left:56px; width:175px">Linear pinch</span>
-      <span class="d38__cq" style="left:56px; width:175px">Marius&rsquo;s, built</span>
+      <span class="d38__cap" style="left:56px; width:230px; text-align:center">Linear pinch</span>
+      <span class="d38__cq" style="left:56px; width:230px; text-align:center">Marius&rsquo;s, built</span>
 
       <!-- The syringe pump was measured on a commercial laboratory
            instrument and never built here.  The clip is portrait
-           (720 x 1280), so it gets a 9:16 box of its own and the row is
-           rebalanced around it — 175 / 105 / 175 with 50 px between —
-           rather than being cropped into the old 4:3 slot. -->
-      <div class="d38__slot" style="left:281px; top:424px; width:105px; height:186px">
+           (720 x 1280), so it keeps a 9:16 box of its own. -->
+      <div class="d38__slot" style="left:321px; top:424px; width:105px; height:186px">
         <video data-src="../../assets/media/pump/syringe-pump-bench.mp4"
                poster="../../assets/media/pump/syringe-pump-bench-poster.jpg"
                muted loop playsinline preload="none"></video>
       </div>
-      <!-- caption centred on the 105 px slot, not the 155 px it used to
-           claim: at 155 it overhung the picture and crowded "Rotary". -->
-      <span class="d38__cap" style="left:281px; width:105px; text-align:center">Syringe</span>
+      <span class="d38__cap" style="left:321px; width:105px; text-align:center">Syringe</span>
       <!-- "benchmarked" sets 109 px wide and cannot break, so its box is
            widened by 2 px each side to keep the word centred on the
-           slot (centre 333.5) instead of spilling to the right. -->
-      <span class="d38__cq" style="left:279px; width:109px; text-align:center">benchmarked</span>
+           slot (centre 373.5) instead of spilling to the right. -->
+      <span class="d38__cq" style="left:319px; width:109px; text-align:center">benchmarked</span>
 
-      <div class="d38__slot" style="left:436px; top:440px; width:175px; height:170px">
+      <div class="d38__slot" style="left:461px; top:464px; width:150px; height:146px">
         <img data-src="../../assets/media/pump/v23-render.png"
              alt="CAD render of the v2.3 rotary pump head, the four-roller rotor inside its housing." />
         <span class="d38__tag">4 builds</span>
       </div>
-      <span class="d38__cap" style="left:436px; width:175px">Rotary</span>
-      <span class="d38__cq" style="left:436px; width:175px">mine, chosen</span>
+      <span class="d38__cap" style="left:461px; width:150px; text-align:center">Rotary</span>
+      <span class="d38__cq" style="left:461px; width:150px; text-align:center">mine, chosen</span>
     </div>
 
     <!-- evidence column: the alignment module -->
@@ -7872,10 +8000,18 @@ body[data-view="guest"] .guest-dot {
     <span class="d43__nm" style="top:548px">Marius Dornonville de la Cour Schiller</span>
     <span class="d43__nm" style="top:586px">Pulkit Saluja</span>
 
-    <div class="paper d43__qr">
-      <svg viewBox="0 0 29 29" role="img" aria-label="QR code linking to sirsirio.github.io/thesis-tools" id="d43-qr"></svg>
-    </div>
-    <span class="d43__url">sirsirio.github.io/thesis-tools</span>
+    <!-- The right column, 2026-09-23: the QR plate and the site address
+         are gone (Sirio: remove the QR, remove the website).  What stands
+         in their place is the invitation, built as the twin of the left
+         column — the same display face, the same top, the same rule 34 px
+         under the word — so the slide reads as one line of two words,
+         "Thank you." and "Questions?", each over its own rule.  The left
+         column then carries the names, the right one the turning mark.
+         This is the slide that sits on the projector for the whole
+         question session, so it is composed to be looked at, not to be
+         read once. -->
+    <h2 class="d43__q">Questions?</h2>
+    <div class="d43__qrule"></div>
 
     <!-- The hold screen's mark, copied drawing for drawing from S00 in
          parts/10-opening.html: the same 120 box, the same r 52 breathing
@@ -7899,8 +8035,8 @@ body[data-view="guest"] .guest-dot {
   <aside class="notes">
     <ul>
       <li>Thank the supervisors, Marius and Pulkit by name.</li>
-      <li>The site address and the QR stay up for the questions.</li>
-      <li>Backup slides follow; say that questions are welcome.</li>
+      <li>Then open the floor: this slide stays on the projector for the whole question session, so let it sit there and stop talking.</li>
+      <li>Backup slides are one press away and are reached by number — the appendix slate lists them; jump to one when a question calls for it and come back here.</li>
     </ul>
   </aside>
 </section>
@@ -8657,34 +8793,91 @@ body[data-view="guest"] .guest-dot {
   </aside>
 </section>
 
-<!-- B13 ───────────────────────────────────────────────────────────── -->
+<!-- B13 · the two weighing sessions, kept apart ──────────────────
+     2026-09-23.  Until this revision the table paired the per-stroke
+     volumes of one session (3.94 / 4.10) with the coefficients of
+     variation of ANOTHER (1.04 / 2.94) in the same row, presenting two
+     weighing sessions as one experiment.  This is the slide that answers
+     "why do chapters 6 and 12 give different numbers?", so the fix is
+     not to drop a column: both sessions are shown, side by side, each
+     one internally complete and labelled with the conditions that
+     separate it.  Session 1 = 2026-09-10, both heads running together on
+     the 3 A mains supply, both carrying the same 4.08 uL constant, n = 3
+     after the fourth dose was dropped on each channel for reservoir
+     exhaustion -- the pair chapter 12 publishes.  Session 2 = later the
+     same day, lines re-primed, run from the battery, one head at a time,
+     each head on its own constant -- chapter 6's calibrated column.
+     No row mixes them.  Every figure comes from VALIDATION-PLAN.md runs
+     4 and 5, or was already on the slide (bench head, occlusion gaps).
+     Chips and tables are HTML over the plate, never SVG <text>. ──── -->
 <section class="slide bk" id="b13" data-cue="b13" data-part="backup" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The pump constant does not transfer between heads.</h2>
+  <h2 class="slide__title">The pump constant does not transfer between heads, or between sessions.</h2>
   <div class="slide__rule"></div>
   <span class="bk__tag">Backup</span>
 
-  <div class="bk__facts">
-    <div class="bk__f"><span class="bk__v">4.53 µL</span><span class="bk__t">per stroke on the characterized bench head, at 180 rpm</span></div>
-    <div class="bk__f"><span class="bk__v">3.94 / 4.10</span><span class="bk__t">microlitres per stroke from the two integrated heads, printed from the identical qualified files</span></div>
-    <div class="bk__f"><span class="bk__v">≈ 10 %</span><span class="bk__t">both assembled heads under-deliver against the bench head, and the measured gap alone does not explain it</span></div>
-    <div class="bk__f"><span class="bk__v">+1.3 / −5.0 %</span><span class="bk__t">shift between sessions with lines re-primed and the supply changed: field instruments need on-device recalibration</span></div>
+  <p class="b13-shared">Both sessions 10 September 2026 &middot; the same two heads &middot; 1000 &micro;L commanded at 180 rpm</p>
+
+  <div class="bk__facts bk__facts--wide">
+    <div class="bk__f"><span class="bk__v">4.53 &micro;L</span><span class="bk__t">per stroke on the isolated bench head, at 180 rpm, at a CV of 0.25 &ndash; 0.34 %</span></div>
+    <div class="bk__f"><span class="bk__v">&asymp; 10 %</span><span class="bk__t">how far short of it both assembled heads fall, on gaps of 1.45 and 1.52 mm</span></div>
+    <div class="bk__f"><span class="bk__v">+1.3 / &minus;5.0 %</span><span class="bk__t">how far each head&rsquo;s measured &micro;L per stroke moved between the two sessions</span></div>
   </div>
 
-  <div class="bk__media">
-    <table class="bk__tbl">
-      <thead><tr><th>Head</th><th class="n">Gap</th><th class="n">µL / stroke</th><th class="n">vs 4.53</th><th class="n">CV</th></tr></thead>
-      <tbody>
-        <tr><td>Bench, characterized</td><td class="n">1.52 mm</td><td class="n">4.53</td><td class="n">—</td><td class="n">0.25 – 0.34 %</td></tr>
-        <tr><td>Channel 1, as built</td><td class="n">1.45 mm</td><td class="n">3.94</td><td class="n">−19.5 %</td><td class="n">1.04 %</td></tr>
-        <tr><td>Channel 2, as built</td><td class="n">1.52 mm</td><td class="n">4.10</td><td class="n">−17.8 %</td><td class="n">2.94 %</td></tr>
-      </tbody>
-    </table>
-    <span class="bk__cap">on their own constants both channels land inside ±10 %: −3.4 % and +0.6 %</span>
+  <div class="b13-sessions">
+
+    <div class="b13-s b13-s--a">
+      <div class="b13-hd">
+        <span class="b13-nm">Session 1 &mdash; both heads together</span>
+        <span class="b13-ch">Chapter 12</span>
+      </div>
+      <div class="b13-cond">
+        <span>3 A mains</span><span>one shared constant</span><span>n = 3, the 4th dose ran the vial dry</span>
+      </div>
+      <table class="b13-tbl">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+        <thead><tr>
+          <th>Head</th><th>Ran on<span class="b13-u">&micro;L/stroke</span></th><th>Measured<span class="b13-u">&micro;L/stroke</span></th><th>Error</th><th>CV</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Channel 1</td><td>4.08</td><td>3.940</td><td>&minus;3.4 %</td><td>0.71 %</td></tr>
+          <tr><td>Channel 2</td><td>4.08</td><td>4.103</td><td>+0.6 %</td><td>0.37 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="b13-s b13-s--b">
+      <div class="b13-hd">
+        <span class="b13-nm">Session 2 &mdash; one head at a time</span>
+        <span class="b13-ch">Chapter 6</span>
+      </div>
+      <div class="b13-cond">
+        <span>battery</span><span>own constant per head</span><span>lines re-primed</span><span>n = 3</span>
+      </div>
+      <table class="b13-tbl">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+        <thead><tr>
+          <th>Head</th><th>Ran on<span class="b13-u">&micro;L/stroke</span></th><th>Measured<span class="b13-u">&micro;L/stroke</span></th><th>Error</th><th>CV</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Channel 1</td><td>3.94</td><td>3.990</td><td>+1.3 %</td><td>1.04 %</td></tr>
+          <tr><td>Channel 2</td><td>4.08</td><td>3.896</td><td>&minus;4.5 %</td><td>2.94 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
+
+  <p class="b13-foot">Session 2 ran Channel 1 on the 3.94 constant Session 1 measured, so its +1.3 % error is that drift</p>
 
   <aside class="notes">
     <ul>
-      <li>Channel 2 matches the bench head&rsquo;s measured occlusion gap and still under-delivers.</li>
+      <li>Two weighing sessions, both on 10 September, both on the same two heads, a commanded 1000 &micro;L at 180 rpm. Everything that differs between them is written on the cards.</li>
+      <li>Session 1 is what chapter 12 publishes: both pumps running together on the 3 A mains supply, both carrying the same 4.08 &micro;L constant. Minus 3.4 and plus 0.6 %, at coefficients of variation of 0.71 and 0.37 %. Three doses each, because the fourth ran the 4 mL vial dry on both channels.</li>
+      <li>Session 2 is chapter 6&rsquo;s calibrated column: later the same day, lines re-primed, run from the battery, one head at a time, each head on the constant measured for it. Plus 1.3 and minus 4.5 %, at 1.04 and 2.94 %.</li>
+      <li>So if the question is why chapters 6 and 12 give different numbers &#8212; they are different sessions, and both are reported.</li>
+      <li>Why plus 1.3 % appears twice in the thesis: Session 2 commanded Channel 1 with exactly the 3.94 &micro;L constant Session 1 had measured on it, so the delivery error against command <em>is</em> the drift of the constant. One measurement described two ways.</li>
+      <li>The constants themselves moved plus 1.3 and minus 5.0 % between the sessions. Inside a session the machine repeats to about 1 %; across sessions it drifts by a few. That gap is the argument for an on-device recalibration routine, not an inconsistency.</li>
+      <li>Against the bench head both assembled heads are about 10 % short. Channel 2 matches the bench head&rsquo;s measured occlusion gap of 1.52 mm and still under-delivers.</li>
       <li>Live suspects: the unmeasured rotor radius, tubing batch variance, tube fatigue, back pressure, feed-line restriction.</li>
       <li>Each channel therefore carries its own calibration constant.</li>
     </ul>
@@ -8949,13 +9142,13 @@ body[data-view="guest"] .guest-dot {
         <tr><td>Safety</td><td>Electrical safety</td><td><span class="bk__vd bk__vd--exc">Excluded</span></td><td>Breadboard electronics; the low-battery lockout is unmet by design</td></tr>
       </tbody>
     </table>
-    <span class="bk__cap bk__cap--full">6 met · 3 partly met · 4 excluded · 1 not tested · 1 n/a · * the 5 µL lower bound is not yet validated</span>
+    <span class="bk__cap bk__cap--full">5 met · 1 by design · 3 partly met · 4 excluded · 1 not tested · 1 n/a · * the 5 µL lower bound is not yet validated</span>
   </div>
 
   <aside class="notes">
     <ul>
       <li>Uncalibrated, delivery fell roughly 18 % short; recalibrated on the instrument, −3.4 % and +0.6 %.</li>
-      <li>The excluded rows all trace back to two missing things: an enclosure and a circuit board.</li>
+      <li>Four excluded rows, three reasons: the operating envelope and wind wait on an enclosure, electrical safety on a real circuit board, and cleanability on a material that can be sanitised &#8212; printed PLA cannot, so a field machine needs metal or polypropylene on the sliding faces.</li>
     </ul>
   </aside>
 </section>
@@ -11643,6 +11836,9 @@ Deck.slide('s05b', function (el, gsap) {
   var shards = [q('#sp-shard-l'), q('#sp-shard-r')];
   var drain  = [q('#sp-drain'), q('#sp-drainhd')];
   var close  = q('.sp-close');
+  var lead   = q('#sp-lead');
+  var leadhd = q('#sp-leadhd');
+  var leadtx = q('.sp-leadtx');
   function dots(n, cls) { return qa('.sp-stage[data-n="' + n + '"] .' + cls + ' circle'); }
 
   /* Pinned in the builder so a seek can never catch a half-drawn stage. */
@@ -11653,6 +11849,11 @@ Deck.slide('s05b', function (el, gsap) {
   gsap.set(q('#sp-basin'), { drawSVG: '0%' });
   gsap.set(drain, { drawSVG: '0%' });
   gsap.set(close, { opacity: 0, y: 12 });
+  gsap.set(lead, { drawSVG: '0%' });
+  /* a filled head cannot DrawSVG, so it lands at the apex the instant the
+     leader finishes: to the room it reads as the same single gesture */
+  gsap.set(leadhd, { opacity: 0, scale: 0.4, svgOrigin: '139.2 73' });
+  gsap.set(leadtx, { opacity: 0 });
   [1, 2, 3].forEach(function (n) {
     gsap.set(dots(n, 'sp-target'), { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
     gsap.set(dots(n, 'sp-junk'), { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
@@ -11666,6 +11867,9 @@ Deck.slide('s05b', function (el, gsap) {
     .to(cell, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut' }, 'step0')
     .to(dots(1, 'sp-junk'), { opacity: 1, scale: 1, duration: 0.4, stagger: 0.06 }, 'step0+=0.35')
     .to(dots(1, 'sp-target'), { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 }, 'step0+=0.55')
+    .to(lead, { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step0+=0.85')
+    .to(leadhd, { opacity: 1, scale: 1, duration: 0.22, ease: 'back.out(2)' }, 'step0+=1.28')
+    .to(leadtx, { opacity: 1, duration: 0.4 }, 'step0+=0.95')
     .to(caps[0], { opacity: 1, y: 0, duration: 0.45 }, 'step0+=0.9')
     .addLabel('step1');
 
@@ -14426,36 +14630,19 @@ Deck.slide('s08a', function (el, gsap) {
     var ty    = el.querySelector('.d43__ty');
     var rule  = el.querySelector('.d43__rule');
     var names = el.querySelectorAll('.d43__nm, .d43__k');
-    var url   = el.querySelector('.d43__url');
-    var svg   = el.querySelector('#d43-qr');
-
-    /* the code plate: the real QR for https://sirsirio.github.io/thesis-tools/
-       (version 3, 29 modules, ECC M), one rect per dark module, revealed outward from the centre */
-    if (svg && !svg.childElementCount) {
-      var QR_ROWS=['11111110110010111010001111111','10000010001000001111001000001','10111010001110100100101011101','10111010111001101000101011101','10111010101000111110001011101','10000010110011000101101000001','11111110101010101010101111111','00000000101100010100000000000','10001011111000001100111111001','10110001100101011110001111111','11011111011111010100010010001','10011000111110110110101101011','00101110000110110101010100010','00101100110000110110011111111','01000110000111110010111111101','00010000100110101110010100011','11100111001011101110110100010','11010100110100111110001111011','00011111010101110010110000101','00100101101111011111101110011','11010010010111010101111111001','00000000110111111001100010001','11111110100010010111101011101','10000010000100101101100010011','10111010101101101101111111001','10111010011101011111010000001','10111010000100110101110001111','10000010011100010100100011011','11111110110000100101111010010'];
-      for (var y = 0; y < 29; y++) {
-        for (var x = 0; x < 29; x++) {
-          if (QR_ROWS[y].charAt(x) !== '1') continue;
-          var r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          r.setAttribute('x', String(x)); r.setAttribute('y', String(y));
-          r.setAttribute('width', '1'); r.setAttribute('height', '1');
-          r.setAttribute('data-d', String(Math.round(Math.hypot(x - 14, y - 14))));
-          svg.appendChild(r);
-        }
-      }
-    }
+    var q     = el.querySelector('.d43__q');
+    var qrule = el.querySelector('.d43__qrule');
 
     if (dip) gsap.fromTo(dip, { opacity: 1 }, { opacity: 0, duration: 0.9, ease: 'power2.out' });
     gsap.fromTo(ty, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'expo.out' });
     gsap.fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.8, delay: 0.5, ease: 'power3.inOut' });
     gsap.fromTo(names, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, delay: 0.6, stagger: 0.06, ease: 'expo.out' });
-    gsap.fromTo(url, { opacity: 0 }, { opacity: 1, duration: 0.6, delay: 1.4 });
 
-    var mods = svg ? svg.querySelectorAll('rect[data-d]') : [];
-    gsap.fromTo(mods, { opacity: 0, scale: 0.2, transformOrigin: '50% 50%' }, {
-      opacity: 1, scale: 1, duration: 0.42, delay: 0.35, ease: 'back.out(2)',
-      stagger: { each: 0.006, from: 'center' }
-    });
+    /* The invitation lands last and from the same distance as "Thank
+       you.", so the two words settle as a pair; its rule opens from the
+       middle outward, against the left rule which draws left to right. */
+    gsap.fromTo(q, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, delay: 1.05, ease: 'expo.out' });
+    gsap.fromTo(qrule, { scaleX: 0 }, { scaleX: 1, duration: 0.85, delay: 1.35, ease: 'power3.inOut' });
 
     /* The mark is not animated from here: it carries S00's own CSS turn,
        26 s linear and endless, so opening and closing run the same motif. */

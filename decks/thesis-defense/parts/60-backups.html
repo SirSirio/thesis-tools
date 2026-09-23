@@ -751,34 +751,91 @@
   </aside>
 </section>
 
-<!-- B13 ───────────────────────────────────────────────────────────── -->
+<!-- B13 · the two weighing sessions, kept apart ──────────────────
+     2026-09-23.  Until this revision the table paired the per-stroke
+     volumes of one session (3.94 / 4.10) with the coefficients of
+     variation of ANOTHER (1.04 / 2.94) in the same row, presenting two
+     weighing sessions as one experiment.  This is the slide that answers
+     "why do chapters 6 and 12 give different numbers?", so the fix is
+     not to drop a column: both sessions are shown, side by side, each
+     one internally complete and labelled with the conditions that
+     separate it.  Session 1 = 2026-09-10, both heads running together on
+     the 3 A mains supply, both carrying the same 4.08 uL constant, n = 3
+     after the fourth dose was dropped on each channel for reservoir
+     exhaustion -- the pair chapter 12 publishes.  Session 2 = later the
+     same day, lines re-primed, run from the battery, one head at a time,
+     each head on its own constant -- chapter 6's calibrated column.
+     No row mixes them.  Every figure comes from VALIDATION-PLAN.md runs
+     4 and 5, or was already on the slide (bench head, occlusion gaps).
+     Chips and tables are HTML over the plate, never SVG <text>. ──── -->
 <section class="slide bk" id="b13" data-cue="b13" data-part="backup" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The pump constant does not transfer between heads.</h2>
+  <h2 class="slide__title">The pump constant does not transfer between heads, or between sessions.</h2>
   <div class="slide__rule"></div>
   <span class="bk__tag">Backup</span>
 
-  <div class="bk__facts">
-    <div class="bk__f"><span class="bk__v">4.53 µL</span><span class="bk__t">per stroke on the characterized bench head, at 180 rpm</span></div>
-    <div class="bk__f"><span class="bk__v">3.94 / 4.10</span><span class="bk__t">microlitres per stroke from the two integrated heads, printed from the identical qualified files</span></div>
-    <div class="bk__f"><span class="bk__v">≈ 10 %</span><span class="bk__t">both assembled heads under-deliver against the bench head, and the measured gap alone does not explain it</span></div>
-    <div class="bk__f"><span class="bk__v">+1.3 / −5.0 %</span><span class="bk__t">shift between sessions with lines re-primed and the supply changed: field instruments need on-device recalibration</span></div>
+  <p class="b13-shared">Both sessions 10 September 2026 &middot; the same two heads &middot; 1000 &micro;L commanded at 180 rpm</p>
+
+  <div class="bk__facts bk__facts--wide">
+    <div class="bk__f"><span class="bk__v">4.53 &micro;L</span><span class="bk__t">per stroke on the isolated bench head, at 180 rpm, at a CV of 0.25 &ndash; 0.34 %</span></div>
+    <div class="bk__f"><span class="bk__v">&asymp; 10 %</span><span class="bk__t">how far short of it both assembled heads fall, on gaps of 1.45 and 1.52 mm</span></div>
+    <div class="bk__f"><span class="bk__v">+1.3 / &minus;5.0 %</span><span class="bk__t">how far each head&rsquo;s measured &micro;L per stroke moved between the two sessions</span></div>
   </div>
 
-  <div class="bk__media">
-    <table class="bk__tbl">
-      <thead><tr><th>Head</th><th class="n">Gap</th><th class="n">µL / stroke</th><th class="n">vs 4.53</th><th class="n">CV</th></tr></thead>
-      <tbody>
-        <tr><td>Bench, characterized</td><td class="n">1.52 mm</td><td class="n">4.53</td><td class="n">—</td><td class="n">0.25 – 0.34 %</td></tr>
-        <tr><td>Channel 1, as built</td><td class="n">1.45 mm</td><td class="n">3.94</td><td class="n">−19.5 %</td><td class="n">1.04 %</td></tr>
-        <tr><td>Channel 2, as built</td><td class="n">1.52 mm</td><td class="n">4.10</td><td class="n">−17.8 %</td><td class="n">2.94 %</td></tr>
-      </tbody>
-    </table>
-    <span class="bk__cap">on their own constants both channels land inside ±10 %: −3.4 % and +0.6 %</span>
+  <div class="b13-sessions">
+
+    <div class="b13-s b13-s--a">
+      <div class="b13-hd">
+        <span class="b13-nm">Session 1 &mdash; both heads together</span>
+        <span class="b13-ch">Chapter 12</span>
+      </div>
+      <div class="b13-cond">
+        <span>3 A mains</span><span>one shared constant</span><span>n = 3, the 4th dose ran the vial dry</span>
+      </div>
+      <table class="b13-tbl">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+        <thead><tr>
+          <th>Head</th><th>Ran on<span class="b13-u">&micro;L/stroke</span></th><th>Measured<span class="b13-u">&micro;L/stroke</span></th><th>Error</th><th>CV</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Channel 1</td><td>4.08</td><td>3.940</td><td>&minus;3.4 %</td><td>0.71 %</td></tr>
+          <tr><td>Channel 2</td><td>4.08</td><td>4.103</td><td>+0.6 %</td><td>0.37 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="b13-s b13-s--b">
+      <div class="b13-hd">
+        <span class="b13-nm">Session 2 &mdash; one head at a time</span>
+        <span class="b13-ch">Chapter 6</span>
+      </div>
+      <div class="b13-cond">
+        <span>battery</span><span>own constant per head</span><span>lines re-primed</span><span>n = 3</span>
+      </div>
+      <table class="b13-tbl">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+        <thead><tr>
+          <th>Head</th><th>Ran on<span class="b13-u">&micro;L/stroke</span></th><th>Measured<span class="b13-u">&micro;L/stroke</span></th><th>Error</th><th>CV</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Channel 1</td><td>3.94</td><td>3.990</td><td>+1.3 %</td><td>1.04 %</td></tr>
+          <tr><td>Channel 2</td><td>4.08</td><td>3.896</td><td>&minus;4.5 %</td><td>2.94 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
+
+  <p class="b13-foot">Session 2 ran Channel 1 on the 3.94 constant Session 1 measured, so its +1.3 % error is that drift</p>
 
   <aside class="notes">
     <ul>
-      <li>Channel 2 matches the bench head&rsquo;s measured occlusion gap and still under-delivers.</li>
+      <li>Two weighing sessions, both on 10 September, both on the same two heads, a commanded 1000 &micro;L at 180 rpm. Everything that differs between them is written on the cards.</li>
+      <li>Session 1 is what chapter 12 publishes: both pumps running together on the 3 A mains supply, both carrying the same 4.08 &micro;L constant. Minus 3.4 and plus 0.6 %, at coefficients of variation of 0.71 and 0.37 %. Three doses each, because the fourth ran the 4 mL vial dry on both channels.</li>
+      <li>Session 2 is chapter 6&rsquo;s calibrated column: later the same day, lines re-primed, run from the battery, one head at a time, each head on the constant measured for it. Plus 1.3 and minus 4.5 %, at 1.04 and 2.94 %.</li>
+      <li>So if the question is why chapters 6 and 12 give different numbers &#8212; they are different sessions, and both are reported.</li>
+      <li>Why plus 1.3 % appears twice in the thesis: Session 2 commanded Channel 1 with exactly the 3.94 &micro;L constant Session 1 had measured on it, so the delivery error against command <em>is</em> the drift of the constant. One measurement described two ways.</li>
+      <li>The constants themselves moved plus 1.3 and minus 5.0 % between the sessions. Inside a session the machine repeats to about 1 %; across sessions it drifts by a few. That gap is the argument for an on-device recalibration routine, not an inconsistency.</li>
+      <li>Against the bench head both assembled heads are about 10 % short. Channel 2 matches the bench head&rsquo;s measured occlusion gap of 1.52 mm and still under-delivers.</li>
       <li>Live suspects: the unmeasured rotor radius, tubing batch variance, tube fatigue, back pressure, feed-line restriction.</li>
       <li>Each channel therefore carries its own calibration constant.</li>
     </ul>
@@ -1043,13 +1100,13 @@
         <tr><td>Safety</td><td>Electrical safety</td><td><span class="bk__vd bk__vd--exc">Excluded</span></td><td>Breadboard electronics; the low-battery lockout is unmet by design</td></tr>
       </tbody>
     </table>
-    <span class="bk__cap bk__cap--full">6 met · 3 partly met · 4 excluded · 1 not tested · 1 n/a · * the 5 µL lower bound is not yet validated</span>
+    <span class="bk__cap bk__cap--full">5 met · 1 by design · 3 partly met · 4 excluded · 1 not tested · 1 n/a · * the 5 µL lower bound is not yet validated</span>
   </div>
 
   <aside class="notes">
     <ul>
       <li>Uncalibrated, delivery fell roughly 18 % short; recalibrated on the instrument, −3.4 % and +0.6 %.</li>
-      <li>The excluded rows all trace back to two missing things: an enclosure and a circuit board.</li>
+      <li>Four excluded rows, three reasons: the operating envelope and wind wait on an enclosure, electrical safety on a real circuit board, and cleanability on a material that can be sanitised &#8212; printed PLA cannot, so a field machine needs metal or polypropylene on the sliding faces.</li>
     </ul>
   </aside>
 </section>
@@ -1640,6 +1697,99 @@
 
 /* B14 and B18 carry a live tool card beside their facts */
 #b14 .bk__facts, #b18 .bk__facts { width: 528px; }
+/* ---- b13 · two weighing sessions, kept apart ---------------------
+   Everything is scoped to #b13.  The two cards are structurally
+   identical -- same five columns in the same order -- so the eye
+   compares them row for row and the only differences it can find are
+   the ones the chips declare.  Session 1 carries the accent edge
+   because it is the published pair; Session 2 carries a neutral one.
+   Nothing here is SVG: chips and tables are HTML over the plate. */
+#b13 .b13-shared {
+  position: absolute; left: 56px; top: 202px; width: 1168px; margin: 0;
+  font-family: var(--mono); font-size: 18px; line-height: 1.35;
+  letter-spacing: 0.02em; color: var(--text-muted);
+}
+#b13 .bk__facts--wide { top: 244px; }
+#b13 .bk__f { padding-bottom: 10px; }
+
+#b13 .b13-sessions {
+  position: absolute; left: 56px; top: 372px; width: 1168px; height: 254px;
+}
+#b13 .b13-s {
+  position: absolute; top: 0; width: 568px; height: 100%;
+  padding: 16px 20px 16px 22px;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+#b13 .b13-s::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+#b13 .b13-s--a { left: 0; }
+#b13 .b13-s--b { left: 600px; }
+#b13 .b13-s--a::before { background: linear-gradient(180deg, var(--t-a), var(--t-b)); }
+#b13 .b13-s--b::before { background: rgba(240,236,232,0.45); }
+
+#b13 .b13-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+#b13 .b13-nm {
+  font-family: var(--mono); font-size: 20px; font-weight: 700;
+  letter-spacing: 0.01em; line-height: 1.25; color: var(--text); white-space: nowrap;
+}
+#b13 .b13-ch {
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.25;
+  color: var(--text-muted); white-space: nowrap;
+}
+
+#b13 .b13-cond { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 6px 8px; }
+#b13 .b13-cond > span {
+  padding: 3px 9px 2px;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-family: var(--mono); font-size: 18px; line-height: 1.2;
+  color: var(--text-soft); white-space: nowrap;
+}
+
+#b13 .b13-tbl {
+  width: 100%; margin-top: 11px;
+  border-collapse: collapse; table-layout: fixed;
+  font-family: var(--mono); font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+#b13 .b13-tbl col.c1 { width: 130px; }
+#b13 .b13-tbl col.c2 { width: 114px; }
+#b13 .b13-tbl col.c3 { width: 114px; }
+#b13 .b13-tbl col.c4 { width: 82px; }
+#b13 .b13-tbl col.c5 { width: 86px; }
+#b13 .b13-tbl th {
+  padding: 0 0 6px; text-align: right; vertical-align: bottom;
+  font-size: 18px; font-weight: 700; line-height: 1.14;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid color-mix(in srgb, var(--t-a) 34%, transparent);
+}
+#b13 .b13-tbl td {
+  padding: 7px 0 6px; text-align: right;
+  line-height: 1.25; color: var(--text); white-space: nowrap;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+#b13 .b13-tbl .b13-u {
+  display: block; text-transform: none;
+  letter-spacing: 0.01em; font-weight: 700;
+}
+#b13 .b13-tbl th:first-child, #b13 .b13-tbl td:first-child { text-align: left; }
+#b13 .b13-s--b .b13-tbl th { border-bottom-color: rgba(240,236,232,0.26); }
+
+#b13 .b13-foot {
+  position: absolute; left: 56px; top: 638px; width: 1168px; margin: 0;
+  font-family: var(--mono); font-size: 18px; line-height: 1.35;
+  color: var(--text-muted);
+}
+
 /* ---- b24 · precision and accuracy (was Part I) ---- */
 /* ══ S04e · accuracy and precision, then the span ══════════════════════
    Everything is scoped to #b24. The boards keep the printed figure's

@@ -37,7 +37,7 @@
 <!-- ░░ S05b · What sample preparation is ░░ three steps -->
 <section class="slide" id="s05b" data-cue="s05b" data-dialect="cards" data-part="I"
          data-map="none" style="--head-h:48px; --title-w:1000px">
-  <h2 class="slide__title">The target arrives locked inside, and the chemistry that frees it must then be washed out.</h2>
+  <h2 class="slide__title">Sample preparation is what turns a raw swab into something a test can read.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -51,6 +51,14 @@
         <circle cx="140" cy="84" r="8"/><circle cx="180" cy="92" r="8"/>
         <circle cx="150" cy="118" r="8"/><circle cx="182" cy="122" r="8"/>
       </g>
+      <!-- The dot is (140,84) r=8. The head's apex stands off 3 units from its
+           edge, i.e. 11 from the centre, at (139.2,73), so head and dot stay two
+           objects on a projector. The head is a FILLED triangle 11 long and 8.4
+           wide, built on the leader's end tangent (0.2747,0.9615), and the
+           leader stops 2 units inside it so the stroke never pokes through. -->
+      <path class="sp-lead" id="sp-lead" d="M 96 26 C 120 30 130.7 43.3 136.7 64.3"/>
+      <path class="sp-lead sp-lead--hd" id="sp-leadhd" d="M 139.2 73 L 132.1 63.6 L 140.2 61.3 Z"/>
+      <text class="sp-leadtx" x="88" y="32">target</text>
       <g class="sp-junk" data-g="1">
         <circle cx="52" cy="62" r="7"/><circle cx="268" cy="70" r="7"/>
         <circle cx="66" cy="148" r="7"/><circle cx="262" cy="152" r="7"/>
@@ -1159,6 +1167,17 @@
   stroke-linecap: round;
 }
 #s05b .sp-target circle { fill: var(--accent); }
+/* one pointer, so nobody has to guess which dots are the thing being looked for */
+#s05b .sp-lead {
+  fill: none; stroke: var(--accent); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* filled, not a 2px chevron: an open head disappears on a projector */
+#s05b .sp-lead--hd { fill: var(--accent); stroke: none; }
+#s05b .sp-leadtx {
+  font-family: var(--mono); font-size: 20px; fill: var(--accent);
+  text-anchor: end;
+}
 /* the grey is the second protagonist — at 0.24 it did not survive a
    projector, and “separated from everything else” needs the everything else */
 #s05b .sp-junk circle { fill: rgba(240, 236, 232, 0.42); }
@@ -1828,6 +1847,9 @@ Deck.slide('s05b', function (el, gsap) {
   var shards = [q('#sp-shard-l'), q('#sp-shard-r')];
   var drain  = [q('#sp-drain'), q('#sp-drainhd')];
   var close  = q('.sp-close');
+  var lead   = q('#sp-lead');
+  var leadhd = q('#sp-leadhd');
+  var leadtx = q('.sp-leadtx');
   function dots(n, cls) { return qa('.sp-stage[data-n="' + n + '"] .' + cls + ' circle'); }
 
   /* Pinned in the builder so a seek can never catch a half-drawn stage. */
@@ -1838,6 +1860,11 @@ Deck.slide('s05b', function (el, gsap) {
   gsap.set(q('#sp-basin'), { drawSVG: '0%' });
   gsap.set(drain, { drawSVG: '0%' });
   gsap.set(close, { opacity: 0, y: 12 });
+  gsap.set(lead, { drawSVG: '0%' });
+  /* a filled head cannot DrawSVG, so it lands at the apex the instant the
+     leader finishes: to the room it reads as the same single gesture */
+  gsap.set(leadhd, { opacity: 0, scale: 0.4, svgOrigin: '139.2 73' });
+  gsap.set(leadtx, { opacity: 0 });
   [1, 2, 3].forEach(function (n) {
     gsap.set(dots(n, 'sp-target'), { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
     gsap.set(dots(n, 'sp-junk'), { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
@@ -1851,6 +1878,9 @@ Deck.slide('s05b', function (el, gsap) {
     .to(cell, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut' }, 'step0')
     .to(dots(1, 'sp-junk'), { opacity: 1, scale: 1, duration: 0.4, stagger: 0.06 }, 'step0+=0.35')
     .to(dots(1, 'sp-target'), { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 }, 'step0+=0.55')
+    .to(lead, { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step0+=0.85')
+    .to(leadhd, { opacity: 1, scale: 1, duration: 0.22, ease: 'back.out(2)' }, 'step0+=1.28')
+    .to(leadtx, { opacity: 1, duration: 0.4 }, 'step0+=0.95')
     .to(caps[0], { opacity: 1, y: 0, duration: 0.45 }, 'step0+=0.9')
     .addLabel('step1');
 

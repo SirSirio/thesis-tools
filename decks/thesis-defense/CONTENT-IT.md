@@ -729,18 +729,21 @@ barre sono gli scarti, e la graffa arancione è il punto di tutta la slide.*
   provata isolata al banco. È esattamente il divario che la ricalibrazione
   assorbe.
 - **Quanto ripete, da una dose all'altra.** Sullo schermo c'è scritto per esteso
-  di che numero si tratta: il **coefficiente di variazione** su **tre dosi da
-  1000 µL per ciascun canale**. Viene **1,04 %** sul canale 1 e **2,94 %** sul
-  canale 2. (È la dispersione delle ripetizioni: quanto una dose somiglia alla
-  precedente, che è cosa diversa dallo scarto dal bersaglio di cui sopra.)
-- *Non è scritto sulla slide, ma lo dico se serve:* la testa provata **da sola
-  al banco** stava intorno allo **0,3 %**. Quindi quasi tutta la dispersione che
-  si vede qui viene dalla **linea montata sulla macchina**, non dal rotore.
-- *Non è scritto sulla slide, ma lo dico:* fra una sessione e l'altra, con le
-  linee ri-innescate e un alimentatore diverso, le costanti si sono spostate di
-  **+1,3 %** e **−5,0 %**. È la ragione per cui uno strumento da campo deve
-  potersi **ricalibrare da solo**, invece di fidarsi di un numero impostato in
-  fabbrica.
+  di che numero si tratta: il **coefficiente di variazione** su **tre dosi
+  consecutive da 1000 µL per ciascun canale, nella stessa sessione**. Viene
+  **0,71 %** sul canale 1 e **0,37 %** sul canale 2 — e sono le stesse identiche
+  dosi da cui vengono le barre qui sopra.
+- **Attenzione a non confondere due cose diverse**, perché è tutto il punto:
+  - **Ripetibilità dentro una sessione** è quanto una dose somiglia alla
+    precedente, adesso, con la macchina montata e le linee già innescate:
+    **0,71 %** e **0,37 %**. È quello che si vede sullo schermo.
+  - **Accordo fra sessioni** è un'altra grandezza: se si svuotano le linee, si
+    riempiono di nuovo e si riaccende la macchina un altro giorno, **la costante
+    si sposta**. Fra le due sessioni del 10 settembre si è spostata
+    del **+1,3 %** e del **−5,0 %**.
+- *Non è scritto sulla slide, ma lo dico:* è proprio quel secondo numero la
+  ragione per cui uno strumento da campo deve potersi **ricalibrare da solo**.
+  Ripetere bene oggi non garantisce di ripetere lo stesso domani.
 
 ### 38 · `s32` — dosaggio non presidiato, validato su cinque rack e quaranta provette
 
@@ -917,8 +920,8 @@ cinquantina, costruito»**.*
     per esteso: due concetti peristaltici sono stati portati avanti **in
     parallelo** fino a prototipi funzionanti — quello rotativo mio, e una
     **pompa peristaltica lineare a camera sviluppata da Marius Schiller nella
-    tesi parallela**. Di quella pompa non esiste nessuna fotografia, quindi al
-    suo posto c'è lo schema che avevo già disegnato per la Parte II.
+    tesi parallela**. Adesso nel riquadro c'è **la fotografia della sua pompa**,
+    che mi ha passato lui: prima c'era solo un disegnino schematico.
   - **Pompa a siringa — misurata, mai costruita.** L'ho **misurata su uno
     strumento da laboratorio commerciale**, per avere un termine di paragone
     sull'accuratezza di dosaggio. **Non ne ho costruita una**: è proprio questa
@@ -1019,15 +1022,20 @@ alla fine lascia il posto alla macchina all'aperto. Tre tempi, detti piano.*
 
 ### 49 · `s43` — grazie
 
-- **Grazie.** Sullo schermo restano i nomi, l'indirizzo del sito e il codice QR.
+- **Grazie.** Sullo schermo restano due parole grandi, una per lato: a sinistra
+  **«Thank you.»** sopra i nomi, a destra **«Questions?»** sopra il simbolo della
+  pompa che gira. Il codice QR e l'indirizzo del sito **sono stati tolti**: non
+  c'è più niente da leggere, solo da guardare.
 - **I relatori: Maria Dimaki, Winnie Edith Svendsen, Lars Hvam.**
 - **E poi Marius Dornonville de la Cour Schiller** — il progetto parallelo, e il
   **modulo di stoccaggio** che mi ha consegnato come hardware funzionante — **e
   Pulkit Saluja**.
-- L'indirizzo, **sirsirio.github.io/thesis-tools**, e il QR restano sullo schermo
-  per tutte le domande: da lì si aprono gli strumenti, i prototipi e i dati.
-- *Un dettaglio, per chi lo nota:* il **simbolo della pompa che gira**, in basso,
-  è **lo stesso identico** della schermata di attesa con cui si è aperta la
+- **È questa la slide che resterete a guardare per tutta la sessione di
+  domande**: resta lì, ferma, mentre si parla. È composta per quello — due
+  parole, i nomi, e il simbolo che continua a girare.
+- *Un dettaglio, per chi lo nota:* il **simbolo della pompa che gira**, sotto
+  la parola «Questions?», è **lo stesso identico** della schermata di attesa
+  con cui si è aperta la
   difesa — stesso disegno, stesso alone, stessa rotazione lenta e continua. Si
   chiude come si era cominciato.
 - Dopo questa slide ci sono le slide di riserva, tenute in fondo apposta per le
@@ -1205,6 +1213,67 @@ ritorno le misure che tarano il modello**. Il braccio di ritorno è disegnato
   pesata prima e una dopo, per misurare quanto deriva il dosaggio mentre il tubo
   si consuma.
 
+### `b13` — la costante della pompa non si trasferisce da una testa all'altra, né da una sessione all'altra
+*(ricostruita il 23-09-2026. **È la slide che Sirio mette se qualcuno della
+commissione nota che il capitolo 6 e il capitolo 12 danno numeri diversi.** La
+risposta è semplice: non sono due risultati in contraddizione, **sono due
+sessioni di misura diverse**, e la tesi le riporta tutte e due.)*
+
+*Sullo schermo due schede **identiche nella forma**, una accanto all'altra: una
+per sessione. Proprio perché sono costruite uguali, quello che salta all'occhio
+è **in che cosa differiscono**.*
+
+- **Che cosa hanno in comune**, scritto in cima: tutte e due il **10 settembre
+  2026**, **le stesse due teste** di pompa, e sempre **1000 µL comandati a 180
+  giri al minuto**. Non è che una sia una prova seria e l'altra no: cambiano le
+  **condizioni**, e sono scritte sulle schede.
+- **Tre numeri in alto, per inquadrare:**
+  - **4,53 µL a passo** — quanto dava la testa provata **da sola al banco**, con
+    una dispersione fra lo 0,25 % e lo 0,34 %.
+  - **≈ 10 %** — quanto **meno** di quel valore danno tutte e due le teste una
+    volta **montate nella macchina**, pur avendo luci di occlusione di 1,45 e
+    1,52 mm.
+  - **+1,3 / −5,0 %** — di quanto si è spostata, fra una sessione e l'altra, la
+    quantità misurata che ogni testa dosa a ogni passo.
+- **Sessione 1 — le due teste insieme** (è quella che pubblica il **capitolo
+  12**): alimentazione **di rete a 3 A**, **una sola costante** uguale per tutte
+  e due, **tre dosi** per canale, perché la quarta svuotava il flaconcino.
+  Canale 1: impostato su 4,08, misurato 3,940, errore **−3,4 %**, dispersione
+  **0,71 %**. Canale 2: impostato su 4,08, misurato 4,103, errore **+0,6 %**,
+  dispersione **0,37 %**.
+- **Sessione 2 — una testa per volta** (è la colonna del **capitolo 6**): a
+  **batteria**, **ogni testa con la sua costante**, **linee ri-innescate**, tre
+  dosi. Canale 1: impostato su 3,94, misurato 3,990, errore **+1,3 %**,
+  dispersione **1,04 %**. Canale 2: impostato su 4,08, misurato 3,896, errore
+  **−4,5 %**, dispersione **2,94 %**.
+- **Il trucco per leggerle è la coppia «impostato su» / «misurato».** Guardando
+  quelle due colonne si vede la deriva senza bisogno di una terza tabella. E in
+  fondo alla slide c'è scritto a chiare lettere: **la sessione 2 ha comandato il
+  canale 1 proprio con il 3,94 che la sessione 1 aveva misurato**, quindi quel
+  **+1,3 %** non è un errore nuovo: è **la deriva stessa**, la stessa cosa
+  raccontata in due modi.
+- **La conclusione, ed è il motivo per cui la slide esiste:** dentro una
+  sessione la macchina ripete bene, intorno all'1 %; **fra una sessione e
+  l'altra** la costante si sposta di qualche punto percentuale. Non è
+  un'incoerenza della tesi: è **la ragione per cui uno strumento da campo deve
+  potersi ricalibrare da solo**, invece di fidarsi di un numero fissato in
+  fabbrica. E per la stessa ragione **ogni canale si porta dietro la propria
+  costante**.
+
+### `b21` — i verdetti sui requisiti, uno per riga, con la motivazione
+*(una cifra corretta il 23-09-2026.)*
+
+- È la tabella completa dei **quindici requisiti**, quella che nel discorso
+  compare riassunta in targhette: gruppo, requisito, verdetto e **su che cosa si
+  basa quel verdetto**.
+- Il conteggio in fondo diceva «6 soddisfatti» ed era sbagliato: la tabella
+  della tesi ne ha **5 soddisfatti più 1 «per come è progettata»** — quello
+  sulla contaminazione incrociata, che la riga stessa già chiamava così. Adesso
+  legge: **5 soddisfatti · 1 per progetto · 3 in parte · 4 esclusi · 1 non
+  provato · 1 non applicabile**, che fa **15**.
+- L'asterisco sulla versatilità resta e dice quello che deve dire: **il limite
+  inferiore da 5 µL non è ancora stato validato**.
+
 ## Da fare
 
 - Parte II: scritti il divisore, le slide della pompa fino a `s16`, poi `s17`,
@@ -1214,7 +1283,7 @@ ritorno le misure che tarano il modello**. Il braccio di ritorno è disegnato
 - Parte III: **completa** (22-09-2026). Da `s25` fino alla chiusura `s43`,
   divisori compresi: non manca nessuna slide. `s39` è stata spostata in
   appendice e i suoi punti sono lì.
-- Appendice: scritte `s12`, `s39`, `s04c`, `b25` e `b26`. Le `B01`–`B24` non
-  sono ancora state scritte in italiano.
+- Appendice: scritte `s12`, `s39`, `s04c`, `b25`, `b26`, `b13` e `b21`. Le
+  altre `B01`–`B24` non sono ancora state scritte in italiano.
 - Rileggere i numeri: i punti qui sopra devono riportare le stesse cifre delle slide
   inglesi, mai arrotondate diversamente.

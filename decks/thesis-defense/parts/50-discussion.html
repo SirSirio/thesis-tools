@@ -145,45 +145,50 @@
       <span class="kicker">Pump — breadth and depth</span>
       <span class="d38__bd">3 concepts, 4 builds</span>
 
-      <div class="d38__slot" style="left:56px; top:475px; width:175px; height:135px">
-        <svg viewBox="0 -12 200 154" aria-hidden="true">
-          <path class="d38-tube" d="M 14 78 L 186 78" stroke-width="7" />
-          <path class="d38-ln" d="M 30 66 L 30 90 L 52 66 L 52 90 Z" stroke-width="3" />
-          <path class="d38-ln" d="M 148 66 L 148 90 L 170 66 L 170 90 Z" stroke-width="3" />
-          <path class="d38-ln d38-soft" d="M 14 104 L 186 104 L 186 112 L 14 112 Z" stroke-width="3" />
-          <path class="d38-ln d38-soft" d="M 84 30 L 116 30 L 116 60 L 84 60 Z" stroke-width="3" />
-          <circle class="d38-ln d38-soft" cx="100" cy="69" r="9" stroke-width="3" />
-          <path class="d38-ln" d="M 100 30 L 100 16" stroke-width="3" />
-        </svg>
+      <!-- Row geometry, 2026-09-23.  The schematic that stood in for the
+           linear pinch pump is gone: Sirio's photograph of Marius's build
+           arrived (973 x 611, ratio 1.5925) and the row was rebalanced
+           around its landscape shape rather than the photograph being
+           forced into the old 175 px box.  Three frames bottom-aligned on
+           y 610, 35 px apart, spanning 56 to 611:
+
+             230 x 146   photo   1.5925 landscape   top 464
+             105 x 186   video   9:16    portrait   top 424
+             150 x 146   render  1.0293  near-square top 464
+
+           Every frame carries the picture's own ratio, so object-fit:
+           contain fills it with no letterbox and nothing is cropped.  The
+           two stills share a height; the portrait clip is the tall one in
+           the middle, which is what makes the row read as a row.  Each
+           caption is centred on the frame it names. -->
+      <div class="d38__slot" style="left:56px; top:464px; width:230px; height:146px">
+        <img data-src="../../assets/media/pump/MariusPump.png"
+             alt="Photograph of Marius's linear pinch pump: the lead screw, the carriage that pinches the tubing, the printed end pieces and the stepper motor." />
       </div>
-      <span class="d38__cap" style="left:56px; width:175px">Linear pinch</span>
-      <span class="d38__cq" style="left:56px; width:175px">Marius&rsquo;s, built</span>
+      <span class="d38__cap" style="left:56px; width:230px; text-align:center">Linear pinch</span>
+      <span class="d38__cq" style="left:56px; width:230px; text-align:center">Marius&rsquo;s, built</span>
 
       <!-- The syringe pump was measured on a commercial laboratory
            instrument and never built here.  The clip is portrait
-           (720 x 1280), so it gets a 9:16 box of its own and the row is
-           rebalanced around it — 175 / 105 / 175 with 50 px between —
-           rather than being cropped into the old 4:3 slot. -->
-      <div class="d38__slot" style="left:281px; top:424px; width:105px; height:186px">
+           (720 x 1280), so it keeps a 9:16 box of its own. -->
+      <div class="d38__slot" style="left:321px; top:424px; width:105px; height:186px">
         <video data-src="../../assets/media/pump/syringe-pump-bench.mp4"
                poster="../../assets/media/pump/syringe-pump-bench-poster.jpg"
                muted loop playsinline preload="none"></video>
       </div>
-      <!-- caption centred on the 105 px slot, not the 155 px it used to
-           claim: at 155 it overhung the picture and crowded "Rotary". -->
-      <span class="d38__cap" style="left:281px; width:105px; text-align:center">Syringe</span>
+      <span class="d38__cap" style="left:321px; width:105px; text-align:center">Syringe</span>
       <!-- "benchmarked" sets 109 px wide and cannot break, so its box is
            widened by 2 px each side to keep the word centred on the
-           slot (centre 333.5) instead of spilling to the right. -->
-      <span class="d38__cq" style="left:279px; width:109px; text-align:center">benchmarked</span>
+           slot (centre 373.5) instead of spilling to the right. -->
+      <span class="d38__cq" style="left:319px; width:109px; text-align:center">benchmarked</span>
 
-      <div class="d38__slot" style="left:436px; top:440px; width:175px; height:170px">
+      <div class="d38__slot" style="left:461px; top:464px; width:150px; height:146px">
         <img data-src="../../assets/media/pump/v23-render.png"
              alt="CAD render of the v2.3 rotary pump head, the four-roller rotor inside its housing." />
         <span class="d38__tag">4 builds</span>
       </div>
-      <span class="d38__cap" style="left:436px; width:175px">Rotary</span>
-      <span class="d38__cq" style="left:436px; width:175px">mine, chosen</span>
+      <span class="d38__cap" style="left:461px; width:150px; text-align:center">Rotary</span>
+      <span class="d38__cq" style="left:461px; width:150px; text-align:center">mine, chosen</span>
     </div>
 
     <!-- evidence column: the alignment module -->
@@ -456,10 +461,18 @@
     <span class="d43__nm" style="top:548px">Marius Dornonville de la Cour Schiller</span>
     <span class="d43__nm" style="top:586px">Pulkit Saluja</span>
 
-    <div class="paper d43__qr">
-      <svg viewBox="0 0 29 29" role="img" aria-label="QR code linking to sirsirio.github.io/thesis-tools" id="d43-qr"></svg>
-    </div>
-    <span class="d43__url">sirsirio.github.io/thesis-tools</span>
+    <!-- The right column, 2026-09-23: the QR plate and the site address
+         are gone (Sirio: remove the QR, remove the website).  What stands
+         in their place is the invitation, built as the twin of the left
+         column — the same display face, the same top, the same rule 34 px
+         under the word — so the slide reads as one line of two words,
+         "Thank you." and "Questions?", each over its own rule.  The left
+         column then carries the names, the right one the turning mark.
+         This is the slide that sits on the projector for the whole
+         question session, so it is composed to be looked at, not to be
+         read once. -->
+    <h2 class="d43__q">Questions?</h2>
+    <div class="d43__qrule"></div>
 
     <!-- The hold screen's mark, copied drawing for drawing from S00 in
          parts/10-opening.html: the same 120 box, the same r 52 breathing
@@ -483,8 +496,8 @@
   <aside class="notes">
     <ul>
       <li>Thank the supervisors, Marius and Pulkit by name.</li>
-      <li>The site address and the QR stay up for the questions.</li>
-      <li>Backup slides follow; say that questions are welcome.</li>
+      <li>Then open the floor: this slide stays on the projector for the whole question session, so let it sit there and stop talking.</li>
+      <li>Backup slides are one press away and are reached by number — the appendix slate lists them; jump to one when a question calls for it and come back here.</li>
     </ul>
   </aside>
 </section>
@@ -614,8 +627,8 @@
 #s38 .d38__shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* the pump column: three concepts, one frame each, nothing cropped.
-   Frame heights are equal and widths follow each picture, so object-fit:
-   contain fills the box without trimming any photograph. */
+   Each frame is set to its own picture's ratio in the markup, so
+   object-fit: contain fills the box without trimming any photograph. */
 #s38 .d38__slot {
   position: absolute;
   overflow: hidden;
@@ -626,10 +639,6 @@
 }
 #s38 .d38__slot img,
 #s38 .d38__slot video { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s38 .d38__slot svg { display: block; width: 100%; height: 100%; }
-#s38 .d38-ln   { fill: none; stroke: var(--text); stroke-linejoin: round; stroke-linecap: round; }
-#s38 .d38-soft { fill: rgba(255,255,255,0.10); }
-#s38 .d38-tube { fill: none; stroke: var(--t-a); stroke-linecap: round; }
 #s38 .d38__tag {
   position: absolute; left: 10px; bottom: 10px;
   padding: 3px 11px; border-radius: 999px;
@@ -926,20 +935,29 @@
 }
 #s43 .d43__k { position: absolute; left: 96px; }
 #s43 .d43__nm { position: absolute; left: 96px; font-size: 24px; line-height: 1.2; color: var(--text-soft); }
-/* The right-hand column is one stack on the 1002 px axis: code plate,
-   address, mark.  The plate came down from 292 to 224 on 2026-09-23
-   (Sirio: make the QR smaller) — 192 px of code over 29 modules, 6.6 px
-   a module at stage scale, 9.9 px on a 1920 projector, still an easy
-   read for a phone — and the column was re-centred around it. */
-#s43 .d43__qr {
-  position: absolute; left: 890px; top: 168px; width: 224px; height: 224px;
-  padding: 16px; box-shadow: 0 18px 44px rgba(0,0,0,0.55);
+/* The right-hand column is one stack on the 1002 px axis — the mark's own
+   axis — and since 2026-09-23 it holds the invitation rather than a code
+   plate and an address.  "Questions?" takes the left column's masthead
+   verbatim: same display face, same 76 px, same top 182, same 300 px rule
+   34 px below the word.  The one difference is colour: the word is the
+   accent gradient, so the warm half of the slide is the half that is
+   asking, and the turning mark below it belongs to the same column.
+   The box is centred on 1002 and 420 wide, which keeps the word inside
+   the 96 px right margin at this size. */
+#s43 .d43__q {
+  position: absolute; left: 792px; top: 182px; width: 420px; margin: 0;
+  text-align: center;
+  font-family: var(--display); font-weight: 700;
+  font-size: 76px; line-height: 1; letter-spacing: -0.03em;
+  color: var(--t-a);
+  background: linear-gradient(96deg, var(--t-a) 8%, var(--t-b) 92%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-#s43 .d43__qr svg { display: block; width: 100%; height: 100%; }
-#s43 .d43__qr rect { fill: #12100e; }
-#s43 .d43__url {
-  position: absolute; left: 792px; top: 416px; width: 420px; text-align: center;
-  font-family: var(--mono); font-size: 21px; letter-spacing: 0.02em; color: var(--text);
+#s43 .d43__qrule {
+  position: absolute; left: 852px; top: 292px; width: 300px; height: 2px;
+  background: linear-gradient(90deg, var(--t-a), var(--t-b));
+  transform: scaleX(0); transform-origin: 50% 50%;
 }
 /* The mark: S00's rules, unchanged, re-scoped to this slide.  Stroked
    rotor and stroked dots in the accent at 3.2, the halo breathing on
@@ -1405,36 +1423,19 @@
     var ty    = el.querySelector('.d43__ty');
     var rule  = el.querySelector('.d43__rule');
     var names = el.querySelectorAll('.d43__nm, .d43__k');
-    var url   = el.querySelector('.d43__url');
-    var svg   = el.querySelector('#d43-qr');
-
-    /* the code plate: the real QR for https://sirsirio.github.io/thesis-tools/
-       (version 3, 29 modules, ECC M), one rect per dark module, revealed outward from the centre */
-    if (svg && !svg.childElementCount) {
-      var QR_ROWS=['11111110110010111010001111111','10000010001000001111001000001','10111010001110100100101011101','10111010111001101000101011101','10111010101000111110001011101','10000010110011000101101000001','11111110101010101010101111111','00000000101100010100000000000','10001011111000001100111111001','10110001100101011110001111111','11011111011111010100010010001','10011000111110110110101101011','00101110000110110101010100010','00101100110000110110011111111','01000110000111110010111111101','00010000100110101110010100011','11100111001011101110110100010','11010100110100111110001111011','00011111010101110010110000101','00100101101111011111101110011','11010010010111010101111111001','00000000110111111001100010001','11111110100010010111101011101','10000010000100101101100010011','10111010101101101101111111001','10111010011101011111010000001','10111010000100110101110001111','10000010011100010100100011011','11111110110000100101111010010'];
-      for (var y = 0; y < 29; y++) {
-        for (var x = 0; x < 29; x++) {
-          if (QR_ROWS[y].charAt(x) !== '1') continue;
-          var r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          r.setAttribute('x', String(x)); r.setAttribute('y', String(y));
-          r.setAttribute('width', '1'); r.setAttribute('height', '1');
-          r.setAttribute('data-d', String(Math.round(Math.hypot(x - 14, y - 14))));
-          svg.appendChild(r);
-        }
-      }
-    }
+    var q     = el.querySelector('.d43__q');
+    var qrule = el.querySelector('.d43__qrule');
 
     if (dip) gsap.fromTo(dip, { opacity: 1 }, { opacity: 0, duration: 0.9, ease: 'power2.out' });
     gsap.fromTo(ty, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'expo.out' });
     gsap.fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.8, delay: 0.5, ease: 'power3.inOut' });
     gsap.fromTo(names, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, delay: 0.6, stagger: 0.06, ease: 'expo.out' });
-    gsap.fromTo(url, { opacity: 0 }, { opacity: 1, duration: 0.6, delay: 1.4 });
 
-    var mods = svg ? svg.querySelectorAll('rect[data-d]') : [];
-    gsap.fromTo(mods, { opacity: 0, scale: 0.2, transformOrigin: '50% 50%' }, {
-      opacity: 1, scale: 1, duration: 0.42, delay: 0.35, ease: 'back.out(2)',
-      stagger: { each: 0.006, from: 'center' }
-    });
+    /* The invitation lands last and from the same distance as "Thank
+       you.", so the two words settle as a pair; its rule opens from the
+       middle outward, against the left rule which draws left to right. */
+    gsap.fromTo(q, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, delay: 1.05, ease: 'expo.out' });
+    gsap.fromTo(qrule, { scaleX: 0 }, { scaleX: 1, duration: 0.85, delay: 1.35, ease: 'power3.inOut' });
 
     /* The mark is not animated from here: it carries S00's own CSS turn,
        26 s linear and endless, so opening and closing run the same motif. */
