@@ -805,6 +805,15 @@ body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
 #presElapsed, #presLeft { color: var(--text-muted); font-weight: 500; }
 #presElapsed.is-over, #presLeft.is-over,
 #presElapsed.is-close, #presLeft.is-close { color: var(--text-soft); }
+
+/* … except Elapsed, which is also a pacing signal: green while he is ahead
+   of the plan or barely behind it, then yellow, dark orange and red as the
+   lateness grows. Same four colours as the two timers above, its own class
+   names because .pres__seg carries layout as well as colour. */
+#presElapsed.is-pace-ok   { color: #5bd98a; font-weight: 600; }
+#presElapsed.is-pace-warn { color: #e9c341; font-weight: 600; }
+#presElapsed.is-pace-near { color: #e2761b; font-weight: 600; }
+#presElapsed.is-pace-over { color: #ff5a4d; font-weight: 600; }
 .pres__bar .pres__prog { opacity: 0.5; }
 .pres__bar .pres__keys { opacity: 0.7; }
 
@@ -819,6 +828,42 @@ body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
   transition: color 160ms var(--ease), border-color 160ms var(--ease);
 }
 .pres__report:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 65%, transparent); }
+
+/* Stops every clock on the bar while he breaks off to talk to someone, and
+   starts them again where they stood. Amber rather than the deck's orange,
+   because this is a state the bar is IN, not an accent: lit while paused,
+   with the readouts it froze stepping back at the same time, so he is never
+   left wondering whether the talk clock is running. Quiet enough to sit on
+   a presenter screen for half a minute without pulling the eye. */
+.pres__pause {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--mono); font-size: 17px; letter-spacing: 0.04em;
+  color: var(--text-soft); white-space: nowrap; cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease),
+              background-color 160ms var(--ease);
+}
+.pres__pause:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, #e9c341 60%, transparent);
+}
+.pres__pause[aria-pressed="true"] {
+  background: #e9c341;
+  border-color: #e9c341;
+  color: #17140a;
+  font-weight: 700;
+}
+body[data-pres-paused] .pres__bar {
+  border-color: color-mix(in srgb, #e9c341 50%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #e9c341 12%, transparent);
+}
+body[data-pres-paused] .pres__seg,
+body[data-pres-paused] #presElapsed,
+body[data-pres-paused] #presLeft { opacity: 0.4; }
+
 .pres__spacer { margin-left: auto; }
 /* the key hints drop to their own line so the progress bar can stretch */
 .pres__keys { flex: 1 1 100%; font-size: 12px; letter-spacing: 0.1em; color: var(--text-muted); }
@@ -1016,24 +1061,10 @@ body[data-view="guest"] .guest-dot {
 }
 
 /* ══ S04 family · three screens, one stylesheet · still by hand ══════════════════════════════ */
-.s04fam .slide__title { width: 860px; max-width: 860px; }
-.s04fam #s04-plate { opacity: 0; }
-.s04fam .s04-spot {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  --sx: 55%; --sy: 53%; --sr: 78%;
-  background: radial-gradient(circle at var(--sx) var(--sy),
-              rgba(6,6,8,0) var(--sr), rgba(6,6,8,0.88) calc(var(--sr) + 16%));
-}
-/* The photo sits a little higher than the shared .cine__img default so that
-   its credit can sit under it rather than on it. The credit is left-aligned
-   to the photo's own left edge, which also keeps it clear of the slide
-   number and the section rail in the bottom-right corner. */
-.s04fam #s04-plate { top: 420px; }
-.s04fam .s04-credit {
-  position: absolute; left: 245px; right: auto; top: 668px; z-index: 5; opacity: 0;
-  font-family: var(--mono); font-size: 18px; letter-spacing: 0.03em;
-  color: var(--text-muted); text-shadow: 0 3px 14px rgba(0,0,0,0.9);
-}
+/* s04 itself moved to the appendix 2026-09-23: its section, its own four
+   rules and its builder all live in parts/60-backups.html. What is left
+   here is the shared family sheet that s04b still uses. */
+.s04fam .slide__title { width: var(--title-w, 860px); max-width: var(--title-w, 860px); }
 .s04fam .s04-blk { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; }
 .s04fam .s04-lead {
   position: absolute; left: 56px; margin: 0; width: 860px;
@@ -1067,9 +1098,15 @@ body[data-view="guest"] .guest-dot {
   color: rgba(240,236,232,0.92); text-shadow: 0 3px 16px rgba(0,0,0,0.85);
 }
 
-/* ── step 4 · where the numbers come from ────────────────── */
-.s04fam #s04-prov .s04-lead { top: 196px; }
-.s04fam .s04-chips { position: absolute; left: 56px; top: 300px; width: 1168px; display: flex; gap: 13px; }
+/* ── step 4 · where the numbers come from ────────────────────
+   No lead sentence on this one: the title says it, and the chips are the
+   evidence. The row spans the full content width so it lines up with the
+   title rule, and the two readouts below sit centred under their own
+   drawing, on one shared baseline. */
+.s04fam .s04-chips {
+  position: absolute; left: 56px; top: 236px; width: 1168px;
+  display: flex; justify-content: space-between; gap: 13px;
+}
 .s04fam .s04-chip {
   padding: 9px 16px; border-radius: var(--r-pill, 999px);
   border: 1px solid color-mix(in srgb, var(--t-a) 42%, transparent);
@@ -1088,13 +1125,13 @@ body[data-view="guest"] .guest-dot {
   white-space: nowrap;
 }
 .s04fam .s04-crule {
-  position: absolute; left: 56px; top: 412px; width: 700px; height: 2px; transform-origin: 0 50%;
+  position: absolute; left: 56px; top: 356px; width: 1168px; height: 2px; transform-origin: 0 50%;
   background: linear-gradient(90deg, var(--t-a), color-mix(in srgb, var(--t-b) 10%, transparent));
 }
-.s04fam .s04-ro { position: absolute; top: 432px; }
+.s04fam .s04-ro { position: absolute; top: 400px; text-align: center; }
 
 /* each readout carries its own drawing above the number */
-.s04fam .s04-ro--wide { width: 440px; }
+.s04fam .s04-ro--wide { width: 560px; }
 .s04fam .s04-vis { display: block; width: 100%; height: 92px; overflow: visible; margin-bottom: 4px; }
 .s04fam .s04-vax, .s04fam .s04-vtk path {
   fill: none; stroke: rgba(240,236,232,0.34); stroke-width: 1.6; stroke-linecap: round;
@@ -1109,8 +1146,8 @@ body[data-view="guest"] .guest-dot {
 .s04fam .s04-rov { display: block; font-size: 44px; font-weight: 600; line-height: 1; white-space: nowrap; }
 .s04fam .s04-rol { display: block; margin-top: 12px; font-size: 20px; color: var(--text-muted); white-space: nowrap; }
 .s04fam .s04-tail {
-  position: absolute; left: 56px; top: 664px; margin: 0; width: 900px;
-  font-size: 21px; line-height: 1.3; color: var(--text);
+  position: absolute; left: 56px; top: 628px; margin: 0; width: 1168px;
+  font-size: 21px; line-height: 1.3; color: var(--text); text-align: center;
 }
 .s04fam .s04-foot {
   position: absolute; left: 56px; top: 640px; margin: 0; width: 1168px;
@@ -1227,17 +1264,19 @@ body[data-view="guest"] .guest-dot {
 #s06 .s06-rule--faint { stroke: rgba(27,34,51,0.14); }
 
 #s06 .s06-row {
-  position: absolute; left: 152px; width: 236px; height: 84px;
+  position: absolute; left: 152px; width: 236px; height: 74px;
   display: flex; flex-direction: column; justify-content: center; gap: 4px;
 }
-#s06 #s06-r1 { top: 62px; } #s06 #s06-r2 { top: 146px; }
-#s06 #s06-r3 { top: 230px; } #s06 #s06-r4 { top: 314px; }
+/* five rows of 74 px under the 62 px header: the pipette, three families, the empty row */
+#s06 #s06-r1 { top: 62px; }  #s06 #s06-r2 { top: 136px; } #s06 #s06-r3 { top: 210px; }
+#s06 #s06-r4 { top: 284px; } #s06 #s06-r5 { top: 358px; }
 #s06 .s06-fam { font-size: 20px; line-height: 1.18; color: #1b2233; }
 #s06 .s06-eg  { font-family: var(--mono); font-size: 18px; line-height: 1.1; color: #6b7387; }
 #s06 .s06-row--want .s06-fam { color: #b06a3a; font-weight: 600; }
 
-/* the photo column: rows 1 to 3 are filled by the plate that flies in,
-   row 4 keeps a dashed, empty chip — the instrument nobody has built */
+/* the photo column: rows 1 to 4 are filled by the plate that flies in,
+   row 5 keeps a dashed, empty chip — the instrument nobody has built.
+   Every photograph stays whole in its chip (contain, never cover). */
 #s06 .s06-big {
   position: absolute; left: 520px; top: 62px; width: 500px; height: 334px;
   border-radius: 16px;
@@ -1247,9 +1286,9 @@ body[data-view="guest"] .guest-dot {
   overflow: hidden; opacity: 0;
 }
 #s06 .s06-big img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s06 .s06-big[data-big="1"] { left: 600px; width: 380px; }
+#s06 .s06-big[data-big="2"] { left: 600px; width: 380px; }
 #s06 .s06-ghostchip {
-  position: absolute; left: 24px; top: 320px; width: 118px; height: 72px;
+  position: absolute; left: 24px; top: 364px; width: 118px; height: 62px;
   border-radius: var(--r-sm);
   border: 1.5px dashed #b06a3a;
   display: flex; align-items: center; justify-content: center;
@@ -1260,6 +1299,12 @@ body[data-view="guest"] .guest-dot {
 
 #s06 .s06-tick { fill: none; stroke: #1b5e43; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round; }
 #s06 .s06-cross path { fill: none; stroke: #c62f2f; stroke-width: 4.2; stroke-linecap: round; }
+/* a third verdict: partly, drawn as a slash in amber — neither the green of
+   a pass nor the red of a fail. Amber rather than the deck's #e9c341 yellow
+   because this sheet is near-white: the yellow was the faintest thing on it.
+   Same stroke weight as the tick and the cross, so the three marks read at
+   one weight. */
+#s06 .s06-part { fill: none; stroke: #b8791f; stroke-width: 4.2; stroke-linecap: round; }
 #s06 .s06-want { fill: none; stroke: #b06a3a; stroke-width: 1.6; stroke-dasharray: 8 7; }
 #s06 .s06-slot { fill: none; stroke: #b06a3a; stroke-width: 1.8; stroke-dasharray: 4 5; }
 
@@ -1564,7 +1609,7 @@ body[data-view="guest"] .guest-dot {
 /* ---- s07b ---- */
 /* ══ S07b · module relationships, rebuilt from thesis figure 5.3 ═══════ */
 #s07b .rl-dg {
-  position: absolute; left: 56px; top: 202px;
+  position: absolute; left: 56px; top: 222px;
   width: 1168px; height: 420px; z-index: 5;
 }
 
@@ -1612,14 +1657,6 @@ body[data-view="guest"] .guest-dot {
 #s07b .rl-lgrow,
 #s07b .rl-drop,
 #s07b .rl-pulse { opacity: 0; }
-
-/* the one reading line, swapped between steps */
-#s07b .rl-read { position: absolute; left: 56px; top: 640px; width: 1060px; height: 46px; z-index: 8; }
-#s07b .rl-line {
-  position: absolute; left: 0; top: 0; margin: 0;
-  font-size: 24px; line-height: 1.3; color: var(--text);
-  opacity: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.9);
-}
 
 /* ---- s09b ---- */
 /* ══ S09b · printed in the room ═══════════════════════════════════════
@@ -3007,7 +3044,7 @@ body[data-view="guest"] .guest-dot {
   font-size: 21px; line-height: 1.3; color: var(--text-soft);
 }
 
-/* ── S41 · one bay, five modules ─────────────────────────── */
+/* ── S41 · one bay, four modules ─────────────────────────── */
 #s41 .d41 { position: absolute; inset: 0; }
 
 /* the machine that exists.  top.jpg is 2000 x 1125, so a 416 x 234 box is
@@ -3093,8 +3130,8 @@ body[data-view="guest"] .guest-dot {
 }
 #s41 .d41__ov .code rect { fill: var(--text); }
 
-/* the modules.  One footprint, five identities: the card in the bay and
-   the four on the rail are the same 208 x 104 block with the same dock
+/* the modules.  One footprint, four identities: the card in the bay and
+   the three on the rail are the same 208 x 104 block with the same dock
    tab, which is the whole of the argument. */
 #s41 .d41__mod {
   position: absolute; width: 208px; height: 104px;
@@ -3710,6 +3747,27 @@ body[data-view="guest"] .guest-dot {
   color: color-mix(in srgb, var(--t-a) 70%, #f0ece8);
 }
 
+/* ---- s04 · the field laboratory (was the opening, now the appendix) ---- */
+/* Only the rules #s04 alone uses. The .s04fam family sheet it shares with
+   s04b stays in parts/10-opening.html. */
+.s04fam #s04-plate { opacity: 0; }
+.s04fam .s04-spot {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  --sx: 55%; --sy: 53%; --sr: 78%;
+  background: radial-gradient(circle at var(--sx) var(--sy),
+              rgba(6,6,8,0) var(--sr), rgba(6,6,8,0.88) calc(var(--sr) + 16%));
+}
+/* The photo sits a little higher than the shared .cine__img default so that
+   its credit can sit under it rather than on it. The credit is left-aligned
+   to the photo's own left edge, which also keeps it clear of the slide
+   number and the section rail in the bottom-right corner. */
+.s04fam #s04-plate { top: 420px; }
+.s04fam .s04-credit {
+  position: absolute; left: 245px; right: auto; top: 668px; z-index: 5; opacity: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.03em;
+  color: var(--text-muted); text-shadow: 0 3px 14px rgba(0,0,0,0.9);
+}
+
 /* ---- s04c ---- */
 /* ══ S04c · PANPOC, and what a real protocol is ════════════════════════
    The thesis's magnetic-bead figure redrawn as inline SVG on a paper
@@ -4207,6 +4265,79 @@ body[data-view="guest"] .guest-dot {
   /* The strip is fixed and the overview is the scroller, so the overview
      reserves the height instead of sliding its first band underneath. */
   .deck-overview { padding-top: 88px; }
+
+  /* ══ Step-synced captions (added 2026-09-23) ═══════════════════════
+     The notes are one bullet per build step: li[data-step="n"] is current
+     from step n until the next bullet's step. The Italian twin lives in
+     aside.notes > .notes-it. Contract: BUILDER-REFERENCE.md, "Step-synced
+     captions". Scoped to the presenter and guest views; the stage view is
+     untouched. */
+
+  /* The Italian block never renders in place, anywhere. aside.notes is
+     already display:none (00-head §2); this is the belt to that brace. */
+  .notes-it { display: none !important; }
+
+  /* ── a · presenter: the current bullet leads ───────────────────── */
+  .pres__notes-body li[data-step] {
+    position: relative;
+    transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .pres__notes-body li.is-now  { opacity: 1; color: var(--text); }
+  .pres__notes-body li.is-now::marker { color: var(--accent); }
+  .pres__notes-body li.is-now::before {
+    content: ""; position: absolute;
+    left: -38px; top: 0.18em; bottom: 0.18em; width: 4px;   /* clear of the disc */
+    border-radius: 2px; background: var(--accent);
+  }
+  .pres__notes-body li.is-done { opacity: 0.45; }
+  .pres__notes-body li.is-next { opacity: 0.7; }
+  /* A bullet without data-step renders neutral (a slide with no clicks has
+     only such bullets). Only an "If asked:" line — flagged .is-aside by
+     markNoteSteps() — takes the quieter panel-question style. */
+  .pres__notes-body.has-steps li:not([data-step]) { opacity: 0.85; }
+  .pres__notes-body li.is-aside,
+  .pres__notes-body.has-steps li.is-aside { opacity: 0.55; font-style: italic; }
+
+  /* ── b · guest: slide above, Italian caption band below ────────── */
+  .guest-cap { display: none; }
+  body[data-view="guest"] { --guest-band: 22vh; }
+  body[data-view="guest"] .deck-viewport {
+    position: fixed; left: 0; top: 0;
+    width: 100vw; height: calc(100vh - var(--guest-band));
+  }
+  body[data-view="guest"] .guest-cap {
+    display: flex; flex-direction: column; justify-content: center; gap: 1.1vh;
+    position: fixed; left: 0; right: 0; bottom: 0;
+    height: var(--guest-band);
+    box-sizing: border-box;
+    padding: 1.6vh 6vw 2.4vh;
+    background: rgba(10,10,12,0.86);
+    border-top: 1px solid var(--line);
+    z-index: 350;
+    font-family: var(--font);
+    overflow: hidden;
+  }
+  body[data-view="guest"][data-overview] .guest-cap { display: none; }
+  .guest-cap__title {
+    margin: 0;
+    font-family: var(--mono); font-size: clamp(12px, 1.55vh, 20px); font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    min-height: 1.2em;
+  }
+  .guest-cap__text {
+    margin: 0; max-width: none;
+    font-size: clamp(22px, 3.2vh, 46px); font-weight: 500;
+    line-height: 1.25; color: var(--text);
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+    overflow: hidden;
+    transition: opacity 200ms var(--ease);
+  }
+  .guest-cap__text.is-swap { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .guest-cap__text, .pres__notes-body li[data-step] { transition: none !important; }
+  }
   </style>
 </head>
 <body>
@@ -4309,10 +4440,15 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Let the clip run a few seconds before speaking; the sound is part of it.</li>
-      <li>Name the title, the group and the three supervisors.</li>
-      <li>This is the machine, working; the talk explains how it got here.</li>
+      <li data-step="meta">~20 s &middot; let the clip run a few seconds first, the sound is part of it</li>
+      <li data-step="0">This is the machine I built, dispensing. The thesis: an automated, portable liquid dispenser at microlitre scale &mdash; DTU Bioengineering, NaBIS group, supervised by Maria Dimaki, Winnie Svendsen and Lars Hvam.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Progetto di un sistema automatico e portatile per dosare liquidi nell&rsquo;ordine dei microlitri, per applicazioni biologiche.</p>
+      <ul>
+        <li data-step="0">Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -4404,52 +4540,26 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>A passenger lands in a crowded arrivals hall in the first weeks of an outbreak, with a fever.</li>
-      <li>The officer takes a nasal swab, but confirming the virus means sending that tube to a central laboratory.</li>
-      <li>Hold them a day or two and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal.</li>
-      <li>The whole axis is one day. Standard testing takes more than 26 hours &mdash; and that is the hospital using its own in-house lab, not a sample shipped away.</li>
-      <li>A portable molecular test, same study, same hospital, same patients: 2.6 hours. Next to a day it is almost nothing &mdash; which is the point.</li>
-      <li>Last press: the same axis rescales to its first three hours. Under an hour is the target that settles the dilemma at the gate.</li>
+      <li data-step="meta">~70 s</li>
+      <li data-step="0">A passenger lands in a crowded arrivals hall, early in an outbreak, with a fever.</li>
+      <li data-step="1">The officer takes a nasal swab. But confirming the virus means sending that tube to a central laboratory, and waiting.</li>
+      <li data-step="2">Hold them a day and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal. This axis is one day.</li>
+      <li data-step="3">Standard molecular testing: more than 26 hours. And that is with the hospital's own lab on site.</li>
+      <li data-step="4">A portable molecular test, same study, same hospital, same patients: 2.6 hours. The test can travel to the gate. The sample preparation cannot yet.</li>
     </ul>
-  </aside>
-</section>
-
-
-<!-- ░░ S04 · Still prepared by hand ░░ the field laboratory, two steps -->
-<section class="slide s04fam" id="s04" data-cue="s04" data-dialect="cine" data-part="open"
-         data-map="none" style="--cine-scrim:0">
-  <i class="fragment step-cue" data-step="1"></i>
-  <i class="fragment step-cue" data-step="2"></i>
-
-  <div class="cine">
-    <h2 class="slide__title">Bringing the lab to the sample often still requires pipetting and an expert.</h2>
-    <div class="cine__shots">
-      <figure class="cine__shot">
-        <div class="cine__img" id="s04-plate" style="width:790px;height:470px">
-          <img data-src="assets/stills/fig-portable-qpcr.png"
-               alt="The equipment of a mobile molecular testing laboratory in Ethiopia: a magnetic induction cycler, a magnetic block, a plate shaker and four manual pipettes." />
-          <div class="s04-spot" id="s04-spot"></div>
-        </div>
-      </figure>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un test che richiede un giorno arriva troppo tardi.</p>
+      <ul>
+        <li data-step="0">Una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un&rsquo;epidemia. Ha la febbre.</li>
+        <li data-step="1">L&rsquo;operatrice fa un tampone nasale. Ma per confermare il virus la provetta va mandata a un laboratorio centrale, e bisogna aspettare.</li>
+        <li data-step="2">Trattenerla un giorno è impraticabile; lasciarla passare vuol dire far uscire un&rsquo;infezione non confermata. L&rsquo;asse in basso è una giornata intera.</li>
+        <li data-step="3">Il test molecolare standard: più di 26 ore. E l&rsquo;ospedale ha il laboratorio in casa.</li>
+        <li data-step="4">Un test molecolare portatile, stesso studio, stesso ospedale, stessi pazienti: 2,6 ore. Il test può arrivare al gate. La preparazione del campione non ancora.</li>
+      </ul>
     </div>
-    <div class="cine__scrim" aria-hidden="true"></div>
-
-    <span class="s04-credit" id="s04-credit">Carlier et al. 2022 &middot; CC BY 4.0</span>
-
-    <!-- 3 · the magnetic-bead extraction, stage by stage -->
-
-    <!-- 4 · where the range and the six liquids come from -->
-
-    <!-- 5 · the span, and what one channel actually covers -->
-  </div>
-  <aside class="notes">
-    <ul>
-      <li>A mobile molecular laboratory for malaria surveillance in Ethiopia &mdash; cycler, magnetic block, shaker.</li>
-      <li>And four manual pipettes doing everything in between. That is the whole automation.</li>
-      <li>A dozen steps, six liquids, 5 &micro;L to 1 mL, every one of them by hand.</li>
-    </ul>
   </aside>
 </section>
+
 
 <!-- ░░ S03 · Contents ░░ four steps, one part lit at a time -->
 <section class="slide" id="s03" data-cue="s03" data-dialect="sheet" data-part="open">
@@ -4467,7 +4577,7 @@ body[data-view="guest"] .guest-dot {
       <span class="s03-lab">Part I</span>
       <span class="s03-pips"><i class="is-live"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span>
       <span class="s03-bar"></span>
-      <h3 class="s03-nm">Introduction, Background and Methods</h3>
+      <h3 class="s03-nm">Background, Requirements and Methods</h3>
       <p class="s03-sub">the gap &middot; requirements and modules &middot; engineering with AI</p>
     </div>
     <div class="s03-blk" data-b="1" style="top:280px">
@@ -4502,13 +4612,25 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Part I: the gap this machine fills, and the way of working behind it.</li>
-      <li>Part II: the five modules, in the order the liquid meets them.</li>
-      <li>The five marks beside each row are the same five that sit in the bottom corner from here on: one lights for whichever section we are in, so the room can always see how far through we are.</li>
-      <li>The demo stands on its own: five minutes, the machine running here in the room.</li>
-      <li>Part III: electronics, integration, validation, then five minutes of live demo.</li>
-      <li>Questions at the end; there are backup slides for the detail.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">Five stops.</li>
+      <li data-step="1">Part I: why this machine is needed, what it has to do, and how I worked.</li>
+      <li data-step="2">Part II: the modules, one by one, starting with the pump.</li>
+      <li data-step="3">Part III: the whole machine &mdash; electronics, integration, validation.</li>
+      <li data-step="4">Then five minutes of live demo, here in the room.</li>
+      <li data-step="5">And discussion and outlook to close. Questions at the end.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Indice.</p>
+      <ul>
+        <li data-step="0">La presentazione ha cinque tappe.</li>
+        <li data-step="1">Parte I: perché serve questa macchina, cosa deve fare, e come ho lavorato.</li>
+        <li data-step="2">Parte II: i moduli, uno alla volta, a partire dal modulo Pump.</li>
+        <li data-step="3">Parte III: la macchina intera &mdash; elettronica, integrazione, validazione.</li>
+        <li data-step="4">Poi cinque minuti di dimostrazione dal vivo, qui in sala.</li>
+        <li data-step="5">Infine discussione e prospettive. Le domande alla fine.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -4534,15 +4656,21 @@ body[data-view="guest"] .guest-dot {
   <div class="divider__wash"></div>
   <div class="divider__inner">
     <div class="divider__num">Part I</div>
-    <h2 class="divider__title">Why this machine, and how I worked.</h2>
-    <p class="divider__sub">The gap, the requirements, the way of working.</p>
+    <h2 class="divider__title">Background,<br />Requirements<br />and Methods.</h2>
+    <p class="divider__sub">Why this machine exists, what it has to do, and how I worked.</p>
   </div>
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
-      <li>Two questions in this part: why build it, and how the work was run.</li>
-      <li>Four minutes; the modules start right after.</li>
+      <li data-step="meta">~5 s</li>
+      <li data-step="0">Part I: background, requirements and methods.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Parte I · Contesto, requisiti e metodi.</p>
+      <ul>
+        <li data-step="0">Parte I: perché questa macchina esiste, cosa deve fare, e come ho lavorato.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -4619,17 +4747,26 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>1 · locked inside — a swab, a scoop of soil, a water sample: none of them can be read directly. What the test is looking for is genetic material, and it starts out sealed inside cells or virus particles, mixed with proteins and debris, with enzymes already breaking it down.</li>
-      <li>2 · separated — so the first job is to break the sample open and get the target out, and the second is to separate it from everything it arrived with. That is what the salt and the beads and the magnet are doing.</li>
-      <li>3 · washed out — and here is the catch. The chemistry that frees the target is aggressive, and if any of it is carried over it blocks the amplification that reads the result. The thesis is explicit about the guanidine salt: anything carried over will inhibit the reaction that follows. So the preparation has to remove its own reagents as well.</li>
-      <li>4 · the hinge — now count what those steps actually are. Almost every one of them is adding a measured volume or taking one away. That is why the piece of hardware sample preparation needs is a dispenser, and it is what the rest of this talk is about.</li>
-      <li>If asked how much it matters: the thesis cites evidence that sampling and sample preparation contribute more variability to a result than the measurement itself.</li>
-      <li>Do not name PANPOC here — the contents slide already did, and the bead protocol has its own slide in the appendix.</li>
+      <li data-step="meta">~45 s</li>
+      <li data-step="0">First, what sample preparation actually is.</li>
+      <li data-step="1">A swab, soil, water: none can be read directly. The genetic material the test looks for is locked inside cells or virus particles, among proteins and debris.</li>
+      <li data-step="2">So you break the sample open, pull the target out, and separate it from everything else.</li>
+      <li data-step="3">Then that aggressive chemistry must be washed out too, or it blocks the reaction that reads the result. Nearly every step adds or removes a measured volume &mdash; so what sample preparation needs is a dispenser.</li>
+      <li>If asked: the thesis cites evidence that sampling and sample preparation add more variability to a result than the measurement itself.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La preparazione del campione trasforma un tampone grezzo in qualcosa che un test può leggere.</p>
+      <ul>
+        <li data-step="0">Prima di tutto: che cos&rsquo;è la preparazione del campione.</li>
+        <li data-step="1">Tampone, terreno, acqua: nessuno si legge così com&rsquo;è. Il materiale genetico che il test cerca è chiuso dentro cellule o virus, in mezzo a proteine e detriti.</li>
+        <li data-step="2">Quindi si rompe il campione, si estrae il bersaglio e lo si separa da tutto il resto.</li>
+        <li data-step="3">Poi anche quella chimica aggressiva va lavata via, altrimenti blocca la reazione che legge il risultato. Quasi ogni passaggio aggiunge o toglie un volume misurato: serve un dosatore.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
-<!-- ░░ S06 · The gap ░░ four steps -->
+<!-- ░░ S06 · The gap ░░ five steps: the pipette, three families, the empty row -->
 <section class="slide" id="s06" data-cue="s06" data-dialect="sheet" data-part="I" style="--head-h:48px" data-map="none">
   <h2 class="slide__title">No instrument today is precise, portable, unattended and open to any protocol at once.</h2>
   <div class="slide__rule"></div>
@@ -4638,6 +4775,7 @@ body[data-view="guest"] .guest-dot {
   <i class="fragment step-cue" data-step="2"></i>
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
 
   <div class="s06-sheet">
     <div class="sheet__grid"></div>
@@ -4654,27 +4792,34 @@ body[data-view="guest"] .guest-dot {
 
     <svg class="s06-rules" viewBox="0 0 1168 452" aria-hidden="true">
       <path class="s06-rule" d="M 24 62 H 1144"/>
-      <path class="s06-rule s06-rule--faint" d="M 24 146 H 1144"/>
-      <path class="s06-rule s06-rule--faint" d="M 24 230 H 1144"/>
-      <path class="s06-rule s06-rule--faint" d="M 24 314 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 136 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 210 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 284 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 358 H 1144"/>
     </svg>
 
+    <!-- the lab standard first: the hand pipette he holds up while this row lands -->
     <div class="s06-row" id="s06-r1">
+      <span class="s06-fam">manual pipetting</span>
+      <span class="s06-eg">hand pipettes</span>
+      <span class="s06-price"><b>~$1k</b><i>kit, 1&ndash;1000 &micro;L</i></span>
+    </div>
+    <div class="s06-row" id="s06-r2">
       <span class="s06-fam">laboratory systems</span>
       <span class="s06-eg">Tecan Fluent</span>
       <span class="s06-price"><b>$25&ndash;80k</b><i>used</i></span>
     </div>
-    <div class="s06-row" id="s06-r2">
+    <div class="s06-row" id="s06-r3">
       <span class="s06-fam">integrated platforms</span>
       <span class="s06-eg">Roche cobas liat</span>
       <span class="s06-price"><b>$11k</b><i>$100 per test</i></span>
     </div>
-    <div class="s06-row" id="s06-r3">
-      <span class="s06-fam">portable and open-source</span>
+    <div class="s06-row" id="s06-r4">
+      <span class="s06-fam">open source</span>
       <span class="s06-eg">Sidekick, Keesey 2022</span>
       <span class="s06-price"><b>$710</b><i>build cost</i></span>
     </div>
-    <div class="s06-row s06-row--want" id="s06-r4">
+    <div class="s06-row s06-row--want" id="s06-r5">
       <span class="s06-fam">what the field needs</span>
     </div>
 
@@ -4687,53 +4832,79 @@ body[data-view="guest"] .guest-dot {
     </div>
 
     <svg class="s06-marks" viewBox="0 0 1168 452" aria-hidden="true">
-      <path class="s06-tick"  data-r="1" data-c="1" d="M 435 104 L 444 113 L 462 93"/>
-      <g class="s06-cross" data-r="1" data-c="2"><path d="M 577 93 L 599 115"/><path d="M 599 93 L 577 115"/></g>
-      <path class="s06-tick"  data-r="1" data-c="3" d="M 715 104 L 724 113 L 742 93"/>
-      <path class="s06-tick"  data-r="1" data-c="4" d="M 855 104 L 864 113 L 882 93"/>
+      <path class="s06-part"  data-r="1" data-c="1" d="M 436 112 L 460 86"/>
+      <path class="s06-tick"  data-r="1" data-c="2" d="M 575 99 L 584 108 L 602 88"/>
+      <g class="s06-cross" data-r="1" data-c="3"><path d="M 717 88 L 739 110"/><path d="M 739 88 L 717 110"/></g>
+      <path class="s06-tick"  data-r="1" data-c="4" d="M 855 99 L 864 108 L 882 88"/>
 
-      <g class="s06-cross" data-r="2" data-c="1"><path d="M 437 177 L 459 199"/><path d="M 459 177 L 437 199"/></g>
-      <path class="s06-tick"  data-r="2" data-c="2" d="M 575 188 L 584 197 L 602 177"/>
-      <path class="s06-tick"  data-r="2" data-c="3" d="M 715 188 L 724 197 L 742 177"/>
-      <g class="s06-cross" data-r="2" data-c="4"><path d="M 857 177 L 879 199"/><path d="M 879 177 L 857 199"/></g>
+      <path class="s06-tick"  data-r="2" data-c="1" d="M 435 173 L 444 182 L 462 162"/>
+      <g class="s06-cross" data-r="2" data-c="2"><path d="M 577 162 L 599 184"/><path d="M 599 162 L 577 184"/></g>
+      <path class="s06-tick"  data-r="2" data-c="3" d="M 715 173 L 724 182 L 742 162"/>
+      <path class="s06-tick"  data-r="2" data-c="4" d="M 855 173 L 864 182 L 882 162"/>
 
-      <g class="s06-cross" data-r="3" data-c="1"><path d="M 437 261 L 459 283"/><path d="M 459 261 L 437 283"/></g>
-      <g class="s06-cross" data-r="3" data-c="2"><path d="M 577 261 L 599 283"/><path d="M 599 261 L 577 283"/></g>
-      <path class="s06-tick"  data-r="3" data-c="3" d="M 715 272 L 724 281 L 742 261"/>
-      <path class="s06-tick"  data-r="3" data-c="4" d="M 855 272 L 864 281 L 882 261"/>
+      <g class="s06-cross" data-r="3" data-c="1"><path d="M 437 236 L 459 258"/><path d="M 459 236 L 437 258"/></g>
+      <path class="s06-tick"  data-r="3" data-c="2" d="M 575 247 L 584 256 L 602 236"/>
+      <path class="s06-tick"  data-r="3" data-c="3" d="M 715 247 L 724 256 L 742 236"/>
+      <g class="s06-cross" data-r="3" data-c="4"><path d="M 857 236 L 879 258"/><path d="M 879 236 L 857 258"/></g>
 
-      <rect class="s06-want" x="16" y="318" width="1136" height="76" rx="10"/>
-      <circle class="s06-slot" cx="448" cy="356" r="15"/>
-      <circle class="s06-slot" cx="588" cy="356" r="15"/>
-      <circle class="s06-slot" cx="728" cy="356" r="15"/>
-      <circle class="s06-slot" cx="868" cy="356" r="15"/>
-      <circle class="s06-slot" cx="1037" cy="356" r="15"/>
+      <g class="s06-cross" data-r="4" data-c="1"><path d="M 437 310 L 459 332"/><path d="M 459 310 L 437 332"/></g>
+      <path class="s06-part"  data-r="4" data-c="2" d="M 576 334 L 600 308"/>
+      <path class="s06-tick"  data-r="4" data-c="3" d="M 715 321 L 724 330 L 742 310"/>
+      <path class="s06-tick"  data-r="4" data-c="4" d="M 855 321 L 864 330 L 882 310"/>
+
+      <rect class="s06-want" x="16" y="362" width="1136" height="66" rx="10"/>
+      <circle class="s06-slot" cx="448" cy="395" r="14"/>
+      <circle class="s06-slot" cx="588" cy="395" r="14"/>
+      <circle class="s06-slot" cx="728" cy="395" r="14"/>
+      <circle class="s06-slot" cx="868" cy="395" r="14"/>
+      <circle class="s06-slot" cx="1037" cy="395" r="14"/>
     </svg>
 
+    <!-- the field-kit photograph of appendix slide A01 (s04), shown whole -->
     <div class="s06-big" data-big="1">
+      <img data-src="assets/stills/fig-portable-qpcr.png"
+           alt="A field testing kit: a magnetic induction cycler, a magnetic block, a plate shaker and four manual pipettes." />
+    </div>
+    <div class="s06-big" data-big="2">
       <img data-src="assets/stills/instr-tecan-fluent.jpg"
            alt="A Tecan Fluent laboratory automation workstation, a full-height enclosed benchtop robot." />
     </div>
-    <div class="s06-big" data-big="2">
+    <div class="s06-big" data-big="3">
       <img data-src="assets/stills/instr-cobas-liat-tube.png"
            alt="A Roche cobas liat assay tube, a sealed cartridge holding the reagents for one test." />
     </div>
-    <div class="s06-big" data-big="3">
+    <div class="s06-big" data-big="4">
       <img data-src="assets/stills/instr-sidekick.jpg"
            alt="The Sidekick open-source liquid handler, an open-frame benchtop dispenser." />
     </div>
   </div>
 
 
-  <p class="s06-credit">Tecan &middot; Roche &middot; Keesey et al. 2022 (CC BY)</p>
+  <p class="s06-credit">Carlier et al. 2022 &middot; Tecan &middot; Roche &middot; Keesey et al. 2022 (CC BY)</p>
 
   <aside class="notes">
     <ul>
-      <li>Four properties across the top, three families of instrument, one row each.</li>
-      <li>Even the smallest Fluent takes 1.15 by 0.79 metres of bench; it covers 0.5 to 1000 microlitres, but its imprecision at half a microlitre is about thirty times its best, and Tecan itself says calibration may be needed at and below five.</li>
-      <li>Each family fails at least one property, and never the same one.</li>
-      <li>The fourth row has no picture because no instrument fills it &mdash; that is the machine.</li>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">Four properties across the top.</li>
+      <li data-step="1">The standard in every lab: the hand pipette.</li>
+      <li data-step="2">Lab systems like the Tecan Fluent: precise and open to any protocol, but even the smallest is the size of a wardrobe.</li>
+      <li data-step="3">Integrated platforms like the cobas liat: portable and unattended, but the volumes are fixed inside a cartridge, locked to one assay.</li>
+      <li data-step="4">Open-source builds like the Sidekick: open and unattended, but calibrated on water and only partly portable.</li>
+      <li data-step="5">Each family fails at least one property, and never the same one. The empty row is what the field needs &mdash; that is this machine.</li>
+      <li>If asked: the Fluent covers 0.5 to 1000 &micro;L, but at half a microlitre its imprecision is about thirty times its best, and Tecan says calibration may be needed at and below 5 &micro;L.</li>
+      <li>If asked: the cobas liat prices are not in the thesis &mdash; a resale price (Dipylon Medical) and the CADTH rapid flu review, about $100 a test, a 2015 figure.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Nessuno strumento oggi è insieme preciso, portatile, autonomo e aperto a qualunque protocollo.</p>
+      <ul>
+        <li data-step="0">In alto quattro proprietà.</li>
+        <li data-step="1">Lo standard di ogni laboratorio: la pipetta manuale.</li>
+        <li data-step="2">Sistemi da laboratorio come il Tecan Fluent: precisi e aperti a ogni protocollo, ma anche il più piccolo è grande come un armadio.</li>
+        <li data-step="3">Piattaforme integrate come il cobas liat: portatili e autonome, ma i volumi sono fissati nella cartuccia, legati a un solo test.</li>
+        <li data-step="4">Progetti open source come il Sidekick: aperti e autonomi, ma calibrati sull&rsquo;acqua e portatili solo in parte.</li>
+        <li data-step="5">Ogni famiglia manca almeno una proprietà, mai la stessa. La riga vuota è ciò che serve sul campo: questa macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -4744,15 +4915,14 @@ body[data-view="guest"] .guest-dot {
      split costs nothing. -->
 <!-- ░░ S04b · Where the range came from ░░ one step -->
 <section class="slide s04fam" id="s04b" data-cue="s04b" data-dialect="sheet" data-part="I"
-         data-map="none" style="--head-h:48px">
+         data-map="none" style="--head-h:48px; --title-w:1040px">
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
 
-  <h2 class="slide__title">The range was read out of five field protocols, not estimated.</h2>
+  <h2 class="slide__title">One machine engineered for generalized sample preparation, grounded in five field protocols.</h2>
   <div class="slide__rule"></div>
 
     <div class="s04-blk" id="s04-prov">
-      <p class="s04-lead">Five off-site protocols representing different disciplines were evaluated in full, with all operational volumes recorded.</p>
       <div class="s04-chips">
         <span class="s04-chip s04-chip--ref"><i>&#129516;</i>clinical and veterinary<em>the PANPOC protocol</em></span>
         <span class="s04-chip"><i>&#127793;</i>plant and field molecular</span>
@@ -4781,10 +4951,10 @@ body[data-view="guest"] .guest-dot {
         <span class="s04-rol">per liquid</span>
       </div>
 
-      <!-- the reagent count, drawn: six vials on the carrier -->
-      <div class="s04-ro s04-ro--wide" style="left:560px">
+      <!-- the liquid count, drawn: six vials on the carrier -->
+      <div class="s04-ro s04-ro--wide" style="left:664px">
         <svg class="s04-vis" viewBox="0 0 320 92" aria-hidden="true">
-          <g class="s04-vialset">
+          <g class="s04-vialset" transform="translate(9,0)">
             <g class="s04-vial" transform="translate(26,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
             <g class="s04-vial" transform="translate(76,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
             <g class="s04-vial" transform="translate(126,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
@@ -4793,21 +4963,26 @@ body[data-view="guest"] .guest-dot {
             <g class="s04-vial" transform="translate(276,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
           </g>
         </svg>
-        <span class="s04-rov num num--grad">up to 6</span>
-        <span class="s04-rol">reagents in one run</span>
+        <span class="s04-rov num num--grad">up to 6 liquids</span>
       </div>
       <p class="s04-tail">into tens of 1.5 and 2&nbsp;mL tubes</p>
     </div>
   <aside class="notes">
     <ul>
-      <li>Not an estimate, and not one protocol: five, chosen for being usable outside a laboratory and for covering different fields.</li>
-      <li>Each was read in full and every stated volume recorded.</li>
-      <li>No review aggregates dispensed volumes across protocol types &mdash; reviews describe instruments, primary papers report only their own protocol &mdash; so they had to be read one by one.</li>
-      <li>The clinical and veterinary one is the PANPOC magnetic-bead protocol itself: the reference protocol sits inside the survey, it is not a sixth case.</li>
-      <li>All of it runs unattended, in one load.</li>
-      <li>What falls out is the specification: 5 to 1000 &micro;L per liquid, up to six reagents, into tens of tubes, unattended.</li>
-      <li>The five-row table with each protocol&rsquo;s own range is a backup slide.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">What should one machine cover? Sample preparation in general, across fields.</li>
+      <li data-step="1">Five field protocols, every volume recorded: clinical and veterinary, plant, water, agriculture and soil. The clinical one, the PANPOC protocol, is what inspired this thesis.</li>
+      <li data-step="2">They are quite consistent: volumes from 5 to 1000 &micro;L, and up to six liquids, into tens of 1.5 and 2 mL tubes.</li>
+      <li>If asked: no review collects dispensed volumes across protocol types; the five-row table with each protocol&rsquo;s range is in the appendix.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Una sola macchina per la preparazione del campione in generale, fondata su cinque protocolli di campo.</p>
+      <ul>
+        <li data-step="0">Che cosa deve coprire una sola macchina? La preparazione del campione in generale, in campi diversi.</li>
+        <li data-step="1">Cinque protocolli di campo, con ogni volume annotato: clinico e veterinario, vegetale, acque, agricoltura e suolo. Quello clinico, il protocollo PANPOC, ha ispirato questa tesi.</li>
+        <li data-step="2">Sono abbastanza coerenti: volumi da 5 a 1000 µL, e fino a sei liquidi, in decine di provette da 1,5 e 2 mL.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -4851,17 +5026,28 @@ body[data-view="guest"] .guest-dot {
   </div>
   <aside class="notes">
     <ul>
-      <li>This is the design problem, in the words the thesis sets it in.</li>
-      <li>Every one of these is a gate, not a score: a concept that fails any of them is out before anything is weighed.</li>
-      <li>Then, and only then, the survivors get ranked &mdash; on eight opportunities, unweighted at the system level. The weights come later, one set per module, once the decomposition exists.</li>
-      <li>A high score never buys back a failed requirement.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">That becomes one design problem.</li>
+      <li data-step="1">Dose 5 to 1000 &micro;L of up to six reagents into tens of tubes, unattended, at least as precise as manual pipetting, run by non-specialists.</li>
+      <li data-step="2">Each of these is a gate: fail one and the concept is out before anything is weighed.</li>
+      <li data-step="3">Only the survivors are ranked, on eight criteria.</li>
+      <li>If asked: the eight criteria are unweighted at system level; each module gets its own weights once the decomposition exists.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina deve dosare da 5 a 1000 µL di sei liquidi in quaranta provette, da sola.</p>
+      <ul>
+        <li data-step="0">Tutto questo diventa un unico problema di progetto.</li>
+        <li data-step="1">Dosare da 5 a 1000 µL di fino a sei reagenti in decine di provette, senza presidio, precisa almeno quanto una pipetta manuale, usata da personale non specializzato.</li>
+        <li data-step="2">Ognuno di questi è un vincolo: se un&rsquo;idea ne manca uno, è esclusa prima di qualunque valutazione.</li>
+        <li data-step="3">Solo le idee rimaste vengono ordinate, su otto criteri.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
 
 <section class="slide" id="s07b" data-cue="s07b" data-dialect="sheet" data-part="I" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The machine is eight modules, and every boundary carries a volume or a signal.</h2>
+  <h2 class="slide__title">The machine is split up into 8 modules, connected by liquid transfers and control signals.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -4982,18 +5168,26 @@ body[data-view="guest"] .guest-dot {
     <circle class="rl-pulse" data-c="5" r="3.6" cx="0" cy="0"/>
   </svg>
 
-  <div class="rl-read">
-    <p class="rl-line" data-line="1">Metering, positioning, dispensing, storing and coordinating cannot be one monolith.</p>
-    <p class="rl-line" data-line="4">One job per module, developed in parallel, replaceable without redesigning the rest.</p>
-  </div>
-
   <aside class="notes">
     <ul>
-      <li>Mapping the operational sequence gave eight functions, so eight modules: pump, alignment, nozzle, storage, tube holding, user interface, electronics and software, and the enclosure around all of it. A machine that meters microlitres, positions tubes, dispenses droplets, manages reagents, talks to an operator and coordinates actuation cannot be engineered as a monolithic system.</li>
-      <li>The rule that set the boundaries: an interface boundary is physically justified only if the transferred mass or information can be precisely defined. Here every subsystem interaction is strictly either a defined volumetric fluid transfer or an electrical control signal. Nothing else crosses.</li>
-      <li>Tube holding is dashed because it was conceived standalone and then physically absorbed into alignment during prototyping, once fabrication showed the tubes could not be indexed independently of the positioning carriage.</li>
-      <li>The boundaries were guidelines, not walls: a concept spanning two domains, storage with direct displacement metering for instance, was judged on merit rather than eliminated for crossing a line. The enclosure is dashed for a different reason: it was specified and never built, because its geometry depends on the aggregate of everything inside it.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Mapping the operating sequence gave eight functions, so eight modules.</li>
+      <li data-step="1">Storage, pump, nozzle, alignment, tube holding, electronics, user interface and the enclosure: one function each.</li>
+      <li data-step="2">The liquid runs one way: storage, pump, nozzle, into the tube. Tube holding was later absorbed into alignment.</li>
+      <li data-step="3">Everything else between the modules is data and control.</li>
+      <li data-step="4">Nothing wet crosses into the electronics. The enclosure stayed a specification: its shape depends on everything inside it.</li>
+      <li>If asked: reagent storage is Marius Schiller&rsquo;s work, not one of my modules.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina è divisa in 8 moduli, collegati da trasferimenti di liquido e segnali di controllo.</p>
+      <ul>
+        <li data-step="0">Dalla sequenza delle operazioni sono uscite otto funzioni, quindi otto moduli.</li>
+        <li data-step="1">Stoccaggio, Pump, Nozzle, Alignment, supporto provette, elettronica, User Interface e involucro: una funzione ciascuno.</li>
+        <li data-step="2">Il liquido va in una sola direzione: stoccaggio, Pump, Nozzle, provetta. Il supporto provette è stato poi assorbito nel modulo Alignment.</li>
+        <li data-step="3">Tutto il resto, fra i moduli, sono dati e segnali di controllo.</li>
+        <li data-step="4">Nessun liquido raggiunge l&rsquo;elettronica. L&rsquo;involucro è rimasto una specifica: la sua forma dipende da tutto ciò che contiene.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5043,11 +5237,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Rank the modules by how much each one depends on the others and you get the order the work had to follow.</li>
-      <li>The pump sits at the top because it carries the tightest volume requirement and sets the operating principle for everything else &mdash; thirty-one rows in its evaluation matrix.</li>
-      <li>The electronics matrix has three requirements and eleven criteria and names no voltage and no driver count, because its demands are just the sum of everything upstream. The enclosure was never built on purpose: its shape is the sum of the mechanisms inside it.</li>
-      <li>Whenever two modules disagreed, the lower one gave way. Part II walks down that list.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">Ranked by how much each depends on the others, the modules give the order the work followed.</li>
+      <li data-step="1">The pump sits on top: it carries the tightest volume requirement and sets the operating principle for everything else.</li>
+      <li data-step="2">Each module below inherits constraints; when two disagreed, the lower one gave way.</li>
+      <li>If asked: the pump&rsquo;s evaluation matrix has thirty-one rows; the electronics matrix has three requirements and eleven criteria and names no voltage or driver count.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il modulo Pump decide, e tutto ciò che sta sotto si adatta.</p>
+      <ul>
+        <li data-step="0">Ordinando i moduli per quanto dipendono l&rsquo;uno dall&rsquo;altro si ottiene l&rsquo;ordine del lavoro.</li>
+        <li data-step="1">In cima il modulo Pump: ha il requisito di volume più severo e detta il principio di funzionamento a tutti gli altri.</li>
+        <li data-step="2">Ogni modulo più in basso eredita vincoli; in caso di conflitto cedeva quello più in basso.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5079,11 +5282,15 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Part I asked two questions. The why is answered; this is the how.</li>
-      <li>Four principles: diverge then decide, split the machine into modules, build physically early, let the discrepancy tell you the next move.</li>
-      <li>The loop only turns as fast as its slowest step. Printing in-house took a turn from weeks to hours — that is the next slide.</li>
-      <li>AI was used throughout, inside written specs, a memory on disk and checks. The two slides after the printer show why those rules were needed and what they were. Printing, wiring, assembly and testing stayed mine.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Now the how: design, build, test, learn, in a loop that turns only as fast as its slowest step.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Metodi, e progettare con l&rsquo;IA.</p>
+      <ul>
+        <li data-step="0">Adesso il come: progettare, costruire, provare, imparare, in un ciclo che gira alla velocità del suo passo più lento.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5143,10 +5350,15 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Every mechanical part came off one printer in the room: a Bambu Lab P1S in PLA, one locked profile, a 0.4 mm nozzle for most of it and 0.2 mm wherever a fit decided something.</li>
-      <li>That is what made the loop turn. A change drawn in the morning was on the bench the same day, so turnaround went from weeks to hours.</li>
-      <li>The price: a printed part is not the part you drew. The precision interfaces needed a tenth of a millimetre, so the printer itself had to be measured &mdash; these were the first test bars, and how that went comes back in Part Two.</li>
+      <li data-step="meta">~8 s</li>
+      <li data-step="0">Every custom part was 3D printed here, to a precision of &plusmn;0.1 mm.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Ogni pezzo su misura di questa macchina è stato stampato nella stanza in cui è stato disegnato.</p>
+      <ul>
+        <li data-step="0">Ogni pezzo su misura è stato stampato in 3D qui, con una precisione di ±0,1 mm.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5159,13 +5371,16 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>No words on this slide. Just say what it is.</li>
-      <li>AI was in this project from the first week, as a working tool: Claude Code, in a terminal on the actual project &mdash; reading files, writing files, running the commands that check them. That is why it could be held to something written down instead of only talked to.</li>
-      <li>Its share was the written and the computed: design documents, the calculations, the interactive models published on the site, and the tooling around the work.</li>
-      <li>Printing, wiring, assembling and testing stayed mine, and every reference was checked and approved by hand.</li>
-      <li>Used unconstrained it does not make occasional mistakes &mdash; it fails in the same structural ways every time. That is the next slide, and the reason the answer was an environment with rules rather than better prompting.</li>
-      <li>Chapter four is about this, and an appendix documents the use.</li>
+      <li data-step="meta">~15 s</li>
+      <li data-step="0">AI was in this project from the first week: Claude Code, working on the real project files. It wrote and computed; printing, wiring, assembling and testing stayed mine, and I checked every reference by hand.</li>
+      <li>If asked: chapter four covers this, and an appendix documents the use.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Progettare con l&rsquo;IA.</p>
+      <ul>
+        <li data-step="0">L&rsquo;IA è stata nel progetto dalla prima settimana: Claude Code, sui file veri del progetto. Ha scritto e calcolato; stampa, cablaggio, montaggio e collaudo sono rimasti miei, e ogni fonte l&rsquo;ho controllata io.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5263,11 +5478,25 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Asked only to design a house it will give you a villa or a townhouse, both structurally valid, neither what was meant &mdash; and here it is finished, complete, before anything goes wrong.</li>
-      <li>Ask for a window upstairs and it lands half off the wall, because nothing on disk recorded where the wall was.</li>
-      <li>Then an instruction from three sessions ago resurfaces, a load-bearing wall moves, and the roof comes with it.</li>
-      <li>Building without a specification is deciding the rooms after the walls are up; check the floor after the furniture is in and you either empty the house or live with a crooked floor.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Used without constraints, AI fails in the same structural ways every time.</li>
+      <li data-step="1">Say I ask it to design a house.</li>
+      <li data-step="2">A villa or a townhouse: both valid, neither what I meant.</li>
+      <li data-step="3">Now ask for a window upstairs: it lands half off the wall, because nothing written down said where the wall was.</li>
+      <li data-step="4">Then an instruction from three sessions ago comes back, a load-bearing wall moves, and the roof comes with it.</li>
+      <li data-step="5">As in all engineering, work with AI has to proceed in steps, each one written down and checked before the next.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Chiedi a un&rsquo;IA di progettare una casa e vedi esattamente dove sbaglia.</p>
+      <ul>
+        <li data-step="0">Usata senza regole, l&rsquo;IA sbaglia sempre negli stessi modi, per struttura.</li>
+        <li data-step="1">Supponiamo di chiederle di progettare una casa.</li>
+        <li data-step="2">Una villa o una casa a schiera: entrambe valide, nessuna delle due quella voluta.</li>
+        <li data-step="3">Chiedi una finestra al piano di sopra: finisce mezza fuori dal muro, perché niente di scritto diceva dov&rsquo;era il muro.</li>
+        <li data-step="4">Poi torna un&rsquo;istruzione di tre sessioni prima, un muro portante si sposta, e il tetto viene giù con lui.</li>
+        <li data-step="5">Come in tutta l&rsquo;ingegneria, il lavoro con l&rsquo;IA deve procedere per passi, ognuno scritto e verificato prima del successivo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5339,11 +5568,21 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Decisions are locked in writing before anything is planned or built.</li>
-      <li>The physical stages stayed mine: printing, wiring, assembling, testing.</li>
-      <li>References came through a retrieval pipeline, and I approved every one.</li>
-      <li>The site address is on the screen; three of its tools open later in this talk.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">So the AI worked inside rules.</li>
+      <li data-step="1">Every decision is locked in writing before anything is planned or built &mdash; discuss, plan, execute, verify, ship &mdash; and the memory lives on disk.</li>
+      <li data-step="2">Throughout, the AI documented the process, so that record was always its reference. Now, the modules.</li>
+      <li>If asked: the sources? Click that panel &mdash; seven databases, forty candidates reranked, twelve returned, and I approved every reference.</li>
+      <li>If asked: the models? Click the tools panel; the site is live and three of its tools open later in this talk.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Quindi l&rsquo;IA ha lavorato dentro specifiche scritte, una memoria su disco e controlli che non poteva saltare.</p>
+      <ul>
+        <li data-step="0">Quindi l&rsquo;IA ha lavorato dentro regole precise.</li>
+        <li data-step="1">Ogni decisione è fissata per iscritto prima di pianificare o costruire: discutere, pianificare, eseguire, verificare, consegnare. E la memoria resta su disco.</li>
+        <li data-step="2">Per tutto il lavoro l&rsquo;IA ha documentato il processo, e quella documentazione è sempre stata il suo riferimento. Adesso, i moduli.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -5402,10 +5641,15 @@ body[data-view="guest"] .guest-dot {
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
-      <li>Part II is the four modules I designed and built: pump, alignment, nozzle, user interface.</li>
-      <li>The pump comes first because it decides the dose; every other module serves it.</li>
-      <li>Nine minutes for the four. The reagent storage at the end of the part is Marius's work, shown for completeness.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Part II is the four modules I designed and built: pump, alignment, nozzle, user interface.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">I moduli.</p>
+      <ul>
+        <li data-step="0">La Parte II sono i quattro moduli che ho progettato e costruito: pompa, allineamento, ugello, interfaccia utente.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5544,11 +5788,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Thirty mechanisms in six families, a piano hammer and a tattoo machine among them on purpose: an ideation that returns only workable ideas has not searched far enough.</li>
-      <li>Seven passed the screening gates, five were developed, split with Marius; two were built.</li>
-      <li>3485 against 3185 is a 300-point margin, and the matrix gives it to footprint, mass and cleanability — the score is not what decided the build.</li>
-      <li>Not on accuracy: reciprocal pinching needs an array of check valves to route several reagents, which puts wetted moving parts back inside the machine.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Thirty mechanisms in six families, including extravagant ones.</li>
+      <li data-step="2">Seven passed the screening gates, five were developed with Marius, and two reached working hardware.</li>
+      <li data-step="3">Cleanability decided it: a pinch pump needs check valves, wetted moving parts inside the machine.</li>
+      <li>If asked: the matrix gave the rotary a 300-point margin on footprint, mass and cleanability.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Trenta idee si sono ridotte a due costruzioni, e la pompa a strozzamento richiedeva comunque valvole di non ritorno.</p>
+      <ul>
+        <li data-step="0">Trenta meccanismi in sei famiglie, compresi alcuni stravaganti.</li>
+        <li data-step="2">Sette hanno superato i filtri, cinque li abbiamo sviluppati con Marius, e due sono arrivati a hardware funzionante.</li>
+        <li data-step="3">Ha deciso la pulibilità: una pompa a strozzamento richiede valvole di non ritorno, cioè parti bagnate in movimento dentro la macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5613,11 +5866,19 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>The design point is two choices and one consequence: a 0.51 mm bore and four rollers, and every stroke moves 5 µL.</li>
-      <li>Four rollers is the smallest count that never leaves the tube open, and the largest with torque to spare at 12 V.</li>
-      <li>Open the solver, change the roller count, show the feasibility and the torque margin move.</li>
-      <li>These were built while the decisions were open, not written up afterwards.</li>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The decision was the dose, 5 µL per stroke; the 0.51 mm tube bore follows from it.</li>
+      <li data-step="2">I built three tools to guide the design, and with them I chose four rollers.</li>
+      <li data-step="3">The geometry solver sizes the rotor for a target dose and checks which roller counts can be built.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Contare i passi, non i secondi: la dose viene dalla geometria, e l&apos;hanno fissata tre strumenti.</p>
+      <ul>
+        <li data-step="0">La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.</li>
+        <li data-step="2">Ho costruito tre strumenti per guidare il progetto, e con questi ho scelto quattro rulli.</li>
+        <li data-step="3">Il solutore geometrico dimensiona il rotore per una dose data e verifica quali numeri di rulli si possono costruire.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5751,11 +6012,22 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Two parameters reached the build wrong: the rotor radius, 17.70 mm against 19.70, and a tube wall estimated at 1.75 mm rather than measured. A folded paper shim forced occlusion.</li>
-      <li>The inline thermal sensor sat between the pump head and the vessel, as the feedback element of a closed loop. Standard deviation 1159 µL/min about a mean of 1104, apparent reverse flow on one sample in seven, rapid sign changes. The roller-passage fundamental is 6.7 Hz on firmware timing.</li>
-      <li>Head to head on one commanded millilitre: flow 600.1 µL at CV 17.6 % over five replicates, balance 678.0 µL at CV 4.5 % over three weighings. The flow integral underestimated by 11.5 %, so every volume in the thesis is weighed from here on.</li>
-      <li>678 µL on a commanded 1000 is 3.39 µL a stroke against a nominal 5.00 — a repeatable systematic shortfall, so the shape of the parts, not the motor. Closed-loop control was set aside here.</li>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The first pump: the rotor came out 2 mm too small, and the gap was drawn from a guessed tube wall, not a measured one.</li>
+      <li data-step="2">To measure the flow I used an inline flow sensor. Its readings scattered more than the flow itself, and one sample in seven read backwards.</li>
+      <li data-step="3">So I switched to an analytical balance. From here on, every volume in the thesis is weighed.</li>
+      <li data-step="4">On the balance it gave 3.39 µL per stroke instead of 5, and the shortfall repeated from dose to dose. That means it came from the geometry of the printed parts, not from the motor.</li>
+      <li>If asked: on the same deliveries the flow sensor read 11.5 % below the balance; closed-loop control was set aside.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato.</p>
+      <ul>
+        <li data-step="0">La prima pompa: il rotore è uscito 2 mm troppo piccolo, e il gioco era disegnato su uno spessore del tubo stimato, non misurato.</li>
+        <li data-step="2">Per misurare il flusso ho usato un sensore in linea. Le sue letture oscillavano più del flusso stesso, e un campione su sette segnava all&rsquo;indietro.</li>
+        <li data-step="3">Così sono passato a una bilancia analitica. Da qui in poi, ogni volume della tesi è pesato.</li>
+        <li data-step="4">Sulla bilancia dava 3,39 µL per corsa invece di 5, e lo scarto si ripeteva da una dose all&rsquo;altra. Quindi veniva dalla geometria dei pezzi stampati, non dal motore.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -5908,11 +6180,22 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>v2.1: the bore sat 0.45 mm above the shaft, so the gap opened to 2.22 mm at the apex against a 1.82 mm closure threshold.</li>
-      <li>v2.2: printed pegs taper 0.085 mm, two stacked bearings tilted the roller 0.6 degrees; fixed with one bearing on the wide base.</li>
-      <li>A housing drawn at 1.52 mm printed at 1.75, so the printer was characterised on rings: parts predictable to 0.10 mm.</li>
-      <li>v2.3, here in parts: Gap 1.52 V2.3 is embossed on the housing face, and a caliper through each of the three slots read 1.52 mm at every one. Land on: CAD dimensions are assumptions until they are anchored to a physical datum.</li>
+      <li data-step="meta">~45 s</li>
+      <li data-step="0">In v2.1 the pump head sat 0.45 mm too high on its mount, so the gap opened at the top of the track and the tube did not seal there.</li>
+      <li data-step="2">In v2.2 the printed pegs came out slightly conical, so the rollers tilted. One bearing on the wide base of the peg fixed it.</li>
+      <li data-step="3">Then I measured the printer itself, on test rings. Outer sizes shrink by 0.65 %, and inner bores lose a fixed 0.14 mm.</li>
+      <li data-step="4">This is v2.3, taken apart. With every correction in, the gap measured 1.52 mm at all three inspection slots.</li>
+      <li>If asked: a housing drawn with a 1.52 mm gap measured 1.75 mm, and that is why I characterised the printer.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Altre tre costruzioni hanno sistemato la stampa, non la fisica.</p>
+      <ul>
+        <li data-step="0">Nella v2.1 la testa della pompa stava 0,45 mm troppo in alto sul supporto, così in cima alla pista il gioco si apriva e il tubo lì non sigillava.</li>
+        <li data-step="2">Nella v2.2 i perni stampati uscivano leggermente conici, e i rulli si inclinavano. Un solo cuscinetto sulla base larga del perno ha risolto.</li>
+        <li data-step="3">Poi ho misurato la stampante stessa, su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.</li>
+        <li data-step="4">Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6006,11 +6289,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>The benchmark is drawn first: a manual laboratory pipette, ten 50 µL replicates on the same balance, scatters 0.27 %. The comparison holds for cumulative volumes — the pump's points are 100- and 300-stroke deliveries.</li>
-      <li>The slide says only that four speeds were run. They were 60, 120, 180 and 240 rpm. If asked why a sweep at all: rotation trades delivered volume against repeatability — slower gives slightly more volume per stroke but repeats less reliably, faster loses both.</li>
-      <li>180 rpm gives the lowest coefficient of variation, costs only 1.7 % of the volume per stroke against the slowest setting, and dispenses three times faster than 60 rpm. That is why it is the operating speed. At it the module sits at 0.25 % over 100 strokes and 0.34 % over 300.</li>
-      <li>The result: 4.53 µL a stroke, the mean of the 100- and 300-stroke tests, which agree within 0.02 %. That is the calibration constant: it underdelivers the nominal 5.0 µL by 9.4 %, corrected once in firmware. The clip beside the chart is one of those weighings on the analytical balance.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">The dashed line is a manual pipette on the same balance, a CV of 0.27 %. The two series are the pump at 100 and 300 strokes, run at four speeds.</li>
+      <li data-step="2">At 180 rpm the pump varies least, level with the pipette, and it doses three times faster than at 60. That became the operating speed.</li>
+      <li data-step="3">At that speed one stroke gives 4.53 µL, 9.4 % under the 5 µL design. The firmware corrects for that once.</li>
+      <li>If asked: the pump points are 100- and 300-stroke totals; slower speeds deliver slightly more but repeat worse.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La pompa ripete una dose bene quanto una mano con una pipetta.</p>
+      <ul>
+        <li data-step="0">La linea tratteggiata è una pipetta manuale sulla stessa bilancia, un CV dello 0,27 %. Le due serie sono la pompa a 100 e 300 corse, a quattro velocità.</li>
+        <li data-step="2">A 180 giri al minuto la pompa varia meno, alla pari della pipetta, e dosa tre volte più in fretta che a 60. È diventata la velocità di lavoro.</li>
+        <li data-step="3">A quella velocità una corsa dà 4,53 µL, il 9,4 % sotto i 5 µL di progetto. Il firmware lo corregge una volta sola.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6108,11 +6400,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Fifty ideas with Marius, ten survived. Still nozzles mean tubing that never bends, and the rack is the progress bar.</li>
-      <li>One rule ran the module, and the sketch sheet boxes it: cleanability first, feasibility second. It is what threw out the circular layout, the belt and pulley, and pushing from underneath the open tubes — bottom-push scored 9 points against 17 on fluid ingress alone.</li>
-      <li>Eight tubes because biology counts in eights; 22 mm apart because a cap opener needs the room, measured off Pulkit&apos;s prototype.</li>
-      <li>That pitch sets 154 mm of travel, and the footprint of the whole instrument belongs to the consumable.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">I evaluated the design concepts on paper and chose to move the tubes and keep the nozzles still, so the tubing never bends.</li>
+      <li data-step="2">Cleanability and feasibility were the main rules. They ruled out a circular layout, a belt and pulley, and pushing the rack from below.</li>
+      <li data-step="3">The rack holds eight tubes, since lab equipment comes in multiples of eight, 22 mm apart to leave room for a cap opener. That spacing sets the length of the machine.</li>
+      <li>If asked: the 22 mm was measured off Pulkit&rsquo;s working cap-opener prototype.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Muovere le provette, tenere fermi gli ugelli, e lasciare che la distanza tra le provette fissi le dimensioni della macchina.</p>
+      <ul>
+        <li data-step="0">Ho valutato i concetti di progetto su carta e ho scelto di muovere le provette e tenere fermi gli ugelli, così il tubo non si piega mai.</li>
+        <li data-step="2">Le regole principali erano pulibilità e fattibilità. Hanno escluso il layout circolare, cinghia e puleggia, e la spinta della rastrelliera dal basso.</li>
+        <li data-step="3">La rastrelliera tiene otto provette, perché le attrezzature di laboratorio lavorano a multipli di otto, a 22 mm l&rsquo;una dall&rsquo;altra per lasciare spazio a un apritappi. È questa distanza a fissare la lunghezza della macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6165,11 +6466,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>v1 proved the printed involute rack and pinion indexes repeatably, which is why the rest could stay printed.</li>
-      <li>v2 put the motor above the sample plane: gravity protects the drive, and a seal is a wearing part that must itself be cleaned.</li>
-      <li>v2.1 added a normally-closed switch and a three-pass home: 0.03 mm repeatability, no step loss over 132 mm, homing cut from 110 s to 22 s.</li>
-      <li>If asked: that rail ran six index moves before the rack reached the end of the pinion, where eight positions need seven. A limit of the rail's length, not of the drive — and the V3 chassis on the next slide is the answer to it.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">v1: a printed rack and pinion moves the tubes in 22 mm steps, repeatably. So the rest of the module could stay printed.</li>
+      <li data-step="2">v2 puts the motor above the samples. Spills fall down, away from the drive, so it needs no seal.</li>
+      <li data-step="3">v2.1 adds a limit switch and finds its zero in three passes, to within 0.03 mm.</li>
+      <li>If asked: that rail gave 140 of the 154 mm needed, six moves of seven; the final chassis fixed the length.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Tre costruzioni hanno dato un modulo di allineamento stampato che trova da solo il proprio zero.</p>
+      <ul>
+        <li data-step="0">v1: pignone e cremagliera stampati spostano le provette a passi di 22 mm, in modo ripetibile. Così il resto del modulo è potuto restare stampato.</li>
+        <li data-step="2">La v2 mette il motore sopra i campioni. Le gocce cadono verso il basso, lontano dalla trasmissione, quindi non serve una guarnizione.</li>
+        <li data-step="3">La v2.1 aggiunge un finecorsa e trova lo zero in tre passate, entro 0,03 mm.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6229,12 +6539,22 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Input queue at the left, dispensing lane in the middle, output tray at the right: the U the rack travels. A second transverse axis feeds the next rack onto the lane, so a standard batch is five racks — four waiting, one pre-loaded.</li>
-      <li>Seven index steps of 22 mm, 154 mm of travel, and the rack holds on every position while the nozzles dispense.</li>
-      <li>Ejection is passive: two angled ribs under the rack, two angled grooves in the floor, and the final 22 mm of the existing stroke turns forward travel into a diagonal slide into the tray, one millimetre below the lane. No second motor, no spring, no pivot.</li>
-      <li>The chassis stopped being a module and became the frame of the instrument: 500 mm long, printed in three sections, with the electronics bay in the middle.</li>
-      <li>If asked about unattended running: the capacity is five racks, and the dye run of 10 September carried two. The one known failure mode is a lid left flat rather than standing — it rubs the chamfered wall and the drive cannot sense it.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Racks wait in the input queue, and a second axis pushes each one onto the dispensing lane. It holds five racks per batch.</li>
+      <li data-step="2">The rack moves in seven steps of 22 mm and stops at each one while the nozzles dispense.</li>
+      <li data-step="3">On the last push, two ribs under the rack slide into two angled grooves in the floor, and the rack drops into the output tray. No extra motor.</li>
+      <li data-step="4">The chassis ended up as the frame of the whole instrument.</li>
+      <li>If asked: a lid pushed flat can rub the chamfered wall. The drive cannot sense it, so the rack falls short and the dose lands beside the tube; the instruction is to leave lids standing.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il telaio finale mette in coda cinque rastrelliere e le espelle senza un motore in più.</p>
+      <ul>
+        <li data-step="0">Le rastrelliere aspettano nella coda di ingresso, e un secondo asse spinge ciascuna nella corsia di dosaggio. Ne tiene cinque per lotto.</li>
+        <li data-step="2">La rastrelliera avanza in sette passi da 22 mm e si ferma a ogni passo mentre gli ugelli dosano.</li>
+        <li data-step="3">All&rsquo;ultima spinta, due nervature sotto la rastrelliera entrano in due scanalature inclinate nel pavimento, e la rastrelliera cade nel vassoio di uscita. Nessun motore in più.</li>
+        <li data-step="4">Alla fine il telaio è diventato la struttura dell&rsquo;intero strumento.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6302,11 +6622,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>It arrived working in principle and inoperative in practice: the eccentric was a printed plastic arm, too weak to shed a pendant droplet; there was no interface to bolt it to the chassis; and the OpenSCAD file exported only a mesh, so Fusion opened an unmodifiable body. Modelled again from scratch, off caliper measurements. The vibration-detachment principle is Marius&apos;s, and I kept it.</li>
-      <li>The seat is a printed negative of the needle&apos;s own moulded hub. Hub and Luer geometry are identical across gauges, only the bore changes, so one seat takes any needle on a slip fit — right on the first print, and with no tools.</li>
-      <li>Vertical guide posts give the carrier one degree of freedom. The eccentric throws force in every direction; the posts absorb all of it but the vertical, which is what keeps a droplet from leaving sideways.</li>
-      <li>A magnet and three offset steel nuts replaced the printed arm. The carrier then walked up its posts until it came off, so holes were drilled and elastic bands routed round it — one is fitted here. Slack through the stroke, tight at the limits, so retention costs no compliance.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">It arrived not working: too weak to release a droplet, nothing to mount it with, and a mesh file I could not edit.</li>
+      <li data-step="2">I kept Marius&rsquo;s idea, shaking the droplet off by vibration, and redrew the module from scratch. Vertical posts let it move only up and down.</li>
+      <li data-step="3">A magnet and three steel nuts replaced the printed weight on the vibration motor. The elastic band stops the carrier shaking off its posts. The needles sit 22 mm apart, like the tubes.</li>
+      <li>If asked: each seat is a printed negative of the needle hub, so any gauge fits without tools.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">L&apos;ugello consegnato da Marius non funzionava, così l&apos;ho ricostruito da zero.</p>
+      <ul>
+        <li data-step="0">È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un file mesh che non potevo modificare.</li>
+        <li data-step="2">Ho tenuto l&rsquo;idea di Marius, staccare la goccia con la vibrazione, e ho ridisegnato il modulo da zero. Le colonnine verticali lo lasciano muovere solo su e giù.</li>
+        <li data-step="3">Un magnete e tre dadi d&rsquo;acciaio hanno sostituito il peso stampato sul motore a vibrazione. L&rsquo;elastico impedisce al carrello di sfilarsi dalle colonnine. Gli aghi stanno a 22 mm l&rsquo;uno dall&rsquo;altro, come le provette.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6375,18 +6704,29 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Five tips, water, the same burst: the only thing changed is the bore.</li>
-      <li>At 0.21 and 0.26 mm the liquid leaves as a stream and the vibration has nothing to act on.</li>
-      <li>At 0.41 and 0.51 mm a droplet forms, grows, and the burst releases it.</li>
-      <li>Plastic tips beat every steel needle, nine of ten and never sideways; the machine still ran on 22 G steel.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Five tips, tested with water and the same vibration burst. Only the bore changes.</li>
+      <li data-step="2">At 0.21 and 0.26 mm the water comes out as a stream, so the burst has nothing to release.</li>
+      <li data-step="3">At 0.41 and 0.51 mm a droplet forms and grows, and the burst releases most of them.</li>
+      <li data-step="4">The plastic tips did best: nine of ten droplets released, none sideways. The machine itself ran on 22 G steel needles.</li>
+      <li>If asked: the plastic tips&rsquo; bore was not measured, and they were taped on, not seated.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">È il foro dell&apos;ago a decidere se la goccia si forma.</p>
+      <ul>
+        <li data-step="0">Cinque punte, provate con acqua e lo stesso impulso di vibrazione. Cambia solo il diametro interno.</li>
+        <li data-step="2">A 0,21 e 0,26 mm l&rsquo;acqua esce come un getto, quindi l&rsquo;impulso non ha niente da staccare.</li>
+        <li data-step="3">A 0,41 e 0,51 mm si forma una goccia che cresce, e l&rsquo;impulso stacca la maggior parte delle gocce.</li>
+        <li data-step="4">Le punte di plastica sono andate meglio: nove gocce su dieci staccate, nessuna di lato. La macchina ha lavorato con aghi d&rsquo;acciaio 22 G.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
 <!-- ══ S22 · the inherited screen, and the browser that checked itself ══ -->
 <section class="slide" id="s22" data-cue="s22" data-dialect="cards" data-part="II"
          data-map="ui" style="--head-h:48px">
-  <h2 class="slide__title">The inherited screen trapped the user, so it was redrawn in a browser that checked its own buttons.</h2>
+  <h2 class="slide__title">The inherited UI had no wiring behind it, turning a necessary hookup into a complete redesign.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -6445,11 +6785,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Porting was easy, finishing was not: a calibration screen you could only leave by power-cycling.</li>
-      <li>A 240-pixel canvas fits three list rows, so the interface became a picture of the machine.</li>
-      <li>Nine candidates, three rounds, each page auditing itself against the 7:1 ratio guidance sets, measured at the panel's 16-bit depth.</li>
-      <li>It caught the first palette failing its own requirement at 6.2:1, in the browser, before the device.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">The interface I inherited only showed the storage levels. It drove no motor, and its calibration screen could only be left by switching the machine off. So hooking it up meant redesigning it.</li>
+      <li data-step="2">The panel is 240 pixels tall: about three list rows. So the new design draws the machine instead, with bottles showing their fill.</li>
+      <li data-step="3">I drew nine candidates over three rounds as web pages, and each page checked itself against the 7:1 contrast requirement.</li>
+      <li>If asked: that check caught the first palette at 6.2:1, in the browser, before it reached the device.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">L&apos;interfaccia ereditata non aveva cablaggio dietro: un collegamento necessario è diventato una riprogettazione completa.</p>
+      <ul>
+        <li data-step="0">L&rsquo;interfaccia che ho ereditato mostrava solo i livelli dello stoccaggio. Non comandava nessun motore, e dalla schermata di calibrazione si usciva solo spegnendo la macchina. Collegarla voleva dire riprogettarla.</li>
+        <li data-step="2">Il pannello è alto 240 pixel: circa tre righe di elenco. Così il nuovo design disegna la macchina, con le bottiglie e il loro livello.</li>
+        <li data-step="3">Ho disegnato nove candidate in tre giri, come pagine web, e ogni pagina si verificava da sola rispetto al requisito di contrasto di 7:1.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6501,11 +6850,19 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Six screens is the whole run: home, pick, assign, check, dispense, done.</li>
-      <li>The check is the point: it compares what the recipe needs with what the bottles hold, and it can rename Start to Refill first.</li>
-      <li>Do not narrate the six. Fold them down and open the live card, then walk one run there; the machine below is doing the same thing.</li>
-      <li>The interface never shows a number it cannot stand behind.</li>
+      <li data-step="meta">~60 s</li>
+      <li data-step="0">A whole run takes six screens: home, choose a recipe, assign it, check, dispense, done.</li>
+      <li data-step="1">The check compares what the recipe needs with what the bottles hold. If a bottle is short, the start button turns into Refill first.</li>
+      <li data-step="2">The live interface is the machine&rsquo;s own screens, captured from the device and made clickable, so one run can be walked through here. Where a level cannot be read, it shows no number.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Una corsa intera, dall&apos;inizio alla fine, su un solo schermo.</p>
+      <ul>
+        <li data-step="0">Una corsa intera sono sei schermate: home, scelta della ricetta, assegnazione, verifica, dosaggio, fine.</li>
+        <li data-step="1">La verifica confronta quanto chiede la ricetta con quanto contengono le bottiglie. Se una bottiglia non basta, il pulsante di avvio diventa &laquo;Refill first&raquo;.</li>
+        <li data-step="2">L&rsquo;interfaccia dal vivo sono le schermate della macchina, catturate dal dispositivo e rese cliccabili, così si può percorrere una corsa qui. Dove un livello non si può leggere, non mostra nessun numero.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6557,11 +6914,18 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Where it comes from: Marius built it and handed it over as working hardware, the one module here I did not design.</li>
-      <li>The vial hangs inverted under a septum that recloses after the needle leaves.</li>
-      <li>The circle is the air filter: one needle draws the reagent, one vents the vial, and the air that replaces it passes a 0.22 µm filter, fine enough to retain microorganisms.</li>
-      <li>It came over as an uneditable mesh, so the carrier was designed around the hardware.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">The reagent storage is Marius&rsquo;s: the cartridge, the sleeve and the needle holder.</li>
+      <li data-step="3">I added the filter on the air inlet; the model came as a mesh I could not edit.</li>
+      <li>If asked: the filter is 0.22 µm, fine enough to keep out microorganisms.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il reagente aspetta in un flaconcino sigillato, letto da un sensore e prelevato da due aghi.</p>
+      <ul>
+        <li data-step="0">Lo stoccaggio dei reagenti è di Marius: la cartuccia, il manicotto e il portaaghi.</li>
+        <li data-step="3">Io ho aggiunto il filtro sull&rsquo;ingresso dell&rsquo;aria; il modello è arrivato come mesh, non modificabile.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -6622,10 +6986,15 @@ body[data-view="guest"] .guest-dot {
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
-      <li>Step back from the modules: from here on there is one object.</li>
-      <li>Three stops: how it was wired, how the parts were bound together, what it delivered.</li>
-      <li>Then the machine itself, in this room.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">From here on, the modules become one machine: how it was wired, how it was put together, and what it achieved.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Parte III-A · Una sola macchina.</p>
+      <ul>
+        <li data-step="0">Da qui in poi i moduli diventano una macchina sola: come è stata cablata, come è stata montata e che cosa ha ottenuto.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6639,7 +7008,7 @@ body[data-view="guest"] .guest-dot {
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
 
-  <p class="p3-question" id="s26-q">One microcontroller driving a screen, six pumps, two axes, and a vibration motor.</p>
+  <p class="p3-question" id="s26-q">What had to be controlled: a screen, six pumps, two axes, and a vibration motor.</p>
   <span class="p3-qrule" id="s26-qrule"></span>
 
   <div class="tool-card" id="s26-card-a"
@@ -6665,11 +7034,24 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>The question: one microcontroller driving a screen, six pumps, two axes and a nozzle vibration motor.</li>
-      <li>Explorer: twenty-five system architectures in four families, costed on real prices, audited against real pins. Pins and driver intelligence decided it, not cost &#8212; a dumb driver makes the processor toggle a pin for every microstep, six of them need twelve lines and only seven are left once the screen and card reader are wired, and every candidate that fits the pin budget lands within about 10 % of the others on price.</li>
-      <li>Simulator: the second pump captures 86 % of the time savings; the four after it yield diminishing returns.</li>
-      <li>Say: a datasheet review would have ended in whichever option I examined last. Open each card briefly.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">There were twenty-five ways to wire this machine, and I needed a fair way to choose.</li>
+      <li data-step="1">It had to control a screen, six pumps, two axes and a vibration motor, with as many controllers as it took.</li>
+      <li data-step="2">The first tool priced every option and checked its connections, and the connections decided it, not the price.</li>
+      <li data-step="3">The second tool timed the work. A second pump saves most of the time, 86 %, and more add little.</li>
+      <li data-step="4">&#8212;</li>
+      <li>If asked about price: every option with enough connections costs within about 10 % of the others.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Venticinque modi di cablare la macchina, confrontati con due strumenti.</p>
+      <ul>
+        <li data-step="0">C&apos;erano venticinque modi di cablare questa macchina, e serviva un modo onesto per scegliere.</li>
+        <li data-step="1">Bisognava comandare uno schermo, sei pompe, due assi e un motorino a vibrazione, con quanti processori servissero.</li>
+        <li data-step="2">Il primo strumento ha prezzato ogni opzione e ne ha controllato i collegamenti: hanno deciso i collegamenti, non il prezzo.</li>
+        <li data-step="3">Il secondo strumento ha misurato i tempi. Una seconda pompa fa risparmiare quasi tutto il tempo, l&apos;86 %, e le altre aggiungono poco.</li>
+        <li data-step="4">Entrambi gli strumenti sono pagine vere, che si possono aprire dal vivo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6713,11 +7095,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Two pictures: what carries the signals, and what carries the power.</li>
-      <li>Signals: one processor, one shared step-and-direction clock for all six pump heads, one enable line each. A dose is a number of steps, so they can share the clock. The slower parts hang off a two-wire bus.</li>
-      <li>Power as built: one 12 V rail from a tool battery or the bench supply, and a converter for the 5 V rail.</li>
-      <li>Production: a regulated USB-C power bank feeding a 24 V motor rail, with a step-down ahead of the board &#8212; a raw pack sags under motor load, which is what stalled the prototype. The fitted 16 V bulk capacitors have to be replaced before that rail can go in.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">One processor sends the same step signal to all six pumps, because a dose is a number of steps, not a length of time.</li>
+      <li data-step="1">As built, everything runs from one 12 volt line, fed by a tool battery or the bench supply.</li>
+      <li data-step="2">For production I would use a regulated USB-C power bank, because a plain battery loses voltage under load, and that is what stopped the prototype.</li>
+      <li>If asked: the capacitors on the board are rated for 16 volts, so they must be replaced before a 24 volt motor line goes in.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un solo segnale muove sei pompe, perché una dose è un numero di passi.</p>
+      <ul>
+        <li data-step="0">Il processore manda lo stesso segnale di passo a tutte e sei le pompe, perché una dose è un numero di passi, non un tempo.</li>
+        <li data-step="1">Com&apos;è costruita, tutto parte da un&apos;unica linea a 12 volt, da una batteria per utensili o dall&apos;alimentatore da banco.</li>
+        <li data-step="2">Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6820,12 +7211,27 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>One carrier per channel: the pump drops in from above, the storage module slides in from the front, and the suction line stays as short as it can be.</li>
-      <li>Two variants, identical inside: the central one screws into the rear wall, the left one adds a tall flange for the exterior side wall.</li>
-      <li>Dovetails plus horizontal screws, because an operator does not know which part is load-bearing.</li>
-      <li>Two of six channels built; the rest is capacity, not hardware.</li>
-      <li>From here the bottom of the slide keeps one picture of everything the integration produced.</li>
+      <li data-step="meta">~20 s</li>
+      <li data-step="0">Each pump and its reagent share one printed holder.</li>
+      <li data-step="1">The container is Marius&apos;s design; the holder is mine.</li>
+      <li data-step="2">The pump drops in from above, the container from the front.</li>
+      <li data-step="3">&#8212;</li>
+      <li data-step="4">The left one also screws into the side wall.</li>
+      <li data-step="5">They slot together and are screwed down.</li>
+      <li data-step="6">&#8212;</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Ogni pompa e il suo reagente stanno in un unico supporto stampato, e i supporti si tengono a vicenda.</p>
+      <ul>
+        <li data-step="0">Ogni pompa e il suo reagente condividono un unico supporto stampato.</li>
+        <li data-step="1">Il contenitore è un progetto di Marius; il supporto è mio.</li>
+        <li data-step="2">La pompa entra dall&apos;alto, il contenitore da davanti.</li>
+        <li data-step="3">Il supporto caricato, con la pompa e il contenitore al loro posto.</li>
+        <li data-step="4">Quello di sinistra si avvita anche alla parete laterale.</li>
+        <li data-step="5">I supporti si incastrano tra loro e sono avvitati.</li>
+        <li data-step="6">La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6914,11 +7320,23 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>The nozzle holder needed no new part: it docks on the electronics bay, two screws down and a third horizontally into the bay wall. You saw the module itself in Part II.</li>
-      <li>450 mm of tubing leaves each pump head and crosses the toothed drive rack to its needle hub, unguided, hand-disconnectable.</li>
-      <li>The screen sits at 45 degrees because the instrument is meant to be looked down at, on a table or the bed of a truck.</li>
-      <li>Split on a sliding dovetail: adding the stylus clips cost one half-print. About ten prints in all.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">The nozzle needed no new part: three screws hold it to the electronics box, one hidden to the side.</li>
+      <li data-step="1">Each pump feeds its needle through a tube that unplugs by hand.</li>
+      <li data-step="2">The screen holder also carries two clips for the pen.</li>
+      <li data-step="3">It tilts the screen to 45 degrees, because you look down at this machine, on a table or a truck bed.</li>
+      <li data-step="4">&#8212;</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">L&apos;ugello si avvita al telaio; lo schermo si inclina a 45 gradi, così lo si guarda dall&apos;alto.</p>
+      <ul>
+        <li data-step="0">L&apos;ugello non ha richiesto pezzi nuovi: tre viti lo fissano al vano dell&apos;elettronica, una di lato.</li>
+        <li data-step="1">Ogni pompa porta il liquido al suo ago con un tubo che si stacca a mano.</li>
+        <li data-step="2">Il supporto dello schermo ha anche due clip per il pennino.</li>
+        <li data-step="3">Inclina lo schermo a 45 gradi, perché questa macchina si guarda dall&apos;alto, su un tavolo o sul cassone di un furgone.</li>
+        <li data-step="4">Il supporto dello schermo entra nella barra in basso.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -6989,11 +7407,21 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>The cheapest win in the whole integration: a published DeWalt holder, holes filled in CAD and re-cut for M3, three horizontal screws.</li>
-      <li>The pack replaces the bench supply on the same connector, with no internal rewiring.</li>
-      <li>That is the fourth and last thing the integration produced: the record along the bottom is now complete.</li>
-      <li>The outdoor run is a scenario, not a claim — there is no enclosure yet. Say so plainly while it plays.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">The battery holder is adapted from a published holder for DeWalt batteries; I remade its screw holes in CAD.</li>
+      <li data-step="1">Three screws hold it, and the battery plugs into the bench supply&apos;s socket, so nothing inside was rewired.</li>
+      <li data-step="2">That was the last piece the machine needed.</li>
+      <li data-step="3">Here it runs outdoors on battery. That is a scenario, not a claim: without a case, it only runs reliably indoors.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un supporto per batteria già pubblicato e tre viti portano l&apos;alimentazione a bordo.</p>
+      <ul>
+        <li data-step="0">Il supporto della batteria nasce da un supporto già pubblicato per batterie DeWalt; ho rifatto in CAD i fori delle viti.</li>
+        <li data-step="1">Lo tengono tre viti, e la batteria si collega alla presa dell&apos;alimentatore da banco, quindi dentro non si è ricablato niente.</li>
+        <li data-step="2">Era l&apos;ultimo pezzo che mancava alla macchina.</li>
+        <li data-step="3">Qui lavora all&apos;aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7059,10 +7487,18 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Everything along the bottom is what the integration produced: the carrier, the nozzle mount, the screen holder, the battery cradle.</li>
-      <li>Together they make one object: 50 by 35 by 18 centimetres, 3.3 kilograms.</li>
-      <li>The battery accounts for 5.5 cm of the depth; the storage modules set the height.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Put together, those four pieces make the modules one object.</li>
+      <li data-step="1">It weighs 3.3 kilograms with the racks and the battery, and you lift it with two hands.</li>
+      <li>If asked: 50 by 35 by 18 centimetres; the battery adds 5.5 centimetres of the depth.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Quattro giunzioni, e i moduli diventano un oggetto solo di 3,3 kg.</p>
+      <ul>
+        <li data-step="0">Messi insieme, questi quattro pezzi fanno dei moduli un oggetto solo.</li>
+        <li data-step="1">Pesa 3,3 chili con i rack e la batteria, e si solleva con due mani.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7116,29 +7552,25 @@ body[data-view="guest"] .guest-dot {
       <path d="M 48 268 L 788 268" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
     </svg>
 
-    <!-- Repeatability, stated so it says what the number IS and what it is
-         of (Sirio, 2026-09-23: "what is that dose to dose thing?").  These
-         are the CVs of the very same three doses per channel the bars above
-         are computed from: the 180 rpm session of 2026-09-10, both channels
-         on the 3 A mains supply, both carrying the 4.08 uL/stroke constant,
-         n = 3 after the fourth dose of each channel is excluded for
-         reservoir exhaustion -- 0.71 % on Channel 1, 0.37 % on Channel 2,
-         the pair chapter 12 publishes beside -3.4 % and +0.6 %.  The 1.04 %
-         and 2.94 % that stood here until 2026-09-23 were the LATER session
-         (battery, one pump at a time, each head on its own constant), so the
-         slide was splicing two campaigns.  The between-session drift stays
-         in the speaker notes, where it is the argument for on-device
-         recalibration.
+    <!-- The between-session drift of the per-stroke calibration (Sirio,
+         2026-09-23: show the drift, not the within-session CV).  Thesis ch. 12,
+         12_System-Level-Validation.tex line 81: "Across separate sessions with
+         re-primed lines and a different power supply, the per-step delivery
+         constants shifted by +1.3 % and -5.0 %".  Channel attribution from the
+         campaign record (VALIDATION-PLAN.md, run 5): Channel 1 +1.3 %
+         (3.990 against 3.940 uL/stroke), Channel 2 about -5 % (3.896 against
+         4.103).  Not a CV, so never labelled as one.  The within-session CVs,
+         0.71 % and 0.37 %, are an "If asked" line in the notes.
 
          HTML over the plate, deliberately not SVG <text>: this chart's
          viewBox is 1:1 with its box, which is the exact case where Chrome
          lays the glyphs out at the pre-scale CTM and paints them off their
          own measured box. -->
     <div class="s31-cv" id="s31-cv">
-      <span class="s31-cv-k">Coefficient of variation, three consecutive 1000 &#181;L doses on each channel, one session</span>
+      <span class="s31-cv-k">Drift between sessions (1000 &#181;L)</span>
       <span class="s31-cv-r">
-        <span class="s31-cv-i"><b>Channel 1</b><i>0.71 %</i></span>
-        <span class="s31-cv-i"><b>Channel 2</b><i>0.37 %</i></span>
+        <span class="s31-cv-i"><b>Channel 1</b><i>+1.3 %</i></span>
+        <span class="s31-cv-i"><b>Channel 2</b><i>&#8722;5.0 %</i></span>
       </span>
     </div>
   </div>
@@ -7154,17 +7586,32 @@ body[data-view="guest"] .guest-dot {
     <span class="p3-k">per stroke</span>
     <span class="p3-srow"><b>Channel 1</b><i>3.94 &#181;L</i></span>
     <span class="p3-srow"><b>Channel 2</b><i>4.10 &#181;L</i></span>
-    <p class="p3-snote">about 10 % less than the isolated bench head</p>
+    <p class="p3-snote">about 10 % less than on the bench</p>
   </div>
 
   <aside class="notes">
     <ul>
-      <li>A commanded 1000 &#181;L through the whole assembled path, into tared tubes standing in the rack &#8212; capped and weighed as they stood, not on a boat.</li>
-      <li>On the constant from the isolated pump bench it fell about 18 % short. Recalibrating that constant on the assembled instrument is the whole story: &#8722;3.4 % and +0.6 %, both inside the 10 % limit.</li>
-      <li>Assembled, the heads give 3.94 and 4.10 &#181;L a stroke, about 10 % less than the bench head &#8212; that is the shortfall the recalibration absorbs.</li>
-      <li>Dose to dose, in that same session: a coefficient of variation of 0.71 % on Channel 1 and 0.37 % on Channel 2 &#8212; the same three consecutive doses of a commanded 1000 &#181;L the bars are computed from, through the whole assembled path. For scale, a hand micropipette measured 0.27 % on the same balance — but at 50 &#181;L, not 1000 &#181;L, so it is the same order rather than a like-for-like win.</li>
-      <li>Not on the slide, say it: that is repeatability inside one session. Across sessions &#8212; lines re-primed, run from the battery &#8212; the constants moved +1.3 % and &#8722;5.0 %, which is why a field instrument has to be able to recalibrate itself.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">To test accuracy, I asked the whole machine for a thousand microlitres and weighed the tube.</li>
+      <li data-step="1">The shaded band is what the requirement allows: 10 % either way.</li>
+      <li data-step="2">Using the pump&apos;s calibration from the bench, the machine delivered about 18 % too little.</li>
+      <li data-step="3">So I recalibrated it on the machine itself, and both channels landed inside the band.</li>
+      <li data-step="4">Installed, each pump gives about 10 % less per stroke than on the bench, and the recalibration corrects that.</li>
+      <li data-step="5">But the calibration moves between sessions, by +1.3 % and &#8722;5.0 %, so a field machine must be able to recalibrate itself.</li>
+      <li>If asked: within one session, from one dose to the next, it varied by only 0.71 % and 0.37 %.</li>
+      <li>If asked: a hand pipette varied by 0.27 % on the same balance, but at 50 microlitres, so it is the same order, not a fair win.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Calibrata sulla macchina stessa, la dose resta entro il 3,4 % del valore voluto.</p>
+      <ul>
+        <li data-step="0">Per provare la precisione ho chiesto alla macchina intera mille microlitri e ho pesato la provetta.</li>
+        <li data-step="1">La fascia chiara è quanto ammette il requisito: il 10 % in più o in meno.</li>
+        <li data-step="2">Con la taratura della pompa fatta al banco, la macchina dava circa il 18 % in meno.</li>
+        <li data-step="3">Così l&apos;ho ricalibrata sulla macchina stessa, ed entrambi i canali sono finiti dentro la fascia.</li>
+        <li data-step="4">Montata, ogni pompa dà circa il 10 % in meno a colpo che al banco, e la ricalibrazione corregge proprio questo.</li>
+        <li data-step="5">Ma la taratura si sposta fra una sessione e l&apos;altra, del +1,3 % e del −5,0 %, quindi una macchina da campo deve sapersi ricalibrare da sola.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7219,12 +7666,25 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>A dual-reagent protocol, 100 and 75 microlitres, across forty tubes in five racks, start to finish without any user help.</li>
-      <li>What made it possible was slowing the linear axes so the steppers could push a loaded five-rack magazine without stalling.</li>
-      <li>First and last rack held comparable volumes by eye. On the bench supply, not on battery.</li>
-      <li>A separate fact, and it is droplets, not tubes: apart from the cap fouling &#8212; which is counted on its own, and comes next &#8212; three droplets wetted the rack deck or the lane instead of falling into a tube.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Next, the real test: can it run a full batch with nobody touching it?</li>
+      <li data-step="1">It started with forty empty tubes in five racks, running on the bench supply, not the battery.</li>
+      <li data-step="2">It filled all forty with both reagents, without any help.</li>
+      <li data-step="3">A tube from the first rack and one from the last hold about the same amount, by eye.</li>
+      <li data-step="4">Only three drops missed and landed on the rack or the lane. The caps caused a separate problem, which comes next.</li>
+      <li>If asked how: the motors were slowed down, which gave them the strength to push five loaded racks.</li>
       <li>If asked for a run time: the thesis does not report one.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Dosaggio senza nessun intervento, validato su cinque rack e quaranta provette.</p>
+      <ul>
+        <li data-step="0">Poi la prova vera: la macchina riesce a completare un lotto intero senza che nessuno la tocchi?</li>
+        <li data-step="1">Si parte con quaranta provette vuote in cinque rack, con l&apos;alimentatore da banco, non a batteria.</li>
+        <li data-step="2">Le ha riempite tutte e quaranta con entrambi i reagenti, senza nessun aiuto.</li>
+        <li data-step="3">Una provetta del primo rack e una dell&apos;ultimo contengono, a occhio, la stessa quantità.</li>
+        <li data-step="4">Solo tre gocce sono finite sul rack o sulla corsia. I tappi hanno causato un problema a parte, che viene subito dopo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7357,11 +7817,21 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>A cap left flat projects sideways and rubs the lane wall; the axis is open-loop, so the firmware thinks the rack arrived while it lagged behind.</li>
-      <li>On the 12 volt pack the machine ran two racks, sixteen samples, then both pumps stalled together. The firmware cannot yet run one pump at a time.</li>
-      <li>The vial septum leaks after about five punctures and does not reliably reseal past twenty: that is where the spillage risk lives.</li>
-      <li>None of the three is kinematic. All three have known fixes.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Three things went wrong, none of them in the moving mechanics, and each has a known fix.</li>
+      <li data-step="1">A cap left flat rubs the wall, the motor slips without knowing it, and the drop lands beside the tube.</li>
+      <li data-step="2">On the battery, it managed two racks, sixteen samples. Then the battery ran low, both pumps stalled, and the software can&apos;t yet run just one.</li>
+      <li data-step="3">The third belongs to Marius&apos;s reagent container: its rubber seal starts to leak after about five needle punctures.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">I tre guasti: l&apos;attrito dei tappi, la batteria che si scarica, il setto che perde.</p>
+      <ul>
+        <li data-step="0">Tre cose sono andate storte, nessuna nella meccanica dei movimenti, e ognuna ha una soluzione nota.</li>
+        <li data-step="1">Un tappo lasciato piatto sfrega contro la parete, il motore perde passi senza accorgersene, e la goccia cade accanto alla provetta.</li>
+        <li data-step="2">A batteria ha completato due rack, sedici campioni. Poi la batteria si è scaricata, le due pompe si sono bloccate, e il programma non sa ancora farne girare una sola.</li>
+        <li data-step="3">Il terzo riguarda il contenitore di Marius: la sua guarnizione di gomma comincia a perdere dopo circa cinque forature dell&apos;ago.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7454,11 +7924,29 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Performance: accuracy and reproducibility met; versatility met with an asterisk, because the 5 microlitre lower bound has not been validated yet. Feasibility was a concept gate, not a test of the built device.</li>
-      <li>Automation: a complete forty-tube run finished without intervention. Training was deferred, so it stands as not tested.</li>
-      <li>Portability partly met, spillage and operator exposure partly met; cross-contamination is prevented by architecture, not by washing.</li>
-      <li>Four are excluded honestly, and not for the same reason: two wait on an enclosure, one on a real circuit board, and one on a material that can be sanitised. PLA is not a cleanable surface &#8212; a field machine needs metal or polypropylene on the sliding faces. None of the four waits on the mechanisms.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Now the requirements, group by group.</li>
+      <li data-step="1">Accuracy and repeatability are met. Versatility is too, though the smallest dose, 5 microlitres, is still unconfirmed.</li>
+      <li data-step="2">It ran a full batch alone; training a new user was not tested.</li>
+      <li data-step="3">Portability is partly met.</li>
+      <li data-step="4">The reagents cannot mix, by design rather than by washing.</li>
+      <li data-step="5">Safety is partly met, and electrical safety was left out: the electronics are still on test boards.</li>
+      <li data-step="6">What was left out waits for a case, a circuit board and a cleanable material, not for new mechanics.</li>
+      <li>If asked about cleaning: printed plastic cannot be disinfected, so the sliding parts need metal or polypropylene.</li>
+      <li>If asked about feasibility: it was a check when choosing the concept, not a test of the finished machine.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La verifica dei requisiti.</p>
+      <ul>
+        <li data-step="0">Ora i requisiti, un gruppo alla volta.</li>
+        <li data-step="1">Precisione e ripetibilità sono soddisfatte. Anche la versatilità, anche se la dose più piccola, 5 microlitri, non è ancora confermata.</li>
+        <li data-step="2">Ha completato un lotto intero da sola; l&apos;addestramento di un nuovo utente non è stato provato.</li>
+        <li data-step="3">La portabilità è soddisfatta in parte.</li>
+        <li data-step="4">I reagenti non possono mescolarsi, per come è costruita la macchina, non grazie ai lavaggi.</li>
+        <li data-step="5">La sicurezza è soddisfatta in parte, e quella elettrica è stata esclusa: l&apos;elettronica è ancora su basette di prova.</li>
+        <li data-step="6">Ciò che è stato escluso aspetta un involucro, un circuito stampato e un materiale lavabile, non nuova meccanica.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7500,10 +7988,16 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Let them run. Say only: this is what you are about to see for real.</li>
-      <li>One press moves on. Click a clip only if you want to point at it; Escape brings the mosaic back.</li>
-      <li>The outdoor clip carries the sound.</li>
+      <li data-step="meta">~5 s</li>
+      <li data-step="0">Here it is running; in a moment you will see it for real.</li>
+      <li>One press moves on. Clicking a clip enlarges it with its sound; Escape goes back.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina funziona ed è pronta per la dimostrazione dal vivo.</p>
+      <ul>
+        <li data-step="0">Ecco la macchina al lavoro, e tra un momento la vedrete dal vivo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7530,11 +8024,19 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Demo, five minutes: load a rack, pick a recipe on the screen, show the pre-run reagent check.</li>
-      <li>Run one or two tubes with dye; point at the droplet detaching; show the rack ejecting to the output queue.</li>
-      <li>The machine arrives ready: dye in the vials, a rack loaded, lines primed, caps folded back to 135 degrees.</li>
-      <li>If it misbehaves: press v here and the pump head and droplet clips play side by side.</li>
+      <li data-step="meta">~5 min &middot; live demo</li>
+      <li data-step="0">Now the machine itself.</li>
+      <li>Load a rack, choose a recipe on the screen, and show the reagent check before the run.</li>
+      <li>Dispense one or two tubes with dye, point at the drop falling, and show the rack moving out.</li>
+      <li>It arrives ready: dye in the containers, a rack loaded, the lines already filled, the caps folded back.</li>
+      <li>If something goes wrong, press v and the pump and droplet clips play instead.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Dimostrazione dal vivo.</p>
+      <ul>
+        <li data-step="0">Ora la macchina vera: si carica un rack, si sceglie una ricetta sullo schermo, si riempiono una o due provette con il colorante e il rack esce.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -7579,9 +8081,15 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>The machine has been shown and demonstrated. What follows is what it means.</li>
-      <li>Discussion and outlook are one movement here: what the evidence covers, what it does not, and what I would build next.</li>
+      <li data-step="meta">~8 s</li>
+      <li data-step="0">You have seen the machine work. Now for what it proves, what it does not, and what comes next.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Parte III-B · Discussione e prospettive</p>
+      <ul>
+        <li data-step="0">Avete visto la macchina funzionare. Ora vediamo che cosa dimostra, che cosa no, e che cosa viene dopo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7641,10 +8149,25 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Two of six channels, water and dye only, the 5 µL bound never verified on the assembled machine, no untrained user.</li>
-      <li>None of that is a failure of the concept; it is the boundary of the evidence.</li>
-      <li>Two tests come before anything else is believed: the PANPOC protocol with its real reagents, and a walk-up user.</li>
+      <li data-step="meta">~31 s</li>
+      <li data-step="0">The machine works, but it is not yet a finished instrument.</li>
+      <li data-step="1">I built only two of the six liquid channels.</li>
+      <li data-step="2">I tested only with water and dye, never with the real reagents.</li>
+      <li data-step="3">I never checked the smallest dose, 5 µL, on the assembled machine.</li>
+      <li data-step="4">And nobody without training has used it yet.</li>
+      <li data-step="5">So two tests come first: the PANPOC protocol with real reagents, and a first-time user handling racks, tubes, lids and bottles.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il prototipo dimostra il concetto, non uno strumento finito</p>
+      <ul>
+        <li data-step="0">La macchina funziona, ma non è ancora uno strumento finito.</li>
+        <li data-step="1">Ho costruito solo due dei sei canali per i liquidi.</li>
+        <li data-step="2">L&rsquo;ho provata solo con acqua e colorante, mai con i reagenti veri.</li>
+        <li data-step="3">Non ho mai verificato la dose più piccola, 5 µL, sulla macchina montata.</li>
+        <li data-step="4">E nessuno senza formazione l&rsquo;ha ancora usata.</li>
+        <li data-step="5">Quindi vengono prima due prove: il protocollo PANPOC con i reagenti veri, e una persona alla prima volta che maneggia rack, provette, tappi e flaconi.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7743,7 +8266,11 @@ body[data-view="guest"] .guest-dot {
 
     <!-- the model panel -->
     <div class="d38__model">
-      <span class="kicker">Model first</span>
+      <!-- Sirio, 2026-09-23: the kicker read "Model first"; it now states the
+           finding. Ch. 13 (Analytical models versus physical prototypes):
+           "However, the model was never experimentally validated." The note
+           under the delivered value said the same thing and is gone. -->
+      <span class="kicker">The pump model was not tested</span>
       <div class="d38__mfig" style="left:24px; top:48px; width:316px; height:183px">
         <img data-src="assets/figs/fig-rotor-geometry.png"
              alt="The rotor geometry drawing: the four-roller rotor inside a 180 degree track, with the delivering arc and the compensating arc marked." />
@@ -7763,19 +8290,32 @@ body[data-view="guest"] .guest-dot {
         <span class="kicker kicker--muted">Delivered</span>
         <span class="d38__nv">3.94 / 4.10 µL</span>
       </div>
-      <span class="d38__mnote" style="left:624px; top:236px; width:520px">the model was never validated</span>
       <span class="d38__mnote" style="left:24px; top:240px; width:560px">±0.10 mm printing makes a real rotor sweep worth running</span>
     </div>
   </div>
 
   <aside class="notes">
     <ul>
-      <li>Depth reaches the precision a concept can, but commits to a shape early; breadth compares hardware, but a quick build may compare two builds rather than two mechanisms.</li>
-      <li>The pump module is the example of both. Breadth: three concepts were taken far enough to judge — the linear pinch pump is Marius’s, built and scored in the companion thesis; the syringe pump I benchmarked on a commercial laboratory instrument rather than building one; the rotary head is mine, and it won 3485 to 3185.</li>
-      <li>Depth: four builds of that one rotary concept, from proto-01 to v2.3.</li>
-      <li>The alignment module had breadth on paper only. It set the size of the machine and one of about fifty concepts was built — a carousel or a gantry might have been smaller, though at much higher build complexity.</li>
-      <li>The model gave a starting point and was never validated; the ±0.10 mm printer now makes a real sweep of rotors worth running.</li>
+      <li data-step="meta">~45 s</li>
+      <li data-step="0">A module can be developed in depth or in breadth.</li>
+      <li data-step="1">Depth means building one idea many times, but you choose its shape before trying the others.</li>
+      <li data-step="2">Breadth means building several ideas, but a quick build can fail for the build, not the idea.</li>
+      <li data-step="3">The pump had both: Marius built a linear pump, I tested a syringe pump, and I built the rotary peristaltic one four times.</li>
+      <li data-step="4">The alignment module had breadth only on paper: about fifty ideas, one built, though it sets the machine&rsquo;s size.</li>
+      <li data-step="5">And the pump&rsquo;s model was never tested: it aimed at 5 µL per stroke, and both pumps deliver less.</li>
+      <li>If asked: the two pumps deliver 3.94 and 4.10 µL per stroke. The rotary pump beat the linear one 3485 to 3185 in the scoring. With printing now held to ±0.10 mm, a real test series of rotors is worth running.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Profondità e ampiezza: pompa e allineamento</p>
+      <ul>
+        <li data-step="0">Un modulo si può sviluppare in profondità o in ampiezza.</li>
+        <li data-step="1">Profondità vuol dire costruire tante volte la stessa idea, ma se ne sceglie la forma prima di provare le altre.</li>
+        <li data-step="2">Ampiezza vuol dire costruire più idee, ma una prova frettolosa può fallire per la costruzione, non per l&rsquo;idea.</li>
+        <li data-step="3">La pompa le ha avute tutte e due: Marius ha costruito una pompa lineare, io ho provato una pompa a siringa, e ho costruito quattro volte quella peristaltica rotativa.</li>
+        <li data-step="4">L&rsquo;allineamento ha avuto ampiezza solo sulla carta: una cinquantina di idee, una costruita, anche se è il modulo che decide quanto è grande la macchina.</li>
+        <li data-step="5">E il modello della pompa non è mai stato verificato: puntava a 5 µL per colpo, e le due pompe ne danno meno.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7832,11 +8372,26 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Pump, storage and nozzle first and together — they set the delivered volume.</li>
-      <li>Lid opener before the rack: opening lids is what needs the tube positions.</li>
-      <li>Then the alignment module, then the electronics on a real board; the enclosure is designed last.</li>
-      <li>Parallel development was forced by six weeks of late tubing. Next time, in order.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">The next prototype should start from the modules, in order.</li>
+      <li data-step="1">First the pump, storage and nozzle, together, because together they set the dose.</li>
+      <li data-step="2">Then the lid opener, the last step still done by hand, before the sample rack is fixed.</li>
+      <li data-step="3">Then the alignment module, with stronger motors, a way to stop if a motor slips, and a safe stop button.</li>
+      <li data-step="4">Then the electronics, on one circuit board that also measures the battery.</li>
+      <li data-step="5">The enclosure comes last, because it wraps around everything else.</li>
+      <li>If asked: this time the pump tubing arrived six weeks late, which forced us to build the modules in parallel. Next time, in order. The storage module is Marius&rsquo;s.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il prossimo prototipo, un modulo alla volta</p>
+      <ul>
+        <li data-step="0">Il prossimo prototipo dovrebbe partire dai moduli, in ordine.</li>
+        <li data-step="1">Prima la pompa, i contenitori dei reagenti e l&rsquo;ugello insieme, perché insieme decidono la dose.</li>
+        <li data-step="2">Poi l&rsquo;apri-tappi, l&rsquo;ultimo passaggio ancora fatto a mano, prima di fissare il rack delle provette.</li>
+        <li data-step="3">Poi il modulo di allineamento, con motori più forti, un modo per fermarsi se un motore slitta, e un pulsante di arresto di sicurezza.</li>
+        <li data-step="4">Poi l&rsquo;elettronica, su una sola scheda che misura anche la batteria.</li>
+        <li data-step="5">L&rsquo;involucro viene per ultimo, perché avvolge tutto il resto.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -7846,7 +8401,7 @@ body[data-view="guest"] .guest-dot {
      the outlines read badly and the travelling object read as nothing at
      all.  This version puts a photograph of the machine that exists next
      to a deliberately schematic body for the one that does not, and gives
-     the whole lower half to the single claim: one bay, five named
+     the whole lower half to the single claim: one bay, four named
      detector modules, interchangeable.  Nothing travels.
 
      Geometry, all at stage scale:
@@ -7854,8 +8409,8 @@ body[data-view="guest"] .guest-dot {
        reader body  600,202  624 x 234  (dashed: a proposal, not a build)
        bay          628,316  224 x 120  (open at the bottom edge)
        seated card  636,324  208 x 104  — the same footprint as the rail
-       bus          y 478, risers to the four card centres
-       rail         y 500,  208 x 104 at x 56 / 376 / 696 / 1016
+       bus          y 478, risers to the three card centres
+       rail         y 500,  208 x 104 at x 56 / 536 / 1016 (three since 2026-09-23)
        narration    y 620,  one line per step; the pull replaces it at 5
 -->
 <section class="slide" id="s41" data-cue="s41" data-dialect="dock"
@@ -7910,19 +8465,18 @@ body[data-view="guest"] .guest-dot {
       <path class="bz" d="M 740 436 L 740 478" />
       <path class="bz" d="M 160 478 L 1120 478" />
       <path class="bz" d="M 160 478 L 160 500" />
-      <path class="bz" d="M 480 478 L 480 500" />
-      <path class="bz" d="M 800 478 L 800 500" />
+      <path class="bz" d="M 640 478 L 640 500" />
       <path class="bz" d="M 1120 478 L 1120 500" />
     </svg>
 
-    <!-- the four that are not in the bay: same footprint, same dock tab -->
+    <!-- the three that are not in the bay: same footprint, same dock tab -->
+    <!-- 2026-09-23: colorimetric and turbidimetry were two cards. In hardware
+         they are one module (LED, sample, photodiode, read in transmission),
+         so they are one card now, and the rail holds three at x 56 / 536 / 1016. -->
     <article class="d41__mod d41__mod--r" style="left:56px">
-      <span class="nm">Colorimetric</span><span class="sb">absorbance</span>
+      <span class="nm">Absorbance</span><span class="sb">colour and turbidity</span>
     </article>
-    <article class="d41__mod d41__mod--r" style="left:376px">
-      <span class="nm">Turbidimetry</span>
-    </article>
-    <article class="d41__mod d41__mod--r" style="left:696px">
+    <article class="d41__mod d41__mod--r" style="left:536px">
       <span class="nm">Lateral flow</span><span class="sb">strip reader</span>
     </article>
     <article class="d41__mod d41__mod--r" style="left:1016px">
@@ -7932,23 +8486,39 @@ body[data-view="guest"] .guest-dot {
     <!-- one line under the picture, swapped per step -->
     <span class="d41__say" data-s="1">The machine prepares the sample. It performs no detection of its own.</span>
     <span class="d41__say" data-s="2">The missing half is a companion reader — proposed here, not built.</span>
-    <span class="d41__say" data-s="3">One bay, five detector modules: the reader is whatever is docked in it.</span>
+    <span class="d41__say" data-s="3">One bay, interchangeable detector modules: the reader is whatever is docked in it.</span>
     <span class="d41__say" data-s="4">A code on the kit sets up both instruments — the operator loads and scans instead of configuring.</span>
   </div>
 
   <aside class="notes">
     <ul>
-      <li>The machine prepares samples and performs no detection. In a decentralised setting the operator wants an actionable result, not liquid handling for its own sake.</li>
-      <li>Preparation is largely shared between assays; detection is not. So the detector does not belong locked inside the dispenser — it belongs in a companion reader with one bay.</li>
-      <li>Five detection methods are reachable in a portable module: fluorescence, colorimetric, turbidimetry, a lateral-flow strip reader, electrochemical. The reader is whichever one is docked; fluorescence is drawn seated because it is what the PANPOC protocol implies.</li>
-      <li>A code on the kit sets both instruments up, so the operator loads and scans instead of configuring — that is what would bring the pair within reach of an untrained user.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">In the field, people want a result, not just a prepared sample.</li>
+      <li data-step="1">This machine prepares the sample, but it does not measure anything.</li>
+      <li data-step="2">The sample-preparation machine is general purpose, so the reader that pairs with it should be too.</li>
+      <li data-step="3">So I propose a modular reader: one slot, with a detector for each kind of test.</li>
+      <li data-step="4">A code on the kit sets up both machines, so the user only loads and scans.</li>
+      <li>If asked: preparing a sample is largely the same from test to test, but detecting the result is not. That is why the detector belongs in a separate reader, not locked inside the dispenser.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un campione preparato non è una risposta: ci vuole un lettore</p>
+      <ul>
+        <li data-step="0">Sul campo si vuole un risultato, non solo un campione preparato.</li>
+        <li data-step="1">Questa macchina prepara il campione, ma non misura niente.</li>
+        <li data-step="2">La macchina che prepara i campioni è di uso generale, quindi anche il lettore che la accompagna dovrebbe esserlo.</li>
+        <li data-step="3">Per questo propongo un lettore modulare: un solo alloggiamento, con un rivelatore per ogni tipo di test.</li>
+        <li data-step="4">Un codice sul kit del test configura tutte e due le macchine: chi le usa deve solo caricare e scansionare.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
 <!-- ─────────────────────────────  S42  ───────────────────────────── -->
 <section class="slide cine" id="s42" data-cue="s42" data-dialect="cine"
          data-part="close" style="--cine-scrim:0.34">
+  <!-- Never shown on the stage: it only gives the presenter panel, the
+       next-slide caption and the overview a title instead of the bare cue. -->
+  <h2 class="slide__title" hidden style="display:none">The arrivals hall, again.</h2>
 
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
@@ -7976,17 +8546,29 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Nothing is written on this slide. Three beats, three presses, said slowly.</li>
-      <li>One: their swab must still travel to a central laboratory — this thesis shows that sample preparation does not have to.</li>
-      <li>Two: a portable instrument can dispense precisely and unattended; before it stands at a gate it must be rebuilt from matured modules, tested on real reagents with real users, and paired with a reader.</li>
-      <li>Three, on the press, the arrivals hall gives way to the machine over six seconds — let it happen, do not talk over it: whether that traveller can one day be tested and cleared before leaving the terminal is an open question, but no longer one that only a central laboratory can answer.</li>
+      <li data-step="meta">~38 s</li>
+      <li data-step="0">Back to the traveller: today, their swab must still travel to a central laboratory.</li>
+      <li data-step="1">This thesis shows that sample preparation does not have to. A portable instrument can dispense liquids precisely and unattended.</li>
+      <li data-step="2">Before it can stand at an airport gate, it must be rebuilt from matured modules, tested on real reagents with real users, and paired with a reader.</li>
+      <li data-step="3">Whether that traveller can one day be tested before leaving the terminal is still open. But it is no longer a question only a central laboratory can answer.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Di nuovo la sala arrivi</p>
+      <ul>
+        <li data-step="0">Torno al viaggiatore: oggi il suo tampone deve ancora viaggiare fino a un laboratorio centrale.</li>
+        <li data-step="1">Questa tesi mostra che la preparazione del campione non è costretta a farlo. Uno strumento portatile può dosare liquidi con precisione e da solo.</li>
+        <li data-step="2">Prima di poter stare a un varco d&rsquo;aeroporto, deve essere ricostruito da moduli maturi, provato con reagenti veri e utenti veri, e affiancato a un lettore.</li>
+        <li data-step="3">Se quel viaggiatore potrà un giorno essere testato prima di lasciare il terminal è ancora aperto. Ma non è più una domanda a cui può rispondere solo un laboratorio centrale.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
 <!-- ─────────────────────────────  S43  ───────────────────────────── -->
 <section class="slide" id="s43" data-cue="s43" data-dialect="close"
          data-part="close">
+  <!-- Never shown: a title for the presenter panel and the overview. -->
+  <h2 class="slide__title" hidden style="display:none">Thank you. Questions?</h2>
   <div class="d43">
     <h2 class="d43__ty">Thank you.</h2>
     <div class="d43__rule"></div>
@@ -8034,10 +8616,15 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li>Thank the supervisors, Marius and Pulkit by name.</li>
-      <li>Then open the floor: this slide stays on the projector for the whole question session, so let it sit there and stop talking.</li>
-      <li>Backup slides are one press away and are reached by number — the appendix slate lists them; jump to one when a question calls for it and come back here.</li>
+      <li data-step="meta">~9 s</li>
+      <li data-step="0">Thank you to my supervisors, Maria Dimaki, Winnie Edith Svendsen and Lars Hvam, and to Marius and Pulkit. I welcome your questions.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Grazie · Domande</p>
+      <ul>
+        <li data-step="0">Grazie ai miei relatori, Maria Dimaki, Winnie Edith Svendsen e Lars Hvam, e a Marius e Pulkit. Aspetto le vostre domande.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -8049,6 +8636,47 @@ body[data-view="guest"] .guest-dot {
      on the right. Where the report has little, the slide stays light. No
      number on any of these slides is invented; each one is in the thesis.
      ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- s04 ───  Moved out of the talk 2026-09-23 (was talk slide 3, the
+     opening). Keeps id/data-cue "s04" on the s12 / s04c precedent:
+     appendix membership is data-part="backup", never the cue prefix.
+     Its CSS block and its builder came with it, as s04c's did; the
+     shared .s04fam family sheet stays in parts/10-opening.html for
+     s04b. The slide itself: the field laboratory, two steps. -->
+<section class="slide s04fam" id="s04" data-cue="s04" data-dialect="cine" data-part="backup" data-topic="open"
+         data-map="none" style="--cine-scrim:0">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+
+  <div class="cine">
+    <h2 class="slide__title">Bringing the lab to the sample often still requires pipetting and an expert.</h2>
+    <div class="cine__shots">
+      <figure class="cine__shot">
+        <div class="cine__img" id="s04-plate" style="width:790px;height:470px">
+          <img data-src="assets/stills/fig-portable-qpcr.png"
+               alt="The equipment of a mobile molecular testing laboratory in Ethiopia: a magnetic induction cycler, a magnetic block, a plate shaker and four manual pipettes." />
+          <div class="s04-spot" id="s04-spot"></div>
+        </div>
+      </figure>
+    </div>
+    <div class="cine__scrim" aria-hidden="true"></div>
+
+    <span class="s04-credit" id="s04-credit">Carlier et al. 2022 &middot; CC BY 4.0</span>
+
+    <!-- 3 · the magnetic-bead extraction, stage by stage -->
+
+    <!-- 4 · where the range and the six liquids come from -->
+
+    <!-- 5 · the span, and what one channel actually covers -->
+  </div>
+  <aside class="notes">
+    <ul>
+      <li>A mobile molecular laboratory for malaria surveillance in Ethiopia &mdash; cycler, magnetic block, shaker.</li>
+      <li>And four manual pipettes doing everything in between. That is the whole automation.</li>
+      <li>A dozen steps, six liquids, 5 &micro;L to 1 mL, every one of them by hand.</li>
+    </ul>
+  </aside>
+</section>
 
 <!-- s12 ─────────────────────────────────────────────────────
      Moved out of the talk 2026-09-21 (was talk slide 18, part II).
@@ -9578,7 +10206,6 @@ body[data-view="guest"] .guest-dot {
     </div>
     <div class="pres__bar">
       <div class="pres__stat"><span class="pres__stat-k">Slide</span><span class="pres__stat-v" id="presCount">1 / 1</span></div>
-      <div class="pres__stat"><span class="pres__stat-k">Step</span><span class="pres__stat-v" id="presStep">0 / 0</span></div>
       <div class="pres__stat"><span class="pres__stat-k">Elapsed</span><span class="pres__stat-v" id="presElapsed">00:00</span></div>
       <div class="pres__stat"><span class="pres__stat-k">Left</span><span class="pres__stat-v" id="presLeft">30:00</span></div>
       <div class="pres__stat pres__stat--seg"><span class="pres__stat-k" id="presBandK">Part</span><span class="pres__stat-v pres__seg is-idle" id="presBand">––:––</span></div>
@@ -9590,9 +10217,11 @@ body[data-view="guest"] .guest-dot {
         </div>
         <span class="pres__prog-n" id="presProgN">1 / 1</span>
       </div>
+      <button type="button" class="pres__pause" id="presPause" aria-pressed="false"
+              title="Freeze every clock (p)">Pause</button>
       <a class="pres__report" id="presReport" href="rehearsal.html" target="_blank"
          rel="noopener" title="How long each part actually took">Rehearsal &rarr;</a>
-      <div class="pres__keys">&larr; &rarr; step &middot; a d slide &middot; r timer &middot; b black &middot; f full &middot; o overview</div>
+      <div class="pres__keys">&larr; &rarr; step &middot; a d slide &middot; r timer &middot; p pause &middot; b black &middot; f full &middot; o overview</div>
     </div>
   </div>
 
@@ -9679,14 +10308,14 @@ body[data-view="guest"] .guest-dot {
        =================================================================== */
     /* ── 0b · The speaking plan ────────────────────────────────────
        Sirio's budget, 30 minutes in total. The opening has no line of its
-       own, so it is spoken inside Part I's seven minutes; change PART_I
+       own, so it is spoken inside Part I's eight minutes; change PART_I
        here and give 'Opening' its own row if that ever stops being true.
        Longest band name first: 'Part I' is a prefix of 'Part II'.
        =============================================================== */
     var BAND_PLAN = [
       { match: 'Part III',   name: 'Part III', secs:  5 * 60 },
-      { match: 'Part II',    name: 'Part II',  secs: 10 * 60 },
-      { match: 'Part I',     name: 'Part I',   secs:  7 * 60 },
+      { match: 'Part II',    name: 'Part II',  secs:  9 * 60 },
+      { match: 'Part I',     name: 'Part I',   secs:  8 * 60 },
       { match: 'Live demo',  name: 'Demo',     secs:  3 * 60 },
       { match: 'Discussion', name: 'Close',    secs:  5 * 60 },
       { match: 'Opening',    name: 'Part I',   secs: null }   /* folded into Part I */
@@ -9702,7 +10331,7 @@ body[data-view="guest"] .guest-dot {
     var SLIDE_ORDER = [
       { band: 'Opening',
         key: 'open',      topic: '',                                thesis: '',
-        cues: ['s00', 's01', 's02', 's04', 's03'] },
+        cues: ['s00', 's01', 's02', 's03', 's04'] },
 
       { band: 'Part I \u2014 Why this machine, and how I worked',
         key: 'gap',       topic: 'The gap',                         thesis: 'chapters 1\u20132',
@@ -10449,6 +11078,44 @@ body[data-view="guest"] .guest-dot {
                               ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
     }
 
+    /* ── The pause ───────────────────────────────────────────
+       He breaks off to talk to someone and every clock on the bar has to
+       stand still. Rather than teach each sum about a paused flag, the panel
+       reads its time through now(): while paused that is the instant the
+       pause began, so every readout paints the same value for as long as it
+       lasts and the open visit in the rehearsal record stops growing.
+       Resuming shifts each origin — the talk clock, the two pacing timers
+       and the open visit — forward by the length of the pause, so all the
+       arithmetic downstream is untouched and not a second is lost or counted
+       twice. The run's startedAt is a wall-clock stamp for the report, so it
+       stays where it is. */
+
+    var pausedAt = null;
+    function now() { return pausedAt === null ? Date.now() : pausedAt; }
+
+    function setPaused(on) {
+      on = !!on;
+      if (on === (pausedAt !== null)) return;
+      if (on) {
+        pausedAt = Date.now();
+      } else {
+        var gap = Date.now() - pausedAt;
+        pausedAt = null;
+        if (timerStart !== null) timerStart += gap;
+        if (bandAt) bandAt += gap;
+        if (topicAt) topicAt += gap;
+        if (visit) visit.at += gap;
+      }
+      if (on) document.body.setAttribute('data-pres-paused', '');
+      else    document.body.removeAttribute('data-pres-paused');
+      if (pres.pause) {
+        pres.pause.textContent = on ? 'Resume' : 'Pause';
+        pres.pause.setAttribute('aria-pressed', on ? 'true' : 'false');
+        pres.pause.title = on ? 'Start the clocks again (p)' : 'Freeze every clock (p)';
+      }
+      tickClock();
+    }
+
     function setupPresenter() {
       pres = {
         stage:  document.getElementById('presStage'),
@@ -10456,7 +11123,6 @@ body[data-view="guest"] .guest-dot {
         title:  document.getElementById('presTitle'),
         notes:  document.getElementById('presNotes'),
         count:  document.getElementById('presCount'),
-        step:   document.getElementById('presStep'),
         elapsed:document.getElementById('presElapsed'),
         band:   document.getElementById('presBand'),
         bandK:  document.getElementById('presBandK'),
@@ -10466,7 +11132,8 @@ body[data-view="guest"] .guest-dot {
         prog:     document.getElementById('presProg'),
         progFill: document.getElementById('presProgFill'),
         progPct:  document.getElementById('presProgPct'),
-        progN:    document.getElementById('presProgN')
+        progN:    document.getElementById('presProgN'),
+        pause:    document.getElementById('presPause')
       };
       if (pres.stage && viewport) pres.stage.appendChild(viewport);
 
@@ -10476,15 +11143,32 @@ body[data-view="guest"] .guest-dot {
       setTimeout(fitPanel, 60);
 
       document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
         if (e.key === 'r' || e.key === 'R') {
-        timerStart = Date.now();
-        bandAt = topicAt = Date.now();
-        resetRun();
-        tickClock();
-      }
+          setPaused(false);           /* a restart always leaves it running */
+          timerStart = Date.now();
+          bandAt = topicAt = Date.now();
+          paceShown = paceCand = ''; paceHeld = 0;
+          resetRun();
+          tickClock();
+          return;
+        }
+        if (e.key === 'p' || e.key === 'P') {
+          if (document.body.hasAttribute('data-demo-active')) return;
+          if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
+          e.preventDefault();
+          setPaused(pausedAt === null);
+        }
       });
 
-      setInterval(tickClock, 500);
+      if (pres.pause) {
+        pres.pause.addEventListener('click', function () {
+          setPaused(pausedAt === null);
+          pres.pause.blur();   /* so space and the arrows keep driving the deck */
+        });
+      }
+
+      setInterval(function () { tickClock(true); }, 500);
       tickClock();
     }
 
@@ -10528,6 +11212,41 @@ body[data-view="guest"] .guest-dot {
         var share = p && totalIn[p.name] ? talkIn[i] / totalIn[p.name] : 0;
         segSecs.push(whole * share);
       }
+      measureExpected(talkIn);
+    }
+
+    /* ── Where he ought to be by now ──────────────────────────
+       The two pacing timers count down the section he is in; this table
+       answers the other question — against the whole talk, is he early or
+       late? Each spoken slide takes an even share of its own section's
+       budget, and the running sum before a slide is the elapsed time he
+       should be at when he arrives at it. Backups and the hold screen are
+       not in the talk, so they are not in the sum and standing on one
+       leaves the readout with no opinion at all. */
+    var slideExp = [];   /* per slide index: {start, share} in seconds, or null */
+
+    function measureExpected(talkIn) {
+      var acc = 0;
+      slideExp = [];
+      slides.forEach(function (el, idx) {
+        if (el.getAttribute('data-part') === 'backup' ||
+            el.getAttribute('data-talk') === 'no') { slideExp.push(null); return; }
+        var gi = groupOf[idx];
+        var share = (segSecs[gi] || 0) / Math.max(talkIn[gi] || 0, 1);
+        slideExp.push({ start: acc, share: share });
+        acc += share;
+      });
+    }
+
+    /* Inside a slide the expectation slides along with the steps, so a
+       slide he is halfway through is worth half its share. */
+    function expectedAt(d) {
+      if (!d || d.slide === undefined) return null;
+      var e = slideExp[d.slide - 1];
+      if (!e) return null;
+      var n = Math.max(d.steps || 0, 1);
+      var k = Math.min(Math.max(d.step || 0, 0), n);
+      return e.start + (k / n) * e.share;
     }
 
     function partSecs(name) {
@@ -10562,10 +11281,10 @@ body[data-view="guest"] .guest-dot {
         if (segSecs[i]) plan.sections[sectionName(i)] = segSecs[i];
       }
       var open = visit ? [{ part: visit.part, section: visit.section,
-                            ms: Date.now() - visit.at, open: true }] : [];
+                            ms: now() - visit.at, open: true }] : [];
       try {
         localStorage.setItem(RUN_KEY, JSON.stringify({
-          startedAt: runStartedAt, savedAt: Date.now(),
+          startedAt: runStartedAt, savedAt: now(),
           visits: runVisits.concat(open), plan: plan
         }));
       } catch (e) { /* private window, blocked storage: the talk still runs */ }
@@ -10573,7 +11292,7 @@ body[data-view="guest"] .guest-dot {
 
     function closeVisit() {
       if (!visit) return;
-      var ms = Date.now() - visit.at;
+      var ms = now() - visit.at;
       if (ms > 400) runVisits.push({ part: visit.part, section: visit.section, ms: ms });
       visit = null;
     }
@@ -10601,17 +11320,63 @@ body[data-view="guest"] .guest-dot {
       var pl = bandPlan(SLIDE_ORDER[gi].band);
       if (!pl) return;
       if (pl.name !== bandName) {
-        bandName = pl.name; bandSecs = partSecs(pl.name); bandAt = Date.now();
+        bandName = pl.name; bandSecs = partSecs(pl.name); bandAt = now();
       }
-      if (gi !== topicGi) { topicGi = gi; topicAt = Date.now(); }
+      if (gi !== topicGi) { topicGi = gi; topicAt = now(); }
 
       var sec = sectionName(gi);
       if (!visit || visit.section !== sec || visit.part !== pl.name) {
         closeVisit();
         if (runStartedAt === null) runStartedAt = Date.now();
-        visit = { part: pl.name, section: sec, at: Date.now() };
+        visit = { part: pl.name, section: sec, at: now() };
       }
       saveRun();
+    }
+
+    /* ── The Elapsed colour ─────────────────────────────────
+       Elapsed no longer only says how long he has been talking: it says
+       whether that is more or less than it should be. Ahead, or no more
+       than twenty seconds behind, is green; then yellow, dark orange and
+       red at a minute, two minutes and beyond, the same four colours the
+       pacing timers use so the bar keeps one language.
+
+       The share each slide gets is an even split, so a five-second divider
+       carries the same expectation as a ninety-second diagram and the raw
+       difference lurches about even when he is exactly on plan. The number
+       is left alone — only the colour is held back: a new level has to
+       survive six consecutive half-second ticks before it is painted, so
+       the readout settles instead of strobing. Ticks are counted only while
+       the clocks run, so a pause freezes the colour with everything else,
+       and before the talk starts there is no colour at all. */
+    var PACE_TICKS = 6;               /* 6 × 500 ms = the 3 s dead band */
+    var paceShown = '', paceCand = '', paceHeld = 0;
+    var presState = null;             /* the last deck state the panel saw */
+
+    function paceLevel(delta) {       /* delta > 0 means behind schedule */
+      if (delta <= 20)  return 'ok';
+      if (delta <= 60)  return 'warn';
+      if (delta <= 120) return 'near';
+      return 'over';
+    }
+
+    function paceElapsed(elapsed, advance) {
+      var lvl = '';
+      if (timerStart !== null) {
+        var exp = expectedAt(presState);
+        if (exp !== null) lvl = paceLevel(elapsed - exp);
+      }
+      if (lvl === '' || paceShown === '') {   /* neutral, or the first reading */
+        paceShown = paceCand = lvl; paceHeld = 0;
+      } else if (lvl !== paceCand) {          /* a different candidate: start over */
+        paceCand = lvl; paceHeld = 0;
+      } else if (lvl !== paceShown && advance && ++paceHeld >= PACE_TICKS) {
+        paceShown = lvl; paceHeld = 0;
+      }
+      var c = pres.elapsed.classList;
+      c.toggle('is-pace-ok',   paceShown === 'ok');
+      c.toggle('is-pace-warn', paceShown === 'warn');
+      c.toggle('is-pace-near', paceShown === 'near');
+      c.toggle('is-pace-over', paceShown === 'over');
     }
 
     function paint(node, left, running) {
@@ -10623,10 +11388,11 @@ body[data-view="guest"] .guest-dot {
     }
 
     /* Kept the name because several call sites use it. */
-    function tickClock() {
+    function tickClock(fromTick) {
       if (view !== 'presenter' || !pres.elapsed) return;
-      var el = timerStart === null ? 0 : (Date.now() - timerStart) / 1000;
+      var el = timerStart === null ? 0 : (now() - timerStart) / 1000;
       pres.elapsed.textContent = mmss(el);
+      paceElapsed(el, fromTick === true && pausedAt === null);
       var left = PLAN_S - el;
       pres.left.textContent = mmss(left);
       pres.left.classList.toggle('is-over', left < 0);
@@ -10639,8 +11405,8 @@ body[data-view="guest"] .guest-dot {
         pres.topicK.textContent = topicGi >= 0 ? (SLIDE_ORDER[topicGi].topic || bandName) : 'Section';
       }
       if (running) saveRun();
-      paint(pres.band, bandSecs - (Date.now() - bandAt) / 1000, running);
-      paint(pres.topic, (segSecs[topicGi] || 0) - (Date.now() - topicAt) / 1000,
+      paint(pres.band, bandSecs - (now() - bandAt) / 1000, running);
+      paint(pres.topic, (segSecs[topicGi] || 0) - (now() - topicAt) / 1000,
             running && topicGi >= 0);
     }
 
@@ -10829,13 +11595,14 @@ body[data-view="guest"] .guest-dot {
 
     function updatePresenter(d) {
       if (!segSecs.length) measurePlan();
+      presState = d;
       markSegment(d && d.slide !== undefined ? d.slide - 1 : 0);
       if (view !== 'presenter') return;
       var el = slides[d.slide - 1];
       /* The clock starts when the talk does, not when the deck opens: the
          hold screen can sit on the projector for as long as he likes. */
       if (timerStart === null && el && el.getAttribute('data-talk') !== 'no') {
-        timerStart = Date.now();
+        timerStart = now();
       }
       var cue = el ? (el.getAttribute('data-cue') || '') : '';
       var mine = talkNo[d.slide - 1] || 0;
@@ -10843,12 +11610,12 @@ body[data-view="guest"] .guest-dot {
       pres.count.textContent = mine
         ? mine + ' / ' + talkCount
         : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
-      pres.step.textContent  = d.step + ' / ' + d.steps;
       var t = el.querySelector('.slide__title, .divider__title');
       pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
       var notes = el.querySelector('aside.notes');
       pres.notes.innerHTML = notes ? notes.innerHTML
         : '<p class="pres__notes-empty">No notes for this slide.</p>';
+      markNoteSteps(d);        /* step-synced captions, see 6c */
       updateProgress(d);
       renderNext(d);
       tickClock();
@@ -10916,7 +11683,110 @@ body[data-view="guest"] .guest-dot {
       pres.progN.textContent    = at + ' / ' + progTotal;
     }
 
+    /* ── 6c · Step-synced captions (added 2026-09-23) ──────────────
+       The notes are one bullet per build step. li[data-step="n"] is the
+       CURRENT bullet from step n until the next stepped bullet takes over:
+       the current bullet is the last li[data-step] whose data-step is at
+       most Deck.step. Stateless per state, so stepping backwards is the
+       same sum. A slide without data-step bullets renders exactly as it
+       did. The Italian twin, aside.notes > .notes-it, feeds the guest
+       band (section 7) and is dropped from the presenter panel.
+       Contract: BUILDER-REFERENCE.md, "Step-synced captions". */
+
+    function currentStepItem(items, step) {
+      var cur = -1;
+      for (var i = 0; i < items.length; i++) {
+        var n = parseInt(items[i].getAttribute('data-step'), 10);
+        if (!isNaN(n) && n <= step) cur = i;
+      }
+      return cur;
+    }
+
+    function markNoteSteps(d) {
+      if (!pres.notes) return;
+      pres.notes.querySelectorAll('.notes-it').forEach(function (n) { n.parentNode.removeChild(n); });
+      var body  = pres.notes.closest('.pres__notes-body') || pres.notes.parentNode;
+      pres.notes.querySelectorAll('li:not([data-step])').forEach(function (li) {
+        if (/^\s*if asked\s*:/i.test(li.textContent)) li.classList.add('is-aside');
+      });
+      var items = pres.notes.querySelectorAll('li[data-step]');
+      if (body) body.classList.toggle('has-steps', items.length > 0);
+      if (!items.length) return;
+      var cur = currentStepItem(items, (d && d.step) || 0);
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.add(i === cur ? 'is-now' : (i < cur ? 'is-done' : 'is-next'));
+      }
+      /* Keep the current bullet in view: scroll the notes box only, never
+         the page, and only when it is actually out of sight. */
+      if (cur < 0 || !body) return;
+      var li = items[cur];
+      var bRect = body.getBoundingClientRect(), lRect = li.getBoundingClientRect();
+      if (lRect.top < bRect.top + 8 || lRect.bottom > bRect.bottom - 8) {
+        body.scrollTop += (lRect.top - bRect.top) - 48;
+      }
+    }
+
     /* ── 7 · Guest view ────────────────────────────────────────────── */
+
+    /* ── 7a · The Italian caption band (added 2026-09-23) ──────────
+       Under ?view=guest the slide is fitted into the space above a fixed
+       band (--guest-band, tail CSS) and the band shows the slide's Italian
+       title and the Italian caption for the current step. The band keeps
+       its height on every slide, captioned or not, so nothing jumps. */
+
+    var guestCap = null, guestShown = null, guestSwap = null;
+
+    function fitGuest() {
+      if (view !== 'guest' || !viewport || !stage) return;
+      var w = viewport.clientWidth, h = viewport.clientHeight;
+      if (!w || !h) return;
+      var s = Math.min(w / 1280, h / 720);
+      stage.style.position = 'absolute';
+      stage.style.left = '0px';
+      stage.style.top = '0px';
+      stage.style.transform = 'translate(' + ((w - 1280 * s) / 2) + 'px,' +
+                              ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
+    }
+
+    function setupGuestCaptions() {
+      guestCap = document.createElement('div');
+      guestCap.className = 'guest-cap';
+      guestCap.setAttribute('lang', 'it');
+      guestCap.setAttribute('aria-live', 'polite');
+      guestCap.innerHTML = '<p class="guest-cap__title"></p><p class="guest-cap__text"></p>';
+      document.body.appendChild(guestCap);
+      guestCap.title_ = guestCap.querySelector('.guest-cap__title');
+      guestCap.text_  = guestCap.querySelector('.guest-cap__text');
+      /* Registered after deck.js's own resize handler, so this one wins. */
+      window.addEventListener('resize', fitGuest);
+      fitGuest();
+      setTimeout(fitGuest, 60);
+    }
+
+    function updateGuestCaption(d) {
+      if (view !== 'guest' || !guestCap) return;
+      var el = slides[d.slide - 1];
+      var it = el ? el.querySelector('aside.notes .notes-it') : null;
+      var tEl = it ? it.querySelector('.notes-it__title') : null;
+      var title = tEl ? tEl.innerHTML.trim() : '';
+      var html = '';
+      if (it) {
+        var items = it.querySelectorAll('li[data-step]');
+        var cur = currentStepItem(items, d.step || 0);
+        if (cur >= 0) html = items[cur].innerHTML.trim();
+      }
+      if (guestCap.title_.innerHTML !== title) guestCap.title_.innerHTML = title;
+      if (html === guestShown) return;
+      guestShown = html;
+      var txt = guestCap.text_;
+      clearTimeout(guestSwap);
+      if (reduce) { txt.innerHTML = html; return; }
+      txt.classList.add('is-swap');
+      guestSwap = setTimeout(function () {
+        txt.innerHTML = guestShown;
+        txt.classList.remove('is-swap');
+      }, 200);
+    }
 
     var dotEl = null, dotTimer = null;
     function markLive() {
@@ -11066,6 +11936,7 @@ body[data-view="guest"] .guest-dot {
       updateModMark(el);
       updateSlideNo(el);
       updatePresenter(d);
+      updateGuestCaption(d);   /* step-synced captions, see 7a */
       broadcast(d);
     }
 
@@ -11087,6 +11958,7 @@ body[data-view="guest"] .guest-dot {
       wireToolCards();
       if (view !== 'guest') wireSlideJump();
       if (view === 'stage') { wireNavIdle(); wireFrame(); }
+      if (view === 'guest') setupGuestCaptions();   /* step-synced captions, see 7a */
       if (view === 'presenter') {
         /* Taken here, after the tool cards are furnished and before the first
            builder has run, so every preview clone starts from a virgin slide. */
@@ -11305,35 +12177,11 @@ Deck.enter('s02', function (el, gsap) {
     { opacity: 1, scale: 1, duration: 2.2, ease: 'power2.out' });
 });
 
-/* ── S04 · the photo, the pipettes, the bench, the provenance, the span ─ */
-Deck.slide('s04', function (el, gsap) {
-  /* the field laboratory, then the spotlight finds the pipettes */
-  var tl = gsap.timeline({ paused: true });
-  var plate  = el.querySelector('#s04-plate');
-  var spot   = el.querySelector('#s04-spot');
-  var credit = el.querySelector('#s04-credit');
-
-  gsap.set(credit, { opacity: 0 });
-
-  tl.addLabel('step0');
-  tl.fromTo(plate, { opacity: 0, scale: 1.04 },
-    { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 'step0');
-  tl.to(credit, { opacity: 1, duration: 0.6 }, 'step0+=0.8');
-  tl.addLabel('step1');
-
-  tl.to(spot, { opacity: 1, duration: 0.5 }, 'step1');
-  tl.fromTo(spot, { '--sr': '78%' }, { '--sr': '17%', duration: 1.1, ease: 'power3.inOut' }, 'step1');
-  tl.addLabel('step2');
-
-  return tl;
-});
-
 /* -- S04b - where the range came from ---------------------------- */
 Deck.slide('s04b', function (el, gsap) {
   var tl = gsap.timeline({ paused: true });
   var prov = el.querySelector('#s04-prov');
 
-  var vLead  = prov.querySelector('.s04-lead');
   var chips  = prov.querySelectorAll('.s04-chip');
   var crule  = prov.querySelector('.s04-crule');
   var ros    = prov.querySelectorAll('.s04-ro');
@@ -11345,7 +12193,7 @@ Deck.slide('s04b', function (el, gsap) {
   var vials  = prov.querySelectorAll('.s04-vial');
 
   gsap.set(prov, { opacity: 1 });
-  gsap.set([vLead, vTail], { opacity: 0, y: 16 });
+  gsap.set(vTail, { opacity: 0, y: 16 });
   gsap.set(chips, { opacity: 0, y: 10 });
   gsap.set(crule, { scaleX: 0 });
   gsap.set(ros, { opacity: 0, y: 12 });
@@ -11357,8 +12205,7 @@ Deck.slide('s04b', function (el, gsap) {
   tl.addLabel('step0');
 
   /* 1 · where the numbers were read */
-  tl.to(vLead, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, 'step0+=0.1');
-  tl.to(chips, { opacity: 1, y: 0, duration: 0.45, stagger: 0.09, ease: 'expo.out' }, 'step0+=0.35');
+  tl.to(chips, { opacity: 1, y: 0, duration: 0.45, stagger: 0.09, ease: 'expo.out' }, 'step0+=0.1');
   tl.addLabel('step1');
 
   /* 2 · and what falls out of them, each number with its picture */
@@ -11427,7 +12274,8 @@ Deck.slide('s06', function (el, gsap) {
   var tl = gsap.timeline({ paused: true });
   var rows = [
     el.querySelector('#s06-r1'), el.querySelector('#s06-r2'),
-    el.querySelector('#s06-r3'), el.querySelector('#s06-r4')
+    el.querySelector('#s06-r3'), el.querySelector('#s06-r4'),
+    el.querySelector('#s06-r5')
   ];
   var marksSvg = el.querySelector('.s06-marks');
   var credit = el.querySelector('.s06-credit');
@@ -11437,29 +12285,32 @@ Deck.slide('s06', function (el, gsap) {
   var bigs = [
     el.querySelector('.s06-big[data-big="1"]'),
     el.querySelector('.s06-big[data-big="2"]'),
-    el.querySelector('.s06-big[data-big="3"]')
+    el.querySelector('.s06-big[data-big="3"]'),
+    el.querySelector('.s06-big[data-big="4"]')
   ];
 
   /* Each mark is addressed by its own row and column, never by index into
      marks.children, so re-ordering the markup cannot mis-assign a tick. */
   var VERDICT = [
+    ['part', 'tick', 'cross', 'tick'],    /* manual pipetting */
     ['tick', 'cross', 'tick', 'tick'],    /* laboratory systems */
     ['cross', 'tick', 'tick', 'cross'],   /* integrated platforms */
-    ['cross', 'cross', 'tick', 'tick']    /* portable and open-source */
+    ['cross', 'part', 'tick', 'tick']     /* open source */
   ];
-  var rowMarks = [], rowPass = [], rowFail = [];
-  for (var r = 0; r < 3; r++) {
-    rowMarks[r] = []; rowPass[r] = []; rowFail[r] = [];
+  var rowMarks = [], rowPass = [], rowPart = [], rowFail = [];
+  for (var r = 0; r < 4; r++) {
+    rowMarks[r] = []; rowPass[r] = []; rowPart[r] = []; rowFail[r] = [];
     for (var c = 0; c < 4; c++) {
       var m = marksSvg.querySelector('[data-r="' + (r + 1) + '"][data-c="' + (c + 1) + '"]');
       if (!m) continue;
       rowMarks[r].push(m);
-      (VERDICT[r][c] === 'cross' ? rowFail[r] : rowPass[r]).push(m);
+      var v = VERDICT[r][c];
+      (v === 'cross' ? rowFail[r] : v === 'part' ? rowPart[r] : rowPass[r]).push(m);
     }
   }
 
-  var CHIP = { left: 24, width: 118, height: 72, radius: 10 };
-  function chipTop(i) { return 68 + i * 84; }
+  var CHIP = { left: 24, width: 118, height: 62, radius: 10 };
+  function chipTop(i) { return 68 + i * 74; }
 
   rows.forEach(function (row) {
     gsap.set(row.children, { opacity: 0, x: -10 });
@@ -11484,8 +12335,11 @@ Deck.slide('s06', function (el, gsap) {
       left: CHIP.left, top: chipTop(i), width: CHIP.width, height: CHIP.height,
       borderRadius: CHIP.radius, duration: 0.95, ease: 'expo.inOut'
     }, at + '+=1.55');
-    tl.set(bigs[i].querySelector('img'), { objectFit: 'cover' }, at + '+=2.5');
     tl.to(rowPass[i], { opacity: 1, scale: 1, duration: 0.32, stagger: 0.09, ease: 'back.out(2.4)' }, at + '+=2.2');
+    /* only the rows that have one: GSAP warns on an empty target list */
+    if (rowPart[i].length) {
+      tl.to(rowPart[i], { opacity: 1, scale: 1, duration: 0.38, ease: 'back.out(2)' }, at + '+=2.38');
+    }
     tl.to(rowFail[i], { opacity: 1, scale: 1.2, duration: 0.42, stagger: 0.12, ease: 'back.out(3)' }, at + '+=2.5');
     tl.to(rowFail[i], { scale: 1, duration: 0.3, stagger: 0.12, ease: 'power2.out' }, at + '+=2.95');
     if (i === 0) tl.to(credit, { opacity: 1, duration: 0.6 }, at + '+=2.6');
@@ -11496,16 +12350,17 @@ Deck.slide('s06', function (el, gsap) {
   family(0);
   family(1);
   family(2);
+  family(3);
 
   /* the row nothing fills */
-  tl.to([rows[2], rowMarks[2]], { opacity: 0.5, duration: 0.4 }, 'step3+=0.15');
-  tl.to(rows[3].children, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, 'step3+=0.25');
-  tl.to(ghost, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 'step3+=0.35');
-  tl.to(want, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, 'step3+=0.45');
-  tl.to(slots, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2)' }, 'step3+=0.65');
-  tl.to(slots, { scale: 1.16, duration: 0.35, stagger: 0.06, ease: 'power2.out' }, 'step3+=1.25');
-  tl.to(slots, { scale: 1, duration: 0.45, stagger: 0.06, ease: 'power2.inOut' }, 'step3+=1.65');
-  tl.addLabel('step4');
+  tl.to([rows[3], rowMarks[3]], { opacity: 0.5, duration: 0.4 }, 'step4+=0.15');
+  tl.to(rows[4].children, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, 'step4+=0.25');
+  tl.to(ghost, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 'step4+=0.35');
+  tl.to(want, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, 'step4+=0.45');
+  tl.to(slots, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2)' }, 'step4+=0.65');
+  tl.to(slots, { scale: 1.16, duration: 0.35, stagger: 0.06, ease: 'power2.out' }, 'step4+=1.25');
+  tl.to(slots, { scale: 1, duration: 0.45, stagger: 0.06, ease: 'power2.inOut' }, 'step4+=1.65');
+  tl.addLabel('step5');
 
   return tl;
 });
@@ -11920,8 +12775,6 @@ Deck.slide('s07b', function (el, gsap) {
   var keyLiq  = q('.rl-lgrow[data-g="1"]');
   var keyCtl  = q('.rl-lgrow[data-g="2"]');
   var keyBar  = q('.rl-lgrow[data-g="3"]');
-  var line1   = q('.rl-line[data-line="1"]');
-  var line4   = q('.rl-line[data-line="4"]');
 
   var order = ['storage', 'pump', 'nozzle', 'align', 'tube', 'elec', 'ui'].map(function (m) {
     return q('.rl-mod[data-m="' + m + '"]');
@@ -11929,7 +12782,6 @@ Deck.slide('s07b', function (el, gsap) {
 
   gsap.set(liqLn, { drawSVG: '0%' });
   if (bar) { gsap.set(bar, { drawSVG: '0%' }); }
-  gsap.set([line1, line4], { opacity: 0, y: 12 });
 
   tl.addLabel('step0');
 
@@ -11942,7 +12794,6 @@ Deck.slide('s07b', function (el, gsap) {
       { opacity: 1, x: 0, y: 0, duration: 0.55, ease: 'expo.out' }, 'step0+=' + (0.09 * i).toFixed(2));
   });
   tl.to(encl, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 'step0+=0.92');
-  tl.to(line1, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step0+=1.10');
   tl.addLabel('step1');
 
   /* 2 · the fluid chain, and one dose walking the whole of it */
@@ -11987,8 +12838,6 @@ Deck.slide('s07b', function (el, gsap) {
   tl.to(liqLn.concat(liqHd), { opacity: 0.55, duration: 0.35, ease: 'power2.inOut' }, 'step3+=0.25');
   tl.to(liqLn.concat(liqHd), { opacity: 1, duration: 0.55, ease: 'power2.out' }, 'step3+=0.70');
   tl.to(keyBar, { opacity: 1, duration: 0.40 }, 'step3+=0.95');
-  tl.to(line1, { opacity: 0, y: -12, duration: 0.30, ease: 'power2.in' }, 'step3+=0.55');
-  tl.to(line4, { opacity: 1, y: 0, duration: 0.50, ease: 'expo.out' }, 'step3+=0.90');
   tl.addLabel('step4');
 
   return tl;
@@ -13849,7 +14698,7 @@ Deck.slide('s08a', function (el, gsap) {
                        { opacity: 1, y: 0, duration: 0.55 }, 'step3')
       .addLabel('step4');
 
-    /* ── step 5 · how repeatable one channel is, dose to dose ── */
+    /* ── step 5 · how far the calibration drifted between sessions ── */
     tl.fromTo(cv, { opacity: 0, y: 12 },
                   { opacity: 1, y: 0, duration: 0.55 }, 'step4')
       .fromTo(qa(el, '.s31-cv-i'), { opacity: 0, y: 14 },
@@ -14460,7 +15309,7 @@ Deck.slide('s08a', function (el, gsap) {
      Four steps, and nothing crosses the slide:
        1  the machine that exists
        2  the reader that does not, bay empty
-       3  the bus, the four modules on the rail, one seating into the bay
+       3  the bus, the three modules on the rail, one seating into the bay
        4  the code that sets both instruments up — and the slide rests there
      The fifth beat (livestock screening / municipal water testing) was cut
      on 2026-09-23 at Sirio's request: out of context for this slide.       */
@@ -14769,6 +15618,30 @@ Deck.slide('b24', function (el, gsap) {
   tl.to(tileLab, { opacity: 1, duration: 0.4 }, 'step3+=1.75');
   tl.to(ghosts, { opacity: 1, duration: 0.45, stagger: 0.14 }, 'step3+=1.85');
   tl.addLabel('step4');
+
+  return tl;
+});
+
+/* ---- s04 · moved here from parts/10-opening.html 2026-09-23 ---- */
+/* ── S04 · the photo, the pipettes, the bench, the provenance, the span ─ */
+Deck.slide('s04', function (el, gsap) {
+  /* the field laboratory, then the spotlight finds the pipettes */
+  var tl = gsap.timeline({ paused: true });
+  var plate  = el.querySelector('#s04-plate');
+  var spot   = el.querySelector('#s04-spot');
+  var credit = el.querySelector('#s04-credit');
+
+  gsap.set(credit, { opacity: 0 });
+
+  tl.addLabel('step0');
+  tl.fromTo(plate, { opacity: 0, scale: 1.04 },
+    { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 'step0');
+  tl.to(credit, { opacity: 1, duration: 0.6 }, 'step0+=0.8');
+  tl.addLabel('step1');
+
+  tl.to(spot, { opacity: 1, duration: 0.5 }, 'step1');
+  tl.fromTo(spot, { '--sr': '78%' }, { '--sr': '17%', duration: 1.1, ease: 'power3.inOut' }, 'step1');
+  tl.addLabel('step2');
 
   return tl;
 });

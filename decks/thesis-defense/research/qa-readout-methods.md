@@ -21,6 +21,9 @@ already implies.
 | Magnetic (GMR) | Magnetic-bead labels shift a magnetoresistive sensor's resistance | Custom GMR die, bias coil, lock-in amp | No — custom silicon |
 | SPR / photonic, SERS, nanopore | Refractive-index shift · Raman fingerprint · ionic-current blockade | Lasers, spectrometers, thermal stabilisation | No — lab-grade |
 
+*The colorimetric and turbidimetry rows are one hardware module: see "One module for colour and
+turbidity" at the foot (2026-09-23).*
+
 ## The five worth describing
 
 **Fluorescence.** A dye intercalates into double-stranded DNA (SYBR Green) or is unquenched from
@@ -36,6 +39,7 @@ by eye, quantified as a ratio of two LED channels. Gold nanoparticles are the im
 red dispersed, blue aggregated. Cheapest possible reader. Its weakness is the thesis's own
 argument in miniature: a crude, high-buffer sample can suppress the colour change and read as a
 false negative, so it is sensitive to how well the prep worked.
+*The same module also reads turbidity: see "One module for colour and turbidity" (2026-09-23).*
 
 **Lateral-flow reader.** Wicked strip, labelled antibody captured at a test line; the reader
 measures reflectance at that line against background and the control line. No heater, lowest power.
@@ -110,3 +114,34 @@ only descends from it.
 Existing anchors already in `bibliography.bib` if any of this ever needs citing:
 `wang-poc-diagnostics-2021` (the big POC review, methods to devices) and
 `chen-portable-sensing-2026` (portable sensor technologies).
+
+## One module for colour and turbidity (2026-09-23)
+
+**What changed.** The table above lists colorimetric and turbidimetry as two modalities, and until
+today S41 showed them as two detector cards. In hardware they are one module: a light source, the
+sample, and a photodiode opposite it, read **in transmission**. Colorimetry reads colour, as the
+ratio of one or two LED wavelengths; turbidity reads cloudiness, as the loss of light at a single
+wavelength (the table above gives a 650 nm LED for the LAMP turbidity readout).
+Both are an attenuation measurement on the same optical path, so one module with one or two LEDs
+does both. **S41 now shows them as one card, "Absorbance: colour and turbidity"**, and the rail
+holds three modules beside fluorescence in the bay.
+
+**Where this comes from.** General optics, not the thesis and not the sources earlier in this
+note, which list the hardware per method but never compare the two. Standard textbook treatment
+of absorbance photometry, turbidimetry and nephelometry: Skoog, Holler and Crouch, *Principles of
+Instrumental Analysis* (Cengage), the chapters on molecular absorption and on light scattering;
+Beer–Lambert attenuation covers both cases, with scattering in place of absorption for turbidity.
+
+**The exception.** Turbidity read at **90° to the beam (nephelometry)** measures scattered light,
+not transmitted light. It needs a second photodiode placed off-axis, so it would not fit this
+module as drawn. Transmission turbidimetry, which is what the LAMP turbidimeter does, does.
+
+**How the slide relates to thesis §13.6.** The thesis
+(`Chapters/13_Discussion-and-Reflection.tex`, line 152) names four **assay types**: colorimetric,
+enzymatic, fluorescence and immunoassay. The slide now shows four **detector types**:
+fluorescence, absorbance, lateral-flow strip reader and electrochemical. They are two different
+lists. Colorimetric maps onto absorbance and fluorescence onto fluorescence. Enzymatic and
+immunoassay tests are chemistries, not detectors: an enzymatic test is read as a colour change
+(absorbance) or a current (electrochemical), an immunoassay as a strip line, a fluorescent label or
+a current. So the slide complements the sentence rather than repeating it; whether to align the
+rail with the thesis wording is still Sirio's call (PUNCHLIST (al)).

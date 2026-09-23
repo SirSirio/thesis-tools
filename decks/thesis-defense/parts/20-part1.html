@@ -21,15 +21,21 @@
   <div class="divider__wash"></div>
   <div class="divider__inner">
     <div class="divider__num">Part I</div>
-    <h2 class="divider__title">Why this machine, and how I worked.</h2>
-    <p class="divider__sub">The gap, the requirements, the way of working.</p>
+    <h2 class="divider__title">Background,<br />Requirements<br />and Methods.</h2>
+    <p class="divider__sub">Why this machine exists, what it has to do, and how I worked.</p>
   </div>
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
-      <li>Two questions in this part: why build it, and how the work was run.</li>
-      <li>Four minutes; the modules start right after.</li>
+      <li data-step="meta">~5 s</li>
+      <li data-step="0">Part I: background, requirements and methods.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Parte I · Contesto, requisiti e metodi.</p>
+      <ul>
+        <li data-step="0">Parte I: perché questa macchina esiste, cosa deve fare, e come ho lavorato.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -106,17 +112,26 @@
 
   <aside class="notes">
     <ul>
-      <li>1 · locked inside — a swab, a scoop of soil, a water sample: none of them can be read directly. What the test is looking for is genetic material, and it starts out sealed inside cells or virus particles, mixed with proteins and debris, with enzymes already breaking it down.</li>
-      <li>2 · separated — so the first job is to break the sample open and get the target out, and the second is to separate it from everything it arrived with. That is what the salt and the beads and the magnet are doing.</li>
-      <li>3 · washed out — and here is the catch. The chemistry that frees the target is aggressive, and if any of it is carried over it blocks the amplification that reads the result. The thesis is explicit about the guanidine salt: anything carried over will inhibit the reaction that follows. So the preparation has to remove its own reagents as well.</li>
-      <li>4 · the hinge — now count what those steps actually are. Almost every one of them is adding a measured volume or taking one away. That is why the piece of hardware sample preparation needs is a dispenser, and it is what the rest of this talk is about.</li>
-      <li>If asked how much it matters: the thesis cites evidence that sampling and sample preparation contribute more variability to a result than the measurement itself.</li>
-      <li>Do not name PANPOC here — the contents slide already did, and the bead protocol has its own slide in the appendix.</li>
+      <li data-step="meta">~45 s</li>
+      <li data-step="0">First, what sample preparation actually is.</li>
+      <li data-step="1">A swab, soil, water: none can be read directly. The genetic material the test looks for is locked inside cells or virus particles, among proteins and debris.</li>
+      <li data-step="2">So you break the sample open, pull the target out, and separate it from everything else.</li>
+      <li data-step="3">Then that aggressive chemistry must be washed out too, or it blocks the reaction that reads the result. Nearly every step adds or removes a measured volume &mdash; so what sample preparation needs is a dispenser.</li>
+      <li>If asked: the thesis cites evidence that sampling and sample preparation add more variability to a result than the measurement itself.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La preparazione del campione trasforma un tampone grezzo in qualcosa che un test può leggere.</p>
+      <ul>
+        <li data-step="0">Prima di tutto: che cos&rsquo;è la preparazione del campione.</li>
+        <li data-step="1">Tampone, terreno, acqua: nessuno si legge così com&rsquo;è. Il materiale genetico che il test cerca è chiuso dentro cellule o virus, in mezzo a proteine e detriti.</li>
+        <li data-step="2">Quindi si rompe il campione, si estrae il bersaglio e lo si separa da tutto il resto.</li>
+        <li data-step="3">Poi anche quella chimica aggressiva va lavata via, altrimenti blocca la reazione che legge il risultato. Quasi ogni passaggio aggiunge o toglie un volume misurato: serve un dosatore.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
-<!-- ░░ S06 · The gap ░░ four steps -->
+<!-- ░░ S06 · The gap ░░ five steps: the pipette, three families, the empty row -->
 <section class="slide" id="s06" data-cue="s06" data-dialect="sheet" data-part="I" style="--head-h:48px" data-map="none">
   <h2 class="slide__title">No instrument today is precise, portable, unattended and open to any protocol at once.</h2>
   <div class="slide__rule"></div>
@@ -125,6 +140,7 @@
   <i class="fragment step-cue" data-step="2"></i>
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
 
   <div class="s06-sheet">
     <div class="sheet__grid"></div>
@@ -141,27 +157,34 @@
 
     <svg class="s06-rules" viewBox="0 0 1168 452" aria-hidden="true">
       <path class="s06-rule" d="M 24 62 H 1144"/>
-      <path class="s06-rule s06-rule--faint" d="M 24 146 H 1144"/>
-      <path class="s06-rule s06-rule--faint" d="M 24 230 H 1144"/>
-      <path class="s06-rule s06-rule--faint" d="M 24 314 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 136 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 210 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 284 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 358 H 1144"/>
     </svg>
 
+    <!-- the lab standard first: the hand pipette he holds up while this row lands -->
     <div class="s06-row" id="s06-r1">
+      <span class="s06-fam">manual pipetting</span>
+      <span class="s06-eg">hand pipettes</span>
+      <span class="s06-price"><b>~$1k</b><i>kit, 1&ndash;1000 &micro;L</i></span>
+    </div>
+    <div class="s06-row" id="s06-r2">
       <span class="s06-fam">laboratory systems</span>
       <span class="s06-eg">Tecan Fluent</span>
       <span class="s06-price"><b>$25&ndash;80k</b><i>used</i></span>
     </div>
-    <div class="s06-row" id="s06-r2">
+    <div class="s06-row" id="s06-r3">
       <span class="s06-fam">integrated platforms</span>
       <span class="s06-eg">Roche cobas liat</span>
       <span class="s06-price"><b>$11k</b><i>$100 per test</i></span>
     </div>
-    <div class="s06-row" id="s06-r3">
-      <span class="s06-fam">portable and open-source</span>
+    <div class="s06-row" id="s06-r4">
+      <span class="s06-fam">open source</span>
       <span class="s06-eg">Sidekick, Keesey 2022</span>
       <span class="s06-price"><b>$710</b><i>build cost</i></span>
     </div>
-    <div class="s06-row s06-row--want" id="s06-r4">
+    <div class="s06-row s06-row--want" id="s06-r5">
       <span class="s06-fam">what the field needs</span>
     </div>
 
@@ -174,53 +197,79 @@
     </div>
 
     <svg class="s06-marks" viewBox="0 0 1168 452" aria-hidden="true">
-      <path class="s06-tick"  data-r="1" data-c="1" d="M 435 104 L 444 113 L 462 93"/>
-      <g class="s06-cross" data-r="1" data-c="2"><path d="M 577 93 L 599 115"/><path d="M 599 93 L 577 115"/></g>
-      <path class="s06-tick"  data-r="1" data-c="3" d="M 715 104 L 724 113 L 742 93"/>
-      <path class="s06-tick"  data-r="1" data-c="4" d="M 855 104 L 864 113 L 882 93"/>
+      <path class="s06-part"  data-r="1" data-c="1" d="M 436 112 L 460 86"/>
+      <path class="s06-tick"  data-r="1" data-c="2" d="M 575 99 L 584 108 L 602 88"/>
+      <g class="s06-cross" data-r="1" data-c="3"><path d="M 717 88 L 739 110"/><path d="M 739 88 L 717 110"/></g>
+      <path class="s06-tick"  data-r="1" data-c="4" d="M 855 99 L 864 108 L 882 88"/>
 
-      <g class="s06-cross" data-r="2" data-c="1"><path d="M 437 177 L 459 199"/><path d="M 459 177 L 437 199"/></g>
-      <path class="s06-tick"  data-r="2" data-c="2" d="M 575 188 L 584 197 L 602 177"/>
-      <path class="s06-tick"  data-r="2" data-c="3" d="M 715 188 L 724 197 L 742 177"/>
-      <g class="s06-cross" data-r="2" data-c="4"><path d="M 857 177 L 879 199"/><path d="M 879 177 L 857 199"/></g>
+      <path class="s06-tick"  data-r="2" data-c="1" d="M 435 173 L 444 182 L 462 162"/>
+      <g class="s06-cross" data-r="2" data-c="2"><path d="M 577 162 L 599 184"/><path d="M 599 162 L 577 184"/></g>
+      <path class="s06-tick"  data-r="2" data-c="3" d="M 715 173 L 724 182 L 742 162"/>
+      <path class="s06-tick"  data-r="2" data-c="4" d="M 855 173 L 864 182 L 882 162"/>
 
-      <g class="s06-cross" data-r="3" data-c="1"><path d="M 437 261 L 459 283"/><path d="M 459 261 L 437 283"/></g>
-      <g class="s06-cross" data-r="3" data-c="2"><path d="M 577 261 L 599 283"/><path d="M 599 261 L 577 283"/></g>
-      <path class="s06-tick"  data-r="3" data-c="3" d="M 715 272 L 724 281 L 742 261"/>
-      <path class="s06-tick"  data-r="3" data-c="4" d="M 855 272 L 864 281 L 882 261"/>
+      <g class="s06-cross" data-r="3" data-c="1"><path d="M 437 236 L 459 258"/><path d="M 459 236 L 437 258"/></g>
+      <path class="s06-tick"  data-r="3" data-c="2" d="M 575 247 L 584 256 L 602 236"/>
+      <path class="s06-tick"  data-r="3" data-c="3" d="M 715 247 L 724 256 L 742 236"/>
+      <g class="s06-cross" data-r="3" data-c="4"><path d="M 857 236 L 879 258"/><path d="M 879 236 L 857 258"/></g>
 
-      <rect class="s06-want" x="16" y="318" width="1136" height="76" rx="10"/>
-      <circle class="s06-slot" cx="448" cy="356" r="15"/>
-      <circle class="s06-slot" cx="588" cy="356" r="15"/>
-      <circle class="s06-slot" cx="728" cy="356" r="15"/>
-      <circle class="s06-slot" cx="868" cy="356" r="15"/>
-      <circle class="s06-slot" cx="1037" cy="356" r="15"/>
+      <g class="s06-cross" data-r="4" data-c="1"><path d="M 437 310 L 459 332"/><path d="M 459 310 L 437 332"/></g>
+      <path class="s06-part"  data-r="4" data-c="2" d="M 576 334 L 600 308"/>
+      <path class="s06-tick"  data-r="4" data-c="3" d="M 715 321 L 724 330 L 742 310"/>
+      <path class="s06-tick"  data-r="4" data-c="4" d="M 855 321 L 864 330 L 882 310"/>
+
+      <rect class="s06-want" x="16" y="362" width="1136" height="66" rx="10"/>
+      <circle class="s06-slot" cx="448" cy="395" r="14"/>
+      <circle class="s06-slot" cx="588" cy="395" r="14"/>
+      <circle class="s06-slot" cx="728" cy="395" r="14"/>
+      <circle class="s06-slot" cx="868" cy="395" r="14"/>
+      <circle class="s06-slot" cx="1037" cy="395" r="14"/>
     </svg>
 
+    <!-- the field-kit photograph of appendix slide A01 (s04), shown whole -->
     <div class="s06-big" data-big="1">
+      <img data-src="assets/stills/fig-portable-qpcr.png"
+           alt="A field testing kit: a magnetic induction cycler, a magnetic block, a plate shaker and four manual pipettes." />
+    </div>
+    <div class="s06-big" data-big="2">
       <img data-src="assets/stills/instr-tecan-fluent.jpg"
            alt="A Tecan Fluent laboratory automation workstation, a full-height enclosed benchtop robot." />
     </div>
-    <div class="s06-big" data-big="2">
+    <div class="s06-big" data-big="3">
       <img data-src="assets/stills/instr-cobas-liat-tube.png"
            alt="A Roche cobas liat assay tube, a sealed cartridge holding the reagents for one test." />
     </div>
-    <div class="s06-big" data-big="3">
+    <div class="s06-big" data-big="4">
       <img data-src="assets/stills/instr-sidekick.jpg"
            alt="The Sidekick open-source liquid handler, an open-frame benchtop dispenser." />
     </div>
   </div>
 
 
-  <p class="s06-credit">Tecan &middot; Roche &middot; Keesey et al. 2022 (CC BY)</p>
+  <p class="s06-credit">Carlier et al. 2022 &middot; Tecan &middot; Roche &middot; Keesey et al. 2022 (CC BY)</p>
 
   <aside class="notes">
     <ul>
-      <li>Four properties across the top, three families of instrument, one row each.</li>
-      <li>Even the smallest Fluent takes 1.15 by 0.79 metres of bench; it covers 0.5 to 1000 microlitres, but its imprecision at half a microlitre is about thirty times its best, and Tecan itself says calibration may be needed at and below five.</li>
-      <li>Each family fails at least one property, and never the same one.</li>
-      <li>The fourth row has no picture because no instrument fills it &mdash; that is the machine.</li>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">Four properties across the top.</li>
+      <li data-step="1">The standard in every lab: the hand pipette.</li>
+      <li data-step="2">Lab systems like the Tecan Fluent: precise and open to any protocol, but even the smallest is the size of a wardrobe.</li>
+      <li data-step="3">Integrated platforms like the cobas liat: portable and unattended, but the volumes are fixed inside a cartridge, locked to one assay.</li>
+      <li data-step="4">Open-source builds like the Sidekick: open and unattended, but calibrated on water and only partly portable.</li>
+      <li data-step="5">Each family fails at least one property, and never the same one. The empty row is what the field needs &mdash; that is this machine.</li>
+      <li>If asked: the Fluent covers 0.5 to 1000 &micro;L, but at half a microlitre its imprecision is about thirty times its best, and Tecan says calibration may be needed at and below 5 &micro;L.</li>
+      <li>If asked: the cobas liat prices are not in the thesis &mdash; a resale price (Dipylon Medical) and the CADTH rapid flu review, about $100 a test, a 2015 figure.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Nessuno strumento oggi è insieme preciso, portatile, autonomo e aperto a qualunque protocollo.</p>
+      <ul>
+        <li data-step="0">In alto quattro proprietà.</li>
+        <li data-step="1">Lo standard di ogni laboratorio: la pipetta manuale.</li>
+        <li data-step="2">Sistemi da laboratorio come il Tecan Fluent: precisi e aperti a ogni protocollo, ma anche il più piccolo è grande come un armadio.</li>
+        <li data-step="3">Piattaforme integrate come il cobas liat: portatili e autonome, ma i volumi sono fissati nella cartuccia, legati a un solo test.</li>
+        <li data-step="4">Progetti open source come il Sidekick: aperti e autonomi, ma calibrati sull&rsquo;acqua e portatili solo in parte.</li>
+        <li data-step="5">Ogni famiglia manca almeno una proprietà, mai la stessa. La riga vuota è ciò che serve sul campo: questa macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -231,15 +280,14 @@
      split costs nothing. -->
 <!-- ░░ S04b · Where the range came from ░░ one step -->
 <section class="slide s04fam" id="s04b" data-cue="s04b" data-dialect="sheet" data-part="I"
-         data-map="none" style="--head-h:48px">
+         data-map="none" style="--head-h:48px; --title-w:1040px">
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
 
-  <h2 class="slide__title">The range was read out of five field protocols, not estimated.</h2>
+  <h2 class="slide__title">One machine engineered for generalized sample preparation, grounded in five field protocols.</h2>
   <div class="slide__rule"></div>
 
     <div class="s04-blk" id="s04-prov">
-      <p class="s04-lead">Five off-site protocols representing different disciplines were evaluated in full, with all operational volumes recorded.</p>
       <div class="s04-chips">
         <span class="s04-chip s04-chip--ref"><i>&#129516;</i>clinical and veterinary<em>the PANPOC protocol</em></span>
         <span class="s04-chip"><i>&#127793;</i>plant and field molecular</span>
@@ -268,10 +316,10 @@
         <span class="s04-rol">per liquid</span>
       </div>
 
-      <!-- the reagent count, drawn: six vials on the carrier -->
-      <div class="s04-ro s04-ro--wide" style="left:560px">
+      <!-- the liquid count, drawn: six vials on the carrier -->
+      <div class="s04-ro s04-ro--wide" style="left:664px">
         <svg class="s04-vis" viewBox="0 0 320 92" aria-hidden="true">
-          <g class="s04-vialset">
+          <g class="s04-vialset" transform="translate(9,0)">
             <g class="s04-vial" transform="translate(26,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
             <g class="s04-vial" transform="translate(76,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
             <g class="s04-vial" transform="translate(126,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
@@ -280,21 +328,26 @@
             <g class="s04-vial" transform="translate(276,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
           </g>
         </svg>
-        <span class="s04-rov num num--grad">up to 6</span>
-        <span class="s04-rol">reagents in one run</span>
+        <span class="s04-rov num num--grad">up to 6 liquids</span>
       </div>
       <p class="s04-tail">into tens of 1.5 and 2&nbsp;mL tubes</p>
     </div>
   <aside class="notes">
     <ul>
-      <li>Not an estimate, and not one protocol: five, chosen for being usable outside a laboratory and for covering different fields.</li>
-      <li>Each was read in full and every stated volume recorded.</li>
-      <li>No review aggregates dispensed volumes across protocol types &mdash; reviews describe instruments, primary papers report only their own protocol &mdash; so they had to be read one by one.</li>
-      <li>The clinical and veterinary one is the PANPOC magnetic-bead protocol itself: the reference protocol sits inside the survey, it is not a sixth case.</li>
-      <li>All of it runs unattended, in one load.</li>
-      <li>What falls out is the specification: 5 to 1000 &micro;L per liquid, up to six reagents, into tens of tubes, unattended.</li>
-      <li>The five-row table with each protocol&rsquo;s own range is a backup slide.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">What should one machine cover? Sample preparation in general, across fields.</li>
+      <li data-step="1">Five field protocols, every volume recorded: clinical and veterinary, plant, water, agriculture and soil. The clinical one, the PANPOC protocol, is what inspired this thesis.</li>
+      <li data-step="2">They are quite consistent: volumes from 5 to 1000 &micro;L, and up to six liquids, into tens of 1.5 and 2 mL tubes.</li>
+      <li>If asked: no review collects dispensed volumes across protocol types; the five-row table with each protocol&rsquo;s range is in the appendix.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Una sola macchina per la preparazione del campione in generale, fondata su cinque protocolli di campo.</p>
+      <ul>
+        <li data-step="0">Che cosa deve coprire una sola macchina? La preparazione del campione in generale, in campi diversi.</li>
+        <li data-step="1">Cinque protocolli di campo, con ogni volume annotato: clinico e veterinario, vegetale, acque, agricoltura e suolo. Quello clinico, il protocollo PANPOC, ha ispirato questa tesi.</li>
+        <li data-step="2">Sono abbastanza coerenti: volumi da 5 a 1000 µL, e fino a sei liquidi, in decine di provette da 1,5 e 2 mL.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -338,17 +391,28 @@
   </div>
   <aside class="notes">
     <ul>
-      <li>This is the design problem, in the words the thesis sets it in.</li>
-      <li>Every one of these is a gate, not a score: a concept that fails any of them is out before anything is weighed.</li>
-      <li>Then, and only then, the survivors get ranked &mdash; on eight opportunities, unweighted at the system level. The weights come later, one set per module, once the decomposition exists.</li>
-      <li>A high score never buys back a failed requirement.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">That becomes one design problem.</li>
+      <li data-step="1">Dose 5 to 1000 &micro;L of up to six reagents into tens of tubes, unattended, at least as precise as manual pipetting, run by non-specialists.</li>
+      <li data-step="2">Each of these is a gate: fail one and the concept is out before anything is weighed.</li>
+      <li data-step="3">Only the survivors are ranked, on eight criteria.</li>
+      <li>If asked: the eight criteria are unweighted at system level; each module gets its own weights once the decomposition exists.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina deve dosare da 5 a 1000 µL di sei liquidi in quaranta provette, da sola.</p>
+      <ul>
+        <li data-step="0">Tutto questo diventa un unico problema di progetto.</li>
+        <li data-step="1">Dosare da 5 a 1000 µL di fino a sei reagenti in decine di provette, senza presidio, precisa almeno quanto una pipetta manuale, usata da personale non specializzato.</li>
+        <li data-step="2">Ognuno di questi è un vincolo: se un&rsquo;idea ne manca uno, è esclusa prima di qualunque valutazione.</li>
+        <li data-step="3">Solo le idee rimaste vengono ordinate, su otto criteri.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
 
 <section class="slide" id="s07b" data-cue="s07b" data-dialect="sheet" data-part="I" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The machine is eight modules, and every boundary carries a volume or a signal.</h2>
+  <h2 class="slide__title">The machine is split up into 8 modules, connected by liquid transfers and control signals.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -469,18 +533,26 @@
     <circle class="rl-pulse" data-c="5" r="3.6" cx="0" cy="0"/>
   </svg>
 
-  <div class="rl-read">
-    <p class="rl-line" data-line="1">Metering, positioning, dispensing, storing and coordinating cannot be one monolith.</p>
-    <p class="rl-line" data-line="4">One job per module, developed in parallel, replaceable without redesigning the rest.</p>
-  </div>
-
   <aside class="notes">
     <ul>
-      <li>Mapping the operational sequence gave eight functions, so eight modules: pump, alignment, nozzle, storage, tube holding, user interface, electronics and software, and the enclosure around all of it. A machine that meters microlitres, positions tubes, dispenses droplets, manages reagents, talks to an operator and coordinates actuation cannot be engineered as a monolithic system.</li>
-      <li>The rule that set the boundaries: an interface boundary is physically justified only if the transferred mass or information can be precisely defined. Here every subsystem interaction is strictly either a defined volumetric fluid transfer or an electrical control signal. Nothing else crosses.</li>
-      <li>Tube holding is dashed because it was conceived standalone and then physically absorbed into alignment during prototyping, once fabrication showed the tubes could not be indexed independently of the positioning carriage.</li>
-      <li>The boundaries were guidelines, not walls: a concept spanning two domains, storage with direct displacement metering for instance, was judged on merit rather than eliminated for crossing a line. The enclosure is dashed for a different reason: it was specified and never built, because its geometry depends on the aggregate of everything inside it.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Mapping the operating sequence gave eight functions, so eight modules.</li>
+      <li data-step="1">Storage, pump, nozzle, alignment, tube holding, electronics, user interface and the enclosure: one function each.</li>
+      <li data-step="2">The liquid runs one way: storage, pump, nozzle, into the tube. Tube holding was later absorbed into alignment.</li>
+      <li data-step="3">Everything else between the modules is data and control.</li>
+      <li data-step="4">Nothing wet crosses into the electronics. The enclosure stayed a specification: its shape depends on everything inside it.</li>
+      <li>If asked: reagent storage is Marius Schiller&rsquo;s work, not one of my modules.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina è divisa in 8 moduli, collegati da trasferimenti di liquido e segnali di controllo.</p>
+      <ul>
+        <li data-step="0">Dalla sequenza delle operazioni sono uscite otto funzioni, quindi otto moduli.</li>
+        <li data-step="1">Stoccaggio, Pump, Nozzle, Alignment, supporto provette, elettronica, User Interface e involucro: una funzione ciascuno.</li>
+        <li data-step="2">Il liquido va in una sola direzione: stoccaggio, Pump, Nozzle, provetta. Il supporto provette è stato poi assorbito nel modulo Alignment.</li>
+        <li data-step="3">Tutto il resto, fra i moduli, sono dati e segnali di controllo.</li>
+        <li data-step="4">Nessun liquido raggiunge l&rsquo;elettronica. L&rsquo;involucro è rimasto una specifica: la sua forma dipende da tutto ciò che contiene.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -530,11 +602,20 @@
 
   <aside class="notes">
     <ul>
-      <li>Rank the modules by how much each one depends on the others and you get the order the work had to follow.</li>
-      <li>The pump sits at the top because it carries the tightest volume requirement and sets the operating principle for everything else &mdash; thirty-one rows in its evaluation matrix.</li>
-      <li>The electronics matrix has three requirements and eleven criteria and names no voltage and no driver count, because its demands are just the sum of everything upstream. The enclosure was never built on purpose: its shape is the sum of the mechanisms inside it.</li>
-      <li>Whenever two modules disagreed, the lower one gave way. Part II walks down that list.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">Ranked by how much each depends on the others, the modules give the order the work followed.</li>
+      <li data-step="1">The pump sits on top: it carries the tightest volume requirement and sets the operating principle for everything else.</li>
+      <li data-step="2">Each module below inherits constraints; when two disagreed, the lower one gave way.</li>
+      <li>If asked: the pump&rsquo;s evaluation matrix has thirty-one rows; the electronics matrix has three requirements and eleven criteria and names no voltage or driver count.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il modulo Pump decide, e tutto ciò che sta sotto si adatta.</p>
+      <ul>
+        <li data-step="0">Ordinando i moduli per quanto dipendono l&rsquo;uno dall&rsquo;altro si ottiene l&rsquo;ordine del lavoro.</li>
+        <li data-step="1">In cima il modulo Pump: ha il requisito di volume più severo e detta il principio di funzionamento a tutti gli altri.</li>
+        <li data-step="2">Ogni modulo più in basso eredita vincoli; in caso di conflitto cedeva quello più in basso.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -566,11 +647,15 @@
 
   <aside class="notes">
     <ul>
-      <li>Part I asked two questions. The why is answered; this is the how.</li>
-      <li>Four principles: diverge then decide, split the machine into modules, build physically early, let the discrepancy tell you the next move.</li>
-      <li>The loop only turns as fast as its slowest step. Printing in-house took a turn from weeks to hours — that is the next slide.</li>
-      <li>AI was used throughout, inside written specs, a memory on disk and checks. The two slides after the printer show why those rules were needed and what they were. Printing, wiring, assembly and testing stayed mine.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Now the how: design, build, test, learn, in a loop that turns only as fast as its slowest step.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Metodi, e progettare con l&rsquo;IA.</p>
+      <ul>
+        <li data-step="0">Adesso il come: progettare, costruire, provare, imparare, in un ciclo che gira alla velocità del suo passo più lento.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -630,10 +715,15 @@
 
   <aside class="notes">
     <ul>
-      <li>Every mechanical part came off one printer in the room: a Bambu Lab P1S in PLA, one locked profile, a 0.4 mm nozzle for most of it and 0.2 mm wherever a fit decided something.</li>
-      <li>That is what made the loop turn. A change drawn in the morning was on the bench the same day, so turnaround went from weeks to hours.</li>
-      <li>The price: a printed part is not the part you drew. The precision interfaces needed a tenth of a millimetre, so the printer itself had to be measured &mdash; these were the first test bars, and how that went comes back in Part Two.</li>
+      <li data-step="meta">~8 s</li>
+      <li data-step="0">Every custom part was 3D printed here, to a precision of &plusmn;0.1 mm.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Ogni pezzo su misura di questa macchina è stato stampato nella stanza in cui è stato disegnato.</p>
+      <ul>
+        <li data-step="0">Ogni pezzo su misura è stato stampato in 3D qui, con una precisione di ±0,1 mm.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -646,13 +736,16 @@
 
   <aside class="notes">
     <ul>
-      <li>No words on this slide. Just say what it is.</li>
-      <li>AI was in this project from the first week, as a working tool: Claude Code, in a terminal on the actual project &mdash; reading files, writing files, running the commands that check them. That is why it could be held to something written down instead of only talked to.</li>
-      <li>Its share was the written and the computed: design documents, the calculations, the interactive models published on the site, and the tooling around the work.</li>
-      <li>Printing, wiring, assembling and testing stayed mine, and every reference was checked and approved by hand.</li>
-      <li>Used unconstrained it does not make occasional mistakes &mdash; it fails in the same structural ways every time. That is the next slide, and the reason the answer was an environment with rules rather than better prompting.</li>
-      <li>Chapter four is about this, and an appendix documents the use.</li>
+      <li data-step="meta">~15 s</li>
+      <li data-step="0">AI was in this project from the first week: Claude Code, working on the real project files. It wrote and computed; printing, wiring, assembling and testing stayed mine, and I checked every reference by hand.</li>
+      <li>If asked: chapter four covers this, and an appendix documents the use.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Progettare con l&rsquo;IA.</p>
+      <ul>
+        <li data-step="0">L&rsquo;IA è stata nel progetto dalla prima settimana: Claude Code, sui file veri del progetto. Ha scritto e calcolato; stampa, cablaggio, montaggio e collaudo sono rimasti miei, e ogni fonte l&rsquo;ho controllata io.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -750,11 +843,25 @@
 
   <aside class="notes">
     <ul>
-      <li>Asked only to design a house it will give you a villa or a townhouse, both structurally valid, neither what was meant &mdash; and here it is finished, complete, before anything goes wrong.</li>
-      <li>Ask for a window upstairs and it lands half off the wall, because nothing on disk recorded where the wall was.</li>
-      <li>Then an instruction from three sessions ago resurfaces, a load-bearing wall moves, and the roof comes with it.</li>
-      <li>Building without a specification is deciding the rooms after the walls are up; check the floor after the furniture is in and you either empty the house or live with a crooked floor.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Used without constraints, AI fails in the same structural ways every time.</li>
+      <li data-step="1">Say I ask it to design a house.</li>
+      <li data-step="2">A villa or a townhouse: both valid, neither what I meant.</li>
+      <li data-step="3">Now ask for a window upstairs: it lands half off the wall, because nothing written down said where the wall was.</li>
+      <li data-step="4">Then an instruction from three sessions ago comes back, a load-bearing wall moves, and the roof comes with it.</li>
+      <li data-step="5">As in all engineering, work with AI has to proceed in steps, each one written down and checked before the next.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Chiedi a un&rsquo;IA di progettare una casa e vedi esattamente dove sbaglia.</p>
+      <ul>
+        <li data-step="0">Usata senza regole, l&rsquo;IA sbaglia sempre negli stessi modi, per struttura.</li>
+        <li data-step="1">Supponiamo di chiederle di progettare una casa.</li>
+        <li data-step="2">Una villa o una casa a schiera: entrambe valide, nessuna delle due quella voluta.</li>
+        <li data-step="3">Chiedi una finestra al piano di sopra: finisce mezza fuori dal muro, perché niente di scritto diceva dov&rsquo;era il muro.</li>
+        <li data-step="4">Poi torna un&rsquo;istruzione di tre sessioni prima, un muro portante si sposta, e il tetto viene giù con lui.</li>
+        <li data-step="5">Come in tutta l&rsquo;ingegneria, il lavoro con l&rsquo;IA deve procedere per passi, ognuno scritto e verificato prima del successivo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -826,11 +933,21 @@
 
   <aside class="notes">
     <ul>
-      <li>Decisions are locked in writing before anything is planned or built.</li>
-      <li>The physical stages stayed mine: printing, wiring, assembling, testing.</li>
-      <li>References came through a retrieval pipeline, and I approved every one.</li>
-      <li>The site address is on the screen; three of its tools open later in this talk.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">So the AI worked inside rules.</li>
+      <li data-step="1">Every decision is locked in writing before anything is planned or built &mdash; discuss, plan, execute, verify, ship &mdash; and the memory lives on disk.</li>
+      <li data-step="2">Throughout, the AI documented the process, so that record was always its reference. Now, the modules.</li>
+      <li>If asked: the sources? Click that panel &mdash; seven databases, forty candidates reranked, twelve returned, and I approved every reference.</li>
+      <li>If asked: the models? Click the tools panel; the site is live and three of its tools open later in this talk.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Quindi l&rsquo;IA ha lavorato dentro specifiche scritte, una memoria su disco e controlli che non poteva saltare.</p>
+      <ul>
+        <li data-step="0">Quindi l&rsquo;IA ha lavorato dentro regole precise.</li>
+        <li data-step="1">Ogni decisione è fissata per iscritto prima di pianificare o costruire: discutere, pianificare, eseguire, verificare, consegnare. E la memoria resta su disco.</li>
+        <li data-step="2">Per tutto il lavoro l&rsquo;IA ha documentato il processo, e quella documentazione è sempre stata il suo riferimento. Adesso, i moduli.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -861,17 +978,19 @@
 #s06 .s06-rule--faint { stroke: rgba(27,34,51,0.14); }
 
 #s06 .s06-row {
-  position: absolute; left: 152px; width: 236px; height: 84px;
+  position: absolute; left: 152px; width: 236px; height: 74px;
   display: flex; flex-direction: column; justify-content: center; gap: 4px;
 }
-#s06 #s06-r1 { top: 62px; } #s06 #s06-r2 { top: 146px; }
-#s06 #s06-r3 { top: 230px; } #s06 #s06-r4 { top: 314px; }
+/* five rows of 74 px under the 62 px header: the pipette, three families, the empty row */
+#s06 #s06-r1 { top: 62px; }  #s06 #s06-r2 { top: 136px; } #s06 #s06-r3 { top: 210px; }
+#s06 #s06-r4 { top: 284px; } #s06 #s06-r5 { top: 358px; }
 #s06 .s06-fam { font-size: 20px; line-height: 1.18; color: #1b2233; }
 #s06 .s06-eg  { font-family: var(--mono); font-size: 18px; line-height: 1.1; color: #6b7387; }
 #s06 .s06-row--want .s06-fam { color: #b06a3a; font-weight: 600; }
 
-/* the photo column: rows 1 to 3 are filled by the plate that flies in,
-   row 4 keeps a dashed, empty chip — the instrument nobody has built */
+/* the photo column: rows 1 to 4 are filled by the plate that flies in,
+   row 5 keeps a dashed, empty chip — the instrument nobody has built.
+   Every photograph stays whole in its chip (contain, never cover). */
 #s06 .s06-big {
   position: absolute; left: 520px; top: 62px; width: 500px; height: 334px;
   border-radius: 16px;
@@ -881,9 +1000,9 @@
   overflow: hidden; opacity: 0;
 }
 #s06 .s06-big img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s06 .s06-big[data-big="1"] { left: 600px; width: 380px; }
+#s06 .s06-big[data-big="2"] { left: 600px; width: 380px; }
 #s06 .s06-ghostchip {
-  position: absolute; left: 24px; top: 320px; width: 118px; height: 72px;
+  position: absolute; left: 24px; top: 364px; width: 118px; height: 62px;
   border-radius: var(--r-sm);
   border: 1.5px dashed #b06a3a;
   display: flex; align-items: center; justify-content: center;
@@ -894,6 +1013,12 @@
 
 #s06 .s06-tick { fill: none; stroke: #1b5e43; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round; }
 #s06 .s06-cross path { fill: none; stroke: #c62f2f; stroke-width: 4.2; stroke-linecap: round; }
+/* a third verdict: partly, drawn as a slash in amber — neither the green of
+   a pass nor the red of a fail. Amber rather than the deck's #e9c341 yellow
+   because this sheet is near-white: the yellow was the faintest thing on it.
+   Same stroke weight as the tick and the cross, so the three marks read at
+   one weight. */
+#s06 .s06-part { fill: none; stroke: #b8791f; stroke-width: 4.2; stroke-linecap: round; }
 #s06 .s06-want { fill: none; stroke: #b06a3a; stroke-width: 1.6; stroke-dasharray: 8 7; }
 #s06 .s06-slot { fill: none; stroke: #b06a3a; stroke-width: 1.8; stroke-dasharray: 4 5; }
 
@@ -1198,7 +1323,7 @@
 /* ---- s07b ---- */
 /* ══ S07b · module relationships, rebuilt from thesis figure 5.3 ═══════ */
 #s07b .rl-dg {
-  position: absolute; left: 56px; top: 202px;
+  position: absolute; left: 56px; top: 222px;
   width: 1168px; height: 420px; z-index: 5;
 }
 
@@ -1246,14 +1371,6 @@
 #s07b .rl-lgrow,
 #s07b .rl-drop,
 #s07b .rl-pulse { opacity: 0; }
-
-/* the one reading line, swapped between steps */
-#s07b .rl-read { position: absolute; left: 56px; top: 640px; width: 1060px; height: 46px; z-index: 8; }
-#s07b .rl-line {
-  position: absolute; left: 0; top: 0; margin: 0;
-  font-size: 24px; line-height: 1.3; color: var(--text);
-  opacity: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.9);
-}
 
 /* ---- s09b ---- */
 /* ══ S09b · printed in the room ═══════════════════════════════════════
@@ -1438,7 +1555,8 @@ Deck.slide('s06', function (el, gsap) {
   var tl = gsap.timeline({ paused: true });
   var rows = [
     el.querySelector('#s06-r1'), el.querySelector('#s06-r2'),
-    el.querySelector('#s06-r3'), el.querySelector('#s06-r4')
+    el.querySelector('#s06-r3'), el.querySelector('#s06-r4'),
+    el.querySelector('#s06-r5')
   ];
   var marksSvg = el.querySelector('.s06-marks');
   var credit = el.querySelector('.s06-credit');
@@ -1448,29 +1566,32 @@ Deck.slide('s06', function (el, gsap) {
   var bigs = [
     el.querySelector('.s06-big[data-big="1"]'),
     el.querySelector('.s06-big[data-big="2"]'),
-    el.querySelector('.s06-big[data-big="3"]')
+    el.querySelector('.s06-big[data-big="3"]'),
+    el.querySelector('.s06-big[data-big="4"]')
   ];
 
   /* Each mark is addressed by its own row and column, never by index into
      marks.children, so re-ordering the markup cannot mis-assign a tick. */
   var VERDICT = [
+    ['part', 'tick', 'cross', 'tick'],    /* manual pipetting */
     ['tick', 'cross', 'tick', 'tick'],    /* laboratory systems */
     ['cross', 'tick', 'tick', 'cross'],   /* integrated platforms */
-    ['cross', 'cross', 'tick', 'tick']    /* portable and open-source */
+    ['cross', 'part', 'tick', 'tick']     /* open source */
   ];
-  var rowMarks = [], rowPass = [], rowFail = [];
-  for (var r = 0; r < 3; r++) {
-    rowMarks[r] = []; rowPass[r] = []; rowFail[r] = [];
+  var rowMarks = [], rowPass = [], rowPart = [], rowFail = [];
+  for (var r = 0; r < 4; r++) {
+    rowMarks[r] = []; rowPass[r] = []; rowPart[r] = []; rowFail[r] = [];
     for (var c = 0; c < 4; c++) {
       var m = marksSvg.querySelector('[data-r="' + (r + 1) + '"][data-c="' + (c + 1) + '"]');
       if (!m) continue;
       rowMarks[r].push(m);
-      (VERDICT[r][c] === 'cross' ? rowFail[r] : rowPass[r]).push(m);
+      var v = VERDICT[r][c];
+      (v === 'cross' ? rowFail[r] : v === 'part' ? rowPart[r] : rowPass[r]).push(m);
     }
   }
 
-  var CHIP = { left: 24, width: 118, height: 72, radius: 10 };
-  function chipTop(i) { return 68 + i * 84; }
+  var CHIP = { left: 24, width: 118, height: 62, radius: 10 };
+  function chipTop(i) { return 68 + i * 74; }
 
   rows.forEach(function (row) {
     gsap.set(row.children, { opacity: 0, x: -10 });
@@ -1495,8 +1616,11 @@ Deck.slide('s06', function (el, gsap) {
       left: CHIP.left, top: chipTop(i), width: CHIP.width, height: CHIP.height,
       borderRadius: CHIP.radius, duration: 0.95, ease: 'expo.inOut'
     }, at + '+=1.55');
-    tl.set(bigs[i].querySelector('img'), { objectFit: 'cover' }, at + '+=2.5');
     tl.to(rowPass[i], { opacity: 1, scale: 1, duration: 0.32, stagger: 0.09, ease: 'back.out(2.4)' }, at + '+=2.2');
+    /* only the rows that have one: GSAP warns on an empty target list */
+    if (rowPart[i].length) {
+      tl.to(rowPart[i], { opacity: 1, scale: 1, duration: 0.38, ease: 'back.out(2)' }, at + '+=2.38');
+    }
     tl.to(rowFail[i], { opacity: 1, scale: 1.2, duration: 0.42, stagger: 0.12, ease: 'back.out(3)' }, at + '+=2.5');
     tl.to(rowFail[i], { scale: 1, duration: 0.3, stagger: 0.12, ease: 'power2.out' }, at + '+=2.95');
     if (i === 0) tl.to(credit, { opacity: 1, duration: 0.6 }, at + '+=2.6');
@@ -1507,16 +1631,17 @@ Deck.slide('s06', function (el, gsap) {
   family(0);
   family(1);
   family(2);
+  family(3);
 
   /* the row nothing fills */
-  tl.to([rows[2], rowMarks[2]], { opacity: 0.5, duration: 0.4 }, 'step3+=0.15');
-  tl.to(rows[3].children, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, 'step3+=0.25');
-  tl.to(ghost, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 'step3+=0.35');
-  tl.to(want, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, 'step3+=0.45');
-  tl.to(slots, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2)' }, 'step3+=0.65');
-  tl.to(slots, { scale: 1.16, duration: 0.35, stagger: 0.06, ease: 'power2.out' }, 'step3+=1.25');
-  tl.to(slots, { scale: 1, duration: 0.45, stagger: 0.06, ease: 'power2.inOut' }, 'step3+=1.65');
-  tl.addLabel('step4');
+  tl.to([rows[3], rowMarks[3]], { opacity: 0.5, duration: 0.4 }, 'step4+=0.15');
+  tl.to(rows[4].children, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, 'step4+=0.25');
+  tl.to(ghost, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 'step4+=0.35');
+  tl.to(want, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, 'step4+=0.45');
+  tl.to(slots, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2)' }, 'step4+=0.65');
+  tl.to(slots, { scale: 1.16, duration: 0.35, stagger: 0.06, ease: 'power2.out' }, 'step4+=1.25');
+  tl.to(slots, { scale: 1, duration: 0.45, stagger: 0.06, ease: 'power2.inOut' }, 'step4+=1.65');
+  tl.addLabel('step5');
 
   return tl;
 });
@@ -1931,8 +2056,6 @@ Deck.slide('s07b', function (el, gsap) {
   var keyLiq  = q('.rl-lgrow[data-g="1"]');
   var keyCtl  = q('.rl-lgrow[data-g="2"]');
   var keyBar  = q('.rl-lgrow[data-g="3"]');
-  var line1   = q('.rl-line[data-line="1"]');
-  var line4   = q('.rl-line[data-line="4"]');
 
   var order = ['storage', 'pump', 'nozzle', 'align', 'tube', 'elec', 'ui'].map(function (m) {
     return q('.rl-mod[data-m="' + m + '"]');
@@ -1940,7 +2063,6 @@ Deck.slide('s07b', function (el, gsap) {
 
   gsap.set(liqLn, { drawSVG: '0%' });
   if (bar) { gsap.set(bar, { drawSVG: '0%' }); }
-  gsap.set([line1, line4], { opacity: 0, y: 12 });
 
   tl.addLabel('step0');
 
@@ -1953,7 +2075,6 @@ Deck.slide('s07b', function (el, gsap) {
       { opacity: 1, x: 0, y: 0, duration: 0.55, ease: 'expo.out' }, 'step0+=' + (0.09 * i).toFixed(2));
   });
   tl.to(encl, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 'step0+=0.92');
-  tl.to(line1, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step0+=1.10');
   tl.addLabel('step1');
 
   /* 2 · the fluid chain, and one dose walking the whole of it */
@@ -1998,8 +2119,6 @@ Deck.slide('s07b', function (el, gsap) {
   tl.to(liqLn.concat(liqHd), { opacity: 0.55, duration: 0.35, ease: 'power2.inOut' }, 'step3+=0.25');
   tl.to(liqLn.concat(liqHd), { opacity: 1, duration: 0.55, ease: 'power2.out' }, 'step3+=0.70');
   tl.to(keyBar, { opacity: 1, duration: 0.40 }, 'step3+=0.95');
-  tl.to(line1, { opacity: 0, y: -12, duration: 0.30, ease: 'power2.in' }, 'step3+=0.55');
-  tl.to(line4, { opacity: 1, y: 0, duration: 0.50, ease: 'expo.out' }, 'step3+=0.90');
   tl.addLabel('step4');
 
   return tl;

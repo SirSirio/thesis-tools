@@ -159,6 +159,38 @@ because it is dirty — it may be mid-edit.
     arithmetic from two published values is fine to show; one that does not follow from the
     thesis at all is rule 14, and stays out.
 
+### Speaker captions — the standard
+
+The notes in each slide's `<aside class="notes">` are what Sirio speaks from, and the Italian
+twin is what his family reads on the guest screen. He overran his time because the old notes
+said too much. His rule, verbatim: **"No filler words. Simple and clear terms. Easy to
+understand. On point."**
+
+- **One line per click, saying what the audience sees at that click**, in plain words, the
+  way a person would say it out loud. The length follows what is on screen — some lines are
+  four words, some twenty-five. There is no word cap; there is no padding either.
+- **The first person, plainly:** "I evaluated the design concepts on paper and chose to move
+  the tubes and keep the nozzles still, so the tubing never bends." That line is the model.
+- **Never:** filler or self-justification ("on purpose", "not written up afterwards");
+  compressed, aphoristic constructions ("Two choices, one consequence", "X first: that rule
+  threw out…"); stage directions ("I open the solver: …") — if a live tool is shown, say in
+  one plain sentence what the tool does; colourful examples where a plain word will do
+  ("including extravagant ones", not a list of oddities).
+- **Get the causality right.** Say what was decided and what followed from it, in that
+  order. On the pump, 5 µL per stroke was the decision, the 0.51 mm bore its consequence, and
+  the roller count came out of the design tools.
+- **Credit only where the slide is about it.** Do not name a collaborator in a line about
+  Sirio's own evaluation.
+- **Sirio sets the time per slide**, and the caption fits it: a 10-second slide gets one or
+  two sentences. Part I has 8 minutes, Part II 9; the per-slide targets sum to those.
+- **Markup** (the runtime reads it; contract in `BUILDER-REFERENCE.md`, "Step-synced
+  captions"): `<li data-step="meta">~40 s</li>` first; each spoken line `<li data-step="n">`,
+  current from click *n* (0 = slide entry); at most one `<li>If asked: …</li>` with no
+  step, for panel questions only. The Italian twin sits in `<div class="notes-it" lang="it">`
+  with a `.notes-it__title` and the same step numbers, no meta line and no "If asked".
+  `CONTENT-IT.md` mirrors the Italian, one numbered line per click.
+- **Rule 14 still holds:** a caption compresses what the thesis says; it never adds to it.
+
 ---
 
 ## 7 · Verification you owe on every change

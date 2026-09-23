@@ -56,10 +56,15 @@
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
-      <li>Step back from the modules: from here on there is one object.</li>
-      <li>Three stops: how it was wired, how the parts were bound together, what it delivered.</li>
-      <li>Then the machine itself, in this room.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">From here on, the modules become one machine: how it was wired, how it was put together, and what it achieved.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Parte III-A · Una sola macchina.</p>
+      <ul>
+        <li data-step="0">Da qui in poi i moduli diventano una macchina sola: come è stata cablata, come è stata montata e che cosa ha ottenuto.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -73,7 +78,7 @@
   <i class="fragment step-cue" data-step="3"></i>
   <i class="fragment step-cue" data-step="4"></i>
 
-  <p class="p3-question" id="s26-q">One microcontroller driving a screen, six pumps, two axes, and a vibration motor.</p>
+  <p class="p3-question" id="s26-q">What had to be controlled: a screen, six pumps, two axes, and a vibration motor.</p>
   <span class="p3-qrule" id="s26-qrule"></span>
 
   <div class="tool-card" id="s26-card-a"
@@ -99,11 +104,24 @@
 
   <aside class="notes">
     <ul>
-      <li>The question: one microcontroller driving a screen, six pumps, two axes and a nozzle vibration motor.</li>
-      <li>Explorer: twenty-five system architectures in four families, costed on real prices, audited against real pins. Pins and driver intelligence decided it, not cost &#8212; a dumb driver makes the processor toggle a pin for every microstep, six of them need twelve lines and only seven are left once the screen and card reader are wired, and every candidate that fits the pin budget lands within about 10 % of the others on price.</li>
-      <li>Simulator: the second pump captures 86 % of the time savings; the four after it yield diminishing returns.</li>
-      <li>Say: a datasheet review would have ended in whichever option I examined last. Open each card briefly.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">There were twenty-five ways to wire this machine, and I needed a fair way to choose.</li>
+      <li data-step="1">It had to control a screen, six pumps, two axes and a vibration motor, with as many controllers as it took.</li>
+      <li data-step="2">The first tool priced every option and checked its connections, and the connections decided it, not the price.</li>
+      <li data-step="3">The second tool timed the work. A second pump saves most of the time, 86 %, and more add little.</li>
+      <li data-step="4">&#8212;</li>
+      <li>If asked about price: every option with enough connections costs within about 10 % of the others.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Venticinque modi di cablare la macchina, confrontati con due strumenti.</p>
+      <ul>
+        <li data-step="0">C&apos;erano venticinque modi di cablare questa macchina, e serviva un modo onesto per scegliere.</li>
+        <li data-step="1">Bisognava comandare uno schermo, sei pompe, due assi e un motorino a vibrazione, con quanti processori servissero.</li>
+        <li data-step="2">Il primo strumento ha prezzato ogni opzione e ne ha controllato i collegamenti: hanno deciso i collegamenti, non il prezzo.</li>
+        <li data-step="3">Il secondo strumento ha misurato i tempi. Una seconda pompa fa risparmiare quasi tutto il tempo, l&apos;86 %, e le altre aggiungono poco.</li>
+        <li data-step="4">Entrambi gli strumenti sono pagine vere, che si possono aprire dal vivo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -147,11 +165,20 @@
 
   <aside class="notes">
     <ul>
-      <li>Two pictures: what carries the signals, and what carries the power.</li>
-      <li>Signals: one processor, one shared step-and-direction clock for all six pump heads, one enable line each. A dose is a number of steps, so they can share the clock. The slower parts hang off a two-wire bus.</li>
-      <li>Power as built: one 12 V rail from a tool battery or the bench supply, and a converter for the 5 V rail.</li>
-      <li>Production: a regulated USB-C power bank feeding a 24 V motor rail, with a step-down ahead of the board &#8212; a raw pack sags under motor load, which is what stalled the prototype. The fitted 16 V bulk capacitors have to be replaced before that rail can go in.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">One processor sends the same step signal to all six pumps, because a dose is a number of steps, not a length of time.</li>
+      <li data-step="1">As built, everything runs from one 12 volt line, fed by a tool battery or the bench supply.</li>
+      <li data-step="2">For production I would use a regulated USB-C power bank, because a plain battery loses voltage under load, and that is what stopped the prototype.</li>
+      <li>If asked: the capacitors on the board are rated for 16 volts, so they must be replaced before a 24 volt motor line goes in.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un solo segnale muove sei pompe, perché una dose è un numero di passi.</p>
+      <ul>
+        <li data-step="0">Il processore manda lo stesso segnale di passo a tutte e sei le pompe, perché una dose è un numero di passi, non un tempo.</li>
+        <li data-step="1">Com&apos;è costruita, tutto parte da un&apos;unica linea a 12 volt, da una batteria per utensili o dall&apos;alimentatore da banco.</li>
+        <li data-step="2">Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -254,12 +281,27 @@
 
   <aside class="notes">
     <ul>
-      <li>One carrier per channel: the pump drops in from above, the storage module slides in from the front, and the suction line stays as short as it can be.</li>
-      <li>Two variants, identical inside: the central one screws into the rear wall, the left one adds a tall flange for the exterior side wall.</li>
-      <li>Dovetails plus horizontal screws, because an operator does not know which part is load-bearing.</li>
-      <li>Two of six channels built; the rest is capacity, not hardware.</li>
-      <li>From here the bottom of the slide keeps one picture of everything the integration produced.</li>
+      <li data-step="meta">~20 s</li>
+      <li data-step="0">Each pump and its reagent share one printed holder.</li>
+      <li data-step="1">The container is Marius&apos;s design; the holder is mine.</li>
+      <li data-step="2">The pump drops in from above, the container from the front.</li>
+      <li data-step="3">&#8212;</li>
+      <li data-step="4">The left one also screws into the side wall.</li>
+      <li data-step="5">They slot together and are screwed down.</li>
+      <li data-step="6">&#8212;</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Ogni pompa e il suo reagente stanno in un unico supporto stampato, e i supporti si tengono a vicenda.</p>
+      <ul>
+        <li data-step="0">Ogni pompa e il suo reagente condividono un unico supporto stampato.</li>
+        <li data-step="1">Il contenitore è un progetto di Marius; il supporto è mio.</li>
+        <li data-step="2">La pompa entra dall&apos;alto, il contenitore da davanti.</li>
+        <li data-step="3">Il supporto caricato, con la pompa e il contenitore al loro posto.</li>
+        <li data-step="4">Quello di sinistra si avvita anche alla parete laterale.</li>
+        <li data-step="5">I supporti si incastrano tra loro e sono avvitati.</li>
+        <li data-step="6">La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -348,11 +390,23 @@
 
   <aside class="notes">
     <ul>
-      <li>The nozzle holder needed no new part: it docks on the electronics bay, two screws down and a third horizontally into the bay wall. You saw the module itself in Part II.</li>
-      <li>450 mm of tubing leaves each pump head and crosses the toothed drive rack to its needle hub, unguided, hand-disconnectable.</li>
-      <li>The screen sits at 45 degrees because the instrument is meant to be looked down at, on a table or the bed of a truck.</li>
-      <li>Split on a sliding dovetail: adding the stylus clips cost one half-print. About ten prints in all.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">The nozzle needed no new part: three screws hold it to the electronics box, one hidden to the side.</li>
+      <li data-step="1">Each pump feeds its needle through a tube that unplugs by hand.</li>
+      <li data-step="2">The screen holder also carries two clips for the pen.</li>
+      <li data-step="3">It tilts the screen to 45 degrees, because you look down at this machine, on a table or a truck bed.</li>
+      <li data-step="4">&#8212;</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">L&apos;ugello si avvita al telaio; lo schermo si inclina a 45 gradi, così lo si guarda dall&apos;alto.</p>
+      <ul>
+        <li data-step="0">L&apos;ugello non ha richiesto pezzi nuovi: tre viti lo fissano al vano dell&apos;elettronica, una di lato.</li>
+        <li data-step="1">Ogni pompa porta il liquido al suo ago con un tubo che si stacca a mano.</li>
+        <li data-step="2">Il supporto dello schermo ha anche due clip per il pennino.</li>
+        <li data-step="3">Inclina lo schermo a 45 gradi, perché questa macchina si guarda dall&apos;alto, su un tavolo o sul cassone di un furgone.</li>
+        <li data-step="4">Il supporto dello schermo entra nella barra in basso.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -423,11 +477,21 @@
 
   <aside class="notes">
     <ul>
-      <li>The cheapest win in the whole integration: a published DeWalt holder, holes filled in CAD and re-cut for M3, three horizontal screws.</li>
-      <li>The pack replaces the bench supply on the same connector, with no internal rewiring.</li>
-      <li>That is the fourth and last thing the integration produced: the record along the bottom is now complete.</li>
-      <li>The outdoor run is a scenario, not a claim — there is no enclosure yet. Say so plainly while it plays.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">The battery holder is adapted from a published holder for DeWalt batteries; I remade its screw holes in CAD.</li>
+      <li data-step="1">Three screws hold it, and the battery plugs into the bench supply&apos;s socket, so nothing inside was rewired.</li>
+      <li data-step="2">That was the last piece the machine needed.</li>
+      <li data-step="3">Here it runs outdoors on battery. That is a scenario, not a claim: without a case, it only runs reliably indoors.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un supporto per batteria già pubblicato e tre viti portano l&apos;alimentazione a bordo.</p>
+      <ul>
+        <li data-step="0">Il supporto della batteria nasce da un supporto già pubblicato per batterie DeWalt; ho rifatto in CAD i fori delle viti.</li>
+        <li data-step="1">Lo tengono tre viti, e la batteria si collega alla presa dell&apos;alimentatore da banco, quindi dentro non si è ricablato niente.</li>
+        <li data-step="2">Era l&apos;ultimo pezzo che mancava alla macchina.</li>
+        <li data-step="3">Qui lavora all&apos;aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -493,10 +557,18 @@
 
   <aside class="notes">
     <ul>
-      <li>Everything along the bottom is what the integration produced: the carrier, the nozzle mount, the screen holder, the battery cradle.</li>
-      <li>Together they make one object: 50 by 35 by 18 centimetres, 3.3 kilograms.</li>
-      <li>The battery accounts for 5.5 cm of the depth; the storage modules set the height.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Put together, those four pieces make the modules one object.</li>
+      <li data-step="1">It weighs 3.3 kilograms with the racks and the battery, and you lift it with two hands.</li>
+      <li>If asked: 50 by 35 by 18 centimetres; the battery adds 5.5 centimetres of the depth.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Quattro giunzioni, e i moduli diventano un oggetto solo di 3,3 kg.</p>
+      <ul>
+        <li data-step="0">Messi insieme, questi quattro pezzi fanno dei moduli un oggetto solo.</li>
+        <li data-step="1">Pesa 3,3 chili con i rack e la batteria, e si solleva con due mani.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -550,29 +622,25 @@
       <path d="M 48 268 L 788 268" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
     </svg>
 
-    <!-- Repeatability, stated so it says what the number IS and what it is
-         of (Sirio, 2026-09-23: "what is that dose to dose thing?").  These
-         are the CVs of the very same three doses per channel the bars above
-         are computed from: the 180 rpm session of 2026-09-10, both channels
-         on the 3 A mains supply, both carrying the 4.08 uL/stroke constant,
-         n = 3 after the fourth dose of each channel is excluded for
-         reservoir exhaustion -- 0.71 % on Channel 1, 0.37 % on Channel 2,
-         the pair chapter 12 publishes beside -3.4 % and +0.6 %.  The 1.04 %
-         and 2.94 % that stood here until 2026-09-23 were the LATER session
-         (battery, one pump at a time, each head on its own constant), so the
-         slide was splicing two campaigns.  The between-session drift stays
-         in the speaker notes, where it is the argument for on-device
-         recalibration.
+    <!-- The between-session drift of the per-stroke calibration (Sirio,
+         2026-09-23: show the drift, not the within-session CV).  Thesis ch. 12,
+         12_System-Level-Validation.tex line 81: "Across separate sessions with
+         re-primed lines and a different power supply, the per-step delivery
+         constants shifted by +1.3 % and -5.0 %".  Channel attribution from the
+         campaign record (VALIDATION-PLAN.md, run 5): Channel 1 +1.3 %
+         (3.990 against 3.940 uL/stroke), Channel 2 about -5 % (3.896 against
+         4.103).  Not a CV, so never labelled as one.  The within-session CVs,
+         0.71 % and 0.37 %, are an "If asked" line in the notes.
 
          HTML over the plate, deliberately not SVG <text>: this chart's
          viewBox is 1:1 with its box, which is the exact case where Chrome
          lays the glyphs out at the pre-scale CTM and paints them off their
          own measured box. -->
     <div class="s31-cv" id="s31-cv">
-      <span class="s31-cv-k">Coefficient of variation, three consecutive 1000 &#181;L doses on each channel, one session</span>
+      <span class="s31-cv-k">Drift between sessions (1000 &#181;L)</span>
       <span class="s31-cv-r">
-        <span class="s31-cv-i"><b>Channel 1</b><i>0.71 %</i></span>
-        <span class="s31-cv-i"><b>Channel 2</b><i>0.37 %</i></span>
+        <span class="s31-cv-i"><b>Channel 1</b><i>+1.3 %</i></span>
+        <span class="s31-cv-i"><b>Channel 2</b><i>&#8722;5.0 %</i></span>
       </span>
     </div>
   </div>
@@ -588,17 +656,32 @@
     <span class="p3-k">per stroke</span>
     <span class="p3-srow"><b>Channel 1</b><i>3.94 &#181;L</i></span>
     <span class="p3-srow"><b>Channel 2</b><i>4.10 &#181;L</i></span>
-    <p class="p3-snote">about 10 % less than the isolated bench head</p>
+    <p class="p3-snote">about 10 % less than on the bench</p>
   </div>
 
   <aside class="notes">
     <ul>
-      <li>A commanded 1000 &#181;L through the whole assembled path, into tared tubes standing in the rack &#8212; capped and weighed as they stood, not on a boat.</li>
-      <li>On the constant from the isolated pump bench it fell about 18 % short. Recalibrating that constant on the assembled instrument is the whole story: &#8722;3.4 % and +0.6 %, both inside the 10 % limit.</li>
-      <li>Assembled, the heads give 3.94 and 4.10 &#181;L a stroke, about 10 % less than the bench head &#8212; that is the shortfall the recalibration absorbs.</li>
-      <li>Dose to dose, in that same session: a coefficient of variation of 0.71 % on Channel 1 and 0.37 % on Channel 2 &#8212; the same three consecutive doses of a commanded 1000 &#181;L the bars are computed from, through the whole assembled path. For scale, a hand micropipette measured 0.27 % on the same balance — but at 50 &#181;L, not 1000 &#181;L, so it is the same order rather than a like-for-like win.</li>
-      <li>Not on the slide, say it: that is repeatability inside one session. Across sessions &#8212; lines re-primed, run from the battery &#8212; the constants moved +1.3 % and &#8722;5.0 %, which is why a field instrument has to be able to recalibrate itself.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">To test accuracy, I asked the whole machine for a thousand microlitres and weighed the tube.</li>
+      <li data-step="1">The shaded band is what the requirement allows: 10 % either way.</li>
+      <li data-step="2">Using the pump&apos;s calibration from the bench, the machine delivered about 18 % too little.</li>
+      <li data-step="3">So I recalibrated it on the machine itself, and both channels landed inside the band.</li>
+      <li data-step="4">Installed, each pump gives about 10 % less per stroke than on the bench, and the recalibration corrects that.</li>
+      <li data-step="5">But the calibration moves between sessions, by +1.3 % and &#8722;5.0 %, so a field machine must be able to recalibrate itself.</li>
+      <li>If asked: within one session, from one dose to the next, it varied by only 0.71 % and 0.37 %.</li>
+      <li>If asked: a hand pipette varied by 0.27 % on the same balance, but at 50 microlitres, so it is the same order, not a fair win.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Calibrata sulla macchina stessa, la dose resta entro il 3,4 % del valore voluto.</p>
+      <ul>
+        <li data-step="0">Per provare la precisione ho chiesto alla macchina intera mille microlitri e ho pesato la provetta.</li>
+        <li data-step="1">La fascia chiara è quanto ammette il requisito: il 10 % in più o in meno.</li>
+        <li data-step="2">Con la taratura della pompa fatta al banco, la macchina dava circa il 18 % in meno.</li>
+        <li data-step="3">Così l&apos;ho ricalibrata sulla macchina stessa, ed entrambi i canali sono finiti dentro la fascia.</li>
+        <li data-step="4">Montata, ogni pompa dà circa il 10 % in meno a colpo che al banco, e la ricalibrazione corregge proprio questo.</li>
+        <li data-step="5">Ma la taratura si sposta fra una sessione e l&apos;altra, del +1,3 % e del −5,0 %, quindi una macchina da campo deve sapersi ricalibrare da sola.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -653,12 +736,25 @@
 
   <aside class="notes">
     <ul>
-      <li>A dual-reagent protocol, 100 and 75 microlitres, across forty tubes in five racks, start to finish without any user help.</li>
-      <li>What made it possible was slowing the linear axes so the steppers could push a loaded five-rack magazine without stalling.</li>
-      <li>First and last rack held comparable volumes by eye. On the bench supply, not on battery.</li>
-      <li>A separate fact, and it is droplets, not tubes: apart from the cap fouling &#8212; which is counted on its own, and comes next &#8212; three droplets wetted the rack deck or the lane instead of falling into a tube.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Next, the real test: can it run a full batch with nobody touching it?</li>
+      <li data-step="1">It started with forty empty tubes in five racks, running on the bench supply, not the battery.</li>
+      <li data-step="2">It filled all forty with both reagents, without any help.</li>
+      <li data-step="3">A tube from the first rack and one from the last hold about the same amount, by eye.</li>
+      <li data-step="4">Only three drops missed and landed on the rack or the lane. The caps caused a separate problem, which comes next.</li>
+      <li>If asked how: the motors were slowed down, which gave them the strength to push five loaded racks.</li>
       <li>If asked for a run time: the thesis does not report one.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Dosaggio senza nessun intervento, validato su cinque rack e quaranta provette.</p>
+      <ul>
+        <li data-step="0">Poi la prova vera: la macchina riesce a completare un lotto intero senza che nessuno la tocchi?</li>
+        <li data-step="1">Si parte con quaranta provette vuote in cinque rack, con l&apos;alimentatore da banco, non a batteria.</li>
+        <li data-step="2">Le ha riempite tutte e quaranta con entrambi i reagenti, senza nessun aiuto.</li>
+        <li data-step="3">Una provetta del primo rack e una dell&apos;ultimo contengono, a occhio, la stessa quantità.</li>
+        <li data-step="4">Solo tre gocce sono finite sul rack o sulla corsia. I tappi hanno causato un problema a parte, che viene subito dopo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -791,11 +887,21 @@
 
   <aside class="notes">
     <ul>
-      <li>A cap left flat projects sideways and rubs the lane wall; the axis is open-loop, so the firmware thinks the rack arrived while it lagged behind.</li>
-      <li>On the 12 volt pack the machine ran two racks, sixteen samples, then both pumps stalled together. The firmware cannot yet run one pump at a time.</li>
-      <li>The vial septum leaks after about five punctures and does not reliably reseal past twenty: that is where the spillage risk lives.</li>
-      <li>None of the three is kinematic. All three have known fixes.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Three things went wrong, none of them in the moving mechanics, and each has a known fix.</li>
+      <li data-step="1">A cap left flat rubs the wall, the motor slips without knowing it, and the drop lands beside the tube.</li>
+      <li data-step="2">On the battery, it managed two racks, sixteen samples. Then the battery ran low, both pumps stalled, and the software can&apos;t yet run just one.</li>
+      <li data-step="3">The third belongs to Marius&apos;s reagent container: its rubber seal starts to leak after about five needle punctures.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">I tre guasti: l&apos;attrito dei tappi, la batteria che si scarica, il setto che perde.</p>
+      <ul>
+        <li data-step="0">Tre cose sono andate storte, nessuna nella meccanica dei movimenti, e ognuna ha una soluzione nota.</li>
+        <li data-step="1">Un tappo lasciato piatto sfrega contro la parete, il motore perde passi senza accorgersene, e la goccia cade accanto alla provetta.</li>
+        <li data-step="2">A batteria ha completato due rack, sedici campioni. Poi la batteria si è scaricata, le due pompe si sono bloccate, e il programma non sa ancora farne girare una sola.</li>
+        <li data-step="3">Il terzo riguarda il contenitore di Marius: la sua guarnizione di gomma comincia a perdere dopo circa cinque forature dell&apos;ago.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -888,11 +994,29 @@
 
   <aside class="notes">
     <ul>
-      <li>Performance: accuracy and reproducibility met; versatility met with an asterisk, because the 5 microlitre lower bound has not been validated yet. Feasibility was a concept gate, not a test of the built device.</li>
-      <li>Automation: a complete forty-tube run finished without intervention. Training was deferred, so it stands as not tested.</li>
-      <li>Portability partly met, spillage and operator exposure partly met; cross-contamination is prevented by architecture, not by washing.</li>
-      <li>Four are excluded honestly, and not for the same reason: two wait on an enclosure, one on a real circuit board, and one on a material that can be sanitised. PLA is not a cleanable surface &#8212; a field machine needs metal or polypropylene on the sliding faces. None of the four waits on the mechanisms.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Now the requirements, group by group.</li>
+      <li data-step="1">Accuracy and repeatability are met. Versatility is too, though the smallest dose, 5 microlitres, is still unconfirmed.</li>
+      <li data-step="2">It ran a full batch alone; training a new user was not tested.</li>
+      <li data-step="3">Portability is partly met.</li>
+      <li data-step="4">The reagents cannot mix, by design rather than by washing.</li>
+      <li data-step="5">Safety is partly met, and electrical safety was left out: the electronics are still on test boards.</li>
+      <li data-step="6">What was left out waits for a case, a circuit board and a cleanable material, not for new mechanics.</li>
+      <li>If asked about cleaning: printed plastic cannot be disinfected, so the sliding parts need metal or polypropylene.</li>
+      <li>If asked about feasibility: it was a check when choosing the concept, not a test of the finished machine.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La verifica dei requisiti.</p>
+      <ul>
+        <li data-step="0">Ora i requisiti, un gruppo alla volta.</li>
+        <li data-step="1">Precisione e ripetibilità sono soddisfatte. Anche la versatilità, anche se la dose più piccola, 5 microlitri, non è ancora confermata.</li>
+        <li data-step="2">Ha completato un lotto intero da sola; l&apos;addestramento di un nuovo utente non è stato provato.</li>
+        <li data-step="3">La portabilità è soddisfatta in parte.</li>
+        <li data-step="4">I reagenti non possono mescolarsi, per come è costruita la macchina, non grazie ai lavaggi.</li>
+        <li data-step="5">La sicurezza è soddisfatta in parte, e quella elettrica è stata esclusa: l&apos;elettronica è ancora su basette di prova.</li>
+        <li data-step="6">Ciò che è stato escluso aspetta un involucro, un circuito stampato e un materiale lavabile, non nuova meccanica.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -934,10 +1058,16 @@
 
   <aside class="notes">
     <ul>
-      <li>Let them run. Say only: this is what you are about to see for real.</li>
-      <li>One press moves on. Click a clip only if you want to point at it; Escape brings the mosaic back.</li>
-      <li>The outdoor clip carries the sound.</li>
+      <li data-step="meta">~5 s</li>
+      <li data-step="0">Here it is running; in a moment you will see it for real.</li>
+      <li>One press moves on. Clicking a clip enlarges it with its sound; Escape goes back.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina funziona ed è pronta per la dimostrazione dal vivo.</p>
+      <ul>
+        <li data-step="0">Ecco la macchina al lavoro, e tra un momento la vedrete dal vivo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -964,11 +1094,19 @@
 
   <aside class="notes">
     <ul>
-      <li>Demo, five minutes: load a rack, pick a recipe on the screen, show the pre-run reagent check.</li>
-      <li>Run one or two tubes with dye; point at the droplet detaching; show the rack ejecting to the output queue.</li>
-      <li>The machine arrives ready: dye in the vials, a rack loaded, lines primed, caps folded back to 135 degrees.</li>
-      <li>If it misbehaves: press v here and the pump head and droplet clips play side by side.</li>
+      <li data-step="meta">~5 min &middot; live demo</li>
+      <li data-step="0">Now the machine itself.</li>
+      <li>Load a rack, choose a recipe on the screen, and show the reagent check before the run.</li>
+      <li>Dispense one or two tubes with dye, point at the drop falling, and show the rack moving out.</li>
+      <li>It arrives ready: dye in the containers, a rack loaded, the lines already filled, the caps folded back.</li>
+      <li>If something goes wrong, press v and the pump and droplet clips play instead.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Dimostrazione dal vivo.</p>
+      <ul>
+        <li data-step="0">Ora la macchina vera: si carica un rack, si sceglie una ricetta sullo schermo, si riempiono una o due provette con il colorante e il rack esce.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -1986,7 +2124,7 @@
                        { opacity: 1, y: 0, duration: 0.55 }, 'step3')
       .addLabel('step4');
 
-    /* ── step 5 · how repeatable one channel is, dose to dose ── */
+    /* ── step 5 · how far the calibration drifted between sessions ── */
     tl.fromTo(cv, { opacity: 0, y: 12 },
                   { opacity: 1, y: 0, duration: 0.55 }, 'step4')
       .fromTo(qa(el, '.s31-cv-i'), { opacity: 0, y: 14 },

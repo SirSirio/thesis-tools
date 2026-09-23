@@ -67,6 +67,7 @@ Motion: GSAP core 3.15 with DrawSVG, MotionPath and MorphSVG, all vendored in `a
 - `?view=stage` (default): the projected deck.
 - `?view=presenter`: Sirio's laptop screen: the stage scaled into a panel, the next step or next slide as a caption plus a live-built clone (the target slide's timeline is rebuilt on the clone, seeked to the target step and settled, so the panel shows the projector's state after the next press, not the slide at rest), the current slide's `aside.notes` at 22 px, slide and step counters, a clock, an elapsed timer that starts on the first key press (reset with `r`), and the remaining time against the 30 minute plan. Keys in the presenter window drive the stage window.
 - `?view=guest`: no nav, no HUD, full-window deck, a status dot top right that turns green when a sync message arrived in the last 20 s. This is the view the Italian deck will use.
+- Step-synced captions (2026-09-23): notes bullets carry `data-step`; the presenter highlights the current bullet, and the guest view fits the slide above a 22 vh band showing the slide's `.notes-it` Italian title and current Italian caption. Contract in `BUILDER-REFERENCE.md`, "Step-synced captions"; stage view unchanged.
 
 ## 5. Synchronisation
 

@@ -54,10 +54,15 @@
   <div class="divider__rule"></div>
   <aside class="notes">
     <ul>
-      <li>Part II is the four modules I designed and built: pump, alignment, nozzle, user interface.</li>
-      <li>The pump comes first because it decides the dose; every other module serves it.</li>
-      <li>Nine minutes for the four. The reagent storage at the end of the part is Marius's work, shown for completeness.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Part II is the four modules I designed and built: pump, alignment, nozzle, user interface.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">I moduli.</p>
+      <ul>
+        <li data-step="0">La Parte II sono i quattro moduli che ho progettato e costruito: pompa, allineamento, ugello, interfaccia utente.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -196,11 +201,20 @@
 
   <aside class="notes">
     <ul>
-      <li>Thirty mechanisms in six families, a piano hammer and a tattoo machine among them on purpose: an ideation that returns only workable ideas has not searched far enough.</li>
-      <li>Seven passed the screening gates, five were developed, split with Marius; two were built.</li>
-      <li>3485 against 3185 is a 300-point margin, and the matrix gives it to footprint, mass and cleanability — the score is not what decided the build.</li>
-      <li>Not on accuracy: reciprocal pinching needs an array of check valves to route several reagents, which puts wetted moving parts back inside the machine.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Thirty mechanisms in six families, including extravagant ones.</li>
+      <li data-step="2">Seven passed the screening gates, five were developed with Marius, and two reached working hardware.</li>
+      <li data-step="3">Cleanability decided it: a pinch pump needs check valves, wetted moving parts inside the machine.</li>
+      <li>If asked: the matrix gave the rotary a 300-point margin on footprint, mass and cleanability.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Trenta idee si sono ridotte a due costruzioni, e la pompa a strozzamento richiedeva comunque valvole di non ritorno.</p>
+      <ul>
+        <li data-step="0">Trenta meccanismi in sei famiglie, compresi alcuni stravaganti.</li>
+        <li data-step="2">Sette hanno superato i filtri, cinque li abbiamo sviluppati con Marius, e due sono arrivati a hardware funzionante.</li>
+        <li data-step="3">Ha deciso la pulibilità: una pompa a strozzamento richiede valvole di non ritorno, cioè parti bagnate in movimento dentro la macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -265,11 +279,19 @@
 
   <aside class="notes">
     <ul>
-      <li>The design point is two choices and one consequence: a 0.51 mm bore and four rollers, and every stroke moves 5 µL.</li>
-      <li>Four rollers is the smallest count that never leaves the tube open, and the largest with torque to spare at 12 V.</li>
-      <li>Open the solver, change the roller count, show the feasibility and the torque margin move.</li>
-      <li>These were built while the decisions were open, not written up afterwards.</li>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The decision was the dose, 5 µL per stroke; the 0.51 mm tube bore follows from it.</li>
+      <li data-step="2">I built three tools to guide the design, and with them I chose four rollers.</li>
+      <li data-step="3">The geometry solver sizes the rotor for a target dose and checks which roller counts can be built.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Contare i passi, non i secondi: la dose viene dalla geometria, e l&apos;hanno fissata tre strumenti.</p>
+      <ul>
+        <li data-step="0">La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.</li>
+        <li data-step="2">Ho costruito tre strumenti per guidare il progetto, e con questi ho scelto quattro rulli.</li>
+        <li data-step="3">Il solutore geometrico dimensiona il rotore per una dose data e verifica quali numeri di rulli si possono costruire.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -403,11 +425,22 @@
 
   <aside class="notes">
     <ul>
-      <li>Two parameters reached the build wrong: the rotor radius, 17.70 mm against 19.70, and a tube wall estimated at 1.75 mm rather than measured. A folded paper shim forced occlusion.</li>
-      <li>The inline thermal sensor sat between the pump head and the vessel, as the feedback element of a closed loop. Standard deviation 1159 µL/min about a mean of 1104, apparent reverse flow on one sample in seven, rapid sign changes. The roller-passage fundamental is 6.7 Hz on firmware timing.</li>
-      <li>Head to head on one commanded millilitre: flow 600.1 µL at CV 17.6 % over five replicates, balance 678.0 µL at CV 4.5 % over three weighings. The flow integral underestimated by 11.5 %, so every volume in the thesis is weighed from here on.</li>
-      <li>678 µL on a commanded 1000 is 3.39 µL a stroke against a nominal 5.00 — a repeatable systematic shortfall, so the shape of the parts, not the motor. Closed-loop control was set aside here.</li>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The first pump: the rotor came out 2 mm too small, and the gap was drawn from a guessed tube wall, not a measured one.</li>
+      <li data-step="2">To measure the flow I used an inline flow sensor. Its readings scattered more than the flow itself, and one sample in seven read backwards.</li>
+      <li data-step="3">So I switched to an analytical balance. From here on, every volume in the thesis is weighed.</li>
+      <li data-step="4">On the balance it gave 3.39 µL per stroke instead of 5, and the shortfall repeated from dose to dose. That means it came from the geometry of the printed parts, not from the motor.</li>
+      <li>If asked: on the same deliveries the flow sensor read 11.5 % below the balance; closed-loop control was set aside.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato.</p>
+      <ul>
+        <li data-step="0">La prima pompa: il rotore è uscito 2 mm troppo piccolo, e il gioco era disegnato su uno spessore del tubo stimato, non misurato.</li>
+        <li data-step="2">Per misurare il flusso ho usato un sensore in linea. Le sue letture oscillavano più del flusso stesso, e un campione su sette segnava all&rsquo;indietro.</li>
+        <li data-step="3">Così sono passato a una bilancia analitica. Da qui in poi, ogni volume della tesi è pesato.</li>
+        <li data-step="4">Sulla bilancia dava 3,39 µL per corsa invece di 5, e lo scarto si ripeteva da una dose all&rsquo;altra. Quindi veniva dalla geometria dei pezzi stampati, non dal motore.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -560,11 +593,22 @@
 
   <aside class="notes">
     <ul>
-      <li>v2.1: the bore sat 0.45 mm above the shaft, so the gap opened to 2.22 mm at the apex against a 1.82 mm closure threshold.</li>
-      <li>v2.2: printed pegs taper 0.085 mm, two stacked bearings tilted the roller 0.6 degrees; fixed with one bearing on the wide base.</li>
-      <li>A housing drawn at 1.52 mm printed at 1.75, so the printer was characterised on rings: parts predictable to 0.10 mm.</li>
-      <li>v2.3, here in parts: Gap 1.52 V2.3 is embossed on the housing face, and a caliper through each of the three slots read 1.52 mm at every one. Land on: CAD dimensions are assumptions until they are anchored to a physical datum.</li>
+      <li data-step="meta">~45 s</li>
+      <li data-step="0">In v2.1 the pump head sat 0.45 mm too high on its mount, so the gap opened at the top of the track and the tube did not seal there.</li>
+      <li data-step="2">In v2.2 the printed pegs came out slightly conical, so the rollers tilted. One bearing on the wide base of the peg fixed it.</li>
+      <li data-step="3">Then I measured the printer itself, on test rings. Outer sizes shrink by 0.65 %, and inner bores lose a fixed 0.14 mm.</li>
+      <li data-step="4">This is v2.3, taken apart. With every correction in, the gap measured 1.52 mm at all three inspection slots.</li>
+      <li>If asked: a housing drawn with a 1.52 mm gap measured 1.75 mm, and that is why I characterised the printer.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Altre tre costruzioni hanno sistemato la stampa, non la fisica.</p>
+      <ul>
+        <li data-step="0">Nella v2.1 la testa della pompa stava 0,45 mm troppo in alto sul supporto, così in cima alla pista il gioco si apriva e il tubo lì non sigillava.</li>
+        <li data-step="2">Nella v2.2 i perni stampati uscivano leggermente conici, e i rulli si inclinavano. Un solo cuscinetto sulla base larga del perno ha risolto.</li>
+        <li data-step="3">Poi ho misurato la stampante stessa, su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.</li>
+        <li data-step="4">Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -658,11 +702,20 @@
 
   <aside class="notes">
     <ul>
-      <li>The benchmark is drawn first: a manual laboratory pipette, ten 50 µL replicates on the same balance, scatters 0.27 %. The comparison holds for cumulative volumes — the pump's points are 100- and 300-stroke deliveries.</li>
-      <li>The slide says only that four speeds were run. They were 60, 120, 180 and 240 rpm. If asked why a sweep at all: rotation trades delivered volume against repeatability — slower gives slightly more volume per stroke but repeats less reliably, faster loses both.</li>
-      <li>180 rpm gives the lowest coefficient of variation, costs only 1.7 % of the volume per stroke against the slowest setting, and dispenses three times faster than 60 rpm. That is why it is the operating speed. At it the module sits at 0.25 % over 100 strokes and 0.34 % over 300.</li>
-      <li>The result: 4.53 µL a stroke, the mean of the 100- and 300-stroke tests, which agree within 0.02 %. That is the calibration constant: it underdelivers the nominal 5.0 µL by 9.4 %, corrected once in firmware. The clip beside the chart is one of those weighings on the analytical balance.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">The dashed line is a manual pipette on the same balance, a CV of 0.27 %. The two series are the pump at 100 and 300 strokes, run at four speeds.</li>
+      <li data-step="2">At 180 rpm the pump varies least, level with the pipette, and it doses three times faster than at 60. That became the operating speed.</li>
+      <li data-step="3">At that speed one stroke gives 4.53 µL, 9.4 % under the 5 µL design. The firmware corrects for that once.</li>
+      <li>If asked: the pump points are 100- and 300-stroke totals; slower speeds deliver slightly more but repeat worse.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La pompa ripete una dose bene quanto una mano con una pipetta.</p>
+      <ul>
+        <li data-step="0">La linea tratteggiata è una pipetta manuale sulla stessa bilancia, un CV dello 0,27 %. Le due serie sono la pompa a 100 e 300 corse, a quattro velocità.</li>
+        <li data-step="2">A 180 giri al minuto la pompa varia meno, alla pari della pipetta, e dosa tre volte più in fretta che a 60. È diventata la velocità di lavoro.</li>
+        <li data-step="3">A quella velocità una corsa dà 4,53 µL, il 9,4 % sotto i 5 µL di progetto. Il firmware lo corregge una volta sola.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -760,11 +813,20 @@
 
   <aside class="notes">
     <ul>
-      <li>Fifty ideas with Marius, ten survived. Still nozzles mean tubing that never bends, and the rack is the progress bar.</li>
-      <li>One rule ran the module, and the sketch sheet boxes it: cleanability first, feasibility second. It is what threw out the circular layout, the belt and pulley, and pushing from underneath the open tubes — bottom-push scored 9 points against 17 on fluid ingress alone.</li>
-      <li>Eight tubes because biology counts in eights; 22 mm apart because a cap opener needs the room, measured off Pulkit&apos;s prototype.</li>
-      <li>That pitch sets 154 mm of travel, and the footprint of the whole instrument belongs to the consumable.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">I evaluated the design concepts on paper and chose to move the tubes and keep the nozzles still, so the tubing never bends.</li>
+      <li data-step="2">Cleanability and feasibility were the main rules. They ruled out a circular layout, a belt and pulley, and pushing the rack from below.</li>
+      <li data-step="3">The rack holds eight tubes, since lab equipment comes in multiples of eight, 22 mm apart to leave room for a cap opener. That spacing sets the length of the machine.</li>
+      <li>If asked: the 22 mm was measured off Pulkit&rsquo;s working cap-opener prototype.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Muovere le provette, tenere fermi gli ugelli, e lasciare che la distanza tra le provette fissi le dimensioni della macchina.</p>
+      <ul>
+        <li data-step="0">Ho valutato i concetti di progetto su carta e ho scelto di muovere le provette e tenere fermi gli ugelli, così il tubo non si piega mai.</li>
+        <li data-step="2">Le regole principali erano pulibilità e fattibilità. Hanno escluso il layout circolare, cinghia e puleggia, e la spinta della rastrelliera dal basso.</li>
+        <li data-step="3">La rastrelliera tiene otto provette, perché le attrezzature di laboratorio lavorano a multipli di otto, a 22 mm l&rsquo;una dall&rsquo;altra per lasciare spazio a un apritappi. È questa distanza a fissare la lunghezza della macchina.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -817,11 +879,20 @@
 
   <aside class="notes">
     <ul>
-      <li>v1 proved the printed involute rack and pinion indexes repeatably, which is why the rest could stay printed.</li>
-      <li>v2 put the motor above the sample plane: gravity protects the drive, and a seal is a wearing part that must itself be cleaned.</li>
-      <li>v2.1 added a normally-closed switch and a three-pass home: 0.03 mm repeatability, no step loss over 132 mm, homing cut from 110 s to 22 s.</li>
-      <li>If asked: that rail ran six index moves before the rack reached the end of the pinion, where eight positions need seven. A limit of the rail's length, not of the drive — and the V3 chassis on the next slide is the answer to it.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">v1: a printed rack and pinion moves the tubes in 22 mm steps, repeatably. So the rest of the module could stay printed.</li>
+      <li data-step="2">v2 puts the motor above the samples. Spills fall down, away from the drive, so it needs no seal.</li>
+      <li data-step="3">v2.1 adds a limit switch and finds its zero in three passes, to within 0.03 mm.</li>
+      <li>If asked: that rail gave 140 of the 154 mm needed, six moves of seven; the final chassis fixed the length.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Tre costruzioni hanno dato un modulo di allineamento stampato che trova da solo il proprio zero.</p>
+      <ul>
+        <li data-step="0">v1: pignone e cremagliera stampati spostano le provette a passi di 22 mm, in modo ripetibile. Così il resto del modulo è potuto restare stampato.</li>
+        <li data-step="2">La v2 mette il motore sopra i campioni. Le gocce cadono verso il basso, lontano dalla trasmissione, quindi non serve una guarnizione.</li>
+        <li data-step="3">La v2.1 aggiunge un finecorsa e trova lo zero in tre passate, entro 0,03 mm.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -881,12 +952,22 @@
 
   <aside class="notes">
     <ul>
-      <li>Input queue at the left, dispensing lane in the middle, output tray at the right: the U the rack travels. A second transverse axis feeds the next rack onto the lane, so a standard batch is five racks — four waiting, one pre-loaded.</li>
-      <li>Seven index steps of 22 mm, 154 mm of travel, and the rack holds on every position while the nozzles dispense.</li>
-      <li>Ejection is passive: two angled ribs under the rack, two angled grooves in the floor, and the final 22 mm of the existing stroke turns forward travel into a diagonal slide into the tray, one millimetre below the lane. No second motor, no spring, no pivot.</li>
-      <li>The chassis stopped being a module and became the frame of the instrument: 500 mm long, printed in three sections, with the electronics bay in the middle.</li>
-      <li>If asked about unattended running: the capacity is five racks, and the dye run of 10 September carried two. The one known failure mode is a lid left flat rather than standing — it rubs the chamfered wall and the drive cannot sense it.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Racks wait in the input queue, and a second axis pushes each one onto the dispensing lane. It holds five racks per batch.</li>
+      <li data-step="2">The rack moves in seven steps of 22 mm and stops at each one while the nozzles dispense.</li>
+      <li data-step="3">On the last push, two ribs under the rack slide into two angled grooves in the floor, and the rack drops into the output tray. No extra motor.</li>
+      <li data-step="4">The chassis ended up as the frame of the whole instrument.</li>
+      <li>If asked: a lid pushed flat can rub the chamfered wall. The drive cannot sense it, so the rack falls short and the dose lands beside the tube; the instruction is to leave lids standing.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il telaio finale mette in coda cinque rastrelliere e le espelle senza un motore in più.</p>
+      <ul>
+        <li data-step="0">Le rastrelliere aspettano nella coda di ingresso, e un secondo asse spinge ciascuna nella corsia di dosaggio. Ne tiene cinque per lotto.</li>
+        <li data-step="2">La rastrelliera avanza in sette passi da 22 mm e si ferma a ogni passo mentre gli ugelli dosano.</li>
+        <li data-step="3">All&rsquo;ultima spinta, due nervature sotto la rastrelliera entrano in due scanalature inclinate nel pavimento, e la rastrelliera cade nel vassoio di uscita. Nessun motore in più.</li>
+        <li data-step="4">Alla fine il telaio è diventato la struttura dell&rsquo;intero strumento.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -954,11 +1035,20 @@
 
   <aside class="notes">
     <ul>
-      <li>It arrived working in principle and inoperative in practice: the eccentric was a printed plastic arm, too weak to shed a pendant droplet; there was no interface to bolt it to the chassis; and the OpenSCAD file exported only a mesh, so Fusion opened an unmodifiable body. Modelled again from scratch, off caliper measurements. The vibration-detachment principle is Marius&apos;s, and I kept it.</li>
-      <li>The seat is a printed negative of the needle&apos;s own moulded hub. Hub and Luer geometry are identical across gauges, only the bore changes, so one seat takes any needle on a slip fit — right on the first print, and with no tools.</li>
-      <li>Vertical guide posts give the carrier one degree of freedom. The eccentric throws force in every direction; the posts absorb all of it but the vertical, which is what keeps a droplet from leaving sideways.</li>
-      <li>A magnet and three offset steel nuts replaced the printed arm. The carrier then walked up its posts until it came off, so holes were drilled and elastic bands routed round it — one is fitted here. Slack through the stroke, tight at the limits, so retention costs no compliance.</li>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">It arrived not working: too weak to release a droplet, nothing to mount it with, and a mesh file I could not edit.</li>
+      <li data-step="2">I kept Marius&rsquo;s idea, shaking the droplet off by vibration, and redrew the module from scratch. Vertical posts let it move only up and down.</li>
+      <li data-step="3">A magnet and three steel nuts replaced the printed weight on the vibration motor. The elastic band stops the carrier shaking off its posts. The needles sit 22 mm apart, like the tubes.</li>
+      <li>If asked: each seat is a printed negative of the needle hub, so any gauge fits without tools.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">L&apos;ugello consegnato da Marius non funzionava, così l&apos;ho ricostruito da zero.</p>
+      <ul>
+        <li data-step="0">È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un file mesh che non potevo modificare.</li>
+        <li data-step="2">Ho tenuto l&rsquo;idea di Marius, staccare la goccia con la vibrazione, e ho ridisegnato il modulo da zero. Le colonnine verticali lo lasciano muovere solo su e giù.</li>
+        <li data-step="3">Un magnete e tre dadi d&rsquo;acciaio hanno sostituito il peso stampato sul motore a vibrazione. L&rsquo;elastico impedisce al carrello di sfilarsi dalle colonnine. Gli aghi stanno a 22 mm l&rsquo;uno dall&rsquo;altro, come le provette.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -1027,11 +1117,22 @@
 
   <aside class="notes">
     <ul>
-      <li>Five tips, water, the same burst: the only thing changed is the bore.</li>
-      <li>At 0.21 and 0.26 mm the liquid leaves as a stream and the vibration has nothing to act on.</li>
-      <li>At 0.41 and 0.51 mm a droplet forms, grows, and the burst releases it.</li>
-      <li>Plastic tips beat every steel needle, nine of ten and never sideways; the machine still ran on 22 G steel.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">Five tips, tested with water and the same vibration burst. Only the bore changes.</li>
+      <li data-step="2">At 0.21 and 0.26 mm the water comes out as a stream, so the burst has nothing to release.</li>
+      <li data-step="3">At 0.41 and 0.51 mm a droplet forms and grows, and the burst releases most of them.</li>
+      <li data-step="4">The plastic tips did best: nine of ten droplets released, none sideways. The machine itself ran on 22 G steel needles.</li>
+      <li>If asked: the plastic tips&rsquo; bore was not measured, and they were taped on, not seated.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">È il foro dell&apos;ago a decidere se la goccia si forma.</p>
+      <ul>
+        <li data-step="0">Cinque punte, provate con acqua e lo stesso impulso di vibrazione. Cambia solo il diametro interno.</li>
+        <li data-step="2">A 0,21 e 0,26 mm l&rsquo;acqua esce come un getto, quindi l&rsquo;impulso non ha niente da staccare.</li>
+        <li data-step="3">A 0,41 e 0,51 mm si forma una goccia che cresce, e l&rsquo;impulso stacca la maggior parte delle gocce.</li>
+        <li data-step="4">Le punte di plastica sono andate meglio: nove gocce su dieci staccate, nessuna di lato. La macchina ha lavorato con aghi d&rsquo;acciaio 22 G.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -1097,11 +1198,20 @@
 
   <aside class="notes">
     <ul>
-      <li>Porting was easy, finishing was not: a calibration screen you could only leave by power-cycling.</li>
-      <li>A 240-pixel canvas fits three list rows, so the interface became a picture of the machine.</li>
-      <li>Nine candidates, three rounds, each page auditing itself against the 7:1 ratio guidance sets, measured at the panel's 16-bit depth.</li>
-      <li>It caught the first palette failing its own requirement at 6.2:1, in the browser, before the device.</li>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">The interface I inherited only showed the storage levels. It drove no motor, and its calibration screen could only be left by switching the machine off. So hooking it up meant redesigning it.</li>
+      <li data-step="2">The panel is 240 pixels tall: about three list rows. So the new design draws the machine instead, with bottles showing their fill.</li>
+      <li data-step="3">I drew nine candidates over three rounds as web pages, and each page checked itself against the 7:1 contrast requirement.</li>
+      <li>If asked: that check caught the first palette at 6.2:1, in the browser, before it reached the device.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">L&apos;interfaccia ereditata non aveva cablaggio dietro: un collegamento necessario è diventato una riprogettazione completa.</p>
+      <ul>
+        <li data-step="0">L&rsquo;interfaccia che ho ereditato mostrava solo i livelli dello stoccaggio. Non comandava nessun motore, e dalla schermata di calibrazione si usciva solo spegnendo la macchina. Collegarla voleva dire riprogettarla.</li>
+        <li data-step="2">Il pannello è alto 240 pixel: circa tre righe di elenco. Così il nuovo design disegna la macchina, con le bottiglie e il loro livello.</li>
+        <li data-step="3">Ho disegnato nove candidate in tre giri, come pagine web, e ogni pagina si verificava da sola rispetto al requisito di contrasto di 7:1.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -1153,11 +1263,19 @@
 
   <aside class="notes">
     <ul>
-      <li>Six screens is the whole run: home, pick, assign, check, dispense, done.</li>
-      <li>The check is the point: it compares what the recipe needs with what the bottles hold, and it can rename Start to Refill first.</li>
-      <li>Do not narrate the six. Fold them down and open the live card, then walk one run there; the machine below is doing the same thing.</li>
-      <li>The interface never shows a number it cannot stand behind.</li>
+      <li data-step="meta">~60 s</li>
+      <li data-step="0">A whole run takes six screens: home, choose a recipe, assign it, check, dispense, done.</li>
+      <li data-step="1">The check compares what the recipe needs with what the bottles hold. If a bottle is short, the start button turns into Refill first.</li>
+      <li data-step="2">The live interface is the machine&rsquo;s own screens, captured from the device and made clickable, so one run can be walked through here. Where a level cannot be read, it shows no number.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Una corsa intera, dall&apos;inizio alla fine, su un solo schermo.</p>
+      <ul>
+        <li data-step="0">Una corsa intera sono sei schermate: home, scelta della ricetta, assegnazione, verifica, dosaggio, fine.</li>
+        <li data-step="1">La verifica confronta quanto chiede la ricetta con quanto contengono le bottiglie. Se una bottiglia non basta, il pulsante di avvio diventa &laquo;Refill first&raquo;.</li>
+        <li data-step="2">L&rsquo;interfaccia dal vivo sono le schermate della macchina, catturate dal dispositivo e rese cliccabili, così si può percorrere una corsa qui. Dove un livello non si può leggere, non mostra nessun numero.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -1209,11 +1327,18 @@
 
   <aside class="notes">
     <ul>
-      <li>Where it comes from: Marius built it and handed it over as working hardware, the one module here I did not design.</li>
-      <li>The vial hangs inverted under a septum that recloses after the needle leaves.</li>
-      <li>The circle is the air filter: one needle draws the reagent, one vents the vial, and the air that replaces it passes a 0.22 µm filter, fine enough to retain microorganisms.</li>
-      <li>It came over as an uneditable mesh, so the carrier was designed around the hardware.</li>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">The reagent storage is Marius&rsquo;s: the cartridge, the sleeve and the needle holder.</li>
+      <li data-step="3">I added the filter on the air inlet; the model came as a mesh I could not edit.</li>
+      <li>If asked: the filter is 0.22 µm, fine enough to keep out microorganisms.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il reagente aspetta in un flaconcino sigillato, letto da un sensore e prelevato da due aghi.</p>
+      <ul>
+        <li data-step="0">Lo stoccaggio dei reagenti è di Marius: la cartuccia, il manicotto e il portaaghi.</li>
+        <li data-step="3">Io ho aggiunto il filtro sull&rsquo;ingresso dell&rsquo;aria; il modello è arrivato come mesh, non modificabile.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 

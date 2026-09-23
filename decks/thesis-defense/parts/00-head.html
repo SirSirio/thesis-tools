@@ -805,6 +805,15 @@ body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
 #presElapsed, #presLeft { color: var(--text-muted); font-weight: 500; }
 #presElapsed.is-over, #presLeft.is-over,
 #presElapsed.is-close, #presLeft.is-close { color: var(--text-soft); }
+
+/* … except Elapsed, which is also a pacing signal: green while he is ahead
+   of the plan or barely behind it, then yellow, dark orange and red as the
+   lateness grows. Same four colours as the two timers above, its own class
+   names because .pres__seg carries layout as well as colour. */
+#presElapsed.is-pace-ok   { color: #5bd98a; font-weight: 600; }
+#presElapsed.is-pace-warn { color: #e9c341; font-weight: 600; }
+#presElapsed.is-pace-near { color: #e2761b; font-weight: 600; }
+#presElapsed.is-pace-over { color: #ff5a4d; font-weight: 600; }
 .pres__bar .pres__prog { opacity: 0.5; }
 .pres__bar .pres__keys { opacity: 0.7; }
 
@@ -819,6 +828,42 @@ body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
   transition: color 160ms var(--ease), border-color 160ms var(--ease);
 }
 .pres__report:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 65%, transparent); }
+
+/* Stops every clock on the bar while he breaks off to talk to someone, and
+   starts them again where they stood. Amber rather than the deck's orange,
+   because this is a state the bar is IN, not an accent: lit while paused,
+   with the readouts it froze stepping back at the same time, so he is never
+   left wondering whether the talk clock is running. Quiet enough to sit on
+   a presenter screen for half a minute without pulling the eye. */
+.pres__pause {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--mono); font-size: 17px; letter-spacing: 0.04em;
+  color: var(--text-soft); white-space: nowrap; cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease),
+              background-color 160ms var(--ease);
+}
+.pres__pause:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, #e9c341 60%, transparent);
+}
+.pres__pause[aria-pressed="true"] {
+  background: #e9c341;
+  border-color: #e9c341;
+  color: #17140a;
+  font-weight: 700;
+}
+body[data-pres-paused] .pres__bar {
+  border-color: color-mix(in srgb, #e9c341 50%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #e9c341 12%, transparent);
+}
+body[data-pres-paused] .pres__seg,
+body[data-pres-paused] #presElapsed,
+body[data-pres-paused] #presLeft { opacity: 0.4; }
+
 .pres__spacer { margin-left: auto; }
 /* the key hints drop to their own line so the progress bar can stretch */
 .pres__keys { flex: 1 1 100%; font-size: 12px; letter-spacing: 0.1em; color: var(--text-muted); }

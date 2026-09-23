@@ -8,6 +8,47 @@
      number on any of these slides is invented; each one is in the thesis.
      ══════════════════════════════════════════════════════════════════════ -->
 
+<!-- s04 ───  Moved out of the talk 2026-09-23 (was talk slide 3, the
+     opening). Keeps id/data-cue "s04" on the s12 / s04c precedent:
+     appendix membership is data-part="backup", never the cue prefix.
+     Its CSS block and its builder came with it, as s04c's did; the
+     shared .s04fam family sheet stays in parts/10-opening.html for
+     s04b. The slide itself: the field laboratory, two steps. -->
+<section class="slide s04fam" id="s04" data-cue="s04" data-dialect="cine" data-part="backup" data-topic="open"
+         data-map="none" style="--cine-scrim:0">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+
+  <div class="cine">
+    <h2 class="slide__title">Bringing the lab to the sample often still requires pipetting and an expert.</h2>
+    <div class="cine__shots">
+      <figure class="cine__shot">
+        <div class="cine__img" id="s04-plate" style="width:790px;height:470px">
+          <img data-src="assets/stills/fig-portable-qpcr.png"
+               alt="The equipment of a mobile molecular testing laboratory in Ethiopia: a magnetic induction cycler, a magnetic block, a plate shaker and four manual pipettes." />
+          <div class="s04-spot" id="s04-spot"></div>
+        </div>
+      </figure>
+    </div>
+    <div class="cine__scrim" aria-hidden="true"></div>
+
+    <span class="s04-credit" id="s04-credit">Carlier et al. 2022 &middot; CC BY 4.0</span>
+
+    <!-- 3 · the magnetic-bead extraction, stage by stage -->
+
+    <!-- 4 · where the range and the six liquids come from -->
+
+    <!-- 5 · the span, and what one channel actually covers -->
+  </div>
+  <aside class="notes">
+    <ul>
+      <li>A mobile molecular laboratory for malaria surveillance in Ethiopia &mdash; cycler, magnetic block, shaker.</li>
+      <li>And four manual pipettes doing everything in between. That is the whole automation.</li>
+      <li>A dozen steps, six liquids, 5 &micro;L to 1 mL, every one of them by hand.</li>
+    </ul>
+  </aside>
+</section>
+
 <!-- s12 ─────────────────────────────────────────────────────
      Moved out of the talk 2026-09-21 (was talk slide 18, part II).
      It keeps id/data-cue "s12": appendix membership is data-part="backup",
@@ -2010,6 +2051,27 @@
   color: color-mix(in srgb, var(--t-a) 70%, #f0ece8);
 }
 
+/* ---- s04 · the field laboratory (was the opening, now the appendix) ---- */
+/* Only the rules #s04 alone uses. The .s04fam family sheet it shares with
+   s04b stays in parts/10-opening.html. */
+.s04fam #s04-plate { opacity: 0; }
+.s04fam .s04-spot {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  --sx: 55%; --sy: 53%; --sr: 78%;
+  background: radial-gradient(circle at var(--sx) var(--sy),
+              rgba(6,6,8,0) var(--sr), rgba(6,6,8,0.88) calc(var(--sr) + 16%));
+}
+/* The photo sits a little higher than the shared .cine__img default so that
+   its credit can sit under it rather than on it. The credit is left-aligned
+   to the photo's own left edge, which also keeps it clear of the slide
+   number and the section rail in the bottom-right corner. */
+.s04fam #s04-plate { top: 420px; }
+.s04fam .s04-credit {
+  position: absolute; left: 245px; right: auto; top: 668px; z-index: 5; opacity: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.03em;
+  color: var(--text-muted); text-shadow: 0 3px 14px rgba(0,0,0,0.9);
+}
+
 /* ---- s04c ---- */
 /* ══ S04c · PANPOC, and what a real protocol is ════════════════════════
    The thesis's magnetic-bead figure redrawn as inline SVG on a paper
@@ -2416,6 +2478,30 @@ Deck.slide('b24', function (el, gsap) {
   tl.to(tileLab, { opacity: 1, duration: 0.4 }, 'step3+=1.75');
   tl.to(ghosts, { opacity: 1, duration: 0.45, stagger: 0.14 }, 'step3+=1.85');
   tl.addLabel('step4');
+
+  return tl;
+});
+
+/* ---- s04 · moved here from parts/10-opening.html 2026-09-23 ---- */
+/* ── S04 · the photo, the pipettes, the bench, the provenance, the span ─ */
+Deck.slide('s04', function (el, gsap) {
+  /* the field laboratory, then the spotlight finds the pipettes */
+  var tl = gsap.timeline({ paused: true });
+  var plate  = el.querySelector('#s04-plate');
+  var spot   = el.querySelector('#s04-spot');
+  var credit = el.querySelector('#s04-credit');
+
+  gsap.set(credit, { opacity: 0 });
+
+  tl.addLabel('step0');
+  tl.fromTo(plate, { opacity: 0, scale: 1.04 },
+    { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 'step0');
+  tl.to(credit, { opacity: 1, duration: 0.6 }, 'step0+=0.8');
+  tl.addLabel('step1');
+
+  tl.to(spot, { opacity: 1, duration: 0.5 }, 'step1');
+  tl.fromTo(spot, { '--sr': '78%' }, { '--sr': '17%', duration: 1.1, ease: 'power3.inOut' }, 'step1');
+  tl.addLabel('step2');
 
   return tl;
 });

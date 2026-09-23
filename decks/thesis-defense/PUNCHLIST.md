@@ -3582,3 +3582,61 @@ held by the other session), every `Deck.enter` timeline forced with
   (they were on the missing list; only `s21` is left for Part II).
 
 Not committed.
+
+### (al) Part III-B step-synced notes: two open items — 2026-09-23
+
+*Letter (aj) left alone: (ak) reserved it for a Part III session, and another
+agent was working `parts/40-part3.html` in parallel.*
+
+The notes and Italian captions for `s37a` to `s43` were rewritten one bullet per
+build step (`parts/50-discussion.html`), and `CONTENT.md` / `CONTENT-IT.md` synced
+from them. Walked every step forward and backward in `?view=presenter` and
+`?view=guest` at 1920 × 1080: right bullet highlighted, right caption shown, no
+overflow, console clean. Two things stay open.
+
+**(a) The guest caption title is under the 18 px floor.** `.guest-cap__title`
+renders at **15.3 px** at 1920 × 1080, and its size is
+`clamp(12px, 1.55vh, 20px)` (`parts/99-tail.html`, line 322), so on a shorter
+screen it drops to **12 px**. The caption text itself is fine (31.5 px). The rule
+lives in `99-tail.html`, owned by the chat that built the step-synced captions:
+**open for that chat.**
+
+**(b) S41 shows five detectors; the thesis names four, and not the same ones.**
+The slide's rail and bay carry **fluorescence, colorimetric, turbidimetry, lateral
+flow and electrochemical**, with the line "One bay, five detector modules". Thesis
+§13.6 (`Chapters/13_Discussion-and-Reflection.tex`, line 152) says:
+
+> "A companion instrument could host swappable sensor modules---such as
+> colorimetric, enzymatic, fluorescence, or immunoassay detectors---to analyze
+> whatever assays the dispenser prepares."
+
+The five on the slide appear to come from `research/qa-readout-methods.md`, the
+Q&A preparation note, not from the thesis; the same goes for "fluorescence is
+seated because the PANPOC protocol implies it". The rewritten notes and captions
+name no count and no list, so nothing he says contradicts the thesis. **The slide
+is unchanged, awaiting Sirio's decision:** keep the five as an illustration, or
+align the rail with the four §13.6 names.
+
+Not committed.
+
+*Appended by the Part III-A notes session (`s25` to `s36`, `parts/40-part3.html`),
+2026-09-23. Same step-synced rewrite; presenter and guest walks at 1280 × 720 and
+1920 × 1080, 101 states each, right bullet and right caption at every state, no
+overflow.*
+
+**(c) S31, the Italian caption says "1000 µL, cioè un millilitro".** A unit
+identity for the family, not a figure from the thesis. Harmless, but it is the one
+number in the Part III-A captions that is not quoted. Kept; delete "cioè un
+millilitro" from the step-0 caption of `s31` if the rule is read strictly.
+
+**(d) S26, "within about 10 % on price" is in the thesis — closed.**
+`Chapters/10_System-Architecture-and-Electronics.tex`, line 127: "the candidate
+architectures that satisfy the GPIO pin budget fall within roughly \SI{10}{\percent}
+of each other in total component cost". The step-2 speaker note keeps it; nothing
+on screen carries it.
+
+**(c) closed, same day.** The Part III-A notes were rewritten again in the Part I
+style; the `s31` step-0 caption now says "mille microlitri", so no unit conversion
+remains.
+(d) likewise: the 10 % price figure is now an "If asked" line on `s26`, not part
+of the step-2 note.

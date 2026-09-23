@@ -19,9 +19,9 @@ moving on.
    1280 × 720 and re-check every fact against the thesis.
 5. Next slide.
 
-You do not have to go in order, and you do not have to do all of them. Slides 5 and
-14 have almost no text; slide 4 is structural. The ones worth your time are
-**2, 6, 7, 8, 9, 15 and 16**.
+You do not have to go in order, and you do not have to do all of them. Slides 4 and
+11 are dividers with almost no text, and slide 3 is structural. The ones worth your
+time are **2, 5, 6, 7, 8, 9, 14 and 15**.
 
 ---
 
@@ -74,20 +74,20 @@ paragraph.
 | — | `s00` | Frontmatter (the title page). |
 | 1 | `s01` | Frontmatter (the title page). |
 | 2 | `s02` | `Chapters/01_Introduction.tex` §1.1 Motivation. |
-| 3 | `s04` | `Chapters/01_Introduction.tex` §1.1; `Chapters/02_Background.tex` §2.1. |
-| 4 | `s03` | No thesis source — this is the deck's own structure. |
-| 5 | `s05` | No thesis source. |
+| A01 | `s04` | `Chapters/01_Introduction.tex` §1.1; `Chapters/02_Background.tex` §2.1. (Appendix slide, not in the talk.) |
+| 3 | `s03` | No thesis source — this is the deck's own structure. |
+| 4 | `s05` | No thesis source. |
+| 5 | `s05b` | `Chapters/01_Introduction.tex` §1.1 (PANPOC); `Chapters/02_Background.tex` §2.1. |
 | 6 | `s06` | `Chapters/02_Background.tex` §2.4 Existing solutions, and §2.6 The gap. |
 | 7 | `s04b` | `Chapters/01_Introduction.tex` §1.3; `Backmatter/App-A-Protocol-Survey.tex`. |
- `Chapters/01_Introduction.tex` §1.1 (PANPOC); `Chapters/02_Background.tex` §2.1. |
 | 8 | `s07` | `Chapters/05_Requirements-and-Decomposition.tex` §5.1 and §5.4 (Tables 5.3 and 5.4). |
-| 10 | `s07b` | `Chapters/05_Requirements-and-Decomposition.tex` §5.5, Figure 5.3. |
-| 11 | `s10` | `Chapters/05_Requirements-and-Decomposition.tex` §5.5, Figure 5.2. |
-| 12 | `s09a` | Chapter 3 is titled 'Methodology'; chapter 4 is 'Engineering with AI: from Design to Documentation'. |
-| 13 | `s09b` | `Chapters/03_Methodology.tex` §3.3; `Backmatter/App-C-Printer-Characterization.tex`. |
-| 14 | `s08a` | Chapter 4 title: 'Engineering with AI: from Design to Documentation'. |
-| 15 | `s08` | `Chapters/04_Engineering-with-AI.tex` §4.1 (the three failure modes and the house analogy), §4.2. |
-| 16 | `s09` | `Chapters/04_Engineering-with-AI.tex` §4.2 (GSD and its five steps), §4.3 (the skills), §4.4 (the citation pipeline). |
+| 9 | `s07b` | `Chapters/05_Requirements-and-Decomposition.tex` §5.5, Figure 5.3. |
+| 10 | `s10` | `Chapters/05_Requirements-and-Decomposition.tex` §5.5, Figure 5.2. |
+| 11 | `s09a` | Chapter 3 is titled 'Methodology'; chapter 4 is 'Engineering with AI: from Design to Documentation'. |
+| 12 | `s09b` | `Chapters/03_Methodology.tex` §3.3; `Backmatter/App-C-Printer-Characterization.tex`. |
+| 13 | `s08a` | Chapter 4 title: 'Engineering with AI: from Design to Documentation'. |
+| 14 | `s08` | `Chapters/04_Engineering-with-AI.tex` §4.1 (the three failure modes and the house analogy), §4.2. |
+| 15 | `s09` | `Chapters/04_Engineering-with-AI.tex` §4.2 (GSD and its five steps), §4.3 (the skills), §4.4 (the citation pipeline). |
 
 Chapter 3 is `03_Methodology.tex`, chapter 4 is `04_Engineering-with-AI.tex`. The
 appendix filenames do not match their printed letters — the AI appendix is the file
@@ -140,7 +140,7 @@ Must not change:
 The strings, as they are now:
   1. [19 px · stay within 15 % of the current length]
      MSc thesis defense · DTU Bioengineering · NaBIS
-  2. [44 px · ~46 characters per line, 2 lines maximum]
+  2. [44 px · ~49 characters per line, 2 lines maximum · title box 1000 px]
      Design of an Automated and Portable Liquid Dispensing System in the µL scale for Biological Applications
   3. [26 px · ~84 characters per line]
      Bringing sample preparation to the point of care
@@ -163,26 +163,20 @@ What this slide has to achieve:
   Show that a lab test takes a day and a point-of-care test takes hours, and turn that into the talk.
 
 Must not change:
-  26 h, 2.6 h and the Collier citation. The 'under 1 h' row is the author's own target and has NO citation — the wording must not make it sound like a measured result.
+  >26 h, < 3 h and the Collier citation — both figures come from that one study, and the citation must stay with them.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~39 characters per line, 2 lines maximum · title box 790 px]
      A test that takes a day comes too late.
   2. [21 px · stay within 15 % of the current length]
      standard molecular testing, the hospital’s own lab
-  3. [34 px · ~84 characters per line]
+  3. [34 px · a number on the axis row, in a box that shrinks to fit · stay within 15 % of the current length]
      >26 h
-  4. [21 px · stay within 15 % of the current length]
-     a portable molecular test at the point of care
-  5. [34 px · ~84 characters per line]
-     2.6 h
-  6. [21 px · stay within 15 % of the current length]
-     the target — an answer before they leave
-  7. [30 px · ~84 characters per line]
-     under 1 h
-  8. [18 px · stay within 15 % of the current length]
+  4. [34 px · a number on the axis row, in a box that shrinks to fit · stay within 15 % of the current length]
+     < 3 h
+  5. [18 px · stay within 15 % of the current length]
      one study, same hospital, same patients · Collier et al. 2020
-  9. [30 px · ~84 characters per line]
+  6. [30 px · ~84 characters per line]
      The test can travel to the gate. The sample preparation cannot yet.
 
 The slide also carries the time axis (0, 4 h, 8 h, 12 h, 16 h, 20 h, 24 h). That is
@@ -193,10 +187,11 @@ Return the numbered list with your replacements.
 
 ---
 
-### Slide 3 — `s04`
+### Slide A01 — `s04`
 
 ```
-SLIDE 3
+SLIDE A01  —  appendix slide, not in the talk
+(moved out of the talk 2026-09-23; the corner reads A01. The copy is still live and still worth rewriting.)
 
 What this slide has to achieve:
   One photograph of a field laboratory. The title carries the whole point.
@@ -205,7 +200,7 @@ Must not change:
   The image credit line.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~44 characters per line, 2 lines maximum · title box 860 px]
      Bringing the lab to the sample often still requires pipetting and an expert.
   2. [18 px · stay within 15 % of the current length]
      Carlier et al. 2022 · CC BY 4.0
@@ -215,71 +210,110 @@ Return the numbered list with your replacements.
 
 ---
 
-### Slide 4 — `s03`
+### Slide 3 — `s03`
 
 ```
-SLIDE 4
+SLIDE 3
 
 What this slide has to achieve:
   The table of contents. Five rows.
 
 Must not change:
-  Part I / Part II / Part III / Demo / Then — these five labels are reprinted in the corner of every later slide, so they must stay short and stay identical.
+  Part I / Part II / Part III-A / Demo / Part III-B — these five labels are reprinted in the corner of every later slide, so they must stay short and stay identical.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~49 characters per line, 2 lines maximum · title box 1168 px]
      Contents
   2. [19 px · stay within 15 % of the current length]
      Part I
-  3. [31 px · ~84 characters per line]
-     Why this machine, and how I worked
+  3. [31 px · one line in a 1000 px box · about 62 characters]
+     Background, Requirements and Methods
   4. [20 px · stay within 15 % of the current length]
-     the gap · the requirements and the modules · working with an AI
+     the gap · requirements and modules · engineering with AI
   5. [19 px · stay within 15 % of the current length]
      Part II
-  6. [31 px · ~84 characters per line]
+  6. [31 px · one line in a 1000 px box · about 62 characters]
      The modules
   7. [20 px · stay within 15 % of the current length]
      pump · alignment · nozzle · interface · storage
   8. [19 px · stay within 15 % of the current length]
-     Part III
-  9. [31 px · ~84 characters per line]
+     Part III-A
+  9. [31 px · one line in a 1000 px box · about 62 characters]
      The machine
   10. [20 px · stay within 15 % of the current length]
      electronics · integration · validation
   11. [19 px · stay within 15 % of the current length]
      Demo
-  12. [31 px · ~84 characters per line]
+  12. [31 px · one line in a 1000 px box · about 62 characters]
      Live demo
   13. [20 px · stay within 15 % of the current length]
      the machine runs, here, for five minutes
   14. [19 px · stay within 15 % of the current length]
-     Then
-  15. [31 px · ~84 characters per line]
-     What I learned, what comes next
+     Part III-B
+  15. [31 px · one line in a 1000 px box · about 62 characters]
+     Discussion & Outlook
   16. [20 px · stay within 15 % of the current length]
-     and the closing
+     Closing
 
 Return the numbered list with your replacements.
 ```
 
 ---
 
-### Slide 5 — `s05`
+### Slide 4 — `s05`
+
+```
+SLIDE 4
+
+What this slide has to achieve:
+  Part I divider. Large type, nothing else.
+
+Must not change:
+  'Part I' — the corner rail carries it on every slide of this part. Strings 2 to 4 are the
+  three hand-set lines of one title, and that title has to keep saying the same thing as the
+  Part I row on the contents slide (slide 3): background, requirements and methods.
+
+The strings, as they are now:
+  1. [22 px · stay within 15 % of the current length]
+     Part I
+  2. [84 px · ~20 characters per line · title box 900 px, the line breaks are hand-set]
+     Background,
+  3. [84 px · ~20 characters per line · title box 900 px, the line breaks are hand-set]
+     Requirements
+  4. [84 px · ~20 characters per line · title box 900 px, the line breaks are hand-set]
+     and Methods.
+  5. [24 px · ~84 characters per line]
+     Why this machine exists, what it has to do, and how I worked.
+
+Return the numbered list with your replacements.
+```
+
+---
+
+### Slide 5 — `s05b`
 
 ```
 SLIDE 5
 
 What this slide has to achieve:
-  Part I divider. Large type, nothing else.
+  Say what sample preparation is, in three drawings, and land on the fact that nearly every step of it is a liquid being moved.
+
+Must not change:
+  The order of the three captions — locked inside, separated, washed out — and the closing line's claim that the steps are liquids. 'target' labels the arrow on the first drawing and has to stay one word.
 
 The strings, as they are now:
-  1. [22 px · stay within 15 % of the current length]
-     Part I
-  2. [84 px · ~46 characters per line, 2 lines maximum]
-     Why this machine, and how I worked.
-  3. [24 px · ~84 characters per line]
-     The gap, the requirements, the way of working.
+  1. [44 px · ~48 characters per line, 2 lines maximum · title box 1000 px]
+     Sample preparation is what turns a raw swab into something a test can read.
+  2. [20 px · stay within 15 % of the current length]
+     target
+  3. [26 px · stay within 15 % of the current length]
+     Locked inside
+  4. [26 px · stay within 15 % of the current length]
+     Separated from everything else
+  5. [26 px · stay within 15 % of the current length]
+     And the chemistry washed out
+  6. [32 px · stay within 15 % of the current length]
+     Nearly every step is a liquid.
 
 Return the numbered list with your replacements.
 ```
@@ -298,7 +332,7 @@ Must not change:
   Every price, instrument name and CV. The two cobas liat figures are not from the thesis (reseller price; CADTH 2015 per-test) — leave them alone.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~57 characters per line, 2 lines maximum · title box 1168 px]
      No instrument today is precise, portable, unattended and open to any protocol at once.
   2. [18 px · stay within 15 % of the current length]
      precise
@@ -316,7 +350,7 @@ The strings, as they are now:
      laboratory systems
   9. [18 px · stay within 15 % of the current length]
      Tecan Fluent
-  10. [25 px · ~84 characters per line]
+  10. [25 px · one line in a 214 px price column · about 15 characters]
      $25–80k
   11. [18 px · stay within 15 % of the current length]
      used
@@ -324,15 +358,15 @@ The strings, as they are now:
      integrated platforms
   13. [18 px · stay within 15 % of the current length]
      Roche cobas liat
-  14. [25 px · ~84 characters per line]
+  14. [25 px · one line in a 214 px price column · about 15 characters]
      $11k
   15. [18 px · stay within 15 % of the current length]
      $100 per test
   16. [20 px · stay within 15 % of the current length]
-     portable and open-source
+     open source
   17. [18 px · stay within 15 % of the current length]
      Sidekick, Keesey 2022
-  18. [25 px · ~84 characters per line]
+  18. [25 px · one line in a 214 px price column · about 15 characters]
      $710
   19. [18 px · stay within 15 % of the current length]
      build cost
@@ -358,45 +392,41 @@ Must not change:
   5–1000 µL, 'up to six', and the five field names.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
-     The range was read out of five field protocols, not estimated.
-  2. [26 px · ~84 characters per line]
-     Five off-site protocols representing different disciplines were evaluated in full, with all operational volumes recorded.
-  3. [22 px · stay within 15 % of the current length]
+  1. [44 px · ~51 characters per line, 2 lines maximum · title box 1040 px]
+     One machine engineered for generalized sample preparation, grounded in five field protocols.
+  2. [22 px · stay within 15 % of the current length]
      🧬
-  4. [19 px · stay within 15 % of the current length]
+  3. [19 px · stay within 15 % of the current length]
      clinical and veterinary
-  5. [18 px · stay within 15 % of the current length]
+  4. [18 px · stay within 15 % of the current length]
      the PANPOC protocol
-  6. [22 px · stay within 15 % of the current length]
+  5. [22 px · stay within 15 % of the current length]
      🌱
-  7. [19 px · stay within 15 % of the current length]
+  6. [19 px · stay within 15 % of the current length]
      plant and field molecular
-  8. [22 px · stay within 15 % of the current length]
+  7. [22 px · stay within 15 % of the current length]
      💧
-  9. [19 px · stay within 15 % of the current length]
+  8. [19 px · stay within 15 % of the current length]
      water chemistry
-  10. [22 px · stay within 15 % of the current length]
+  9. [22 px · stay within 15 % of the current length]
      🌾
-  11. [19 px · stay within 15 % of the current length]
+  10. [19 px · stay within 15 % of the current length]
      agriculture
-  12. [22 px · stay within 15 % of the current length]
+  11. [22 px · stay within 15 % of the current length]
      🌲
-  13. [19 px · stay within 15 % of the current length]
+  12. [19 px · stay within 15 % of the current length]
      soil chemistry
-  14. [18 px · stay within 15 % of the current length]
+  13. [18 px · stay within 15 % of the current length]
      5 µL
-  15. [18 px · stay within 15 % of the current length]
+  14. [18 px · stay within 15 % of the current length]
      1000 µL
-  16. [44 px · ~46 characters per line, 2 lines maximum]
+  15. [44 px · one line in a 560 px readout box · about 23 characters, and it must not wrap]
      5 – 1000 µL
-  17. [20 px · stay within 15 % of the current length]
+  16. [20 px · stay within 15 % of the current length]
      per liquid
-  18. [44 px · ~46 characters per line, 2 lines maximum]
-     up to 6
-  19. [20 px · stay within 15 % of the current length]
-     reagents in one run
-  20. [21 px · stay within 15 % of the current length]
+  17. [44 px · one line in a 560 px readout box · about 23 characters, and it must not wrap]
+     up to 6 liquids
+  18. [21 px · stay within 15 % of the current length]
      into tens of 1.5 and 2 mL tubes
 
 Return the numbered list with your replacements.
@@ -416,7 +446,7 @@ Must not change:
   The long sentence is the thesis's own design-problem block quote — treat it as a quotation. The eight criterion names are the thesis's eight opportunity classes.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~41 characters per line, 2 lines maximum · title box 820 px]
      The machine must dose 5 to 1000 µL of six liquids into forty tubes, on its own.
   2. [24 px · ~84 characters per line]
      Design a portable liquid dispenser capable of delivering
@@ -492,8 +522,8 @@ Must not change:
   Module names are canonical: Pump, Alignment, Nozzle, Storage, Tube holding, User interface, Electronics and software, Enclosure. 'Alignment' is never 'stage'.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
-     The machine is eight modules, and every boundary carries a volume or a signal.
+  1. [44 px · ~59 characters per line, 2 lines maximum · title box 1168 px]
+     The machine is split up into 8 modules, connected by liquid transfers and control signals.
   2. [20 px · stay within 15 % of the current length]
      Enclosure
   3. [18 px · stay within 15 % of the current length]
@@ -534,10 +564,6 @@ The strings, as they are now:
      Data and control
   21. [18 px · stay within 15 % of the current length]
      Nothing wetted crosses
-  22. [24 px · ~84 characters per line]
-     Metering, positioning, dispensing, storing and coordinating cannot be one monolith.
-  23. [24 px · ~84 characters per line]
-     One job per module, developed in parallel, replaceable without redesigning the rest.
 
 Return the numbered list with your replacements.
 ```
@@ -560,7 +586,7 @@ Must not change:
   deleted from this slide and must not come back.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~56 characters per line, 2 lines maximum · title box 1168 px]
      The pump decides, and everything below it adapts.
   2. [26 px · a module name — DO NOT CHANGE]
      Pump
@@ -595,9 +621,9 @@ Must not change:
 The strings, as they are now:
   1. [22 px · stay within 15 % of the current length]
      How I worked
-  2. [76 px · ~46 characters per line, 2 lines maximum]
+  2. [76 px · ~24 characters per line · title box 980 px, the line breaks are hand-set]
      Methods,
-  3. [76 px · ~46 characters per line, 2 lines maximum]
+  3. [76 px · ~24 characters per line · title box 980 px, the line breaks are hand-set]
      & engineering with AI.
 
 Return the numbered list with your replacements.
@@ -620,7 +646,7 @@ Must not change:
   ±0.1 mm is the honest repeatability figure. Do not replace it with the 0.01 mm that the thesis explicitly disowns.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~43 characters per line, 2 lines maximum · title box 900 px]
      Every custom part of this machine was printed in the room where it was designed.
   2. [72 px · a number — DO NOT CHANGE]
      ±0.1
@@ -666,7 +692,7 @@ Must not change:
 The strings, as they are now:
   1. [19 px · stay within 15 % of the current length]
      Engineering with AI
-  2. [44 px · ~46 characters per line, 2 lines maximum]
+  2. [44 px · ~35 characters per line, 2 lines maximum · title box 700 px]
      Ask an AI to design a house and you see exactly where it fails.
   3. [18 px · stay within 15 % of the current length]
      the ask
@@ -703,7 +729,7 @@ Must not change:
   The site address is printed in the thesis — keep it exactly. 'Discuss, plan, execute, verify, ship' are the thesis's five step names.
 
 The strings, as they are now:
-  1. [44 px · ~46 characters per line, 2 lines maximum]
+  1. [44 px · ~56 characters per line, 2 lines maximum · title box 1120 px]
      So the AI worked inside written specs, a memory on disk, and checks it could not skip.
   2. [18 px · stay within 15 % of the current length]
      every model behind these decisions

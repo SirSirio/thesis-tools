@@ -16,7 +16,6 @@
     </div>
     <div class="pres__bar">
       <div class="pres__stat"><span class="pres__stat-k">Slide</span><span class="pres__stat-v" id="presCount">1 / 1</span></div>
-      <div class="pres__stat"><span class="pres__stat-k">Step</span><span class="pres__stat-v" id="presStep">0 / 0</span></div>
       <div class="pres__stat"><span class="pres__stat-k">Elapsed</span><span class="pres__stat-v" id="presElapsed">00:00</span></div>
       <div class="pres__stat"><span class="pres__stat-k">Left</span><span class="pres__stat-v" id="presLeft">30:00</span></div>
       <div class="pres__stat pres__stat--seg"><span class="pres__stat-k" id="presBandK">Part</span><span class="pres__stat-v pres__seg is-idle" id="presBand">––:––</span></div>
@@ -28,9 +27,11 @@
         </div>
         <span class="pres__prog-n" id="presProgN">1 / 1</span>
       </div>
+      <button type="button" class="pres__pause" id="presPause" aria-pressed="false"
+              title="Freeze every clock (p)">Pause</button>
       <a class="pres__report" id="presReport" href="rehearsal.html" target="_blank"
          rel="noopener" title="How long each part actually took">Rehearsal &rarr;</a>
-      <div class="pres__keys">&larr; &rarr; step &middot; a d slide &middot; r timer &middot; b black &middot; f full &middot; o overview</div>
+      <div class="pres__keys">&larr; &rarr; step &middot; a d slide &middot; r timer &middot; p pause &middot; b black &middot; f full &middot; o overview</div>
     </div>
   </div>
 
@@ -263,6 +264,79 @@
   /* The strip is fixed and the overview is the scroller, so the overview
      reserves the height instead of sliding its first band underneath. */
   .deck-overview { padding-top: 88px; }
+
+  /* ══ Step-synced captions (added 2026-09-23) ═══════════════════════
+     The notes are one bullet per build step: li[data-step="n"] is current
+     from step n until the next bullet's step. The Italian twin lives in
+     aside.notes > .notes-it. Contract: BUILDER-REFERENCE.md, "Step-synced
+     captions". Scoped to the presenter and guest views; the stage view is
+     untouched. */
+
+  /* The Italian block never renders in place, anywhere. aside.notes is
+     already display:none (00-head §2); this is the belt to that brace. */
+  .notes-it { display: none !important; }
+
+  /* ── a · presenter: the current bullet leads ───────────────────── */
+  .pres__notes-body li[data-step] {
+    position: relative;
+    transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .pres__notes-body li.is-now  { opacity: 1; color: var(--text); }
+  .pres__notes-body li.is-now::marker { color: var(--accent); }
+  .pres__notes-body li.is-now::before {
+    content: ""; position: absolute;
+    left: -38px; top: 0.18em; bottom: 0.18em; width: 4px;   /* clear of the disc */
+    border-radius: 2px; background: var(--accent);
+  }
+  .pres__notes-body li.is-done { opacity: 0.45; }
+  .pres__notes-body li.is-next { opacity: 0.7; }
+  /* A bullet without data-step renders neutral (a slide with no clicks has
+     only such bullets). Only an "If asked:" line — flagged .is-aside by
+     markNoteSteps() — takes the quieter panel-question style. */
+  .pres__notes-body.has-steps li:not([data-step]) { opacity: 0.85; }
+  .pres__notes-body li.is-aside,
+  .pres__notes-body.has-steps li.is-aside { opacity: 0.55; font-style: italic; }
+
+  /* ── b · guest: slide above, Italian caption band below ────────── */
+  .guest-cap { display: none; }
+  body[data-view="guest"] { --guest-band: 22vh; }
+  body[data-view="guest"] .deck-viewport {
+    position: fixed; left: 0; top: 0;
+    width: 100vw; height: calc(100vh - var(--guest-band));
+  }
+  body[data-view="guest"] .guest-cap {
+    display: flex; flex-direction: column; justify-content: center; gap: 1.1vh;
+    position: fixed; left: 0; right: 0; bottom: 0;
+    height: var(--guest-band);
+    box-sizing: border-box;
+    padding: 1.6vh 6vw 2.4vh;
+    background: rgba(10,10,12,0.86);
+    border-top: 1px solid var(--line);
+    z-index: 350;
+    font-family: var(--font);
+    overflow: hidden;
+  }
+  body[data-view="guest"][data-overview] .guest-cap { display: none; }
+  .guest-cap__title {
+    margin: 0;
+    font-family: var(--mono); font-size: clamp(12px, 1.55vh, 20px); font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    min-height: 1.2em;
+  }
+  .guest-cap__text {
+    margin: 0; max-width: none;
+    font-size: clamp(22px, 3.2vh, 46px); font-weight: 500;
+    line-height: 1.25; color: var(--text);
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+    overflow: hidden;
+    transition: opacity 200ms var(--ease);
+  }
+  .guest-cap__text.is-swap { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .guest-cap__text, .pres__notes-body li[data-step] { transition: none !important; }
+  }
   </style>
 
   <script src="../../assets/deck.js"></script>
@@ -330,14 +404,14 @@
        =================================================================== */
     /* ── 0b · The speaking plan ────────────────────────────────────
        Sirio's budget, 30 minutes in total. The opening has no line of its
-       own, so it is spoken inside Part I's seven minutes; change PART_I
+       own, so it is spoken inside Part I's eight minutes; change PART_I
        here and give 'Opening' its own row if that ever stops being true.
        Longest band name first: 'Part I' is a prefix of 'Part II'.
        =============================================================== */
     var BAND_PLAN = [
       { match: 'Part III',   name: 'Part III', secs:  5 * 60 },
-      { match: 'Part II',    name: 'Part II',  secs: 10 * 60 },
-      { match: 'Part I',     name: 'Part I',   secs:  7 * 60 },
+      { match: 'Part II',    name: 'Part II',  secs:  9 * 60 },
+      { match: 'Part I',     name: 'Part I',   secs:  8 * 60 },
       { match: 'Live demo',  name: 'Demo',     secs:  3 * 60 },
       { match: 'Discussion', name: 'Close',    secs:  5 * 60 },
       { match: 'Opening',    name: 'Part I',   secs: null }   /* folded into Part I */
@@ -353,7 +427,7 @@
     var SLIDE_ORDER = [
       { band: 'Opening',
         key: 'open',      topic: '',                                thesis: '',
-        cues: ['s00', 's01', 's02', 's04', 's03'] },
+        cues: ['s00', 's01', 's02', 's03', 's04'] },
 
       { band: 'Part I \u2014 Why this machine, and how I worked',
         key: 'gap',       topic: 'The gap',                         thesis: 'chapters 1\u20132',
@@ -1100,6 +1174,44 @@
                               ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
     }
 
+    /* ── The pause ───────────────────────────────────────────
+       He breaks off to talk to someone and every clock on the bar has to
+       stand still. Rather than teach each sum about a paused flag, the panel
+       reads its time through now(): while paused that is the instant the
+       pause began, so every readout paints the same value for as long as it
+       lasts and the open visit in the rehearsal record stops growing.
+       Resuming shifts each origin — the talk clock, the two pacing timers
+       and the open visit — forward by the length of the pause, so all the
+       arithmetic downstream is untouched and not a second is lost or counted
+       twice. The run's startedAt is a wall-clock stamp for the report, so it
+       stays where it is. */
+
+    var pausedAt = null;
+    function now() { return pausedAt === null ? Date.now() : pausedAt; }
+
+    function setPaused(on) {
+      on = !!on;
+      if (on === (pausedAt !== null)) return;
+      if (on) {
+        pausedAt = Date.now();
+      } else {
+        var gap = Date.now() - pausedAt;
+        pausedAt = null;
+        if (timerStart !== null) timerStart += gap;
+        if (bandAt) bandAt += gap;
+        if (topicAt) topicAt += gap;
+        if (visit) visit.at += gap;
+      }
+      if (on) document.body.setAttribute('data-pres-paused', '');
+      else    document.body.removeAttribute('data-pres-paused');
+      if (pres.pause) {
+        pres.pause.textContent = on ? 'Resume' : 'Pause';
+        pres.pause.setAttribute('aria-pressed', on ? 'true' : 'false');
+        pres.pause.title = on ? 'Start the clocks again (p)' : 'Freeze every clock (p)';
+      }
+      tickClock();
+    }
+
     function setupPresenter() {
       pres = {
         stage:  document.getElementById('presStage'),
@@ -1107,7 +1219,6 @@
         title:  document.getElementById('presTitle'),
         notes:  document.getElementById('presNotes'),
         count:  document.getElementById('presCount'),
-        step:   document.getElementById('presStep'),
         elapsed:document.getElementById('presElapsed'),
         band:   document.getElementById('presBand'),
         bandK:  document.getElementById('presBandK'),
@@ -1117,7 +1228,8 @@
         prog:     document.getElementById('presProg'),
         progFill: document.getElementById('presProgFill'),
         progPct:  document.getElementById('presProgPct'),
-        progN:    document.getElementById('presProgN')
+        progN:    document.getElementById('presProgN'),
+        pause:    document.getElementById('presPause')
       };
       if (pres.stage && viewport) pres.stage.appendChild(viewport);
 
@@ -1127,15 +1239,32 @@
       setTimeout(fitPanel, 60);
 
       document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
         if (e.key === 'r' || e.key === 'R') {
-        timerStart = Date.now();
-        bandAt = topicAt = Date.now();
-        resetRun();
-        tickClock();
-      }
+          setPaused(false);           /* a restart always leaves it running */
+          timerStart = Date.now();
+          bandAt = topicAt = Date.now();
+          paceShown = paceCand = ''; paceHeld = 0;
+          resetRun();
+          tickClock();
+          return;
+        }
+        if (e.key === 'p' || e.key === 'P') {
+          if (document.body.hasAttribute('data-demo-active')) return;
+          if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
+          e.preventDefault();
+          setPaused(pausedAt === null);
+        }
       });
 
-      setInterval(tickClock, 500);
+      if (pres.pause) {
+        pres.pause.addEventListener('click', function () {
+          setPaused(pausedAt === null);
+          pres.pause.blur();   /* so space and the arrows keep driving the deck */
+        });
+      }
+
+      setInterval(function () { tickClock(true); }, 500);
       tickClock();
     }
 
@@ -1179,6 +1308,41 @@
         var share = p && totalIn[p.name] ? talkIn[i] / totalIn[p.name] : 0;
         segSecs.push(whole * share);
       }
+      measureExpected(talkIn);
+    }
+
+    /* ── Where he ought to be by now ──────────────────────────
+       The two pacing timers count down the section he is in; this table
+       answers the other question — against the whole talk, is he early or
+       late? Each spoken slide takes an even share of its own section's
+       budget, and the running sum before a slide is the elapsed time he
+       should be at when he arrives at it. Backups and the hold screen are
+       not in the talk, so they are not in the sum and standing on one
+       leaves the readout with no opinion at all. */
+    var slideExp = [];   /* per slide index: {start, share} in seconds, or null */
+
+    function measureExpected(talkIn) {
+      var acc = 0;
+      slideExp = [];
+      slides.forEach(function (el, idx) {
+        if (el.getAttribute('data-part') === 'backup' ||
+            el.getAttribute('data-talk') === 'no') { slideExp.push(null); return; }
+        var gi = groupOf[idx];
+        var share = (segSecs[gi] || 0) / Math.max(talkIn[gi] || 0, 1);
+        slideExp.push({ start: acc, share: share });
+        acc += share;
+      });
+    }
+
+    /* Inside a slide the expectation slides along with the steps, so a
+       slide he is halfway through is worth half its share. */
+    function expectedAt(d) {
+      if (!d || d.slide === undefined) return null;
+      var e = slideExp[d.slide - 1];
+      if (!e) return null;
+      var n = Math.max(d.steps || 0, 1);
+      var k = Math.min(Math.max(d.step || 0, 0), n);
+      return e.start + (k / n) * e.share;
     }
 
     function partSecs(name) {
@@ -1213,10 +1377,10 @@
         if (segSecs[i]) plan.sections[sectionName(i)] = segSecs[i];
       }
       var open = visit ? [{ part: visit.part, section: visit.section,
-                            ms: Date.now() - visit.at, open: true }] : [];
+                            ms: now() - visit.at, open: true }] : [];
       try {
         localStorage.setItem(RUN_KEY, JSON.stringify({
-          startedAt: runStartedAt, savedAt: Date.now(),
+          startedAt: runStartedAt, savedAt: now(),
           visits: runVisits.concat(open), plan: plan
         }));
       } catch (e) { /* private window, blocked storage: the talk still runs */ }
@@ -1224,7 +1388,7 @@
 
     function closeVisit() {
       if (!visit) return;
-      var ms = Date.now() - visit.at;
+      var ms = now() - visit.at;
       if (ms > 400) runVisits.push({ part: visit.part, section: visit.section, ms: ms });
       visit = null;
     }
@@ -1252,17 +1416,63 @@
       var pl = bandPlan(SLIDE_ORDER[gi].band);
       if (!pl) return;
       if (pl.name !== bandName) {
-        bandName = pl.name; bandSecs = partSecs(pl.name); bandAt = Date.now();
+        bandName = pl.name; bandSecs = partSecs(pl.name); bandAt = now();
       }
-      if (gi !== topicGi) { topicGi = gi; topicAt = Date.now(); }
+      if (gi !== topicGi) { topicGi = gi; topicAt = now(); }
 
       var sec = sectionName(gi);
       if (!visit || visit.section !== sec || visit.part !== pl.name) {
         closeVisit();
         if (runStartedAt === null) runStartedAt = Date.now();
-        visit = { part: pl.name, section: sec, at: Date.now() };
+        visit = { part: pl.name, section: sec, at: now() };
       }
       saveRun();
+    }
+
+    /* ── The Elapsed colour ─────────────────────────────────
+       Elapsed no longer only says how long he has been talking: it says
+       whether that is more or less than it should be. Ahead, or no more
+       than twenty seconds behind, is green; then yellow, dark orange and
+       red at a minute, two minutes and beyond, the same four colours the
+       pacing timers use so the bar keeps one language.
+
+       The share each slide gets is an even split, so a five-second divider
+       carries the same expectation as a ninety-second diagram and the raw
+       difference lurches about even when he is exactly on plan. The number
+       is left alone — only the colour is held back: a new level has to
+       survive six consecutive half-second ticks before it is painted, so
+       the readout settles instead of strobing. Ticks are counted only while
+       the clocks run, so a pause freezes the colour with everything else,
+       and before the talk starts there is no colour at all. */
+    var PACE_TICKS = 6;               /* 6 × 500 ms = the 3 s dead band */
+    var paceShown = '', paceCand = '', paceHeld = 0;
+    var presState = null;             /* the last deck state the panel saw */
+
+    function paceLevel(delta) {       /* delta > 0 means behind schedule */
+      if (delta <= 20)  return 'ok';
+      if (delta <= 60)  return 'warn';
+      if (delta <= 120) return 'near';
+      return 'over';
+    }
+
+    function paceElapsed(elapsed, advance) {
+      var lvl = '';
+      if (timerStart !== null) {
+        var exp = expectedAt(presState);
+        if (exp !== null) lvl = paceLevel(elapsed - exp);
+      }
+      if (lvl === '' || paceShown === '') {   /* neutral, or the first reading */
+        paceShown = paceCand = lvl; paceHeld = 0;
+      } else if (lvl !== paceCand) {          /* a different candidate: start over */
+        paceCand = lvl; paceHeld = 0;
+      } else if (lvl !== paceShown && advance && ++paceHeld >= PACE_TICKS) {
+        paceShown = lvl; paceHeld = 0;
+      }
+      var c = pres.elapsed.classList;
+      c.toggle('is-pace-ok',   paceShown === 'ok');
+      c.toggle('is-pace-warn', paceShown === 'warn');
+      c.toggle('is-pace-near', paceShown === 'near');
+      c.toggle('is-pace-over', paceShown === 'over');
     }
 
     function paint(node, left, running) {
@@ -1274,10 +1484,11 @@
     }
 
     /* Kept the name because several call sites use it. */
-    function tickClock() {
+    function tickClock(fromTick) {
       if (view !== 'presenter' || !pres.elapsed) return;
-      var el = timerStart === null ? 0 : (Date.now() - timerStart) / 1000;
+      var el = timerStart === null ? 0 : (now() - timerStart) / 1000;
       pres.elapsed.textContent = mmss(el);
+      paceElapsed(el, fromTick === true && pausedAt === null);
       var left = PLAN_S - el;
       pres.left.textContent = mmss(left);
       pres.left.classList.toggle('is-over', left < 0);
@@ -1290,8 +1501,8 @@
         pres.topicK.textContent = topicGi >= 0 ? (SLIDE_ORDER[topicGi].topic || bandName) : 'Section';
       }
       if (running) saveRun();
-      paint(pres.band, bandSecs - (Date.now() - bandAt) / 1000, running);
-      paint(pres.topic, (segSecs[topicGi] || 0) - (Date.now() - topicAt) / 1000,
+      paint(pres.band, bandSecs - (now() - bandAt) / 1000, running);
+      paint(pres.topic, (segSecs[topicGi] || 0) - (now() - topicAt) / 1000,
             running && topicGi >= 0);
     }
 
@@ -1480,13 +1691,14 @@
 
     function updatePresenter(d) {
       if (!segSecs.length) measurePlan();
+      presState = d;
       markSegment(d && d.slide !== undefined ? d.slide - 1 : 0);
       if (view !== 'presenter') return;
       var el = slides[d.slide - 1];
       /* The clock starts when the talk does, not when the deck opens: the
          hold screen can sit on the projector for as long as he likes. */
       if (timerStart === null && el && el.getAttribute('data-talk') !== 'no') {
-        timerStart = Date.now();
+        timerStart = now();
       }
       var cue = el ? (el.getAttribute('data-cue') || '') : '';
       var mine = talkNo[d.slide - 1] || 0;
@@ -1494,12 +1706,12 @@
       pres.count.textContent = mine
         ? mine + ' / ' + talkCount
         : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
-      pres.step.textContent  = d.step + ' / ' + d.steps;
       var t = el.querySelector('.slide__title, .divider__title');
       pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
       var notes = el.querySelector('aside.notes');
       pres.notes.innerHTML = notes ? notes.innerHTML
         : '<p class="pres__notes-empty">No notes for this slide.</p>';
+      markNoteSteps(d);        /* step-synced captions, see 6c */
       updateProgress(d);
       renderNext(d);
       tickClock();
@@ -1567,7 +1779,110 @@
       pres.progN.textContent    = at + ' / ' + progTotal;
     }
 
+    /* ── 6c · Step-synced captions (added 2026-09-23) ──────────────
+       The notes are one bullet per build step. li[data-step="n"] is the
+       CURRENT bullet from step n until the next stepped bullet takes over:
+       the current bullet is the last li[data-step] whose data-step is at
+       most Deck.step. Stateless per state, so stepping backwards is the
+       same sum. A slide without data-step bullets renders exactly as it
+       did. The Italian twin, aside.notes > .notes-it, feeds the guest
+       band (section 7) and is dropped from the presenter panel.
+       Contract: BUILDER-REFERENCE.md, "Step-synced captions". */
+
+    function currentStepItem(items, step) {
+      var cur = -1;
+      for (var i = 0; i < items.length; i++) {
+        var n = parseInt(items[i].getAttribute('data-step'), 10);
+        if (!isNaN(n) && n <= step) cur = i;
+      }
+      return cur;
+    }
+
+    function markNoteSteps(d) {
+      if (!pres.notes) return;
+      pres.notes.querySelectorAll('.notes-it').forEach(function (n) { n.parentNode.removeChild(n); });
+      var body  = pres.notes.closest('.pres__notes-body') || pres.notes.parentNode;
+      pres.notes.querySelectorAll('li:not([data-step])').forEach(function (li) {
+        if (/^\s*if asked\s*:/i.test(li.textContent)) li.classList.add('is-aside');
+      });
+      var items = pres.notes.querySelectorAll('li[data-step]');
+      if (body) body.classList.toggle('has-steps', items.length > 0);
+      if (!items.length) return;
+      var cur = currentStepItem(items, (d && d.step) || 0);
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.add(i === cur ? 'is-now' : (i < cur ? 'is-done' : 'is-next'));
+      }
+      /* Keep the current bullet in view: scroll the notes box only, never
+         the page, and only when it is actually out of sight. */
+      if (cur < 0 || !body) return;
+      var li = items[cur];
+      var bRect = body.getBoundingClientRect(), lRect = li.getBoundingClientRect();
+      if (lRect.top < bRect.top + 8 || lRect.bottom > bRect.bottom - 8) {
+        body.scrollTop += (lRect.top - bRect.top) - 48;
+      }
+    }
+
     /* ── 7 · Guest view ────────────────────────────────────────────── */
+
+    /* ── 7a · The Italian caption band (added 2026-09-23) ──────────
+       Under ?view=guest the slide is fitted into the space above a fixed
+       band (--guest-band, tail CSS) and the band shows the slide's Italian
+       title and the Italian caption for the current step. The band keeps
+       its height on every slide, captioned or not, so nothing jumps. */
+
+    var guestCap = null, guestShown = null, guestSwap = null;
+
+    function fitGuest() {
+      if (view !== 'guest' || !viewport || !stage) return;
+      var w = viewport.clientWidth, h = viewport.clientHeight;
+      if (!w || !h) return;
+      var s = Math.min(w / 1280, h / 720);
+      stage.style.position = 'absolute';
+      stage.style.left = '0px';
+      stage.style.top = '0px';
+      stage.style.transform = 'translate(' + ((w - 1280 * s) / 2) + 'px,' +
+                              ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
+    }
+
+    function setupGuestCaptions() {
+      guestCap = document.createElement('div');
+      guestCap.className = 'guest-cap';
+      guestCap.setAttribute('lang', 'it');
+      guestCap.setAttribute('aria-live', 'polite');
+      guestCap.innerHTML = '<p class="guest-cap__title"></p><p class="guest-cap__text"></p>';
+      document.body.appendChild(guestCap);
+      guestCap.title_ = guestCap.querySelector('.guest-cap__title');
+      guestCap.text_  = guestCap.querySelector('.guest-cap__text');
+      /* Registered after deck.js's own resize handler, so this one wins. */
+      window.addEventListener('resize', fitGuest);
+      fitGuest();
+      setTimeout(fitGuest, 60);
+    }
+
+    function updateGuestCaption(d) {
+      if (view !== 'guest' || !guestCap) return;
+      var el = slides[d.slide - 1];
+      var it = el ? el.querySelector('aside.notes .notes-it') : null;
+      var tEl = it ? it.querySelector('.notes-it__title') : null;
+      var title = tEl ? tEl.innerHTML.trim() : '';
+      var html = '';
+      if (it) {
+        var items = it.querySelectorAll('li[data-step]');
+        var cur = currentStepItem(items, d.step || 0);
+        if (cur >= 0) html = items[cur].innerHTML.trim();
+      }
+      if (guestCap.title_.innerHTML !== title) guestCap.title_.innerHTML = title;
+      if (html === guestShown) return;
+      guestShown = html;
+      var txt = guestCap.text_;
+      clearTimeout(guestSwap);
+      if (reduce) { txt.innerHTML = html; return; }
+      txt.classList.add('is-swap');
+      guestSwap = setTimeout(function () {
+        txt.innerHTML = guestShown;
+        txt.classList.remove('is-swap');
+      }, 200);
+    }
 
     var dotEl = null, dotTimer = null;
     function markLive() {
@@ -1717,6 +2032,7 @@
       updateModMark(el);
       updateSlideNo(el);
       updatePresenter(d);
+      updateGuestCaption(d);   /* step-synced captions, see 7a */
       broadcast(d);
     }
 
@@ -1738,6 +2054,7 @@
       wireToolCards();
       if (view !== 'guest') wireSlideJump();
       if (view === 'stage') { wireNavIdle(); wireFrame(); }
+      if (view === 'guest') setupGuestCaptions();   /* step-synced captions, see 7a */
       if (view === 'presenter') {
         /* Taken here, after the tool cards are furnished and before the first
            builder has run, so every preview clone starts from a virgin slide. */

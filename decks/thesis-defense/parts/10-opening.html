@@ -81,10 +81,15 @@
 
   <aside class="notes">
     <ul>
-      <li>Let the clip run a few seconds before speaking; the sound is part of it.</li>
-      <li>Name the title, the group and the three supervisors.</li>
-      <li>This is the machine, working; the talk explains how it got here.</li>
+      <li data-step="meta">~20 s &middot; let the clip run a few seconds first, the sound is part of it</li>
+      <li data-step="0">This is the machine I built, dispensing. The thesis: an automated, portable liquid dispenser at microlitre scale &mdash; DTU Bioengineering, NaBIS group, supervised by Maria Dimaki, Winnie Svendsen and Lars Hvam.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Progetto di un sistema automatico e portatile per dosare liquidi nell&rsquo;ordine dei microlitri, per applicazioni biologiche.</p>
+      <ul>
+        <li data-step="0">Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -176,52 +181,26 @@
 
   <aside class="notes">
     <ul>
-      <li>A passenger lands in a crowded arrivals hall in the first weeks of an outbreak, with a fever.</li>
-      <li>The officer takes a nasal swab, but confirming the virus means sending that tube to a central laboratory.</li>
-      <li>Hold them a day or two and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal.</li>
-      <li>The whole axis is one day. Standard testing takes more than 26 hours &mdash; and that is the hospital using its own in-house lab, not a sample shipped away.</li>
-      <li>A portable molecular test, same study, same hospital, same patients: 2.6 hours. Next to a day it is almost nothing &mdash; which is the point.</li>
-      <li>Last press: the same axis rescales to its first three hours. Under an hour is the target that settles the dilemma at the gate.</li>
+      <li data-step="meta">~70 s</li>
+      <li data-step="0">A passenger lands in a crowded arrivals hall, early in an outbreak, with a fever.</li>
+      <li data-step="1">The officer takes a nasal swab. But confirming the virus means sending that tube to a central laboratory, and waiting.</li>
+      <li data-step="2">Hold them a day and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal. This axis is one day.</li>
+      <li data-step="3">Standard molecular testing: more than 26 hours. And that is with the hospital's own lab on site.</li>
+      <li data-step="4">A portable molecular test, same study, same hospital, same patients: 2.6 hours. The test can travel to the gate. The sample preparation cannot yet.</li>
     </ul>
-  </aside>
-</section>
-
-
-<!-- ░░ S04 · Still prepared by hand ░░ the field laboratory, two steps -->
-<section class="slide s04fam" id="s04" data-cue="s04" data-dialect="cine" data-part="open"
-         data-map="none" style="--cine-scrim:0">
-  <i class="fragment step-cue" data-step="1"></i>
-  <i class="fragment step-cue" data-step="2"></i>
-
-  <div class="cine">
-    <h2 class="slide__title">Bringing the lab to the sample often still requires pipetting and an expert.</h2>
-    <div class="cine__shots">
-      <figure class="cine__shot">
-        <div class="cine__img" id="s04-plate" style="width:790px;height:470px">
-          <img data-src="assets/stills/fig-portable-qpcr.png"
-               alt="The equipment of a mobile molecular testing laboratory in Ethiopia: a magnetic induction cycler, a magnetic block, a plate shaker and four manual pipettes." />
-          <div class="s04-spot" id="s04-spot"></div>
-        </div>
-      </figure>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un test che richiede un giorno arriva troppo tardi.</p>
+      <ul>
+        <li data-step="0">Una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un&rsquo;epidemia. Ha la febbre.</li>
+        <li data-step="1">L&rsquo;operatrice fa un tampone nasale. Ma per confermare il virus la provetta va mandata a un laboratorio centrale, e bisogna aspettare.</li>
+        <li data-step="2">Trattenerla un giorno è impraticabile; lasciarla passare vuol dire far uscire un&rsquo;infezione non confermata. L&rsquo;asse in basso è una giornata intera.</li>
+        <li data-step="3">Il test molecolare standard: più di 26 ore. E l&rsquo;ospedale ha il laboratorio in casa.</li>
+        <li data-step="4">Un test molecolare portatile, stesso studio, stesso ospedale, stessi pazienti: 2,6 ore. Il test può arrivare al gate. La preparazione del campione non ancora.</li>
+      </ul>
     </div>
-    <div class="cine__scrim" aria-hidden="true"></div>
-
-    <span class="s04-credit" id="s04-credit">Carlier et al. 2022 &middot; CC BY 4.0</span>
-
-    <!-- 3 · the magnetic-bead extraction, stage by stage -->
-
-    <!-- 4 · where the range and the six liquids come from -->
-
-    <!-- 5 · the span, and what one channel actually covers -->
-  </div>
-  <aside class="notes">
-    <ul>
-      <li>A mobile molecular laboratory for malaria surveillance in Ethiopia &mdash; cycler, magnetic block, shaker.</li>
-      <li>And four manual pipettes doing everything in between. That is the whole automation.</li>
-      <li>A dozen steps, six liquids, 5 &micro;L to 1 mL, every one of them by hand.</li>
-    </ul>
   </aside>
 </section>
+
 
 <!-- ░░ S03 · Contents ░░ four steps, one part lit at a time -->
 <section class="slide" id="s03" data-cue="s03" data-dialect="sheet" data-part="open">
@@ -239,7 +218,7 @@
       <span class="s03-lab">Part I</span>
       <span class="s03-pips"><i class="is-live"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span>
       <span class="s03-bar"></span>
-      <h3 class="s03-nm">Introduction, Background and Methods</h3>
+      <h3 class="s03-nm">Background, Requirements and Methods</h3>
       <p class="s03-sub">the gap &middot; requirements and modules &middot; engineering with AI</p>
     </div>
     <div class="s03-blk" data-b="1" style="top:280px">
@@ -274,13 +253,25 @@
 
   <aside class="notes">
     <ul>
-      <li>Part I: the gap this machine fills, and the way of working behind it.</li>
-      <li>Part II: the five modules, in the order the liquid meets them.</li>
-      <li>The five marks beside each row are the same five that sit in the bottom corner from here on: one lights for whichever section we are in, so the room can always see how far through we are.</li>
-      <li>The demo stands on its own: five minutes, the machine running here in the room.</li>
-      <li>Part III: electronics, integration, validation, then five minutes of live demo.</li>
-      <li>Questions at the end; there are backup slides for the detail.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">Five stops.</li>
+      <li data-step="1">Part I: why this machine is needed, what it has to do, and how I worked.</li>
+      <li data-step="2">Part II: the modules, one by one, starting with the pump.</li>
+      <li data-step="3">Part III: the whole machine &mdash; electronics, integration, validation.</li>
+      <li data-step="4">Then five minutes of live demo, here in the room.</li>
+      <li data-step="5">And discussion and outlook to close. Questions at the end.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Indice.</p>
+      <ul>
+        <li data-step="0">La presentazione ha cinque tappe.</li>
+        <li data-step="1">Parte I: perché serve questa macchina, cosa deve fare, e come ho lavorato.</li>
+        <li data-step="2">Parte II: i moduli, uno alla volta, a partire dal modulo Pump.</li>
+        <li data-step="3">Parte III: la macchina intera &mdash; elettronica, integrazione, validazione.</li>
+        <li data-step="4">Poi cinque minuti di dimostrazione dal vivo, qui in sala.</li>
+        <li data-step="5">Infine discussione e prospettive. Le domande alla fine.</li>
+      </ul>
+    </div>
   </aside>
 </section>
 
@@ -418,24 +409,10 @@
 }
 
 /* ══ S04 family · three screens, one stylesheet · still by hand ══════════════════════════════ */
-.s04fam .slide__title { width: 860px; max-width: 860px; }
-.s04fam #s04-plate { opacity: 0; }
-.s04fam .s04-spot {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  --sx: 55%; --sy: 53%; --sr: 78%;
-  background: radial-gradient(circle at var(--sx) var(--sy),
-              rgba(6,6,8,0) var(--sr), rgba(6,6,8,0.88) calc(var(--sr) + 16%));
-}
-/* The photo sits a little higher than the shared .cine__img default so that
-   its credit can sit under it rather than on it. The credit is left-aligned
-   to the photo's own left edge, which also keeps it clear of the slide
-   number and the section rail in the bottom-right corner. */
-.s04fam #s04-plate { top: 420px; }
-.s04fam .s04-credit {
-  position: absolute; left: 245px; right: auto; top: 668px; z-index: 5; opacity: 0;
-  font-family: var(--mono); font-size: 18px; letter-spacing: 0.03em;
-  color: var(--text-muted); text-shadow: 0 3px 14px rgba(0,0,0,0.9);
-}
+/* s04 itself moved to the appendix 2026-09-23: its section, its own four
+   rules and its builder all live in parts/60-backups.html. What is left
+   here is the shared family sheet that s04b still uses. */
+.s04fam .slide__title { width: var(--title-w, 860px); max-width: var(--title-w, 860px); }
 .s04fam .s04-blk { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; }
 .s04fam .s04-lead {
   position: absolute; left: 56px; margin: 0; width: 860px;
@@ -469,9 +446,15 @@
   color: rgba(240,236,232,0.92); text-shadow: 0 3px 16px rgba(0,0,0,0.85);
 }
 
-/* ── step 4 · where the numbers come from ────────────────── */
-.s04fam #s04-prov .s04-lead { top: 196px; }
-.s04fam .s04-chips { position: absolute; left: 56px; top: 300px; width: 1168px; display: flex; gap: 13px; }
+/* ── step 4 · where the numbers come from ────────────────────
+   No lead sentence on this one: the title says it, and the chips are the
+   evidence. The row spans the full content width so it lines up with the
+   title rule, and the two readouts below sit centred under their own
+   drawing, on one shared baseline. */
+.s04fam .s04-chips {
+  position: absolute; left: 56px; top: 236px; width: 1168px;
+  display: flex; justify-content: space-between; gap: 13px;
+}
 .s04fam .s04-chip {
   padding: 9px 16px; border-radius: var(--r-pill, 999px);
   border: 1px solid color-mix(in srgb, var(--t-a) 42%, transparent);
@@ -490,13 +473,13 @@
   white-space: nowrap;
 }
 .s04fam .s04-crule {
-  position: absolute; left: 56px; top: 412px; width: 700px; height: 2px; transform-origin: 0 50%;
+  position: absolute; left: 56px; top: 356px; width: 1168px; height: 2px; transform-origin: 0 50%;
   background: linear-gradient(90deg, var(--t-a), color-mix(in srgb, var(--t-b) 10%, transparent));
 }
-.s04fam .s04-ro { position: absolute; top: 432px; }
+.s04fam .s04-ro { position: absolute; top: 400px; text-align: center; }
 
 /* each readout carries its own drawing above the number */
-.s04fam .s04-ro--wide { width: 440px; }
+.s04fam .s04-ro--wide { width: 560px; }
 .s04fam .s04-vis { display: block; width: 100%; height: 92px; overflow: visible; margin-bottom: 4px; }
 .s04fam .s04-vax, .s04fam .s04-vtk path {
   fill: none; stroke: rgba(240,236,232,0.34); stroke-width: 1.6; stroke-linecap: round;
@@ -511,8 +494,8 @@
 .s04fam .s04-rov { display: block; font-size: 44px; font-weight: 600; line-height: 1; white-space: nowrap; }
 .s04fam .s04-rol { display: block; margin-top: 12px; font-size: 20px; color: var(--text-muted); white-space: nowrap; }
 .s04fam .s04-tail {
-  position: absolute; left: 56px; top: 664px; margin: 0; width: 900px;
-  font-size: 21px; line-height: 1.3; color: var(--text);
+  position: absolute; left: 56px; top: 628px; margin: 0; width: 1168px;
+  font-size: 21px; line-height: 1.3; color: var(--text); text-align: center;
 }
 .s04fam .s04-foot {
   position: absolute; left: 56px; top: 640px; margin: 0; width: 1168px;
@@ -803,35 +786,11 @@ Deck.enter('s02', function (el, gsap) {
     { opacity: 1, scale: 1, duration: 2.2, ease: 'power2.out' });
 });
 
-/* ── S04 · the photo, the pipettes, the bench, the provenance, the span ─ */
-Deck.slide('s04', function (el, gsap) {
-  /* the field laboratory, then the spotlight finds the pipettes */
-  var tl = gsap.timeline({ paused: true });
-  var plate  = el.querySelector('#s04-plate');
-  var spot   = el.querySelector('#s04-spot');
-  var credit = el.querySelector('#s04-credit');
-
-  gsap.set(credit, { opacity: 0 });
-
-  tl.addLabel('step0');
-  tl.fromTo(plate, { opacity: 0, scale: 1.04 },
-    { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 'step0');
-  tl.to(credit, { opacity: 1, duration: 0.6 }, 'step0+=0.8');
-  tl.addLabel('step1');
-
-  tl.to(spot, { opacity: 1, duration: 0.5 }, 'step1');
-  tl.fromTo(spot, { '--sr': '78%' }, { '--sr': '17%', duration: 1.1, ease: 'power3.inOut' }, 'step1');
-  tl.addLabel('step2');
-
-  return tl;
-});
-
 /* -- S04b - where the range came from ---------------------------- */
 Deck.slide('s04b', function (el, gsap) {
   var tl = gsap.timeline({ paused: true });
   var prov = el.querySelector('#s04-prov');
 
-  var vLead  = prov.querySelector('.s04-lead');
   var chips  = prov.querySelectorAll('.s04-chip');
   var crule  = prov.querySelector('.s04-crule');
   var ros    = prov.querySelectorAll('.s04-ro');
@@ -843,7 +802,7 @@ Deck.slide('s04b', function (el, gsap) {
   var vials  = prov.querySelectorAll('.s04-vial');
 
   gsap.set(prov, { opacity: 1 });
-  gsap.set([vLead, vTail], { opacity: 0, y: 16 });
+  gsap.set(vTail, { opacity: 0, y: 16 });
   gsap.set(chips, { opacity: 0, y: 10 });
   gsap.set(crule, { scaleX: 0 });
   gsap.set(ros, { opacity: 0, y: 12 });
@@ -855,8 +814,7 @@ Deck.slide('s04b', function (el, gsap) {
   tl.addLabel('step0');
 
   /* 1 · where the numbers were read */
-  tl.to(vLead, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, 'step0+=0.1');
-  tl.to(chips, { opacity: 1, y: 0, duration: 0.45, stagger: 0.09, ease: 'expo.out' }, 'step0+=0.35');
+  tl.to(chips, { opacity: 1, y: 0, duration: 0.45, stagger: 0.09, ease: 'expo.out' }, 'step0+=0.1');
   tl.addLabel('step1');
 
   /* 2 · and what falls out of them, each number with its picture */

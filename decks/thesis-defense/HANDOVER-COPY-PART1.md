@@ -17,13 +17,16 @@ Biological Applications*, subtitled *Bringing sample preparation to the point of
 care*. The speaker is Sirio
 Vittorio Feltrin, and he built the machine the talk is about.
 
-The talk runs: opening → **Part I, why this machine and how I worked** → Part II, the
-modules → Part III, the machine → live demo → what I learned → closing. This document
-covers **the opening and all of Part I only**: the hold screen and slides 1 to 16,
-out of 75. The numbers used here are the ones printed in the corner of each slide.
-Part I was cut twice for length — the modules-on-the-machine slide was dropped and
-the precision-and-accuracy slide moved to the appendix — so these numbers have
-shifted since the first version of this document. Work from the numbers here.
+The talk runs: opening → **Part I, background, requirements and methods** → Part
+II, the modules → Part III-A, the machine → live demo → Part III-B, discussion and
+outlook. This document covers **the opening and all of Part I only**: the hold
+screen plus talk slides 1 to 15, out of 49 numbered talk slides — the opening is
+1 to 3 and Part I is 4 to 15 — and one opening slide that has since moved to the
+appendix, where the corner reads A01. The numbers used here are the ones printed
+in the corner of each slide. Part I was cut twice for length — the
+modules-on-the-machine slide was dropped and the precision-and-accuracy slide
+moved to the appendix — so these numbers have shifted since the first version of
+this document. Work from the numbers here.
 
 ---
 
@@ -37,9 +40,9 @@ breaks them gets rejected.
 2. **No filler.** Delete any line that only announces what is about to be said, or
    that labels something already obvious. If a line can be removed without loss,
    remove it.
-3. **A title states a finding, not a topic.** "The range was read out of five field
-   protocols, not estimated" — not "Protocol survey". Titles are full sentences and
-   end with a full stop.
+3. **A title states a finding, not a topic.** "One machine engineered for generalized
+   sample preparation, grounded in five field protocols" — not "Protocol survey".
+   Titles are full sentences and end with a full stop.
 4. **Short fragments elsewhere.** Labels, captions and chips are two to six words.
    Lower case unless it is a proper noun.
 5. **No marketing register.** No "revolutionary", "seamless", "cutting-edge",
@@ -79,11 +82,13 @@ string with its replacement. Keep the numbering. If you would delete a line, wri
 `DELETE` and one line of why. If you want to split or merge lines, say so explicitly —
 the layout is fixed pixel geometry and a line that doubles in length will overflow.
 
-**Length discipline matters.** Each string below carries its rendered size in pixels
-and, where it is tight, a character budget. A title at 44 px fits about **46
-characters per line** and may run to two lines, no more. A 24–26 px reading line fits
-about **84 characters per line**. Chips and labels at 18–22 px should stay within the
-character count of what is already there, ±15 %.
+**Length discipline matters.** Each string below carries its rendered size in pixels,
+and each slide carries its own title budget, printed above that slide's table. A title
+at 44 px may run to two lines, never three, but how many characters fit depends on that
+slide's title box, which runs from 700 px to 1168 px across these slides — about **35 to
+59 characters per line**, so use the number given for the slide you are on. A 24–26 px
+reading line fits about **84 characters per line**. Chips and labels at 18–22 px should
+stay within the character count of what is already there, ±15 %.
 
 ---
 
@@ -114,6 +119,8 @@ Shown while the room fills. Not numbered, and the timer has not started. Minimal
 ### 1 · `s01` · cover
 **[keep] the title and subtitle are fixed** — they are the thesis front matter, word for word. Do not shorten or rephrase them.
 
+*Title: 44 px in a 1000 px box — about 49 characters a line, two lines maximum.*
+
 | # | px | string |
 |---|----|--------|
 | 1.1 | 19 | MSc thesis defense · DTU Bioengineering · NaBIS |
@@ -130,7 +137,9 @@ Shown while the room fills. Not numbered, and the timer has not started. Minimal
 ---
 
 ### 2 · `s02` · a test that takes a day
-One study, one hospital, one set of patients, on a single 0-24 h axis. The three rows are the evidence; the closing line is the turn into the talk.
+One study, one hospital, one set of patients, on a single 0-24 h axis. The two rows are the evidence; the closing line is the turn into the talk.
+
+*Title: 44 px in a 790 px box — about 39 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|
@@ -144,12 +153,9 @@ One study, one hospital, one set of patients, on a single 0-24 h axis. The three
 | 2.8 | 18 | 24 h |
 | 2.9 | 21 | standard molecular testing, the hospital’s own lab |
 | 2.10 | 34 | >26 h |
-| 2.11 | 21 | a portable molecular test at the point of care |
-| 2.12 | 34 | 2.6 h |
-| 2.13 | 21 | the target — an answer before they leave |
-| 2.14 | 30 | under 1 h |
-| 2.15 | 18 | one study, same hospital, same patients · Collier et al. 2020 |
-| 2.16 | 30 | The test can travel to the gate. The sample preparation cannot yet. |
+| 2.11 | 34 | < 3 h |
+| 2.12 | 18 | one study, same hospital, same patients · Collier et al. 2020 |
+| 2.13 | 30 | The test can travel to the gate. The sample preparation cannot yet. |
 
 *Context — what he says (not on screen):*
 - A passenger lands in a crowded arrivals hall in the first weeks of an outbreak, with a fever.
@@ -161,14 +167,18 @@ One study, one hospital, one set of patients, on a single 0-24 h axis. The three
 
 ---
 
-### 3 · `s04` · the field laboratory
+### A01 · `s04` · the field laboratory
+**Appendix slide — not in the talk.** Moved out on 2026-09-23; the corner reads A01, not a talk number. Its copy is still live and still worth rewriting.
+
 A photograph. The title is the only copy besides the credit, which now sits under the
 photo at its left edge, clear of the slide number and the section rail.
 
+*Title: 44 px in a 860 px box — about 44 characters a line, two lines maximum.*
+
 | # | px | string |
 |---|----|--------|
-| 3.1 | 44 | Bringing the lab to the sample often still requires pipetting and an expert. |
-| 3.2 | 18 | Carlier et al. 2022 · CC BY 4.0 |
+| A01.1 | 44 | Bringing the lab to the sample often still requires pipetting and an expert. |
+| A01.2 | 18 | Carlier et al. 2022 · CC BY 4.0 |
 
 *Context — what he says (not on screen):*
 - A mobile molecular laboratory for malaria surveillance in Ethiopia — cycler, magnetic block, shaker.
@@ -177,27 +187,29 @@ photo at its left edge, clear of the slide number and the section rail.
 
 ---
 
-### 4 · `s03` · contents
-Five rows. **[keep] Part I / Part II / Part III / Demo / Then** — these five labels also appear in the corner of every later slide, so they must stay short and stay identical.
+### 3 · `s03` · contents
+Five rows. **[keep] Part I / Part II / Part III-A / Demo / Part III-B** — these five labels also appear in the corner of every later slide, so they must stay short and stay identical.
+
+*Title: 44 px in a 1168 px box — about 49 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|
-| 4.1 | 44 | Contents |
-| 4.2 | 19 | Part I |
-| 4.3 | 31 | Why this machine, and how I worked |
-| 4.4 | 20 | the gap · the requirements and the modules · working with an AI |
-| 4.5 | 19 | Part II |
-| 4.6 | 31 | The modules |
-| 4.7 | 20 | pump · alignment · nozzle · interface · storage |
-| 4.8 | 19 | Part III |
-| 4.9 | 31 | The machine |
-| 4.10 | 20 | electronics · integration · validation |
-| 4.11 | 19 | Demo |
-| 4.12 | 31 | Live demo |
-| 4.13 | 20 | the machine runs, here, for five minutes |
-| 4.14 | 19 | Then |
-| 4.15 | 31 | What I learned, what comes next |
-| 4.16 | 20 | and the closing |
+| 3.1 | 44 | Contents |
+| 3.2 | 19 | Part I |
+| 3.3 | 31 | Background, Requirements and Methods |
+| 3.4 | 20 | the gap · requirements and modules · engineering with AI |
+| 3.5 | 19 | Part II |
+| 3.6 | 31 | The modules |
+| 3.7 | 20 | pump · alignment · nozzle · interface · storage |
+| 3.8 | 19 | Part III-A |
+| 3.9 | 31 | The machine |
+| 3.10 | 20 | electronics · integration · validation |
+| 3.11 | 19 | Demo |
+| 3.12 | 31 | Live demo |
+| 3.13 | 20 | the machine runs, here, for five minutes |
+| 3.14 | 19 | Part III-B |
+| 3.15 | 31 | Discussion & Outlook |
+| 3.16 | 20 | Closing |
 
 *Context — what he says (not on screen):*
 - Part I: the gap this machine fills, and the way of working behind it.
@@ -209,23 +221,53 @@ Five rows. **[keep] Part I / Part II / Part III / Demo / Then** — these five l
 
 ---
 
-### 5 · `s05` · Part I divider
-Large type, nothing else.
+### 4 · `s05` · Part I divider
+Large type, nothing else. The title is set on three hand-made lines, and it says the same thing as the Part I row on the contents slide — **[keep] them in step**, here and there. **[keep] Part I**: the corner rail carries it on every slide of this part.
+
+*Title: 84 px in a 900 px box — about 20 characters a line; the line breaks are hand-set.*
 
 | # | px | string |
 |---|----|--------|
-| 5.1 | 22 | Part I |
-| 5.2 | 84 | Why this machine, and how I worked. |
-| 5.3 | 24 | The gap, the requirements, the way of working. |
+| 4.1 | 22 | Part I |
+| 4.2 | 84 | Background, |
+| 4.3 | 84 | Requirements |
+| 4.4 | 84 | and Methods. |
+| 4.5 | 24 | Why this machine exists, what it has to do, and how I worked. |
 
 *Context — what he says (not on screen):*
-- Two questions in this part: why build it, and how the work was run.
+- Three things in this part: the gap that justifies the machine, the requirements that follow from it, and the way the work was run.
 - Four minutes; the modules start right after.
+
+---
+
+### 5 · `s05b` · what sample preparation is
+Three drawings, one per press, each with its caption under it; an arrow on the first one labels the target. The closing line lands last, on its own.
+
+*Title: 44 px in a 1000 px box — about 48 characters a line, two lines maximum.*
+
+| # | px | string |
+|---|----|--------|
+| 5.1 | 44 | Sample preparation is what turns a raw swab into something a test can read. |
+| 5.2 | 20 | target |
+| 5.3 | 26 | Locked inside |
+| 5.4 | 26 | Separated from everything else |
+| 5.5 | 26 | And the chemistry washed out |
+| 5.6 | 32 | Nearly every step is a liquid. |
+
+*Context — what he says (not on screen):*
+- 1 · locked inside — a swab, a scoop of soil, a water sample: none of them can be read directly. What the test is looking for is genetic material, and it starts out sealed inside cells or virus particles, mixed with proteins and debris, with enzymes already breaking it down.
+- 2 · separated — so the first job is to break the sample open and get the target out, and the second is to separate it from everything it arrived with. That is what the salt and the beads and the magnet are doing.
+- 3 · washed out — and here is the catch. The chemistry that frees the target is aggressive, and if any of it is carried over it blocks the amplification that reads the result. The thesis is explicit about the guanidine salt: anything carried over will inhibit the reaction that follows. So the preparation has to remove its own reagents as well.
+- 4 · the hinge — now count what those steps actually are. Almost every one of them is adding a measured volume or taking one away. That is why the piece of hardware sample preparation needs is a dispenser, and it is what the rest of this talk is about.
+- If asked how much it matters: the thesis cites evidence that sampling and sample preparation contribute more variability to a result than the measurement itself.
+- Do not name PANPOC here — the contents slide already did, and the bead protocol has its own slide in the appendix.
 
 ---
 
 ### 6 · `s06` · the gap
 A four-row comparison with a price column. The last row is the machine this thesis builds, so it has no product name and no price.
+
+*Title: 44 px in a 1168 px box — about 57 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|
@@ -244,7 +286,7 @@ A four-row comparison with a price column. The last row is the machine this thes
 | 6.13 | 18 | Roche cobas liat |
 | 6.14 | 25 | $11k |
 | 6.15 | 18 | $100 per test |
-| 6.16 | 20 | portable and open-source |
+| 6.16 | 20 | open source |
 | 6.17 | 18 | Sidekick, Keesey 2022 |
 | 6.18 | 25 | $710 |
 | 6.19 | 18 | build cost |
@@ -262,28 +304,28 @@ A four-row comparison with a price column. The last row is the machine this thes
 ### 7 · `s04b` · where the range came from
 Two presses: the five protocol fields, then the two numbers that fall out of them. Each number carries a small drawing.
 
+*Title: 44 px in a 1040 px box — about 51 characters a line, two lines maximum.*
+
 | # | px | string |
 |---|----|--------|
-| 7.1 | 44 | The range was read out of five field protocols, not estimated. |
-| 7.2 | 26 | Five off-site protocols representing different disciplines were evaluated in full, with all operational volumes recorded. |
-| 7.3 | 22 | 🧬 |
-| 7.4 | 19 | clinical and veterinary |
-| 7.5 | 18 | the PANPOC protocol |
-| 7.6 | 22 | 🌱 |
-| 7.7 | 19 | plant and field molecular |
-| 7.8 | 22 | 💧 |
-| 7.9 | 19 | water chemistry |
-| 7.10 | 22 | 🌾 |
-| 7.11 | 19 | agriculture |
-| 7.12 | 22 | 🌲 |
-| 7.13 | 19 | soil chemistry |
-| 7.14 | 18 | 5 µL |
-| 7.15 | 18 | 1000 µL |
-| 7.16 | 44 | 5 – 1000 µL |
-| 7.17 | 20 | per liquid |
-| 7.18 | 44 | up to 6 |
-| 7.19 | 20 | reagents in one run |
-| 7.20 | 21 | into tens of 1.5 and 2 mL tubes |
+| 7.1 | 44 | One machine engineered for generalized sample preparation, grounded in five field protocols. |
+| 7.2 | 22 | 🧬 |
+| 7.3 | 19 | clinical and veterinary |
+| 7.4 | 18 | the PANPOC protocol |
+| 7.5 | 22 | 🌱 |
+| 7.6 | 19 | plant and field molecular |
+| 7.7 | 22 | 💧 |
+| 7.8 | 19 | water chemistry |
+| 7.9 | 22 | 🌾 |
+| 7.10 | 19 | agriculture |
+| 7.11 | 22 | 🌲 |
+| 7.12 | 19 | soil chemistry |
+| 7.13 | 18 | 5 µL |
+| 7.14 | 18 | 1000 µL |
+| 7.15 | 44 | 5 – 1000 µL |
+| 7.16 | 20 | per liquid |
+| 7.17 | 44 | up to 6 liquids |
+| 7.18 | 21 | into tens of 1.5 and 2 mL tubes |
 
 *Context — what he says (not on screen):*
 - Not an estimate, and not one protocol: five, chosen for being usable outside a laboratory and for covering different fields.
@@ -291,13 +333,15 @@ Two presses: the five protocol fields, then the two numbers that fall out of the
 - No review aggregates dispensed volumes across protocol types — reviews describe instruments, primary papers report only their own protocol — so they had to be read one by one.
 - The clinical and veterinary one is the PANPOC magnetic-bead protocol itself: the reference protocol sits inside the survey, it is not a sixth case.
 - All of it runs unattended, in one load.
-- What falls out is the specification: 5 to 1000 µL per liquid, up to six reagents, into tens of tubes, unattended.
+- What falls out is the specification: 5 to 1000 µL per liquid, up to six of them, into tens of tubes, unattended.
 - The five-row table with each protocol’s own range is a backup slide.
 
 ---
 
 ### 8 · `s07` · the design problem and the gates
 The brief as one sentence with the binding phrases picked out, then six gates, then the ranking criteria. The sentence is **verbatim from the thesis** (its design-problem block quote) — treat it as a quotation.
+
+*Title: 44 px in a 820 px box — about 41 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|
@@ -342,9 +386,11 @@ The brief as one sentence with the binding phrases picked out, then six gates, t
 ### 9 · `s07b` · how the modules relate
 The module diagram from the thesis: eight boxes, and what crosses each boundary.
 
+*Title: 44 px in a 1168 px box — about 59 characters a line, two lines maximum.*
+
 | # | px | string |
 |---|----|--------|
-| 9.1 | 44 | The machine is eight modules, and every boundary carries a volume or a signal. |
+| 9.1 | 44 | The machine is split up into 8 modules, connected by liquid transfers and control signals. |
 | 9.2 | 20 | Enclosure |
 | 9.3 | 18 | specified, not built |
 | 9.4 | 22 | Storage |
@@ -365,8 +411,6 @@ The module diagram from the thesis: eight boxes, and what crosses each boundary.
 | 9.19 | 18 | Liquid |
 | 9.20 | 18 | Data and control |
 | 9.21 | 18 | Nothing wetted crosses |
-| 9.22 | 24 | Metering, positioning, dispensing, storing and coordinating cannot be one monolith. |
-| 9.23 | 24 | One job per module, developed in parallel, replaceable without redesigning the rest. |
 
 *Context — what he says (not on screen):*
 - Mapping the operational sequence gave eight functions, so eight modules: pump, alignment, nozzle, storage, tube holding, user interface, electronics and software, and the enclosure around all of it. A machine that meters microlitres, positions tubes, dispenses droplets, manages reagents, talks to an operator and coordinates actuation cannot be engineered as a monolithic system.
@@ -383,6 +427,8 @@ it top to bottom *is* the order Part II walks, which is why no separate list of 
 order is drawn any more. The arrows, the side notes and the running-order chips were
 all deleted — do not propose bringing any of them back. Only the title is rewritable;
 the seven tiers are module names.
+
+*Title: 44 px in a 1168 px box — about 56 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|
@@ -406,6 +452,8 @@ the seven tiers are module names.
 ### 11 · `s09a` · divider - the method
 Five seconds on screen. The two lines are the titles of thesis chapters three and four. Nothing else, deliberately.
 
+*Title: 76 px in a 980 px box — about 24 characters a line; the line breaks are hand-set.*
+
 | # | px | string |
 |---|----|--------|
 | 11.1 | 22 | How I worked |
@@ -425,6 +473,8 @@ Five seconds on screen. The two lines are the titles of thesis chapters three an
 ±0.1 mm under it; the printer photograph sits on the right. Every caption and the
 weeks → hours pair were deleted and must not come back — no small text on this slide.
 Only the title is rewritable.
+
+*Title: 44 px in a 900 px box — about 43 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|
@@ -465,6 +515,8 @@ thing the audience reads — it arrives on the second press.
 
 Four captioned beats of the same failure. The captions are deliberately tiny; the quoted asks are what the audience reads. The lockup from slide 14 sits in the top-right corner.
 
+*Title: 44 px in a 700 px box — about 35 characters a line, two lines maximum.*
+
 | # | px | string |
 |---|----|--------|
 | 14.1 | 19 | Engineering with AI |
@@ -489,6 +541,8 @@ Four captioned beats of the same failure. The captions are deliberately tiny; th
 ### 15 · `s09` · the working environment
 Four panels and the site address. **Only the first two are on screen when the slide
 opens**; the sources and the tools arrive on a press each, so the rail starts quiet. The address is printed in the thesis — **[keep] it exactly**. Two panels are now label-only by choice: do not write sentences back into them.
+
+*Title: 44 px in a 1120 px box — about 56 characters a line, two lines maximum.*
 
 | # | px | string |
 |---|----|--------|

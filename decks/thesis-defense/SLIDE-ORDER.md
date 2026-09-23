@@ -16,6 +16,14 @@ The deck has two different orders and they are not the same thing:
 - **Organisation** — the two-level taxonomy below, which is what the overview
   (press `o` or `Escape`) shows, so Sirio can find any slide in a second.
 
+*Changed 2026-09-23.* `s04` (the field laboratory) moved to the **appendix**.
+It was talk slide 3; every talk slide after it shifts down by one. It keeps
+its `s04` cue — appendix membership is `data-part="backup"` — and carries
+`data-topic="open"`. Its section, its own four CSS rules and its builder all
+moved into `parts/60-backups.html` on the `s04c` precedent; the shared
+`.s04fam` family sheet stays in `parts/10-opening.html`, because `s04b`
+still uses it.
+
 *Resolved 2026-09-22.* `s30b` and `s37a` are now in `SLIDE_ORDER`, and
 `b25` was added beside `s41`. `s39` moved to the **appendix** on the same
 day, simplified to the AI contrast alone with its timeline cut (Sirio:
@@ -37,7 +45,7 @@ thesis chapter inside that band and is the lighter sub-heading.
 
 | Band (strong) | Topic (sub-heading) | Thesis | Cues, in order |
 |---|---|---|---|
-| Opening | — | — | `s00` `s01` `s02` `s04` `s03` |
+| Opening | — | — | `s00` `s01` `s02` `s03` · appendix: `s04` |
 | Part I — Why this machine, and how I worked | The gap | ch. 1–2 | `s05` `s05b` `s06` `s04b` · appendix: `s04c` |
 | | Requirements and decomposition | ch. 5 | `s07` `s07b` `s10` |
 | | Method, and working with an AI | ch. 3–4 | `s09a` `s09b` `s08a` `s08` `s09` |

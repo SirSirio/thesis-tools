@@ -105,5 +105,31 @@ Rules: nothing below 18 px at stage size, no bullet lists on the stage, no inter
 ## Views and sync
 `?view=stage` (default) · `?view=presenter` · `?view=guest`. `?sync=host` / `?sync=guest` add the ntfy relay (topic `svf-defense-20260928-k7q2m9x4`); BroadcastChannel `deck:thesis-defense` is always on, so two windows on one laptop stay in step with no network and no parameter. With no `sync` parameter the deck makes no network call.
 
+## Step-synced captions
+The notes are one bullet per build step, and both non-stage views follow the step (runtime: `parts/99-tail.html` sections 6c and 7a, added 2026-09-23):
+
+```html
+<aside class="notes">
+  <ul>
+    <li data-step="0">English bullet shown from step 0 (slide entry)</li>
+    <li data-step="2">English bullet current from step 2 until the next bullet's step</li>
+    <li>If asked: … (no data-step: panel-question material, never highlighted)</li>
+  </ul>
+  <div class="notes-it" lang="it">
+    <p class="notes-it__title">Titolo della slide in italiano</p>
+    <ul>
+      <li data-step="0">Didascalia italiana</li>
+      <li data-step="2">…</li>
+    </ul>
+  </div>
+</aside>
+```
+
+- **Current-bullet rule:** the current bullet is the last `li[data-step]` whose `data-step` is at most `Deck.step` (0 = slide entry, up to `steps`). Stateless per state, so stepping backwards works the same way. If no bullet qualifies yet, none is current.
+- **Presenter:** the current bullet is `is-now` (full opacity, accent bar and accent disc), earlier ones `is-done` (45 %), later ones `is-next` (70 %); the panel scrolls the current bullet into view. A bullet without `data-step` renders neutral; only one whose text starts with `If asked:` gets the quieter italic panel-question style. The `.notes-it` block is removed from the panel.
+- **Guest:** the slide is fitted above a fixed band of 22 vh; the band shows `.notes-it__title` on one muted line and the current Italian `li[data-step]` large, crossfading on change. A slide without `.notes-it` shows an empty band of the same height.
+- **Stage:** unchanged; `aside.notes` and `.notes-it` never render there.
+- A slide with no `data-step` bullets renders its notes exactly as before. Content may use inline markup (`<em>`, entities); keep captions to one or two lines at 34 px.
+
 ## Deviations from BUILD-CONTRACT.md, accepted
 `Deck.slide` is the registration function (`Deck.slideNo` is the getter); `window.Deck` exists synchronously; the Escape guard uses a capture-phase probe; `--head-h` added; the HUD sits top right; a sync bootstrap guard stops a late-joining window from yanking the others; the presenter's next preview builds the target state on a clone (your builder and your `Deck.enter` hook are called again, on the clone, with `dataset.preview` set — keep every selector scoped to `el`, and guard anything that starts a live clock, an interval or a document-level listener with `if (el.dataset.preview)`).
