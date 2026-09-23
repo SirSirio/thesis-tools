@@ -1845,9 +1845,65 @@ body[data-view="guest"] .guest-dot {
 .p2-ov .ln.ghost { stroke: color-mix(in srgb, var(--t-a) 50%, transparent); stroke-dasharray: 16 13; }
 .p2-ov .dot { fill: var(--t-a); stroke: none; }
 .sheet__frame { position: relative; }
-/* four-row rails: let every panel shrink to its equal share, so the last
-   one is not the only one that clips */
-#s15 .sheet__panel { min-height: 0; padding-top: 10px; padding-bottom: 10px; }
+/* S15's rail (2026-09-23): the two walked panels, the printer and v2.3,
+   share the height; v2.1 and v2.2 sit above them as buttons — outside the
+   clicker walk, pressed only when a question calls for one.  A button opens
+   its sentence in place and its figure and readout over the sheet; the
+   sheet's own figure and readout step aside while it is open (the class
+   lives on the section, so the step timeline's inline styles are untouched
+   and come back exactly as they were).  Mark + closed, x open, as on S09. */
+#s15 .sheet__panel { min-height: 0; }
+#s15 .s15-btn {
+  flex: 0 0 auto;
+  position: relative;
+  margin: 12px 12px 0;
+  padding: 11px 44px 11px 16px;
+  gap: 0;
+  cursor: pointer;
+  opacity: 0.72;
+  border: 1px dashed color-mix(in srgb, var(--accent) 38%, transparent);
+  border-radius: var(--r-sm);
+  transition: background 160ms var(--ease), border-color 160ms var(--ease), opacity 160ms var(--ease);
+}
+#s15 .s15-btn + .s15-btn { margin-top: 8px; }
+#s15 .s15-btn + .sheet__panel:not(.s15-btn) { margin-top: 12px; }
+#s15 .s15-btn__line { display: flex; align-items: baseline; gap: 14px; }
+#s15 .s15-btn__s { font-size: 18px; line-height: 1.3; color: var(--text-soft); }
+#s15 .s15-btn .sheet__panel-t {
+  max-height: 0; opacity: 0; overflow: hidden; margin-top: 0;
+  transition: max-height 320ms var(--ease), opacity 240ms var(--ease), margin-top 320ms var(--ease);
+}
+#s15 .s15-btn::after {
+  content: '+';
+  position: absolute; right: 14px; top: 13px;
+  font-family: var(--mono); font-size: 21px; line-height: 1;
+  color: var(--accent);
+}
+#s15 .s15-btn.is-open::after { content: '\00d7'; }
+#s15 .s15-btn.is-open {
+  opacity: 1;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+}
+#s15 .s15-btn.is-open .sheet__panel-t { max-height: 90px; opacity: 1; margin-top: 8px; }
+#s15 .s15-btn:hover,
+#s15 .s15-btn:focus-visible { background: rgba(255, 255, 255, 0.055); outline: none; opacity: 1; }
+#s15 .s15-btn:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 60%, transparent); }
+
+/* the aside's figure and readout, and the walked ones stepping back.  Only
+   children are faded on the walked side: the timeline owns the figures'
+   and readouts' own opacity, never their children's. */
+#s15 #s15-f1, #s15 #s15-f2, #s15 #s15-ro1, #s15 #s15-ro2 {
+  transition: opacity 280ms var(--ease), visibility 280ms;
+}
+#s15.s15-open-0 #s15-f1, #s15.s15-open-0 #s15-ro1,
+#s15.s15-open-1 #s15-f2, #s15.s15-open-1 #s15-ro2 { opacity: 1; visibility: visible; z-index: 2; }
+#s15 #s15-f3 > *, #s15 #s15-f4 > *, #s15 #s15-ro3 > *, #s15 #s15-ro4 > * {
+  transition: opacity 240ms var(--ease);
+}
+#s15.s15-open #s15-f3 > *, #s15.s15-open #s15-f4 > *,
+#s15.s15-open #s15-ro3 > *, #s15.s15-open #s15-ro4 > * { opacity: 0; }
 
 /* the drawn panels that sit on the paper sheet beside a photograph */
 .sheet__draw { display: block; flex: none; overflow: visible; }
@@ -4298,6 +4354,23 @@ body[data-view="guest"] .guest-dot {
   .pres__notes-body li.is-aside,
   .pres__notes-body.has-steps li.is-aside { opacity: 0.55; font-style: italic; }
 
+  /* ── a2 · the meta line is a time target, not a caption ───────────
+     Per-slide targets (added 2026-09-23): li[data-step="meta"] drives the
+     pacing timers (tail script, 0b) and shows here as a small muted
+     "target ~40 s" line, never marked done/next. The bar echoes the
+     slide's planned seconds beside the slide count (.pres__target). */
+  .pres__notes-body li.is-meta {
+    list-style: none; margin-left: -26px; margin-bottom: 8px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.4;
+    letter-spacing: 0.06em; color: var(--text-muted); opacity: 0.8;
+  }
+  .pres__notes-body li.is-meta::before { content: "target "; text-transform: uppercase; letter-spacing: 0.18em; font-size: 11px; }
+  .pres__target {
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .pres__target:empty { display: none; }
+
   /* ── b · guest: slide above, Italian caption band below ────────── */
   .guest-cap { display: none; }
   body[data-view="guest"] { --guest-band: 22vh; }
@@ -4440,13 +4513,13 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~20 s &middot; let the clip run a few seconds first, the sound is part of it</li>
-      <li data-step="0">This is the machine I built, dispensing. The thesis: an automated, portable liquid dispenser at microlitre scale &mdash; DTU Bioengineering, NaBIS group, supervised by Maria Dimaki, Winnie Svendsen and Lars Hvam.</li>
+      <li data-step="meta">~28 s &middot; let the clip run a few seconds first, the sound is part of it</li>
+      <li data-step="0">This is the machine I built, dispensing. The thesis: an automated, portable liquid dispenser at microlitre scale &mdash; DTU Bioengineering, NaBIS group, supervised by Maria Dimaki, Winnie Svendsen and Lars Hvam. To describe what inspired my thesis, imagine the following: a passenger lands in a crowded arrivals hall, early in an outbreak, with a fever.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Progetto di un sistema automatico e portatile per dosare liquidi nell&rsquo;ordine dei microlitri, per applicazioni biologiche.</p>
       <ul>
-        <li data-step="0">Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam.</li>
+        <li data-step="0">Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam. Per raccontare che cosa ha ispirato la tesi, immaginate questo: una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un&rsquo;epidemia, con la febbre.</li>
       </ul>
     </div>
   </aside>
@@ -4540,8 +4613,8 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~70 s</li>
-      <li data-step="0">A passenger lands in a crowded arrivals hall, early in an outbreak, with a fever.</li>
+      <li data-step="meta">~62 s</li>
+      <li data-step="0">This is the health check at the arrivals gate.</li>
       <li data-step="1">The officer takes a nasal swab. But confirming the virus means sending that tube to a central laboratory, and waiting.</li>
       <li data-step="2">Hold them a day and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal. This axis is one day.</li>
       <li data-step="3">Standard molecular testing: more than 26 hours. And that is with the hospital's own lab on site.</li>
@@ -4550,7 +4623,7 @@ body[data-view="guest"] .guest-dot {
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Un test che richiede un giorno arriva troppo tardi.</p>
       <ul>
-        <li data-step="0">Una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un&rsquo;epidemia. Ha la febbre.</li>
+        <li data-step="0">Eccola al controllo sanitario degli arrivi.</li>
         <li data-step="1">L&rsquo;operatrice fa un tampone nasale. Ma per confermare il virus la provetta va mandata a un laboratorio centrale, e bisogna aspettare.</li>
         <li data-step="2">Trattenerla un giorno è impraticabile; lasciarla passare vuol dire far uscire un&rsquo;infezione non confermata. L&rsquo;asse in basso è una giornata intera.</li>
         <li data-step="3">Il test molecolare standard: più di 26 ore. E l&rsquo;ospedale ha il laboratorio in casa.</li>
@@ -5788,10 +5861,10 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~35 s</li>
+      <li data-step="meta">~10 s</li>
       <li data-step="0">Thirty mechanisms in six families, including extravagant ones.</li>
       <li data-step="2">Seven passed the screening gates, five were developed with Marius, and two reached working hardware.</li>
-      <li data-step="3">Cleanability decided it: a pinch pump needs check valves, wetted moving parts inside the machine.</li>
+      <li data-step="3">The peristaltic pump won on cleanability.</li>
       <li>If asked: the matrix gave the rotary a 300-point margin on footprint, mass and cleanability.</li>
     </ul>
     <div class="notes-it" lang="it">
@@ -5799,7 +5872,7 @@ body[data-view="guest"] .guest-dot {
       <ul>
         <li data-step="0">Trenta meccanismi in sei famiglie, compresi alcuni stravaganti.</li>
         <li data-step="2">Sette hanno superato i filtri, cinque li abbiamo sviluppati con Marius, e due sono arrivati a hardware funzionante.</li>
-        <li data-step="3">Ha deciso la pulibilità: una pompa a strozzamento richiede valvole di non ritorno, cioè parti bagnate in movimento dentro la macchina.</li>
+        <li data-step="3">La pompa peristaltica ha vinto per la pulibilità.</li>
       </ul>
     </div>
   </aside>
@@ -5866,7 +5939,7 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~50 s</li>
+      <li data-step="meta">~90 s</li>
       <li data-step="0">The decision was the dose, 5 µL per stroke; the 0.51 mm tube bore follows from it.</li>
       <li data-step="2">I built three tools to guide the design, and with them I chose four rollers.</li>
       <li data-step="3">The geometry solver sizes the rotor for a target dose and checks which roller counts can be built.</li>
@@ -6012,20 +6085,20 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~50 s</li>
-      <li data-step="0">The first pump: the rotor came out 2 mm too small, and the gap was drawn from a guessed tube wall, not a measured one.</li>
-      <li data-step="2">To measure the flow I used an inline flow sensor. Its readings scattered more than the flow itself, and one sample in seven read backwards.</li>
-      <li data-step="3">So I switched to an analytical balance. From here on, every volume in the thesis is weighed.</li>
-      <li data-step="4">On the balance it gave 3.39 µL per stroke instead of 5, and the shortfall repeated from dose to dose. That means it came from the geometry of the printed parts, not from the motor.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">The printed pump did not squeeze the tube shut; I had to add tape and a paper shim to get any liquid pumped.</li>
+      <li data-step="2">The inline flow sensor scattered more than the flow itself; one sample in seven read backwards.</li>
+      <li data-step="3">So I switched to an analytical balance; from here on every volume is weighed.</li>
+      <li data-step="4">The pump underdelivered significantly, but it was consistent and very precise.</li>
       <li>If asked: on the same deliveries the flow sensor read 11.5 % below the balance; closed-loop control was set aside.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">La prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato.</p>
       <ul>
-        <li data-step="0">La prima pompa: il rotore è uscito 2 mm troppo piccolo, e il gioco era disegnato su uno spessore del tubo stimato, non misurato.</li>
-        <li data-step="2">Per misurare il flusso ho usato un sensore in linea. Le sue letture oscillavano più del flusso stesso, e un campione su sette segnava all&rsquo;indietro.</li>
-        <li data-step="3">Così sono passato a una bilancia analitica. Da qui in poi, ogni volume della tesi è pesato.</li>
-        <li data-step="4">Sulla bilancia dava 3,39 µL per corsa invece di 5, e lo scarto si ripeteva da una dose all&rsquo;altra. Quindi veniva dalla geometria dei pezzi stampati, non dal motore.</li>
+        <li data-step="0">La pompa stampata non schiacciava il tubo fino a chiuderlo; ho dovuto aggiungere nastro e uno spessore di carta per far passare il liquido.</li>
+        <li data-step="2">Il sensore di flusso in linea oscillava più del flusso stesso; un campione su sette segnava all&rsquo;indietro.</li>
+        <li data-step="3">Così sono passato a una bilancia analitica; da qui in poi ogni volume è pesato.</li>
+        <li data-step="4">La pompa erogava molto meno del previsto, ma in modo costante e molto preciso.</li>
       </ul>
     </div>
   </aside>
@@ -6037,10 +6110,13 @@ body[data-view="guest"] .guest-dot {
   <h2 class="slide__title">Three more builds fixed the printing, not the physics.</h2>
   <div class="slide__rule"></div>
 
+  <!-- Two clicker steps (Sirio, 2026-09-23): the printer, then v2.3.  The
+       v2.1 and v2.2 builds are not in the walk any more: they sit at the top
+       of the rail as two buttons, and a mouse click on one opens its figure
+       over whatever the arrows are showing.  Opening one never changes the
+       deck step and is never sent to the other windows. -->
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
-  <i class="fragment step-cue" data-step="4"></i>
 
   <div class="sheet">
     <div class="sheet__main">
@@ -6050,7 +6126,7 @@ body[data-view="guest"] .guest-dot {
 
       <div class="sheet__figs">
 
-        <!-- 1 · v2.1, the mount sat high -->
+        <!-- 1 · v2.1, the mount sat high (button, not a step) -->
         <div class="sheet__fig" id="s15-f1">
           <div class="sheet__frame" style="width:748px;aspect-ratio:2400/1128">
             <img data-src="assets/fig-v21-gap-around-arc.png"
@@ -6075,7 +6151,7 @@ body[data-view="guest"] .guest-dot {
           </div>
         </div>
 
-        <!-- 2 · v2.2, the peg tapers -->
+        <!-- 2 · v2.2, the peg tapers (button, not a step) -->
         <div class="sheet__fig" id="s15-f2">
           <div class="sheet__frame" style="width:748px;aspect-ratio:2400/1219">
             <img data-src="assets/fig-roller-peg-taper.png"
@@ -6147,14 +6223,14 @@ body[data-view="guest"] .guest-dot {
     </div>
 
     <ol class="sheet__rail">
-      <li class="sheet__panel" data-rev="1">
-        <span class="sheet__panel-bar"></span>
-        <span class="sheet__panel-k">v2.1</span>
+      <li class="sheet__panel s15-btn" data-fig="0"
+          role="button" tabindex="0" aria-expanded="false" aria-label="Show the v2.1 build: the mount height">
+        <span class="s15-btn__line"><span class="sheet__panel-k">v2.1</span><span class="s15-btn__s">mount height</span></span>
         <span class="sheet__panel-t">The mount sat 0.45 mm high, so the apex opened.</span>
       </li>
-      <li class="sheet__panel" data-rev="2">
-        <span class="sheet__panel-bar"></span>
-        <span class="sheet__panel-k">v2.2</span>
+      <li class="sheet__panel s15-btn" data-fig="1"
+          role="button" tabindex="0" aria-expanded="false" aria-label="Show the v2.2 build: the peg taper">
+        <span class="s15-btn__line"><span class="sheet__panel-k">v2.2</span><span class="s15-btn__s">peg taper</span></span>
         <span class="sheet__panel-t">Printed pegs taper, so the rollers tilted and walked the tube.</span>
       </li>
       <li class="sheet__panel" data-rev="3">
@@ -6180,20 +6256,18 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~45 s</li>
-      <li data-step="0">In v2.1 the pump head sat 0.45 mm too high on its mount, so the gap opened at the top of the track and the tube did not seal there.</li>
-      <li data-step="2">In v2.2 the printed pegs came out slightly conical, so the rollers tilted. One bearing on the wide base of the peg fixed it.</li>
-      <li data-step="3">Then I measured the printer itself, on test rings. Outer sizes shrink by 0.65 %, and inner bores lose a fixed 0.14 mm.</li>
-      <li data-step="4">This is v2.3, taken apart. With every correction in, the gap measured 1.52 mm at all three inspection slots.</li>
-      <li>If asked: a housing drawn with a 1.52 mm gap measured 1.75 mm, and that is why I characterised the printer.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">I went through a few more iterations. The most meaningful was characterising the printer, so that it prints the dimensions I designed.</li>
+      <li data-step="1">I measured the printer on test rings. Outer sizes shrink by 0.65 %, and inner bores lose a fixed 0.14 mm.</li>
+      <li data-step="2">This is v2.3, taken apart. With every correction in, the gap measured 1.52 mm at all three inspection slots.</li>
+      <li>If asked: in v2.1 the mount sat 0.45 mm high, so the gap opened at the top of the track; in v2.2 the printed pegs tapered and tilted the rollers, fixed with one bearing on the wide base; and a housing drawn with a 1.52 mm gap measured 1.75 mm, which is why I characterised the printer.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Altre tre costruzioni hanno sistemato la stampa, non la fisica.</p>
       <ul>
-        <li data-step="0">Nella v2.1 la testa della pompa stava 0,45 mm troppo in alto sul supporto, così in cima alla pista il gioco si apriva e il tubo lì non sigillava.</li>
-        <li data-step="2">Nella v2.2 i perni stampati uscivano leggermente conici, e i rulli si inclinavano. Un solo cuscinetto sulla base larga del perno ha risolto.</li>
-        <li data-step="3">Poi ho misurato la stampante stessa, su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.</li>
-        <li data-step="4">Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.</li>
+        <li data-step="0">Ho fatto alcune altre iterazioni. La più significativa è stata caratterizzare la stampante, perché stampi le dimensioni che ho progettato.</li>
+        <li data-step="1">Ho misurato la stampante su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.</li>
+        <li data-step="2">Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.</li>
       </ul>
     </div>
   </aside>
@@ -6623,7 +6697,7 @@ body[data-view="guest"] .guest-dot {
   <aside class="notes">
     <ul>
       <li data-step="meta">~40 s</li>
-      <li data-step="0">It arrived not working: too weak to release a droplet, nothing to mount it with, and a mesh file I could not edit.</li>
+      <li data-step="0">It arrived not working: too weak to release a droplet, nothing to mount it with, and a model that could not be edited in CAD.</li>
       <li data-step="2">I kept Marius&rsquo;s idea, shaking the droplet off by vibration, and redrew the module from scratch. Vertical posts let it move only up and down.</li>
       <li data-step="3">A magnet and three steel nuts replaced the printed weight on the vibration motor. The elastic band stops the carrier shaking off its posts. The needles sit 22 mm apart, like the tubes.</li>
       <li>If asked: each seat is a printed negative of the needle hub, so any gauge fits without tools.</li>
@@ -6631,7 +6705,7 @@ body[data-view="guest"] .guest-dot {
     <div class="notes-it" lang="it">
       <p class="notes-it__title">L&apos;ugello consegnato da Marius non funzionava, così l&apos;ho ricostruito da zero.</p>
       <ul>
-        <li data-step="0">È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un file mesh che non potevo modificare.</li>
+        <li data-step="0">È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un modello non modificabile in CAD.</li>
         <li data-step="2">Ho tenuto l&rsquo;idea di Marius, staccare la goccia con la vibrazione, e ho ridisegnato il modulo da zero. Le colonnine verticali lo lasciano muovere solo su e giù.</li>
         <li data-step="3">Un magnete e tre dadi d&rsquo;acciaio hanno sostituito il peso stampato sul motore a vibrazione. L&rsquo;elastico impedisce al carrello di sfilarsi dalle colonnine. Gli aghi stanno a 22 mm l&rsquo;uno dall&rsquo;altro, come le provette.</li>
       </ul>
@@ -6787,16 +6861,14 @@ body[data-view="guest"] .guest-dot {
     <ul>
       <li data-step="meta">~35 s</li>
       <li data-step="0">The interface I inherited only showed the storage levels. It drove no motor, and its calibration screen could only be left by switching the machine off. So hooking it up meant redesigning it.</li>
-      <li data-step="2">The panel is 240 pixels tall: about three list rows. So the new design draws the machine instead, with bottles showing their fill.</li>
-      <li data-step="3">I drew nine candidates over three rounds as web pages, and each page checked itself against the 7:1 contrast requirement.</li>
+      <li data-step="3">I prototyped nine candidates as web pages, much faster with AI, and each checked itself against a 7:1 contrast, because the machine is used outdoors in bright light.</li>
       <li>If asked: that check caught the first palette at 6.2:1, in the browser, before it reached the device.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">L&apos;interfaccia ereditata non aveva cablaggio dietro: un collegamento necessario è diventato una riprogettazione completa.</p>
       <ul>
         <li data-step="0">L&rsquo;interfaccia che ho ereditato mostrava solo i livelli dello stoccaggio. Non comandava nessun motore, e dalla schermata di calibrazione si usciva solo spegnendo la macchina. Collegarla voleva dire riprogettarla.</li>
-        <li data-step="2">Il pannello è alto 240 pixel: circa tre righe di elenco. Così il nuovo design disegna la macchina, con le bottiglie e il loro livello.</li>
-        <li data-step="3">Ho disegnato nove candidate in tre giri, come pagine web, e ogni pagina si verificava da sola rispetto al requisito di contrasto di 7:1.</li>
+        <li data-step="3">Ho prototipato nove candidate come pagine web, molto più in fretta con l&rsquo;IA, e ognuna verificava da sola un contrasto di 7:1, perché la macchina si usa all&rsquo;aperto, in piena luce.</li>
       </ul>
     </div>
   </aside>
@@ -6851,16 +6923,14 @@ body[data-view="guest"] .guest-dot {
   <aside class="notes">
     <ul>
       <li data-step="meta">~60 s</li>
-      <li data-step="0">A whole run takes six screens: home, choose a recipe, assign it, check, dispense, done.</li>
-      <li data-step="1">The check compares what the recipe needs with what the bottles hold. If a bottle is short, the start button turns into Refill first.</li>
-      <li data-step="2">The live interface is the machine&rsquo;s own screens, captured from the device and made clickable, so one run can be walked through here. Where a level cannot be read, it shows no number.</li>
+      <li data-step="0">The interface is meant to be visual and intuitive: a recipe draws each volume in proportion in a tube, and the run screen simulates the rack.</li>
+      <li data-step="2">This is a live mock of the interface, built from real screens of the machine.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Una corsa intera, dall&apos;inizio alla fine, su un solo schermo.</p>
       <ul>
-        <li data-step="0">Una corsa intera sono sei schermate: home, scelta della ricetta, assegnazione, verifica, dosaggio, fine.</li>
-        <li data-step="1">La verifica confronta quanto chiede la ricetta con quanto contengono le bottiglie. Se una bottiglia non basta, il pulsante di avvio diventa &laquo;Refill first&raquo;.</li>
-        <li data-step="2">L&rsquo;interfaccia dal vivo sono le schermate della macchina, catturate dal dispositivo e rese cliccabili, così si può percorrere una corsa qui. Dove un livello non si può leggere, non mostra nessun numero.</li>
+        <li data-step="0">L&rsquo;interfaccia è pensata per essere visiva e intuitiva: una ricetta disegna ogni volume in proporzione dentro una provetta, e la schermata della corsa simula il rack.</li>
+        <li data-step="2">Questa è una simulazione dal vivo dell&rsquo;interfaccia, costruita con le vere schermate della macchina.</li>
       </ul>
     </div>
   </aside>
@@ -7095,8 +7165,8 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~30 s</li>
-      <li data-step="0">One processor sends the same step signal to all six pumps, because a dose is a number of steps, not a length of time.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">One microcontroller controls everything: the screen, the six pumps, the two alignment motors, the vibration motor and the level sensors.</li>
       <li data-step="1">As built, everything runs from one 12 volt line, fed by a tool battery or the bench supply.</li>
       <li data-step="2">For production I would use a regulated USB-C power bank, because a plain battery loses voltage under load, and that is what stopped the prototype.</li>
       <li>If asked: the capacitors on the board are rated for 16 volts, so they must be replaced before a 24 volt motor line goes in.</li>
@@ -7104,7 +7174,7 @@ body[data-view="guest"] .guest-dot {
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Un solo segnale muove sei pompe, perché una dose è un numero di passi.</p>
       <ul>
-        <li data-step="0">Il processore manda lo stesso segnale di passo a tutte e sei le pompe, perché una dose è un numero di passi, non un tempo.</li>
+        <li data-step="0">Un solo microcontrollore comanda tutto: lo schermo, le sei pompe, i due motori dell&apos;allineamento, il motorino a vibrazione e i sensori di livello.</li>
         <li data-step="1">Com&apos;è costruita, tutto parte da un&apos;unica linea a 12 volt, da una batteria per utensili o dall&apos;alimentatore da banco.</li>
         <li data-step="2">Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.</li>
       </ul>
@@ -7120,7 +7190,7 @@ body[data-view="guest"] .guest-dot {
      cropped.  Dialect "record". ═══════════════════════════════════════ -->
 <section class="slide" id="s28" data-cue="s28" data-dialect="record" data-part="III"
          style="--head-h:48px" data-map="integration">
-  <h2 class="slide__title">Each pump and its vial share one printed carrier, and the carriers hold each other.</h2>
+  <h2 class="slide__title">Each pump and its reagent storage share one printed carrier, and the carriers hold each other.</h2>
   <div class="slide__rule"></div>
 
   <!-- Six, not five (Sirio, 2026-09-23): the slide rests on its title alone
@@ -7146,15 +7216,20 @@ body[data-view="guest"] .guest-dot {
   <!-- the central carrier, empty: front and back -->
   <div class="p3-shot" id="s28-a0" style="left:188px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-front-empty.png"
-         alt="The central carrier alone, seen from the front: an open bay for the pump head on the right and a lower bay for the reagent vial on the left." />
+         alt="The central carrier alone, seen from the front: an open bay for the pump head on the left and a wider bay for the reagent storage on the right." />
     <svg class="p3-ov" viewBox="0 0 1046 683" aria-hidden="true">
-      <path id="s28-a1" d="M 600 236 L 600 416" fill="none" stroke="#ff6b2b" stroke-width="13"/>
-      <path id="s28-a1h" d="M 570 382 L 600 420 L 630 382" fill="none" stroke="#ff6b2b" stroke-width="13"/>
-      <path id="s28-a2" d="M 142 322 L 246 446" fill="none" stroke="#ff6b2b" stroke-width="13"/>
-      <path id="s28-a2h" d="M 246 400 L 252 452 L 202 442" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <!-- Re-placed 2026-09-23 against the render (Sirio): the pump bay is the
+           LEFT one (x 190-435), the storage bay the RIGHT one (x 440-820).
+           The pump arrow drops into the left bay; the storage arrow rises
+           from below the front face into the right bay, which is how "from
+           the front" projects in this near-frontal view. -->
+      <path id="s28-a1" d="M 270 180 L 270 466" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a1h" d="M 240 430 L 270 470 L 300 430" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a2" d="M 580 678 L 580 520" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a2h" d="M 550 556 L 580 516 L 610 556" fill="none" stroke="#ff6b2b" stroke-width="13"/>
     </svg>
-    <span class="callout" id="s28-c1" style="left:46%; top:12%">pump, from above</span>
-    <span class="callout" id="s28-c2" style="left:1%; top:32%">vial, from the front</span>
+    <span class="callout" id="s28-c1" style="left:29%; top:20%">pump, from above</span>
+    <span class="callout" id="s28-c2" style="left:59%; top:72%">storage,<br>from the front</span>
   </div>
   <div class="p3-shot" id="s28-b0" style="left:663px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-back-empty.png"
@@ -7212,21 +7287,21 @@ body[data-view="guest"] .guest-dot {
   <aside class="notes">
     <ul>
       <li data-step="meta">~20 s</li>
-      <li data-step="0">Each pump and its reagent share one printed holder.</li>
-      <li data-step="1">The container is Marius&apos;s design; the holder is mine.</li>
-      <li data-step="2">The pump drops in from above, the container from the front.</li>
+      <li data-step="0">Regarding how the machine was put together, each pump and its reagent storage share one printed holder.</li>
+      <li data-step="1">&#8212;</li>
+      <li data-step="2">The pump drops in from above, and the storage slides in from the front.</li>
       <li data-step="3">&#8212;</li>
       <li data-step="4">The left one also screws into the side wall.</li>
       <li data-step="5">They slot together and are screwed down.</li>
       <li data-step="6">&#8212;</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Ogni pompa e il suo reagente stanno in un unico supporto stampato, e i supporti si tengono a vicenda.</p>
+      <p class="notes-it__title">Ogni pompa e il suo stoccaggio del reagente stanno in un unico supporto stampato, e i supporti si tengono a vicenda.</p>
       <ul>
-        <li data-step="0">Ogni pompa e il suo reagente condividono un unico supporto stampato.</li>
-        <li data-step="1">Il contenitore è un progetto di Marius; il supporto è mio.</li>
-        <li data-step="2">La pompa entra dall&apos;alto, il contenitore da davanti.</li>
-        <li data-step="3">Il supporto caricato, con la pompa e il contenitore al loro posto.</li>
+        <li data-step="0">Quanto a come è stata montata la macchina: ogni pompa e il suo stoccaggio del reagente condividono un unico supporto stampato.</li>
+        <li data-step="1">Il supporto centrale, vuoto, visto davanti e dietro.</li>
+        <li data-step="2">La pompa entra dall&apos;alto, a sinistra; lo stoccaggio scivola dentro da davanti, a destra.</li>
+        <li data-step="3">Il supporto caricato, con la pompa e lo stoccaggio al loro posto.</li>
         <li data-step="4">Quello di sinistra si avvita anche alla parete laterale.</li>
         <li data-step="5">I supporti si incastrano tra loro e sono avvitati.</li>
         <li data-step="6">La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.</li>
@@ -7408,7 +7483,7 @@ body[data-view="guest"] .guest-dot {
   <aside class="notes">
     <ul>
       <li data-step="meta">~30 s</li>
-      <li data-step="0">The battery holder is adapted from a published holder for DeWalt batteries; I remade its screw holes in CAD.</li>
+      <li data-step="0">The battery holder is adapted to the drill battery I used, and I remade its screw holes in CAD.</li>
       <li data-step="1">Three screws hold it, and the battery plugs into the bench supply&apos;s socket, so nothing inside was rewired.</li>
       <li data-step="2">That was the last piece the machine needed.</li>
       <li data-step="3">Here it runs outdoors on battery. That is a scenario, not a claim: without a case, it only runs reliably indoors.</li>
@@ -7416,7 +7491,7 @@ body[data-view="guest"] .guest-dot {
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Un supporto per batteria già pubblicato e tre viti portano l&apos;alimentazione a bordo.</p>
       <ul>
-        <li data-step="0">Il supporto della batteria nasce da un supporto già pubblicato per batterie DeWalt; ho rifatto in CAD i fori delle viti.</li>
+        <li data-step="0">Il supporto della batteria è adattato alla batteria da trapano che ho usato, e ho rifatto in CAD i fori delle viti.</li>
         <li data-step="1">Lo tengono tre viti, e la batteria si collega alla presa dell&apos;alimentatore da banco, quindi dentro non si è ricablato niente.</li>
         <li data-step="2">Era l&apos;ultimo pezzo che mancava alla macchina.</li>
         <li data-step="3">Qui lavora all&apos;aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.</li>
@@ -8246,10 +8321,10 @@ body[data-view="guest"] .guest-dot {
 
       <div class="d38__slot" style="left:461px; top:464px; width:150px; height:146px">
         <img data-src="../../assets/media/pump/v23-render.png"
-             alt="CAD render of the v2.3 rotary pump head, the four-roller rotor inside its housing." />
+             alt="CAD render of the v2.3 peristaltic pump head, the four-roller rotor inside its housing." />
         <span class="d38__tag">4 builds</span>
       </div>
-      <span class="d38__cap" style="left:461px; width:150px; text-align:center">Rotary</span>
+      <span class="d38__cap" style="left:461px; width:150px; text-align:center">Peristaltic</span>
       <span class="d38__cq" style="left:461px; width:150px; text-align:center">mine, chosen</span>
     </div>
 
@@ -8300,10 +8375,10 @@ body[data-view="guest"] .guest-dot {
       <li data-step="0">A module can be developed in depth or in breadth.</li>
       <li data-step="1">Depth means building one idea many times, but you choose its shape before trying the others.</li>
       <li data-step="2">Breadth means building several ideas, but a quick build can fail for the build, not the idea.</li>
-      <li data-step="3">The pump had both: Marius built a linear pump, I tested a syringe pump, and I built the rotary peristaltic one four times.</li>
+      <li data-step="3">The pump had both: Marius built a linear pump, I tested a syringe pump, and I built the peristaltic one four times.</li>
       <li data-step="4">The alignment module had breadth only on paper: about fifty ideas, one built, though it sets the machine&rsquo;s size.</li>
       <li data-step="5">And the pump&rsquo;s model was never tested: it aimed at 5 µL per stroke, and both pumps deliver less.</li>
-      <li>If asked: the two pumps deliver 3.94 and 4.10 µL per stroke. The rotary pump beat the linear one 3485 to 3185 in the scoring. With printing now held to ±0.10 mm, a real test series of rotors is worth running.</li>
+      <li>If asked: the two pumps deliver 3.94 and 4.10 µL per stroke. My peristaltic pump beat Marius&rsquo;s linear one 3485 to 3185 in the scoring. With printing now held to ±0.10 mm, a real test series of rotors is worth running.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Profondità e ampiezza: pompa e allineamento</p>
@@ -8311,7 +8386,7 @@ body[data-view="guest"] .guest-dot {
         <li data-step="0">Un modulo si può sviluppare in profondità o in ampiezza.</li>
         <li data-step="1">Profondità vuol dire costruire tante volte la stessa idea, ma se ne sceglie la forma prima di provare le altre.</li>
         <li data-step="2">Ampiezza vuol dire costruire più idee, ma una prova frettolosa può fallire per la costruzione, non per l&rsquo;idea.</li>
-        <li data-step="3">La pompa le ha avute tutte e due: Marius ha costruito una pompa lineare, io ho provato una pompa a siringa, e ho costruito quattro volte quella peristaltica rotativa.</li>
+        <li data-step="3">La pompa le ha avute tutte e due: Marius ha costruito una pompa lineare, io ho provato una pompa a siringa, e ho costruito quattro volte quella peristaltica.</li>
         <li data-step="4">L&rsquo;allineamento ha avuto ampiezza solo sulla carta: una cinquantina di idee, una costruita, anche se è il modulo che decide quanto è grande la macchina.</li>
         <li data-step="5">E il modello della pompa non è mai stato verificato: puntava a 5 µL per colpo, e le due pompe ne danno meno.</li>
       </ul>
@@ -10311,6 +10386,21 @@ body[data-view="guest"] .guest-dot {
        own, so it is spoken inside Part I's eight minutes; change PART_I
        here and give 'Opening' its own row if that ever stops being true.
        Longest band name first: 'Part I' is a prefix of 'Part II'.
+
+       Per-slide targets (added 2026-09-23). Inside a band the budget is
+       split slide by slide, not group by group:
+         · a spoken slide whose notes open with <li data-step="meta">~N s</li>
+           gets exactly N seconds (also read: "~1 min 30 s", "~1:30",
+           "~5 min"; anything after a middle dot is commentary);
+         · the band's spoken slides without a meta share what is left of the
+           band (band − sum of metas) equally, or 0 s each if nothing is left;
+         · a group's budget (segSecs, the Section timer) is the sum of its
+           slides' seconds, and the expected-position table (slideExp) uses
+           the same per-slide seconds;
+         · the Part timer still counts down the band figure below, even when
+           the metas add up to more or less than it.
+       Backups and data-talk="no" slides are outside the plan, as before.
+       The code is measurePlan() in section 6.
        =============================================================== */
     var BAND_PLAN = [
       { match: 'Part III',   name: 'Part III', secs:  5 * 60 },
@@ -11181,58 +11271,135 @@ body[data-view="guest"] .guest-dot {
 
     /* ── The two pacing timers ─────────────────────────────────────
        Each counts down the budget for the thing he is in the middle of: the
-       part, and the section inside it. A section's share of its part is its
-       fraction of that part's spoken slides, worked out from SLIDE_ORDER, so
-       moving a slide between sections re-balances them without a second
-       table to maintain. Backup slides never reset either timer — answering
-       a question is not a new section. */
+       part, and the section inside it. A section's budget is the sum of its
+       slides' targets (the meta rule in 0b), so moving a slide between
+       sections carries its seconds with it, without a second table to
+       maintain. Backup slides never reset either timer — answering a
+       question is not a new section. */
     var segSecs = [];                 /* per SLIDE_ORDER index: its budget */
     var bandName = '', bandSecs = 0, bandAt = 0;
     var topicGi = -1, topicAt = 0;
 
-    function measurePlan() {
-      var talkIn = [], i;
-      for (i = 0; i < SLIDE_ORDER.length; i++) talkIn.push(0);
-      slides.forEach(function (el, idx) {
-        if (el.getAttribute('data-part') === 'backup') return;
-        if (el.getAttribute('data-talk') === 'no') return;
-        talkIn[groupOf[idx]]++;
-      });
-      /* every group that shares a part shares that part's budget */
-      var totalIn = {};
-      for (i = 0; i < SLIDE_ORDER.length; i++) {
-        var pl = bandPlan(SLIDE_ORDER[i].band);
-        if (!pl) continue;
-        totalIn[pl.name] = (totalIn[pl.name] || 0) + talkIn[i];
+    /* ══ Per-slide targets (added 2026-09-23) ═══════════════════════
+       The rule is written out in 0b. slideMeta holds the parsed meta line
+       of every slide (null when it has none), slideSecs the seconds the
+       plan gives it (null outside the talk). segSecs and slideExp are both
+       sums of slideSecs, so the Section timer, the Elapsed colour and the
+       rehearsal plan all read the same numbers. */
+    var slideMeta = [];   /* per slide index: meta seconds, or null */
+    var slideSecs = [];   /* per slide index: planned seconds, or null */
+
+    /* "~40 s", "~90 s", "~1 min 30 s", "~1:30", "~5 min · live demo".
+       Only the text before a middle dot counts; the rest is commentary. */
+    function parseMetaSecs(text) {
+      if (!text) return null;
+      var t = String(text).split('·')[0].replace(/ /g, ' ').toLowerCase();
+      var m = t.match(/(\d+)\s*:\s*(\d{1,2})(?!\d)/);
+      if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+      var secs = 0, hit = false;
+      m = t.match(/(\d+(?:[.,]\d+)?)\s*(?:minutes?|mins?|m)(?![a-z])/);
+      if (m) { secs += parseFloat(m[1].replace(',', '.')) * 60; hit = true; }
+      m = t.match(/(\d+(?:[.,]\d+)?)\s*(?:seconds?|secs?|s)(?![a-z])/);
+      if (m) { secs += parseFloat(m[1].replace(',', '.')); hit = true; }
+      if (!hit) {
+        m = t.match(/(\d+(?:[.,]\d+)?)/);
+        if (m) { secs = parseFloat(m[1].replace(',', '.')); hit = true; }
       }
-      segSecs = [];
-      for (i = 0; i < SLIDE_ORDER.length; i++) {
-        var p = bandPlan(SLIDE_ORDER[i].band);
-        var whole = p ? partSecs(p.name) : 0;
-        var share = p && totalIn[p.name] ? talkIn[i] / totalIn[p.name] : 0;
-        segSecs.push(whole * share);
-      }
-      measureExpected(talkIn);
+      return hit ? Math.round(secs) : null;
     }
+
+    /* The English list's meta bullet only; the Italian twin is ignored. */
+    function metaItemOf(el) {
+      return el ? el.querySelector('aside.notes > ul > li[data-step="meta"]') : null;
+    }
+
+    function measurePlan() {
+      var i;
+      var inTalk = [], bandOf = [];
+      var metaSum = {}, freeIn = {};
+      slideMeta = []; slideSecs = [];
+      slides.forEach(function (el, idx) {
+        var li = metaItemOf(el);
+        slideMeta.push(li ? parseMetaSecs(li.textContent) : null);
+        var talk = el.getAttribute('data-part') !== 'backup' &&
+                   el.getAttribute('data-talk') !== 'no';
+        var pl = talk ? bandPlan(SLIDE_ORDER[groupOf[idx]].band) : null;
+        inTalk.push(talk);
+        bandOf.push(pl ? pl.name : null);
+        if (!pl) return;
+        if (slideMeta[idx] !== null) metaSum[pl.name] = (metaSum[pl.name] || 0) + slideMeta[idx];
+        else freeIn[pl.name] = (freeIn[pl.name] || 0) + 1;
+      });
+      /* what each unmarked slide of a band gets: the rest of the band, evenly */
+      var freeEach = {};
+      Object.keys(freeIn).forEach(function (name) {
+        var rest = partSecs(name) - (metaSum[name] || 0);
+        freeEach[name] = rest > 0 ? rest / freeIn[name] : 0;
+      });
+      segSecs = [];
+      for (i = 0; i < SLIDE_ORDER.length; i++) segSecs.push(0);
+      slides.forEach(function (el, idx) {
+        if (!inTalk[idx]) { slideSecs.push(null); return; }
+        var name = bandOf[idx];
+        var s = !name ? 0 : (slideMeta[idx] !== null ? slideMeta[idx] : (freeEach[name] || 0));
+        slideSecs.push(s);
+        segSecs[groupOf[idx]] += s;
+      });
+      measureExpected();
+    }
+
+    /* The bar echoes the current slide's planned seconds, small and muted,
+       beside the slide count. Empty (hidden) outside the talk. */
+    function paintSlideTarget(idx) {
+      if (!pres.count) return;
+      var tgt = pres.target;
+      if (!tgt) {
+        tgt = pres.target = document.createElement('span');
+        tgt.className = 'pres__target';
+        tgt.title = 'Planned time for this slide';
+        pres.count.parentNode.appendChild(tgt);
+      }
+      var s = slideSecs[idx];
+      if (s === null || s === undefined) { tgt.textContent = ''; return; }
+      s = Math.round(s);
+      tgt.textContent = '~' + (s < 60 ? s + ' s' : mmss(s).replace(/^0/, ''));
+    }
+
+    /* Read-only diagnostic for the console: window.deckPlan() lists every
+       spoken slide's meta, planned seconds and expected start, and every
+       group's budget. Nothing in the deck calls it. */
+    window.deckPlan = function () {
+      if (!segSecs.length) measurePlan();
+      var rows = [];
+      slides.forEach(function (el, idx) {
+        if (!slideExp[idx]) return;
+        rows.push({ cue: el.getAttribute('data-cue') || '', meta: slideMeta[idx],
+                    secs: slideSecs[idx], start: slideExp[idx].start });
+      });
+      var groups = SLIDE_ORDER.map(function (g, gi) {
+        return { band: g.band, topic: g.topic, secs: segSecs[gi] || 0 };
+      });
+      return { slides: rows, groups: groups };
+    };
+    /* ══ end per-slide targets ═══════════════════════════════════════ */
 
     /* ── Where he ought to be by now ──────────────────────────
        The two pacing timers count down the section he is in; this table
        answers the other question — against the whole talk, is he early or
-       late? Each spoken slide takes an even share of its own section's
-       budget, and the running sum before a slide is the elapsed time he
-       should be at when he arrives at it. Backups and the hold screen are
-       not in the talk, so they are not in the sum and standing on one
-       leaves the readout with no opinion at all. */
+       late? Each spoken slide's share is its own target from the plan in
+       0b (its meta line, or an even cut of what its band has left), and
+       the running sum before a slide is the elapsed time he should be at
+       when he arrives at it. Backups and the hold screen are not in the
+       talk, so they are not in the sum and standing on one leaves the
+       readout with no opinion at all. */
     var slideExp = [];   /* per slide index: {start, share} in seconds, or null */
 
-    function measureExpected(talkIn) {
+    function measureExpected() {
       var acc = 0;
       slideExp = [];
       slides.forEach(function (el, idx) {
-        if (el.getAttribute('data-part') === 'backup' ||
-            el.getAttribute('data-talk') === 'no') { slideExp.push(null); return; }
-        var gi = groupOf[idx];
-        var share = (segSecs[gi] || 0) / Math.max(talkIn[gi] || 0, 1);
+        var share = slideSecs[idx];
+        if (share === null || share === undefined) { slideExp.push(null); return; }
         slideExp.push({ start: acc, share: share });
         acc += share;
       });
@@ -11340,9 +11507,9 @@ body[data-view="guest"] .guest-dot {
        red at a minute, two minutes and beyond, the same four colours the
        pacing timers use so the bar keeps one language.
 
-       The share each slide gets is an even split, so a five-second divider
-       carries the same expectation as a ninety-second diagram and the raw
-       difference lurches about even when he is exactly on plan. The number
+       Each slide's share is its own target (0b), but inside a slide the
+       expectation still moves in even steps, so the raw difference wobbles
+       a little even when he is exactly on plan. The number
        is left alone — only the colour is held back: a new level has to
        survive six consecutive half-second ticks before it is painted, so
        the readout settles instead of strobing. Ticks are counted only while
@@ -11610,6 +11777,7 @@ body[data-view="guest"] .guest-dot {
       pres.count.textContent = mine
         ? mine + ' / ' + talkCount
         : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
+      paintSlideTarget(d.slide - 1);   /* per-slide targets, see 0b */
       var t = el.querySelector('.slide__title, .divider__title');
       pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
       var notes = el.querySelector('aside.notes');
@@ -11709,7 +11877,13 @@ body[data-view="guest"] .guest-dot {
       pres.notes.querySelectorAll('li:not([data-step])').forEach(function (li) {
         if (/^\s*if asked\b/i.test(li.textContent)) li.classList.add('is-aside');
       });
-      var items = pres.notes.querySelectorAll('li[data-step]');
+      /* The meta line is the slide's time target, never a caption: it takes
+         its own quiet .is-meta style and stays out of the step marking.
+         (Per-slide targets, added 2026-09-23; the rule is in 0b.) */
+      pres.notes.querySelectorAll('li[data-step="meta"]').forEach(function (li) {
+        li.classList.add('is-meta');
+      });
+      var items = pres.notes.querySelectorAll('li[data-step]:not([data-step="meta"])');
       if (body) body.classList.toggle('has-steps', items.length > 0);
       if (!items.length) return;
       var cur = currentStepItem(items, (d && d.step) || 0);
@@ -13484,7 +13658,7 @@ Deck.slide('s08a', function (el, gsap) {
 
     armDraw(strokes);
     gsap.set(comp, { clipPath: 'inset(0% 100% 0% 0%)' });
-    /* step 4 enters with the photograph at the full width of the sheet
+    /* step 2 enters with the photograph at the full width of the sheet
        (719 x 384, the figure area exactly) and the gap figure not yet there;
        the markup carries the settled widths, so a motionless deck is right. */
     gsap.set(dis,  { width: 719 });
@@ -13495,66 +13669,135 @@ Deck.slide('s08a', function (el, gsap) {
     gsap.set(q(el, '#f2-roller'), { autoAlpha: 0 });
     gsap.set(tags, { xPercent: -50, yPercent: -50, autoAlpha: 0, scale: 0.7, transformOrigin: '50% 50%' });
 
+    /* ── the two asides, v2.1 and v2.2.  Each is its own paused timeline
+       that draws the figure's marks exactly as the old steps 1 and 2 did;
+       it owns those marks outright, so the step timeline never touches
+       them and the two can never fight. ── */
+    var aside = [gsap.timeline({ paused: true, defaults: { ease: EO } }),
+                 gsap.timeline({ paused: true, defaults: { ease: EO } })];
+    var a = aside[0];
+    draw(a, [q(el, '#f1-ext1'), q(el, '#f1-ext2')], 0.2, 0.5, EO, 0.08);
+    draw(a, [q(el, '#f1-dim'), q(el, '#f1-ah1'), q(el, '#f1-ah2')], 0.45, 0.45);
+    draw(a, [q(el, '#f1-d1'), q(el, '#f1-d2')], 0.7, 0.45, EO, 0.07);
+    draw(a, [q(el, '#f1-off'), q(el, '#f1-offah')], 0.9, 0.5);
+    a.to(q(el, '#f1-mark'), { autoAlpha: 1, duration: 0.3 }, 1.0)
+     .to(q(el, '#f1-mark'), { y: -91, duration: 0.85, ease: 'expo.inOut' }, 1.1);
+    draw(a, [q(el, '#f1-closure')], 1.3, 0.75);
+    draw(a, [q(el, '#f1-stem')], 1.75, 0.95, 'expo.inOut');
+    a.to(dot, { autoAlpha: 1, duration: 0.25 }, 1.75)
+     .to(dot, { attr: { cy: 330 }, duration: 0.95, ease: 'expo.inOut' }, 1.75);
+    count(a, q(el, '#s15-n1'), 1.82, 2.22, 2, 1.75, 0.95);
+
+    a = aside[1];
+    draw(a, [q(el, '#f2-tl'), q(el, '#f2-tr')], 0.2, 0.65, EO, 0.1);
+    draw(a, [q(el, '#f2-tip'), q(el, '#f2-base')], 0.6, 0.4, EO, 0.08);
+    a.to(q(el, '#f2-roller'), { autoAlpha: 1, duration: 0.3 }, 0.75);
+    draw(a, qa(el, '#f2-rollerG > path'), 0.75, 0.5, EO, 0.08);
+    a.to(q(el, '#f2-rollerG'), { rotation: -5, svgOrigin: '599 566', duration: 0.9, ease: 'power2.inOut' }, 1.25)
+     .to(q(el, '#f2-rollerG'), { rotation: 0, svgOrigin: '599 566', duration: 0.6, ease: 'back.out(2.4)' }, 2.3);
+    draw(a, [q(el, '#f2-fix')], 2.55, 0.8);
+    count(a, q(el, '#s15-n2'), 0, 0.6, 1, 1.25, 0.9);
+
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
     tl.addLabel('step0');
+    /* step 0 is the sheet waiting: the two buttons are the iterations the
+       caption mentions, and nothing is walked until the printer. */
 
-    /* 1 · v2.1, the mount sat high */
-    sheetEnter(tl, c, 0, 0.0, '12.5%');
-    draw(tl, [q(el, '#f1-ext1'), q(el, '#f1-ext2')], 0.35, 0.5, EO, 0.08);
-    draw(tl, [q(el, '#f1-dim'), q(el, '#f1-ah1'), q(el, '#f1-ah2')], 0.6, 0.45);
-    draw(tl, [q(el, '#f1-d1'), q(el, '#f1-d2')], 0.85, 0.45, EO, 0.07);
-    draw(tl, [q(el, '#f1-off'), q(el, '#f1-offah')], 1.05, 0.5);
-    tl.to(q(el, '#f1-mark'), { autoAlpha: 1, duration: 0.3 }, 1.15)
-      .to(q(el, '#f1-mark'), { y: -91, duration: 0.85, ease: 'expo.inOut' }, 1.25);
-    draw(tl, [q(el, '#f1-closure')], 1.45, 0.75);
-    draw(tl, [q(el, '#f1-stem')], 1.9, 0.95, 'expo.inOut');
-    tl.to(dot, { autoAlpha: 1, duration: 0.25 }, 1.9)
-      .to(dot, { attr: { cy: 330 }, duration: 0.95, ease: 'expo.inOut' }, 1.9);
-    count(tl, q(el, '#s15-n1'), 1.82, 2.22, 2, 1.9, 0.95);
-    tl.addLabel('step1', 3.0);
-
-    /* 2 · v2.2, the peg tapers */
-    sheetLeave(tl, c, 0, 3.1);
-    sheetEnter(tl, c, 1, 3.2, '37.5%');
-    draw(tl, [q(el, '#f2-tl'), q(el, '#f2-tr')], 3.7, 0.65, EO, 0.1);
-    draw(tl, [q(el, '#f2-tip'), q(el, '#f2-base')], 4.1, 0.4, EO, 0.08);
-    tl.to(q(el, '#f2-roller'), { autoAlpha: 1, duration: 0.3 }, 4.25);
-    draw(tl, qa(el, '#f2-rollerG > path'), 4.25, 0.5, EO, 0.08);
-    tl.to(q(el, '#f2-rollerG'), { rotation: -5, svgOrigin: '599 566', duration: 0.9, ease: 'power2.inOut' }, 4.75)
-      .to(q(el, '#f2-rollerG'), { rotation: 0, svgOrigin: '599 566', duration: 0.6, ease: 'back.out(2.4)' }, 5.8);
-    draw(tl, [q(el, '#f2-fix')], 6.05, 0.8);
-    count(tl, q(el, '#s15-n2'), 0, 0.6, 1, 4.75, 0.9);
-    tl.addLabel('step2', 6.9);
-
-    /* 3 · the printer.  No drawing on the photographs here: the coupon sits
+    /* 1 · the printer.  No drawing on the photographs here: the coupon sits
        small as context and the compensation figure, which carries the two
        rules and their own numbers, wipes in a panel at a time — the external
        rule first, then the internal one, matching the rail line. */
-    sheetLeave(tl, c, 1, 7.0);
-    sheetEnter(tl, c, 2, 7.1, '62.5%');
-    tl.to(comp, { clipPath: 'inset(0% 49% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 7.5)
-      .to(comp, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 8.5);
-    count(tl, q(el, '#s15-n3'), 0, 0.10, 2, 8.7, 1.0);
-    tl.addLabel('step3', 9.8);
+    sheetEnter(tl, c, 2, 0.0, '62.5%');
+    tl.to(comp, { clipPath: 'inset(0% 49% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 0.4)
+      .to(comp, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 1.4);
+    count(tl, q(el, '#s15-n3'), 0, 0.10, 2, 1.6, 1.0);
+    tl.addLabel('step1', 2.7);
 
-    /* 4 · v2.3, the pump in parts and the same number at three points.
+    /* 2 · v2.3, the pump in parts and the same number at three points.
        The photograph comes in at the full width of the sheet and holds there
        while the readout counts to 1.52 — long enough to find the gap value
        embossed on the housing face — then steps back to 500 px and the
        measured figure grows in beside it, where each of the three caliper
        slots leads out to its own reading. */
-    sheetLeave(tl, c, 2, 9.9);
-    sheetEnter(tl, c, 3, 10.0, '87.5%');
-    count(tl, q(el, '#s15-n4'), 0, 1.52, 2, 10.55, 1.0);
-    tl.to(dis,  { width: 500, duration: 0.85, ease: 'power2.inOut' }, 11.6)
-      .to(gapf, { width: 246, duration: 0.85, ease: 'power2.inOut' }, 11.6);
-    draw(tl, [q(el, '#f4-l1')], 12.5, 0.35);
-    tl.to(q(el, '#s15-tag-apex'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 12.72);
-    draw(tl, [q(el, '#f4-l2')], 12.9, 0.35);
-    tl.to(q(el, '#s15-tag-left'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 13.12);
-    draw(tl, [q(el, '#f4-l3')], 13.3, 0.35);
-    tl.to(q(el, '#s15-tag-right'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 13.52);
-    tl.addLabel('step4', 14.05);
+    sheetLeave(tl, c, 2, 2.8);
+    sheetEnter(tl, c, 3, 2.9, '87.5%');
+    count(tl, q(el, '#s15-n4'), 0, 1.52, 2, 3.45, 1.0);
+    tl.to(dis,  { width: 500, duration: 0.85, ease: 'power2.inOut' }, 4.5)
+      .to(gapf, { width: 246, duration: 0.85, ease: 'power2.inOut' }, 4.5);
+    draw(tl, [q(el, '#f4-l1')], 5.4, 0.35);
+    tl.to(q(el, '#s15-tag-apex'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 5.62);
+    draw(tl, [q(el, '#f4-l2')], 5.8, 0.35);
+    tl.to(q(el, '#s15-tag-left'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 6.02);
+    draw(tl, [q(el, '#f4-l3')], 6.2, 0.35);
+    tl.to(q(el, '#s15-tag-right'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 6.42);
+    tl.addLabel('step2', 6.95);
+
+    /* ── the buttons.  Mouse (or Enter) only; the click is stopped here, so
+       nothing downstream sees it, and opening one fires no deck:state, so
+       the sync layer has nothing to send.  Wired once per element (the
+       presenter's clone gets its own, harmlessly). ── */
+    if (!el.dataset.s15Wired) {
+      el.dataset.s15Wired = '1';
+      var btns = qa(el, '.s15-btn');
+      var open = null, openedAt = null, shutTimer = null;
+
+      function shut() {
+        if (open === null) return;
+        var n = open;
+        btns[n].classList.remove('is-open');
+        btns[n].setAttribute('aria-expanded', 'false');
+        el.classList.remove('s15-open', 's15-open-' + n);
+        open = null; openedAt = null;
+        clearTimeout(shutTimer);
+        /* rewind the marks once the figure has faded, so the next opening
+           draws them again from nothing */
+        shutTimer = setTimeout(function () {
+          if (open !== n) aside[n].pause(0);
+        }, 320);
+      }
+
+      function toggle(n) {
+        if (open === n) { shut(); return; }
+        shut();
+        clearTimeout(shutTimer);
+        open = n;
+        var s = (window.Deck && Deck.state) || {};
+        openedAt = { slide: s.slide, step: s.step };
+        btns[n].classList.add('is-open');
+        btns[n].setAttribute('aria-expanded', 'true');
+        el.classList.add('s15-open', 's15-open-' + n);
+        aside[n].restart();
+      }
+
+      btns.forEach(function (b, n) {
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggle(n);
+          b.blur();   /* so Space and the arrows keep driving the deck */
+        });
+        b.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); toggle(n); }
+        });
+      });
+
+      /* a click anywhere else puts it away */
+      document.addEventListener('click', function (e) {
+        if (open === null) return;
+        if (e.target && e.target.closest && e.target.closest('.s15-btn')) return;
+        shut();
+      });
+
+      /* so does any real move — a step either way, or leaving the slide —
+         so re-entering, or stepping back, always finds both closed.  A
+         heartbeat from the sync layer re-sends the same state; that is not
+         a move and leaves the aside open. */
+      document.addEventListener('deck:state', function (e) {
+        if (open === null) return;
+        var d = e.detail || {};
+        if (!el.classList.contains('slide--active') ||
+            d.slide !== openedAt.slide || d.step !== openedAt.step) shut();
+      });
+    }
 
     return tl;
   });
@@ -14415,7 +14658,7 @@ Deck.slide('s08a', function (el, gsap) {
       { opacity: 1, duration: 0.45, immediateRender: false }, 'step0+=0.34');
     tl.addLabel('step1');
 
-    /* 2 · how it loads: the pump from above, the vial from the front */
+    /* 2 · how it loads: the pump from above, the storage from the front */
     tl.to(qa(el, '#s28-a1, #s28-a1h'), { drawSVG: '100%', duration: 0.5 }, 'step1');
     pop(q(el, '#s28-c1'), 'step1+=0.36');
     tl.to(qa(el, '#s28-a2, #s28-a2h'), { drawSVG: '100%', duration: 0.5 }, 'step1+=0.5');

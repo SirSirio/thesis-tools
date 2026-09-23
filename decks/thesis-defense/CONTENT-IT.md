@@ -30,15 +30,15 @@ e accuratezza (spostata in appendice come B24).
 
 ### 1 · `s01` — copertina
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 20 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 28 s:*
 
-- **0** — Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam.
+- **0** — Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam. Per raccontare che cosa ha ispirato la tesi, immaginate questo: una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un’epidemia, con la febbre.
 
 ### 2 · `s02` — la sala arrivi, e una giornata intera su un asse
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 70 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 62 s:*
 
-- **0** — Una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un’epidemia. Ha la febbre.
+- **0** — Eccola al controllo sanitario degli arrivi.
 - **1** — L’operatrice fa un tampone nasale. Ma per confermare il virus la provetta va mandata a un laboratorio centrale, e bisogna aspettare.
 - **2** — Trattenerla un giorno è impraticabile; lasciarla passare vuol dire far uscire un’infezione non confermata. L’asse in basso è una giornata intera.
 - **3** — Il test molecolare standard: più di 26 ore. E l’ospedale ha il laboratorio in casa.
@@ -232,16 +232,16 @@ non fa avanzare la presentazione.*
 
 ### 17 · `s12b` — trenta idee, due costruite
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 10 s:*
 
 - **0** — Trenta meccanismi in sei famiglie, compresi alcuni stravaganti.
 - **2** — Sette hanno superato i filtri, cinque li abbiamo sviluppati con Marius, e due sono arrivati a hardware funzionante.
-- **3** — Ha deciso la pulibilità: una pompa a strozzamento richiede valvole di non ritorno, cioè parti bagnate in movimento dentro la macchina.
+- **3** — La pompa peristaltica ha vinto per la pulibilità.
 - *Se chiedono:* la matrice dava alla pompa rotativa 300 punti di margine su ingombro, massa e pulibilità.
 
 ### 18 · `s13` — la dose viene dalla geometria
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 50 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 90 s:*
 
 - **0** — La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.
 - **2** — Ho costruito tre strumenti per guidare il progetto, e con questi ho scelto quattro rulli.
@@ -249,23 +249,22 @@ non fa avanzare la presentazione.*
 
 ### 19 · `s14` — la prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 50 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 30 s:*
 
-- **0** — La prima pompa: il rotore è uscito 2 mm troppo piccolo, e il gioco era disegnato su uno spessore del tubo stimato, non misurato.
-- **2** — Per misurare il flusso ho usato un sensore in linea. Le sue letture oscillavano più del flusso stesso, e un campione su sette segnava all’indietro.
-- **3** — Così sono passato a una bilancia analitica. Da qui in poi, ogni volume della tesi è pesato.
-- **4** — Sulla bilancia dava 3,39 µL per corsa invece di 5, e lo scarto si ripeteva da una dose all’altra. Quindi veniva dalla geometria dei pezzi stampati, non dal motore.
+- **0** — La pompa stampata non schiacciava il tubo fino a chiuderlo; ho dovuto aggiungere nastro e uno spessore di carta per far passare il liquido.
+- **2** — Il sensore di flusso in linea oscillava più del flusso stesso; un campione su sette segnava all’indietro.
+- **3** — Così sono passato a una bilancia analitica; da qui in poi ogni volume è pesato.
+- **4** — La pompa erogava molto meno del previsto, ma in modo costante e molto preciso.
 - *Se chiedono:* sullo stesso dosaggio il sensore di flusso leggeva l'11,5 % in meno della bilancia; il controllo in anello chiuso è stato accantonato.
 
 ### 20 · `s15` — altre tre costruzioni: hanno sistemato la stampa, non la fisica
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 45 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 30 s:*
 
-- **0** — Nella v2.1 la testa della pompa stava 0,45 mm troppo in alto sul supporto, così in cima alla pista il gioco si apriva e il tubo lì non sigillava.
-- **2** — Nella v2.2 i perni stampati uscivano leggermente conici, e i rulli si inclinavano. Un solo cuscinetto sulla base larga del perno ha risolto.
-- **3** — Poi ho misurato la stampante stessa, su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.
-- **4** — Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.
-- *Se chiedono:* un corpo disegnato con un gioco di 1,52 mm misurava 1,75 mm, ed è per questo che ho caratterizzato la stampante.
+- **0** — Ho fatto alcune altre iterazioni. La più significativa è stata caratterizzare la stampante, perché stampi le dimensioni che ho progettato.
+- **1** — Ho misurato la stampante su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.
+- **2** — Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.
+- *Se chiedono:* nella v2.1 il supporto stava 0,45 mm troppo in alto, così il gioco si apriva in cima alla pista; nella v2.2 i perni stampati erano conici e inclinavano i rulli, risolto con un solo cuscinetto sulla base larga; e un corpo disegnato con un gioco di 1,52 mm misurava 1,75 mm, ed è per questo che ho caratterizzato la stampante.
 
 ### 21 · `s16` — la pompa ripete una dose come una mano con una pipetta
 
@@ -308,7 +307,7 @@ non fa avanzare la presentazione.*
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
 
-- **0** — È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un file mesh che non potevo modificare.
+- **0** — È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un modello non modificabile in CAD.
 - **2** — Ho tenuto l’idea di Marius, staccare la goccia con la vibrazione, e ho ridisegnato il modulo da zero. Le colonnine verticali lo lasciano muovere solo su e giù.
 - **3** — Un magnete e tre dadi d’acciaio hanno sostituito il peso stampato sul motore a vibrazione. L’elastico impedisce al carrello di sfilarsi dalle colonnine. Gli aghi stanno a 22 mm l’uno dall’altro, come le provette.
 - *Se chiedono:* la sede è il negativo stampato dell'attacco dell'ago, quindi ogni calibro si monta senza attrezzi.
@@ -328,17 +327,15 @@ non fa avanzare la presentazione.*
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
 
 - **0** — L’interfaccia che ho ereditato mostrava solo i livelli dello stoccaggio. Non comandava nessun motore, e dalla schermata di calibrazione si usciva solo spegnendo la macchina. Collegarla voleva dire riprogettarla.
-- **2** — Il pannello è alto 240 pixel: circa tre righe di elenco. Così il nuovo design disegna la macchina, con le bottiglie e il loro livello.
-- **3** — Ho disegnato nove candidate in tre giri, come pagine web, e ogni pagina si verificava da sola rispetto al requisito di contrasto di 7:1.
+- **3** — Ho prototipato nove candidate come pagine web, molto più in fretta con l’IA, e ognuna verificava da sola un contrasto di 7:1, perché la macchina si usa all’aperto, in piena luce.
 - *Se chiedono:* la verifica ha bocciato la prima palette a 6,2:1, nel browser, prima che arrivasse sul dispositivo.
 
 ### 28 · `s23` — una corsa intera, dall'inizio alla fine, su un solo schermo
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 60 s:*
 
-- **0** — Una corsa intera sono sei schermate: home, scelta della ricetta, assegnazione, verifica, dosaggio, fine.
-- **1** — La verifica confronta quanto chiede la ricetta con quanto contengono le bottiglie. Se una bottiglia non basta, il pulsante di avvio diventa «Refill first».
-- **2** — L’interfaccia dal vivo sono le schermate della macchina, catturate dal dispositivo e rese cliccabili, così si può percorrere una corsa qui. Dove un livello non si può leggere, non mostra nessun numero.
+- **0** — L’interfaccia è pensata per essere visiva e intuitiva: una ricetta disegna ogni volume in proporzione dentro una provetta, e la schermata della corsa simula il rack.
+- **2** — Questa è una simulazione dal vivo dell’interfaccia, costruita con le vere schermate della macchina.
 
 ### 29 · `s24` — il reagente aspetta in un flaconcino sigillato, letto da un sensore e prelevato da due aghi
 
@@ -370,16 +367,16 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - *Se chiesto del prezzo:* ogni opzione con abbastanza collegamenti costa entro il 10 % circa delle altre.
 
 ### 32 · `s27` — un solo clock muove sei pompe, perché una dose è un numero di passi
-- Il processore manda lo stesso segnale di passo a tutte e sei le pompe, perché una dose è un numero di passi, non un tempo.
+- Un solo microcontrollore comanda tutto: lo schermo, le sei pompe, i due motori dell'allineamento, il motorino a vibrazione e i sensori di livello.
 - Com'è costruita, tutto parte da un'unica linea a 12 volt, da una batteria per utensili o dall'alimentatore da banco.
 - Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.
 - *Se chiesto:* i condensatori sulla scheda reggono 16 volt, e vanno sostituiti prima di una linea motori a 24 volt.
 
-### 33 · `s28` — ogni pompa e il suo flaconcino stanno nello stesso supporto stampato
-- Ogni pompa e il suo reagente condividono un unico supporto stampato.
-- Il contenitore è un progetto di Marius; il supporto è mio.
-- La pompa entra dall'alto, il contenitore da davanti.
-- Il supporto caricato, con la pompa e il contenitore al loro posto.
+### 33 · `s28` — ogni pompa e il suo stoccaggio del reagente stanno nello stesso supporto stampato
+- Quanto a come è stata montata la macchina: ogni pompa e il suo stoccaggio del reagente condividono un unico supporto stampato.
+- Il supporto centrale, vuoto, visto davanti e dietro.
+- La pompa entra dall'alto, a sinistra; lo stoccaggio scivola dentro da davanti, a destra.
+- Il supporto caricato, con la pompa e lo stoccaggio al loro posto.
 - Quello di sinistra si avvita anche alla parete laterale.
 - I supporti si incastrano tra loro e sono avvitati.
 - La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.
@@ -392,7 +389,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Il supporto dello schermo entra nella barra in basso.
 
 ### 35 · `s30` — un supporto batteria già pubblicato e tre viti
-- Il supporto della batteria nasce da un supporto già pubblicato per batterie DeWalt; ho rifatto in CAD i fori delle viti.
+- Il supporto della batteria è adattato alla batteria da trapano che ho usato, e ho rifatto in CAD i fori delle viti.
 - Lo tengono tre viti, e la batteria si collega alla presa dell'alimentatore da banco, quindi dentro non si è ricablato niente.
 - Era l'ultimo pezzo che mancava alla macchina.
 - Qui lavora all'aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.

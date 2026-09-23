@@ -3640,3 +3640,19 @@ style; the `s31` step-0 caption now says "mille microlitri", so no unit conversi
 remains.
 (d) likewise: the 10 % price figure is now an "If asked" line on `s26`, not part
 of the step-2 note.
+
+### (am) The demo is three minutes, not five — 2026-09-23
+
+Sirio's decision (2026-09-23, in the Part II chat): **the live demo is 3 minutes.** The
+speaking plan already budgets it at 3 (`BAND_PLAN` in `parts/99-tail.html`, total 30 minutes);
+three places still say five, and each belongs to another part's chat:
+
+- **Part III** — `parts/40-part3.html`, the demo slide's notes: `<li data-step="meta">~5 min &middot; live demo</li>`
+  → `~3 min`. Since the presenter timers now read each slide's meta line, this one makes the
+  demo slide count 300 s against a 180 s band: the timer is wrong on stage until it changes.
+  Also `CONTENT.md` "Live demo (5 min)", its "Suggested run, five minutes" and "~5 min" note.
+- **Opening (Part I)** — `parts/10-opening.html`, the contents slide `s03`: the on-screen line
+  "the machine runs, here, for five minutes" and the step-4 note "Then five minutes of live
+  demo" (and its Italian twin, plus `CONTENT-IT.md` line "Poi cinque minuti…"). The on-screen
+  line is seen by the panel.
+- `CONTENT.md` line 18: "Time plan, 30 minutes with a 5 minute live demo".

@@ -182,7 +182,10 @@ understand. On point."**
 - **Credit only where the slide is about it.** Do not name a collaborator in a line about
   Sirio's own evaluation.
 - **Sirio sets the time per slide**, and the caption fits it: a 10-second slide gets one or
-  two sentences. Part I has 8 minutes, Part II 9; the per-slide targets sum to those.
+  two sentences. Part I has 8 minutes, Part II 9. **Whenever he mentions how long he will
+  spend on a slide, update that slide's `data-step="meta"` line at once, unprompted** — the
+  presenter timers are computed from those lines, so a time he said but you did not write
+  down is a timer that lies to him on stage.
 - **Markup** (the runtime reads it; contract in `BUILDER-REFERENCE.md`, "Step-synced
   captions"): `<li data-step="meta">~40 s</li>` first; each spoken line `<li data-step="n">`,
   current from click *n* (0 = slide entry); at most one `<li>If asked: …</li>` with no

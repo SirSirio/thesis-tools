@@ -165,8 +165,8 @@
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~30 s</li>
-      <li data-step="0">One processor sends the same step signal to all six pumps, because a dose is a number of steps, not a length of time.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">One microcontroller controls everything: the screen, the six pumps, the two alignment motors, the vibration motor and the level sensors.</li>
       <li data-step="1">As built, everything runs from one 12 volt line, fed by a tool battery or the bench supply.</li>
       <li data-step="2">For production I would use a regulated USB-C power bank, because a plain battery loses voltage under load, and that is what stopped the prototype.</li>
       <li>If asked: the capacitors on the board are rated for 16 volts, so they must be replaced before a 24 volt motor line goes in.</li>
@@ -174,7 +174,7 @@
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Un solo segnale muove sei pompe, perché una dose è un numero di passi.</p>
       <ul>
-        <li data-step="0">Il processore manda lo stesso segnale di passo a tutte e sei le pompe, perché una dose è un numero di passi, non un tempo.</li>
+        <li data-step="0">Un solo microcontrollore comanda tutto: lo schermo, le sei pompe, i due motori dell&apos;allineamento, il motorino a vibrazione e i sensori di livello.</li>
         <li data-step="1">Com&apos;è costruita, tutto parte da un&apos;unica linea a 12 volt, da una batteria per utensili o dall&apos;alimentatore da banco.</li>
         <li data-step="2">Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.</li>
       </ul>
@@ -190,7 +190,7 @@
      cropped.  Dialect "record". ═══════════════════════════════════════ -->
 <section class="slide" id="s28" data-cue="s28" data-dialect="record" data-part="III"
          style="--head-h:48px" data-map="integration">
-  <h2 class="slide__title">Each pump and its vial share one printed carrier, and the carriers hold each other.</h2>
+  <h2 class="slide__title">Each pump and its reagent storage share one printed carrier, and the carriers hold each other.</h2>
   <div class="slide__rule"></div>
 
   <!-- Six, not five (Sirio, 2026-09-23): the slide rests on its title alone
@@ -216,15 +216,20 @@
   <!-- the central carrier, empty: front and back -->
   <div class="p3-shot" id="s28-a0" style="left:188px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-front-empty.png"
-         alt="The central carrier alone, seen from the front: an open bay for the pump head on the right and a lower bay for the reagent vial on the left." />
+         alt="The central carrier alone, seen from the front: an open bay for the pump head on the left and a wider bay for the reagent storage on the right." />
     <svg class="p3-ov" viewBox="0 0 1046 683" aria-hidden="true">
-      <path id="s28-a1" d="M 600 236 L 600 416" fill="none" stroke="#ff6b2b" stroke-width="13"/>
-      <path id="s28-a1h" d="M 570 382 L 600 420 L 630 382" fill="none" stroke="#ff6b2b" stroke-width="13"/>
-      <path id="s28-a2" d="M 142 322 L 246 446" fill="none" stroke="#ff6b2b" stroke-width="13"/>
-      <path id="s28-a2h" d="M 246 400 L 252 452 L 202 442" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <!-- Re-placed 2026-09-23 against the render (Sirio): the pump bay is the
+           LEFT one (x 190-435), the storage bay the RIGHT one (x 440-820).
+           The pump arrow drops into the left bay; the storage arrow rises
+           from below the front face into the right bay, which is how "from
+           the front" projects in this near-frontal view. -->
+      <path id="s28-a1" d="M 270 180 L 270 466" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a1h" d="M 240 430 L 270 470 L 300 430" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a2" d="M 580 678 L 580 520" fill="none" stroke="#ff6b2b" stroke-width="13"/>
+      <path id="s28-a2h" d="M 550 556 L 580 516 L 610 556" fill="none" stroke="#ff6b2b" stroke-width="13"/>
     </svg>
-    <span class="callout" id="s28-c1" style="left:46%; top:12%">pump, from above</span>
-    <span class="callout" id="s28-c2" style="left:1%; top:32%">vial, from the front</span>
+    <span class="callout" id="s28-c1" style="left:29%; top:20%">pump, from above</span>
+    <span class="callout" id="s28-c2" style="left:59%; top:72%">storage,<br>from the front</span>
   </div>
   <div class="p3-shot" id="s28-b0" style="left:663px; top:224px; width:429px; height:280px;">
     <img data-src="assets/stills/carrier-central-back-empty.png"
@@ -282,21 +287,21 @@
   <aside class="notes">
     <ul>
       <li data-step="meta">~20 s</li>
-      <li data-step="0">Each pump and its reagent share one printed holder.</li>
-      <li data-step="1">The container is Marius&apos;s design; the holder is mine.</li>
-      <li data-step="2">The pump drops in from above, the container from the front.</li>
+      <li data-step="0">Regarding how the machine was put together, each pump and its reagent storage share one printed holder.</li>
+      <li data-step="1">&#8212;</li>
+      <li data-step="2">The pump drops in from above, and the storage slides in from the front.</li>
       <li data-step="3">&#8212;</li>
       <li data-step="4">The left one also screws into the side wall.</li>
       <li data-step="5">They slot together and are screwed down.</li>
       <li data-step="6">&#8212;</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Ogni pompa e il suo reagente stanno in un unico supporto stampato, e i supporti si tengono a vicenda.</p>
+      <p class="notes-it__title">Ogni pompa e il suo stoccaggio del reagente stanno in un unico supporto stampato, e i supporti si tengono a vicenda.</p>
       <ul>
-        <li data-step="0">Ogni pompa e il suo reagente condividono un unico supporto stampato.</li>
-        <li data-step="1">Il contenitore è un progetto di Marius; il supporto è mio.</li>
-        <li data-step="2">La pompa entra dall&apos;alto, il contenitore da davanti.</li>
-        <li data-step="3">Il supporto caricato, con la pompa e il contenitore al loro posto.</li>
+        <li data-step="0">Quanto a come è stata montata la macchina: ogni pompa e il suo stoccaggio del reagente condividono un unico supporto stampato.</li>
+        <li data-step="1">Il supporto centrale, vuoto, visto davanti e dietro.</li>
+        <li data-step="2">La pompa entra dall&apos;alto, a sinistra; lo stoccaggio scivola dentro da davanti, a destra.</li>
+        <li data-step="3">Il supporto caricato, con la pompa e lo stoccaggio al loro posto.</li>
         <li data-step="4">Quello di sinistra si avvita anche alla parete laterale.</li>
         <li data-step="5">I supporti si incastrano tra loro e sono avvitati.</li>
         <li data-step="6">La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.</li>
@@ -478,7 +483,7 @@
   <aside class="notes">
     <ul>
       <li data-step="meta">~30 s</li>
-      <li data-step="0">The battery holder is adapted from a published holder for DeWalt batteries; I remade its screw holes in CAD.</li>
+      <li data-step="0">The battery holder is adapted to the drill battery I used, and I remade its screw holes in CAD.</li>
       <li data-step="1">Three screws hold it, and the battery plugs into the bench supply&apos;s socket, so nothing inside was rewired.</li>
       <li data-step="2">That was the last piece the machine needed.</li>
       <li data-step="3">Here it runs outdoors on battery. That is a scenario, not a claim: without a case, it only runs reliably indoors.</li>
@@ -486,7 +491,7 @@
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Un supporto per batteria già pubblicato e tre viti portano l&apos;alimentazione a bordo.</p>
       <ul>
-        <li data-step="0">Il supporto della batteria nasce da un supporto già pubblicato per batterie DeWalt; ho rifatto in CAD i fori delle viti.</li>
+        <li data-step="0">Il supporto della batteria è adattato alla batteria da trapano che ho usato, e ho rifatto in CAD i fori delle viti.</li>
         <li data-step="1">Lo tengono tre viti, e la batteria si collega alla presa dell&apos;alimentatore da banco, quindi dentro non si è ricablato niente.</li>
         <li data-step="2">Era l&apos;ultimo pezzo che mancava alla macchina.</li>
         <li data-step="3">Qui lavora all&apos;aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.</li>
@@ -1841,7 +1846,7 @@
       { opacity: 1, duration: 0.45, immediateRender: false }, 'step0+=0.34');
     tl.addLabel('step1');
 
-    /* 2 · how it loads: the pump from above, the vial from the front */
+    /* 2 · how it loads: the pump from above, the storage from the front */
     tl.to(qa(el, '#s28-a1, #s28-a1h'), { drawSVG: '100%', duration: 0.5 }, 'step1');
     pop(q(el, '#s28-c1'), 'step1+=0.36');
     tl.to(qa(el, '#s28-a2, #s28-a2h'), { drawSVG: '100%', duration: 0.5 }, 'step1+=0.5');

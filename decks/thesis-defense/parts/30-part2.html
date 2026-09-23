@@ -201,10 +201,10 @@
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~35 s</li>
+      <li data-step="meta">~10 s</li>
       <li data-step="0">Thirty mechanisms in six families, including extravagant ones.</li>
       <li data-step="2">Seven passed the screening gates, five were developed with Marius, and two reached working hardware.</li>
-      <li data-step="3">Cleanability decided it: a pinch pump needs check valves, wetted moving parts inside the machine.</li>
+      <li data-step="3">The peristaltic pump won on cleanability.</li>
       <li>If asked: the matrix gave the rotary a 300-point margin on footprint, mass and cleanability.</li>
     </ul>
     <div class="notes-it" lang="it">
@@ -212,7 +212,7 @@
       <ul>
         <li data-step="0">Trenta meccanismi in sei famiglie, compresi alcuni stravaganti.</li>
         <li data-step="2">Sette hanno superato i filtri, cinque li abbiamo sviluppati con Marius, e due sono arrivati a hardware funzionante.</li>
-        <li data-step="3">Ha deciso la pulibilità: una pompa a strozzamento richiede valvole di non ritorno, cioè parti bagnate in movimento dentro la macchina.</li>
+        <li data-step="3">La pompa peristaltica ha vinto per la pulibilità.</li>
       </ul>
     </div>
   </aside>
@@ -279,7 +279,7 @@
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~50 s</li>
+      <li data-step="meta">~90 s</li>
       <li data-step="0">The decision was the dose, 5 µL per stroke; the 0.51 mm tube bore follows from it.</li>
       <li data-step="2">I built three tools to guide the design, and with them I chose four rollers.</li>
       <li data-step="3">The geometry solver sizes the rotor for a target dose and checks which roller counts can be built.</li>
@@ -425,20 +425,20 @@
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~50 s</li>
-      <li data-step="0">The first pump: the rotor came out 2 mm too small, and the gap was drawn from a guessed tube wall, not a measured one.</li>
-      <li data-step="2">To measure the flow I used an inline flow sensor. Its readings scattered more than the flow itself, and one sample in seven read backwards.</li>
-      <li data-step="3">So I switched to an analytical balance. From here on, every volume in the thesis is weighed.</li>
-      <li data-step="4">On the balance it gave 3.39 µL per stroke instead of 5, and the shortfall repeated from dose to dose. That means it came from the geometry of the printed parts, not from the motor.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">The printed pump did not squeeze the tube shut; I had to add tape and a paper shim to get any liquid pumped.</li>
+      <li data-step="2">The inline flow sensor scattered more than the flow itself; one sample in seven read backwards.</li>
+      <li data-step="3">So I switched to an analytical balance; from here on every volume is weighed.</li>
+      <li data-step="4">The pump underdelivered significantly, but it was consistent and very precise.</li>
       <li>If asked: on the same deliveries the flow sensor read 11.5 % below the balance; closed-loop control was set aside.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">La prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato.</p>
       <ul>
-        <li data-step="0">La prima pompa: il rotore è uscito 2 mm troppo piccolo, e il gioco era disegnato su uno spessore del tubo stimato, non misurato.</li>
-        <li data-step="2">Per misurare il flusso ho usato un sensore in linea. Le sue letture oscillavano più del flusso stesso, e un campione su sette segnava all&rsquo;indietro.</li>
-        <li data-step="3">Così sono passato a una bilancia analitica. Da qui in poi, ogni volume della tesi è pesato.</li>
-        <li data-step="4">Sulla bilancia dava 3,39 µL per corsa invece di 5, e lo scarto si ripeteva da una dose all&rsquo;altra. Quindi veniva dalla geometria dei pezzi stampati, non dal motore.</li>
+        <li data-step="0">La pompa stampata non schiacciava il tubo fino a chiuderlo; ho dovuto aggiungere nastro e uno spessore di carta per far passare il liquido.</li>
+        <li data-step="2">Il sensore di flusso in linea oscillava più del flusso stesso; un campione su sette segnava all&rsquo;indietro.</li>
+        <li data-step="3">Così sono passato a una bilancia analitica; da qui in poi ogni volume è pesato.</li>
+        <li data-step="4">La pompa erogava molto meno del previsto, ma in modo costante e molto preciso.</li>
       </ul>
     </div>
   </aside>
@@ -450,10 +450,13 @@
   <h2 class="slide__title">Three more builds fixed the printing, not the physics.</h2>
   <div class="slide__rule"></div>
 
+  <!-- Two clicker steps (Sirio, 2026-09-23): the printer, then v2.3.  The
+       v2.1 and v2.2 builds are not in the walk any more: they sit at the top
+       of the rail as two buttons, and a mouse click on one opens its figure
+       over whatever the arrows are showing.  Opening one never changes the
+       deck step and is never sent to the other windows. -->
   <i class="fragment step-cue" data-step="1"></i>
   <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
-  <i class="fragment step-cue" data-step="4"></i>
 
   <div class="sheet">
     <div class="sheet__main">
@@ -463,7 +466,7 @@
 
       <div class="sheet__figs">
 
-        <!-- 1 · v2.1, the mount sat high -->
+        <!-- 1 · v2.1, the mount sat high (button, not a step) -->
         <div class="sheet__fig" id="s15-f1">
           <div class="sheet__frame" style="width:748px;aspect-ratio:2400/1128">
             <img data-src="assets/fig-v21-gap-around-arc.png"
@@ -488,7 +491,7 @@
           </div>
         </div>
 
-        <!-- 2 · v2.2, the peg tapers -->
+        <!-- 2 · v2.2, the peg tapers (button, not a step) -->
         <div class="sheet__fig" id="s15-f2">
           <div class="sheet__frame" style="width:748px;aspect-ratio:2400/1219">
             <img data-src="assets/fig-roller-peg-taper.png"
@@ -560,14 +563,14 @@
     </div>
 
     <ol class="sheet__rail">
-      <li class="sheet__panel" data-rev="1">
-        <span class="sheet__panel-bar"></span>
-        <span class="sheet__panel-k">v2.1</span>
+      <li class="sheet__panel s15-btn" data-fig="0"
+          role="button" tabindex="0" aria-expanded="false" aria-label="Show the v2.1 build: the mount height">
+        <span class="s15-btn__line"><span class="sheet__panel-k">v2.1</span><span class="s15-btn__s">mount height</span></span>
         <span class="sheet__panel-t">The mount sat 0.45 mm high, so the apex opened.</span>
       </li>
-      <li class="sheet__panel" data-rev="2">
-        <span class="sheet__panel-bar"></span>
-        <span class="sheet__panel-k">v2.2</span>
+      <li class="sheet__panel s15-btn" data-fig="1"
+          role="button" tabindex="0" aria-expanded="false" aria-label="Show the v2.2 build: the peg taper">
+        <span class="s15-btn__line"><span class="sheet__panel-k">v2.2</span><span class="s15-btn__s">peg taper</span></span>
         <span class="sheet__panel-t">Printed pegs taper, so the rollers tilted and walked the tube.</span>
       </li>
       <li class="sheet__panel" data-rev="3">
@@ -593,20 +596,18 @@
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~45 s</li>
-      <li data-step="0">In v2.1 the pump head sat 0.45 mm too high on its mount, so the gap opened at the top of the track and the tube did not seal there.</li>
-      <li data-step="2">In v2.2 the printed pegs came out slightly conical, so the rollers tilted. One bearing on the wide base of the peg fixed it.</li>
-      <li data-step="3">Then I measured the printer itself, on test rings. Outer sizes shrink by 0.65 %, and inner bores lose a fixed 0.14 mm.</li>
-      <li data-step="4">This is v2.3, taken apart. With every correction in, the gap measured 1.52 mm at all three inspection slots.</li>
-      <li>If asked: a housing drawn with a 1.52 mm gap measured 1.75 mm, and that is why I characterised the printer.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">I went through a few more iterations. The most meaningful was characterising the printer, so that it prints the dimensions I designed.</li>
+      <li data-step="1">I measured the printer on test rings. Outer sizes shrink by 0.65 %, and inner bores lose a fixed 0.14 mm.</li>
+      <li data-step="2">This is v2.3, taken apart. With every correction in, the gap measured 1.52 mm at all three inspection slots.</li>
+      <li>If asked: in v2.1 the mount sat 0.45 mm high, so the gap opened at the top of the track; in v2.2 the printed pegs tapered and tilted the rollers, fixed with one bearing on the wide base; and a housing drawn with a 1.52 mm gap measured 1.75 mm, which is why I characterised the printer.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Altre tre costruzioni hanno sistemato la stampa, non la fisica.</p>
       <ul>
-        <li data-step="0">Nella v2.1 la testa della pompa stava 0,45 mm troppo in alto sul supporto, così in cima alla pista il gioco si apriva e il tubo lì non sigillava.</li>
-        <li data-step="2">Nella v2.2 i perni stampati uscivano leggermente conici, e i rulli si inclinavano. Un solo cuscinetto sulla base larga del perno ha risolto.</li>
-        <li data-step="3">Poi ho misurato la stampante stessa, su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.</li>
-        <li data-step="4">Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.</li>
+        <li data-step="0">Ho fatto alcune altre iterazioni. La più significativa è stata caratterizzare la stampante, perché stampi le dimensioni che ho progettato.</li>
+        <li data-step="1">Ho misurato la stampante su anelli di prova. Le misure esterne si riducono dello 0,65 %, i fori interni perdono sempre 0,14 mm.</li>
+        <li data-step="2">Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.</li>
       </ul>
     </div>
   </aside>
@@ -1036,7 +1037,7 @@
   <aside class="notes">
     <ul>
       <li data-step="meta">~40 s</li>
-      <li data-step="0">It arrived not working: too weak to release a droplet, nothing to mount it with, and a mesh file I could not edit.</li>
+      <li data-step="0">It arrived not working: too weak to release a droplet, nothing to mount it with, and a model that could not be edited in CAD.</li>
       <li data-step="2">I kept Marius&rsquo;s idea, shaking the droplet off by vibration, and redrew the module from scratch. Vertical posts let it move only up and down.</li>
       <li data-step="3">A magnet and three steel nuts replaced the printed weight on the vibration motor. The elastic band stops the carrier shaking off its posts. The needles sit 22 mm apart, like the tubes.</li>
       <li>If asked: each seat is a printed negative of the needle hub, so any gauge fits without tools.</li>
@@ -1044,7 +1045,7 @@
     <div class="notes-it" lang="it">
       <p class="notes-it__title">L&apos;ugello consegnato da Marius non funzionava, così l&apos;ho ricostruito da zero.</p>
       <ul>
-        <li data-step="0">È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un file mesh che non potevo modificare.</li>
+        <li data-step="0">È arrivato che non funzionava: troppo debole per staccare una goccia, niente per montarlo, e un modello non modificabile in CAD.</li>
         <li data-step="2">Ho tenuto l&rsquo;idea di Marius, staccare la goccia con la vibrazione, e ho ridisegnato il modulo da zero. Le colonnine verticali lo lasciano muovere solo su e giù.</li>
         <li data-step="3">Un magnete e tre dadi d&rsquo;acciaio hanno sostituito il peso stampato sul motore a vibrazione. L&rsquo;elastico impedisce al carrello di sfilarsi dalle colonnine. Gli aghi stanno a 22 mm l&rsquo;uno dall&rsquo;altro, come le provette.</li>
       </ul>
@@ -1200,16 +1201,14 @@
     <ul>
       <li data-step="meta">~35 s</li>
       <li data-step="0">The interface I inherited only showed the storage levels. It drove no motor, and its calibration screen could only be left by switching the machine off. So hooking it up meant redesigning it.</li>
-      <li data-step="2">The panel is 240 pixels tall: about three list rows. So the new design draws the machine instead, with bottles showing their fill.</li>
-      <li data-step="3">I drew nine candidates over three rounds as web pages, and each page checked itself against the 7:1 contrast requirement.</li>
+      <li data-step="3">I prototyped nine candidates as web pages, much faster with AI, and each checked itself against a 7:1 contrast, because the machine is used outdoors in bright light.</li>
       <li>If asked: that check caught the first palette at 6.2:1, in the browser, before it reached the device.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">L&apos;interfaccia ereditata non aveva cablaggio dietro: un collegamento necessario è diventato una riprogettazione completa.</p>
       <ul>
         <li data-step="0">L&rsquo;interfaccia che ho ereditato mostrava solo i livelli dello stoccaggio. Non comandava nessun motore, e dalla schermata di calibrazione si usciva solo spegnendo la macchina. Collegarla voleva dire riprogettarla.</li>
-        <li data-step="2">Il pannello è alto 240 pixel: circa tre righe di elenco. Così il nuovo design disegna la macchina, con le bottiglie e il loro livello.</li>
-        <li data-step="3">Ho disegnato nove candidate in tre giri, come pagine web, e ogni pagina si verificava da sola rispetto al requisito di contrasto di 7:1.</li>
+        <li data-step="3">Ho prototipato nove candidate come pagine web, molto più in fretta con l&rsquo;IA, e ognuna verificava da sola un contrasto di 7:1, perché la macchina si usa all&rsquo;aperto, in piena luce.</li>
       </ul>
     </div>
   </aside>
@@ -1264,16 +1263,14 @@
   <aside class="notes">
     <ul>
       <li data-step="meta">~60 s</li>
-      <li data-step="0">A whole run takes six screens: home, choose a recipe, assign it, check, dispense, done.</li>
-      <li data-step="1">The check compares what the recipe needs with what the bottles hold. If a bottle is short, the start button turns into Refill first.</li>
-      <li data-step="2">The live interface is the machine&rsquo;s own screens, captured from the device and made clickable, so one run can be walked through here. Where a level cannot be read, it shows no number.</li>
+      <li data-step="0">The interface is meant to be visual and intuitive: a recipe draws each volume in proportion in a tube, and the run screen simulates the rack.</li>
+      <li data-step="2">This is a live mock of the interface, built from real screens of the machine.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Una corsa intera, dall&apos;inizio alla fine, su un solo schermo.</p>
       <ul>
-        <li data-step="0">Una corsa intera sono sei schermate: home, scelta della ricetta, assegnazione, verifica, dosaggio, fine.</li>
-        <li data-step="1">La verifica confronta quanto chiede la ricetta con quanto contengono le bottiglie. Se una bottiglia non basta, il pulsante di avvio diventa &laquo;Refill first&raquo;.</li>
-        <li data-step="2">L&rsquo;interfaccia dal vivo sono le schermate della macchina, catturate dal dispositivo e rese cliccabili, così si può percorrere una corsa qui. Dove un livello non si può leggere, non mostra nessun numero.</li>
+        <li data-step="0">L&rsquo;interfaccia è pensata per essere visiva e intuitiva: una ricetta disegna ogni volume in proporzione dentro una provetta, e la schermata della corsa simula il rack.</li>
+        <li data-step="2">Questa è una simulazione dal vivo dell&rsquo;interfaccia, costruita con le vere schermate della macchina.</li>
       </ul>
     </div>
   </aside>
@@ -1375,9 +1372,65 @@
 .p2-ov .ln.ghost { stroke: color-mix(in srgb, var(--t-a) 50%, transparent); stroke-dasharray: 16 13; }
 .p2-ov .dot { fill: var(--t-a); stroke: none; }
 .sheet__frame { position: relative; }
-/* four-row rails: let every panel shrink to its equal share, so the last
-   one is not the only one that clips */
-#s15 .sheet__panel { min-height: 0; padding-top: 10px; padding-bottom: 10px; }
+/* S15's rail (2026-09-23): the two walked panels, the printer and v2.3,
+   share the height; v2.1 and v2.2 sit above them as buttons — outside the
+   clicker walk, pressed only when a question calls for one.  A button opens
+   its sentence in place and its figure and readout over the sheet; the
+   sheet's own figure and readout step aside while it is open (the class
+   lives on the section, so the step timeline's inline styles are untouched
+   and come back exactly as they were).  Mark + closed, x open, as on S09. */
+#s15 .sheet__panel { min-height: 0; }
+#s15 .s15-btn {
+  flex: 0 0 auto;
+  position: relative;
+  margin: 12px 12px 0;
+  padding: 11px 44px 11px 16px;
+  gap: 0;
+  cursor: pointer;
+  opacity: 0.72;
+  border: 1px dashed color-mix(in srgb, var(--accent) 38%, transparent);
+  border-radius: var(--r-sm);
+  transition: background 160ms var(--ease), border-color 160ms var(--ease), opacity 160ms var(--ease);
+}
+#s15 .s15-btn + .s15-btn { margin-top: 8px; }
+#s15 .s15-btn + .sheet__panel:not(.s15-btn) { margin-top: 12px; }
+#s15 .s15-btn__line { display: flex; align-items: baseline; gap: 14px; }
+#s15 .s15-btn__s { font-size: 18px; line-height: 1.3; color: var(--text-soft); }
+#s15 .s15-btn .sheet__panel-t {
+  max-height: 0; opacity: 0; overflow: hidden; margin-top: 0;
+  transition: max-height 320ms var(--ease), opacity 240ms var(--ease), margin-top 320ms var(--ease);
+}
+#s15 .s15-btn::after {
+  content: '+';
+  position: absolute; right: 14px; top: 13px;
+  font-family: var(--mono); font-size: 21px; line-height: 1;
+  color: var(--accent);
+}
+#s15 .s15-btn.is-open::after { content: '\00d7'; }
+#s15 .s15-btn.is-open {
+  opacity: 1;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+}
+#s15 .s15-btn.is-open .sheet__panel-t { max-height: 90px; opacity: 1; margin-top: 8px; }
+#s15 .s15-btn:hover,
+#s15 .s15-btn:focus-visible { background: rgba(255, 255, 255, 0.055); outline: none; opacity: 1; }
+#s15 .s15-btn:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 60%, transparent); }
+
+/* the aside's figure and readout, and the walked ones stepping back.  Only
+   children are faded on the walked side: the timeline owns the figures'
+   and readouts' own opacity, never their children's. */
+#s15 #s15-f1, #s15 #s15-f2, #s15 #s15-ro1, #s15 #s15-ro2 {
+  transition: opacity 280ms var(--ease), visibility 280ms;
+}
+#s15.s15-open-0 #s15-f1, #s15.s15-open-0 #s15-ro1,
+#s15.s15-open-1 #s15-f2, #s15.s15-open-1 #s15-ro2 { opacity: 1; visibility: visible; z-index: 2; }
+#s15 #s15-f3 > *, #s15 #s15-f4 > *, #s15 #s15-ro3 > *, #s15 #s15-ro4 > * {
+  transition: opacity 240ms var(--ease);
+}
+#s15.s15-open #s15-f3 > *, #s15.s15-open #s15-f4 > *,
+#s15.s15-open #s15-ro3 > *, #s15.s15-open #s15-ro4 > * { opacity: 0; }
 
 /* the drawn panels that sit on the paper sheet beside a photograph */
 .sheet__draw { display: block; flex: none; overflow: visible; }
@@ -2410,7 +2463,7 @@
 
     armDraw(strokes);
     gsap.set(comp, { clipPath: 'inset(0% 100% 0% 0%)' });
-    /* step 4 enters with the photograph at the full width of the sheet
+    /* step 2 enters with the photograph at the full width of the sheet
        (719 x 384, the figure area exactly) and the gap figure not yet there;
        the markup carries the settled widths, so a motionless deck is right. */
     gsap.set(dis,  { width: 719 });
@@ -2421,66 +2474,135 @@
     gsap.set(q(el, '#f2-roller'), { autoAlpha: 0 });
     gsap.set(tags, { xPercent: -50, yPercent: -50, autoAlpha: 0, scale: 0.7, transformOrigin: '50% 50%' });
 
+    /* ── the two asides, v2.1 and v2.2.  Each is its own paused timeline
+       that draws the figure's marks exactly as the old steps 1 and 2 did;
+       it owns those marks outright, so the step timeline never touches
+       them and the two can never fight. ── */
+    var aside = [gsap.timeline({ paused: true, defaults: { ease: EO } }),
+                 gsap.timeline({ paused: true, defaults: { ease: EO } })];
+    var a = aside[0];
+    draw(a, [q(el, '#f1-ext1'), q(el, '#f1-ext2')], 0.2, 0.5, EO, 0.08);
+    draw(a, [q(el, '#f1-dim'), q(el, '#f1-ah1'), q(el, '#f1-ah2')], 0.45, 0.45);
+    draw(a, [q(el, '#f1-d1'), q(el, '#f1-d2')], 0.7, 0.45, EO, 0.07);
+    draw(a, [q(el, '#f1-off'), q(el, '#f1-offah')], 0.9, 0.5);
+    a.to(q(el, '#f1-mark'), { autoAlpha: 1, duration: 0.3 }, 1.0)
+     .to(q(el, '#f1-mark'), { y: -91, duration: 0.85, ease: 'expo.inOut' }, 1.1);
+    draw(a, [q(el, '#f1-closure')], 1.3, 0.75);
+    draw(a, [q(el, '#f1-stem')], 1.75, 0.95, 'expo.inOut');
+    a.to(dot, { autoAlpha: 1, duration: 0.25 }, 1.75)
+     .to(dot, { attr: { cy: 330 }, duration: 0.95, ease: 'expo.inOut' }, 1.75);
+    count(a, q(el, '#s15-n1'), 1.82, 2.22, 2, 1.75, 0.95);
+
+    a = aside[1];
+    draw(a, [q(el, '#f2-tl'), q(el, '#f2-tr')], 0.2, 0.65, EO, 0.1);
+    draw(a, [q(el, '#f2-tip'), q(el, '#f2-base')], 0.6, 0.4, EO, 0.08);
+    a.to(q(el, '#f2-roller'), { autoAlpha: 1, duration: 0.3 }, 0.75);
+    draw(a, qa(el, '#f2-rollerG > path'), 0.75, 0.5, EO, 0.08);
+    a.to(q(el, '#f2-rollerG'), { rotation: -5, svgOrigin: '599 566', duration: 0.9, ease: 'power2.inOut' }, 1.25)
+     .to(q(el, '#f2-rollerG'), { rotation: 0, svgOrigin: '599 566', duration: 0.6, ease: 'back.out(2.4)' }, 2.3);
+    draw(a, [q(el, '#f2-fix')], 2.55, 0.8);
+    count(a, q(el, '#s15-n2'), 0, 0.6, 1, 1.25, 0.9);
+
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
     tl.addLabel('step0');
+    /* step 0 is the sheet waiting: the two buttons are the iterations the
+       caption mentions, and nothing is walked until the printer. */
 
-    /* 1 · v2.1, the mount sat high */
-    sheetEnter(tl, c, 0, 0.0, '12.5%');
-    draw(tl, [q(el, '#f1-ext1'), q(el, '#f1-ext2')], 0.35, 0.5, EO, 0.08);
-    draw(tl, [q(el, '#f1-dim'), q(el, '#f1-ah1'), q(el, '#f1-ah2')], 0.6, 0.45);
-    draw(tl, [q(el, '#f1-d1'), q(el, '#f1-d2')], 0.85, 0.45, EO, 0.07);
-    draw(tl, [q(el, '#f1-off'), q(el, '#f1-offah')], 1.05, 0.5);
-    tl.to(q(el, '#f1-mark'), { autoAlpha: 1, duration: 0.3 }, 1.15)
-      .to(q(el, '#f1-mark'), { y: -91, duration: 0.85, ease: 'expo.inOut' }, 1.25);
-    draw(tl, [q(el, '#f1-closure')], 1.45, 0.75);
-    draw(tl, [q(el, '#f1-stem')], 1.9, 0.95, 'expo.inOut');
-    tl.to(dot, { autoAlpha: 1, duration: 0.25 }, 1.9)
-      .to(dot, { attr: { cy: 330 }, duration: 0.95, ease: 'expo.inOut' }, 1.9);
-    count(tl, q(el, '#s15-n1'), 1.82, 2.22, 2, 1.9, 0.95);
-    tl.addLabel('step1', 3.0);
-
-    /* 2 · v2.2, the peg tapers */
-    sheetLeave(tl, c, 0, 3.1);
-    sheetEnter(tl, c, 1, 3.2, '37.5%');
-    draw(tl, [q(el, '#f2-tl'), q(el, '#f2-tr')], 3.7, 0.65, EO, 0.1);
-    draw(tl, [q(el, '#f2-tip'), q(el, '#f2-base')], 4.1, 0.4, EO, 0.08);
-    tl.to(q(el, '#f2-roller'), { autoAlpha: 1, duration: 0.3 }, 4.25);
-    draw(tl, qa(el, '#f2-rollerG > path'), 4.25, 0.5, EO, 0.08);
-    tl.to(q(el, '#f2-rollerG'), { rotation: -5, svgOrigin: '599 566', duration: 0.9, ease: 'power2.inOut' }, 4.75)
-      .to(q(el, '#f2-rollerG'), { rotation: 0, svgOrigin: '599 566', duration: 0.6, ease: 'back.out(2.4)' }, 5.8);
-    draw(tl, [q(el, '#f2-fix')], 6.05, 0.8);
-    count(tl, q(el, '#s15-n2'), 0, 0.6, 1, 4.75, 0.9);
-    tl.addLabel('step2', 6.9);
-
-    /* 3 · the printer.  No drawing on the photographs here: the coupon sits
+    /* 1 · the printer.  No drawing on the photographs here: the coupon sits
        small as context and the compensation figure, which carries the two
        rules and their own numbers, wipes in a panel at a time — the external
        rule first, then the internal one, matching the rail line. */
-    sheetLeave(tl, c, 1, 7.0);
-    sheetEnter(tl, c, 2, 7.1, '62.5%');
-    tl.to(comp, { clipPath: 'inset(0% 49% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 7.5)
-      .to(comp, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 8.5);
-    count(tl, q(el, '#s15-n3'), 0, 0.10, 2, 8.7, 1.0);
-    tl.addLabel('step3', 9.8);
+    sheetEnter(tl, c, 2, 0.0, '62.5%');
+    tl.to(comp, { clipPath: 'inset(0% 49% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 0.4)
+      .to(comp, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.85, ease: 'power2.inOut' }, 1.4);
+    count(tl, q(el, '#s15-n3'), 0, 0.10, 2, 1.6, 1.0);
+    tl.addLabel('step1', 2.7);
 
-    /* 4 · v2.3, the pump in parts and the same number at three points.
+    /* 2 · v2.3, the pump in parts and the same number at three points.
        The photograph comes in at the full width of the sheet and holds there
        while the readout counts to 1.52 — long enough to find the gap value
        embossed on the housing face — then steps back to 500 px and the
        measured figure grows in beside it, where each of the three caliper
        slots leads out to its own reading. */
-    sheetLeave(tl, c, 2, 9.9);
-    sheetEnter(tl, c, 3, 10.0, '87.5%');
-    count(tl, q(el, '#s15-n4'), 0, 1.52, 2, 10.55, 1.0);
-    tl.to(dis,  { width: 500, duration: 0.85, ease: 'power2.inOut' }, 11.6)
-      .to(gapf, { width: 246, duration: 0.85, ease: 'power2.inOut' }, 11.6);
-    draw(tl, [q(el, '#f4-l1')], 12.5, 0.35);
-    tl.to(q(el, '#s15-tag-apex'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 12.72);
-    draw(tl, [q(el, '#f4-l2')], 12.9, 0.35);
-    tl.to(q(el, '#s15-tag-left'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 13.12);
-    draw(tl, [q(el, '#f4-l3')], 13.3, 0.35);
-    tl.to(q(el, '#s15-tag-right'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 13.52);
-    tl.addLabel('step4', 14.05);
+    sheetLeave(tl, c, 2, 2.8);
+    sheetEnter(tl, c, 3, 2.9, '87.5%');
+    count(tl, q(el, '#s15-n4'), 0, 1.52, 2, 3.45, 1.0);
+    tl.to(dis,  { width: 500, duration: 0.85, ease: 'power2.inOut' }, 4.5)
+      .to(gapf, { width: 246, duration: 0.85, ease: 'power2.inOut' }, 4.5);
+    draw(tl, [q(el, '#f4-l1')], 5.4, 0.35);
+    tl.to(q(el, '#s15-tag-apex'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 5.62);
+    draw(tl, [q(el, '#f4-l2')], 5.8, 0.35);
+    tl.to(q(el, '#s15-tag-left'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 6.02);
+    draw(tl, [q(el, '#f4-l3')], 6.2, 0.35);
+    tl.to(q(el, '#s15-tag-right'), { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, 6.42);
+    tl.addLabel('step2', 6.95);
+
+    /* ── the buttons.  Mouse (or Enter) only; the click is stopped here, so
+       nothing downstream sees it, and opening one fires no deck:state, so
+       the sync layer has nothing to send.  Wired once per element (the
+       presenter's clone gets its own, harmlessly). ── */
+    if (!el.dataset.s15Wired) {
+      el.dataset.s15Wired = '1';
+      var btns = qa(el, '.s15-btn');
+      var open = null, openedAt = null, shutTimer = null;
+
+      function shut() {
+        if (open === null) return;
+        var n = open;
+        btns[n].classList.remove('is-open');
+        btns[n].setAttribute('aria-expanded', 'false');
+        el.classList.remove('s15-open', 's15-open-' + n);
+        open = null; openedAt = null;
+        clearTimeout(shutTimer);
+        /* rewind the marks once the figure has faded, so the next opening
+           draws them again from nothing */
+        shutTimer = setTimeout(function () {
+          if (open !== n) aside[n].pause(0);
+        }, 320);
+      }
+
+      function toggle(n) {
+        if (open === n) { shut(); return; }
+        shut();
+        clearTimeout(shutTimer);
+        open = n;
+        var s = (window.Deck && Deck.state) || {};
+        openedAt = { slide: s.slide, step: s.step };
+        btns[n].classList.add('is-open');
+        btns[n].setAttribute('aria-expanded', 'true');
+        el.classList.add('s15-open', 's15-open-' + n);
+        aside[n].restart();
+      }
+
+      btns.forEach(function (b, n) {
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggle(n);
+          b.blur();   /* so Space and the arrows keep driving the deck */
+        });
+        b.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); toggle(n); }
+        });
+      });
+
+      /* a click anywhere else puts it away */
+      document.addEventListener('click', function (e) {
+        if (open === null) return;
+        if (e.target && e.target.closest && e.target.closest('.s15-btn')) return;
+        shut();
+      });
+
+      /* so does any real move — a step either way, or leaving the slide —
+         so re-entering, or stepping back, always finds both closed.  A
+         heartbeat from the sync layer re-sends the same state; that is not
+         a move and leaves the aside open. */
+      document.addEventListener('deck:state', function (e) {
+        if (open === null) return;
+        var d = e.detail || {};
+        if (!el.classList.contains('slide--active') ||
+            d.slide !== openedAt.slide || d.step !== openedAt.step) shut();
+      });
+    }
 
     return tl;
   });

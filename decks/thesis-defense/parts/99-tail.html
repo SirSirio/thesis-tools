@@ -297,6 +297,23 @@
   .pres__notes-body li.is-aside,
   .pres__notes-body.has-steps li.is-aside { opacity: 0.55; font-style: italic; }
 
+  /* ── a2 · the meta line is a time target, not a caption ───────────
+     Per-slide targets (added 2026-09-23): li[data-step="meta"] drives the
+     pacing timers (tail script, 0b) and shows here as a small muted
+     "target ~40 s" line, never marked done/next. The bar echoes the
+     slide's planned seconds beside the slide count (.pres__target). */
+  .pres__notes-body li.is-meta {
+    list-style: none; margin-left: -26px; margin-bottom: 8px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.4;
+    letter-spacing: 0.06em; color: var(--text-muted); opacity: 0.8;
+  }
+  .pres__notes-body li.is-meta::before { content: "target "; text-transform: uppercase; letter-spacing: 0.18em; font-size: 11px; }
+  .pres__target {
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .pres__target:empty { display: none; }
+
   /* ── b · guest: slide above, Italian caption band below ────────── */
   .guest-cap { display: none; }
   body[data-view="guest"] { --guest-band: 22vh; }
@@ -407,6 +424,21 @@
        own, so it is spoken inside Part I's eight minutes; change PART_I
        here and give 'Opening' its own row if that ever stops being true.
        Longest band name first: 'Part I' is a prefix of 'Part II'.
+
+       Per-slide targets (added 2026-09-23). Inside a band the budget is
+       split slide by slide, not group by group:
+         · a spoken slide whose notes open with <li data-step="meta">~N s</li>
+           gets exactly N seconds (also read: "~1 min 30 s", "~1:30",
+           "~5 min"; anything after a middle dot is commentary);
+         · the band's spoken slides without a meta share what is left of the
+           band (band − sum of metas) equally, or 0 s each if nothing is left;
+         · a group's budget (segSecs, the Section timer) is the sum of its
+           slides' seconds, and the expected-position table (slideExp) uses
+           the same per-slide seconds;
+         · the Part timer still counts down the band figure below, even when
+           the metas add up to more or less than it.
+       Backups and data-talk="no" slides are outside the plan, as before.
+       The code is measurePlan() in section 6.
        =============================================================== */
     var BAND_PLAN = [
       { match: 'Part III',   name: 'Part III', secs:  5 * 60 },
@@ -1277,58 +1309,135 @@
 
     /* ── The two pacing timers ─────────────────────────────────────
        Each counts down the budget for the thing he is in the middle of: the
-       part, and the section inside it. A section's share of its part is its
-       fraction of that part's spoken slides, worked out from SLIDE_ORDER, so
-       moving a slide between sections re-balances them without a second
-       table to maintain. Backup slides never reset either timer — answering
-       a question is not a new section. */
+       part, and the section inside it. A section's budget is the sum of its
+       slides' targets (the meta rule in 0b), so moving a slide between
+       sections carries its seconds with it, without a second table to
+       maintain. Backup slides never reset either timer — answering a
+       question is not a new section. */
     var segSecs = [];                 /* per SLIDE_ORDER index: its budget */
     var bandName = '', bandSecs = 0, bandAt = 0;
     var topicGi = -1, topicAt = 0;
 
-    function measurePlan() {
-      var talkIn = [], i;
-      for (i = 0; i < SLIDE_ORDER.length; i++) talkIn.push(0);
-      slides.forEach(function (el, idx) {
-        if (el.getAttribute('data-part') === 'backup') return;
-        if (el.getAttribute('data-talk') === 'no') return;
-        talkIn[groupOf[idx]]++;
-      });
-      /* every group that shares a part shares that part's budget */
-      var totalIn = {};
-      for (i = 0; i < SLIDE_ORDER.length; i++) {
-        var pl = bandPlan(SLIDE_ORDER[i].band);
-        if (!pl) continue;
-        totalIn[pl.name] = (totalIn[pl.name] || 0) + talkIn[i];
+    /* ══ Per-slide targets (added 2026-09-23) ═══════════════════════
+       The rule is written out in 0b. slideMeta holds the parsed meta line
+       of every slide (null when it has none), slideSecs the seconds the
+       plan gives it (null outside the talk). segSecs and slideExp are both
+       sums of slideSecs, so the Section timer, the Elapsed colour and the
+       rehearsal plan all read the same numbers. */
+    var slideMeta = [];   /* per slide index: meta seconds, or null */
+    var slideSecs = [];   /* per slide index: planned seconds, or null */
+
+    /* "~40 s", "~90 s", "~1 min 30 s", "~1:30", "~5 min · live demo".
+       Only the text before a middle dot counts; the rest is commentary. */
+    function parseMetaSecs(text) {
+      if (!text) return null;
+      var t = String(text).split('·')[0].replace(/ /g, ' ').toLowerCase();
+      var m = t.match(/(\d+)\s*:\s*(\d{1,2})(?!\d)/);
+      if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+      var secs = 0, hit = false;
+      m = t.match(/(\d+(?:[.,]\d+)?)\s*(?:minutes?|mins?|m)(?![a-z])/);
+      if (m) { secs += parseFloat(m[1].replace(',', '.')) * 60; hit = true; }
+      m = t.match(/(\d+(?:[.,]\d+)?)\s*(?:seconds?|secs?|s)(?![a-z])/);
+      if (m) { secs += parseFloat(m[1].replace(',', '.')); hit = true; }
+      if (!hit) {
+        m = t.match(/(\d+(?:[.,]\d+)?)/);
+        if (m) { secs = parseFloat(m[1].replace(',', '.')); hit = true; }
       }
-      segSecs = [];
-      for (i = 0; i < SLIDE_ORDER.length; i++) {
-        var p = bandPlan(SLIDE_ORDER[i].band);
-        var whole = p ? partSecs(p.name) : 0;
-        var share = p && totalIn[p.name] ? talkIn[i] / totalIn[p.name] : 0;
-        segSecs.push(whole * share);
-      }
-      measureExpected(talkIn);
+      return hit ? Math.round(secs) : null;
     }
+
+    /* The English list's meta bullet only; the Italian twin is ignored. */
+    function metaItemOf(el) {
+      return el ? el.querySelector('aside.notes > ul > li[data-step="meta"]') : null;
+    }
+
+    function measurePlan() {
+      var i;
+      var inTalk = [], bandOf = [];
+      var metaSum = {}, freeIn = {};
+      slideMeta = []; slideSecs = [];
+      slides.forEach(function (el, idx) {
+        var li = metaItemOf(el);
+        slideMeta.push(li ? parseMetaSecs(li.textContent) : null);
+        var talk = el.getAttribute('data-part') !== 'backup' &&
+                   el.getAttribute('data-talk') !== 'no';
+        var pl = talk ? bandPlan(SLIDE_ORDER[groupOf[idx]].band) : null;
+        inTalk.push(talk);
+        bandOf.push(pl ? pl.name : null);
+        if (!pl) return;
+        if (slideMeta[idx] !== null) metaSum[pl.name] = (metaSum[pl.name] || 0) + slideMeta[idx];
+        else freeIn[pl.name] = (freeIn[pl.name] || 0) + 1;
+      });
+      /* what each unmarked slide of a band gets: the rest of the band, evenly */
+      var freeEach = {};
+      Object.keys(freeIn).forEach(function (name) {
+        var rest = partSecs(name) - (metaSum[name] || 0);
+        freeEach[name] = rest > 0 ? rest / freeIn[name] : 0;
+      });
+      segSecs = [];
+      for (i = 0; i < SLIDE_ORDER.length; i++) segSecs.push(0);
+      slides.forEach(function (el, idx) {
+        if (!inTalk[idx]) { slideSecs.push(null); return; }
+        var name = bandOf[idx];
+        var s = !name ? 0 : (slideMeta[idx] !== null ? slideMeta[idx] : (freeEach[name] || 0));
+        slideSecs.push(s);
+        segSecs[groupOf[idx]] += s;
+      });
+      measureExpected();
+    }
+
+    /* The bar echoes the current slide's planned seconds, small and muted,
+       beside the slide count. Empty (hidden) outside the talk. */
+    function paintSlideTarget(idx) {
+      if (!pres.count) return;
+      var tgt = pres.target;
+      if (!tgt) {
+        tgt = pres.target = document.createElement('span');
+        tgt.className = 'pres__target';
+        tgt.title = 'Planned time for this slide';
+        pres.count.parentNode.appendChild(tgt);
+      }
+      var s = slideSecs[idx];
+      if (s === null || s === undefined) { tgt.textContent = ''; return; }
+      s = Math.round(s);
+      tgt.textContent = '~' + (s < 60 ? s + ' s' : mmss(s).replace(/^0/, ''));
+    }
+
+    /* Read-only diagnostic for the console: window.deckPlan() lists every
+       spoken slide's meta, planned seconds and expected start, and every
+       group's budget. Nothing in the deck calls it. */
+    window.deckPlan = function () {
+      if (!segSecs.length) measurePlan();
+      var rows = [];
+      slides.forEach(function (el, idx) {
+        if (!slideExp[idx]) return;
+        rows.push({ cue: el.getAttribute('data-cue') || '', meta: slideMeta[idx],
+                    secs: slideSecs[idx], start: slideExp[idx].start });
+      });
+      var groups = SLIDE_ORDER.map(function (g, gi) {
+        return { band: g.band, topic: g.topic, secs: segSecs[gi] || 0 };
+      });
+      return { slides: rows, groups: groups };
+    };
+    /* ══ end per-slide targets ═══════════════════════════════════════ */
 
     /* ── Where he ought to be by now ──────────────────────────
        The two pacing timers count down the section he is in; this table
        answers the other question — against the whole talk, is he early or
-       late? Each spoken slide takes an even share of its own section's
-       budget, and the running sum before a slide is the elapsed time he
-       should be at when he arrives at it. Backups and the hold screen are
-       not in the talk, so they are not in the sum and standing on one
-       leaves the readout with no opinion at all. */
+       late? Each spoken slide's share is its own target from the plan in
+       0b (its meta line, or an even cut of what its band has left), and
+       the running sum before a slide is the elapsed time he should be at
+       when he arrives at it. Backups and the hold screen are not in the
+       talk, so they are not in the sum and standing on one leaves the
+       readout with no opinion at all. */
     var slideExp = [];   /* per slide index: {start, share} in seconds, or null */
 
-    function measureExpected(talkIn) {
+    function measureExpected() {
       var acc = 0;
       slideExp = [];
       slides.forEach(function (el, idx) {
-        if (el.getAttribute('data-part') === 'backup' ||
-            el.getAttribute('data-talk') === 'no') { slideExp.push(null); return; }
-        var gi = groupOf[idx];
-        var share = (segSecs[gi] || 0) / Math.max(talkIn[gi] || 0, 1);
+        var share = slideSecs[idx];
+        if (share === null || share === undefined) { slideExp.push(null); return; }
         slideExp.push({ start: acc, share: share });
         acc += share;
       });
@@ -1436,9 +1545,9 @@
        red at a minute, two minutes and beyond, the same four colours the
        pacing timers use so the bar keeps one language.
 
-       The share each slide gets is an even split, so a five-second divider
-       carries the same expectation as a ninety-second diagram and the raw
-       difference lurches about even when he is exactly on plan. The number
+       Each slide's share is its own target (0b), but inside a slide the
+       expectation still moves in even steps, so the raw difference wobbles
+       a little even when he is exactly on plan. The number
        is left alone — only the colour is held back: a new level has to
        survive six consecutive half-second ticks before it is painted, so
        the readout settles instead of strobing. Ticks are counted only while
@@ -1706,6 +1815,7 @@
       pres.count.textContent = mine
         ? mine + ' / ' + talkCount
         : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
+      paintSlideTarget(d.slide - 1);   /* per-slide targets, see 0b */
       var t = el.querySelector('.slide__title, .divider__title');
       pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
       var notes = el.querySelector('aside.notes');
@@ -1805,7 +1915,13 @@
       pres.notes.querySelectorAll('li:not([data-step])').forEach(function (li) {
         if (/^\s*if asked\b/i.test(li.textContent)) li.classList.add('is-aside');
       });
-      var items = pres.notes.querySelectorAll('li[data-step]');
+      /* The meta line is the slide's time target, never a caption: it takes
+         its own quiet .is-meta style and stays out of the step marking.
+         (Per-slide targets, added 2026-09-23; the rule is in 0b.) */
+      pres.notes.querySelectorAll('li[data-step="meta"]').forEach(function (li) {
+        li.classList.add('is-meta');
+      });
+      var items = pres.notes.querySelectorAll('li[data-step]:not([data-step="meta"])');
       if (body) body.classList.toggle('has-steps', items.length > 0);
       if (!items.length) return;
       var cur = currentStepItem(items, (d && d.step) || 0);
