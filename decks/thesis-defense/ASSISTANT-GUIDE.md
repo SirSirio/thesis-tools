@@ -49,9 +49,13 @@ is assessed on. Everything below follows from that.
 10. **150 words maximum. Decision first.**
 11. **Say plainly what you could not do, got wrong, or disagree with.** That is not a status
     report; that is the part he needs.
-12. **No internal codes or abbreviations** (`S07`, `D-04`, `A1/A2`, `H-13`) in anything
+12. **Decide small things yourself:** layout touches, wording that follows an instruction he
+    already gave, obvious consequences of a change (a title that no longer matches the notes).
+    Do it, and he will look. Ask only when the answer changes what gets built or the thesis's
+    claims.
+13. **No internal codes or abbreviations** (`S07`, `D-04`, `A1/A2`, `H-13`) in anything
     thesis-facing or in a reply. Spell out the concept.
-13. He will call slides by the **corner number**. That number shifts whenever any part adds or
+14. He will call slides by the **corner number**. That number shifts whenever any part adds or
     removes a slide. **Identify slides by `data-cue`** and translate. When in doubt, quote the
     slide's title back to him rather than guessing.
 
@@ -136,28 +140,28 @@ because it is dirty — it may be mid-edit.
 
 ## 6 · Hard content rules
 
-14. **Every number on screen must be traceable to the thesis.** Never compute, infer, round or
+15. **Every number on screen must be traceable to the thesis.** Never compute, infer, round or
     dramatise. A Part II audit found nineteen claims that failed this — invented ratios,
     deck-computed percentages, and three identical bars presented as three measurements that
     were never taken. Assume your part has its own until you have checked.
-15. **Never crop a photograph — shrink it.** Give it a box at its own aspect ratio with
+16. **Never crop a photograph — shrink it.** Give it a box at its own aspect ratio with
     `object-fit: contain`. An `overflow:hidden` window onto part of an image is the thing he
     rejects hardest, and he has rejected it six times.
-16. **Nothing below 18 px. No overflow at any clicker position.**
-17. **Write `%`, never "per cent".**
-18. **The modules are Pump, Alignment, Nozzle, User Interface** — the thesis chapter names.
+17. **Nothing below 18 px. No overflow at any clicker position.**
+18. **Write `%`, never "per cent".**
+19. **The modules are Pump, Alignment, Nozzle, User Interface** — the thesis chapter names.
     Never "stage" for alignment, "needle" for nozzle, "screen" or "display" for the interface.
     **Reagent storage is Marius Schiller's**, never one of Sirio's modules.
-19. **Titles are full assertive sentences carrying the finding.** No filler labels. He
+20. **Titles are full assertive sentences carrying the finding.** No filler labels. He
     narrates; the slide shows. Less text wins.
-20. **Every slide edit updates that slide's Italian points in `CONTENT-IT.md`, unprompted.**
-21. **New compositions per slide are expected.** Reusing a template unchanged disappoints him.
-22. **Few numbers, not no numbers.** Percentages are welcome and so are measured values —
+21. **Every slide edit updates that slide's Italian points in `CONTENT-IT.md`, unprompted.**
+22. **New compositions per slide are expected.** Reusing a template unchanged disappoints him.
+23. **Few numbers, not no numbers.** Percentages are welcome and so are measured values —
     the failure mode is a crowded slide, not the percent sign. Sirio has cut numbers from
     slides far more often than he has asked for more. Put up the two or three that carry the
     finding and let the rest live in the speaker notes. A percentage that follows by plain
     arithmetic from two published values is fine to show; one that does not follow from the
-    thesis at all is rule 14, and stays out.
+    thesis at all is rule 15, and stays out.
 
 ### Speaker captions — the standard
 
@@ -192,38 +196,38 @@ understand. On point."**
   step, for panel questions only. The Italian twin sits in `<div class="notes-it" lang="it">`
   with a `.notes-it__title` and the same step numbers, no meta line and no "If asked".
   `CONTENT-IT.md` mirrors the Italian, one numbered line per click.
-- **Rule 14 still holds:** a caption compresses what the thesis says; it never adds to it.
+- **Rule 15 still holds:** a caption compresses what the thesis says; it never adds to it.
 
 ---
 
 ## 7 · Verification you owe on every change
 
-23. Reassemble, then walk **every clicker position of the touched slides, forward and
+24. Reassemble, then walk **every clicker position of the touched slides, forward and
     backward**, screenshotting each.
-24. Audit each state programmatically: no descendant outside the slide box, no text under
+25. Audit each state programmatically: no descendant outside the slide box, no text under
     18 px (normalise by the stage scale — headless renders at about 0.867).
-25. **Look at the screenshots.** Automated audits pass things that are obviously wrong to the
+26. **Look at the screenshots.** Automated audits pass things that are obviously wrong to the
     eye; that is how nine defects survived three passes. Crop and zoom anything positioned
     over a photograph or a chart.
-26. **Watch any clip he supplies end to end** before it goes on a slide.
-27. Check `?view=presenter` renders and its next-step preview does not throw.
+27. **Watch any clip he supplies end to end** before it goes on a slide.
+28. Check `?view=presenter` renders and its next-step preview does not throw.
 
 ---
 
 ## 8 · Traps that have already cost whole rounds
 
-28. **SVG `<text>` over a chart can paint in the wrong place.** On one slide every geometry
+29. **SVG `<text>` over a chart can paint in the wrong place.** On one slide every geometry
     API agreed with itself and disagreed with the pixels by a line height. Annotate with the
     deck's HTML chips (`.callout`, `.callout--lite`, `.s16-pipt`) positioned over the plate,
     not SVG text, wherever the plate and the viewBox are 1:1. Punchlist **(x)**.
-29. **Headless Chrome animates at about 1.3 fps.** Step timelines are seeked and look fine;
+30. **Headless Chrome animates at about 1.3 fps.** Step timelines are seeked and look fine;
     anything on `Deck.enter` autoplays and looks stalled and broken. Force it before judging:
     `gsap.globalTimeline.time(gsap.globalTimeline.time() + 8)`. Punchlist **(aa)**.
-30. **A Chrome that outlives its script serves a stale page.** Fresh `--user-data-dir` and
+31. **A Chrome that outlives its script serves a stale page.** Fresh `--user-data-dir` and
     fresh port per run, kill the tree afterwards (`taskkill /F /T /PID`). Launch with
     `--remote-allow-origins=*` and connect the websocket with `suppress_origin=True`, or the
     CDP handshake returns 403. The Playwright MCP browser is usually locked by another chat.
-31. **Never open these files through VS Code Live Preview** — it rewrites relative paths and
+32. **Never open these files through VS Code Live Preview** — it rewrites relative paths and
     strips inline scripts.
 
 ---

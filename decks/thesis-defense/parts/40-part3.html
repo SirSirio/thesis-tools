@@ -132,7 +132,7 @@
      fading in on top of it.  Dialect "plates": one figure at its own aspect
      ratio, object-fit contain, grown and shrunk, never cropped. ══════════ -->
 <section class="slide" id="s27" data-cue="s27" data-dialect="plates" data-part="III"
-         data-map="electronics" style="--head-h:48px">
+         data-map="electronics" style="--head-h:0px">
   <h2 class="slide__title">One microcontroller controls the whole machine.</h2>
   <div class="slide__rule"></div>
 
@@ -1717,9 +1717,11 @@
     var stB  = q(el, '#s27-pwr .p3-st--b');
 
     /* the two geometries: presented big, then stepped back */
-    var C_BIG = { left: 280, top: 192, width: 720 };
-    var C_SML = { left: 56,  top: 312, width: 330 };
-    var P_BIG = { left: 420, top: 192, width: 790 };
+    /* One-line title since 2026-09-23 (--head-h 0): everything sits 48 px
+       higher than it did under the two-line title. */
+    var C_BIG = { left: 280, top: 144, width: 720 };
+    var C_SML = { left: 56,  top: 264, width: 330 };
+    var P_BIG = { left: 420, top: 144, width: 790 };
 
     gsap.set(ctrl, { left: C_BIG.left, top: C_BIG.top, width: C_BIG.width });
     gsap.set(pwr,  { left: P_BIG.left, top: P_BIG.top, width: P_BIG.width,
