@@ -250,44 +250,37 @@
     <span class="tool-card__line">A taut tube moves the dose by at most 2 %.</span>
   </div>
 
-  <!-- the design point, as the chain it actually is: two geometries chosen,
-       one dose out.  Not a trend line — the quantities are unrelated. -->
-  <svg class="dp" id="s13-dp" viewBox="0 0 880 160" aria-hidden="true">
-    <text class="dp__kick" x="2" y="14">geometry</text>
-    <text class="dp__kick dp__kick--out" x="436" y="14">dose</text>
+  <!-- The pump at work: a four-roller rotor turning counter-clockwise inside a
+       180° track, the tube pinched shut wherever a roller presses it.  The
+       figure is drawn into this root by window.PumpAnim (this part's script),
+       the one factory that also draws it, without labels, on s00 and s43.
+       Every dynamic path (the pinched inner wall, the liquid, the packets,
+       the track band) is computed from one centreline, so the geometry is
+       stated once.  The wrapper is 600 × 480 and the viewBox is 1:1 with it,
+       so the HTML labels in .pp__hud sit in viewBox pixels. -->
+  <div class="pp" id="s13-pp" aria-hidden="true" data-pump-anim="s13-" data-pump-labels></div>
 
-    <g class="dp__given">
-      <rect class="dp__box" x="1" y="26" width="300" height="54" rx="10" />
-      <text class="dp__v" x="22" y="62">0.51 mm</text>
-      <text class="dp__k" x="282" y="62">tube bore</text>
-    </g>
-    <g class="dp__given">
-      <rect class="dp__box" x="1" y="94" width="300" height="54" rx="10" />
-      <text class="dp__v" x="22" y="130">4</text>
-      <text class="dp__k" x="282" y="130">rollers</text>
-    </g>
-
-    <path class="dp__join" d="M 301 53 L 342 53 Q 358 53 358 69 L 358 87" />
-    <path class="dp__join" d="M 301 121 L 342 121 Q 358 121 358 105 L 358 87" />
-    <path class="dp__join" d="M 358 87 L 414 87" />
-    <path class="dp__head" d="M 404 80 L 416 87 L 404 94" />
-
-    <rect class="dp__box dp__box--out" id="s13-out" x="436" y="26" width="400" height="122" rx="14" />
-    <text class="dp__out-v" x="636" y="92">5 µL</text>
-    <text class="dp__out-k" x="636" y="124">per stroke</text>
-  </svg>
+  <!-- the design point: three numbers, large beside the pump on step 1, then
+       flown into one row under the tools.  Each keeps its compact size as its
+       native size and is only ever scaled UP, so it never drops below 18 px. -->
+  <div class="s13-n" id="s13-n1"><span class="s13-n__v">4</span><span class="s13-n__k">rollers</span></div>
+  <div class="s13-n" id="s13-n2"><span class="s13-n__v">0.51 mm</span><span class="s13-n__k">inner diameter</span></div>
+  <div class="s13-n s13-n--dose" id="s13-n3"><span class="s13-n__v">5 µL</span><span class="s13-n__k">per stroke</span></div>
 
   <aside class="notes">
     <ul>
       <li data-step="meta">~90 s</li>
-      <li data-step="0">The decision was the dose, 5 µL per stroke; the 0.51 mm tube bore follows from it.</li>
+      <li data-step="0">The rollers pinch the tube shut against the track; each quarter turn pushes out the liquid trapped between two rollers: one stroke, 5 µL.</li>
+      <li data-step="1">The decision was the dose, 5 µL per stroke; the 0.51 mm tube bore follows from it.</li>
       <li data-step="2">I built three tools to guide the design, and with them I chose four rollers.</li>
       <li data-step="3">The geometry solver sizes the rotor for a target dose and checks which roller counts can be built.</li>
+      <li>If asked: four is the fewest rollers that keeps two of them pressing the tube at every moment across the 180° track, so the tube never opens and nothing flows back, with no valves.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Contare i passi, non i secondi: la dose viene dalla geometria, e l&apos;hanno fissata tre strumenti.</p>
       <ul>
-        <li data-step="0">La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.</li>
+        <li data-step="0">I rulli schiacciano il tubo contro la pista fino a chiuderlo; ogni quarto di giro spinge fuori il liquido chiuso tra due rulli: una corsa, 5 µL.</li>
+        <li data-step="1">La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.</li>
         <li data-step="2">Ho costruito tre strumenti per guidare il progetto, e con questi ho scelto quattro rulli.</li>
         <li data-step="3">Il solutore geometrico dimensiona il rotore per una dose data e verifica quali numeri di rulli si possono costruire.</li>
       </ul>
@@ -1649,24 +1642,68 @@
 #s12b .sheet__ro--say .sheet__num { font-size: 62px; letter-spacing: -0.012em; }
 #s12b .sheet__ro--say .sheet__label { font-size: 28px; }
 
-/* ══ S13 · the design point, two geometries into one dose ═══════════ */
-#s13 .dp { position: absolute; left: 200px; top: 532px; width: 880px; height: 160px; overflow: visible; }
-#s13 .dp__box { fill: rgba(255,255,255,0.045); stroke: rgba(255,255,255,0.17); stroke-width: 1.5; }
-#s13 .dp__box--out { fill: color-mix(in srgb, var(--t-a) 13%, transparent);
-                     stroke: var(--t-a); stroke-width: 2; }
-#s13 .dp__v { font-family: var(--mono); font-size: 30px; font-weight: 600; fill: var(--text);
-              font-variant-numeric: tabular-nums; }
-#s13 .dp__k { font-family: var(--mono); font-size: 18px; fill: var(--text-muted);
-              text-anchor: end; letter-spacing: 0.06em; }
-#s13 .dp__kick { font-family: var(--mono); font-size: 18px; font-weight: 700; letter-spacing: 0.2em;
-                 fill: var(--text-muted); }
-#s13 .dp__kick--out { fill: var(--t-a); }
-#s13 .dp__join, #s13 .dp__head { fill: none; stroke: var(--t-a); stroke-width: 2;
-                                 stroke-linecap: round; stroke-linejoin: round; }
-#s13 .dp__out-v { font-family: var(--mono); font-size: 56px; font-weight: 700; fill: var(--t-a);
-                  text-anchor: middle; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-#s13 .dp__out-k { font-family: var(--mono); font-size: 18px; fill: var(--text-soft);
-                  text-anchor: middle; letter-spacing: 0.08em; }
+/* ══ S13 · the pump at work, then the design point under the tools ═══
+   .pp is the 600 × 480 pump figure; GSAP moves it with x / y / scale from
+   the top-left corner (centred on entry, left on step 1, a 0.3 miniature in
+   the bottom band from step 2).  The transform below is its step-0 place, so
+   nothing jumps before the builder runs. */
+#s13 .pp { position: absolute; left: 0; top: 0; width: 600px; height: 480px; z-index: 2;
+           transform-origin: 0 0; transform: translate(340px, 212px); pointer-events: none; }
+#s13 .pp__svg { position: absolute; inset: 0; width: 600px; height: 480px; overflow: visible; }
+/* The figure's look, shared by every PumpAnim root (s13 here, bare on s00
+   and s43).  The packet, drop and receiving-tube fills are the per-root
+   gradient, set as attributes by the factory so each root's ids stay its own. */
+.pp .pp__disc  { fill: rgba(255,255,255,0.035); stroke: color-mix(in srgb, var(--t-a) 30%, transparent); stroke-width: 1.5; }
+.pp .pp__wedge { fill: color-mix(in srgb, var(--t-a) 20%, transparent);
+                  stroke: color-mix(in srgb, var(--t-a) 55%, transparent); stroke-width: 1.5; }
+.pp .pp__arm   { fill: none; stroke: color-mix(in srgb, var(--t-a) 32%, transparent); stroke-width: 7; stroke-linecap: round; }
+.pp .pp__track { fill: rgba(255,255,255,0.055); stroke: rgba(255,255,255,0.2); stroke-width: 1.5; stroke-linejoin: round; }
+.pp .pp__liq   { fill: color-mix(in srgb, var(--t-a) 24%, transparent); }
+.pp .pp__flow  { fill: none; stroke: rgba(255,214,190,0.55); stroke-width: 3; stroke-linecap: round;
+                  stroke-dasharray: 7 70.488; }
+.pp .pp__wall  { fill: none; stroke: rgba(240,236,232,0.7); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+/* the rollers are glass, so the pinch under each one stays visible: the
+   inner wall pressed flat onto the outer one and no liquid between them */
+.pp .pp__roller circle:first-child { fill: color-mix(in srgb, var(--t-a) 10%, rgba(15,12,11,0.28)); stroke: var(--t-a); stroke-width: 2.5; }
+/* where a roller has the tube shut, the flattened length shows as one bright bar */
+.pp .pp__seal  { fill: none; stroke: #fff4ec; stroke-width: 5; stroke-linecap: round; }
+.pp .pp__tick  { fill: none; stroke: var(--t-a); stroke-width: 3; stroke-linecap: round; }
+.pp .pp__axle  { fill: var(--t-a); }
+.pp .pp__hub   { fill: var(--t-a); }
+.pp .pp__hub-pin { fill: #0f0c0b; }
+.pp .pp__nhub  { fill: rgba(240,236,232,0.16); stroke: rgba(240,236,232,0.62); stroke-width: 2; }
+.pp .pp__needle { fill: none; stroke: rgba(240,236,232,0.75); stroke-width: 4; stroke-linecap: round; }
+.pp .pp__rt    { fill: rgba(255,255,255,0.04); stroke: rgba(240,236,232,0.6); stroke-width: 2.5; stroke-linejoin: round; }
+.pp .pp__rt-rim { fill: none; stroke: rgba(240,236,232,0.6); stroke-width: 4; stroke-linecap: round; }
+
+/* a bare root (no labels): the slide sizes the box, the cropped viewBox fills it */
+.pp--bare { pointer-events: none; }
+.pp--bare .pp__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* the HTML labels over the figure, in viewBox pixels; they leave before the
+   figure shrinks, so their 20 px never becomes 6 */
+#s13 .pp__hud { position: absolute; inset: 0; }
+#s13 .pp__q { position: absolute; left: 293px; top: 218px; transform: translate(-50%, -50%);
+              display: flex; flex-direction: column; align-items: center; gap: 2px;
+              font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+#s13 .pp__q-k { font-family: system-ui, "Segoe UI", sans-serif; font-size: 20px; color: var(--text-soft); }
+#s13 .pp__q-v { font-size: 25px; font-weight: 700; color: var(--t-a); }
+#s13 .pp__ct { position: absolute; right: 124px; top: 368px; text-align: right;
+               display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+               font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+#s13 .pp__ct-v { font-size: 34px; font-weight: 700; color: var(--text); line-height: 1.05; }
+#s13 .pp__ct-k { font-size: 20px; color: var(--text-muted); }
+
+/* the three numbers: native size is the compact row; step 1 scales them up */
+#s13 .s13-n { position: absolute; left: 0; top: 0; transform-origin: 0 0; z-index: 3;
+              display: flex; flex-direction: column; gap: 4px; pointer-events: none; white-space: nowrap; }
+#s13 .s13-n__v { font-family: var(--mono); font-size: 40px; font-weight: 700; line-height: 1.05;
+                 color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+#s13 .s13-n__k { font-family: var(--mono); font-size: 18px; line-height: 1.25; color: var(--text-muted);
+                 letter-spacing: 0.06em; }
+#s13 .s13-n--dose .s13-n__v { color: var(--t-a);
+  background: linear-gradient(104deg, var(--t-a) 12%, var(--t-b) 96%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
 /* ══ S16 · the drawn precision chart, the clip and the ledger ═══════ */
 #s16 .s16-plate { position: absolute; left: 56px; top: 214px; width: 700px; height: 340px; }
@@ -1919,7 +1956,7 @@
 /* ── initial states, so nothing flashes before its timeline is built ── */
 #s12 .prin { opacity: 0; }
 #s13 .tool-card { opacity: 0; }
-#s13 .dp__kick, #s13 .dp__given, #s13 #s13-out, #s13 .dp__out-v, #s13 .dp__out-k { opacity: 0; }
+#s13 .s13-n { opacity: 0; }
 #s16 .ledger__cell, #s16 .s16-clip { opacity: 0; }
 #s17 .fan__sheet, #s17 .s17-rack { opacity: 0; }
 #s17 .rej, #s17 .rej-prin { opacity: 0; }
@@ -2209,53 +2246,448 @@
     return tl;
   });
 
+  /* ══════════════════ PumpAnim · the peristaltic pump figure ══════════════════
+     One figure, three slides: s13 draws it with its labels (the quarter-turn
+     dose and the running counter), s00 (the hold screen, parts/10-opening)
+     and s43 (the closing slide, parts/50-discussion) draw it bare, with no
+     text of any kind.  Defined once here, as window.PumpAnim:
+
+       PumpAnim.mount(root)            fills an empty [data-pump-anim] root
+                                       with the figure's SVG (and, with
+                                       data-pump-labels, the label HUD)
+       PumpAnim.build(root) → engine   mounts, samples the geometry once,
+                                       paints t = 0; idempotent per root
+                                       engine: { render(t), loop, play(),
+                                                 pause(), kill() }
+       PumpAnim.run(el, root, opts)    the slide-enter lifecycle: a still
+                                       frame for the presenter preview and
+                                       reduced motion, else fade in and
+                                       restart the loop; paused whenever el
+                                       is not the active slide.  opts:
+                                       { speed: loop timeScale, delay: fade
+                                       delay in s }
+
+     A root is  <div class="pp" data-pump-anim="PREFIX">  where PREFIX makes
+     the figure's SVG ids unique (s13 keeps its old ids with "s13-").  Every
+     [data-pump-anim] root in the document is built at the end of this
+     script, while the page parses, so the overview, the presenter's pristine
+     clones and a cold entry all see a painted first frame.  The opening and
+     closing parts call PumpAnim.run only from their Deck.enter hooks, which
+     the runtime first fires on DOMContentLoaded, after every part script has
+     run, so the factory is always defined by then.
+
+     Everything the figure shows is a pure function of one loop time t
+     (render(t)), so the loop can be seeked, scrubbed or frozen and the frame
+     is always right, and t = LOOP draws exactly what t = 0 draws.
+
+     Geometry, in viewBox pixels (schematic, not to scale):
+       rotor centre C (250,175); four rollers 90° apart on pitch radius R,
+       roller radius RR, R / RR = 5 so a roller's own spin also closes after
+       one rotor turn; tube centreline radius 148 in the 180° track; tube
+       walls at ±12 from the centreline, 3 px wide.  R + RR = 158 reaches
+       2 px past the point where the two walls meet, so a roller in the track
+       always closes the tube over a short flattened length.  Outside the
+       180° arc the track eases outward over about 26° at each end (the
+       lead-in and lead-out ramps), where a roller engages and releases.
+
+     Motion: the rotor turns counter-clockwise on screen, so a roller enters
+     the track at the left (the inlet) and leaves it at the right (the
+     outlet); the liquid moves the same way.  One stroke = one quarter turn:
+     at every hold the rollers sit at 0°, 90° and 180°, so two sealed
+     pockets lie in the track, and the stroke sweeps the one next to the
+     outlet out through it.  Its volume leaves the needle as one drop. */
+  var PA = {
+    CX: 250, CY: 175, RC: 148, RR: 158 / 6, R: 158 * 5 / 6,
+    HALF: 12, WALL: 1.5, CLOSED: 9, DS: 2,
+    STROKE: 1.6, HOLD: 1.0, N: 4, SWAP: 1.2,
+    STATIC_T: 4.85,         /* reduced motion and the presenter preview:
+                               the hold after stroke 2 — two drops landed,
+                               the next packet sealed and lit, the quarter
+                               shown */
+    BARE_VB: '0 8 560 456'  /* the bare figure's viewBox: the drawing's own
+                               bounds, no room kept for labels */
+  };
+  PA.CYCLE = PA.STROKE + PA.HOLD;
+  PA.LOOP = PA.N * PA.CYCLE + PA.SWAP;
+  PA.P = PA.RC * Math.PI / 2;              /* one pitch of tube, centreline arc */
+
+  function paClamp(v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
+  function paSmooth(a, b, v) { var x = paClamp((v - a) / (b - a)); return x * x * (3 - 2 * x); }
+  function paEase(v) { return 0.5 - 0.5 * Math.cos(Math.PI * paClamp(v)); }   /* sine.inOut */
+  function paFmt(n) { return (Math.round(n * 100) / 100).toString(); }
+
+  /* the figure's markup, ids prefixed with P; the label HUD only on request */
+  function paMarkup(P, labels) {
+    var roller = '<g class="pp__roller"><circle r="26.333" /><path class="pp__tick" d="M 0 -6 V -20" />' +
+                 '<circle class="pp__axle" r="4.5" /></g>';
+    var pkg = 'url(#' + P + 'pkg)';
+    var svg =
+      '<svg class="pp__svg" viewBox="' + (labels ? '0 0 600 480' : PA.BARE_VB) + '">' +
+        '<defs>' +
+          '<linearGradient id="' + P + 'pkg" x1="0" y1="0" x2="1" y2="1">' +
+            '<stop offset="0" stop-color="#ff8a4c" /><stop offset="1" stop-color="#e83535" />' +
+          '</linearGradient>' +
+          '<linearGradient id="' + P + 'fade" gradientUnits="userSpaceOnUse" x1="4" y1="0" x2="58" y2="0">' +
+            '<stop offset="0" stop-color="#000" /><stop offset="1" stop-color="#fff" />' +
+          '</linearGradient>' +
+          '<mask id="' + P + 'mask" maskUnits="userSpaceOnUse" x="0" y="0" width="600" height="480">' +
+            '<rect x="0" y="0" width="600" height="480" fill="url(#' + P + 'fade)" />' +
+          '</mask>' +
+          '<clipPath id="' + P + 'rtclip">' +
+            '<path d="M 497.5 318 V 409.5 L 520 449.5 L 542.5 409.5 V 318 Z" />' +
+          '</clipPath>' +
+          /* the tube centreline, in the direction the liquid flows: in from
+             the left, down the inlet ramp, 180° under the rotor, up the
+             outlet ramp, over to the nozzle.  Never rendered; sampled once. */
+          '<path id="' + P + 'cl" d="M 4 44 H 36 C 70 44 90 70 96 100 C 100.8 124 102 150 102 175 ' +
+            'A 148 148 0 0 0 398 175 C 398 150 399.2 124 404 100 ' +
+            'C 410 70 430 44 464 44 H 494 C 510 44 520 54 520 70 V 232" />' +
+          '<path id="' + P + 'clA" d="M 4 44 H 36 C 70 44 90 70 96 100" />' +
+          '<path id="' + P + 'clL" d="M 4 44 H 36 C 70 44 90 70 96 100 C 100.8 124 102 150 102 175" />' +
+        '</defs>' +
+        '<circle class="pp__disc" cx="250" cy="175" r="112" />' +
+        '<path class="pp__wedge" id="' + P + 'wedge" d="" />' +
+        '<g id="' + P + 'arms">' +
+          '<path class="pp__arm" d="M 250 175 H 381.667 M 250 175 V 306.667 M 250 175 H 118.333 M 250 175 V 43.333" />' +
+        '</g>' +
+        '<g mask="url(#' + P + 'mask)">' +
+          '<path class="pp__track" id="' + P + 'track" d="" />' +
+          '<path class="pp__liq" id="' + P + 'liq" d="" />' +
+          '<path class="pp__flow" id="' + P + 'flow-in" d="" />' +
+          '<path class="pp__flow" id="' + P + 'flow-out" d="" />' +
+          '<path class="pp__pk" id="' + P + 'pk0" d="" fill="' + pkg + '" />' +
+          '<path class="pp__pk" id="' + P + 'pk1" d="" fill="' + pkg + '" />' +
+          '<path class="pp__pk" id="' + P + 'pk2" d="" fill="' + pkg + '" />' +
+          '<path class="pp__wall" id="' + P + 'wall-o" d="" />' +
+          '<path class="pp__wall" id="' + P + 'wall-i" d="" />' +
+        '</g>' +
+        roller + roller + roller + roller +
+        '<path class="pp__seal" id="' + P + 'seal" d="" />' +
+        '<circle class="pp__hub" cx="250" cy="175" r="17" />' +
+        '<circle class="pp__hub-pin" cx="250" cy="175" r="5" />' +
+        '<rect class="pp__nhub" x="510" y="230" width="20" height="11" rx="2.5" />' +
+        '<path class="pp__needle" d="M 520 241 V 272" />' +
+        '<circle class="pp__drop" id="' + P + 'drop" cx="520" cy="272" r="0" fill="' + pkg + '" />' +
+        '<g id="' + P + 'rt">' +
+          '<rect class="pp__rt-liq" id="' + P + 'rt-liq" x="490" y="449.5" width="60" height="4" ' +
+            'clip-path="url(#' + P + 'rtclip)" fill="' + pkg + '" />' +
+          '<path class="pp__rt" d="M 496 318 V 410 L 520 452 L 544 410 V 318" />' +
+          '<path class="pp__rt-rim" d="M 489 317 H 551" />' +
+        '</g>' +
+      '</svg>';
+    if (!labels) return svg;
+    return svg +
+      '<div class="pp__hud">' +
+        '<div class="pp__q"><span class="pp__q-k">&frac14; turn</span><span class="pp__q-v">5 µL</span></div>' +
+        '<div class="pp__ct"><span class="pp__ct-v" id="' + P + 'ct-v">0 µL</span>' +
+          '<span class="pp__ct-k" id="' + P + 'ct-k">0 strokes</span></div>' +
+      '</div>';
+  }
+
+  function paMount(root) {
+    if (!root.querySelector('.pp__svg')) {
+      root.innerHTML = paMarkup(root.getAttribute('data-pump-anim') || 'pa-',
+                                root.hasAttribute('data-pump-labels'));
+    }
+    return root;
+  }
+
+  function paBuild(root) {
+    if (!root) return null;
+    if (root.__pp) return root.__pp;
+    paMount(root);
+    var P = root.getAttribute('data-pump-anim') || 'pa-';
+    function byId(name) { return root.querySelector('#' + P + name); }
+    var cl = byId('cl');
+    if (!cl || !cl.getTotalLength) return null;
+
+    /* sample the centreline once: point, outward normal, arc length */
+    var len = cl.getTotalLength(), n = Math.floor(len / PA.DS), i;
+    var px = [], py = [], nx = [], ny = [], ss = [];
+    for (i = 0; i <= n; i++) {
+      var s = (i === n) ? len : i * PA.DS;
+      var a = cl.getPointAtLength(Math.max(0, s - 0.5)), b = cl.getPointAtLength(Math.min(len, s + 0.5));
+      var p = cl.getPointAtLength(s);
+      var dx = b.x - a.x, dy = b.y - a.y, dl = Math.sqrt(dx * dx + dy * dy) || 1;
+      px.push(p.x); py.push(p.y); nx.push(-dy / dl); ny.push(dx / dl); ss.push(s);
+    }
+    var sA = byId('clA').getTotalLength();                 /* inlet ramp starts   */
+    var sL = byId('clL').getTotalLength();                 /* 180° arc starts     */
+    var sR = sL + 2 * PA.P;                                /* 180° arc ends       */
+    var sB = sR + (sL - sA);                               /* outlet ramp ends    */
+    function idx(s) { return Math.max(0, Math.min(n, Math.round(s / PA.DS))); }
+    function pt(k, off) { return (px[k] + nx[k] * off).toFixed(2) + ' ' + (py[k] + ny[k] * off).toFixed(2); }
+    function line(k0, k1, off) {
+      var d = '', k;
+      for (k = k0; k <= k1; k++) d += (k === k0 ? 'M ' : ' L ') + pt(k, off[k] !== undefined ? off[k] : off);
+      return d;
+    }
+
+    /* the static parts: outer wall, track band, the flow marks' lines */
+    byId('wall-o').setAttribute('d', line(0, n, PA.HALF));
+    var t0 = idx(sA - 14), t1 = idx(sB + 14), tr = '', k;
+    for (k = t0; k <= t1; k++) tr += (k === t0 ? 'M ' : ' L ') + pt(k, PA.HALF + PA.WALL);
+    for (k = t1; k >= t0; k--) tr += ' L ' + pt(k, PA.HALF + 24);
+    byId('track').setAttribute('d', tr + ' Z');
+    var fin = byId('flow-in'), fout = byId('flow-out');
+    fin.setAttribute('d', line(idx(20), idx(sA - 6), 0));
+    fout.setAttribute('d', line(idx(sB + 6), n - 3, 0));
+
+    var liq = byId('liq'), wallI = byId('wall-i');
+    var pks = [byId('pk0'), byId('pk1'), byId('pk2')];
+    var rollers = qa(root, '.pp__roller');
+    var arms = byId('arms'), wedge = byId('wedge');
+    var drop = byId('drop'), rt = byId('rt'), rtLiq = byId('rt-liq');
+    var ctV = byId('ct-v'), ctK = byId('ct-k'), ct = q(root, '.pp__ct');   /* null when bare */
+    var seal = byId('seal');
+    var inner = new Array(n + 1), lastCount = -1;
+    var eng = { sL: sL, sR: sR, P: PA.P };
+
+    /* a packet's brightness from where it is, in pitches from the inlet end
+       of the arc: forming (dark), sealed in the inlet quarter (faint), next
+       out in the outlet quarter (full), gone into the outlet column (fading) */
+    function pkAlpha(pos) {
+      if (pos < -0.25 || pos >= 2) return 0;
+      if (pos < 0)   return 0.3 * paSmooth(-0.25, 0, pos);
+      if (pos < 1)   return 0.3 + 0.7 * paSmooth(0.45, 1, pos);
+      if (pos < 1.5) return 1;
+      return 1 - paSmooth(1.5, 2, pos);
+    }
+
+    function render(t) {
+      t = ((t % PA.LOOP) + PA.LOOP) % PA.LOOP;
+      var k, j, S = 0, strokeNow = -1, pNow = 0;
+      for (k = 0; k < PA.N; k++) {
+        var raw = paClamp((t - k * PA.CYCLE) / PA.STROKE);
+        S += paEase(raw);
+        if (t >= k * PA.CYCLE && t < (k + 1) * PA.CYCLE) { strokeNow = k; pNow = paEase(raw); }
+      }
+      var rot = -90 * S;                                  /* SVG degrees, negative = counter-clockwise */
+      var D = PA.P * S;                                   /* how far the liquid has moved */
+
+      /* rotor, rollers (rolling on the tube, so they spin the other way) */
+      arms.setAttribute('transform', 'rotate(' + paFmt(rot) + ' ' + PA.CX + ' ' + PA.CY + ')');
+      var qx = [], qy = [];
+      for (k = 0; k < 4; k++) {
+        var ang = (90 * k + rot) * Math.PI / 180;
+        qx[k] = PA.CX + PA.R * Math.cos(ang); qy[k] = PA.CY + PA.R * Math.sin(ang);
+        rollers[k].setAttribute('transform', 'translate(' + paFmt(qx[k]) + ' ' + paFmt(qy[k]) + ') rotate(' +
+          paFmt((-rot * PA.R / PA.RR + 45 * k) % 360) + ')');
+      }
+
+      /* the inner wall, pushed out wherever a roller reaches into the tube */
+      var RR2 = PA.RR * PA.RR, wi = '', m;
+      for (m = 0; m <= n; m++) {
+        var off = -PA.HALF;
+        for (k = 0; k < 4; k++) {
+          var Dx = px[m] - qx[k], Dy = py[m] - qy[k];
+          if (Dx * Dx + Dy * Dy > 2500) continue;
+          var dn = Dx * nx[m] + Dy * ny[m];
+          var disc = dn * dn - (Dx * Dx + Dy * Dy) + RR2;
+          if (disc > 0) { var reach = -dn + Math.sqrt(disc) + PA.WALL; if (reach > off) off = reach; }
+        }
+        if (off > PA.CLOSED) off = PA.CLOSED;
+        inner[m] = off;
+        wi += (m === 0 ? 'M ' : ' L ') + pt(m, off);
+      }
+      wallI.setAttribute('d', wi);
+
+      /* the seals: every run of samples where the walls meet */
+      var sl = '', run = -1, closedAt = [];
+      for (m = 0; m <= n + 1; m++) {
+        var shut = m <= n && inner[m] >= PA.CLOSED - 0.01;
+        if (shut && run < 0) run = m;
+        if (!shut && run >= 0) {
+          sl += line(run, m - 1, PA.HALF - 1.5);
+          closedAt.push(ss[(run + m - 1) >> 1]);
+          run = -1;
+        }
+      }
+      seal.setAttribute('d', sl);
+      eng.closedAt = closedAt;
+
+      /* the liquid: the lumen between the walls, zero wherever a roller seals it */
+      function lumen(k0, k1) {
+        var d = '', h;
+        for (h = k0; h <= k1; h++) d += (h === k0 ? 'M ' : ' L ') + pt(h, Math.min(inner[h] + PA.WALL, PA.HALF - PA.WALL));
+        for (h = k1; h >= k0; h--) d += ' L ' + pt(h, PA.HALF - PA.WALL);
+        return d + ' Z';
+      }
+      liq.setAttribute('d', lumen(0, n));
+
+      /* the packets riding with the liquid, one pitch long each */
+      var used = 0;
+      for (j = -5; j <= 2 && used < 3; j++) {
+        var pos = j + S, al = pkAlpha(pos);
+        if (al <= 0.004) continue;
+        var k0 = idx(sL + PA.P * pos), k1 = idx(sL + PA.P * (pos + 1));
+        if (k1 - k0 < 2) continue;
+        pks[used].setAttribute('d', lumen(k0, k1));
+        pks[used].setAttribute('opacity', al.toFixed(3));
+        used++;
+      }
+      for (; used < 3; used++) { pks[used].setAttribute('d', ''); pks[used].setAttribute('opacity', '0'); }
+
+      /* the flow marks move with the liquid in the free tube */
+      fin.style.strokeDashoffset = paFmt(-D);
+      fout.style.strokeDashoffset = paFmt(-D);
+
+      /* the quarter turn, swept behind the arm that starts at six o'clock */
+      var wa = 0, wo = 0;
+      if (strokeNow >= 0) {
+        var inHold = t - strokeNow * PA.CYCLE - PA.STROKE;
+        wa = 90 * pNow;
+        wo = inHold < 0 ? 1 : 1 - paSmooth(PA.HOLD - 0.32, PA.HOLD, inHold);
+      }
+      if (wa < 0.5 || wo <= 0.004) { wedge.setAttribute('d', ''); }
+      else {
+        var e = (90 - wa) * Math.PI / 180;
+        wedge.setAttribute('d', 'M 250 175 L 250 275 A 100 100 0 0 0 ' +
+          paFmt(250 + 100 * Math.cos(e)) + ' ' + paFmt(175 + 100 * Math.sin(e)) + ' Z');
+        wedge.setAttribute('opacity', wo.toFixed(3));
+      }
+
+      /* the drop grows at the needle through the stroke, falls, lands */
+      var swapAt = PA.N * PA.CYCLE, reset = t >= swapAt + 0.5;
+      var landed = 0, level = 0, FALL = 0.34, TIP = 272;
+      for (k = 0; k < PA.N; k++) {
+        var land = k * PA.CYCLE + PA.STROKE + FALL;
+        if (t >= land) landed++;
+        level += paEase((t - land) / 0.25);
+      }
+      if (reset) { landed = 0; level = 0; }
+      var surf = 449.5 - 17 * level;
+      rtLiq.setAttribute('y', paFmt(surf));
+      rtLiq.setAttribute('height', paFmt(Math.max(0, 452 - surf)));
+      var dr = 0, dy2 = TIP;
+      if (strokeNow >= 0) {
+        var ts = t - strokeNow * PA.CYCLE;
+        if (ts < PA.STROKE) { dr = 10.5 * Math.pow(pNow, 1 / 3); dy2 = TIP + dr * 0.9; }
+        else if (ts < PA.STROKE + FALL) {
+          var f = (ts - PA.STROKE) / FALL; f = f * f;
+          dr = 10.5; dy2 = TIP + 9.5 + f * (surf - TIP - 9.5);
+        }
+      }
+      drop.setAttribute('r', paFmt(dr));
+      drop.setAttribute('cy', paFmt(dy2));
+
+      /* the tube is swapped once four strokes are in it */
+      var out = paSmooth(swapAt + 0.1, swapAt + 0.5, t), back = paSmooth(swapAt + 0.7, swapAt + 1.1, t);
+      var vis = t < swapAt + 0.5 ? 1 - out : back;
+      rt.setAttribute('opacity', vis.toFixed(3));
+      rt.setAttribute('transform', 'translate(0 ' + paFmt(t < swapAt + 0.5 ? 14 * out : -10 * (1 - back)) + ')');
+      if (ct) ct.style.opacity = vis.toFixed(3);
+      if (ctV && landed !== lastCount) {
+        lastCount = landed;
+        ctV.textContent = (5 * landed) + ' µL';
+        if (ctK) ctK.textContent = landed + (landed === 1 ? ' stroke' : ' strokes');
+      }
+    }
+
+    /* a presenter preview clone only ever shows a still: it gets no loop,
+       so rebuilding the preview on every step leaves nothing behind */
+    var inPreview = !!(root.closest && root.closest('[data-preview]'));
+    var clock = { t: 0 }, loop = null;
+    if (!inPreview) {
+      loop = window.gsap.to(clock, {
+        t: PA.LOOP, duration: PA.LOOP, ease: 'none', repeat: -1, paused: true,
+        onUpdate: function () { render(clock.t); }
+      });
+    }
+    eng.render = render; eng.loop = loop; eng.root = root;
+    eng.play  = function () { if (loop) loop.play(); };
+    eng.pause = function () { if (loop) loop.pause(); };
+    eng.kill  = function () {
+      if (loop) loop.kill();
+      if (root.__ppWatch) { document.removeEventListener('deck:state', root.__ppWatch); root.__ppWatch = null; }
+      root.__pp = null;
+    };
+    render(0);
+    root.__pp = eng;
+    return eng;
+  }
+
+  /* the slide-enter lifecycle, shared by s13, s00 and s43.  One engine and
+     one loop per root, created once; re-entry restarts it from an empty
+     receiving tube, leaving the slide pauses it.  The presenter's preview
+     clone and reduced motion get one still frame. */
+  function paRun(el, root, opts) {
+    opts = opts || {};
+    var eng = paBuild(root);
+    if (!eng) return null;
+    var still = !eng.loop || el.dataset.preview || (window.Deck && Deck.reducedMotion);
+    if (still) { if (eng.loop) eng.loop.pause(); eng.render(PA.STATIC_T); return eng; }
+    window.gsap.fromTo(q(root, '.pp__svg'), { opacity: 0 },
+      { opacity: 1, duration: 0.6, delay: opts.delay || 0, ease: 'power1.out', overwrite: true });
+    eng.loop.timeScale(opts.speed || 1);
+    eng.loop.restart();
+    if (!root.__ppWatch) {
+      root.__ppWatch = function () {
+        if (!el.classList.contains('slide--active')) eng.loop.pause();
+        else if (eng.loop.paused()) eng.loop.play();
+      };
+      document.addEventListener('deck:state', root.__ppWatch);
+    }
+    return eng;
+  }
+
+  window.PumpAnim = { mount: paMount, build: paBuild, run: paRun, markup: paMarkup, CONST: PA };
+
+  /* build every pump root now, while the page parses, so the overview, the
+     presenter's pristine clones and a cold entry never show an empty tube */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-pump-anim]'), function (r) {
+    try { paBuild(r); } catch (err) { /* the enter hook retries */ }
+  });
+
   /* ══════════════════ S13 · the design point and the three tools ══════════════════ */
   Deck.slide('s13', function (el, gsap) {
-    var kicks = qa(el, '.dp__kick');
-    var givens = qa(el, '.dp__given');
-    var joins = qa(el, '.dp__join');
-    var head = q(el, '.dp__head');
-    var out = q(el, '#s13-out');
-    var outV = q(el, '.dp__out-v');
-    var outK = q(el, '.dp__out-k');
+    var pp = q(el, '#s13-pp');
+    paBuild(pp);                      /* the figure, mounted and painted */
+    var hud = q(el, '.pp__hud');
+    var nums = [q(el, '#s13-n1'), q(el, '#s13-n2'), q(el, '#s13-n3')];
     var cards = [q(el, '#s13-c1'), q(el, '#s13-c2'), q(el, '#s13-c3')];
-    var chain = kicks.concat(givens, joins, [head, out, outV, outK]);
-    var fig = q(el, '#s13-dp');
 
-    armDraw(joins.concat([head]));
-    gsap.set(fig, { y: -168 });
-    gsap.set(kicks.concat(givens), { opacity: 0 });
-    gsap.set([out, outV, outK], { opacity: 0 });
+    /* places, in stage pixels: [x, y, scale] */
+    var PP0 = [340, 212, 1], PP1 = [58, 212, 1], PP2 = [278, 552, 0.29];
+    var BIG = [[742, 226], [742, 378], [742, 530]], BIGS = 1.8;
+    var ROW = [[502, 584], [648, 584], [882, 584]];
+
+    gsap.set(pp, { x: PP0[0], y: PP0[1], scale: PP0[2] });
+    nums.forEach(function (nd, i) { gsap.set(nd, { x: BIG[i][0], y: BIG[i][1] + 18, scale: BIGS, autoAlpha: 0 }); });
     gsap.set(cards, { autoAlpha: 0, y: 34 });
 
     var tl = gsap.timeline({ paused: true, defaults: { ease: EO } });
     tl.addLabel('step0');
 
-    /* 1 · two geometries chosen, and the dose they produce */
-    tl.to(kicks[0], { opacity: 1, duration: 0.4 }, 0.0)
-      .fromTo(givens, { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.55, stagger: 0.16 }, 0.06);
-    draw(tl, joins, 0.7, 0.5, 'power2.inOut', 0.1);
-    draw(tl, [head], 1.1, 0.3, 'power2.out');
-    tl.to(out, { opacity: 1, duration: 0.45 }, 1.15)
-      .fromTo(out, { scale: 0.94, svgOrigin: '636 87' },
-        { scale: 1, duration: 0.65, ease: 'back.out(1.7)' }, 1.15)
-      .to([kicks[1], outV, outK], { opacity: 1, duration: 0.4, stagger: 0.06 }, 1.35);
-    tl.addLabel('step1', 2.1);
+    /* 1 · the pump steps left, the three numbers arrive beside it */
+    tl.to(pp, { x: PP1[0], y: PP1[1], duration: 0.9, ease: 'power3.inOut' }, 0.0);
+    nums.forEach(function (nd, i) {
+      tl.to(nd, { autoAlpha: 1, y: BIG[i][1], duration: 0.6 }, 0.4 + i * 0.14);
+    });
+    tl.addLabel('step1', 1.4);
 
-    /* 2 · the three tools rise */
-    tl.to(fig, { y: 0, duration: 0.8, ease: 'power3.inOut' }, 2.2)
-      .to(cards, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.12 }, 2.35)
-      .to(chain, { opacity: 0.5, duration: 0.5 }, 2.45);
-    tl.addLabel('step2', 3.3);
+    /* 2 · the pump and its numbers shrink into the bottom band, the tools rise */
+    tl.to(hud, { opacity: 0, duration: 0.25, ease: 'power1.out' }, 1.5)
+      .to(pp, { x: PP2[0], y: PP2[1], scale: PP2[2], duration: 0.95, ease: 'power3.inOut' }, 1.55);
+    nums.forEach(function (nd, i) {
+      tl.to(nd, { x: ROW[i][0], y: ROW[i][1], scale: 1, duration: 0.95, ease: 'power3.inOut' }, 1.58 + i * 0.05);
+    });
+    tl.to(cards, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.12 }, 2.05);
+    tl.addLabel('step2', 3.0);
 
     /* 3 · the solver takes the stage */
-    tl.to(cards[0], { scale: 1.04, duration: 0.5, transformOrigin: '50% 50%' }, 3.4)
-      .to(cards[0], { boxShadow: '0 26px 76px rgba(255,107,43,0.42)', borderColor: PUMP, duration: 0.5 }, 3.4)
-      .to([cards[1], cards[2]], { autoAlpha: 0.45, duration: 0.5 }, 3.4);
-    tl.addLabel('step3', 4.2);
+    tl.to(cards[0], { scale: 1.04, duration: 0.5, transformOrigin: '50% 50%' }, 3.1)
+      .to(cards[0], { boxShadow: '0 26px 76px rgba(255,107,43,0.42)', borderColor: PUMP, duration: 0.5 }, 3.1)
+      .to([cards[1], cards[2]], { autoAlpha: 0.45, duration: 0.5 }, 3.1);
+    tl.addLabel('step3', 3.9);
 
     return tl;
+  });
+
+  /* the loop runs whenever the slide is up, at every step, and only then;
+     PumpAnim.run (above) owns that lifecycle, shared with s00 and s43. */
+  Deck.enter('s13', function (el) {
+    paRun(el, q(el, '#s13-pp'));
   });
 
   /* ══════════════════ S14 · two columns, one story ══════════════════

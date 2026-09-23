@@ -554,21 +554,13 @@
     <h2 class="d43__q">Questions?</h2>
     <div class="d43__qrule"></div>
 
-    <!-- The hold screen's mark, copied drawing for drawing from S00 in
-         parts/10-opening.html: the same 120 box, the same r 52 breathing
-         halo, the same stroked r 34 rotor with four stroked r 7 dots at
-         3.2, turning clockwise once every 26 s.  Sirio, 2026-09-23: the
-         closing mark has to be the opening mark. -->
-    <svg class="d43__mark" viewBox="0 0 120 120" aria-hidden="true">
-      <circle class="d43__halo" cx="60" cy="60" r="52"/>
-      <g class="d43__rotor" id="d43-rotor">
-        <circle class="rm" cx="60" cy="60" r="34"/>
-        <circle class="rd" cx="60" cy="26" r="7"/>
-        <circle class="rd" cx="94" cy="60" r="7"/>
-        <circle class="rd" cx="60" cy="94" r="7"/>
-        <circle class="rd" cx="26" cy="60" r="7"/>
-      </g>
-    </svg>
+    <!-- ── PumpAnim · the pump figure (2026-09-23) ─────────────────────
+         The hold screen's figure, so the closing mark is still the opening
+         mark: Sirio asked for the s13 pump, with no numbers or text, in
+         place of the turning rotor on both.  Drawn into this empty root and
+         run by window.PumpAnim (defined once in parts/30-part2.html) from
+         the S43 enter hook below. -->
+    <div class="pp pp--bare d43__pump" data-pump-anim="s43-pa-" aria-hidden="true"></div>
   </div>
 
   <div class="dip" id="d43-dip"></div>
@@ -1044,25 +1036,13 @@
   background: linear-gradient(90deg, var(--t-a), var(--t-b));
   transform: scaleX(0); transform-origin: 50% 50%;
 }
-/* The mark: S00's rules, unchanged, re-scoped to this slide.  Stroked
-   rotor and stroked dots in the accent at 3.2, the halo breathing on
-   s00-breathe, the turn on s00-turn — 26 s, linear, clockwise, forever. */
-#s43 .d43__mark {
-  position: absolute; left: 914px; top: 462px;
-  width: 176px; height: 176px; overflow: visible;
-}
-#s43 .d43__rotor { transform-origin: 60px 60px; animation: s00-turn 26s linear infinite; }
-#s43 .d43__mark .rm, #s43 .d43__mark .rd {
-  fill: none; stroke: var(--accent); stroke-width: 3.2;
-  opacity: 0.92;
-}
-#s43 .d43__halo {
-  fill: none; stroke: color-mix(in srgb, var(--accent) 26%, transparent);
-  stroke-width: 1.4; transform-origin: 60px 60px;
-  animation: s00-breathe 7s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  #s43 .d43__rotor, #s43 .d43__halo { animation: none; }
+/* ── PumpAnim · the pump figure (2026-09-23) ──────────────────────────
+   The hold screen's figure at the hold screen's size (the bare 560 × 456
+   viewBox at 0.6), centred on the right column's 1002 px axis and hung
+   from the "Supervisors" line, so it spans the names block beside it.
+   Its look comes from the shared .pp rules in parts/30-part2.html. */
+#s43 .d43__pump {
+  position: absolute; left: 834px; top: 350px; width: 336px; height: 274px;
 }
 </style>
 
@@ -1522,8 +1502,14 @@
     gsap.fromTo(q, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.9, delay: 1.05, ease: 'expo.out' });
     gsap.fromTo(qrule, { scaleX: 0 }, { scaleX: 1, duration: 0.85, delay: 1.35, ease: 'power3.inOut' });
 
-    /* The mark is not animated from here: it carries S00's own CSS turn,
-       26 s linear and endless, so opening and closing run the same motif. */
+    /* ── PumpAnim · the pump figure (2026-09-23) ──────────────────────
+       The hold screen's pump, so opening and closing run the same motif:
+       window.PumpAnim (parts/30-part2.html) is defined by the time any
+       enter hook fires.  run() is idempotent — one figure and one loop per
+       root, restarted on every entry, paused when the slide is left, a
+       still frame in the presenter preview and under reduced motion.  The
+       same 0.8 speed as s00; it fades in with the invitation. */
+    if (window.PumpAnim) window.PumpAnim.run(el, el.querySelector('.d43__pump'), { speed: 0.8, delay: 1.05 });
   });
 })();
 </script>

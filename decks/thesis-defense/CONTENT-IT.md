@@ -243,9 +243,11 @@ non fa avanzare la presentazione.*
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 90 s:*
 
-- **0** — La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.
+- **0** — I rulli schiacciano il tubo contro la pista fino a chiuderlo; ogni quarto di giro spinge fuori il liquido chiuso tra due rulli: una corsa, 5 µL.
+- **1** — La decisione è stata la dose, 5 µL per corsa; il tubo da 0,51 mm di diametro interno ne è la conseguenza.
 - **2** — Ho costruito tre strumenti per guidare il progetto, e con questi ho scelto quattro rulli.
 - **3** — Il solutore geometrico dimensiona il rotore per una dose data e verifica quali numeri di rulli si possono costruire.
+- *Se chiedono:* quattro è il numero minimo di rulli che tiene sempre due rulli premuti sul tubo lungo la pista di 180°, così il tubo non si apre mai e il liquido non torna indietro, senza valvole.
 
 ### 19 · `s14` — la prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato
 

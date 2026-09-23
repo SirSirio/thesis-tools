@@ -19,16 +19,12 @@
 <section class="slide" id="s00" data-cue="s00" data-dialect="hold" data-part="open"
          data-map="none" data-no="none" data-talk="no">
   <div class="s00">
-    <svg class="s00-mark" viewBox="0 0 120 120" aria-hidden="true">
-      <circle class="s00-halo" cx="60" cy="60" r="52"/>
-      <g class="s00-rotor">
-        <circle class="s00-rm" cx="60" cy="60" r="34"/>
-        <circle class="s00-rd" cx="60" cy="26" r="7"/>
-        <circle class="s00-rd" cx="94" cy="60" r="7"/>
-        <circle class="s00-rd" cx="60" cy="94" r="7"/>
-        <circle class="s00-rd" cx="26" cy="60" r="7"/>
-      </g>
-    </svg>
+    <!-- ── PumpAnim · the pump figure (2026-09-23) ─────────────────────
+         Sirio: the s13 pump, with no numbers or text, replaces the turning
+         rotor mark.  The figure is drawn into this empty root and run by
+         window.PumpAnim, defined once in parts/30-part2.html; the S00
+         enter hook in this part's script starts it.  s43 shows the same. -->
+    <div class="pp pp--bare s00-pump" data-pump-anim="s00-pa-" aria-hidden="true"></div>
     <h2 class="s00-title">Design of an Automated and Portable Liquid Dispensing
         System in the &micro;L scale for Biological Applications</h2>
     <p class="s00-sub">Bringing sample preparation to the point of care</p>
@@ -595,6 +591,17 @@
    Opening timelines. One per slide, labels step0..stepN.
    Every selector is scoped to `el`: the presenter view clones slides.
    ══════════════════════════════════════════════════════════════════════ */
+
+/* ── S00 · the hold screen's pump (PumpAnim, 2026-09-23) ──────────────
+   window.PumpAnim is defined in parts/30-part2.html, whose script runs
+   after this one; enter hooks first fire on DOMContentLoaded, after every
+   part script, so it exists here.  run() is idempotent: one figure and one
+   loop per root, restarted on every entry, paused when the slide is left,
+   a still frame in the presenter preview and under reduced motion.  The
+   hold screen is calm, so the loop runs at 0.8 of s13's speed (s43 too). */
+Deck.enter('s00', function (el) {
+  if (window.PumpAnim) window.PumpAnim.run(el, el.querySelector('.s00-pump'), { speed: 0.8 });
+});
 
 /* ── S01 · the cover: no steps, one entrance ─────────────────────────── */
 Deck.enter('s01', function (el, gsap) {
