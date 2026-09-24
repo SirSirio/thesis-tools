@@ -280,8 +280,8 @@
 
 <!-- ─────────────────────────────  S40  ───────────────────────────── -->
 <section class="slide" id="s40" data-cue="s40" data-dialect="chain"
-         data-part="disc" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The next prototype starts from the modules, in the order their geometry depends.</h2>
+         data-part="disc" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Roadmap for rebuilding the next prototype.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -293,32 +293,32 @@
   <div class="d40">
 
     <svg class="d40__wire" viewBox="0 0 1280 720" aria-hidden="true">
-      <path class="d40-w" id="d40-w1" d="M 326 400 L 352 400" />
-      <path class="d40-w" id="d40-w2" d="M 502 400 L 528 400" />
-      <path class="d40-w" id="d40-w3" d="M 678 400 L 704 400" />
-      <path class="d40-w" id="d40-w4" d="M 854 400 L 880 400" />
-      <path class="d40-w" id="d40-w5" d="M 1030 400 L 1056 400" />
-      <circle class="d40-car" id="d40-car" cx="326" cy="400" r="7" />
+      <path class="d40-w" id="d40-w1" d="M 326 368 L 352 368" />
+      <path class="d40-w" id="d40-w2" d="M 502 368 L 528 368" />
+      <path class="d40-w" id="d40-w3" d="M 678 368 L 704 368" />
+      <path class="d40-w" id="d40-w4" d="M 854 368 L 880 368" />
+      <path class="d40-w" id="d40-w5" d="M 1030 368 L 1056 368" />
+      <circle class="d40-car" id="d40-car" cx="326" cy="368" r="7" />
     </svg>
 
-    <article class="d40__tile d40__tile--grp" data-t="0" style="left:66px; top:305px; width:260px; height:190px">
+    <article class="d40__tile d40__tile--grp" data-t="0" style="left:66px; top:236px; width:260px; height:264px">
       <span class="d40__n">01</span>
       <span class="d40__nm">The fluidic core</span>
       <span class="d40__sub">Pump · Storage · Nozzle</span>
     </article>
-    <article class="d40__tile" data-t="1" style="left:352px; top:325px; width:150px; height:150px">
+    <article class="d40__tile" data-t="1" style="left:352px; top:256px; width:150px; height:224px">
       <span class="d40__n">02</span><span class="d40__nm">Lid opener</span>
     </article>
-    <article class="d40__tile" data-t="2" style="left:528px; top:325px; width:150px; height:150px">
+    <article class="d40__tile" data-t="2" style="left:528px; top:256px; width:150px; height:224px">
       <span class="d40__n">03</span><span class="d40__nm">Sample rack</span>
     </article>
-    <article class="d40__tile" data-t="3" style="left:704px; top:325px; width:150px; height:150px">
+    <article class="d40__tile" data-t="3" style="left:704px; top:256px; width:150px; height:224px">
       <span class="d40__n">04</span><span class="d40__nm">Alignment</span>
     </article>
-    <article class="d40__tile" data-t="4" style="left:880px; top:325px; width:150px; height:150px">
+    <article class="d40__tile" data-t="4" style="left:880px; top:256px; width:150px; height:224px">
       <span class="d40__n">05</span><span class="d40__nm">Electronics</span>
     </article>
-    <article class="d40__tile" data-t="5" style="left:1056px; top:325px; width:150px; height:150px">
+    <article class="d40__tile" data-t="5" style="left:1056px; top:256px; width:150px; height:224px">
       <span class="d40__n">06</span><span class="d40__nm">Enclosure</span>
     </article>
 
@@ -341,7 +341,7 @@
       <li>If asked: this time the pump tubing arrived six weeks late, which forced us to build the modules in parallel. Next time, in order. The storage module is Marius&rsquo;s.</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Il prossimo prototipo, un modulo alla volta</p>
+      <p class="notes-it__title">Il piano per ricostruire il prossimo prototipo.</p>
       <ul>
         <li data-step="0">Il prossimo prototipo dovrebbe partire dai moduli, in ordine.</li>
         <li data-step="1">Prima la pompa, i contenitori dei reagenti e l&rsquo;ugello insieme, perché insieme decidono la dose.</li>
@@ -363,18 +363,20 @@
      the whole lower half to the single claim: one bay, four named
      detector modules, interchangeable.  Nothing travels.
 
-     Geometry, all at stage scale:
-       photograph   56,202  416 x 234   (16:9 exactly, object-fit contain)
-       reader body  600,202  624 x 234  (dashed: a proposal, not a build)
-       bay          628,316  224 x 120  (open at the bottom edge)
-       seated card  636,324  208 x 104  — the same footprint as the rail
-       bus          y 478, risers to the three card centres
-       rail         y 500,  208 x 104 at x 56 / 536 / 1016 (three since 2026-09-23)
-       narration    y 620,  one line per step; the pull replaces it at 5
+     Geometry, all at stage scale (one-line title since 2026-09-24, rule
+     at y 138, so the upper row grew by the 48 px the second line freed):
+       photograph   56,156  512 x 288   (16:9 exactly, object-fit contain)
+       handoff      gap 568..696, code centred 632.4,190.4, arrow y 226
+       reader body  696,156  528 x 288  (dashed: a proposal, not a build)
+       bay          724,324  224 x 120  (open at the bottom edge)
+       seated card  732,332  208 x 104  — the same footprint as the rail
+       bus          riser x 836, y 486, risers to the three card centres
+       rail         y 508,  208 x 104 at x 56 / 536 / 1016 (three since 2026-09-23)
+       narration    y 628,  one line per step
 -->
 <section class="slide" id="s41" data-cue="s41" data-dialect="dock"
-         data-part="disc" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">A prepared sample is not an answer: pair the dispenser with a reader.</h2>
+         data-part="disc" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">From sample preparation to complete diagnostics.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -415,17 +417,17 @@
          No <text> anywhere in here, and the viewBox is the stage itself,
          so every coordinate below is a stage coordinate. -->
     <svg class="d41__ov" viewBox="0 0 1280 720" aria-hidden="true">
-      <path class="ar" d="M 484 272 L 576 272" />
-      <path class="ar" d="M 564 264 L 576 272 L 564 280" />
-      <circle class="cdh" cx="536.4" cy="236.4" r="30" />
+      <path class="ar" d="M 580 226 L 672 226" />
+      <path class="ar" d="M 660 218 L 672 226 L 660 234" />
+      <circle class="cdh" cx="632.4" cy="190.4" r="30" />
       <g class="code" id="d41-code"></g>
-      <circle class="cdr" cx="536.4" cy="236.4" r="30" />
-      <circle class="cdr" cx="536.4" cy="236.4" r="30" />
-      <path class="bz" d="M 740 436 L 740 478" />
-      <path class="bz" d="M 160 478 L 1120 478" />
-      <path class="bz" d="M 160 478 L 160 500" />
-      <path class="bz" d="M 640 478 L 640 500" />
-      <path class="bz" d="M 1120 478 L 1120 500" />
+      <circle class="cdr" cx="632.4" cy="190.4" r="30" />
+      <circle class="cdr" cx="632.4" cy="190.4" r="30" />
+      <path class="bz" d="M 836 444 L 836 486" />
+      <path class="bz" d="M 160 486 L 1120 486" />
+      <path class="bz" d="M 160 486 L 160 508" />
+      <path class="bz" d="M 640 486 L 640 508" />
+      <path class="bz" d="M 1120 486 L 1120 508" />
     </svg>
 
     <!-- the three that are not in the bay: same footprint, same dock tab -->
@@ -460,7 +462,7 @@
       <li>If asked: preparing a sample is largely the same from test to test, but detecting the result is not. That is why the detector belongs in a separate reader, not locked inside the dispenser.</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Un campione preparato non è una risposta: ci vuole un lettore</p>
+      <p class="notes-it__title">Dalla preparazione del campione alla diagnostica completa.</p>
       <ul>
         <li data-step="0">Sul campo si vuole un risultato, non solo un campione preparato.</li>
         <li data-step="1">Questa macchina prepara il campione, ma non misura niente.</li>
@@ -823,7 +825,7 @@
 #s40 .d40-car { fill: var(--t-a); filter: drop-shadow(0 0 10px var(--t-a)); opacity: 0; }
 #s40 .d40__tile {
   position: absolute;
-  padding: 16px 16px 18px;
+  padding: 18px 14px 20px;
   display: flex; flex-direction: column; gap: 6px;
   border-radius: var(--r-md);
   background: var(--glass-bg);
@@ -832,26 +834,26 @@
   box-shadow: 0 18px 46px rgba(0,0,0,0.5);
 }
 #s40 .d40__n {
-  font-family: var(--mono); font-size: 19px; font-weight: 700;
+  font-family: var(--mono); font-size: 22px; font-weight: 700;
   letter-spacing: 0.2em; color: var(--t-a);
 }
-#s40 .d40__nm { margin-top: auto; font-size: 21px; line-height: 1.2; color: var(--text); }
+#s40 .d40__nm { margin-top: auto; font-size: 22px; line-height: 1.2; color: var(--text); }
 #s40 .d40__sub {
-  font-family: var(--mono); font-size: 18px; letter-spacing: 0.04em;
+  font-family: var(--mono); font-size: 19px; letter-spacing: 0.04em;
   color: var(--text-muted);
 }
 #s40 .d40__note {
-  position: absolute; top: 528px;
-  font-size: 21px; line-height: 1.3; color: var(--text-soft);
+  position: absolute; top: 544px;
+  font-size: 24px; line-height: 1.3; color: var(--text-soft);
 }
 
 /* ── S41 · one bay, four modules ─────────────────────────── */
 #s41 .d41 { position: absolute; inset: 0; }
 
-/* the machine that exists.  top.jpg is 2000 x 1125, so a 416 x 234 box is
+/* the machine that exists.  top.jpg is 2000 x 1125, so a 512 x 288 box is
    its own ratio to the pixel: contain fills it and nothing is trimmed. */
 #s41 .d41__shot {
-  position: absolute; left: 56px; top: 202px; width: 416px; height: 234px;
+  position: absolute; left: 56px; top: 156px; width: 512px; height: 288px;
   margin: 0; overflow: hidden;
   border-radius: var(--r-md);
   background: #0d0f12;
@@ -871,7 +873,7 @@
 
 /* the handoff */
 #s41 .d41__hcap {
-  position: absolute; left: 474px; top: 292px; width: 124px; text-align: center;
+  position: absolute; left: 570px; top: 246px; width: 124px; text-align: center;
   font-family: var(--mono); font-size: 18px; letter-spacing: 0.04em;
   color: var(--text-muted);
 }
@@ -879,19 +881,19 @@
 /* the instrument that does not exist.  Dashed throughout, on purpose:
    a proposal standing beside a photograph of a real machine. */
 #s41 .d41__rd {
-  position: absolute; left: 600px; top: 202px; width: 624px; height: 234px;
+  position: absolute; left: 696px; top: 156px; width: 528px; height: 288px;
   border-radius: var(--r-md);
   border: 1.5px dashed color-mix(in srgb, var(--t-a) 60%, transparent);
   background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.014));
 }
-#s41 .d41__rk { position: absolute; left: 28px; top: 20px; }
+#s41 .d41__rk { position: absolute; left: 28px; top: 26px; }
 #s41 .d41__rs {
-  position: absolute; left: 28px; top: 48px; width: 260px;
+  position: absolute; left: 28px; top: 56px; width: 224px;
   font-size: 19px; line-height: 1.2; color: var(--text-muted);
 }
-#s41 .d41__bk { position: absolute; left: 28px; top: 86px; }
+#s41 .d41__bk { position: absolute; left: 28px; top: 136px; }
 #s41 .d41__bay {
-  position: absolute; left: 28px; top: 114px; width: 224px; height: 120px;
+  position: absolute; left: 28px; top: 168px; width: 224px; height: 120px;
   border: 1.5px dashed color-mix(in srgb, var(--t-a) 62%, transparent);
   border-bottom: none;
   border-radius: 14px 14px 0 0;
@@ -899,7 +901,7 @@
   box-shadow: inset 0 14px 30px rgba(0,0,0,0.60);
 }
 #s41 .d41__disp {
-  position: absolute; left: 320px; top: 34px; width: 268px; height: 120px;
+  position: absolute; left: 276px; top: 40px; width: 224px; height: 148px;
   padding: 24px 22px;
   display: flex; flex-direction: column; justify-content: center; gap: 14px;
   border-radius: 12px;
@@ -909,7 +911,7 @@
 #s41 .d41__disp i { display: block; height: 12px; border-radius: 6px; background: rgba(255,255,255,0.16); }
 #s41 .d41__disp i:first-child { background: color-mix(in srgb, var(--t-a) 52%, transparent); }
 #s41 .d41__dc {
-  position: absolute; left: 320px; top: 170px; width: 268px;
+  position: absolute; left: 276px; top: 204px; width: 224px;
   font-size: 18px; line-height: 1.2; color: var(--text-muted);
 }
 /* the empty bay shows the footprint it is waiting for */
@@ -957,7 +959,7 @@
   font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em;
   color: var(--text-muted);
 }
-#s41 .d41__mod--r { top: 500px; }
+#s41 .d41__mod--r { top: 508px; }
 #s41 .d41__mod--in {
   left: 8px; top: 8px;
   border-color: color-mix(in srgb, var(--t-a) 62%, transparent);
@@ -967,7 +969,7 @@
 
 /* one narrating line, swapped per step */
 #s41 .d41__say {
-  position: absolute; left: 56px; top: 620px; width: 1168px;
+  position: absolute; left: 56px; top: 628px; width: 1168px;
   font-size: 23px; line-height: 1.3; color: var(--text-soft);
 }
 
@@ -1348,8 +1350,8 @@
       for (var i = 0; i < 25; i++) {
         if (!BITS[i]) continue;
         var r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        r.setAttribute('x', String(519 + (i % 5) * 7.2));
-        r.setAttribute('y', String(219 + Math.floor(i / 5) * 7.2));
+        r.setAttribute('x', String(615 + (i % 5) * 7.2));
+        r.setAttribute('y', String(173 + Math.floor(i / 5) * 7.2));
         r.setAttribute('width', '6'); r.setAttribute('height', '6');
         r.setAttribute('rx', '1.2');
         code.appendChild(r);
@@ -1367,7 +1369,7 @@
     gsap.set(hcap, { autoAlpha: 0 });
     gsap.set(code, { autoAlpha: 0, scale: 0.7, transformOrigin: '50% 50%' });
     gsap.set(says,  { autoAlpha: 0, y: 10 });
-    gsap.set(rings, { opacity: 0, scale: 0.7, svgOrigin: '536.4 236.4' });
+    gsap.set(rings, { opacity: 0, scale: 0.7, svgOrigin: '632.4 190.4' });
     gsap.set(cdh,   { opacity: 0 });
     if (window.DrawSVGPlugin) {
       gsap.set(ars, { drawSVG: '0%' });
@@ -1418,7 +1420,7 @@
        the "from" state the moment the paused timeline is built, and the
        rings sit lit on the empty stage at step 0. */
     Array.prototype.forEach.call(rings, function (rg, i) {
-      tl.fromTo(rg, { opacity: 0.9, scale: 0.7, svgOrigin: '536.4 236.4' },
+      tl.fromTo(rg, { opacity: 0.9, scale: 0.7, svgOrigin: '632.4 190.4' },
         { opacity: 0, scale: 1.8, duration: 1.15, ease: 'power2.out',
           immediateRender: false },
         'step3+=' + (0.40 + i * 0.34));

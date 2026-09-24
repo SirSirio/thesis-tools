@@ -374,7 +374,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.
 - *Se chiesto:* i condensatori sulla scheda reggono 16 volt, e vanno sostituiti prima di una linea motori a 24 volt.
 
-### 33 · `s28` — ogni pompa e il suo stoccaggio del reagente stanno nello stesso supporto stampato
+### 33 · `s28` — supporti a incastro integrano pompe e stoccaggio
 - Quanto a come è stata montata la macchina: ogni pompa e il suo stoccaggio del reagente condividono un unico supporto stampato.
 - Il supporto centrale, vuoto, visto davanti e dietro.
 - La pompa entra dall'alto, a sinistra; lo stoccaggio scivola dentro da davanti, a destra.
@@ -383,25 +383,25 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - I supporti si incastrano tra loro e sono avvitati.
 - La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.
 
-### 34 · `s29` — l'ugello si avvita al telaio, lo schermo si inclina a 45 gradi
+### 34 · `s29` — ugello montato in modo rigido e schermo inclinato con porta-pennino
 - L'ugello non ha richiesto pezzi nuovi: tre viti lo fissano al vano dell'elettronica, una di lato.
 - Ogni pompa porta il liquido al suo ago con un tubo che si stacca a mano.
 - Il supporto dello schermo ha anche due clip per il pennino.
 - Inclina lo schermo a 45 gradi, perché questa macchina si guarda dall'alto, su un tavolo o sul cassone di un furgone.
 - Il supporto dello schermo entra nella barra in basso.
 
-### 35 · `s30` — un supporto batteria già pubblicato e tre viti
+### 35 · `s30` — la batteria a bordo permette di lavorare senza cavi
 - Il supporto della batteria è adattato alla batteria da trapano che ho usato, e ho rifatto in CAD i fori delle viti.
 - Lo tengono tre viti, e la batteria si collega alla presa dell'alimentatore da banco, quindi dentro non si è ricablato niente.
 - Era l'ultimo pezzo che mancava alla macchina.
 - Qui lavora all'aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.
 
-### 36 · `s30b` — quattro giunzioni, e i moduli diventano un oggetto solo
+### 36 · `s30b` — la macchina completamente assemblata
 - Messi insieme, questi quattro pezzi fanno dei moduli un oggetto solo.
 - Pesa 3,3 chili con i rack e la batteria, e si solleva con due mani.
 - *Se chiesto:* 50 per 35 per 18 centimetri; la batteria aggiunge 5,5 centimetri alla profondità.
 
-### 37 · `s31` — calibrata su se stessa, la macchina resta entro il 3,4 % del bersaglio
+### 37 · `s31` — accuratezza e precisione ben entro i requisiti
 - Per provare la precisione ho chiesto alla macchina intera mille microlitri e ho pesato la provetta.
 - La fascia chiara è quanto ammette il requisito: il 10 % in più o in meno.
 - Con la taratura della pompa fatta al banco, la macchina dava circa il 18 % in meno.
@@ -420,7 +420,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - *Se chiesto come:* i motori sono stati rallentati, e così avevano la forza di spingere cinque rack carichi.
 - *Se chiesto quanto è durata la corsa:* la tesi non riporta nessun tempo.
 
-### 39 · `s33` — i tre modi di guasto: attrito dei tappi, batteria che si scarica, setto che perde
+### 39 · `s33` — tre modi di guasto osservati durante le prove
 - Tre cose sono andate storte, nessuna nella meccanica dei movimenti, e ognuna ha una soluzione nota.
 - Un tappo lasciato piatto sfrega contro la parete, il motore perde passi senza accorgersene, e la goccia cade accanto alla provetta.
 - A batteria ha completato due rack, sedici campioni. Poi la batteria si è scaricata, le due pompe si sono bloccate, e il programma non sa ancora farne girare una sola.
@@ -463,7 +463,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - E il modello della pompa non è mai stato verificato: puntava a 5 µL per colpo, e le due pompe ne danno meno.
 - *Se chiesto:* le due pompe danno 3,94 e 4,10 µL a colpo. La mia pompa peristaltica ha battuto quella lineare di Marius 3485 a 3185 nel punteggio. Con la stampa ora precisa a ±0,10 mm, vale la pena fare una vera serie di prove sui rotori.
 
-### 46 · `s40` — il prossimo prototipo parte dai moduli, nell'ordine in cui la geometria dipende
+### 46 · `s40` — il piano per ricostruire il prossimo prototipo
 - Il prossimo prototipo dovrebbe partire dai moduli, in ordine.
 - Prima la pompa, i contenitori dei reagenti e l'ugello insieme, perché insieme decidono la dose.
 - Poi l'apri-tappi, l'ultimo passaggio ancora fatto a mano, prima di fissare il rack delle provette.
@@ -472,7 +472,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - L'involucro viene per ultimo, perché avvolge tutto il resto.
 - *Se chiesto:* stavolta il tubo della pompa è arrivato sei settimane in ritardo, e ci ha costretti a sviluppare i moduli in parallelo. La prossima volta, in ordine. Il modulo dei contenitori dei reagenti è di Marius.
 
-### 47 · `s41` — un campione preparato non è una risposta: accanto al dosatore ci vuole un lettore
+### 47 · `s41` — dalla preparazione del campione alla diagnostica completa
 - Sul campo si vuole un risultato, non solo un campione preparato.
 - Questa macchina prepara il campione, ma non misura niente.
 - La macchina che prepara i campioni è di uso generale, quindi anche il lettore che la accompagna dovrebbe esserlo.
