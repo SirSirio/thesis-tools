@@ -30,9 +30,9 @@ e accuratezza (spostata in appendice come B24).
 
 ### 1 · `s01` — copertina
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 28 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 20 s:*
 
-- **0** — Questa è la macchina che ho costruito, mentre dosa. Tesi magistrale al DTU Bioengineering, gruppo NaBIS; relatori Maria Dimaki, Winnie Svendsen e Lars Hvam. Per raccontare che cosa ha ispirato la tesi, immaginate questo: una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un’epidemia, con la febbre.
+- **0** — Grazie a tutti per essere qui, e per il vostro tempo. / Per raccontare che cosa ha ispirato la tesi, immaginate questo: una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un’epidemia, con la febbre.
 
 ### 2 · `s02` — la sala arrivi, e una giornata intera su un asse
 
