@@ -293,32 +293,32 @@
   <div class="d40">
 
     <svg class="d40__wire" viewBox="0 0 1280 720" aria-hidden="true">
-      <path class="d40-w" id="d40-w1" d="M 326 368 L 352 368" />
-      <path class="d40-w" id="d40-w2" d="M 502 368 L 528 368" />
-      <path class="d40-w" id="d40-w3" d="M 678 368 L 704 368" />
-      <path class="d40-w" id="d40-w4" d="M 854 368 L 880 368" />
-      <path class="d40-w" id="d40-w5" d="M 1030 368 L 1056 368" />
-      <circle class="d40-car" id="d40-car" cx="326" cy="368" r="7" />
+      <path class="d40-w" id="d40-w1" d="M 326 378 L 352 378" />
+      <path class="d40-w" id="d40-w2" d="M 502 378 L 528 378" />
+      <path class="d40-w" id="d40-w3" d="M 678 378 L 704 378" />
+      <path class="d40-w" id="d40-w4" d="M 854 378 L 880 378" />
+      <path class="d40-w" id="d40-w5" d="M 1030 378 L 1056 378" />
+      <circle class="d40-car" id="d40-car" cx="326" cy="378" r="7" />
     </svg>
 
-    <article class="d40__tile d40__tile--grp" data-t="0" style="left:66px; top:236px; width:260px; height:264px">
+    <article class="d40__tile d40__tile--grp" data-t="0" style="left:66px; top:288px; width:260px; height:180px">
       <span class="d40__n">01</span>
       <span class="d40__nm">The fluidic core</span>
-      <span class="d40__sub">Pump · Storage · Nozzle</span>
+      <span class="d40__sub"><i>Pump</i><i>Storage</i><i>Nozzle</i></span>
     </article>
-    <article class="d40__tile" data-t="1" style="left:352px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="1" style="left:352px; top:322px; width:150px; height:112px">
       <span class="d40__n">02</span><span class="d40__nm">Lid opener</span>
     </article>
-    <article class="d40__tile" data-t="2" style="left:528px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="2" style="left:528px; top:322px; width:150px; height:112px">
       <span class="d40__n">03</span><span class="d40__nm">Sample rack</span>
     </article>
-    <article class="d40__tile" data-t="3" style="left:704px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="3" style="left:704px; top:322px; width:150px; height:112px">
       <span class="d40__n">04</span><span class="d40__nm">Alignment</span>
     </article>
-    <article class="d40__tile" data-t="4" style="left:880px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="4" style="left:880px; top:322px; width:150px; height:112px">
       <span class="d40__n">05</span><span class="d40__nm">Electronics</span>
     </article>
-    <article class="d40__tile" data-t="5" style="left:1056px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="5" style="left:1056px; top:322px; width:150px; height:112px">
       <span class="d40__n">06</span><span class="d40__nm">Enclosure</span>
     </article>
 
@@ -368,9 +368,9 @@
        photograph   56,156  512 x 288   (16:9 exactly, object-fit contain)
        handoff      gap 568..696, code centred 632.4,190.4, arrow y 226
        reader body  696,156  528 x 288  (dashed: a proposal, not a build)
-       bay          724,324  224 x 120  (open at the bottom edge)
-       seated card  732,332  208 x 104  — the same footprint as the rail
-       bus          riser x 836, y 486, risers to the three card centres
+       bay          724,304  224 x 120  (closed, 20 px inside the reader's edge)
+       seated card  732,312  208 x 104  — the same footprint as the rail
+       bus          riser x 836 from y 424, y 486, risers to the three card centres
        rail         y 508,  208 x 104 at x 56 / 536 / 1016 (three since 2026-09-23)
        narration    y 628,  one line per step
 -->
@@ -423,7 +423,7 @@
       <g class="code" id="d41-code"></g>
       <circle class="cdr" cx="632.4" cy="190.4" r="30" />
       <circle class="cdr" cx="632.4" cy="190.4" r="30" />
-      <path class="bz" d="M 836 444 L 836 486" />
+      <path class="bz" d="M 836 424 L 836 486" />
       <path class="bz" d="M 160 486 L 1120 486" />
       <path class="bz" d="M 160 486 L 160 508" />
       <path class="bz" d="M 640 486 L 640 508" />
@@ -838,12 +838,15 @@
   letter-spacing: 0.2em; color: var(--t-a);
 }
 #s40 .d40__nm { margin-top: auto; font-size: 22px; line-height: 1.2; color: var(--text); }
+/* the three modules of the core, one per line, so no word is left alone */
 #s40 .d40__sub {
-  font-family: var(--mono); font-size: 19px; letter-spacing: 0.04em;
+  display: flex; flex-direction: column;
+  font-family: var(--mono); font-size: 19px; line-height: 1.25; letter-spacing: 0.04em;
   color: var(--text-muted);
 }
+#s40 .d40__sub i { font-style: normal; }
 #s40 .d40__note {
-  position: absolute; top: 544px;
+  position: absolute; top: 510px;
   font-size: 24px; line-height: 1.3; color: var(--text-soft);
 }
 
@@ -891,12 +894,13 @@
   position: absolute; left: 28px; top: 56px; width: 224px;
   font-size: 19px; line-height: 1.2; color: var(--text-muted);
 }
-#s41 .d41__bk { position: absolute; left: 28px; top: 136px; }
+#s41 .d41__bk { position: absolute; left: 28px; top: 116px; }
+/* closed and fully inside the reader, 20 px clear of its dashed edge, so the
+   two outlines never run together; the bus riser leaves from its bottom */
 #s41 .d41__bay {
-  position: absolute; left: 28px; top: 168px; width: 224px; height: 120px;
+  position: absolute; left: 28px; top: 148px; width: 224px; height: 120px;
   border: 1.5px dashed color-mix(in srgb, var(--t-a) 62%, transparent);
-  border-bottom: none;
-  border-radius: 14px 14px 0 0;
+  border-radius: 14px;
   background: rgba(0,0,0,0.46);
   box-shadow: inset 0 14px 30px rgba(0,0,0,0.60);
 }

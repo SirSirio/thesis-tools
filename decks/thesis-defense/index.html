@@ -3119,12 +3119,15 @@ body[data-view="guest"] .guest-dot {
   letter-spacing: 0.2em; color: var(--t-a);
 }
 #s40 .d40__nm { margin-top: auto; font-size: 22px; line-height: 1.2; color: var(--text); }
+/* the three modules of the core, one per line, so no word is left alone */
 #s40 .d40__sub {
-  font-family: var(--mono); font-size: 19px; letter-spacing: 0.04em;
+  display: flex; flex-direction: column;
+  font-family: var(--mono); font-size: 19px; line-height: 1.25; letter-spacing: 0.04em;
   color: var(--text-muted);
 }
+#s40 .d40__sub i { font-style: normal; }
 #s40 .d40__note {
-  position: absolute; top: 544px;
+  position: absolute; top: 510px;
   font-size: 24px; line-height: 1.3; color: var(--text-soft);
 }
 
@@ -3172,12 +3175,13 @@ body[data-view="guest"] .guest-dot {
   position: absolute; left: 28px; top: 56px; width: 224px;
   font-size: 19px; line-height: 1.2; color: var(--text-muted);
 }
-#s41 .d41__bk { position: absolute; left: 28px; top: 136px; }
+#s41 .d41__bk { position: absolute; left: 28px; top: 116px; }
+/* closed and fully inside the reader, 20 px clear of its dashed edge, so the
+   two outlines never run together; the bus riser leaves from its bottom */
 #s41 .d41__bay {
-  position: absolute; left: 28px; top: 168px; width: 224px; height: 120px;
+  position: absolute; left: 28px; top: 148px; width: 224px; height: 120px;
   border: 1.5px dashed color-mix(in srgb, var(--t-a) 62%, transparent);
-  border-bottom: none;
-  border-radius: 14px 14px 0 0;
+  border-radius: 14px;
   background: rgba(0,0,0,0.46);
   box-shadow: inset 0 14px 30px rgba(0,0,0,0.60);
 }
@@ -7369,12 +7373,12 @@ body[data-view="guest"] .guest-dot {
   </div>
 
   <!-- and on the machine, at 45 degrees -->
-  <div class="p3-shot" id="s29-d1" style="left:108px; top:178px; width:557px; height:314px;">
+  <div class="p3-shot" id="s29-d1" style="left:56px; top:178px; width:557px; height:314px;">
     <img data-src="../../assets/media/ui/display-side.jpg"
          alt="The 3.2 inch touchscreen in its printed holder on the front of the electronics bay, tilted up at 45 degrees, with the power switch and supply socket beneath it." />
     <span class="callout" id="s29-c5" style="left:34%; top:36%">45&#176;</span>
   </div>
-  <div class="p3-shot" id="s29-d2" style="left:716px; top:206px; width:455px; height:256px;">
+  <div class="p3-shot" id="s29-d2" style="left:667px; top:178px; width:557px; height:314px;">
     <img data-src="../../assets/media/ui/display-top.jpg"
          alt="The same holder from above: the stylus in its two clips, tethered by a coiled wire." />
     <span class="callout callout--ghost" id="s29-c6" style="left:4%; top:6%">stylus, tethered</span>
@@ -7593,7 +7597,7 @@ body[data-view="guest"] .guest-dot {
   <i class="fragment step-cue" data-step="4"></i>
   <i class="fragment step-cue" data-step="5"></i>
 
-  <div class="p3-chart" id="s31-chart" style="top:190px;">
+  <div class="p3-chart" id="s31-chart" style="top:211px;">
     <svg viewBox="0 0 820 404" aria-hidden="true">
       <rect id="s31-band" x="268" y="52" width="320" height="194" rx="10"
             fill="rgba(79,195,138,0.10)" stroke="none" opacity="0"/>
@@ -7655,18 +7659,18 @@ body[data-view="guest"] .guest-dot {
     </div>
   </div>
 
-  <div class="p3-frame p3-frame--dark" id="s31-vid" style="left:908px; top:190px; width:316px; height:178px;">
+  <div class="p3-frame p3-frame--dark" id="s31-vid" style="left:908px; top:211px; width:316px; height:178px;">
     <video data-src="../../assets/media/video/machine-dispensing.mp4"
            poster="../../assets/media/video/machine-dispensing-poster.jpg"
            muted loop playsinline preload="none"></video>
     <span class="callout" id="s31-vc" style="left:12px; bottom:12px;">weighed in the tube</span>
   </div>
 
-  <div class="p3-strokes" id="s31-stroke" style="left:908px; top:392px; width:316px; height:202px;">
+  <div class="p3-strokes" id="s31-stroke" style="left:908px; top:413px; width:316px; height:202px;">
     <span class="p3-k">per stroke</span>
     <span class="p3-srow"><b>Channel 1</b><i>3.94 &#181;L</i></span>
     <span class="p3-srow"><b>Channel 2</b><i>4.10 &#181;L</i></span>
-    <p class="p3-snote">about 10 % less than on the bench</p>
+    <p class="p3-snote">about 10 % less<br>than on the bench</p>
   </div>
 
   <aside class="notes">
@@ -7782,8 +7786,8 @@ body[data-view="guest"] .guest-dot {
        ratio and the image is contained, never cropped.  That makes it the
        narrow card of the three, and the row is centred around it. -->
   <article class="p3-fcard p3-fcard--fit" id="s33-c0"
-           style="left:152px; width:429px; height:520px;">
-    <div class="p3-fcard-media" style="height:380px;">
+           style="left:175px; top:157px; width:383px; height:510px;">
+    <div class="p3-fcard-media" style="height:340px;">
       <img data-src="../../assets/media/alignment/lid-fouling.jpg"
            alt="Sample tubes in a rack. One hinged cap is folded back clear of the deck, marked in green; another lies flat and projects sideways towards the alignment lane wall, marked in red." />
       <!-- Both caps are in the frame now that the picture is not cropped, so
@@ -7816,8 +7820,8 @@ body[data-view="guest"] .guest-dot {
        and the image is object-fit: contain.  The overlay viewBox carries the
        same ratio, so the drawing tracks the picture at every card width and
        stays on the empty bench to the right of the machine. -->
-  <article class="p3-fcard p3-fcard--fit" id="s33-c1" style="left:601px; width:254px;">
-    <div class="p3-fcard-media">
+  <article class="p3-fcard p3-fcard--fit" id="s33-c1" style="left:578px; top:354px; width:254px; height:313px;">
+    <div class="p3-fcard-media" style="height:143px;">
       <img data-src="../../assets/media/device/validation-battery.jpg"
            alt="The output queue after the battery run: two racks, sixteen tubes filled with dye, and the screen reading run stopped." />
       <svg class="p3-ov" viewBox="0 0 600 338" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -7848,8 +7852,8 @@ body[data-view="guest"] .guest-dot {
     </div>
   </article>
 
-  <article class="p3-fcard" id="s33-c2" style="left:875px; width:254px;">
-    <div class="p3-fcard-media p3-fcard-media--draw">
+  <article class="p3-fcard" id="s33-c2" style="left:852px; top:272px; width:254px; height:395px;">
+    <div class="p3-fcard-media p3-fcard-media--draw" style="height:225px;">
       <svg viewBox="0 0 600 340" aria-hidden="true">
         <circle cx="300" cy="196" r="104" fill="rgba(255,255,255,0.05)"
                 stroke="rgba(240,236,232,0.45)" stroke-width="4"/>
@@ -8414,32 +8418,32 @@ body[data-view="guest"] .guest-dot {
   <div class="d40">
 
     <svg class="d40__wire" viewBox="0 0 1280 720" aria-hidden="true">
-      <path class="d40-w" id="d40-w1" d="M 326 368 L 352 368" />
-      <path class="d40-w" id="d40-w2" d="M 502 368 L 528 368" />
-      <path class="d40-w" id="d40-w3" d="M 678 368 L 704 368" />
-      <path class="d40-w" id="d40-w4" d="M 854 368 L 880 368" />
-      <path class="d40-w" id="d40-w5" d="M 1030 368 L 1056 368" />
-      <circle class="d40-car" id="d40-car" cx="326" cy="368" r="7" />
+      <path class="d40-w" id="d40-w1" d="M 326 378 L 352 378" />
+      <path class="d40-w" id="d40-w2" d="M 502 378 L 528 378" />
+      <path class="d40-w" id="d40-w3" d="M 678 378 L 704 378" />
+      <path class="d40-w" id="d40-w4" d="M 854 378 L 880 378" />
+      <path class="d40-w" id="d40-w5" d="M 1030 378 L 1056 378" />
+      <circle class="d40-car" id="d40-car" cx="326" cy="378" r="7" />
     </svg>
 
-    <article class="d40__tile d40__tile--grp" data-t="0" style="left:66px; top:236px; width:260px; height:264px">
+    <article class="d40__tile d40__tile--grp" data-t="0" style="left:66px; top:288px; width:260px; height:180px">
       <span class="d40__n">01</span>
       <span class="d40__nm">The fluidic core</span>
-      <span class="d40__sub">Pump · Storage · Nozzle</span>
+      <span class="d40__sub"><i>Pump</i><i>Storage</i><i>Nozzle</i></span>
     </article>
-    <article class="d40__tile" data-t="1" style="left:352px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="1" style="left:352px; top:322px; width:150px; height:112px">
       <span class="d40__n">02</span><span class="d40__nm">Lid opener</span>
     </article>
-    <article class="d40__tile" data-t="2" style="left:528px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="2" style="left:528px; top:322px; width:150px; height:112px">
       <span class="d40__n">03</span><span class="d40__nm">Sample rack</span>
     </article>
-    <article class="d40__tile" data-t="3" style="left:704px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="3" style="left:704px; top:322px; width:150px; height:112px">
       <span class="d40__n">04</span><span class="d40__nm">Alignment</span>
     </article>
-    <article class="d40__tile" data-t="4" style="left:880px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="4" style="left:880px; top:322px; width:150px; height:112px">
       <span class="d40__n">05</span><span class="d40__nm">Electronics</span>
     </article>
-    <article class="d40__tile" data-t="5" style="left:1056px; top:256px; width:150px; height:224px">
+    <article class="d40__tile" data-t="5" style="left:1056px; top:322px; width:150px; height:112px">
       <span class="d40__n">06</span><span class="d40__nm">Enclosure</span>
     </article>
 
@@ -8489,9 +8493,9 @@ body[data-view="guest"] .guest-dot {
        photograph   56,156  512 x 288   (16:9 exactly, object-fit contain)
        handoff      gap 568..696, code centred 632.4,190.4, arrow y 226
        reader body  696,156  528 x 288  (dashed: a proposal, not a build)
-       bay          724,324  224 x 120  (open at the bottom edge)
-       seated card  732,332  208 x 104  — the same footprint as the rail
-       bus          riser x 836, y 486, risers to the three card centres
+       bay          724,304  224 x 120  (closed, 20 px inside the reader's edge)
+       seated card  732,312  208 x 104  — the same footprint as the rail
+       bus          riser x 836 from y 424, y 486, risers to the three card centres
        rail         y 508,  208 x 104 at x 56 / 536 / 1016 (three since 2026-09-23)
        narration    y 628,  one line per step
 -->
@@ -8544,7 +8548,7 @@ body[data-view="guest"] .guest-dot {
       <g class="code" id="d41-code"></g>
       <circle class="cdr" cx="632.4" cy="190.4" r="30" />
       <circle class="cdr" cx="632.4" cy="190.4" r="30" />
-      <path class="bz" d="M 836 444 L 836 486" />
+      <path class="bz" d="M 836 424 L 836 486" />
       <path class="bz" d="M 160 486 L 1120 486" />
       <path class="bz" d="M 160 486 L 160 508" />
       <path class="bz" d="M 640 486 L 640 508" />
@@ -15174,7 +15178,7 @@ Deck.slide('s08a', function (el, gsap) {
 
     /* 4 · the holder takes its place in the record; the pictures stay,
            because this is the last beat of the slide */
-    barDrop(tl, el, gsap, 3, { x: 108, y: 178, w: 557 }, 'step3');
+    barDrop(tl, el, gsap, 3, { x: 56, y: 178, w: 557 }, 'step3');
     tl.addLabel('step4');
 
     return tl;
@@ -15412,15 +15416,22 @@ Deck.slide('s08a', function (el, gsap) {
        nearly square and is contained, not cropped; the other two keep the
        600 px stage they were built for.  The row is centred, so the narrow
        card does not leave the board lopsided. */
-    /* Grown 2026-09-24 into the height a one-line title frees: each photo
-       card keeps its picture's own ratio (429 x 380, 620 x 349). */
-    var ACT  = [ { w: 429, h: 520, mh: 380 },
-                 { w: 620, h: 491, mh: 349 },
-                 { w: 600, h: 424, mh: 252 } ];
-    var IDLE = { w: 254, h: 424, mh: 252 };
+    /* Re-laid out 2026-09-24.  Every photo box carries its picture's own
+       ratio in every state, active or idle (cap 1.127, battery 1.776), so
+       no card is ever letterboxed.  The cards hang from one shared line:
+       the text row (the foot) starts at FOOT_TOP on all three, the media
+       sits above it at its own height, and the row is centred under the
+       rule.  The septum card is drawn, so it takes the cap's idle height. */
+    var ACT  = [ { w: 383, mh: 340 },
+                 { w: 600, mh: 338 },
+                 { w: 600, mh: 340 } ];
+    var IDLE = [ { w: 254, mh: 225 },
+                 { w: 254, mh: 143 },
+                 { w: 254, mh: 225 } ];
+    var FOOT = 170, FOOT_TOP = 497;
     var GAP = 20, STAGE = 1280;
 
-    function geo(i, active) { return (i === active) ? ACT[i] : IDLE; }
+    function geo(i, active) { return (i === active) ? ACT[i] : IDLE[i]; }
     function rowX0(active) {
       var tot = GAP * 2;
       for (var i = 0; i < 3; i++) tot += geo(i, active).w;
@@ -15453,7 +15464,7 @@ Deck.slide('s08a', function (el, gsap) {
       var x = rowX0(active);
       cards.forEach(function (c, i) {
         var g = geo(i, active);
-        tl.to(c, { left: x, width: g.w, height: g.h,
+        tl.to(c, { left: x, width: g.w, top: FOOT_TOP - g.mh, height: g.mh + FOOT,
                    opacity: (i === active) ? 1 : 0.5, duration: 0.8 }, at);
         tl.to(medias[i], { height: g.mh, duration: 0.8 }, at);
         x += g.w + GAP;
