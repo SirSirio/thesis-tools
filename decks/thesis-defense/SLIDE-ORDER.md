@@ -16,6 +16,27 @@ The deck has two different orders and they are not the same thing:
 - **Organisation** — the two-level taxonomy below, which is what the overview
   (press `o` or `Escape`) shows, so Sirio can find any slide in a second.
 
+*Added 2026-09-24.* **`s04r`**, the PANPOC reagents: an appendix twin of
+`s04c` with the reagent the thesis names for each stage. `data-part="backup"`,
+`data-topic="open"`, section, CSS and builder all in `parts/60-backups.html`
+(after `s04`). The cue is new; `s04d` and `s04e` were avoided because both
+appear in older notes (`SPEC.md`, `PUNCHLIST.md`).
+
+*Changed 2026-09-24.* The supervisor asked for a bridge between the
+arrivals hall and the contents, so the opening now runs `s01` → `s02` →
+**`s02b`** (new: the workflow, sample → sample preparation → detection →
+result) → **`s04c`** (PANPOC, **back out of the appendix** into the talk,
+cue kept, `data-part="open"`, its `data-topic` removed) → `s03`. The section
+of `s04c` is in `parts/10-opening.html`; its CSS and its builder stayed in
+`parts/60-backups.html` (§4). **`s05b`** (what sample preparation is) moved
+the other way, into the appendix under the gap (`data-part="backup"`,
+`data-topic="gap"`): its section is in `parts/60-backups.html` after `s04`,
+its CSS and builder stay in `parts/20-part1.html`. Moving a slide *out of*
+the appendix is the recipe below run backwards: move the section into its
+part file, set its real `data-part`, drop `data-topic` unless it should
+file elsewhere, and move its cue from the end of the topic list to its talk
+position.
+
 *Changed 2026-09-23.* `s04` (the field laboratory) moved to the **appendix**.
 It was talk slide 3; every talk slide after it shifts down by one. It keeps
 its `s04` cue — appendix membership is `data-part="backup"` — and carries
@@ -45,8 +66,8 @@ thesis chapter inside that band and is the lighter sub-heading.
 
 | Band (strong) | Topic (sub-heading) | Thesis | Cues, in order |
 |---|---|---|---|
-| Opening | — | — | `s00` `s01` `s02` `s03` · appendix: `s04` |
-| Part I — Why this machine, and how I worked | The gap | ch. 1–2 | `s05` `s05b` `s06` `s04b` · appendix: `s04c` |
+| Opening | — | — | `s00` `s01` `s02` `s02b` `s04c` `s03` · appendix: `s04` `s04r` |
+| Part I — Why this machine, and how I worked | The gap | ch. 1–2 | `s05` `s06` `s04b` · appendix: `s05b` |
 | | Requirements and decomposition | ch. 5 | `s07` `s07b` `s10` |
 | | Method, and working with an AI | ch. 3–4 | `s09a` `s09b` `s08a` `s08` `s09` |
 | Part II — The modules | Pump module | ch. 6 | `s11` `s12b` `s13` `s14` `s15` `s16` · appendix: `s12` `b26` |

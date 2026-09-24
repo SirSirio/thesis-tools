@@ -9,11 +9,11 @@ cambia, questi punti vanno aggiornati nello stesso lavoro, senza aspettare che
 qualcuno lo chieda. Se i punti e le note inglesi divergono, vuol dire che la slide
 è cambiata e i punti no.
 
-Apertura e Parte I (blocchi 1–15) riscritte il 23 settembre 2026 come didascalie per
+Apertura e Parte I (oggi blocchi 1–16) riscritte il 23 settembre 2026 come didascalie per
 passo: una riga per clic, identica al `div.notes-it` dentro le note della slide, da cui
 la vista ospite legge la didascalia corrente.
 
-Aggiornato al 22 settembre 2026 · 78 slide, 49 nel discorso (aggiunte `s30b`,
+Aggiornato al 24 settembre 2026 · 81 slide, 50 nel discorso (nuova `s02b`, il procedimento; PANPOC `s04c` torna nel discorso dopo di lei; `s05b` passa in appendice). In precedenza, 22 settembre: 78 slide, 49 nel discorso (aggiunte `s30b`,
 il divisore `s37a` e la slide di appendice `b25`; `s39` è passata in appendice). La Parte I ha perso
 la slide sui moduli montati sulla macchina (tolta del tutto) e quella su precisione
 e accuratezza (spostata in appendice come B24).
@@ -29,22 +29,80 @@ e accuratezza (spostata in appendice come B24).
 - Il cronometro parte quando si passa alla slide 1, non prima.
 
 ### 1 · `s01` — copertina
+*Sotto il nome, nello stesso stile ma più piccolo e più tenue: «(& Marius Schiller)» (24 settembre 2026).*
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 20 s:*
 
-- **0** — Grazie a tutti per essere qui, e per il vostro tempo. / Per raccontare che cosa ha ispirato la tesi, immaginate questo: una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un’epidemia, con la febbre.
+- **0** — Grazie a tutti per essere qui, e per il vostro tempo. / Questo progetto è stato sviluppato insieme a Marius; ne parlerò più avanti. / Per raccontare che cosa ha ispirato la tesi, immaginate questo: una passeggera atterra in una sala arrivi affollata, nelle prime settimane di un’epidemia, con la febbre.
 
 ### 2 · `s02` — la sala arrivi, e una giornata intera su un asse
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 62 s:*
+*Dal 24 settembre 2026: tolta dalla slide la frase «The test can travel to the gate. The sample
+preparation cannot yet.»; l’etichetta della barra lunga è ora solo «Standard molecular
+testing» (il laboratorio dell’ospedale lo dice a voce); sopra la banda «< 3 h» c’è
+«Point-of-Care»; in basso resta solo la citazione «Collier et al. 2020». La scena
+disegnata è più chiara: la provetta arriva intera a un edificio con la beuta dentro, il
+laboratorio centrale, mentre l’orologio gira.*
+
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 55 s:*
 
 - **0** — Eccola al controllo sanitario degli arrivi.
 - **1** — L’operatrice fa un tampone nasale. Ma per confermare il virus la provetta va mandata a un laboratorio centrale, e bisogna aspettare.
 - **2** — Trattenerla un giorno è impraticabile; lasciarla passare vuol dire far uscire un’infezione non confermata. L’asse in basso è una giornata intera.
 - **3** — Il test molecolare standard: più di 26 ore. E l’ospedale ha il laboratorio in casa.
-- **4** — Un test molecolare portatile, stesso studio, stesso ospedale, stessi pazienti: 2,6 ore. Il test può arrivare al gate. La preparazione del campione non ancora.
+- **4** — Un test molecolare portatile, sul posto: 2,6 ore.
+- *Se chiedono:* i due tempi vengono da un solo studio, stesso ospedale, stessi pazienti (Collier et al. 2020).
 
-### 3 · `s03` — indice
+### 3 · `s02b` — il procedimento: campione, preparazione, rilevazione, risultato
+*Nuova il 24 settembre 2026: il ponte fra la sala arrivi e PANPOC chiesto dal relatore.
+Sulla slide, un titolo e quattro parole: «Sample», «Sample preparation», «Detection»,
+«Result», una per clic, ognuna con il suo disegno (la persona, il tampone e la provetta
+della slide 2; un ugello che versa liquidi nella provetta; un lettore con una curva;
+un segno di spunta). La preparazione del campione sta su un pannello arancione e alla fine
+resta l’unica a piena intensità.*
+
+*Titolo: «Before a sample can be read, it has to be prepared.»*
+
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 25 s:*
+
+- **0** — Per analizzare il campione in aeroporto, il procedimento necessario è questo.
+- **1** — Prima il campione: un tampone, in una provetta.
+- **2** — Poi la preparazione del campione: nella provetta si aggiungono liquidi che liberano ciò che il test cerca e lo ripuliscono.
+- **3** — Poi uno strumento di lettura lo rileva.
+- **4** — E da lì il risultato.
+
+### 4 · `s04c` — PANPOC
+*Tornata nel discorso il 24 settembre 2026 (era in appendice dal 21 settembre).
+Sulla slide: il titolo, la figura della provetta con la sua legenda, e a destra i sette
+stadi in un riquadro arancione intitolato «Sample preparation: PANPOC»; in basso solo «PAIR project
+– DTU Bioengineering». Il primo clic porta il tampone nella provetta, che contiene già del
+liquido: restano due cellule, ciascuna con il bersaglio (arancione) chiuso dentro; questo
+clic non ha una riga. Poi un clic per stadio, sette in tutto, mentre la provetta li esegue
+(alla lisi le membrane si aprono e il bersaglio si libera);
+all’ultimo clic restano accesi solo i quattro che aggiungono un liquido («add»), gli altri
+(anche il lavaggio) si spengono.*
+
+*Il passaggio dalla slide precedente: il riquadro è lo stesso pannello «Sample
+preparation» della slide 3, che si allarga e porta con sé la sua etichetta come titolo del
+riquadro. Tornando indietro di un clic succede il contrario.*
+
+*Titolo: «PANPOC brings a molecular test to the gate.»*
+
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 50 s:*
+
+- **0** — Per diagnosticare la persona malata al gate è stato messo a punto un protocollo: PANPOC.
+- **1** — Il tampone va in una provetta che contiene già del liquido.
+- **2** — Si aprono le cellule e il bersaglio viene liberato.
+- **3** — Si aggiunge un controllo.
+- **4** — Il materiale genetico si lega a biglie magnetiche.
+- **5** — Un magnete le trattiene; il resto viene tolto.
+- **6** — Due lavaggi.
+- **7** — Si asciuga.
+- **8** — L’acqua lo libera.
+- **9** — La maggior parte di questi passaggi aggiunge un liquido; gli altri sono specifici del procedimento. / Quindi, per rendere generale un procedimento, basta una macchina fatta solo per dosare liquidi.
+- *Se chiedono:* PANPOC è lo strumento portatile del progetto europeo PAIR, pensato per aeroporti e controlli di frontiera; la preparazione completa sono circa una dozzina di passaggi manuali con sei liquidi, da 5 µL a 1 mL. I reagenti sono sulla slide di appendice `s04r`.
+
+### 5 · `s03` — indice
 *Sulla slide, cinque righe: «Background, Requirements and Methods», «The modules»,
 «The machine», «Live demo», «Discussion & Outlook».*
 
@@ -61,7 +119,7 @@ e accuratezza (spostata in appendice come B24).
 
 ## Parte I — contesto, requisiti e metodi
 
-### 4 · `s05` — divisore
+### 6 · `s05` — divisore
 *Sulla slide: «Background, Requirements and Methods.», e sotto «Why this machine
 exists, what it has to do, and how I worked.» — lo stesso nome che la slide
 dell’indice dà a questa parte.*
@@ -70,21 +128,9 @@ dell’indice dà a questa parte.*
 
 - **0** — Parte I: perché questa macchina esiste, cosa deve fare, e come ho lavorato.
 
-### 5 · `s05b` — che cos'è la preparazione del campione
-*Sulla slide: tre disegni, uno per clic, con le didascalie «Locked inside»,
-«Separated from everything else» e «And the chemistry washed out»; sul primo
-pannello una freccia indica il **target**. In chiusura: «Nearly every step is a
-liquid.»*
+### 7 · `s06` — il divario
+*Titolo sulla slide (dal 24 settembre): «No existing tool meets every field need.» — in italiano: «Nessuno strumento esistente soddisfa ogni esigenza sul campo.».*
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 45 s:*
-
-- **0** — Prima di tutto: che cos’è la preparazione del campione.
-- **1** — Tampone, terreno, acqua: nessuno si legge così com’è. Il materiale genetico che il test cerca è chiuso dentro cellule o virus, in mezzo a proteine e detriti.
-- **2** — Quindi si rompe il campione, si estrae il bersaglio e lo si separa da tutto il resto.
-- **3** — Poi anche quella chimica aggressiva va lavata via, altrimenti blocca la reazione che legge il risultato. Quasi ogni passaggio aggiunge o toglie un volume misurato: serve un dosatore.
-- *Se chiedono:* la tesi cita prove che il campionamento e la preparazione del campione pesano sulla variabilità di un risultato più della misura stessa.
-
-### 6 · `s06` — il divario
 *Prezzi sulla slide: Tecan Fluent 25–80k$ (usato), Roche cobas liat 11k$ con
 ~100$ a test, Sidekick 710$ di costruzione. I due dati del cobas liat **non** sono
 nella tesi: la macchina è un prezzo di rivendita (Dipylon Medical), il costo a test
@@ -108,12 +154,12 @@ da circa 1 a 1000 µL; cifra fornita da Sirio, non dalla tesi). Sirio tiene in m
 - *Se chiedono:* il Fluent copre da 0,5 a 1000 µL, ma a mezzo microlitro la sua imprecisione è circa trenta volte quella migliore, e Tecan stessa dice che sotto i 5 µL può servire una calibrazione.
 - *Se chiedono:* i prezzi del cobas liat non sono nella tesi: la macchina è un prezzo di rivendita (Dipylon Medical), il costo a test (~100 $) viene dalla revisione CADTH sui test rapidi per l'influenza, cifra del 2015.
 
-### 7 · `s04b` — da dove viene l'intervallo
+### 8 · `s04b` — da dove viene l'intervallo
 *Due clic: prima i campi, poi i numeri che ne escono. La frase introduttiva non è
 più sulla slide: restano i cinque campi, e la si dice a voce.*
 
-*Titolo sulla slide: «One machine engineered for generalized sample preparation,
-grounded in five field protocols.»*
+*Titolo sulla slide (dal 24 settembre): «One general machine for diverse field
+protocols.» — in italiano: «Una macchina generale per protocolli di campo diversi.»*
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
 
@@ -122,7 +168,9 @@ grounded in five field protocols.»*
 - **2** — Sono abbastanza coerenti: volumi da 5 a 1000 µL, e fino a sei liquidi, in decine di provette da 1,5 e 2 mL.
 - *Se chiedono:* nessuna rassegna raccoglie i volumi dosati fra tipi di protocollo; la tabella a cinque righe, con l'intervallo di ciascun protocollo, è in appendice.
 
-### 8 · `s07` — il problema di progetto e i vincoli
+### 9 · `s07` — il problema di progetto e i vincoli
+*Titolo sulla slide (dal 24 settembre): «Core requirements for an autonomous dispenser.» — in italiano: «I requisiti fondamentali di un dosatore autonomo.».*
+
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
 
@@ -132,9 +180,9 @@ grounded in five field protocols.»*
 - **3** — Solo le idee rimaste vengono ordinate, su otto criteri.
 - *Se chiedono:* gli otto criteri non sono pesati a livello di sistema; ogni modulo riceve i propri pesi quando la decomposizione esiste.
 
-### 9 · `s07b` — la macchina divisa in 8 moduli
-*Titolo: «La macchina è divisa in 8 moduli, collegati da trasferimenti di liquido
-e segnali di controllo». Sulla slide c'è **solo il diagramma**: le due righe di lettura
+### 10 · `s07b` — la macchina divisa in 8 moduli
+*Titolo sulla slide (dal 24 settembre): «The machine is split into 8 functional
+modules» — in italiano: «La macchina è divisa in 8 moduli funzionali». Sulla slide c'è **solo il diagramma**: le due righe di lettura
 in fondo sono state tolte, quei due punti ora si dicono a voce.*
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
@@ -146,7 +194,9 @@ in fondo sono state tolte, quei due punti ora si dicono a voce.*
 - **4** — Nessun liquido raggiunge l’elettronica. L’involucro è rimasto una specifica: la sua forma dipende da tutto ciò che contiene.
 - *Se chiedono:* lo stoccaggio dei reagenti è lavoro di Marius Schiller, non uno dei miei moduli.
 
-### 10 · `s10` — la gerarchia
+### 11 · `s10` — la gerarchia
+*Titolo sulla slide (dal 24 settembre): «The module hierarchy is led by the pump» — in italiano: «La gerarchia dei moduli è guidata dal modulo Pump».*
+
 *Sulla slide c'è **solo una piramide** di sette moduli, ricostruita dalla figura 5.2
 della tesi: in cima la **Pompa**, alla base l'**Involucro** (tratteggiato, mai
 costruito). Niente frecce, niente note, nessun elenco dell'ordine: l'ordine si legge
@@ -159,7 +209,7 @@ dalla piramide stessa, dall'alto verso il basso.*
 - **2** — Ogni modulo più in basso eredita vincoli; in caso di conflitto cedeva quello più in basso.
 - *Se chiedono:* la matrice di valutazione della pompa ha trentuno righe; quella dell'elettronica ha tre requisiti e undici criteri, e non nomina né tensioni né numero di driver.
 
-### 11 · `s09a` — divisore: i metodi
+### 12 · `s09a` — divisore: i metodi
 *Sullo schermo ci sono **solo due righe**: «Methods, & engineering with AI.»
 Nient'altro. Cinque secondi, si passa oltre. Sono i titoli dei capitoli tre e
 quattro della tesi.*
@@ -168,19 +218,22 @@ quattro della tesi.*
 
 - **0** — Adesso il come: progettare, costruire, provare, imparare, in un ciclo che gira alla velocità del suo passo più lento.
 
-### 12 · `s09b` — stampa 3D
-*Sulla slide: il titolo, a sinistra il pezzo che si costruisce strato su strato
-(animazione) con **±0,1 mm** sotto, a destra la fotografia della stampante. Nessuna
-didascalia, nessun testo piccolo, e **«weeks → hours» non c'è più**: il passaggio da
-settimane a ore si dice a voce.*
+### 13 · `s09b` — dal CAD alla stampa 3D
+*Titolo sulla slide (dal 24 settembre): «From CAD design to 3D-printed parts» — in
+italiano: «Dal progetto CAD ai pezzi stampati in 3D».*
 
-*Una sola frase per tutta la slide, detta in meno di dieci secondi: vale per tutti e tre i clic.*
+*Un clic, due stati. A sinistra, subito: il render CAD del portaprovette da otto provette della
+macchina, intero, su un foglio
+bianco, con sotto il marchio **Autodesk Fusion 360**. Al clic una freccia porta a
+destra, dove lo stesso portaprovette si stampa strato su strato con **±0,1 mm** sotto, e accanto
+la fotografia della stampante. Sulla slide solo il titolo, il marchio e «±0,1 mm».*
 
-*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 8 s:*
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 15 s:*
 
-- **0** — Ogni pezzo su misura è stato stampato in 3D qui, con una precisione di ±0,1 mm.
+- **0** — I pezzi su misura sono stati progettati in CAD, con Fusion 360, e poi stampati in 3D.
+- **1** — La stampante è stata studiata per ottenere una precisione migliore di 0,1 mm; ne parlerò più avanti.
 
-### 13 · `s08a` — Engineering with AI
+### 14 · `s08a` — Engineering with AI
 *Sullo schermo ci sono **solo il simbolo di Claude Code e il titolo «Engineering
 with AI»**, al centro, in grande. È il titolo del capitolo quattro. Tutto il
 resto si dice a voce. Il gruppo simbolo + titolo passa poi alla slide seguente,
@@ -191,7 +244,9 @@ rimpicciolito nell'angolo in alto a destra, e ci resta.*
 - **0** — L’IA è stata nel progetto dalla prima settimana: Claude Code, sui file veri del progetto. Ha scritto e calcolato; stampa, cablaggio, montaggio e collaudo sono rimasti miei, e ogni fonte l’ho controllata io.
 - *Se chiedono:* il capitolo quattro è su questo, e un'appendice documenta l'uso.
 
-### 14 · `s08` — la casa
+### 15 · `s08` — la casa
+*Titolo sulla slide (dal 24 settembre): «Addressing AI limits in engineering…» — in italiano: «Affrontare i limiti dell’IA nell’ingegneria…».*
+
 *La slide **si apre con il solo titolo «Engineering with AI»**, al centro e in
 grande, ereditato dalla slide precedente: c'è tutto il tempo per introdurre
 l'argomento. Al primo clic il gruppo si rimpicciolisce nell'angolo in alto a
@@ -206,7 +261,9 @@ destra e solo allora compaiono il titolo della slide, la lavagna e le schede.*
 - **4** — Poi torna un’istruzione di tre sessioni prima, un muro portante si sposta, e il tetto viene giù con lui.
 - **5** — Come in tutta l’ingegneria, il lavoro con l’IA deve procedere per passi, ognuno scritto e verificato prima del successivo.
 
-### 15 · `s09` — l'ambiente di lavoro
+### 16 · `s09` — l'ambiente di lavoro
+*Titolo sulla slide (dal 24 settembre): «…through spec-driven development & documentation» — in italiano: «…attraverso lo sviluppo guidato da specifiche e la documentazione».*
+
 *Le frecce percorrono **solo** «the specs» e «the loop»: due pressioni e si passa
 oltre. «The sources» e «the tools» sono **pulsanti** (bordo tratteggiato e un +):
 si aprono cliccandoci sopra, uno alla volta, e servono per le domande. Cliccare
@@ -224,13 +281,13 @@ non fa avanzare la presentazione.*
 
 ## Parte II — i moduli
 
-### 16 · `s11` — divisore: i moduli
+### 17 · `s11` — divisore: i moduli
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 10 s:*
 
 - **0** — La Parte II sono i quattro moduli che ho progettato e costruito: pompa, allineamento, ugello, interfaccia utente.
 
-### 17 · `s12b` — trenta idee, due costruite
+### 18 · `s12b` — da trenta concetti a due, e poi al progetto di una pompa peristaltica
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 10 s:*
 
@@ -239,7 +296,7 @@ non fa avanzare la presentazione.*
 - **3** — La pompa peristaltica ha vinto per la pulibilità.
 - *Se chiedono:* la matrice dava alla pompa rotativa 300 punti di margine su ingombro, massa e pulibilità.
 
-### 18 · `s13` — la dose viene dalla geometria
+### 19 · `s13` — il volume pompato è definito dalla geometria della pompa
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 90 s:*
 
@@ -249,7 +306,7 @@ non fa avanzare la presentazione.*
 - **3** — Il solutore geometrico dimensiona il rotore per una dose data e verifica quali numeri di rulli si possono costruire.
 - *Se chiedono:* quattro è il numero minimo di rulli che tiene sempre due rulli premuti sul tubo lungo la pista di 180°, così il tubo non si apre mai e il liquido non torna indietro, senza valvole.
 
-### 19 · `s14` — la prima pompa non sigillava, e il sensore di flusso si è rivelato inadeguato
+### 20 · `s14` — primi fallimenti: la tenuta e i limiti del sensore
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 30 s:*
 
@@ -259,7 +316,7 @@ non fa avanzare la presentazione.*
 - **4** — La pompa erogava molto meno del previsto, ma in modo costante e molto preciso.
 - *Se chiedono:* sullo stesso dosaggio il sensore di flusso leggeva l'11,5 % in meno della bilancia; il controllo in anello chiuso è stato accantonato.
 
-### 20 · `s15` — altre tre costruzioni: hanno sistemato la stampa, non la fisica
+### 21 · `s15` — affinare la meccanica e le dimensioni della pompa
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 30 s:*
 
@@ -268,7 +325,7 @@ non fa avanzare la presentazione.*
 - **2** — Questa è la v2.3, smontata. Con tutte le correzioni, il gioco misurava 1,52 mm in tutte e tre le fessure di controllo.
 - *Se chiedono:* nella v2.1 il supporto stava 0,45 mm troppo in alto, così il gioco si apriva in cima alla pista; nella v2.2 i perni stampati erano conici e inclinavano i rulli, risolto con un solo cuscinetto sulla base larga; e un corpo disegnato con un gioco di 1,52 mm misurava 1,75 mm, ed è per questo che ho caratterizzato la stampante.
 
-### 21 · `s16` — la pompa ripete una dose come una mano con una pipetta
+### 22 · `s16` — la pompa si comporta come una pipetta manuale
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
 
@@ -277,7 +334,7 @@ non fa avanzare la presentazione.*
 - **3** — A quella velocità una corsa dà 4,53 µL, il 9,4 % sotto i 5 µL di progetto. Il firmware lo corregge una volta sola.
 - *Se chiedono:* i punti della pompa sono totali da 100 e da 300 corse; più piano dosa un po' di più, ma ripete peggio.
 
-### 22 · `s17` — muovere le provette, tenere fermi gli ugelli
+### 23 · `s17` — modulo di allineamento: una cinematica guidata dalla distanza tra le provette
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
 
@@ -286,7 +343,7 @@ non fa avanzare la presentazione.*
 - **3** — La rastrelliera tiene otto provette, perché le attrezzature di laboratorio lavorano a multipli di otto, a 22 mm l’una dall’altra per lasciare spazio a un apritappi. È questa distanza a fissare la lunghezza della macchina.
 - *Se chiedono:* i 22 mm sono stati misurati sul prototipo funzionante di apritappi di Pulkit.
 
-### 23 · `s18` — tre costruzioni, un modulo che trova da solo il proprio zero
+### 24 · `s18` — progettato per la pulibilità, in tre costruzioni ha raggiunto l'azzeramento automatico
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
 
@@ -295,7 +352,7 @@ non fa avanzare la presentazione.*
 - **3** — La v2.1 aggiunge un finecorsa e trova lo zero in tre passate, entro 0,03 mm.
 - *Se chiedono:* quella guida dava 140 dei 154 mm necessari, sei spostamenti su sette; il telaio finale ha risolto la lunghezza.
 
-### 24 · `s19` — il telaio finale: coda, corsia, vassoio
+### 25 · `s19` — il telaio finale: coda, corsia, vassoio
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
 
@@ -305,7 +362,7 @@ non fa avanzare la presentazione.*
 - **4** — Alla fine il telaio è diventato la struttura dell’intero strumento.
 - *Se chiedono:* un tappo aperto fino in piano può sfregare contro la parete smussata. La trasmissione non lo sente, quindi la rastrelliera resta indietro e la dose finisce accanto alla provetta; l'istruzione è lasciare i tappi in piedi.
 
-### 25 · `s20` — il modulo ugello, ricostruito da zero
+### 26 · `s20` — ricostruire l'ugello
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
 
@@ -314,7 +371,7 @@ non fa avanzare la presentazione.*
 - **3** — Un magnete e tre dadi d’acciaio hanno sostituito il peso stampato sul motore a vibrazione. L’elastico impedisce al carrello di sfilarsi dalle colonnine. Gli aghi stanno a 22 mm l’uno dall’altro, come le provette.
 - *Se chiedono:* la sede è il negativo stampato dell'attacco dell'ago, quindi ogni calibro si monta senza attrezzi.
 
-### 26 · `s21` — è il foro dell'ago a decidere se la goccia si forma
+### 27 · `s21` — il foro dell'ago governa la formazione della goccia
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
 
@@ -324,7 +381,7 @@ non fa avanzare la presentazione.*
 - **4** — Le punte di plastica sono andate meglio: nove gocce su dieci staccate, nessuna di lato. La macchina ha lavorato con aghi d’acciaio 22 G.
 - *Se chiedono:* il foro delle punte di plastica non è mai stato misurato, ed erano fissate col nastro, non inserite nella sede.
 
-### 27 · `s22` — l'interfaccia ereditata non aveva cablaggio dietro: un collegamento necessario è diventato una riprogettazione completa
+### 28 · `s22` — ricostruire l'interfaccia utente
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 35 s:*
 
@@ -332,14 +389,14 @@ non fa avanzare la presentazione.*
 - **3** — Ho prototipato nove candidate come pagine web, molto più in fretta con l’IA, e ognuna verificava da sola un contrasto di 7:1, perché la macchina si usa all’aperto, in piena luce.
 - *Se chiedono:* la verifica ha bocciato la prima palette a 6,2:1, nel browser, prima che arrivasse sul dispositivo.
 
-### 28 · `s23` — una corsa intera, dall'inizio alla fine, su un solo schermo
+### 29 · `s23` — simulare una corsa completa con il mockup dell'interfaccia
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 60 s:*
 
 - **0** — L’interfaccia è pensata per essere visiva e intuitiva: una ricetta disegna ogni volume in proporzione dentro una provetta, e la schermata della corsa simula il rack.
 - **2** — Questa è una simulazione dal vivo dell’interfaccia, costruita con le vere schermate della macchina.
 
-### 29 · `s24` — il reagente aspetta in un flaconcino sigillato, letto da un sensore e prelevato da due aghi
+### 30 · `s24` — modulo di stoccaggio con misura capacitiva del livello
 
 *Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 10 s:*
 
@@ -357,10 +414,10 @@ in italiano. `s39` non è più qui: il 22 settembre è stata spostata in
 **appendice**, e i suoi punti stanno in fondo, nella sezione dell'appendice. La
 numerazione qui sotto è stata richiusa di conseguenza.*
 
-### 30 · `s25` — divisore: Parte III-A. Una sola macchina.
+### 31 · `s25` — divisore: Parte III-A. Una sola macchina.
 - Da qui in poi i moduli diventano una macchina sola: come è stata cablata, come è stata montata e che cosa ha ottenuto.
 
-### 31 · `s26` — venticinque architetture di sistema, scremate con due strumenti interattivi
+### 32 · `s26` — venticinque architetture di sistema, scremate con due strumenti interattivi
 - C'erano venticinque modi di cablare questa macchina, e serviva un modo onesto per scegliere.
 - Bisognava comandare uno schermo, sei pompe, due assi e un motorino a vibrazione, con quanti processori servissero.
 - Il primo strumento ha prezzato ogni opzione e ne ha controllato i collegamenti: hanno deciso i collegamenti, non il prezzo.
@@ -368,13 +425,13 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Entrambi gli strumenti sono pagine vere, che si possono aprire dal vivo.
 - *Se chiesto del prezzo:* ogni opzione con abbastanza collegamenti costa entro il 10 % circa delle altre.
 
-### 32 · `s27` — un solo microcontrollore comanda tutta la macchina
+### 33 · `s27` — un solo microcontrollore comanda tutta la macchina
 - Un solo microcontrollore comanda tutto: lo schermo, le sei pompe, i due motori dell'allineamento, il motorino a vibrazione e i sensori di livello.
 - Com'è costruita, tutto parte da un'unica linea a 12 volt, da una batteria per utensili o dall'alimentatore da banco.
 - Per la produzione userei un power bank USB-C regolato, perché una batteria semplice perde tensione sotto sforzo, ed è questo che ha fermato il prototipo.
 - *Se chiesto:* i condensatori sulla scheda reggono 16 volt, e vanno sostituiti prima di una linea motori a 24 volt.
 
-### 33 · `s28` — supporti a incastro integrano pompe e stoccaggio
+### 34 · `s28` — supporti a incastro integrano pompe e stoccaggio
 - Quanto a come è stata montata la macchina: ogni pompa e il suo stoccaggio del reagente condividono un unico supporto stampato.
 - Il supporto centrale, vuoto, visto davanti e dietro.
 - La pompa entra dall'alto, a sinistra; lo stoccaggio scivola dentro da davanti, a destra.
@@ -383,25 +440,25 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - I supporti si incastrano tra loro e sono avvitati.
 - La sua immagine scende nella barra in basso, che raccoglie i pezzi della macchina.
 
-### 34 · `s29` — ugello montato in modo rigido e schermo inclinato con porta-pennino
+### 35 · `s29` — ugello montato in modo rigido e schermo inclinato con porta-pennino
 - L'ugello non ha richiesto pezzi nuovi: tre viti lo fissano al vano dell'elettronica, una di lato.
 - Ogni pompa porta il liquido al suo ago con un tubo che si stacca a mano.
 - Il supporto dello schermo ha anche due clip per il pennino.
 - Inclina lo schermo a 45 gradi, perché questa macchina si guarda dall'alto, su un tavolo o sul cassone di un furgone.
 - Il supporto dello schermo entra nella barra in basso.
 
-### 35 · `s30` — la batteria a bordo permette di lavorare senza cavi
+### 36 · `s30` — la batteria a bordo permette di lavorare senza cavi
 - Il supporto della batteria è adattato alla batteria da trapano che ho usato, e ho rifatto in CAD i fori delle viti.
 - Lo tengono tre viti, e la batteria si collega alla presa dell'alimentatore da banco, quindi dentro non si è ricablato niente.
 - Era l'ultimo pezzo che mancava alla macchina.
 - Qui lavora all'aperto, a batteria. È uno scenario possibile, non un risultato: senza un involucro funziona in modo affidabile solo al chiuso.
 
-### 36 · `s30b` — la macchina completamente assemblata
+### 37 · `s30b` — la macchina completamente assemblata
 - Messi insieme, questi quattro pezzi fanno dei moduli un oggetto solo.
 - Pesa 3,3 chili con i rack e la batteria, e si solleva con due mani.
 - *Se chiesto:* 50 per 35 per 18 centimetri; la batteria aggiunge 5,5 centimetri alla profondità.
 
-### 37 · `s31` — accuratezza e precisione ben entro i requisiti
+### 38 · `s31` — accuratezza e precisione ben entro i requisiti
 - Per provare la precisione ho chiesto alla macchina intera mille microlitri e ho pesato la provetta.
 - La fascia chiara è quanto ammette il requisito: il 10 % in più o in meno.
 - Con la taratura della pompa fatta al banco, la macchina dava circa il 18 % in meno.
@@ -411,7 +468,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - *Se chiesto:* nella stessa sessione, da una dose all'altra, variava solo dello 0,71 % e dello 0,37 %.
 - *Se chiesto:* una pipetta a mano variava dello 0,27 % sulla stessa bilancia, ma a 50 microlitri: stesso ordine di grandezza, non una vittoria alla pari.
 
-### 38 · `s32` — dosaggio non presidiato, validato su cinque rack e quaranta provette
+### 39 · `s32` — dosaggio non presidiato, validato su cinque rack e quaranta provette
 - Poi la prova vera: la macchina riesce a completare un lotto intero senza che nessuno la tocchi?
 - Si parte con quaranta provette vuote in cinque rack, con l'alimentatore da banco, non a batteria.
 - Le ha riempite tutte e quaranta con entrambi i reagenti, senza nessun aiuto.
@@ -420,13 +477,13 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - *Se chiesto come:* i motori sono stati rallentati, e così avevano la forza di spingere cinque rack carichi.
 - *Se chiesto quanto è durata la corsa:* la tesi non riporta nessun tempo.
 
-### 39 · `s33` — tre modi di guasto osservati durante le prove
+### 40 · `s33` — tre modi di guasto osservati durante le prove
 - Tre cose sono andate storte, nessuna nella meccanica dei movimenti, e ognuna ha una soluzione nota.
 - Un tappo lasciato piatto sfrega contro la parete, il motore perde passi senza accorgersene, e la goccia cade accanto alla provetta.
 - A batteria ha completato due rack, sedici campioni. Poi la batteria si è scaricata, le due pompe si sono bloccate, e il programma non sa ancora farne girare una sola.
 - Il terzo riguarda lo stoccaggio del reagente di Marius: la sua guarnizione di gomma comincia a perdere dopo circa cinque forature dell'ago.
 
-### 40 · `s34` — valutazione dei requisiti
+### 41 · `s34` — valutazione dei requisiti
 - Ora i requisiti, un gruppo alla volta.
 - Precisione e ripetibilità sono soddisfatte. Anche la versatilità, anche se la dose più piccola, 5 microlitri, non è ancora confermata.
 - Ha completato un lotto intero da sola; l'addestramento di un nuovo utente non è stato provato.
@@ -437,16 +494,16 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - *Se chiesto della pulizia:* la plastica stampata non si disinfetta, quindi le parti che scorrono vanno in metallo o polipropilene.
 - *Se chiesto della fattibilità:* era un controllo nella scelta del concetto, non una prova della macchina finita.
 
-### 41 · `s35` — la macchina funziona ed è pronta a lavorare dal vivo
+### 42 · `s35` — la macchina funziona ed è pronta a lavorare dal vivo
 - Ecco la macchina al lavoro, e tra un momento la vedrete dal vivo.
 
-### 42 · `s36` — dimostrazione dal vivo
+### 43 · `s36` — dimostrazione dal vivo
 - Ora la macchina vera: si carica un rack, si sceglie una ricetta sullo schermo, si riempiono una o due provette con il colorante e il rack esce.
 
-### 43 · `s37a` — divisore: Parte III-B. Discussione e prospettive.
+### 44 · `s37a` — divisore: Parte III-B. Discussione e prospettive.
 - Avete visto la macchina funzionare. Ora vediamo che cosa dimostra, che cosa no, e che cosa viene dopo.
 
-### 44 · `s37` — il prototipo dimostra il concetto, non uno strumento finito
+### 45 · `s37` — il prototipo dimostra il concetto, non uno strumento finito
 - La macchina funziona, ma non è ancora uno strumento finito.
 - Ho costruito solo due dei sei canali per i liquidi.
 - L'ho provata solo con acqua e colorante, mai con i reagenti veri.
@@ -454,7 +511,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - E nessuno senza formazione l'ha ancora usata.
 - Quindi vengono prima due prove: il protocollo PANPOC con i reagenti veri, e una persona alla prima volta che maneggia rack, provette, tappi e flaconi.
 
-### 45 · `s38` — profondità e ampiezza nella prototipazione: il modulo pompa e il modulo allineamento
+### 46 · `s38` — profondità e ampiezza nella prototipazione: il modulo pompa e il modulo allineamento
 - Un modulo si può sviluppare in profondità o in ampiezza.
 - Profondità vuol dire costruire tante volte la stessa idea, ma se ne sceglie la forma prima di provare le altre.
 - Ampiezza vuol dire costruire più idee, ma una prova frettolosa può fallire per la costruzione, non per l'idea.
@@ -463,7 +520,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - E il modello della pompa non è mai stato verificato: puntava a 5 µL per colpo, e le due pompe ne danno meno.
 - *Se chiesto:* le due pompe danno 3,94 e 4,10 µL a colpo. La mia pompa peristaltica ha battuto quella lineare di Marius 3485 a 3185 nel punteggio. Con la stampa ora precisa a ±0,10 mm, vale la pena fare una vera serie di prove sui rotori.
 
-### 46 · `s40` — il piano per ricostruire il prossimo prototipo
+### 47 · `s40` — il piano per ricostruire il prossimo prototipo
 - Il prossimo prototipo dovrebbe partire dai moduli, in ordine.
 - Prima la pompa, i contenitori dei reagenti e l'ugello insieme, perché insieme decidono la dose.
 - Poi l'apri-tappi, l'ultimo passaggio ancora fatto a mano, prima di fissare il rack delle provette.
@@ -472,7 +529,7 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - L'involucro viene per ultimo, perché avvolge tutto il resto.
 - *Se chiesto:* stavolta il tubo della pompa è arrivato sei settimane in ritardo, e ci ha costretti a sviluppare i moduli in parallelo. La prossima volta, in ordine. Il modulo dei contenitori dei reagenti è di Marius.
 
-### 47 · `s41` — dalla preparazione del campione alla diagnostica completa
+### 48 · `s41` — dalla preparazione del campione alla diagnostica completa
 - Sul campo si vuole un risultato, non solo un campione preparato.
 - Questa macchina prepara il campione, ma non misura niente.
 - La macchina che prepara i campioni è di uso generale, quindi anche il lettore che la accompagna dovrebbe esserlo.
@@ -480,13 +537,13 @@ numerazione qui sotto è stata richiusa di conseguenza.*
 - Un codice sul kit del test configura tutte e due le macchine: chi le usa deve solo caricare e scansionare.
 - *Se chiesto:* preparare un campione è in gran parte uguale da un test all'altro, rivelare il risultato no. Per questo il rivelatore sta in un lettore separato, non chiuso dentro il dosatore.
 
-### 48 · `s42` — di nuovo la sala arrivi
+### 49 · `s42` — di nuovo la sala arrivi
 - Torno al viaggiatore: oggi il suo tampone deve ancora viaggiare fino a un laboratorio centrale.
 - Questa tesi mostra che la preparazione del campione non è costretta a farlo. Uno strumento portatile può dosare liquidi con precisione e da solo.
 - Prima di poter stare a un varco d'aeroporto, deve essere ricostruito da moduli maturi, provato con reagenti veri e utenti veri, e affiancato a un lettore.
 - Se quel viaggiatore potrà un giorno essere testato prima di lasciare il terminal è ancora aperto. Ma non è più una domanda a cui può rispondere solo un laboratorio centrale.
 
-### 49 · `s43` — grazie
+### 50 · `s43` — grazie
 - Grazie ai miei relatori, Maria Dimaki, Winnie Edith Svendsen e Lars Hvam, e a Marius e Pulkit. Aspetto le vostre domande.
 
 ---
@@ -520,35 +577,42 @@ Resta nel suo argomento — l'apertura — e si raggiunge dalla panoramica.*
   questa tesi.
 - *(Foto: Carlier et al. 2022, CC BY 4.0.)*
 
-### `s04c` — PANPOC e il protocollo a biglie magnetiche
-*Spostata in appendice il 21 settembre 2026. Resta nel suo argomento — Parte I,
-«The gap» — e si raggiunge dalla panoramica.*
+### `s04r` — i sei reagenti di PANPOC
+*Nuova il 24 settembre 2026, gemella di `s04c` in appendice, nell’argomento dell’apertura.
+Sulla slide gli stessi sette stadi, ciascuno con il reagente che la tesi gli attribuisce
+(Appendice A): «Guanidine thiocyanate», «Synthetic control RNA», «Ethanol, 96–100 % ·
+silica-coated magnetic beads», nessuno per la cattura (un magnete), «Ethanol, 70 %»,
+nessuno per l’asciugatura, «Water, free of degrading enzymes». Un clic accende una riga.*
 
-- **PANPOC** è lo strumento portatile del progetto PAIR: influenza, SARS-CoV-2,
-  qualunque cosa abbia potenziale pandemico. È pensato per aeroporti e controlli
-  di frontiera — la stessa sala da cui siamo partiti.
-- Ma prima che possa leggere un tampone, un banco deve trasformarlo in RNA
-  purificato. Questa è la figura della tesi ridisegnata: una provetta, sette
-  stadi, e la legenda di ciò che ci galleggia dentro.
-- **Rilascio e lisi:** il tampone viene agitato in tiocianato di guanidinio, che
-  rompe le cellule e blocca gli enzimi che distruggerebbero l'RNA.
-- **Controllo interno:** una quantità nota di RNA sintetico. Serve a distinguere un
-  risultato negativo da un'estrazione fallita: se il controllo non passa, la
-  corsa è fallita.
-- **Legame:** etanolo e biglie magnetiche rivestite di silice. L'RNA si attacca
-  alla superficie delle biglie, tutto il resto resta libero nel liquido.
-- **Cattura e scarto:** un magnete tiene le biglie contro la parete e il liquido
-  viene aspirato via. **È il magnete che elimina la centrifuga**, ed è la ragione
-  per cui questo protocollo può uscire da un laboratorio.
-- **Due lavaggi** con etanolo al 70 %, **asciugatura** (l'unico stadio che
-  aspetta soltanto) e infine **eluizione**: si toglie il magnete, si aggiunge
-  acqua, l'RNA torna in soluzione. Quello va al rivelatore.
-- Il punto: **quattro dei sette stadi sono un volume misurato che entra**, e un
-  quinto aggiunge oltre a togliere. Un dispositivo generico per la preparazione
-  dei campioni è un dispositivo che **dosa volumi misurati**: è tutto qui il
-  lavoro.
-- «*Detection can travel to the gate; the upstream preparation cannot*» — perché
-  ogni volume di quella preparazione è posato a mano, su un banco.
+*Titolo: «Six reagents carry the PANPOC protocol.»*
+
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 40 s:*
+
+- **0** — Gli stessi sette stadi, con ciò che entra nella provetta a ciascuno.
+- **1** — Tiocianato di guanidinio, un sale caotropico: rompe le cellule, ferma gli enzimi che degradano l’RNA e fa aderire l’RNA alla silice.
+- **2** — RNA sintetico di controllo, in quantità nota: se non si amplifica, la corsa non è affidabile.
+- **3** — L’etanolo spinge l’RNA sulle biglie; la loro silice lo trattiene, il loro nucleo magnetico permette a un magnete di spostarlo.
+- **4** — Non si aggiunge nulla: un magnete trattiene le biglie mentre il liquido viene aspirato.
+- **5** — L’etanolo al 70 % porta via sali e detriti, ma è troppo debole per staccare l’RNA.
+- **6** — Non si aggiunge nulla: l’etanolo residuo evapora.
+- **7** — Acqua priva di enzimi degradanti: tolti sale e alcol, l’RNA si stacca dalle biglie.
+
+### `s05b` — che cos'è la preparazione del campione
+*Spostata in appendice il 24 settembre 2026: la slide del procedimento (`s02b`) e PANPOC
+(`s04c`) nell’apertura ora dicono la stessa cosa. Resta nel suo argomento — Parte I,
+«The gap» — e si raggiunge dalla panoramica.*
+*Sulla slide: tre disegni, uno per clic, con le didascalie «Locked inside»,
+«Separated from everything else» e «And the chemistry washed out»; sul primo
+pannello una freccia indica il **target**. In chiusura: «Nearly every step is a
+liquid.»*
+
+*Didascalie per passo (una per clic, le stesse di `aside.notes .notes-it` nella slide) · circa 45 s:*
+
+- **0** — Prima di tutto: che cos’è la preparazione del campione.
+- **1** — Tampone, terreno, acqua: nessuno si legge così com’è. Il materiale genetico che il test cerca è chiuso dentro cellule o virus, in mezzo a proteine e detriti.
+- **2** — Quindi si rompe il campione, si estrae il bersaglio e lo si separa da tutto il resto.
+- **3** — Poi anche quella chimica aggressiva va lavata via, altrimenti blocca la reazione che legge il risultato. Quasi ogni passaggio aggiunge o toglie un volume misurato: serve un dosatore.
+- *Se chiedono:* la tesi cita prove che il campionamento e la preparazione del campione pesano sulla variabilità di un risultato più della misura stessa.
 
 ### `s12` — dove il liquido tocca la macchina
 *(modulo pompa, capitolo 6; tolta dal discorso il 21-09-2026, mantiene la sigla `s12`)*

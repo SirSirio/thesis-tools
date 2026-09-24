@@ -459,11 +459,11 @@
     var SLIDE_ORDER = [
       { band: 'Opening',
         key: 'open',      topic: '',                                thesis: '',
-        cues: ['s00', 's01', 's02', 's03', 's04'] },
+        cues: ['s00', 's01', 's02', 's02b', 's04c', 's03', 's04', 's04r'] },
 
       { band: 'Part I \u2014 Why this machine, and how I worked',
         key: 'gap',       topic: 'The gap',                         thesis: 'chapters 1\u20132',
-        cues: ['s05', 's05b', 's06', 's04b', 's04c'] },
+        cues: ['s05', 's06', 's04b', 's05b'] },
       { band: 'Part I \u2014 Why this machine, and how I worked',
         key: 'req',       topic: 'Requirements and decomposition',  thesis: 'chapter 5',
         cues: ['s07', 's07b', 's10'] },
@@ -1908,6 +1908,10 @@
       return cur;
     }
 
+    /* Several bullets may share one data-step, so a long line can be split
+       for reading: all of them are current together. */
+    function stepOf(li) { return li ? parseInt(li.getAttribute('data-step'), 10) : NaN; }
+
     function markNoteSteps(d) {
       if (!pres.notes) return;
       pres.notes.querySelectorAll('.notes-it').forEach(function (n) { n.parentNode.removeChild(n); });
@@ -1925,13 +1929,16 @@
       if (body) body.classList.toggle('has-steps', items.length > 0);
       if (!items.length) return;
       var cur = currentStepItem(items, (d && d.step) || 0);
+      var curN = cur >= 0 ? stepOf(items[cur]) : NaN, first = -1;
       for (var i = 0; i < items.length; i++) {
-        items[i].classList.add(i === cur ? 'is-now' : (i < cur ? 'is-done' : 'is-next'));
+        var now = cur >= 0 && stepOf(items[i]) === curN;
+        if (now && first < 0) first = i;
+        items[i].classList.add(now ? 'is-now' : (i < cur ? 'is-done' : 'is-next'));
       }
       /* Keep the current bullet in view: scroll the notes box only, never
          the page, and only when it is actually out of sight. */
-      if (cur < 0 || !body) return;
-      var li = items[cur];
+      if (first < 0 || !body) return;
+      var li = items[first];
       var bRect = body.getBoundingClientRect(), lRect = li.getBoundingClientRect();
       if (lRect.top < bRect.top + 8 || lRect.bottom > bRect.bottom - 8) {
         body.scrollTop += (lRect.top - bRect.top) - 48;
@@ -1985,7 +1992,13 @@
       if (it) {
         var items = it.querySelectorAll('li[data-step]');
         var cur = currentStepItem(items, d.step || 0);
-        if (cur >= 0) html = items[cur].innerHTML.trim();
+        if (cur >= 0) {
+          var parts = [];
+          for (var k = 0; k < items.length; k++) {
+            if (stepOf(items[k]) === stepOf(items[cur])) parts.push(items[k].innerHTML.trim());
+          }
+          html = parts.join('<br />');
+        }
       }
       if (guestCap.title_.innerHTML !== title) guestCap.title_.innerHTML = title;
       if (html === guestShown) return;

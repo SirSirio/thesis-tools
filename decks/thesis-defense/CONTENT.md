@@ -63,13 +63,32 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 **S01. Cover.**
 - Text: Modular automated liquid dispensing for point-of-care use. Sirio Vittorio Feltrin. MSc thesis defense, DTU Bioengineering, NaBIS. Supervisors Maria Dimaki, Winnie Edith Svendsen, Lars Hvam.
 - Visual: `video/machine-dispensing.mp4` (the 7 s landscape clip of the machine dispensing) looping full bleed under a dark scrim, with its sound; the rotor mark turns once and settles. `device/outdoor.jpg` is its poster.
+- **2026-09-24:** after the name, in the same line and style but smaller and softer (22 px, `--text-soft`): *(& Marius Schiller)*.
 - IT: title in Italian.
 
 **S02. The arrivals hall, then: a test that takes a day comes too late.** No title on entry; the title arrives with step 2. **No text beats on the slide — Sirio tells the story; the slide draws it.**
-- Visual: `assets/airport-arrivals.jpg` rising from black. Over it, on step 1, one wordless drawing: a ring marks the traveller, a swab draws beside her, a droplet falls from its tip into a sample tube, the tube fills, then travels along a drawn route across the frame to a conical-flask glyph (a central laboratory) while a clock ring fills and its hand sweeps almost a full turn. On step 2 the photo shrinks into a card at the top right, about a quarter of the stage, and the freed stage holds one time axis.
-- Steps, four in all: (1) the drawn scene; (2) the photo shrinks, the title appears, and "under 1 h" is drawn as a short green band; (3) the hospital route, over 26 hours, a bar that runs off the right edge; (4) a portable molecular test at the point of care, 2.6 hours, and the closing line "The test can travel to the gate. The sample preparation cannot yet."
-- Say: the four beats are in the speaker notes and are spoken, not shown — the passenger with a fever, the swab that must be sent away, the day of waiting that is impossible either way, and the answer in under an hour. Then the numbers.
-- IT: four captions, one per step, carrying the same four spoken beats.
+- Visual: `assets/airport-arrivals.jpg` rising from black. Over it, on step 1, one wordless drawing: a person glyph marks the traveller, a swab draws beside her, an orange drop falls from its tip into a sample tube and the tube fills; a central laboratory draws on the right — **a building with the flask inside it** (2026-09-24, it was a bare flask) — and the tube, **at full size**, travels along a drawn route to its door, where a ring pings, while a clock ring fills and its hand sweeps almost a full turn. On step 2 the photo shrinks into a card at the top right and the freed stage holds one time axis.
+- **Fixed 2026-09-24:** the swab tip's orange fill was on the photograph before anything started (DrawSVG draws strokes, not fills); it now starts at zero and fades in with the tip.
+- Steps, four in all: (1) the drawn scene; (2) the photo shrinks, the title and the one-day axis; (3) **Standard molecular testing**, over 26 hours, a bar across the whole day; (4) **Point-of-Care** above the green-to-red band and its **< 3 h** label, and the citation *Collier et al. 2020* alone at the foot.
+- **Removed 2026-09-24:** the closing line “The test can travel to the gate. The sample preparation cannot yet.”, the words “the hospital's own lab” from the bar label (he says it), and “one study, same hospital, same patients” from the citation (now an *If asked* line in the notes).
+- Notes by step (~55 s): (0) This is the health check at the arrivals gate. (1) The officer takes a nasal swab. But confirming the virus means sending that tube to a central laboratory, and waiting. (2) Hold them a day and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal. This axis is one day. (3) Standard molecular testing: more than 26 hours. And that is with the hospital's own lab on site. (4) A portable molecular test at the point of care: 2.6 hours. *If asked:* both times come from one study, same hospital, same patients (Collier et al. 2020).
+- IT: four captions, one per step.
+
+**S02b. Before a sample can be read, it has to be prepared.** *(new 2026-09-24, the bridge between the arrivals hall and PANPOC that the supervisor asked for; cue `s02b`, `data-part="open"`)*
+- Visual: four stages across the stage, one per click, each with a small line drawing in S02's glyphs and colours and an HTML label under it: **Sample** (S02's person, swab, orange drop and tube, same size), **Sample preparation** (a copy of the tube slides in; a nozzle drops pale liquid into it and the pale layer rises over the orange sample; one drop stays hanging at the nozzle), **Detection** (the tube slides into a reader and a signal curve rises on its screen), **Result** (a ring and a tick). Grey arrows between stages. Sample preparation alone sits on an accent-bordered panel with its label in the display face and the accent colour; on the last step the other three stages drop to half strength.
+- **Polish 2026-09-24 (review):** the four stages share one centre line (stage y 434) with equal 125 px gaps from x 56 to 1224, and all three arrows sit on that line. The nozzle is a quiet grey outline, so the orange tube is what the eye follows; the prepared tube travels to the reader on top of everything, with an opaque body, and a clip hides the part inside the reader's slot.
+- Steps, four: (1) sample; (2) sample preparation; (3) detection; (4) result.
+- Notes by step (~25 s): (0) In order to analyse the sample at the airport, the workflow needed is the following. (1) First, the sample: a swab, into a tube. (2) Then sample preparation: liquids are added to the tube to free what the test looks for and clean it up. (3) Then a reader detects it. (4) And that gives the result.
+- IT: five captions (0–4).
+
+**S04c. PANPOC brings a molecular test to the gate.** *(back in the talk 2026-09-24; it was an appendix slide under the gap from 2026-09-21. Cue kept. Section in `parts/10-opening.html`; its CSS and its builder stayed in `parts/60-backups.html`, `SLIDE-ORDER.md` §4)*
+- Visual: the thesis bead-sequence figure redrawn on a paper plate (one tube, the legend: target molecule, internal control, everything else, magnetic bead); beside it one accent box headed **Sample preparation: PANPOC** (the carried label in the accent, “: PANPOC” joining it on arrival) with the seven stages, one line each, with a chip: Release and lyse *add* · Add the control *add* · Bind *add* · Capture and discard *remove* · Wash, twice *add + remove* · Dry *untouched* · Elute *add*. Every row highlight stays inside its row and the box clips. Foot: *PAIR project – DTU Bioengineering* only.
+- **The hand-off from S02b (2026-09-24).** The box *is* S02b's "Sample preparation" panel: same accent border and wash, same label, now its heading. A single press forward from S02b's last step grows the panel into the box and walks the label up to the heading while the title, plate and credit fade in; a single press back from S04c's first step shrinks it into S02b again. Any other entry (overview, hash, digits, presenter preview, reduced motion) shows each slide as it is. Geometry and the seam test: `window.PrepHandoff` in `parts/10-opening.html`, after the precedent of the Engineering with AI lockup (S08a → S08).
+- **Removed 2026-09-24:** the lead line "Before PANPOC can …", the magnet line, the closing quote "Detection can travel to the gate …" and its fragment, the sub-line under each stage, and the Horizon Europe wording of the credit. Title shortened from "The reference protocol comes from PANPOC, a portable detector for respiratory viruses."
+- **Added 2026-09-24:** the tube starts with liquid in it; a first press brings in S02's swab (upright, same orange stick and tinted tip) and leaves two cells in the liquid, each a grey membrane with the target locked inside (after S05b's "Locked inside"). This beat has no row. At lysis the membranes split open and the targets spread into the liquid. **The target is now the accent orange** (legend swatch too), so it can be followed onto the beads, onto the wall and back into the water; the "liquid in" marker became blue so the two never meet.
+- Steps, **nine** (Sirio triggers every stage): (1) the swab; (2)–(8) one stage per press, the row lighting as the tube performs it; (9) only the four *add* stages stay bright, the other three (Wash, twice included) dim.
+- Notes by step (~50 s): (0) To diagnose the sick person at the gate, a protocol has been devised: PANPOC. (1) The swab goes into a tube that already holds liquid. (2) The cells are broken open, and the target is released. (3) A control is added. (4) The genetic material binds to magnetic beads. (5) A magnet holds them; the rest is removed. (6) Two washes. (7) It dries. (8) Water releases it. (9) Most of these steps are about liquid addition, while the others are process specific. Thus, to generalise a process, a machine meant for liquid dispensing alone is sufficient. *If asked:* PAIR and PANPOC; about a dozen manual steps, six liquids, 5 µL to 1 mL; the swab can arrive dry, in guanidine thiocyanate or in phosphate-buffered saline; reagents on S04r.
+- IT: ten captions.
 
 **S03. Three parts, one droplet.** (contents) **A structured text slide — no photograph, no journey bar, no second map.**
 - Visual: four blocks, each a mono part label at the left, a thin accent rule, a short title and one line of contents. Part I, why this machine, and how I worked — the gap · the requirements and the modules · working with an AI. Part II, the modules — pump · alignment · nozzle · interface · storage. Part III, the machine — electronics · integration · validation. Then: live demo, what I learned and what comes next, closing.
@@ -81,24 +100,32 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 
 **S05. Divider: Part I. Why this machine, and how I worked.**
 
-**S06. No instrument today is precise, portable, unattended and open to any protocol at once.**
+**Part I titles, 2026-09-24 (Sirio's wording).** s06 “No existing tool meets every field need.” · s04b “One general machine for diverse field protocols.” · s07 “Core requirements for an autonomous dispenser.” · s07b “The machine is split into 8 functional modules” · s10 “The module hierarchy is led by the pump” · s09b “From CAD design to 3D-printed parts” · s08 “Addressing AI limits in engineering…” · s09 “…through spec-driven development & documentation”. Italian titles are in each slide's `notes-it__title` and in CONTENT-IT.md. All eight titles are one line, so these slides run at `--head-h: 0` (rule at 138 px) and each body block is moved up to sit centred between the rule and the foot of the slide (s06 −28, s04b −32, s07 −10, s07b −18, s09 −6 px; s10 and s08 already sat centred). On s09b the CAD rack and the printed rack are drawn at about the same width, roughly 250 px.
+
+**S09b. From CAD design to 3D-printed parts.** *(reworked 2026-09-24)*
+- Visual: left half, the CAD render of the machine's eight-tube sample rack (`assets/media/alignment/rack.png`, whole, `object-fit: contain`) on a white sheet with the Autodesk Fusion 360 logo under it (`assets/stills/fusion360-logo.png`, cropped from the image Sirio supplied, kept whole beside it as `fusion360-logo-source.jpg`). An arrow hands over to the right half: that same rack, seen from the front, printing layer by layer (its two feet, the body, the top rail) with **±0.1 mm** under it, and the P1S printer photograph. Sirio rejected the V3 chassis render and then a drawn rack on 2026-09-24; the real rack render is his choice.
+- Steps, **one click, two states**: (0) the CAD half; (1) the arrow, the build, ±0.1 mm and the printer.
+- **Notes by step** (~15 s): (0) Custom parts were designed in CAD, in Fusion 360, and then 3D-printed. (1) The printer was studied to achieve a precision better than 0.1 mm, more about this later.
+- IT: two captions (see CONTENT-IT.md).
+
+**S06. No existing tool meets every field need.** *(retitled 2026-09-24)*
 - Visual: a 3 by 4 matrix, three instrument families as line-art icons against four properties; the empty fourth row.
 - Steps: (1) lab workstations; (2) cartridge platforms; (3) the open-source builds — portable only in part, a yellow slash rather than a cross; (4) the empty row.
 - IT: four captions.
 
-**S07. The machine must dose 5 to 1000 µL of six liquids into forty tubes, on its own.**
+**S07. Core requirements for an autonomous dispenser.** *(retitled 2026-09-24)*
 - Visual: the design problem statement, then the requirement gates as cards, then the module hierarchy with the pump on top and a match cut to the machine with callouts (the enclosure callout points at empty air).
 - Steps: (1) the statement, verbatim; (2) the gates: within ±10 %, 5 to 1000 µL, six reagents, tens of tubes, no hands after setup, learnable in ten minutes; (3) six modules, the pump decides for all of them; the lower module adapts to the higher; (4) the modules on the machine, and the one never built.
 - Say: requirements are gates; criteria only rank what already passed.
 - IT: four captions.
 
-**S08. Ask an AI to design a house and you see exactly where it fails.**
+**S08. Addressing AI limits in engineering…** *(retitled 2026-09-24; runs on into S09's title)*
 - Visual: a line-drawn house in orange that changes with each failure.
 - Steps: (1) "Design a house": villa or townhouse, both valid, neither what was meant; (2) "Add a window upstairs": it lands where the balcony was agreed earlier; (3) an old instruction comes back and a wall moves; (4) the fix as a blueprint: the layout set up front, plumbing aligned floor to floor, each floor checked before the next is raised.
 - Say: structural failures, not mistakes; the answer is an environment, not better prompting.
 - IT: four captions.
 
-**S09. So the AI worked inside written specs, a memory on disk, and checks it could not skip.**
+**S09. …through spec-driven development & documentation** *(retitled 2026-09-24)*
 - Visual: the three chapter figures in a row, each taking focus in turn: `fig-gsd-loop`, `fig-ai-working-loop`, `fig-cite-search-pipeline`.
 - Steps: (1) the spec-driven loop: discuss, plan, execute, verify, ship; (2) the design loop, what the assistant did at each stage, and what stayed physical: printing, wiring, assembling, testing; (3) the literature pipeline: seven databases, forty candidates in, twelve out, no reference without a human; (4) the models behind the decisions were published as tools on the thesis site (address and QR); three of them open in this talk.
 - IT: four captions.
@@ -113,13 +140,13 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 
 *(S12, the three metering principles, moved to the appendix on 2026-09-21. It is filed under the pump module and its entry is in section D; it keeps its `s12` cue. See `SLIDE-ORDER.md`.)*
 
-**S12b. Thirty ideas came down to two builds, and the pinch pump still needed check valves.**
+**S12b. Screening thirty concepts down to two, then to a peristaltic pump design.**
 - Visual: the chip field on the engineering sheet — thirty chips thinning to two, the two growing into the finalist glyphs with their scores; rail and readouts on the right. **Three of the thirty slots are not blanks**: they carry the three metering principles themselves, one cropped panel each of `assets/figs/fig-pump-principles.png` (`principle-a/-b/-c.png`) on a 104 px plate with its name under it — Syringe · Reciprocating · Peristaltic — sitting in three slots of the middle row. The screening step therefore shows three real mechanisms among the anonymous ones, which is the job the appendix slide `s12` used to do in the talk. The field is still thirty ideas: 25 blanks, 3 principles, 2 finalists.
 - Steps: (1) thirty mechanisms in six families, some deliberately absurd — readout 30; (2) seven passed the gates, and the three principles are among them: their plates lift 6 px and their borders take the accent — readout 7; (3) five developed, two built; the three principles settle back and dim with the rest while the two finalists grow, the rotor turns, the carriage strokes, the scores count to 3485 against 3185 on the two chips — and the readout closes the slide with **Cleanability decided it**, the word carrying the same gradient the numbers do (2026-09-23: it replaced the old `3485 against 3185` readout, on the grounds that the points are not the point).
 - Say: 3485 against 3185 is a 300-point margin and the matrix gives it to footprint, mass and cleanability, so the score is not what decided the build. The linear pinch pump lost on the same ground as the syringe — reciprocal pinching needs a check-valve array to route several reagents, which puts wetted moving parts back inside the machine.
 - IT: three captions.
 
-**S13. Count steps, not seconds: the dose comes from the geometry, and three tools set it.** (tools embedded)
+**S13. Pumped volume is defined by pump geometry.** (tools embedded)
 - Visual (rebuilt 2026-09-23, Sirio's request: show how a peristaltic pump works and what 5 µL per stroke means): **the pump at work**, a schematic four-roller rotor turning counter-clockwise inside a 180° track, the tube lying in the track from an inlet on the left to a needle on the right over a small receiving tube. Wherever a roller presses, the inner tube wall is pushed onto the outer one and a short bright bar marks the flattened, closed length; two rollers are always closed inside the track (audited every 10 ms across the loop), so the path is never open. The liquid fills the tube; the pocket trapped between two sealed rollers is lit, travels with the rotor and leaves through the outlet ramp. A wedge inside the rotor sweeps the quarter turn, labelled *¼ turn · 5 µL*.
 - The loop, stop-and-go: one stroke = one quarter turn (1.6 s), then a 1 s hold. During the stroke the lit pocket next to the outlet is swept out and the next one, sealed in the inlet quarter, lights up as it takes its place; one drop grows at the needle through the stroke and falls in the hold, and the counter beside the tube steps *5 µL · 1 stroke → 10 µL · 2 strokes → 15 → 20*. After four strokes (one full turn) the tube is swapped for an empty one and the counter returns to 0; the loop closes seamlessly (rotor, roller spin and pockets repeat exactly after one turn). Every frame is a function of one loop time, drawn from one tube centreline. The loop runs whenever the slide is up, at every step including the miniature, and pauses when the slide is left; reduced motion and the presenter preview show one still frame (the hold after two strokes, 10 µL).
 - Steps: (0) the pump alone, centred; (1) the pump steps left and the three numbers arrive beside it, large: **4 rollers · 0.51 mm inner diameter · 5 µL per stroke**; (2) the pump shrinks to a miniature in the bottom band, still running, the numbers fly into one row beside it, and the three live cards rise across the top — Rotor Geometry Solver, Occlusion and Displaced-Volume Model, Tensioned Tube-Path Model; click one and it fills the stage; (3) Sirio clicks the solver and shows, in about 30 seconds, that four rollers is the smallest count that never leaves the tube open and the largest with torque to spare at 12 V.
@@ -127,7 +154,7 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 - Say: the tools were built while the decisions were open, not written up afterwards. If asked why four: across a 180° track it is the fewest rollers that keeps two pressing at every moment, so no backflow without valves.
 - IT: four captions, one per click.
 
-**S14. The first pump did not seal, and the flow sensor proved inadequate.**
+**S14. First build failures: sealing and sensor limits.**
 - Visual: **two columns telling one story**, a composition of its own (`data-dialect="columns"`). The left column is headed *the prototype* and holds the first and last blocks; the right column is headed *the method* and holds the two in between. A block is full size while it is being presented and steps back a size once it has been, so by the last step all four are on screen with the fourth prominent — the prototype story opened and closed on the left, the measurement method settled on the right.
 - **Every photograph is shown whole (2026-09-22).** Each frame is cut to its own image's aspect ratio and is only ever *scaled down* as its block steps back; nothing is ever cropped to a window. Because a frame is the whole image, each overlay states the image's own pixel coordinates and stays registered at every size — the ring and leader on the inline flow sensor (1280 × 721) and the tilted quadrilateral on the balance display (1080 × 1385). Captions sit **beside** the square, tall and stacked media and **below** the one wide drawn figure, so no block carries dead space at any size.
 - Steps: (1) **left, the prototype** — the whole taped pump head, large, with its one line beside it: *a rotor 2 mm small, and a gap drawn from a guessed wall*; (2) **right, the method** — the whole bench photograph with the flow sensor called out, and under it the trace it produced: zero sits on the x-axis, mean 1104 µL/min, one standard deviation 1159, so the band crosses below zero and one sample in seven lands there; (3) **right, the method** — the balance: **`video/pump-gravimetric.mp4`**, the weighing actually happening, beside the frame that carries the reading with the tilted quadrilateral drawn on the display: *every volume from here on is weighed*; (4) **left, the prototype** — one bar at 3.39 µL under the dashed 5.00 µL nominal with a CV 4.5 % whisker: *it repeats, so the parts were wrong, not the motor*.
@@ -137,7 +164,7 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 - Traceability: the thesis publishes a mean and a CV for those three weighings and never the individual masses, so the last step draws **one** bar. The trough depth of the negative flow excursions is nowhere in the thesis, so no number is put on it — the frequency (one in seven) and the standard deviation carry it.
 - IT: four captions.
 
-**S15. Three more builds fixed the printing, not the physics.**
+**S15. Refining pump mechanics & dimensions.**
 - **Two clicker steps, two buttons (2026-09-23, Sirio).** The slide opens on the empty sheet with **v2.1 · mount height** and **v2.2 · peg taper** collapsed into two small dashed buttons at the top of the rail (+ closed, × open, as on S09); the printer and v2.3 panels share the rest of the rail. The walk skips v2.1 and v2.2: click 1 is the printer, click 2 is v2.3. A mouse click (or Enter) on a button opens its sentence in the rail and its figure over the sheet, drawn as before (`fig-v21-gap-around-arc` with the 2.22 mm readout, `fig-roller-peg-taper` with the 0.6° readout), while the walked figure and readout step aside; a second click, a click anywhere else, any step or leaving the slide closes it. Opening one changes no deck step, fires no `deck:state` and is never sent by sync — a local aside for questions.
 - Visual: the printer step, then the last panel, which is **the pump in parts**. On the printer step the slicer plate of calibration rings is kept small as pure context (128 px) beside `fig-print-compensation` at the full height the sheet allows (596 px); **nothing is drawn on either image** — the old ring, dimension arrows and the two circles over the compensation figure are gone.
 - Last panel (2026-09-22, Sirio): the panel is **`media/pump/disassembly.jpg`**, the whole v2.3 pump laid out in parts — motor, mount, housing with **Gap: 1.52 V2.3** embossed on its face, four bearings, five cap screws, the two rotor halves, the tube with its fittings. It arrives at the full width of the sheet (719 px) and holds there while the readout counts, then steps back to 500 px as `fig-pump-head-gap` grows in beside it at **246 px, half its old size**. The deck-local `assets/v23-render.png` is **dropped from this slide**: it showed in simulation the same embossing the printed part now shows for real. (The separate `media/pump/v23-render.png` is still used in Part IV and is untouched.) The three `1.52` callouts are parked **outside** the figure — one above the apex slot, two below the end slots — each on a lengthened tick, so no text sits on the dark-red inspection rings.
@@ -146,7 +173,7 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 - Say: "CAD dimensions are assumptions until anchored to a physical datum."
 - Time: ~30 s. IT: three captions, none about v2.1 or v2.2.
 
-**S16. The pump repeats a dose as well as a hand with a pipette.**
+**S16. The pump performs as a manual pipette.**
 - Visual: the CV-against-rpm chart with the pipette benchmark drawn first, **`video/pump-gravimetric.mp4` beside it** — the weighing on the analytical balance, the same clip S14 uses (2026-09-22, Sirio: the pump-head clip was the wrong one) — and under the chart **three cells: the rationale, the choice and the result**. The clip is portrait, 540 × 960, so its box is cut to 9:16 (270 × 480, right-aligned, the full height of the content band) and the frame is shown whole; the ledger stops at 862 px to clear it. `data-noauto` plus a playhead window keeps it playing only from the step that brings it on. The title claim is carried by the chart alone — the pump points sit on the benchmark line at the operating point — because the ledger no longer states it.
 - Steps: (1) **the rationale** — the benchmark line draws, then both series and their four speeds: *the pump was tested at four speeds*; (2) **the choice** — a stem draws up from the 180 rpm tick and one ring closes around both points there, the clip starts: **180 rpm**, *adopted: the lowest scatter, three times faster than the slowest*; (3) **the result** — **4.53 µL**, *per stroke at that speed — a 9.4 % underdelivery*, counting down from 5.00.
 - Say: the slide states only that four speeds were run; the reason is his to give if asked — slower rotation delivers slightly more volume per stroke but repeats less reliably; faster loses both. 180 rpm costs 1.7 % of the volume against the slowest setting and dispenses three times faster than 60 rpm. The two heads from identical files belong in the validation part, not here.
@@ -156,14 +183,14 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 
 #### Alignment (violet)
 
-**S17. Move the tubes, keep the nozzles still, and let the tube spacing set the size of the machine.**
+**S17. Alignment module: kinematics driven by tube spacing.**
 - Visual: four sketch sheets fanned; `alignment/rack.png` arriving on the last steps.
 - Steps: (1) fifty ideas, ten survived; still nozzles mean tubing that never bends and a rack that shows progress; (2) the rule the sketch sheet boxes - **cleanability is the main concern** - and the three approaches it threw out, struck through: circular design, belt & pulley, push from the bottom; (3) the rack: eight tubes because biology counts in eights, 22 mm apart because a cap opener needs the room, 154 mm of travel; the footprint belongs to the consumable.
 - The boxed note drawn on `sketch-3.jpg` and the same words arriving in the side column are timed as one thought, and the column is headed by that rule rather than by another rejected item. The old `push, never grip / clean first, build second` line is gone.
 - The eight ellipses over `rack.png` are **measured off the file**, not spaced on a constant pitch: the render is in perspective, so the on-screen pitch grows 129 to 165 px and the bores widen and flatten toward the camera. Centres and radii are in the part file; the 22 mm and 154 mm dimensions are re-anchored to bores 1, 2 and 8.
 - IT: three captions.
 
-**S18. Three builds made a printed alignment module that finds its own zero.**
+**S18. Designed for cleanability, three builds achieved automated homing.**
 - Visual: the V1 strip, `alignment/v21-homing.jpg`, `video/alignment-v2.mp4`, each widening in turn. **The rail-length comparison under them — the two bars, the `154 mm` and `140 mm` callouts and the shortfall marker — was dropped on 2026-09-23 with the fourth step it occupied; the three panels grew from 366 to 456 px to take the whole content band.** The 140-against-154 fact survives as a presenter note, to be said only if the panel asks.
 - Steps: (1) V1: a printed rack and pinion indexes 22 mm repeatably; (2) V2: the motor above the samples, protected by gravity; (3) V2.1: a switch and a three-pass homing, 0.03 mm repeatability, no lost steps over 132 mm.
 - IT: three captions.
@@ -177,7 +204,7 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 
 #### Nozzle (teal)
 
-**S20. The nozzle Marius handed over did not work, so I rebuilt it from scratch.**
+**S20. Rebuilding the nozzle.**
 - Visual: `nozzle/carrier-top.png` and `holder-vibr-top.png`, then `nozzle/as-built.jpg`.
 - The title carries the hand-over and the rebuild (ch. 8: it arrived working in principle and inoperative in practice, with no mounting interface and an OpenSCAD mesh that Fusion could not edit).
 - Steps: (1) **left**, three findings about the inherited hardware - *too weak / no mounting / an uneditable mesh*. **No strike-through**: these are real observations, not ideas that were considered and dropped; (2) **right**, the two CAD renders, with one short line on the left, *One degree of freedom: vertical.*; (3) the renders step down to the **bottom left** and the module **as built** takes the whole right region.
@@ -186,20 +213,20 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 - The three findings carry a light-blue dash each. The dash is a **baseline-aligned flex sibling** of the text, lifted half an x-height, so it sits on the text's optical centre by construction and stays there at any size and through a wrap — it is no longer an absolutely positioned box at a hand-measured offset (2026-09-22).
 - IT: three captions.
 
-**S21. The needle bore decides whether a droplet forms at all.**
+**S21. Needle bore governs droplet formation.**
 - Visual: `video/droplet-slowmo.mp4` throughout; `nozzle/needle-assortment.jpg` with the gauges lighting in turn.
 - Steps: (1) five tips tried with water; (2) 0.21 and 0.26 mm: a stream, nothing to shake off; (3) 0.41 and 0.51 mm: a droplet forms and most release; (4) plastic tips released nine of ten small droplets and never scattered; the machine ran on 22 G steel.
 - IT: four captions.
 
 #### Interface
 
-**S22. The inherited screen trapped the user, so it was redrawn in a browser that checked its own buttons.**
+**S22. Rebuilding the User Interface.**
 - Visual: `ui-v1-home` captioned "V1 handed over." and `ui-v22-home-twopumps` captioned "V2.2 rebuilt."; the three round-1 candidates beneath; the contrast readout on the right.
 - Steps: (1) a calibration screen with no way out but the power switch, buttons of 25 by 14 pixels; (2) rebuilt as a picture of the machine: bottles with their fill, racks at their pitch, three rows at most; (3) nine candidates over three rounds, and the bar each page held itself to — **7:1, Contrast ratio**, the requirement the thesis states (ch. 9), never a measured reading. The 6.2:1 palette that failed its own requirement lives in the notes only.
 - The word-split beat ("tube" into "line" and "tube") was cut on 2026-09-22 at Sirio's request; the version history still carries it.
 - IT: three captions.
 
-**S23. One run, start to done, on one screen.** (tool embedded)
+**S23. Simulating a complete run with the UI mockup.** (tool embedded)
 - Visual: six device frames (home, pick, assign, check, run, done), then the **Live User Interface** as a card that fills the stage on click.
 - Steps: (1) all six frames arrive at once in a fast cascade, about 0.7 s end to end; (2) they fold into a filmstrip and the live card takes the room. He walks the run in the tool, not through the frames.
 - Say: the interface never shows a number it cannot stand behind.
@@ -207,7 +234,7 @@ Motion stack: CSS for simple reveals; GSAP core (vendored) plus DrawSVG, MotionP
 
 #### Storage (inherited, last)
 
-**S24. The reagent waits in a sealed vial, read by a sensor and drawn by two needles.**
+**S24. Storage module with capacitive level sensing.**
 - Visual: `storage/cartridge.jpg`, `storage/sleeve.jpg`, `storage/needle-holder.jpg`, side by side; "Designed and built by Marius Schiller."
 - He says two things here and nothing else: where the module comes from, and the air filter. The captions carry only those.
 - Steps: (1) the cartridge — "The one module in this machine I did not design", with the credit line; (2) the sleeve — cartridge into sleeve, sleeve onto needle holder; (3) the needle holder — one needle draws the liquid, one lets air back in through a 0.22 µm filter, **and the single orange circle on the slide draws around that filter**; (4) it arrived as an uneditable mesh, which shaped the integration.
@@ -444,6 +471,20 @@ number and **no entry below states one**: a slide's address is its `data-cue`
 - Steps, **two**: (1) the photograph rises out of black and the credit fades in; (2) the spotlight tightens onto the four manual pipettes. The old beats 3 to 5 — the bead protocol, the provenance of the range, the span — became S04c, S04b and B24 and are commented out in the section.
 - Say: a mobile molecular laboratory for malaria surveillance in Ethiopia — cycler, magnetic block, shaker — and four manual pipettes doing everything in between. A dozen steps, six liquids, 5 µL to 1 mL, every one of them by hand.
 - IT: three beats.
+
+**S04r. Six reagents carry the PANPOC protocol.** *(new 2026-09-24, appendix twin of S04c; `data-part="backup"`, `data-topic="open"`; section, CSS and builder in `parts/60-backups.html`)*
+- Source: thesis Appendix A, "The PANPOC magnetic-bead protocol" — "The reagents, and why each is there". Every name on the slide is written there; none is added.
+- Visual: S04c's seven stages in the same accent box, one row each: stage on the left, reagent on the right — Release and lyse **Guanidine thiocyanate** · Add the control **Synthetic control RNA** · Bind **Ethanol, 96–100 % · silica-coated magnetic beads** · Capture and discard *none · a magnet* · Wash, twice **Ethanol, 70 %** · Dry *none* · Elute **Water, free of degrading enzymes**. Foot: *PAIR project – DTU Bioengineering*.
+- Steps, seven: one row lit per press, the rest at 42 %.
+- Notes by step (~40 s): (0) The same seven stages, with what goes into the tube at each. (1) Guanidine thiocyanate, a chaotropic salt: breaks the cells open, stops the enzymes that degrade RNA, lets RNA stick to silica. (2) Synthetic control RNA in a known amount: if it does not amplify, the run is not trusted. (3) Ethanol drives the RNA onto the beads; their silica holds it, their magnetic core lets a magnet move it. (4) Nothing is added: a magnet holds the beads while the liquid is pipetted away. (5) 70 % ethanol carries away salt and debris but is too weak to release the RNA. (6) Nothing is added: the leftover ethanol evaporates. (7) Water free of degrading enzymes: with salt and alcohol gone, the RNA lets go of the beads. *If asked:* the fume hood and the cold chain.
+- IT: eight captions.
+
+### Sorted — The gap (chapters 1–2)
+
+**S05b. Sample preparation is what turns a raw swab into something a test can read.** *(moved out of the talk 2026-09-24, where it followed the Part I divider; S02b and S04c in the opening now carry what it said. Keeps its `s05b` cue; section in `parts/60-backups.html` after S04, `data-topic="gap"`; its CSS and builder stay in `parts/20-part1.html`)*
+- Visual: three drawings, one per click — “Locked inside” (the target inside a cell, with a leader to *target*), “Separated from everything else”, “And the chemistry washed out” — and the closing line “Nearly every step is a liquid.”
+- Steps, three. Notes (~45 s) unchanged: what sample preparation is; break open, pull the target out, separate it; wash the chemistry out, because nearly every step adds or removes a measured volume.
+- IT: four captions.
 
 ### Sorted — Pump module (chapter 6)
 
