@@ -7786,8 +7786,8 @@ body[data-view="guest"] .guest-dot {
        ratio and the image is contained, never cropped.  That makes it the
        narrow card of the three, and the row is centred around it. -->
   <article class="p3-fcard p3-fcard--fit" id="s33-c0"
-           style="left:175px; top:157px; width:383px; height:510px;">
-    <div class="p3-fcard-media" style="height:340px;">
+           style="left:175px; top:160px; width:383px; height:478px;">
+    <div class="p3-fcard-media" style="height:338px;">
       <img data-src="../../assets/media/alignment/lid-fouling.jpg"
            alt="Sample tubes in a rack. One hinged cap is folded back clear of the deck, marked in green; another lies flat and projects sideways towards the alignment lane wall, marked in red." />
       <!-- Both caps are in the frame now that the picture is not cropped, so
@@ -7820,8 +7820,8 @@ body[data-view="guest"] .guest-dot {
        and the image is object-fit: contain.  The overlay viewBox carries the
        same ratio, so the drawing tracks the picture at every card width and
        stays on the empty bench to the right of the machine. -->
-  <article class="p3-fcard p3-fcard--fit" id="s33-c1" style="left:578px; top:354px; width:254px; height:313px;">
-    <div class="p3-fcard-media" style="height:143px;">
+  <article class="p3-fcard p3-fcard--fit" id="s33-c1" style="left:578px; top:160px; width:254px; height:312px;">
+    <div class="p3-fcard-media" style="height:142px;">
       <img data-src="../../assets/media/device/validation-battery.jpg"
            alt="The output queue after the battery run: two racks, sixteen tubes filled with dye, and the screen reading run stopped." />
       <svg class="p3-ov" viewBox="0 0 600 338" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -7852,8 +7852,8 @@ body[data-view="guest"] .guest-dot {
     </div>
   </article>
 
-  <article class="p3-fcard" id="s33-c2" style="left:852px; top:272px; width:254px; height:395px;">
-    <div class="p3-fcard-media p3-fcard-media--draw" style="height:225px;">
+  <article class="p3-fcard" id="s33-c2" style="left:852px; top:160px; width:254px; height:394px;">
+    <div class="p3-fcard-media p3-fcard-media--draw" style="height:224px;">
       <svg viewBox="0 0 600 340" aria-hidden="true">
         <circle cx="300" cy="196" r="104" fill="rgba(255,255,255,0.05)"
                 stroke="rgba(240,236,232,0.45)" stroke-width="4"/>
@@ -15418,17 +15418,20 @@ Deck.slide('s08a', function (el, gsap) {
        card does not leave the board lopsided. */
     /* Re-laid out 2026-09-24.  Every photo box carries its picture's own
        ratio in every state, active or idle (cap 1.127, battery 1.776), so
-       no card is ever letterboxed.  The cards hang from one shared line:
-       the text row (the foot) starts at FOOT_TOP on all three, the media
-       sits above it at its own height, and the row is centred under the
-       rule.  The septum card is drawn, so it takes the cap's idle height. */
-    var ACT  = [ { w: 383, mh: 340 },
-                 { w: 600, mh: 338 },
-                 { w: 600, mh: 340 } ];
-    var IDLE = [ { w: 254, mh: 225 },
-                 { w: 254, mh: 143 },
-                 { w: 254, mh: 225 } ];
-    var FOOT = 170, FOOT_TOP = 497;
+       no card is ever letterboxed.  All three card tops align at TOP, just
+       under the rule; each card's media sits at the top of its card at its
+       own height and the text follows under it, so only the bottoms differ.
+       The row stays inside 160-640.  The septum card is drawn, so it takes
+       the cap's idle height. */
+    /* media heights are the inner width (card width less its 2 px border)
+       over the picture's ratio, so the photo meets all four edges */
+    var ACT  = [ { w: 383, mh: 338 },
+                 { w: 600, mh: 337 },
+                 { w: 600, mh: 338 } ];
+    var IDLE = [ { w: 254, mh: 224 },
+                 { w: 254, mh: 142 },
+                 { w: 254, mh: 224 } ];
+    var TOP = 160, FOOT_ACT = 140, FOOT_IDLE = 170;
     var GAP = 20, STAGE = 1280;
 
     function geo(i, active) { return (i === active) ? ACT[i] : IDLE[i]; }
@@ -15464,7 +15467,7 @@ Deck.slide('s08a', function (el, gsap) {
       var x = rowX0(active);
       cards.forEach(function (c, i) {
         var g = geo(i, active);
-        tl.to(c, { left: x, width: g.w, top: FOOT_TOP - g.mh, height: g.mh + FOOT,
+        tl.to(c, { left: x, width: g.w, top: TOP, height: g.mh + ((i === active) ? FOOT_ACT : FOOT_IDLE),
                    opacity: (i === active) ? 1 : 0.5, duration: 0.8 }, at);
         tl.to(medias[i], { height: g.mh, duration: 0.8 }, at);
         x += g.w + GAP;
