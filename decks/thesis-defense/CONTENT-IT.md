@@ -1,5 +1,9 @@
 # Contenuti in italiano — apertura e Parte I
 
+> **Superato il 24 settembre 2026.** Il mazzo italiano è costruito in `it/` (`it/parts/`,
+> `python assemble.py it`). Le didascalie e i testi validi sono lì, riscritti dalle righe
+> inglesi del presentatore; questo file resta come bozza storica.
+
 Punti di contenuto per la difesa, in italiano. Servono a due cose: Sirio li legge
 mentre parla, e sono la base del mazzo ospite italiano (`it/`) da costruire più
 avanti. **Contenuto soltanto: nessuna slide italiana va ancora costruita.**

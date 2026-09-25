@@ -7,7 +7,7 @@
 **How to run it.** From the repo root, `.\serve.bat` (or `python -m http.server 7331`), then:
 - Stage (projector): `http://localhost:7331/decks/thesis-defense/index.html`
 - Presenter (Sirio's laptop, drives the stage, relays to the family screen): `…/index.html?view=presenter&sync=host`
-- Guest (Italian, second laptop): `…/index.html?view=guest&sync=guest` — the same deck, with the Italian caption of the current step in a band under the slide (step-synced captions, 2026-09-23; see `BUILDER-REFERENCE.md`)
+- Guest (Italian, second laptop): `…/it/index.html?sync=guest` — the Italian deck (built 2026-09-24): every slide translated with the same layout, opening in the guest view, with the Italian caption of the current click in a band under the slide; no band on the cover and the appendix. Built from `it/parts/` by `python assemble.py it`. On one laptop, a second window at `it/index.html` follows with no parameter (BroadcastChannel).
 - Both drop-down cards are on `decks/index.html` under the defense card (hover).
 Never edit `index.html`: edit `parts/*.html`, run `assemble.py` with the anaconda python from the deck folder. Never open pages through VS Code Live Preview.
 

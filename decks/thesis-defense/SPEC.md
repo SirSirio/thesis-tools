@@ -2,7 +2,7 @@
 
 **Address:** `decks/thesis-defense/index.html` · **Defense:** 28 September 2026 · **Length:** 30 minutes including a 5 minute live demo, then questions · **Author:** Sirio Vittorio Feltrin.
 
-Status: built and verified 2026-09-20 (English host deck), Revision 1 (Sirio's first notes) and Revision 2 (presenter preview) applied the same day; Italian guest deck (`it/index.html`) not yet built. Handoff notes in `BRIEF.md` section 0. Content and per-slide design are in `CONTENT.md` (v3.1, 43 slides plus 23 backups); requirements and decisions in `BRIEF.md`; the build rules in `BUILD-CONTRACT.md` and `BUILDER-REFERENCE.md`.
+Status: built and verified 2026-09-20 (English host deck), Revision 1 (Sirio's first notes) and Revision 2 (presenter preview) applied the same day; Italian guest deck (`it/index.html`) built 2026-09-24 from `it/parts/` (`python assemble.py it`). Handoff notes in `BRIEF.md` section 0. Content and per-slide design are in `CONTENT.md` (v3.1, 43 slides plus 23 backups); requirements and decisions in `BRIEF.md`; the build rules in `BUILD-CONTRACT.md` and `BUILDER-REFERENCE.md`.
 
 ## 0. Slide numbering, after the September 21 restructure
 
@@ -99,7 +99,7 @@ Real: every number, every photo, every clip, the tool pages (the same files the 
 
 ## 9. Open
 
-Italian guest deck (`it/`), to be drafted by Claude and corrected by Sirio. A rehearsal on the venue network for ntfy.sh. Sirio's further review rounds. The QR swap is done (both codes decode).
+Italian guest deck (`it/`): built 2026-09-24 by Claude, for Sirio to correct. A rehearsal on the venue network for ntfy.sh. Sirio's further review rounds. The QR swap is done (both codes decode).
 
 ## 10. Verification 2026-09-20
 

@@ -1,0 +1,1462 @@
+<!-- ══════════════════════════════════════════════════════════════════════
+     OPENING — S01 cover · S02 the arrivals hall and the time axis ·
+     S02b the workflow · S04c PANPOC (its CSS and builder live in
+     parts/60-backups.html) · S03 contents.  Builder P1.
+     Dialect: cinematic (B) throughout, bent twice —
+       · S02 invents the "time axis that runs off the stage": the photo
+         becomes a corner card and the freed stage carries one linear hour
+         axis at 60 px per hour, so the 26 h bar physically leaves the frame.
+       · S03 invents the "journey bar": the four stops of the talk drawn
+         along the bottom edge, ending in the liquid-path mark at exactly
+         the corner where the infra mini map lives from Part I onwards.
+       · S04 invents two more: the "bead chain", seven tube glyphs across
+         the freed stage with an arrow per stage showing liquid going in or
+         coming out; and the "decade tiling", one log axis carrying the
+         protocol's whole span as a bracket while the band below is cut
+         into the decades a single channel can actually hold.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- ░░ S00 · Hold ░░ before the talk: no number, no mark, no timer -->
+<section class="slide" id="s00" data-cue="s00" data-dialect="hold" data-part="open"
+         data-map="none" data-no="none" data-talk="no">
+  <div class="s00">
+    <!-- ── PumpAnim · the pump figure (2026-09-23) ─────────────────────
+         Sirio: the s13 pump, with no numbers or text, replaces the turning
+         rotor mark.  The figure is drawn into this empty root and run by
+         window.PumpAnim, defined once in parts/30-part2.html; the S00
+         enter hook in this part's script starts it.  s43 shows the same. -->
+    <div class="pp pp--bare s00-pump" data-pump-anim="s00-pa-" aria-hidden="true"></div>
+    <h2 class="s00-title">Progetto di un sistema automatico e portatile per dosare
+        liquidi su scala &micro;L, per applicazioni biologiche</h2>
+    <p class="s00-sub">Portare la preparazione dei campioni sul posto</p>
+    <p class="s00-who">Sirio Vittorio Feltrin</p>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li>Hold here while the room settles. Nothing is running yet &mdash; no timer, no slide number, and this screen is not counted in the progress bar.</li>
+      <li>The next press is slide 1 and starts the clock.</li>
+    </ul>
+  </aside>
+</section>
+
+
+<!-- ░░ S01 · Cover ░░ the 7 s dispensing clip, with its sound, under a scrim -->
+<section class="slide" id="s01" data-cue="s01" data-dialect="cine" data-part="open"
+         style="--cine-scrim:1.04">
+  <div class="cine">
+    <div class="cine__shots">
+      <figure class="cine__shot">
+        <div class="cine__img cine__img--bleed cine__img--cover">
+          <video data-src="../../assets/media/video/machine-dispensing.mp4"
+                 poster="../../assets/media/device/outdoor.jpg"
+                 data-sound loop playsinline preload="none"></video>
+        </div>
+      </figure>
+    </div>
+    <div class="cine__scrim" aria-hidden="true"></div>
+
+    <div class="s01-block">
+      <svg class="s01-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <g class="s01-rotor">
+          <circle class="s01-ring" cx="32" cy="32" r="22"/>
+          <circle class="s01-roll" cx="32" cy="12" r="5"/>
+          <circle class="s01-roll" cx="52" cy="32" r="5"/>
+          <circle class="s01-roll" cx="32" cy="52" r="5"/>
+          <circle class="s01-roll" cx="12" cy="32" r="5"/>
+          <circle class="s01-hub"  cx="32" cy="32" r="3.4"/>
+        </g>
+      </svg>
+      <p class="s01-kicker">Discussione tesi magistrale &middot; DTU Bioengineering &middot; NaBIS</p>
+      <h1 class="s01-title">Progetto di un sistema automatico e portatile per dosare liquidi su scala &micro;L, per applicazioni biologiche</h1>
+      <p class="s01-sub">Portare la preparazione dei campioni sul posto</p>
+      <div class="s01-rule"></div>
+      <p class="s01-name">Sirio Vittorio Feltrin <span class="s01-with">(con&nbsp;Marius Schiller)</span></p>
+      <p class="s01-sup">Relatori Maria Dimaki &middot; Winnie Edith Svendsen &middot; Lars Hvam &nbsp;&middot;&nbsp; 28 settembre 2026</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~20 s &middot; let the clip run a few seconds first, the sound is part of it</li>
+      <li data-step="0">I thank you all for being here, and for your time.</li>
+      <li data-step="0">This project was developed together with Marius, more on that later.</li>
+      <li data-step="0">To describe what inspired my thesis, imagine the following: a passenger lands in a crowded arrivals hall, early in an outbreak, with a fever.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Progetto di un sistema automatico e portatile per dosare liquidi su scala &micro;L, per applicazioni biologiche</p>
+      <ul>
+        <li data-step="0">Grazie a tutti per essere qui.</li>
+        <li data-step="0">Progetto sviluppato con Marius.</li>
+        <li data-step="0">Immaginate: un passeggero con la febbre atterra, a inizio epidemia.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- ░░ S02 · The arrivals hall, then the time axis ░░ four steps -->
+<section class="slide" id="s02" data-cue="s02" data-dialect="cine" data-part="open"
+         style="--cine-scrim:1">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="cine">
+    <h2 class="slide__title">Un test di un giorno arriva troppo tardi.</h2>
+    <div class="cine__shots">
+      <figure class="cine__shot">
+        <div class="cine__img cine__img--bleed cine__img--cover" id="s02-plate">
+          <img data-src="assets/airport-arrivals.jpg"
+               alt="Un operatore sanitario misura la temperatura a un passeggero in arrivo, nella sala arrivi di un aeroporto internazionale, accanto a un tabellone di allerta sanitaria." />
+        </div>
+      </figure>
+    </div>
+    <div class="cine__scrim" aria-hidden="true"></div>
+    <div class="s02-veil" id="s02-veil" aria-hidden="true"></div>
+
+    <!-- the scene, drawn over the photo with no words: the traveller, the swab,
+         the tube, the journey to a central laboratory, and the hours passing -->
+    <svg class="cine__draw s02-scene" id="s02-scene" viewBox="0 0 1280 720" aria-hidden="true">
+      <g id="s02-trav">
+        <circle class="stroke" id="s02-head" cx="298" cy="450" r="19"/>
+        <path class="stroke" id="s02-body" d="M 266 512 a 32 33 0 0 1 64 0"/>
+      </g>
+      <g id="s02-swab">
+        <path class="stroke" id="s02-swab-ln" d="M 330 434 L 383 403"/>
+        <path class="stroke" id="s02-swab-tip" d="M 385 402 a 9 6.2 -30 1 1 0.1 0"/>
+      </g>
+      <path class="s02-drop" id="s02-drop" d="M 394 390 c 9 11 13 18 13 23 a 13 13 0 0 1 -26 0 c 0 -5 4 -12 13 -23 z"/>
+      <g id="s02-tube">
+        <path class="stroke" id="s02-tube-cap" d="M 450 440 H 490"/>
+        <path class="stroke" id="s02-tube-body" d="M 456 440 V 488 L 470 506 L 484 488 V 440"/>
+        <path class="s02-fill" id="s02-fill" d="M 461 464 V 487 L 470 499 L 479 487 V 464 Z"/>
+      </g>
+      <path class="stroke s02-route" id="s02-route" d="M 470 470 C 640 384 840 392 966 474"/>
+      <!-- the central laboratory: a building with the flask inside it, so it
+           reads as a place the tube is sent to, not as a piece of glassware -->
+      <g id="s02-lab">
+        <path class="stroke" d="M 994 426 L 1064 380 L 1134 426"/>
+        <path class="stroke" d="M 1006 418 V 522 H 1122 V 418"/>
+        <path class="stroke" d="M 1054 448 H 1074"/>
+        <path class="stroke" d="M 1058 448 V 462 L 1044 500 H 1084 L 1070 462 V 448"/>
+        <path class="stroke" d="M 1050 486 H 1078"/>
+      </g>
+      <circle class="s02-ping" id="s02-ping" cx="966" cy="474" r="30"/>
+      <g id="s02-clock">
+        <circle class="s02-ctrack" cx="1186" cy="462" r="36"/>
+        <path class="s02-ctick" d="M 1186 426 V 434"/>
+        <path class="s02-ctick" d="M 1222 462 H 1214"/>
+        <path class="s02-ctick" d="M 1186 498 V 490"/>
+        <path class="s02-ctick" d="M 1150 462 H 1158"/>
+        <path class="stroke s02-cfill" id="s02-cfill" d="M 1186 426 A 36 36 0 1 1 1185.9 426"/>
+        <path class="stroke s02-chand" id="s02-chand" d="M 1186 462 V 438"/>
+      </g>
+    </svg>
+
+    <!-- One linear axis. First it holds the whole day, so the proportion is
+         real; then the same axis rescales to its first three hours, so the
+         two short bars become readable without the scale ever lying. -->
+    <div class="s02-axis">
+      <svg class="s02-svg" viewBox="0 0 1280 720" aria-hidden="true">
+        <path class="s02-base" id="s02-base" d="M 96 640 H 1244"/>
+        <g id="s02-ticks-true"></g>
+      </svg>
+      <div class="s02-axlab" id="s02-axlab-true"></div>
+
+      <div class="s02-row" id="s02-row-hosp">
+        <span class="s02-rowlab">Test molecolare standard</span>
+        <span class="s02-bar s02-bar--hosp"></span>
+        <span class="s02-val">&gt;26 h</span>
+      </div>
+
+      <div class="s02-row" id="s02-row-poc">
+        <span class="s02-rowlab">Test sul posto</span>
+        <span class="s02-lowband" aria-hidden="true"></span>
+      </div>
+
+      <div class="s02-row" id="s02-row-goal">
+        <span class="s02-val s02-val--low">&lt;&thinsp;3 h</span>
+      </div>
+
+      <span class="s02-cite" id="s02-cite">Collier et al. 2020</span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~55 s</li>
+      <li data-step="0">This is the health check at the arrivals gate.</li>
+      <li data-step="1">The officer takes a nasal swab. But confirming the virus means sending that tube to a central laboratory, and waiting.</li>
+      <li data-step="2">Hold them a day and it is an operational nightmare; wave them through and an unconfirmed infection leaves the terminal. This axis is one day.</li>
+      <li data-step="3">Standard molecular testing: more than 26 hours. And that is with the hospital's own lab on site.</li>
+      <li data-step="4">A portable molecular test at the point of care: 2.6 hours.</li>
+      <li>If asked: both times come from one study, same hospital, same patients (Collier et al. 2020): a median of more than 26 hours from swab to result in the laboratory, 2.6 hours at the point of care.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Un test di un giorno arriva troppo tardi.</p>
+      <ul>
+        <li data-step="0">Il controllo sanitario agli arrivi.</li>
+        <li data-step="1">Un tampone nasale, da spedire a un laboratorio centrale. E si aspetta.</li>
+        <li data-step="2">Fermarli un giorno è un incubo; lasciarli andare è un rischio. L’asse è un giorno.</li>
+        <li data-step="3">Test standard: oltre 26 ore, con il laboratorio in ospedale.</li>
+        <li data-step="4">Un test portatile, sul posto: 2,6 ore.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- ░░ S02b · The workflow ░░ four steps, one stage per click (new 2026-09-24).
+     The bridge between the arrivals hall and PANPOC, asked for by the
+     supervisor. The first stage reuses s02's person, swab, drop and tube
+     glyphs at the same size, so the tube from the hall is recognisable; a
+     copy of the tube slides on to each next stage. Sample preparation is
+     the stage the talk goes to next, so it alone sits on an accent panel
+     and keeps full strength at the end. Labels are HTML, never SVG text. -->
+<section class="slide" id="s02b" data-cue="s02b" data-dialect="sheet" data-part="open" data-map="none">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <h2 class="slide__title">Prima di leggere un campione, bisogna prepararlo.</h2>
+  <div class="slide__rule"></div>
+
+  <div class="wf-prep" id="wf-prep" aria-hidden="true"></div>
+
+  <svg class="wf-svg" viewBox="0 0 1280 720" aria-hidden="true">
+    <defs>
+      <!-- the reader's interior, cut out of the travelling tube so it reads
+           as sitting in the slot; stage-3 local coordinates -->
+      <clipPath id="wf-slot" clipPathUnits="userSpaceOnUse">
+        <path clip-rule="evenodd" d="M -2000 -2000 H 4000 V 4000 H -2000 Z M 754 346 H 926 V 442 H 754 Z"/>
+      </clipPath>
+    </defs>
+    <!-- Layout (2026-09-24 polish): the four stages sit on one centre line
+         (y 362 in this group, 434 on the stage) with equal 125 px gaps
+         between them, from the title's left edge (56) to the rule's right
+         end (1224). Each stage is drawn in its own local coordinates and
+         placed by its group's translate. -->
+    <g transform="translate(0 72)">
+      <!-- 1 · sample: s02's glyphs at s02's size -->
+      <g transform="translate(-8 0)">
+        <g class="wf-st" id="wf-st1">
+          <circle class="wf-ln" cx="96" cy="340" r="19"/>
+          <path class="wf-ln" d="M 64 402 a 32 33 0 0 1 64 0"/>
+          <g id="wf-swab">
+            <path class="wf-ln" d="M 128 324 L 181 293"/>
+            <path class="wf-ln wf-tip" d="M 183 292 a 9 6.2 -30 1 1 0.1 0"/>
+          </g>
+          <path class="wf-drop" id="wf-drop" d="M 192 280 c 9 11 13 18 13 23 a 13 13 0 0 1 -26 0 c 0 -5 4 -12 13 -23 z"/>
+          <g class="wf-tube" id="wf-tube1">
+            <path class="wf-fill" d="M 259 354 V 377 L 268 389 L 277 377 V 354 Z"/>
+            <path class="wf-ln" d="M 248 330 H 288"/>
+            <path class="wf-ln" d="M 254 330 V 378 L 268 396 L 282 378 V 330"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- 2 · sample preparation: a recessive nozzle puts liquid into the tube -->
+      <g transform="translate(49 0)">
+        <g class="wf-st" id="wf-st2">
+          <path class="wf-noz" id="wf-feed" d="M 512 212 V 236"/>
+          <path class="wf-noz" id="wf-noz" d="M 498 236 H 526 V 262 L 516 280 H 508 L 498 262 Z"/>
+          <path class="wf-rdrop" d="M 512 286 c 6 7 8.5 11.5 8.5 15 a 8.5 8.5 0 0 1 -17 0 c 0 -3.5 2.5 -8 8.5 -15 z"/>
+          <path class="wf-rdrop" d="M 512 286 c 6 7 8.5 11.5 8.5 15 a 8.5 8.5 0 0 1 -17 0 c 0 -3.5 2.5 -8 8.5 -15 z"/>
+          <path class="wf-rdrop" d="M 512 286 c 6 7 8.5 11.5 8.5 15 a 8.5 8.5 0 0 1 -17 0 c 0 -3.5 2.5 -8 8.5 -15 z"/>
+          <path class="wf-hang" id="wf-hang" d="M 512 284 c 6 7 8.5 11.5 8.5 15 a 8.5 8.5 0 0 1 -17 0 c 0 -3.5 2.5 -8 8.5 -15 z"/>
+          <g class="wf-tube" id="wf-tube2">
+            <path class="wf-fill" d="M 503 354 V 377 L 512 389 L 521 377 V 354 Z"/>
+            <path class="wf-reag" id="wf-reag" d="M 503 336 H 521 V 354 H 503 Z"/>
+            <path class="wf-ln" d="M 492 330 H 532"/>
+            <path class="wf-ln" d="M 498 330 V 378 L 512 396 L 526 378 V 330"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- 3 · detection: a reader with a signal curve on its screen -->
+      <g transform="translate(90 -32)">
+        <g class="wf-st" id="wf-st3">
+          <path class="wf-ln wf-box" id="wf-box" d="M 764 344 H 916 a 12 12 0 0 1 12 12 V 432 a 12 12 0 0 1 -12 12 H 764 a 12 12 0 0 1 -12 -12 V 356 a 12 12 0 0 1 12 -12 Z"/>
+          <path class="wf-ln wf-scr" id="wf-scr" d="M 842 362 H 910 V 426 H 842 Z"/>
+          <path class="wf-ln wf-curve" id="wf-curve" d="M 848 418 C 866 418 872 416 878 402 C 884 384 890 374 904 372"/>
+        </g>
+      </g>
+
+      <!-- 4 · result -->
+      <g transform="translate(63 -32)">
+        <g class="wf-st" id="wf-st4">
+          <circle class="wf-ln" id="wf-ring" cx="1120" cy="394" r="40"/>
+          <path class="wf-ln" id="wf-tick" d="M 1101 395 L 1115 409 L 1140 380"/>
+        </g>
+      </g>
+
+      <!-- the arrows, all on the centre line, centred in their gaps -->
+      <path class="wf-arr" d="M 316 362 H 368 M 360 354 L 370 362 L 360 370"/>
+      <path class="wf-arr" d="M 752 362 H 804 M 796 354 L 806 362 L 796 370"/>
+      <path class="wf-arr" d="M 1053 362 H 1105 M 1097 354 L 1107 362 L 1097 370"/>
+
+      <!-- the prepared sample on its way to the reader: drawn last, so it
+           travels over everything, with an opaque body so nothing shows
+           through it; the slot clip hides the part inside the reader -->
+      <g transform="translate(90 -32)">
+        <g clip-path="url(#wf-slot)">
+          <g class="wf-tube" id="wf-tube3">
+            <path class="wf-body" d="M 780 312 V 360 L 794 378 L 808 360 V 312 Z"/>
+            <path class="wf-fill" d="M 785 336 V 359 L 794 371 L 803 359 V 336 Z"/>
+            <path class="wf-reag" d="M 785 318 H 803 V 336 H 785 Z"/>
+            <path class="wf-ln" d="M 774 312 H 814"/>
+            <path class="wf-ln" d="M 780 312 V 360 L 794 378 L 808 360 V 312"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  <p class="wf-lab" data-n="1" style="left:168px">Campione</p>
+  <p class="wf-lab wf-lab--prep" data-n="2" style="left:561px">Preparazione</p>
+  <p class="wf-lab" data-n="3" style="left:930px">Rilevazione</p>
+  <p class="wf-lab" data-n="4" style="left:1183px">Risultato</p>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">In order to analyse the sample at the airport, the workflow needed is the following.</li>
+      <li data-step="1">First, the sample: a swab, into a tube.</li>
+      <li data-step="2">Then sample preparation: liquids are added to the tube to free what the test looks for and clean it up.</li>
+      <li data-step="3">Then a reader detects it.</li>
+      <li data-step="4">And that gives the result.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Prima di leggere un campione, bisogna prepararlo.</p>
+      <ul>
+        <li data-step="0">I passaggi per analizzare il campione.</li>
+        <li data-step="1">Il campione: un tampone in una provetta.</li>
+        <li data-step="2">Preparazione: liquidi aggiunti liberano e ripuliscono ciò che si cerca.</li>
+        <li data-step="3">Poi uno strumento lo legge.</li>
+        <li data-step="4">Ed ecco il risultato.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- ░░ S04c · PANPOC ░░ eight steps. Back in the talk 2026-09-24 (it was an
+     appendix slide from 2026-09-21, filed under the gap). Keeps its cue.
+     Its CSS and its Deck.slide builder stay in parts/60-backups.html, where
+     they moved with it in September (SLIDE-ORDER.md §4). One press puts
+     the swab in the tube (no row of its own), one press per stage, then
+     one that leaves only the stages that add a liquid bright.
+     The stage box is s02b's "Sample preparation" panel, handed over on a
+     forward press (window.PrepHandoff). The appendix twin with the
+     reagent names is s04d. -->
+<section class="slide" id="s04c" data-cue="s04c" data-dialect="cine" data-part="open" data-map="none">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+  <i class="fragment step-cue" data-step="6"></i>
+  <i class="fragment step-cue" data-step="7"></i>
+  <i class="fragment step-cue" data-step="8"></i>
+  <i class="fragment step-cue" data-step="9"></i>
+
+  <h2 class="slide__title">PANPOC porta un test molecolare al gate.</h2>
+  <div class="slide__rule"></div>
+
+  <!-- the thesis figure, redrawn on paper and played rather than printed -->
+  <div class="paper pan-plate" id="s04c-plate">
+    <svg class="pan-svg" viewBox="0 0 536 344" width="536" height="344" aria-hidden="true">
+      <defs>
+        <clipPath id="s04c-bore">
+          <path d="M 84 52 V 258 L 138 293 L 192 258 V 52 Z"/>
+        </clipPath>
+      </defs>
+
+      <!-- the liquid column, clipped to the tube bore; its top edge is the level -->
+      <g clip-path="url(#s04c-bore)">
+        <rect class="pan-liq" id="s04c-liq" x="82" y="302" width="112" height="330"/>
+      </g>
+
+      <!-- sample background: open circles, seated inside the lysed volume -->
+      <circle class="pan-bg" cx="108" cy="197" r="5"/>
+      <circle class="pan-bg" cx="101" cy="235" r="5"/>
+      <circle class="pan-bg" cx="126" cy="221" r="5"/>
+      <circle class="pan-bg" cx="139" cy="166" r="5"/>
+      <circle class="pan-bg" cx="103" cy="167" r="5"/>
+      <circle class="pan-bg" cx="166" cy="208" r="5"/>
+      <circle class="pan-bg" cx="177" cy="232" r="5"/>
+      <circle class="pan-bg" cx="119" cy="272" r="5"/>
+      <circle class="pan-bg" cx="145" cy="180" r="5"/>
+      <circle class="pan-bg" cx="132" cy="238" r="5"/>
+
+      <!-- magnetic beads: ringed discs, at rest where the bind volume puts them -->
+      <circle class="pan-bead" cx="153" cy="129" r="8.5"/>
+      <circle class="pan-bead" cx="136" cy="209" r="8.5"/>
+      <circle class="pan-bead" cx="139" cy="239" r="8.5"/>
+      <circle class="pan-bead" cx="117" cy="187" r="8.5"/>
+      <circle class="pan-bead" cx="128" cy="101" r="8.5"/>
+      <circle class="pan-bead" cx="117" cy="236" r="8.5"/>
+      <circle class="pan-bead" cx="102" cy="140" r="8.5"/>
+      <circle class="pan-bead" cx="147" cy="271" r="8.5"/>
+
+      <!-- the sample as it comes off the swab (2026-09-24): two cells, each a
+           membrane with the target locked inside, after s05b's "Locked
+           inside" panel. Each membrane is two half-arcs, so lysis can split
+           it open. The target discs below start inside them. -->
+      <g class="pan-cell" id="s04c-cell1">
+        <path class="pan-mem" d="M 118 215 A 17 17 0 0 0 118 249"/>
+        <path class="pan-mem" d="M 118 215 A 17 17 0 0 1 118 249"/>
+      </g>
+      <g class="pan-cell" id="s04c-cell2">
+        <path class="pan-mem" d="M 160 219 A 17 17 0 0 0 160 253"/>
+        <path class="pan-mem" d="M 160 219 A 17 17 0 0 1 160 253"/>
+      </g>
+
+      <!-- target RNA: filled discs, in the accent so they can be followed -->
+      <circle class="pan-rna" cx="145" cy="195" r="5"/>
+      <circle class="pan-rna" cx="155" cy="251" r="5"/>
+      <circle class="pan-rna" cx="146" cy="240" r="5"/>
+      <circle class="pan-rna" cx="176" cy="256" r="5"/>
+      <circle class="pan-rna" cx="152" cy="214" r="5"/>
+      <circle class="pan-rna" cx="155" cy="166" r="5"/>
+
+      <!-- the internal control: light blue, so it never reads as the target -->
+      <circle class="pan-ctrl" cx="119" cy="254" r="5"/>
+      <circle class="pan-ctrl" cx="116" cy="174" r="5"/>
+
+      <!-- the magnet, drawn under the tube wall so the wall reads in front of it -->
+      <g id="s04c-mag">
+        <path class="pan-mag" d="M 202 160 H 262 A 39 39 0 0 1 262 238 H 202"/>
+        <path class="pan-pole" d="M 202 160 H 226"/>
+        <path class="pan-pole" d="M 202 238 H 226"/>
+      </g>
+
+      <!-- the swab, s02's glyph turned upright: a stick and its tip -->
+      <g class="pan-swab" id="s04c-swab">
+        <path class="pan-swl" d="M 150 -96 V 26"/>
+        <path class="pan-swt" d="M 150 26 a 7 11 0 1 1 -0.1 0"/>
+      </g>
+
+      <!-- the tube -->
+      <path class="pan-tube" d="M 62 48 H 80"/>
+      <path class="pan-tube" d="M 196 48 H 214"/>
+      <path class="pan-tube" d="M 80 48 V 260 L 138 298 L 196 260 V 48"/>
+
+      <!-- the two markers that carry a measured volume in and out -->
+      <circle class="pan-din"  id="s04c-din"  cx="138" cy="18" r="6"/>
+      <circle class="pan-dout" id="s04c-dout" cx="138" cy="18" r="6"/>
+
+      <!-- drying -->
+      <path class="pan-wisp" d="M 106 40 c 6 -8 -6 -14 0 -22"/>
+      <path class="pan-wisp" d="M 138 34 c 6 -8 -6 -14 0 -22"/>
+      <path class="pan-wisp" d="M 170 42 c 6 -8 -6 -14 0 -22"/>
+
+      <!-- the legend the printed figure carries, with the control added.
+           Only the swatches are SVG.  The four labels are HTML chips
+           below, outside the svg: Chrome paints <text> at its unscaled
+           position when the viewBox scale is exactly 1, which put the
+           words through the right edge of the plate. -->
+      <g class="pan-leg">
+        <circle class="pan-dot-rna" cx="336" cy="112" r="5"/>
+      </g>
+      <g class="pan-leg">
+        <circle class="pan-dot-ctrl" cx="336" cy="156" r="5"/>
+      </g>
+      <g class="pan-leg">
+        <circle class="pan-dot-bg" cx="336" cy="200" r="5"/>
+      </g>
+      <g class="pan-leg">
+        <circle class="pan-dot-bead" cx="336" cy="244" r="8.5"/>
+      </g>
+    </svg>
+
+    <!-- the legend labels, as HTML over the plate.  The plate and the
+         viewBox are 1:1 (536 x 344), so these are the same coordinates
+         the swatches use: left 358, centred on each swatch's cy. -->
+    <span class="pan-legt" style="top:98px">molecola cercata</span>
+    <span class="pan-legt" style="top:142px">controllo interno</span>
+    <span class="pan-legt" style="top:186px">tutto il resto</span>
+    <span class="pan-legt" style="top:230px">biglia magnetica</span>
+  </div>
+
+  <!-- the seven stages, inside one box; the four that add a liquid carry the accent -->
+  <div class="pan-lad" id="s04c-lad">
+    <p class="pan-head">Preparazione<span class="pan-head__tail">: PANPOC</span></p>
+    <div class="pan-row pan-row--add" style="top:62px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">1</span><span class="pan-rt">Rilascio e lisi</span>
+      <span class="pan-rc pan-rc--add">aggiunta</span>
+    </div>
+    <div class="pan-row pan-row--add" style="top:118px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">2</span><span class="pan-rt">Aggiunta del controllo</span>
+      <span class="pan-rc pan-rc--add">aggiunta</span>
+    </div>
+    <div class="pan-row pan-row--add" style="top:174px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">3</span><span class="pan-rt">Legame</span>
+      <span class="pan-rc pan-rc--add">aggiunta</span>
+    </div>
+    <div class="pan-row pan-row--flat" style="top:230px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">4</span><span class="pan-rt">Cattura e scarto</span>
+      <span class="pan-rc">rimozione</span>
+    </div>
+    <div class="pan-row pan-row--both" style="top:286px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">5</span><span class="pan-rt">Lavaggio, due volte</span>
+      <span class="pan-rc pan-rc--both">aggiunta + rimozione</span>
+    </div>
+    <div class="pan-row pan-row--flat" style="top:342px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">6</span><span class="pan-rt">Asciugatura</span>
+      <span class="pan-rc pan-rc--none">a riposo</span>
+    </div>
+    <div class="pan-row pan-row--add" style="top:398px">
+      <i class="pan-rw"></i><i class="pan-rb"></i>
+      <span class="pan-rn">7</span><span class="pan-rt">Eluizione</span>
+      <span class="pan-rc pan-rc--add">aggiunta</span>
+    </div>
+  </div>
+
+  <p class="pan-cred" id="s04c-cred">Progetto PAIR &ndash; DTU Bioengineering</p>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">To diagnose the sick person at the gate, a protocol has been devised: PANPOC.</li>
+      <li data-step="1">The swab goes into a tube that already holds liquid.</li>
+      <li data-step="2">The cells are broken open, and the target is released.</li>
+      <li data-step="3">A control is added.</li>
+      <li data-step="4">The genetic material binds to magnetic beads.</li>
+      <li data-step="5">A magnet holds them; the rest is removed.</li>
+      <li data-step="6">Two washes.</li>
+      <li data-step="7">It dries.</li>
+      <li data-step="8">Water releases it.</li>
+      <li data-step="9">Most of these steps are about liquid addition, while the others are process specific.</li>
+      <li data-step="9">Thus, to generalise a process, a machine meant for liquid dispensing alone is sufficient.</li>
+      <li>If asked: PANPOC is the portable instrument of the Horizon Europe project PAIR, meant for sites such as airports and border controls. Its full preparation is about a dozen manual steps with six liquids, from 5 &micro;L to 1 mL. The swab can arrive dry, in guanidine thiocyanate or in phosphate-buffered saline; from the bead step on the three are identical. The reagent of each stage is on appendix slide s04r.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">PANPOC porta un test molecolare al gate.</p>
+      <ul>
+        <li data-step="0">Per la diagnosi al gate c’è un protocollo: PANPOC.</li>
+        <li data-step="1">Il tampone va in una provetta già con liquido.</li>
+        <li data-step="2">Le cellule si rompono e liberano ciò che si cerca.</li>
+        <li data-step="3">Si aggiunge un controllo.</li>
+        <li data-step="4">Il materiale genetico si lega alle biglie.</li>
+        <li data-step="5">Un magnete le tiene; il resto si butta.</li>
+        <li data-step="6">Due lavaggi.</li>
+        <li data-step="7">Si asciuga.</li>
+        <li data-step="8">L’acqua lo libera.</li>
+        <li data-step="9">Quasi ogni passaggio aggiunge liquido; gli altri variano.</li>
+        <li data-step="9">Quindi basta una macchina che dosa liquidi, per ogni protocollo.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- ░░ S03 · Contents ░░ four steps, one part lit at a time -->
+<section class="slide" id="s03" data-cue="s03" data-dialect="sheet" data-part="open">
+  <h2 class="slide__title">Indice</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+
+  <div class="s03-toc">
+    <div class="s03-blk" data-b="0" style="top:184px">
+      <span class="s03-lab">Parte I</span>
+      <span class="s03-pips"><i class="is-live"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span>
+      <span class="s03-bar"></span>
+      <h3 class="s03-nm">Contesto, requisiti e metodi</h3>
+      <p class="s03-sub">cosa manca &middot; requisiti e moduli &middot; progettare con l&rsquo;IA</p>
+    </div>
+    <div class="s03-blk" data-b="1" style="top:280px">
+      <span class="s03-lab">Parte II</span>
+      <span class="s03-pips"><i class=""></i><i class="is-live"></i><i class=""></i><i class=""></i><i class=""></i></span>
+      <span class="s03-bar"></span>
+      <h3 class="s03-nm">I moduli</h3>
+      <p class="s03-sub">pompa &middot; allineamento &middot; ugelli &middot; interfaccia &middot; stoccaggio</p>
+    </div>
+    <div class="s03-blk" data-b="2" style="top:376px">
+      <span class="s03-lab">Parte III-A</span>
+      <span class="s03-pips"><i class=""></i><i class=""></i><i class="is-live"></i><i class=""></i><i class=""></i></span>
+      <span class="s03-bar"></span>
+      <h3 class="s03-nm">La macchina</h3>
+      <p class="s03-sub">elettronica &middot; integrazione &middot; validazione</p>
+    </div>
+    <div class="s03-blk s03-blk--solo" data-b="3" style="top:472px">
+      <span class="s03-lab">Demo</span>
+      <span class="s03-pips"><i class=""></i><i class=""></i><i class=""></i><i class="is-live"></i><i class=""></i></span>
+      <span class="s03-bar"></span>
+      <h3 class="s03-nm">Dimostrazione dal vivo</h3>
+      <p class="s03-sub">la macchina funziona, qui, per cinque minuti</p>
+    </div>
+    <div class="s03-blk" data-b="4" style="top:568px">
+      <span class="s03-lab">Parte III-B</span>
+      <span class="s03-pips"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="is-live"></i></span>
+      <span class="s03-bar"></span>
+      <h3 class="s03-nm">Discussione e prospettive</h3>
+      <p class="s03-sub">Conclusione</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">Five stops.</li>
+      <li data-step="1">Part I: why this machine is needed, what it has to do, and how I worked.</li>
+      <li data-step="2">Part II: the modules, one by one, starting with the pump.</li>
+      <li data-step="3">Part III: the whole machine &mdash; electronics, integration, validation.</li>
+      <li data-step="4">Then five minutes of live demo, here in the room.</li>
+      <li data-step="5">And discussion and outlook to close. Questions at the end.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Indice</p>
+      <ul>
+        <li data-step="0">Cinque tappe.</li>
+        <li data-step="1">Parte I: perché, cosa deve fare, come ho lavorato.</li>
+        <li data-step="2">Parte II: i moduli, dalla Pompa in poi.</li>
+        <li data-step="3">Parte III: la macchina intera.</li>
+        <li data-step="4">Poi cinque minuti di prova dal vivo.</li>
+        <li data-step="5">Poi discussione e prospettive. Domande alla fine.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+
+
+
+
+
+
+<style data-part="p1-open">
+/* ══ S01 · cover ═══════════════════════════════════════════════════════ */
+#s01 .s01-block { position: absolute; left: 96px; bottom: 82px; width: 1000px; z-index: 4; }
+#s01 .s01-block::before {
+  content: ""; position: absolute;
+  left: -96px; right: -220px; top: -52px; bottom: -110px;
+  z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(105deg, rgba(8,8,10,0.94) 0%, rgba(8,8,10,0.86) 42%,
+                    rgba(8,8,10,0.54) 74%, rgba(8,8,10,0) 100%);
+}
+#s01 .s01-mark  { width: 58px; height: 58px; display: block; margin-bottom: 20px; }
+#s01 .s01-ring  { fill: none; stroke: color-mix(in srgb, var(--t-a) 70%, transparent); stroke-width: 2.4; }
+#s01 .s01-roll  { fill: none; stroke: var(--t-a); stroke-width: 2.4; }
+#s01 .s01-hub   { fill: var(--t-a); }
+#s01 .s01-rotor { transform-origin: 32px 32px; }
+#s01 .s01-kicker {
+  margin: 0 0 16px; font-family: var(--mono); font-size: 19px; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--t-a);
+  text-shadow: 0 3px 18px rgba(0,0,0,0.9);
+}
+#s01 .s01-title {
+  margin: 0; max-width: 1060px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 44px; line-height: 1.1; letter-spacing: -0.022em;
+  color: var(--text); text-shadow: 0 8px 36px rgba(0,0,0,0.7);
+}
+#s01 .s01-sub {
+  margin: 14px 0 0; max-width: 1000px;
+  font-size: 26px; line-height: 1.3;
+  color: var(--text-soft);
+  text-shadow: 0 6px 26px rgba(0,0,0,0.7);
+}
+#s01 .s01-rule { width: 320px; height: 2px; margin: 26px 0 22px;
+  background: linear-gradient(90deg, var(--t-a), var(--t-b)); transform-origin: 0 50%; }
+#s01 .s01-name { margin: 0 0 8px; font-size: 27px; color: var(--text); text-shadow: 0 3px 18px rgba(0,0,0,0.9); }
+#s01 .s01-with { margin-left: 6px; font-size: 22px; color: var(--text-soft); }
+#s01 .s01-sup  { margin: 0; font-size: 19px; color: var(--text-soft); text-shadow: 0 3px 18px rgba(0,0,0,0.9); }
+
+/* ══ S02 · arrivals hall, the drawn scene, then the hour axis ══════ */
+#s02 { overflow: hidden; }
+#s02 .slide__title { width: 790px; max-width: 790px; opacity: 0; }
+
+/* the veil calms the photograph while the scene is drawn over it */
+#s02 .s02-veil {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: rgba(8,8,10,0.44); opacity: 0;
+}
+#s02 .s02-scene { z-index: 4; }
+#s02 .s02-scene .stroke { stroke-width: 3; }
+#s02 .s02-drop { opacity: 0; }
+#s02 .s02-fill { opacity: 0; }
+#s02 #s02-swab-tip { opacity: 1; }
+#s02 #s02-swab-tip { fill: color-mix(in srgb, var(--t-a) 30%, transparent); }
+/* The tip's fill is not drawn by DrawSVG, so it would sit on the photo as an
+   orange dot before the scene starts; it waits at zero and fades in with
+   the tip's outline. */
+#s02 #s02-swab-tip { fill-opacity: 0; }
+#s02 .s02-ping { fill: none; stroke: var(--t-a); stroke-width: 2.4; opacity: 0; }
+#s02 .s02-drop { fill: color-mix(in srgb, var(--t-a) 82%, transparent); stroke: none; }
+#s02 .s02-fill { fill: color-mix(in srgb, var(--t-a) 70%, transparent); stroke: none; }
+#s02 .s02-route { stroke-width: 2.4; }
+#s02 .s02-ctrack { fill: none; stroke: rgba(240,236,232,0.34); stroke-width: 3; }
+#s02 .s02-ctick  { fill: none; stroke: rgba(240,236,232,0.44); stroke-width: 3; stroke-linecap: round; }
+#s02 .s02-cfill  { stroke-width: 5; }
+#s02 .s02-chand  { stroke-width: 3.4; }
+
+/* ── the axis ──────────────────────────────────────────────────────
+   One scale, two framings. The tick groups and the label rows exist in
+   both, and the last step crossfades between them while the bars widen
+   by the same factor, so nothing is ever drawn out of proportion. */
+#s02 .s02-axis { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+#s02 .s02-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+#s02 .s02-base, #s02 .s02-tick, #s02 .s02-tickz {
+  fill: none; stroke: rgba(240,236,232,0.34); stroke-width: 1.6; stroke-linecap: round;
+}
+#s02 .s02-axlab { position: absolute; inset: 0; opacity: 0; }
+#s02 .s02-axlab span {
+  position: absolute; top: 650px; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 18px;
+  color: var(--text-muted); letter-spacing: 0.06em;
+}
+#s02 .s02-row { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; }
+#s02 .s02-rowlab {
+  position: absolute; left: 96px; font-size: 21px; color: rgba(240,236,232,0.9);
+  text-shadow: 0 4px 18px rgba(0,0,0,0.8);
+}
+/* Width is animated, not scaleX: a scaled bar squashes the target band's
+   dashes and its border into hairlines. */
+#s02 .s02-bar { position: absolute; left: 96px; display: block; border-radius: 4px; }
+#s02 .s02-val {
+  position: absolute; font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 34px; font-weight: 600; color: #fff; text-shadow: 0 6px 22px rgba(0,0,0,0.8);
+}
+#s02 .s02-val--goal { color: #7ee0a8; }
+
+#s02 #s02-row-hosp .s02-rowlab { top: 352px; }
+#s02 #s02-row-hosp .s02-bar { top: 384px; height: 36px; width: 1148px;
+  background: linear-gradient(90deg, var(--t-a), var(--t-b) 62%, var(--t-b)); }
+/* Pinned to the right margin: at the day's scale the bar ends there, and
+   once the axis zooms the bar runs on past it. The label is right either way. */
+#s02 #s02-row-hosp .s02-val { right: 36px; top: 381px; }
+#s02 #s02-row-poc .s02-rowlab { top: 462px; }
+
+/* The short times are slivers against a 24-hour axis, so instead of two bars
+   they are one band over the low end: green where an answer is fast enough,
+   running to red as it approaches three hours, and dissolving at the right
+   rather than stopping at a hard edge — the boundary is an argument, not a
+   measurement. Everything else about it he says out loud. 1 h = 47.83 px. */
+#s02 .s02-lowband {
+  position: absolute; left: 96px; top: 496px;
+  width: 172px; height: 42px;
+  border-radius: 10px 0 0 10px;
+  background: linear-gradient(90deg, #35c46e 0%, #7ac85a 26%, #e9c341 52%, #e0503a 80%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 46%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(90deg, #000 0%, #000 46%, rgba(0,0,0,0) 100%);
+}
+#s02 .s02-val--low {
+  left: 296px; top: 492px; font-size: 34px; color: #e9c341;
+}
+
+#s02 .s02-cite {
+  position: absolute; left: 96px; top: 676px; opacity: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+
+/* ══ S02b · the workflow: four stages, one per click ════════════════
+   The glyphs are s02's, at s02's size and in s02's colours: the same
+   person, swab, orange drop and tube. The pale liquid is what sample
+   preparation adds. Only the preparation stage sits on a panel. */
+#s02b .wf-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 2;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--t-a) 45%, transparent));
+}
+#s02b .wf-ln { fill: none; stroke: var(--t-a); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+#s02b .wf-tip { fill: color-mix(in srgb, var(--t-a) 30%, transparent); fill-opacity: 0; }
+#s02b .wf-drop { fill: color-mix(in srgb, var(--t-a) 82%, transparent); opacity: 0; }
+#s02b .wf-fill { fill: color-mix(in srgb, var(--t-a) 70%, transparent); }
+#s02b .wf-reag, #s02b .wf-rdrop { fill: rgba(240,236,232,0.84); }
+/* the dispenser is scenery, not the subject: a quiet grey outline, so the
+   orange sample tube is what the eye follows */
+#s02b .wf-noz {
+  fill: none; stroke: rgba(240,236,232,0.34); stroke-width: 2.4;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* the travelling tube's opaque body: nothing shows through it in transit */
+#s02b .wf-body { fill: #121114; }
+#s02b .wf-rdrop, #s02b .wf-hang { opacity: 0; }
+#s02b .wf-hang { fill: rgba(240,236,232,0.84); }
+#s02b .wf-box { fill: #111114; fill-opacity: 0; }
+#s02b .wf-scr { stroke: rgba(240,236,232,0.5); stroke-width: 2; }
+#s02b .wf-curve { stroke-width: 3.4; }
+#s02b .wf-arr {
+  fill: none; stroke: rgba(240,236,232,0.55); stroke-width: 2.4;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+#s02b .wf-prep {
+  position: absolute; left: 405px; top: 248px; width: 312px; height: 356px;
+  box-sizing: border-box; border-radius: var(--r-md, 18px); z-index: 1; opacity: 0;
+  border: 1px solid color-mix(in srgb, var(--t-a) 55%, transparent);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--t-a) 15%, transparent),
+    color-mix(in srgb, var(--t-a) 4%, transparent));
+}
+#s02b .wf-lab {
+  position: absolute; top: 530px; margin: 0; width: 180px; z-index: 3;
+  transform: translateX(-50%); text-align: center; opacity: 0;
+  font-size: 26px; line-height: 1.2; color: var(--text);
+}
+#s02b .wf-lab--prep {
+  width: 300px; top: 528px;
+  font-family: var(--display); font-weight: 700; font-size: 28px; letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--t-a) 88%, #fff);
+}
+
+/* ══ S04 family · three screens, one stylesheet · still by hand ══════════════════════════════ */
+/* s04 itself moved to the appendix 2026-09-23: its section, its own four
+   rules and its builder all live in parts/60-backups.html. What is left
+   here is the shared family sheet that s04b still uses. */
+.s04fam .slide__title { width: var(--title-w, 860px); max-width: var(--title-w, 860px); }
+.s04fam .s04-blk { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; }
+.s04fam .s04-lead {
+  position: absolute; left: 56px; margin: 0; width: 860px;
+  font-size: 26px; line-height: 1.34; color: var(--text);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.85);
+}
+
+/* ── step 3 · the bead chain ───────────────────────────── */
+.s04fam #s04-prep .s04-lead { top: 196px; }
+.s04fam .s04-legend { position: absolute; left: 56px; top: 250px; display: flex; gap: 32px; align-items: center; }
+.s04fam .s04-lg { display: flex; align-items: center; gap: 9px; font-size: 20px; color: var(--text-soft); }
+.s04fam .s04-lg svg { width: 15px; height: 28px; overflow: visible; }
+.s04fam .s04-lg--in  { color: color-mix(in srgb, var(--t-a) 82%, #f0ece8); }
+.s04fam .s04-chainsvg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.s04fam .s04-tube { fill: none; stroke: rgba(240,236,232,0.66); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.s04fam .s04-link { fill: none; stroke: rgba(240,236,232,0.26); stroke-width: 1.6; }
+.s04fam .s04-fill { fill: color-mix(in srgb, var(--t-a) 46%, transparent); }
+.s04fam .s04-fill--water { fill: rgba(240,236,232,0.28); }
+.s04fam .s04-bead { fill: rgba(240,236,232,0.78); }
+.s04fam .s04-arr  { fill: none; stroke-width: 2.6; stroke-linecap: round; }
+.s04fam .s04-arrh { stroke: none; }
+.s04fam .s04-in  .s04-arr { stroke: var(--t-a); }
+.s04fam .s04-in  .s04-arrh { fill: var(--t-a); }
+.s04fam .s04-out .s04-arr { stroke: rgba(240,236,232,0.52); }
+.s04fam .s04-out .s04-arrh { fill: rgba(240,236,232,0.52); }
+.s04fam .s04-lg--in  .s04-arr { stroke: var(--t-a); } .s04fam .s04-lg--in  .s04-arrh { fill: var(--t-a); }
+.s04fam .s04-lg--out .s04-arr { stroke: rgba(240,236,232,0.52); } .s04fam .s04-lg--out .s04-arrh { fill: rgba(240,236,232,0.52); }
+.s04fam .s04-st {
+  position: absolute; top: 544px; width: 150px; transform: translateX(-50%);
+  text-align: center; font-size: 20px; line-height: 1.22;
+  color: rgba(240,236,232,0.92); text-shadow: 0 3px 16px rgba(0,0,0,0.85);
+}
+
+/* ── step 4 · where the numbers come from ────────────────────
+   No lead sentence on this one: the title says it, and the chips are the
+   evidence. The row spans the full content width so it lines up with the
+   title rule, and the two readouts below sit centred under their own
+   drawing, on one shared baseline. */
+.s04fam .s04-chips {
+  position: absolute; left: 56px; top: 236px; width: 1168px;
+  display: flex; justify-content: space-between; gap: 13px;
+}
+.s04fam .s04-chip {
+  padding: 9px 16px; border-radius: var(--r-pill, 999px);
+  border: 1px solid color-mix(in srgb, var(--t-a) 42%, transparent);
+  background: rgba(255,255,255,0.05);
+  font-size: 19px; line-height: 1.2; white-space: nowrap; color: var(--text);
+}
+
+/* an icon per field, and the one that is the reference protocol says so */
+.s04fam .s04-chip { display: inline-flex; align-items: center; gap: 9px; }
+.s04fam .s04-chip i { font-style: normal; font-size: 22px; line-height: 1; }
+.s04fam .s04-chip--ref { border-color: color-mix(in srgb, var(--t-a) 70%, transparent); position: relative; }
+.s04fam .s04-chip em {
+  position: absolute; left: 2px; top: 100%; margin-top: 6px;
+  font-style: normal; font-family: var(--mono); font-size: 18px;
+  letter-spacing: 0.02em; color: color-mix(in srgb, var(--t-a) 80%, #f0ece8);
+  white-space: nowrap;
+}
+.s04fam .s04-crule {
+  position: absolute; left: 56px; top: 356px; width: 1168px; height: 2px; transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--t-a), color-mix(in srgb, var(--t-b) 10%, transparent));
+}
+.s04fam .s04-ro { position: absolute; top: 400px; text-align: center; }
+
+/* each readout carries its own drawing above the number */
+.s04fam .s04-ro--wide { width: 560px; }
+.s04fam .s04-vis { display: block; width: 100%; height: 92px; overflow: visible; margin-bottom: 4px; }
+.s04fam .s04-vax, .s04fam .s04-vtk path {
+  fill: none; stroke: rgba(240,236,232,0.34); stroke-width: 1.6; stroke-linecap: round;
+}
+.s04fam .s04-vdrop { fill: color-mix(in srgb, var(--t-a) 82%, transparent); }
+.s04fam .s04-vlab {
+  font-family: var(--mono); font-size: 18px; fill: var(--text-muted);
+}
+.s04fam .s04-vlab--r { text-anchor: end; }
+.s04fam .s04-vial path { fill: none; stroke: var(--t-a); stroke-width: 2; stroke-linejoin: round; }
+.s04fam .s04-vial .s04-vliq { fill: color-mix(in srgb, var(--t-a) 58%, transparent); stroke: none; }
+.s04fam .s04-rov { display: block; font-size: 44px; font-weight: 600; line-height: 1; white-space: nowrap; }
+.s04fam .s04-rol { display: block; margin-top: 12px; font-size: 20px; color: var(--text-muted); white-space: nowrap; }
+.s04fam .s04-tail {
+  position: absolute; left: 56px; top: 628px; margin: 0; width: 1168px;
+  font-size: 21px; line-height: 1.3; color: var(--text); text-align: center;
+}
+.s04fam .s04-foot {
+  position: absolute; left: 56px; top: 640px; margin: 0; width: 1168px;
+  font-family: var(--mono); font-size: 18px; line-height: 1.34; letter-spacing: 0.01em;
+  color: var(--text-muted);
+}
+
+/* ── step 5 · the span, and one channel's reach ───────────── */
+.s04fam #s04-span .s04-lead { top: 190px; }
+.s04fam .s04-eq {
+  position: absolute; left: 630px; top: 238px; transform: translateX(-50%);
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 34px; font-weight: 600; letter-spacing: -0.01em;
+  color: var(--t-a); white-space: nowrap;
+}
+.s04fam .s04-axsvg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.s04fam .s04-brk { fill: none; stroke: color-mix(in srgb, var(--t-a) 72%, transparent); stroke-width: 2; stroke-linecap: round; }
+.s04fam .s04-ax, .s04fam .s04-tk { fill: none; stroke: rgba(240,236,232,0.40); stroke-width: 1.6; stroke-linecap: round; }
+.s04fam .s04-dp { fill: color-mix(in srgb, var(--t-a) 74%, transparent); stroke: var(--t-a); stroke-width: 1.6; }
+.s04fam .s04-tkl {
+  position: absolute; top: 428px; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 19px; color: var(--text-muted); white-space: nowrap;
+}
+.s04fam .s04-liq {
+  position: absolute; top: 456px; transform: translateX(-50%);
+  font-size: 20px; color: rgba(240,236,232,0.92); white-space: nowrap;
+}
+.s04fam .s04-tile {
+  position: absolute; top: 504px; height: 34px; box-sizing: border-box; border-radius: 5px;
+}
+.s04fam .s04-tile--one {
+  border: 1px solid color-mix(in srgb, var(--t-a) 70%, transparent);
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 34%, transparent),
+    color-mix(in srgb, var(--t-b) 22%, transparent));
+}
+.s04fam .s04-tile--ghost {
+  border: 1px dashed rgba(240,236,232,0.34);
+  background: rgba(240,236,232,0.05);
+}
+.s04fam .s04-tilelab {
+  position: absolute; top: 511px; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 21px; font-weight: 600; color: #fff; white-space: nowrap;
+}
+.s04fam .s04-cap {
+  position: absolute; left: 56px; top: 552px; margin: 0; width: 1040px;
+  font-size: 20px; line-height: 1.36; color: var(--text);
+}
+.s04fam .s04-lippi {
+  position: absolute; left: 56px; top: 616px; margin: 0; width: 1060px;
+  font-size: 19px; line-height: 1.34; color: var(--text-muted);
+}
+.s04fam .s04-src { font-family: var(--mono); font-size: 18px; color: var(--text-muted); }
+
+/* ══ S03 · contents ════════════════════════════════════ */
+/* Five rows, and each carries the very pip the corner rail will light for
+   it, so the corner needs no explaining later. */
+#s03 .s03-toc { position: absolute; inset: 0; }
+#s03 .s03-blk { position: absolute; left: 56px; width: 1168px; opacity: 0; }
+#s03 .s03-lab {
+  position: absolute; left: 0; top: 4px; width: 150px;
+  font-family: var(--mono); font-size: 19px; font-weight: 700;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--t-a);
+  white-space: nowrap;
+}
+#s03 .s03-pips { position: absolute; left: 0; top: 34px; display: flex; gap: 5px; }
+#s03 .s03-pips i {
+  display: block; width: 18px; height: 4px; border-radius: 2px;
+  background: rgba(240,236,232,0.20);
+}
+#s03 .s03-pips i.is-live { background: var(--t-a); width: 28px; }
+#s03 .s03-bar {
+  position: absolute; left: 164px; top: 0; width: 2px; height: 76px;
+  background: linear-gradient(180deg, var(--t-a), color-mix(in srgb, var(--t-b) 12%, transparent));
+}
+#s03 .s03-nm {
+  position: absolute; left: 200px; top: 0; margin: 0; width: 1000px;
+  font-family: var(--display); font-weight: 700; font-size: 31px; line-height: 1.1;
+  letter-spacing: -0.02em; color: var(--text);
+}
+#s03 .s03-sub {
+  position: absolute; left: 200px; top: 44px; margin: 0; width: 1000px;
+  font-size: 20px; line-height: 1.3; color: var(--text-soft);
+}
+/* the demo is its own thing, not a sub-item of anything */
+#s03 .s03-blk--solo .s03-bar {
+  width: 3px;
+  background: linear-gradient(180deg, var(--t-a), var(--t-b));
+}
+#s03 .s03-blk--solo .s03-nm { color: #fff; }
+#s03 .s03-blk--solo .s03-sub { color: color-mix(in srgb, var(--t-a) 70%, #f0ece8); }
+</style>
+
+
+<script data-part="p1-open">
+/* ══════════════════════════════════════════════════════════════════════
+   Opening timelines. One per slide, labels step0..stepN.
+   Every selector is scoped to `el`: the presenter view clones slides.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── S00 · the hold screen's pump (PumpAnim, 2026-09-23) ──────────────
+   window.PumpAnim is defined in parts/30-part2.html, whose script runs
+   after this one; enter hooks first fire on DOMContentLoaded, after every
+   part script, so it exists here.  run() is idempotent: one figure and one
+   loop per root, restarted on every entry, paused when the slide is left,
+   a still frame in the presenter preview and under reduced motion.  The
+   hold screen is calm, so the loop runs at 0.8 of s13's speed (s43 too). */
+Deck.enter('s00', function (el) {
+  if (window.PumpAnim) window.PumpAnim.run(el, el.querySelector('.s00-pump'), { speed: 0.8 });
+});
+
+/* ── S01 · the cover: no steps, one entrance ─────────────────────────── */
+Deck.enter('s01', function (el, gsap) {
+  var rotor = el.querySelector('.s01-rotor');
+  var block = el.querySelector('.s01-block');
+  var parts = [
+    el.querySelector('.s01-kicker'),
+    el.querySelector('.s01-title'),
+    el.querySelector('.s01-sub'),
+    el.querySelector('.s01-name'),
+    el.querySelector('.s01-sup')
+  ];
+  gsap.fromTo(rotor, { rotation: -90, opacity: 0, transformOrigin: '32px 32px' },
+    { rotation: 0, opacity: 1, duration: 1.6, ease: 'expo.out' });
+  gsap.fromTo(parts, { opacity: 0, y: 22 },
+    { opacity: 1, y: 0, duration: 0.8, stagger: 0.11, ease: 'expo.out', delay: 0.15 });
+  gsap.fromTo(el.querySelector('.s01-rule'), { scaleX: 0 },
+    { scaleX: 1, duration: 1.0, ease: 'expo.out', delay: 0.5 });
+  if (block) gsap.set(block, { opacity: 1 });
+});
+
+/* ── S02 · the drawn scene, then the hour axis ────────────────── */
+Deck.slide('s02', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+
+  /* ── the one scale this slide runs on ──────────────────────────────
+     The axis is 1148 px wide and starts at x = 96. First it carries the
+     whole day (26 h across the axis); on the last step it carries only
+     the first three hours. Every bar is drawn from the same px-per-hour,
+     so the two framings are one measurement seen from two distances. */
+  var AX_X0 = 96, AX_W = 1148;
+  var PXH_DAY = AX_W / 26;   /* 44.15 px to the hour */
+  var HOURS = { hosp: 26, poc: 2.6, goal: 1 };
+
+  var plate = el.querySelector('#s02-plate');
+  var scrim = el.querySelector('.cine__scrim');
+  var veil  = el.querySelector('#s02-veil');
+  var scene = el.querySelector('#s02-scene');
+  var title = el.querySelector('.slide__title');
+  var ping  = el.querySelector('#s02-ping');
+
+  var head   = el.querySelector('#s02-head');
+  var body   = el.querySelector('#s02-body');
+  var swab   = el.querySelector('#s02-swab');
+  var swabLn = el.querySelector('#s02-swab-ln');
+  var swabTp = el.querySelector('#s02-swab-tip');
+  var drop   = el.querySelector('#s02-drop');
+  var tube   = el.querySelector('#s02-tube');
+  var tubeC  = el.querySelector('#s02-tube-cap');
+  var tubeB  = el.querySelector('#s02-tube-body');
+  var fill   = el.querySelector('#s02-fill');
+  var route  = el.querySelector('#s02-route');
+  var labP   = el.querySelectorAll('#s02-lab path');
+  var ctrack = el.querySelector('.s02-ctrack');
+  var cticks = el.querySelectorAll('.s02-ctick');
+  var cfill  = el.querySelector('#s02-cfill');
+  var chand  = el.querySelector('#s02-chand');
+
+  var axSvg = el.querySelector('.s02-svg');
+  var base  = el.querySelector('#s02-base');
+  var gTrue = el.querySelector('#s02-ticks-true');
+  var lTrue = el.querySelector('#s02-axlab-true');
+  var cite  = el.querySelector('#s02-cite');
+  var rowH  = el.querySelector('#s02-row-hosp');
+  var rowP  = el.querySelector('#s02-row-poc');
+  var rowG  = el.querySelector('#s02-row-goal');
+
+  /* ── both framings of the axis, built from the numbers ──────────── */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  function ticks(group, cls, stepH, spanH, longEvery) {
+    group.innerHTML = '';
+    var pxh = AX_W / spanH;
+    for (var h = 0; h <= spanH + 1e-9; h += stepH) {
+      var x = AX_X0 + h * pxh;
+      if (x > AX_X0 + AX_W + 0.5) break;
+      var isLong = Math.abs(h % longEvery) < 1e-9;
+      var pth = document.createElementNS(SVGNS, 'path');
+      pth.setAttribute('class', cls);
+      pth.setAttribute('d', 'M ' + x.toFixed(1) + ' 640 V ' + (isLong ? 628 : 634));
+      group.appendChild(pth);
+    }
+  }
+
+  function labels(host, marks, spanH) {
+    host.innerHTML = '';
+    var pxh = AX_W / spanH;
+    marks.forEach(function (m) {
+      var s = document.createElement('span');
+      s.style.left = (AX_X0 + m[0] * pxh).toFixed(1) + 'px';
+      s.textContent = m[1];
+      host.appendChild(s);
+    });
+  }
+
+  ticks(gTrue, 's02-tick', 2, 26, 4);
+  labels(lTrue, [[0, '0'], [4, '4 h'], [8, '8 h'], [12, '12 h'],
+                 [16, '16 h'], [20, '20 h'], [24, '24 h']], 26);
+
+  var tickTrue = gTrue.querySelectorAll('.s02-tick');
+
+  var drawn = [head, body, swabLn, swabTp, tubeC, tubeB, route, ctrack, cfill, chand]
+              .concat(Array.prototype.slice.call(labP))
+              .concat(Array.prototype.slice.call(cticks));
+  gsap.set(drawn, { drawSVG: '0%' });
+  gsap.set([drop], { opacity: 0, x: 0, y: 0 });
+  gsap.set(swabTp, { fillOpacity: 0 });
+  gsap.set(ping, { opacity: 0, scale: 0.5, transformOrigin: '50% 50%' });
+  gsap.set(fill, { scaleY: 0, opacity: 1, transformOrigin: '50% 100%' });
+  gsap.set(scene, { opacity: 1 });
+
+  gsap.set([base].concat(Array.prototype.slice.call(tickTrue)), { drawSVG: '0%' });
+  gsap.set(axSvg, { opacity: 1 });
+  [rowH, rowP, rowG].forEach(function (r) {
+    var b = r.querySelector('.s02-bar');
+    if (b) gsap.set(b, { width: 0 });
+    var band = r.querySelector('.s02-lowband');
+    if (band) gsap.set(band, { width: 0 });
+    var words = [r.querySelector('.s02-rowlab'), r.querySelector('.s02-val')].filter(Boolean);
+    if (words.length) gsap.set(words, { opacity: 0, y: 10 });
+  });
+
+  tl.addLabel('step0');
+
+  /* 1 · the scene, without a word: a traveller, a swab, a drop into a
+         tube, then the tube is sent along a route to a central laboratory
+         (a building with the flask inside) while the clock runs. The same
+         person, swab, drop and tube glyphs open the workflow slide (s02b),
+         so the tube is recognisable there. */
+  tl.to(veil, { opacity: 1, duration: 0.7 }, 'step0');
+  tl.to([head, body], { drawSVG: '100%', duration: 0.7, stagger: 0.14, ease: 'power2.out' }, 'step0+=0.15');
+  tl.to([swabLn, swabTp], { drawSVG: '100%', duration: 0.5, stagger: 0.12, ease: 'power2.out' }, 'step0+=0.85');
+  tl.to(swabTp, { fillOpacity: 1, duration: 0.3 }, 'step0+=1.1');
+  tl.to([tubeC, tubeB], { drawSVG: '100%', duration: 0.6, stagger: 0.1, ease: 'power2.out' }, 'step0+=1.3');
+  tl.to(drop, { opacity: 1, duration: 0.2 }, 'step0+=1.8');
+  tl.to(drop, { x: 76, y: 46, duration: 0.55, ease: 'power2.in' }, 'step0+=1.95');
+  tl.to(drop, { opacity: 0, duration: 0.18 }, 'step0+=2.46');
+  tl.to(fill, { scaleY: 1, duration: 0.5, ease: 'power2.out' }, 'step0+=2.5');
+  tl.to(swab, { opacity: 0.38, duration: 0.4 }, 'step0+=2.55');
+  /* the laboratory is drawn first, so the route has somewhere to go */
+  tl.to(labP, { drawSVG: '100%', duration: 0.6, stagger: 0.08, ease: 'power2.out' }, 'step0+=2.7');
+  tl.to(ctrack, { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step0+=2.9');
+  tl.to(cticks, { drawSVG: '100%', duration: 0.25, stagger: 0.06 }, 'step0+=3.1');
+  tl.to(chand, { drawSVG: '100%', duration: 0.3 }, 'step0+=3.2');
+  tl.to(route, { drawSVG: '100%', duration: 1.9, ease: 'power1.inOut' }, 'step0+=3.3');
+  tl.to(tube, {
+    motionPath: { path: route, align: route, alignOrigin: [0.5, 0.5], autoRotate: false },
+    duration: 1.9, ease: 'power1.inOut'
+  }, 'step0+=3.3');
+  tl.to(ping, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }, 'step0+=5.15');
+  tl.to(ping, { opacity: 0, scale: 1.5, duration: 0.5, ease: 'power1.in' }, 'step0+=5.45');
+  tl.to(cfill, { drawSVG: '0% 92%', duration: 2.6, ease: 'none' }, 'step0+=3.3');
+  tl.to(chand, { rotation: 331, duration: 2.6, ease: 'none',
+                 svgOrigin: '1186 462' }, 'step0+=3.3');
+  tl.addLabel('step1');
+
+  /* 2 · the photo becomes a corner card, and the axis takes a whole day */
+  tl.to(scene, { opacity: 0, duration: 0.45, ease: 'power2.in' }, 'step1');
+  tl.to(veil, { opacity: 0, duration: 0.7 }, 'step1');
+  tl.to(plate, {
+    left: 900, top: 56, width: 324, height: 243, borderRadius: 28,
+    duration: 0.9, ease: 'expo.inOut'
+  }, 'step1+=0.1');
+  tl.to(scrim, { opacity: 0.35, duration: 0.9, ease: 'power2.inOut' }, 'step1+=0.1');
+  tl.fromTo(title, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 'step1+=0.5');
+  tl.to(base, { drawSVG: '100%', duration: 0.9, ease: 'power2.inOut' }, 'step1+=0.55');
+  tl.to(tickTrue, { drawSVG: '100%', duration: 0.3, stagger: 0.03, ease: 'power2.out' }, 'step1+=0.8');
+  tl.to(lTrue, { opacity: 1, duration: 0.5 }, 'step1+=1.0');
+  tl.addLabel('step2');
+
+  /* 3 · more than 26 hours — the bar is the whole axis, and the axis is a day */
+  tl.to(rowH, { opacity: 1, duration: 0.2 }, 'step2');
+  tl.to(rowH.querySelector('.s02-rowlab'), { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step2');
+  tl.to(rowH.querySelector('.s02-bar'),
+    { width: HOURS.hosp * PXH_DAY, duration: 1.6, ease: 'power2.inOut' }, 'step2+=0.15');
+  tl.to(rowH.querySelector('.s02-val'), { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step2+=1.2');
+  tl.addLabel('step3');
+
+  /* 4 · the two that matter, at the same scale — slivers against the day */
+  tl.to([rowP, rowG], { opacity: 1, duration: 0.2 }, 'step3');
+  tl.to(rowP.querySelector('.s02-rowlab'), { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step3');
+  /* the band grows out of the origin, then the one number it is allowed */
+  tl.to(rowP.querySelector('.s02-lowband'),
+    { width: 172, duration: 0.85, ease: 'expo.out' }, 'step3');
+  tl.to(rowG.querySelector('.s02-val'),
+    { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step3+=0.55');
+  tl.to(cite, { opacity: 1, duration: 0.5 }, 'step3+=0.7');
+  tl.addLabel('step4');
+
+  return tl;
+});
+
+Deck.enter('s02', function (el, gsap) {
+  /* the hall rises out of black on every entry */
+  var shot = el.querySelector('.cine__shot');
+  if (shot) shot.classList.add('is-live');
+  gsap.fromTo(el.querySelector('#s02-plate'), { opacity: 0, scale: 1.06 },
+    { opacity: 1, scale: 1, duration: 2.2, ease: 'power2.out' });
+});
+
+/* ── The sample-preparation hand-off, s02b ⇄ s04c (2026-09-24) ──────
+   s02b's "Sample preparation" panel and label, and s04c's stage box and
+   its "Sample preparation" heading, are one object shown twice. A press
+   forward from s02b grows the panel into the box and walks the label to
+   the heading (s04c's enter hook, parts/60-backups.html); a press back
+   from s04c shrinks it again (s02b's enter hook, below). Any other entry
+   — overview, hash, digits, the presenter preview, reduced motion — shows
+   each slide as it is, because both hooks test where the deck came from.
+   This listener is registered before the tail's own deck:state handler
+   (which runs the enter hooks), so from() already names the slide just
+   left when a hook asks. The numbers are the two stylesheets' own boxes:
+   s02b .wf-prep / .wf-lab--prep here, s04c .pan-lad / .pan-head in
+   parts/60-backups.html. Change either and this table follows. */
+window.PrepHandoff = (function () {
+  var cur = null, prev = null, curStep = 0, prevStep = -1;
+  document.addEventListener('deck:state', function (e) {
+    var c = e.detail && e.detail.cue;
+    if (!c) return;
+    if (c !== cur) { prev = cur; prevStep = curStep; cur = c; }
+    curStep = e.detail.step || 0;
+  });
+  return {
+    PANEL: { left: 405, top: 248, width: 312, height: 356 },   /* s02b .wf-prep */
+    LABEL: { cx: 561, top: 528 },                              /* s02b .wf-lab--prep, centred */
+    BOX:   { left: 632, top: 176, width: 592, height: 468 },   /* s04c .pan-lad */
+    HEAD:  { left: 24, top: 12 },                              /* s04c .pan-head, inside the box */
+    from:  function () { return prev; },
+    /* true only for a single press across the seam: s02b's last step to
+       s04c's first, or s04c's first back to s02b's last */
+    seam:  function (to) {
+      var D = window.Deck;
+      if (to === 's04c') return prev === 's02b' && prevStep >= 4 && D.step === 0;
+      if (to === 's02b') return prev === 's04c' && prevStep === 0 && D.step === D.steps;
+      return false;
+    }
+  };
+})();
+
+/* ── S02b · the workflow, one stage per click (new 2026-09-24) ───────
+   A copy of the tube slides on from the stage before, so each stage keeps
+   its own picture and the final frame reads left to right. */
+Deck.slide('s02b', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  function q(s)  { return el.querySelector(s); }
+  function qa(s) { return Array.prototype.slice.call(el.querySelectorAll(s)); }
+
+  var st    = [q('#wf-st1'), q('#wf-st2'), q('#wf-st3'), q('#wf-st4')];
+  var labs  = qa('.wf-lab');
+  var arrs  = qa('.wf-arr');
+  var prep  = q('#wf-prep');
+  var body1 = qa('#wf-st1 > .wf-ln');
+  var swab  = q('#wf-swab');
+  var swabL = qa('#wf-swab .wf-ln');
+  var tip   = q('#wf-swab .wf-tip');
+  var drop  = q('#wf-drop');
+  var t1L   = qa('#wf-tube1 .wf-ln');
+  var t1F   = q('#wf-tube1 .wf-fill');
+  var feed  = q('#wf-feed'), noz = q('#wf-noz');   /* recessive grey, .wf-noz */
+  var rd    = qa('#wf-st2 .wf-rdrop');
+  var t2    = q('#wf-tube2'), reag = q('#wf-reag');
+  var hang  = q('#wf-hang');
+  var t3    = q('#wf-tube3');
+  var box   = q('#wf-box'), scr = q('#wf-scr'), curve = q('#wf-curve');
+  var ring  = q('#wf-ring'), tick = q('#wf-tick');
+
+  gsap.set(body1.concat(swabL, t1L, [feed, noz, box, scr, curve, ring, tick], arrs), { drawSVG: '0%' });
+  gsap.set(tip, { fillOpacity: 0 });
+  gsap.set(box, { fillOpacity: 0 });
+  gsap.set(swab, { opacity: 1 });
+  gsap.set(drop, { opacity: 0, x: 0, y: 0 });
+  gsap.set(t1F, { scaleY: 0, transformOrigin: '50% 100%' });
+  gsap.set(t2, { opacity: 0, x: -301, y: 0 });
+  gsap.set(reag, { scaleY: 0, transformOrigin: '50% 100%' });
+  gsap.set(rd, { opacity: 0, y: 0 });
+  gsap.set(hang, { opacity: 0, scale: 0.3, transformOrigin: '50% 0%' });
+  gsap.set(t3, { opacity: 0, x: -323, y: 50 });
+  gsap.set(labs, { opacity: 0, y: 10 });
+  gsap.set(prep, { opacity: 0 });
+  gsap.set(st, { opacity: 1 });
+
+  tl.addLabel('step0');
+
+  /* 1 · sample: the swab, a drop, the tube fills (s02's own beat) */
+  tl.to(body1, { drawSVG: '100%', duration: 0.6, stagger: 0.12, ease: 'power2.out' }, 'step0');
+  tl.to(swabL, { drawSVG: '100%', duration: 0.45, stagger: 0.1, ease: 'power2.out' }, 'step0+=0.5');
+  tl.to(tip, { fillOpacity: 1, duration: 0.3 }, 'step0+=0.75');
+  tl.to(t1L, { drawSVG: '100%', duration: 0.5, stagger: 0.1, ease: 'power2.out' }, 'step0+=0.8');
+  tl.to(labs[0], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step0+=0.4');
+  tl.to(drop, { opacity: 1, duration: 0.2 }, 'step0+=1.3');
+  tl.to(drop, { x: 76, y: 46, duration: 0.55, ease: 'power2.in' }, 'step0+=1.45');
+  tl.to(drop, { opacity: 0, duration: 0.18 }, 'step0+=1.96');
+  tl.to(t1F, { scaleY: 1, duration: 0.5, ease: 'power2.out' }, 'step0+=2.0');
+  tl.to(swab, { opacity: 0.38, duration: 0.4 }, 'step0+=2.05');
+  tl.addLabel('step1');
+
+  /* 2 · sample preparation: the tube moves on, liquids go in */
+  tl.to(prep, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 'step1');
+  tl.to(labs[1], { opacity: 1, y: 0, duration: 0.55, ease: 'expo.out' }, 'step1+=0.2');
+  tl.to(arrs[0], { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step1');
+  tl.to(t2, { opacity: 1, duration: 0.15 }, 'step1');
+  tl.to(t2, { x: 0, duration: 0.9, ease: 'power2.inOut' }, 'step1+=0.05');
+  tl.to([feed, noz], { drawSVG: '100%', duration: 0.5, stagger: 0.1, ease: 'power2.out' }, 'step1+=0.5');
+  rd.forEach(function (d, i) {
+    var t = 1.15 + i * 0.55;
+    tl.fromTo(d, { opacity: 0, y: 0 }, { opacity: 1, duration: 0.1 }, 'step1+=' + t);
+    tl.to(d, { y: 40, duration: 0.32, ease: 'power2.in' }, 'step1+=' + (t + 0.05));
+    tl.to(d, { opacity: 0, duration: 0.1 }, 'step1+=' + (t + 0.32));
+    tl.to(reag, { scaleY: (i + 1) / rd.length, duration: 0.3, ease: 'power2.out' }, 'step1+=' + (t + 0.34));
+  });
+  /* the next drop forms at the nozzle and stays, so the still frame
+     still says "liquid goes in here" */
+  tl.to(hang, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.6)' }, 'step1+=2.9');
+  tl.addLabel('step2');
+
+  /* 3 · detection: into the reader, and a signal rises on its screen */
+  tl.to(arrs[1], { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step2');
+  tl.to(box, { drawSVG: '100%', duration: 0.6, ease: 'power2.inOut' }, 'step2');
+  tl.to(box, { fillOpacity: 1, duration: 0.3 }, 'step2+=0.3');
+  tl.to(scr, { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, 'step2+=0.45');
+  tl.to(labs[2], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step2+=0.3');
+  tl.to(t3, { opacity: 1, duration: 0.15 }, 'step2+=0.2');
+  tl.to(t3, { y: -40, duration: 0.4, ease: 'power2.out' }, 'step2+=0.2');
+  tl.to(t3, { x: 0, duration: 0.75, ease: 'power2.inOut' }, 'step2+=0.55');
+  tl.to(t3, { y: 0, duration: 0.35, ease: 'power2.in' }, 'step2+=1.3');
+  tl.to(curve, { drawSVG: '100%', duration: 0.9, ease: 'power1.inOut' }, 'step2+=1.7');
+  tl.addLabel('step3');
+
+  /* 4 · result, then everything but the preparation steps back */
+  tl.to(arrs[2], { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step3');
+  tl.to(ring, { drawSVG: '100%', duration: 0.6, ease: 'power2.inOut' }, 'step3+=0.35');
+  tl.to(tick, { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, 'step3+=0.85');
+  tl.to(labs[3], { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step3+=0.4');
+  tl.to([st[0], st[2], st[3], t3, labs[0], labs[2], labs[3]].concat(arrs),
+    { opacity: 0.5, duration: 0.7, ease: 'power2.inOut' }, 'step3+=1.7');
+  tl.addLabel('step4');
+
+  return tl;
+});
+
+Deck.enter('s02b', function (el, gsap) {
+  var rule = el.querySelector('.slide__rule');
+  if (rule) gsap.fromTo(rule, { scaleX: 0 },
+    { scaleX: 1, duration: 0.9, ease: 'expo.out', transformOrigin: '0% 50%' });
+
+  /* A press back from PANPOC: the stage box shrinks into this panel and
+     its heading walks back under it; the rest of the drawing fades in. */
+  var H = window.PrepHandoff;
+  if (!H || el.dataset.preview || window.Deck.reducedMotion) return;
+  if (!H.seam('s02b')) return;
+  var prep = el.querySelector('#wf-prep');
+  var lab  = el.querySelector('.wf-lab--prep');
+  var svg  = el.querySelector('.wf-svg');
+  var rest = Array.prototype.slice.call(el.querySelectorAll('.wf-lab:not(.wf-lab--prep)'));
+  if (!prep || !lab) return;
+  var r = document.createRange();
+  r.selectNodeContents(lab);
+  var k  = el.getBoundingClientRect().width / 1280 || 1;
+  var tw = r.getBoundingClientRect().width / k;
+  var P = H.PANEL, L = H.LABEL, B = H.BOX, D = H.HEAD;
+  gsap.fromTo(prep,
+    { left: B.left, top: B.top, width: B.width, height: B.height },
+    { left: P.left, top: P.top, width: P.width, height: P.height,
+      duration: 0.9, ease: 'expo.inOut', clearProps: 'left,top,width,height' });
+  gsap.fromTo(lab,
+    { left: B.left + D.left + tw / 2, top: B.top + D.top },
+    { left: L.cx, top: L.top, duration: 0.9, ease: 'expo.inOut',
+      /* left is the label's own inline style, so it is restored, not cleared */
+      onComplete: function () { lab.style.left = L.cx + 'px'; lab.style.top = ''; } });
+  if (svg) gsap.fromTo(svg, { opacity: 0 },
+    { opacity: 1, duration: 0.6, delay: 0.55, ease: 'power2.out', clearProps: 'opacity' });
+  /* filter, not opacity: the timeline owns the labels' opacity */
+  if (rest.length) gsap.fromTo(rest, { filter: 'opacity(0)' },
+    { filter: 'opacity(1)', duration: 0.6, delay: 0.55, ease: 'power2.out', clearProps: 'filter' });
+});
+
+/* -- S04b - where the range came from ---------------------------- */
+Deck.slide('s04b', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var prov = el.querySelector('#s04-prov');
+
+  var chips  = prov.querySelectorAll('.s04-chip');
+  var crule  = prov.querySelector('.s04-crule');
+  var ros    = prov.querySelectorAll('.s04-ro');
+  var vTail  = prov.querySelector('.s04-tail');
+  var vax    = prov.querySelector('#s04-vax');
+  var vtk    = prov.querySelectorAll('.s04-vtk path');
+  var drops  = prov.querySelectorAll('.s04-vdrop');
+  var vlab   = prov.querySelectorAll('.s04-vlab');
+  var vials  = prov.querySelectorAll('.s04-vial');
+
+  gsap.set(prov, { opacity: 1 });
+  gsap.set(vTail, { opacity: 0, y: 16 });
+  gsap.set(chips, { opacity: 0, y: 10 });
+  gsap.set(crule, { scaleX: 0 });
+  gsap.set(ros, { opacity: 0, y: 12 });
+  gsap.set([vax].concat(Array.prototype.slice.call(vtk)), { drawSVG: '0%' });
+  gsap.set(drops, { opacity: 0, scale: 0.4, transformOrigin: '50% 100%' });
+  gsap.set(vlab, { opacity: 0 });
+  gsap.set(vials, { opacity: 0, y: 10 });
+
+  tl.addLabel('step0');
+
+  /* 1 · where the numbers were read */
+  tl.to(chips, { opacity: 1, y: 0, duration: 0.45, stagger: 0.09, ease: 'expo.out' }, 'step0+=0.1');
+  tl.addLabel('step1');
+
+  /* 2 · and what falls out of them, each number with its picture */
+  tl.to(crule, { scaleX: 1, duration: 0.6, ease: 'power2.out' }, 'step1');
+  tl.to(ros, { opacity: 1, y: 0, duration: 0.55, stagger: 0.14, ease: 'expo.out' }, 'step1+=0.15');
+  tl.to(vax, { drawSVG: '100%', duration: 0.7, ease: 'power2.inOut' }, 'step1+=0.35');
+  tl.to(vtk, { drawSVG: '100%', duration: 0.25, stagger: 0.05 }, 'step1+=0.6');
+  tl.to(vlab, { opacity: 1, duration: 0.4, stagger: 0.08 }, 'step1+=0.7');
+  tl.to(drops, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.16, ease: 'back.out(1.8)' }, 'step1+=0.75');
+  tl.to(vials, { opacity: 1, y: 0, duration: 0.4, stagger: 0.07, ease: 'back.out(1.6)' }, 'step1+=0.6');
+  tl.to(vTail, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 'step1+=1.3');
+  tl.addLabel('step2');
+
+  return tl;
+});
+
+
+/* ── S03 · contents: one part lit, the ones before it dimmed ────── */
+Deck.slide('s03', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var blks = el.querySelectorAll('.s03-blk');
+  var bars = el.querySelectorAll('.s03-bar');
+
+  gsap.set(blks, { opacity: 0, y: 16 });
+  gsap.set(bars, { scaleY: 0, transformOrigin: '50% 0%' });
+
+  tl.addLabel('step0');
+
+  for (var i = 0; i < blks.length; i++) {
+    (function (i) {
+      var at = 'step' + i;
+      tl.to(blks[i], { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, at);
+      tl.to(bars[i], { scaleY: 1, duration: 0.55, ease: 'expo.out' }, at + '+=0.08');
+      if (i > 0) tl.to(blks[i - 1], { opacity: 0.34, duration: 0.45 }, at);
+    })(i);
+    tl.addLabel('step' + (i + 1));
+  }
+
+  return tl;
+});
+</script>

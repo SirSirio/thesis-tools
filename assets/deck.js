@@ -112,7 +112,7 @@
 
     // 2. Hash Routing  (#/<slide>/<step>; the one-segment form still reads)
     function updateURL() {
-      history.replaceState(null, '', `#/${slideIdx + 1}/${fragmentIdx + 1}`);
+      history.replaceState(null, '', `${location.pathname}${location.search}#/${slideIdx + 1}/${fragmentIdx + 1}`);
     }
 
     function readURL() {

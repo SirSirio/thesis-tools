@@ -16,7 +16,8 @@ before </head> and before </body> respectively, so a builder never has to
 touch the head or the tail.
 
 index.html is generated; never edit it by hand.
-Run:  python assemble.py
+Run:  python assemble.py        (English deck)
+      python assemble.py it     (Italian guest deck, it/parts -> it/index.html)
 """
 
 from __future__ import annotations
@@ -26,8 +27,10 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-PARTS = HERE / "parts"
-OUT = HERE / "index.html"
+# `python assemble.py it` builds the Italian guest deck, it/parts -> it/index.html
+ROOT = HERE / "it" if sys.argv[1:] == ["it"] else HERE
+PARTS = ROOT / "parts"
+OUT = ROOT / "index.html"
 
 STYLE_RE = re.compile(r"[ \t]*<style\b[^>]*\bdata-part\b[^>]*>.*?</style>[ \t]*\r?\n?", re.S | re.I)
 SCRIPT_RE = re.compile(r"[ \t]*<script\b[^>]*\bdata-part\b[^>]*>.*?</script>[ \t]*\r?\n?", re.S | re.I)

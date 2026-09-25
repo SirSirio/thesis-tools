@@ -1,0 +1,2242 @@
+    </div><!-- /.deck-stage -->
+  </div><!-- /.deck-viewport -->
+
+  <!-- Presenter panel: rendered only under ?view=presenter -->
+  <div class="pres">
+    <div class="pres__stage" id="presStage"></div>
+    <div class="pres__next">
+      <div class="pres__cap">Next step</div>
+      <div class="pres__next-frame"><div class="pres__next-inner" id="presNext"></div></div>
+    </div>
+    <div class="pres__notes">
+      <div class="pres__notes-body">
+        <h2 class="pres__notes-title" id="presTitle"></h2>
+        <div id="presNotes"></div>
+      </div>
+    </div>
+    <div class="pres__bar">
+      <div class="pres__stat"><span class="pres__stat-k">Slide</span><span class="pres__stat-v" id="presCount">1 / 1</span></div>
+      <div class="pres__stat"><span class="pres__stat-k">Elapsed</span><span class="pres__stat-v" id="presElapsed">00:00</span></div>
+      <div class="pres__stat"><span class="pres__stat-k">Left</span><span class="pres__stat-v" id="presLeft">30:00</span></div>
+      <div class="pres__stat pres__stat--seg"><span class="pres__stat-k" id="presBandK">Part</span><span class="pres__stat-v pres__seg is-idle" id="presBand">––:––</span></div>
+      <div class="pres__stat pres__stat--seg"><span class="pres__stat-k" id="presTopicK">Section</span><span class="pres__stat-v pres__seg is-idle" id="presTopic">––:––</span></div>
+      <div class="pres__prog" id="presProg">
+        <div class="pres__prog-track">
+          <div class="pres__prog-fill" id="presProgFill"></div>
+          <span class="pres__prog-pct" id="presProgPct">0 %</span>
+        </div>
+        <span class="pres__prog-n" id="presProgN">1 / 1</span>
+      </div>
+      <button type="button" class="pres__pause" id="presPause" aria-pressed="false"
+              title="Freeze every clock (p)">Pause</button>
+      <a class="pres__report" id="presReport" href="rehearsal.html" target="_blank"
+         rel="noopener" title="How long each part actually took">Rehearsal &rarr;</a>
+      <div class="pres__keys">&larr; &rarr; step &middot; a d slide &middot; r timer &middot; p pause &middot; b black &middot; f full &middot; o overview</div>
+    </div>
+  </div>
+
+  <!-- Guest follow indicator: rendered only under ?view=guest -->
+  <div class="guest-dot"><span class="guest-dot__led"></span><span>seguiamo</span></div>
+
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <div class="site-foot__who">
+        <p class="site-foot__name">Sirio Vittorio Feltrin, DTU Bioengineering, NaBIS group, 2026</p>
+        <p class="site-foot__thesis">Design of an Automated and Portable Liquid Dispensing System in the &micro;L scale for Biological Applications</p>
+      </div>
+      <nav class="site-foot__links" aria-label="Site">
+        <a href="../../prototypes/index.html">Prototypes</a>
+        <a href="../../tools/index.html">Instruments</a>
+        <a href="../../decks/index.html">Presentations</a>
+      </nav>
+    </div>
+  </footer>
+
+  <style data-part="tail">
+  /* ══════════════════════════════════════════════════════════════════════
+     Tail CSS — the appendix hue and the grouped overview.
+     Added 2026-09-21 with the slide taxonomy; the contract is SLIDE-ORDER.md.
+     It lives here, next to the script that uses it, because every part's
+     style block is hoisted into the one document head; the tail's is emitted
+     last, so these rules win over deck.css and over the parts.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  /* One cool slate, nowhere near the orange accent or the violet/teal module
+     threads. It means exactly one thing: reference material, not the talk. */
+  :root { --appendix: #8b99ad; }
+
+  /* ── The corner counter ────────────────────────────────────────────
+     Talk slides keep the plain number; an appendix slide reads A01, A02, …
+     in the slate, so a glance at the corner says "we are off the script". */
+  .slide-no.is-appendix {
+    color: color-mix(in srgb, var(--appendix) 88%, #f0ece8);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── The overview, regrouped ───────────────────────────────────────
+     deck.js (shared, never edited) builds one flat grid of .deck-overview-thumb
+     nodes. The tail script moves those same nodes — click handlers intact —
+     into a band → topic → grid tree. These rules lay that tree out. */
+  .deck-overview-header { margin-bottom: 26px !important; text-align: left !important; }
+  .deck-overview-header .site-title { font-size: 1.7rem !important; }
+  .deck-overview-header .site-label { margin-bottom: 4px !important; }
+
+  .deck-overview-grid.is-grouped {
+    display: block;
+    gap: 0;
+    max-width: 1560px;
+  }
+
+  .ovband { margin: 0 0 40px; }
+  .ovband:last-child { margin-bottom: 8px; }
+  .ovband__head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin: 0 0 18px; padding-bottom: 9px;
+    border-bottom: 2px solid color-mix(in srgb, var(--accent) 62%, transparent);
+  }
+  .ovband__name {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 700; font-size: 27px; line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .ovband__n {
+    margin-left: auto;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .ovband--appendix .ovband__head {
+    border-bottom-color: color-mix(in srgb, var(--appendix) 70%, transparent);
+  }
+  .ovband--appendix .ovband__name {
+    color: color-mix(in srgb, var(--appendix) 82%, #f0ece8);
+  }
+
+  .ovtopic { margin: 0 0 22px; }
+  .ovtopic:last-child { margin-bottom: 0; }
+  .ovtopic__head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 10px; }
+  .ovtopic__name {
+    margin: 0; font-family: var(--font);
+    font-size: 16px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--text-soft);
+  }
+  .ovtopic__ch {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .ovtopic__ch::before { content: "·"; margin-right: 7px; }
+  .ovtopic__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(206px, 1fr));
+    gap: 15px;
+  }
+
+  /* The badge has to hold "A01" now, so it is a pill rather than a disc. */
+  .deck-overview-badge {
+    width: auto !important; min-width: 30px;
+    padding: 0 9px; border-radius: 15px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+  }
+
+  /* An appendix thumb: same slate, dimmed clone, its own border. Present,
+     legible, and obviously not part of the talk. */
+  .deck-overview-thumb.is-appendix {
+    border-color: color-mix(in srgb, var(--appendix) 52%, transparent);
+    border-style: dashed;
+    background: rgba(139,153,173,0.05);
+  }
+  .deck-overview-thumb.is-appendix:hover { border-color: var(--appendix); }
+  .deck-overview-thumb.is-appendix .deck-overview-clone {
+    opacity: 0.55; filter: saturate(0.45);
+  }
+  .deck-overview-thumb.is-appendix .deck-overview-badge {
+    background: var(--appendix); color: #0f1319;
+  }
+
+  /* The clones render imperfectly today (a separate, later job), so every
+     thumb also carries its own title. That is what makes a slide findable. */
+  .ovcap {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 9;
+    padding: 22px 50px 8px 10px;
+    font-family: var(--font); font-size: 11.5px; line-height: 1.25;
+    color: rgba(240,236,232,0.92);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    background: linear-gradient(to top, rgba(8,8,10,0.94) 42%, rgba(8,8,10,0));
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .ovcap__t {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ovcap__cue {
+    display: block;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .deck-overview-thumb.is-appendix .ovcap__cue {
+    color: color-mix(in srgb, var(--appendix) 86%, #f0ece8);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .deck-overview-thumb { transition: none !important; }
+  }
+
+  /* ══ The frame gets its own space ═══════════════════════════════════
+     Added 2026-09-21. The deck nav (00-head section 1) is one absolutely
+     positioned bar at top left carrying "← Presentations" and the
+     Instruments trigger. On a slide it landed on the module mark and beside
+     the title; in the overview it crowded the OVERVIEW pill and the deck
+     title, both of which start at 60/80 px. Two different answers:
+
+       a slide is shown   nothing but the slide and a back arrow. The
+                          Instruments trigger and its panel are gone — this
+                          is a presentation, not a website. The arrow keeps
+                          the idle fade, so a fullscreen run shows nothing.
+       the overview       the frame takes a reserved strip across the top
+                          and the overview's own header starts below it.
+                          Instruments may stay: this is a browsing view.
+
+     Both live here rather than in 00-head.html, which another session owns:
+     every part's style block is hoisted into the one head in part order and
+     the tail's is emitted last, so these win on equal specificity. */
+
+  /* ── a · while a slide is shown ────────────────────────────────── */
+
+  /* The website half of the frame, off. */
+  body:not([data-overview]) .site-nav--deck .site-nav__links,
+  body:not([data-overview]) #instr-panel { display: none; }
+
+  /* The back arrow sits in the stage's empty left gutter. The stage is
+     1280 × 720 scaled by s = min(W/1280, H/720) from its top left, and the
+     module mark is the leftmost thing on it at x = 56, so the mark's page
+     left is tx + 56·s. A 32 px control at (8, 10) ends at x = 40 and clears
+     the mark at every window this deck will ever meet; below about 900 px
+     wide at exactly 16:9 they would touch, which is far under stage size. */
+  body:not([data-overview]) .site-nav--deck {
+    top: 10px; left: 8px; gap: 0;
+  }
+  body:not([data-overview]) .site-nav--deck .deck-back-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: var(--r-pill, 999px);
+    border: 1px solid var(--glass-border);
+    background: rgba(10,10,12,0.55);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    color: var(--accent);
+    font-size: 0;                 /* the "← Presentations" label, off stage */
+    transition: background var(--dur-fast) var(--ease),
+                border-color var(--dur-fast) var(--ease);
+  }
+  /* The glyph is drawn, not typed, so the link keeps its real text (and its
+     aria-label, set in the tail script) for anything that reads the page. */
+  body:not([data-overview]) .site-nav--deck .deck-back-link::before {
+    content: "\2190";
+    font-family: var(--mono); font-size: 17px; line-height: 1;
+  }
+  body:not([data-overview]) .site-nav--deck .deck-back-link:hover {
+    background: rgba(255,107,43,0.16);
+    border-color: var(--accent);
+    opacity: 1;
+  }
+
+  /* ── b · while the overview is open ────────────────────────────── */
+
+  body[data-overview] .site-nav--deck {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    width: auto; height: 64px;
+    display: flex; align-items: center; gap: 20px;
+    padding: 0 80px;                       /* the overview's own gutter */
+    background: rgba(10,10,12,0.78);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 310;                          /* above the panel's 299 */
+  }
+  /* Browsing is not presenting: the strip does not fade out under him. */
+  body[data-overview][data-nav-idle] .site-nav--deck {
+    opacity: 1; pointer-events: auto;
+  }
+  /* The strip is fixed and the overview is the scroller, so the overview
+     reserves the height instead of sliding its first band underneath. */
+  .deck-overview { padding-top: 88px; }
+
+  /* ══ Step-synced captions (added 2026-09-23) ═══════════════════════
+     The notes are one bullet per build step: li[data-step="n"] is current
+     from step n until the next bullet's step. The Italian twin lives in
+     aside.notes > .notes-it. Contract: BUILDER-REFERENCE.md, "Step-synced
+     captions". Scoped to the presenter and guest views; the stage view is
+     untouched. */
+
+  /* The Italian block never renders in place, anywhere. aside.notes is
+     already display:none (00-head §2); this is the belt to that brace. */
+  .notes-it { display: none !important; }
+
+  /* ── a · presenter: the current bullet leads ───────────────────── */
+  .pres__notes-body li[data-step] {
+    position: relative;
+    transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .pres__notes-body li.is-now  { opacity: 1; color: var(--text); }
+  .pres__notes-body li.is-now::marker { color: var(--accent); }
+  .pres__notes-body li.is-now::before {
+    content: ""; position: absolute;
+    left: -38px; top: 0.18em; bottom: 0.18em; width: 4px;   /* clear of the disc */
+    border-radius: 2px; background: var(--accent);
+  }
+  .pres__notes-body li.is-done { opacity: 0.45; }
+  .pres__notes-body li.is-next { opacity: 0.7; }
+  /* A bullet without data-step renders neutral (a slide with no clicks has
+     only such bullets). Only an "If asked:" line — flagged .is-aside by
+     markNoteSteps() — takes the quieter panel-question style. */
+  .pres__notes-body.has-steps li:not([data-step]) { opacity: 0.85; }
+  .pres__notes-body li.is-aside,
+  .pres__notes-body.has-steps li.is-aside { opacity: 0.55; font-style: italic; }
+
+  /* ── a2 · the meta line is a time target, not a caption ───────────
+     Per-slide targets (added 2026-09-23): li[data-step="meta"] drives the
+     pacing timers (tail script, 0b) and shows here as a small muted
+     "target ~40 s" line, never marked done/next. The bar echoes the
+     slide's planned seconds beside the slide count (.pres__target). */
+  .pres__notes-body li.is-meta {
+    list-style: none; margin-left: -26px; margin-bottom: 8px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.4;
+    letter-spacing: 0.06em; color: var(--text-muted); opacity: 0.8;
+  }
+  .pres__notes-body li.is-meta::before { content: "target "; text-transform: uppercase; letter-spacing: 0.18em; font-size: 11px; }
+  .pres__target {
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .pres__target:empty { display: none; }
+
+  /* ── b · guest: slide above, Italian caption band below ────────── */
+  .guest-cap { display: none; }
+  body[data-view="guest"] { --guest-band: 27vh; }   /* Italian deck: room for the slide's running captions */
+  body[data-view="guest"] .deck-viewport {
+    position: fixed; left: 0; top: 0;
+    width: 100vw; height: calc(100vh - var(--guest-band));
+  }
+  body[data-view="guest"] .guest-cap {
+    display: flex; flex-direction: column; justify-content: center; gap: 1.1vh;
+    position: fixed; left: 0; right: 0; bottom: 0;
+    height: var(--guest-band);
+    box-sizing: border-box;
+    padding: 1.6vh 6vw 2.4vh;
+    background: rgba(10,10,12,0.86);
+    border-top: 1px solid var(--line);
+    z-index: 350;
+    font-family: var(--font);
+    overflow: hidden;
+  }
+  body[data-view="guest"][data-overview] .guest-cap { display: none; }
+  /* Italian deck: a slide with no Italian caption (the cover, the appendix)
+     gets the whole window, and the band drops its title line because the
+     slide's own title is already in Italian. */
+  body[data-view="guest"][data-guest-noband] { --guest-band: 0px; }
+  body[data-view="guest"][data-guest-noband] .guest-cap { display: none; }
+  body[data-view="guest"] .guest-cap__title { display: none; }
+  .guest-cap__title {
+    margin: 0;
+    font-family: var(--mono); font-size: clamp(12px, 1.55vh, 20px); font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    min-height: 1.2em;
+  }
+  /* Italian deck: the band keeps every caption said so far on this slide.
+     The one being said is large, white and marked in orange; the earlier
+     ones stay readable but dimmed. Lines stack from the bottom, so the
+     current one is always in view and the oldest fade out at the top. */
+  .guest-cap__text {
+    margin: 0; max-width: none; flex: 1 1 auto; min-height: 0;
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 0.9vh;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 3.2vh);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 3.2vh);
+  }
+  .gc-line {
+    margin: 0; flex: none;
+    padding-left: 1.6vh; border-left: 0.45vh solid transparent;
+    font-size: clamp(18px, 2.45vh, 34px); font-weight: 500; line-height: 1.28;
+    color: var(--text); opacity: 0.5;
+    transition: opacity 260ms var(--ease), font-size 260ms var(--ease);
+  }
+  .gc-line.is-now {
+    font-size: clamp(22px, 3.3vh, 46px); font-weight: 600; opacity: 1;
+    border-left-color: var(--accent);
+  }
+  .gc-line.is-new { animation: gcIn 420ms var(--ease) both; }
+  @keyframes gcIn { from { opacity: 0; transform: translateY(1.2vh); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .guest-cap__text, .gc-line, .pres__notes-body li[data-step] { transition: none !important; animation: none !important; }
+  }
+  </style>
+
+  <script src="../../assets/deck.js"></script>
+  <script src="../../assets/gsap/gsap.min.js"></script>
+  <script src="../../assets/gsap/DrawSVGPlugin.min.js"></script>
+  <script src="../../assets/gsap/MotionPathPlugin.min.js"></script>
+  <script src="../../assets/gsap/MorphSVGPlugin.min.js"></script>
+  <script>
+    /* GSAP core plus the three vendored plugins. Registered once, here, so
+       every part script can use them without touching the tail. */
+    (function () {
+      if (!window.gsap) { console.error('[deck] GSAP core did not load'); return; }
+      var plugins = [];
+      if (window.DrawSVGPlugin)    plugins.push(window.DrawSVGPlugin);
+      if (window.MotionPathPlugin) plugins.push(window.MotionPathPlugin);
+      if (window.MorphSVGPlugin)   plugins.push(window.MorphSVGPlugin);
+      if (plugins.length) gsap.registerPlugin.apply(gsap, plugins);
+    })();
+  </script>
+  <script>
+  /* ══════════════════════════════════════════════════════════════════════
+     Thesis defense deck — infrastructure tail.
+
+     Owns everything the slide parts are allowed to assume:
+       · the fragment-to-timeline driver (Deck.slide builders, tweenTo)
+       · the Deck.enter entrance hooks
+       · lazy media with one-slide lookahead, video autoplay and sound
+       · the live tool cards (grow, focus handoff, Escape, backdrop)
+       · the mini map
+       · the three views (?view=stage|presenter|guest)
+       · the sync client (BroadcastChannel always, ntfy under ?sync=)
+     Slide parts never edit this file.
+     ══════════════════════════════════════════════════════════════════════ */
+  (function () {
+    'use strict';
+
+    var TOPIC   = 'svf-defense-20260928-k7q2m9x4';
+    var CHANNEL = 'deck:thesis-defense';
+    var DECK_ID = 'thesis-defense';
+    var PLAN_S  = 30 * 60;   /* 25 minutes of slides plus the 5 minute demo */
+
+    /* == 0 . The slide taxonomy =========================================
+       The single source of truth for how the deck is ORGANISED, as opposed
+       to how it is ordered in the file. Two levels:
+
+         band   the part of the presentation - the strongly marked division
+         topic  the thesis chapter inside that part - the sub-grouping
+
+       Edit this table and the overview regroups itself; nothing else reads
+       the order. The prose version, with the recipes for adding or moving a
+       slide, is decks/thesis-defense/SLIDE-ORDER.md - keep the two in step.
+
+       Rules that are easy to get wrong:
+         - A slide is an APPENDIX slide when it carries data-part="backup".
+           Never the cue prefix: s12 sits in the appendix and keeps its cue,
+           because cues are stable addresses (sync protocol, CONTENT.md,
+           CONTENT-IT.md, #sNN CSS, Deck.slide builders).
+         - `key` is what a slide's data-topic attribute names. data-topic wins
+           over this table, so a slide that moves parts carries its own group.
+         - Consecutive rows with the same `band` are one band block.
+         - A slide whose cue is absent here inherits the group of the nearest
+           preceding slide in the file that has one; an unmapped backup slide
+           falls into "not yet sorted". Other sessions add and remove slides,
+           so nothing may ever vanish from the overview.
+       =================================================================== */
+    /* ── 0b · The speaking plan ────────────────────────────────────
+       Sirio's budget, 30 minutes in total. The opening has no line of its
+       own, so it is spoken inside Part I's eight minutes; change PART_I
+       here and give 'Opening' its own row if that ever stops being true.
+       Longest band name first: 'Part I' is a prefix of 'Part II'.
+
+       Per-slide targets (added 2026-09-23). Inside a band the budget is
+       split slide by slide, not group by group:
+         · a spoken slide whose notes open with <li data-step="meta">~N s</li>
+           gets exactly N seconds (also read: "~1 min 30 s", "~1:30",
+           "~5 min"; anything after a middle dot is commentary);
+         · the band's spoken slides without a meta share what is left of the
+           band (band − sum of metas) equally, or 0 s each if nothing is left;
+         · a group's budget (segSecs, the Section timer) is the sum of its
+           slides' seconds, and the expected-position table (slideExp) uses
+           the same per-slide seconds;
+         · the Part timer still counts down the band figure below, even when
+           the metas add up to more or less than it.
+       Backups and data-talk="no" slides are outside the plan, as before.
+       The code is measurePlan() in section 6.
+       =============================================================== */
+    var BAND_PLAN = [
+      { match: 'Part III',   name: 'Part III', secs:  5 * 60 },
+      { match: 'Part II',    name: 'Part II',  secs:  9 * 60 },
+      { match: 'Part I',     name: 'Part I',   secs:  8 * 60 },
+      { match: 'Live demo',  name: 'Demo',     secs:  3 * 60 },
+      { match: 'Discussion', name: 'Close',    secs:  5 * 60 },
+      { match: 'Opening',    name: 'Part I',   secs: null }   /* folded into Part I */
+    ];
+
+    function bandPlan(band) {
+      for (var i = 0; i < BAND_PLAN.length; i++) {
+        if (band.indexOf(BAND_PLAN[i].match) === 0) return BAND_PLAN[i];
+      }
+      return null;
+    }
+
+    var SLIDE_ORDER = [
+      { band: 'Opening',
+        key: 'open',      topic: '',                                thesis: '',
+        cues: ['s00', 's01', 's02', 's02b', 's04c', 's03', 's04', 's04r'] },
+
+      { band: 'Part I \u2014 Why this machine, and how I worked',
+        key: 'gap',       topic: 'The gap',                         thesis: 'chapters 1\u20132',
+        cues: ['s05', 's06', 's04b', 's05b'] },
+      { band: 'Part I \u2014 Why this machine, and how I worked',
+        key: 'req',       topic: 'Requirements and decomposition',  thesis: 'chapter 5',
+        cues: ['s07', 's07b', 's10'] },
+      { band: 'Part I \u2014 Why this machine, and how I worked',
+        key: 'method',    topic: 'Method, and working with an AI',  thesis: 'chapters 3\u20134',
+        cues: ['s09a', 's09b', 's08a', 's08', 's09'] },
+
+      { band: 'Part II \u2014 The modules',
+        key: 'pump',      topic: 'Pump module',                     thesis: 'chapter 6',
+        cues: ['s11', 's12b', 's13', 's14', 's15', 's16', 's12', 'b26'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'alignment', topic: 'Alignment module',                thesis: 'chapter 7',
+        cues: ['s17', 's18', 's19'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'nozzle',    topic: 'Nozzle module',                   thesis: 'chapter 8',
+        cues: ['s20', 's21'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'ui',        topic: 'User interface module',           thesis: 'chapter 9',
+        cues: ['s22', 's23'] },
+      { band: 'Part II \u2014 The modules',
+        key: 'storage',   topic: 'Reagent storage',                 thesis: '',
+        cues: ['s24'] },
+
+      { band: 'Part III \u2014 The machine',
+        key: 'arch',      topic: 'System architecture and electronics', thesis: 'chapter 10',
+        cues: ['s25', 's26', 's27'] },
+      { band: 'Part III \u2014 The machine',
+        key: 'integ',     topic: 'Integration',                     thesis: 'chapter 11',
+        cues: ['s28', 's29', 's30', 's30b'] },
+      { band: 'Part III \u2014 The machine',
+        key: 'valid',     topic: 'System-level validation',         thesis: 'chapter 12',
+        cues: ['s31', 's32', 's33', 's34', 's35'] },
+
+      { band: 'Live demo',
+        key: 'demo',      topic: '',                                thesis: '',
+        cues: ['s36'] },
+
+      { band: 'Discussion and close',
+        key: 'disc',      topic: 'Discussion and reflection',       thesis: 'chapter 13',
+        cues: ['s37a', 's37', 's38', 's39'] },
+      { band: 'Discussion and close',
+        key: 'outlook',   topic: 'Conclusion and outlook',          thesis: 'chapter 14',
+        cues: ['s40', 's41', 'b25'] },
+      { band: 'Discussion and close',
+        key: 'closing',   topic: 'Closing',                         thesis: '',
+        cues: ['s42', 's43'] },
+
+      /* b01-b24 are UNREVISED: Sirio has not looked at them yet, so they are
+         deliberately left in one flat band in their current order. When he
+         revises one, give it a data-topic and move its cue into that topic's
+         list above - nothing else changes. */
+      { band: 'Appendix \u2014 not yet sorted',
+        key: 'unsorted',  topic: '',                                thesis: '',
+        cues: ['b01','b02','b03','b04','b05','b06','b07','b08','b09','b10','b11','b12',
+               'b13','b14','b15','b16','b17','b18','b19','b20','b21','b22','b23','b24'] }
+    ];
+
+    /* cue -> group index, data-topic key -> group index, and the catch-all. */
+    var GROUP_BY_CUE = Object.create(null);
+    var GROUP_BY_KEY = Object.create(null);
+    var UNSORTED_GI  = SLIDE_ORDER.length - 1;
+    (function () {
+      for (var i = 0; i < SLIDE_ORDER.length; i++) {
+        var g = SLIDE_ORDER[i];
+        if (g.key) GROUP_BY_KEY[g.key] = i;
+        if (g.key === 'unsorted') UNSORTED_GI = i;
+        for (var j = 0; j < g.cues.length; j++) {
+          if (GROUP_BY_CUE[g.cues[j]] !== undefined) {
+            console.warn('[deck] SLIDE_ORDER lists ' + g.cues[j] + ' twice');
+          }
+          GROUP_BY_CUE[g.cues[j]] = i;
+        }
+      }
+    })();
+
+    var groupOf = [];   /* per slide index: its index into SLIDE_ORDER */
+
+    /* Resolved once, in file order, so the fallback can look backwards. */
+    function measureGroups() {
+      groupOf = [];
+      var last = 0;
+      slides.forEach(function (el) {
+        var cue    = el.getAttribute('data-cue') || '';
+        var topic  = el.getAttribute('data-topic') || '';
+        var backup = el.getAttribute('data-part') === 'backup';
+        var gi;
+        if (topic && GROUP_BY_KEY[topic] !== undefined)   gi = GROUP_BY_KEY[topic];
+        else if (GROUP_BY_CUE[cue] !== undefined)         gi = GROUP_BY_CUE[cue];
+        else if (backup)                                  gi = UNSORTED_GI;
+        else                                              gi = last;   /* nearest preceding */
+        groupOf.push(gi);
+        last = gi;
+      });
+    }
+
+    var params    = new URLSearchParams(location.search);
+    var view      = params.get('view') || 'guest';   /* Italian deck: guest by default */
+    if (view !== 'presenter' && view !== 'guest') view = 'stage';
+    var syncRole  = params.get('sync');           /* 'host' | 'guest' | null */
+    var reduce    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.body.setAttribute('data-view', view);
+
+    var slides = [];
+    var stage  = null;
+    var timelines = new WeakMap();
+    var prevIdx = -1;
+
+    /* ── 1 · Timelines ─────────────────────────────────────────────── */
+
+    function buildTimeline(el) {
+      if (timelines.has(el)) return timelines.get(el);
+      var cue = el.getAttribute('data-cue');
+      var fn  = cue && window.Deck.builderFor ? window.Deck.builderFor(cue) : null;
+      var tl  = null;
+      if (fn && window.gsap) {
+        try {
+          tl = fn(el, window.gsap) || null;
+          if (tl && tl.pause) tl.pause();
+        } catch (err) {
+          console.error('[deck] timeline builder failed for ' + cue, err);
+          tl = null;
+        }
+      }
+      timelines.set(el, tl);
+      return tl;
+    }
+
+    /* The nearest existing step label at or below n, so a builder may skip
+       labels without the driver throwing. */
+    function labelAt(tl, n) {
+      var labels = tl.labels || {};
+      for (var i = n; i >= 0; i--) {
+        if (labels['step' + i] !== undefined) return 'step' + i;
+      }
+      return null;
+    }
+
+    function driveTimeline(el, step, entering) {
+      var tl = timelines.get(el);
+      if (!tl) return;
+      var lbl = labelAt(tl, step);
+      if (lbl === null) return;
+      if (tl.__tween) { tl.__tween.kill(); tl.__tween = null; }
+      if (entering || reduce) {
+        tl.pause();
+        tl.seek(lbl, false);
+      } else {
+        tl.__tween = tl.tweenTo(lbl);
+      }
+    }
+
+    function runEnterHooks(el) {
+      var cue = el.getAttribute('data-cue');
+      if (!cue || !window.Deck.entersFor) return;
+      window.Deck.entersFor(cue).forEach(function (fn) {
+        try { fn(el, window.gsap); } catch (err) { console.error('[deck] enter hook failed for ' + cue, err); }
+      });
+    }
+
+    /* ── 2 · Lazy media ────────────────────────────────────────────── */
+
+    function lazyNodes(el) {
+      return Array.prototype.filter.call(
+        el.querySelectorAll('img[data-src], video[data-src], iframe[data-src]'),
+        function (m) { return !m.closest('.tool-card'); }
+      );
+    }
+
+    function loadSlideMedia(idx) {
+      var el = slides[idx];
+      if (!el) return;
+      lazyNodes(el).forEach(function (m) {
+        if (!m.getAttribute('src')) m.setAttribute('src', m.getAttribute('data-src'));
+      });
+    }
+
+    function unloadSlideMedia(idx) {
+      var el = slides[idx];
+      if (!el) return;
+      lazyNodes(el).forEach(function (m) {
+        if (!m.getAttribute('src')) return;
+        if (m.tagName === 'VIDEO') {
+          try { m.pause(); } catch (e) {}
+          m.removeAttribute('src');
+          try { m.load(); } catch (e) {}
+        } else {
+          m.removeAttribute('src');
+        }
+      });
+    }
+
+    function ensureMedia(idx) {
+      loadSlideMedia(idx);
+      loadSlideMedia(idx + 1);
+      for (var j = 0; j < slides.length; j++) {
+        if (Math.abs(j - idx) > 2) unloadSlideMedia(j);
+      }
+    }
+
+    function playVideos(el) {
+      el.querySelectorAll('video').forEach(function (v) {
+        if (v.hasAttribute('data-noauto')) return;
+        if (!v.getAttribute('src') && v.getAttribute('data-src')) v.src = v.getAttribute('data-src');
+        v.muted = !v.hasAttribute('data-sound');
+        try { v.currentTime = 0; } catch (e) {}
+        var p;
+        try { p = v.play(); } catch (e) { return; }
+        if (p && p.catch) {
+          p.catch(function () {
+            /* autoplay with sound refused before the first gesture: drop to muted */
+            if (!v.muted) { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function () {}); }
+          });
+        }
+      });
+    }
+
+    function pauseVideos(el) {
+      el.querySelectorAll('video').forEach(function (v) {
+        try { v.pause(); } catch (e) {}
+      });
+    }
+
+    /* ── 3 · Live tool cards ───────────────────────────────────────── */
+
+    var grownCard = null;
+    var backdrop  = null;
+
+    function growCard(card) {
+      if (grownCard) return;
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'tool-backdrop';
+        backdrop.addEventListener('click', shrinkCard);
+      }
+      stage.appendChild(backdrop);
+      void backdrop.offsetWidth;
+      backdrop.classList.add('is-on');
+
+      var frame = card.querySelector('iframe');
+      if (!frame) {
+        frame = document.createElement('iframe');
+        var name = card.querySelector('.tool-card__name');
+        frame.setAttribute('title', name ? name.textContent : 'Tool');
+        frame.src = card.getAttribute('data-src') || 'about:blank';
+        card.appendChild(frame);
+        frame.addEventListener('load', function () {
+          /* Same-origin tools: let Escape inside the iframe close the card too. */
+          try {
+            frame.contentDocument.addEventListener('keydown', function (e) {
+              if (e.key === 'Escape') { e.preventDefault(); shrinkCard(); }
+            });
+          } catch (e) {}
+        });
+      }
+      card.classList.add('is-grown');
+      document.body.setAttribute('data-demo-active', '');
+      grownCard = card;
+      setTimeout(function () { try { frame.focus(); } catch (e) {} }, 560);
+    }
+
+    function shrinkCard() {
+      if (!grownCard) return;
+      grownCard.classList.remove('is-grown');
+      grownCard = null;
+      document.body.removeAttribute('data-demo-active');
+      if (backdrop) {
+        backdrop.classList.remove('is-on');
+        var b = backdrop;
+        setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 560);
+      }
+      if (stage) stage.focus();
+    }
+
+    function wireToolCards() {
+      document.querySelectorAll('.tool-card').forEach(function (card) {
+        var poster = card.getAttribute('data-poster');
+        if (poster) card.style.backgroundImage = 'url("' + poster + '")';
+        if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        if (!card.querySelector('.tool-card__hint')) {
+          var hint = document.createElement('span');
+          hint.className = 'tool-card__hint';
+          hint.textContent = 'Apri dal vivo';
+          card.appendChild(hint);
+        }
+        if (!card.querySelector('.tool-card__shade')) {
+          var shade = document.createElement('span');
+          shade.className = 'tool-card__shade';
+          card.insertBefore(shade, card.firstChild);
+        }
+        card.addEventListener('click', function (e) {
+          /* deck.js deactivates its own iframe panels on any stray document
+             click while data-demo-active is set; keep ours out of its way. */
+          e.stopPropagation();
+          if (!card.classList.contains('is-grown')) growCard(card);
+        });
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); growCard(card); }
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (!grownCard) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          shrinkCard();
+        }
+      }, true);
+    }
+
+    /* ── 4 · Section rail ──────────────────────────────────────────
+       Where we are in the talk, on every slide but the hold screen. The
+       five sections are exactly the five rows of the contents slide, and
+       the mapping comes from each slide's own data-part, so the rail can
+       never disagree with the deck. */
+
+    var THREAD = { pump: '#ff6b2b', align: '#9b7fe0', nozzle: '#4fb3c8' };
+    var SECTIONS = ['Parte I', 'Parte II', 'Parte III-A', 'Demo dal vivo', 'Parte III-B'];   /* Italian deck */
+    var PART_SECTION = { I: 0, II: 1, III: 2, demo: 3, disc: 4, close: 4 };
+    var railEl = null;
+
+    function renderSecRail() {
+      railEl = document.createElement('div');
+      railEl.className = 'secrail';
+      railEl.setAttribute('aria-hidden', 'true');
+      var pips = '';
+      for (var i = 0; i < SECTIONS.length; i++) pips += '<i></i>';
+      railEl.innerHTML =
+        '<span class="secrail__name"></span>' +
+        '<span class="secrail__pips">' + pips + '</span>';
+      stage.appendChild(railEl);
+    }
+
+    function updateSecRail(el) {
+      if (!railEl) return;
+      var part   = el.getAttribute('data-part') || '';
+      var accent = el.getAttribute('data-accent') || '';
+
+      /* the hold screen is before the talk; it shows nothing */
+      if (el.getAttribute('data-talk') === 'no') { railEl.hidden = true; return; }
+      railEl.hidden = false;
+
+      var backup = part === 'backup';
+      var live   = backup ? -1 : (PART_SECTION[part] === undefined ? -1 : PART_SECTION[part]);
+
+      railEl.style.setProperty('--sr-a', THREAD[accent] || 'var(--accent)');
+      railEl.classList.toggle('is-appendix', backup);
+      railEl.classList.toggle('is-live', live >= 0);
+
+      var pips = railEl.querySelectorAll('.secrail__pips i');
+      for (var i = 0; i < pips.length; i++) {
+        pips[i].classList.toggle('is-live', !backup && i === live);
+        pips[i].classList.toggle('is-done', !backup && live >= 0 && i < live);
+      }
+      var name = railEl.querySelector('.secrail__name');
+      if (name) {
+        name.textContent = backup ? 'appendice'
+                         : (live >= 0 ? SECTIONS[live] : 'apertura');
+      }
+    }
+
+    /* ── 4b · Slide number ─────────────────────────────────────────
+       Taken from the slide's POSITION in the talk, so moving a section
+       needs no rename anywhere. The hold screen opts out with
+       data-talk="no"; appendix slides number separately as A01, A02, ...
+       in the appendix slate, so the corner says at a glance whether we
+       are still on the script. See SLIDE-ORDER.md. */
+
+    var noEl = null;
+
+    function renderSlideNo() {
+      noEl = document.createElement('div');
+      noEl.className = 'slide-no';
+      noEl.setAttribute('aria-hidden', 'true');
+      stage.appendChild(noEl);
+    }
+
+    function updateSlideNo(el) {
+      if (!noEl) return;
+      var i = slides.indexOf(el);
+      var mine = talkNo[i] || 0;
+      var back = backupNo[i] || 0;
+      if (!mine && !back) { noEl.hidden = true; return; }
+      noEl.hidden = false;
+      noEl.textContent = mine ? String(mine) : 'A' + ('0' + back).slice(-2);
+      noEl.classList.toggle('is-appendix', !mine);
+    }
+
+    /* ── 4c · Module mark ──────────────────────────────────────────
+       A module slide says which module it is, top left, with the same
+       drawing the site uses. data-map wins; otherwise the thread accent
+       decides. Slides with neither carry no mark. */
+
+    var MODULE_BY_ACCENT = { pump: 'rotor', align: 'rack', nozzle: 'nozzle' };
+    var MODULE_NAME = { store: 'stoccaggio', rotor: 'pompa', nozzle: 'ugelli', rack: 'allineamento',
+                        ui: 'interfaccia utente',
+                        electronics: 'architettura ed elettronica',
+                        integration: 'integrazione', validation: 'verifica' };   /* Italian deck */
+    var MODULE_GLYPH = {
+      store: '<path class="mk-solid" d="M -6 -3 V 9 a 3 3 0 0 0 3 3 H 3 a 3 3 0 0 0 3 -3 V -3 Z"/>' +
+             '<path class="mk-node" d="M -7 -15 H 7"/>' +
+             '<path class="mk-node" d="M -6 -15 V 9 a 3 3 0 0 0 3 3 H 3 a 3 3 0 0 0 3 -3 V -15"/>',
+      rotor: '<circle class="mk-node" cx="0" cy="0" r="12"/>' +
+             '<circle class="mk-node" cx="0" cy="-12" r="3.2"/>' +
+             '<circle class="mk-node" cx="12" cy="0" r="3.2"/>' +
+             '<circle class="mk-node" cx="0" cy="12" r="3.2"/>' +
+             '<circle class="mk-node" cx="-12" cy="0" r="3.2"/>',
+      nozzle: '<path class="mk-node" d="M -7 -15 H 7 L 2 -1 H -2 Z"/>' +
+              '<path class="mk-solid" d="M 0 1 c 4 5 6 8 6 10 a 6 6 0 0 1 -12 0 c 0 -2 2 -5 6 -10 z"/>',
+      rack:  '<path class="mk-node" d="M -8 -15 V -3 M 0 -15 V -3 M 8 -15 V -3"/>' +
+             '<path class="mk-node" d="M -15 -3 H 15 V 9 a 3 3 0 0 1 -3 3 H -12 a 3 3 0 0 1 -3 -3 Z"/>',
+      /* user interface — the panel on its stand, with the touch target lit.
+         Same drawing as the fourth stop of the Part II journey strip (s11). */
+      ui:    '<rect class="mk-node" x="-15" y="-14" width="30" height="22" rx="3"/>' +
+             '<path class="mk-node" d="M -10 -7 H 3 M -10 -1 H -2"/>' +
+             '<circle class="mk-solid" cx="7" cy="1" r="3.2"/>' +
+             '<path class="mk-node" d="M 0 8 V 12 M -8 12 H 8"/>',
+
+      /* ── Part III, added 2026-09-22.  Same hand as the four module marks
+            above: the -18 -18 36 36 box, mk-node for the stroked outline,
+            mk-solid for the few filled nodes, nothing smaller than r 2.6. ── */
+
+      /* electronics — system architecture and electronics are ONE subject in
+         this deck (Sirio, 2026-09-22), so they share ONE mark: the processor
+         package with its legs, over the bus, over the things it drives. */
+      electronics: '<rect class="mk-node" x="-10" y="-16" width="20" height="13" rx="2.5"/>' +
+             '<circle class="mk-solid" cx="-5" cy="-11" r="2.6"/>' +
+             '<path class="mk-node" d="M 0 -3 V 2 M -12 2 H 12 M -12 2 V 7 M 0 2 V 7 M 12 2 V 7"/>' +
+             '<rect class="mk-solid" x="-15" y="7" width="6" height="9" rx="1.6"/>' +
+             '<rect class="mk-solid" x="-3" y="7" width="6" height="9" rx="1.6"/>' +
+             '<rect class="mk-solid" x="9" y="7" width="6" height="9" rx="1.6"/>',
+
+      /* integration — one case, the modules seated inside it */
+      integration: '<rect class="mk-node" x="-15" y="-12" width="30" height="24" rx="3.5"/>' +
+             '<path class="mk-node" d="M -4 -12 V 12 M -4 0 H 15"/>' +
+             '<circle class="mk-solid" cx="-9.5" cy="5" r="2.8"/>',
+
+      /* validation — measurements landing inside the band */
+      validation: '<path class="mk-node" d="M -15 -10 H 15 M -15 10 H 15"/>' +
+             '<circle class="mk-solid" cx="-9" cy="-3" r="2.8"/>' +
+             '<circle class="mk-solid" cx="0" cy="3" r="2.8"/>' +
+             '<circle class="mk-solid" cx="9" cy="-1" r="2.8"/>'
+    };
+
+    /* ONE SOURCE for the module symbols.  The Part II divider (s11) draws the
+       same four modules in its journey strip and builds its glyphs from this
+       map through window.Deck.marks, so the corner mark and the divider can
+       never drift into two different drawings of one module.  Anything reading
+       it must treat the -18 -18 36 36 viewBox and the mk-node / mk-solid
+       classes as part of the contract. */
+    if (window.Deck) {
+      window.Deck.marks = MODULE_GLYPH;
+      window.Deck.mark = function (key) { return MODULE_GLYPH[key] || ''; };
+      window.Deck.markBox = '-18 -18 36 36';
+    }
+
+    var markEl = null;
+
+    function renderModMark() {
+      markEl = document.createElement('div');
+      markEl.className = 'modmark';
+      markEl.setAttribute('aria-hidden', 'true');
+      markEl.innerHTML = '<svg viewBox="-18 -18 36 36"></svg><span class="modmark__name"></span>';
+      stage.appendChild(markEl);
+    }
+
+    function updateModMark(el) {
+      if (!markEl) return;
+      var want   = el.getAttribute('data-map');
+      var accent = el.getAttribute('data-accent') || '';
+      var key    = (want && want !== 'none') ? want : MODULE_BY_ACCENT[accent];
+      if (want === 'none' || !key || !MODULE_GLYPH[key]) { markEl.hidden = true; return; }
+      markEl.hidden = false;
+      markEl.style.setProperty('--mk-a', THREAD[accent] || 'var(--accent)');
+      markEl.querySelector('svg').innerHTML = MODULE_GLYPH[key];
+      markEl.querySelector('.modmark__name').textContent = MODULE_NAME[key] || '';
+    }
+
+    /* ── 4d · The overview: numbering, appendix marking, regrouping ──
+       deck.js is SHARED with decks/lab-meeting-2026-06/ and is never edited.
+       It builds one FLAT grid of .deck-overview-thumb nodes, each holding a
+       clone, a badge and a click handler closed over that slide's index.
+
+       This deck wants that grid grouped by the taxonomy in section 0, so the
+       tail post-processes it in two passes:
+
+         labelOverview    pins each thumb's slide index on the node (after
+                          regrouping, DOM position no longer implies it),
+                          rewrites the badge to the talk number or A01...,
+                          marks appendix thumbs, and adds a title caption
+                          because the clones render imperfectly today;
+         regroupOverview  MOVES those same nodes -- never rebuilds them, so
+                          every click closure survives -- into
+                          band > topic > grid containers.
+
+       The overview is built lazily on the first press of o or Escape, hence
+       the observer. See SLIDE-ORDER.md. */
+
+    function labelOverview(root) {
+      var thumbs = root.querySelectorAll('.deck-overview-thumb');
+      for (var i = 0; i < thumbs.length; i++) {
+        var th = thumbs[i];
+        var el = slides[i];
+        th.setAttribute('data-idx', i);
+        var mine = talkNo[i] || 0;
+        var back = backupNo[i] || 0;
+        th.classList.toggle('is-appendix', !!back);
+        var badge = th.querySelector('.deck-overview-badge');
+        if (badge) {
+          badge.textContent = mine ? String(mine)
+                            : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
+        }
+        /* One line of address plus the slide's own title: with the clones
+           half-drawn, this is what actually makes a slide findable. */
+        if (el && !th.querySelector('.ovcap')) {
+          var ttl = el.querySelector('.slide__title, .divider__title');
+          var cap = document.createElement('div');
+          cap.className = 'ovcap';
+          var cueEl = document.createElement('span');
+          cueEl.className = 'ovcap__cue';
+          cueEl.textContent = el.getAttribute('data-cue') || '';
+          cap.appendChild(cueEl);
+          var ttlEl = document.createElement('span');
+          ttlEl.className = 'ovcap__t';
+          ttlEl.textContent = ttl ? ttl.textContent.trim() : '';
+          cap.appendChild(ttlEl);
+          th.appendChild(cap);
+        }
+      }
+    }
+
+    function regroupOverview(root) {
+      var grid = root.querySelector('.deck-overview-grid');
+      if (!grid || grid.classList.contains('is-grouped')) return;
+      var thumbs = Array.prototype.slice.call(grid.querySelectorAll('.deck-overview-thumb'));
+      if (!thumbs.length) return;
+
+      /* Two buckets per group: inside a topic the talk slides come first,
+         then that topic's appendix slides. */
+      var talkBucket = [], backBucket = [], gi;
+      for (gi = 0; gi < SLIDE_ORDER.length; gi++) { talkBucket.push([]); backBucket.push([]); }
+      thumbs.forEach(function (th) {
+        var i = parseInt(th.getAttribute('data-idx'), 10);
+        var g = groupOf[i];
+        if (g === undefined || !talkBucket[g]) g = UNSORTED_GI;
+        (backupNo[i] ? backBucket : talkBucket)[g].push(th);
+      });
+
+      var frag = document.createDocumentFragment();
+      var band = null, bandName = null, bandN = null, bandCount = 0;
+
+      function closeBand() {
+        if (band && bandN) {
+          bandN.textContent = bandCount + (bandCount === 1 ? ' slide' : ' slides');
+        }
+      }
+
+      for (gi = 0; gi < SLIDE_ORDER.length; gi++) {
+        var grp  = SLIDE_ORDER[gi];
+        var list = talkBucket[gi].concat(backBucket[gi]);
+        if (!list.length) continue;
+
+        if (grp.band !== bandName) {
+          closeBand();
+          bandName  = grp.band;
+          bandCount = 0;
+          band = document.createElement('section');
+          band.className = 'ovband';
+          if (gi === UNSORTED_GI) band.classList.add('ovband--appendix');
+          var head = document.createElement('div');
+          head.className = 'ovband__head';
+          var h2 = document.createElement('h2');
+          h2.className = 'ovband__name';
+          h2.textContent = bandName;
+          bandN = document.createElement('span');
+          bandN.className = 'ovband__n';
+          head.appendChild(h2);
+          head.appendChild(bandN);
+          band.appendChild(head);
+          frag.appendChild(band);
+        }
+        bandCount += list.length;
+
+        var topic = document.createElement('div');
+        topic.className = 'ovtopic';
+        if (grp.topic) {
+          var thead = document.createElement('div');
+          thead.className = 'ovtopic__head';
+          var h3 = document.createElement('h3');
+          h3.className = 'ovtopic__name';
+          h3.textContent = grp.topic;
+          thead.appendChild(h3);
+          if (grp.thesis) {
+            var ch = document.createElement('span');
+            ch.className = 'ovtopic__ch';
+            ch.textContent = grp.thesis;
+            thead.appendChild(ch);
+          }
+          topic.appendChild(thead);
+        } else {
+          topic.classList.add('ovtopic--bare');
+        }
+        var tgrid = document.createElement('div');
+        tgrid.className = 'ovtopic__grid';
+        list.forEach(function (th) { tgrid.appendChild(th); });   /* move, not clone */
+        topic.appendChild(tgrid);
+        band.appendChild(topic);
+      }
+      closeBand();
+
+      grid.textContent = '';                 /* the thumbs are already in frag */
+      grid.classList.add('is-grouped');
+      grid.appendChild(frag);
+    }
+
+    function dressOverview(root) {
+      try {
+        labelOverview(root);
+        regroupOverview(root);
+      } catch (err) {
+        /* A broken grouping must never cost him the overview itself. */
+        console.error('[deck] overview grouping failed', err);
+      }
+    }
+
+    function watchOverview() {
+      var existing = document.querySelector('.deck-overview');
+      if (existing) dressOverview(existing);
+      new MutationObserver(function (muts) {
+        for (var i = 0; i < muts.length; i++) {
+          var added = muts[i].addedNodes;
+          for (var j = 0; j < added.length; j++) {
+            var n = added[j];
+            if (n.nodeType === 1 && n.classList && n.classList.contains('deck-overview')) {
+              dressOverview(n);
+            }
+          }
+        }
+      }).observe(document.body, { childList: true });
+    }
+
+    /* ── 5 · Nav auto-hide ─────────────────────────────────────────── */
+
+    function wireNavIdle() {
+      var t;
+      function wake() {
+        document.body.removeAttribute('data-nav-idle');
+        clearTimeout(t);
+        t = setTimeout(function () { document.body.setAttribute('data-nav-idle', ''); }, 3000);
+      }
+      document.addEventListener('mousemove', wake);
+      document.addEventListener('mousedown', wake);
+      wake();
+    }
+
+    /* ── 5b · A and D jump whole slides ────────────────────────────
+       The arrows walk clicker STEPS: they reveal the fragments inside a
+       slide before moving on. A and D ignore the animation entirely and
+       land on the neighbouring slide at step 0 — a second pair of keys for
+       getting somewhere, the way a game moves you left and right.
+
+       Deliberately consistent with the arrows: the deck is one flat
+       sequence, so walking off the last talk slide walks into the appendix
+       here exactly as the right arrow already does. Nothing at the ends.
+
+       Guarded, because this deck has live tool pages inside iframes and an
+       "a" typed into the rotor solver must not move the talk:
+         · any modifier held hands the key back to the browser;
+         · a grown tool card owns the keyboard (deck.js does the same with
+           body[data-demo-active]);
+         · a focused field, of any kind, keeps its letters.
+       The guest view is left alone: a guest follows its host. */
+
+    function isTypingTarget(t) {
+      if (!t || t.nodeType !== 1) return false;
+      if (t.isContentEditable) return true;
+      var tag = t.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    }
+
+    function wireSlideJump() {
+      document.addEventListener('keydown', function (e) {
+        var k = e.key;
+        if (k !== 'a' && k !== 'A' && k !== 'd' && k !== 'D') return;
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        if (document.body.hasAttribute('data-demo-active')) return;
+        if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
+        if (!window.Deck || !window.Deck.goToState) return;
+
+        var here = window.Deck.slideNo;
+        var to   = (k === 'd' || k === 'D') ? here + 1 : here - 1;
+        e.preventDefault();
+        if (to < 1 || to > window.Deck.count) return;   /* the ends hold */
+        window.Deck.goToState(to, 0);
+      });
+    }
+
+    /* ── 5c · The frame, on a slide and in the overview ────────────
+       The CSS above does the layout; this does the two things CSS cannot.
+       The back arrow is drawn as a glyph, so it is named here rather than
+       read out as its own arrow character. And the Instruments panel is
+       display:none on a slide, so a panel left open in the overview would
+       still count as open to deck.js's Escape handler after a thumb was
+       clicked — close it as the overview closes. */
+
+    function wireFrame() {
+      var back = document.querySelector('.site-nav--deck .deck-back-link');
+      if (back && !back.hasAttribute('aria-label')) {
+        back.setAttribute('aria-label', 'Back to presentations');
+        back.setAttribute('title', 'Back to presentations');
+      }
+      var panel = document.getElementById('instr-panel');
+      var btn   = document.querySelector('.site-nav--deck .site-nav__instr');
+      if (!panel) return;
+      new MutationObserver(function () {
+        if (document.body.hasAttribute('data-overview')) return;
+        if (panel.hidden) return;
+        panel.hidden = true;
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }).observe(document.body, { attributes: true, attributeFilter: ['data-overview'] });
+    }
+
+    /* ── 6 · Presenter view ────────────────────────────────────────── */
+
+    var pres = {};
+    var timerStart = null;
+    var viewport = null;
+
+    function fitPanel() {
+      if (view !== 'presenter' || !viewport || !stage) return;
+      var w = viewport.clientWidth, h = viewport.clientHeight;
+      if (!w || !h) return;
+      var s = Math.min(w / 1280, h / 720);
+      stage.style.position = 'absolute';
+      stage.style.left = '0px';
+      stage.style.top = '0px';
+      stage.style.transform = 'translate(' + ((w - 1280 * s) / 2) + 'px,' +
+                              ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
+    }
+
+    /* ── The pause ───────────────────────────────────────────
+       He breaks off to talk to someone and every clock on the bar has to
+       stand still. Rather than teach each sum about a paused flag, the panel
+       reads its time through now(): while paused that is the instant the
+       pause began, so every readout paints the same value for as long as it
+       lasts and the open visit in the rehearsal record stops growing.
+       Resuming shifts each origin — the talk clock, the two pacing timers
+       and the open visit — forward by the length of the pause, so all the
+       arithmetic downstream is untouched and not a second is lost or counted
+       twice. The run's startedAt is a wall-clock stamp for the report, so it
+       stays where it is. */
+
+    var pausedAt = null;
+    function now() { return pausedAt === null ? Date.now() : pausedAt; }
+
+    function setPaused(on) {
+      on = !!on;
+      if (on === (pausedAt !== null)) return;
+      if (on) {
+        pausedAt = Date.now();
+      } else {
+        var gap = Date.now() - pausedAt;
+        pausedAt = null;
+        if (timerStart !== null) timerStart += gap;
+        if (bandAt) bandAt += gap;
+        if (topicAt) topicAt += gap;
+        if (visit) visit.at += gap;
+      }
+      if (on) document.body.setAttribute('data-pres-paused', '');
+      else    document.body.removeAttribute('data-pres-paused');
+      if (pres.pause) {
+        pres.pause.textContent = on ? 'Resume' : 'Pause';
+        pres.pause.setAttribute('aria-pressed', on ? 'true' : 'false');
+        pres.pause.title = on ? 'Start the clocks again (p)' : 'Freeze every clock (p)';
+      }
+      tickClock();
+    }
+
+    function setupPresenter() {
+      pres = {
+        stage:  document.getElementById('presStage'),
+        next:   document.getElementById('presNext'),
+        title:  document.getElementById('presTitle'),
+        notes:  document.getElementById('presNotes'),
+        count:  document.getElementById('presCount'),
+        elapsed:document.getElementById('presElapsed'),
+        band:   document.getElementById('presBand'),
+        bandK:  document.getElementById('presBandK'),
+        topic:  document.getElementById('presTopic'),
+        topicK: document.getElementById('presTopicK'),
+        left:   document.getElementById('presLeft'),
+        prog:     document.getElementById('presProg'),
+        progFill: document.getElementById('presProgFill'),
+        progPct:  document.getElementById('presProgPct'),
+        progN:    document.getElementById('presProgN'),
+        pause:    document.getElementById('presPause')
+      };
+      if (pres.stage && viewport) pres.stage.appendChild(viewport);
+
+      /* Registered after deck.js's own resize handler, so this one wins. */
+      window.addEventListener('resize', fitPanel);
+      fitPanel();
+      setTimeout(fitPanel, 60);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        if (e.key === 'r' || e.key === 'R') {
+          setPaused(false);           /* a restart always leaves it running */
+          timerStart = Date.now();
+          bandAt = topicAt = Date.now();
+          paceShown = paceCand = ''; paceHeld = 0;
+          resetRun();
+          tickClock();
+          return;
+        }
+        if (e.key === 'p' || e.key === 'P') {
+          if (document.body.hasAttribute('data-demo-active')) return;
+          if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
+          e.preventDefault();
+          setPaused(pausedAt === null);
+        }
+      });
+
+      if (pres.pause) {
+        pres.pause.addEventListener('click', function () {
+          setPaused(pausedAt === null);
+          pres.pause.blur();   /* so space and the arrows keep driving the deck */
+        });
+      }
+
+      setInterval(function () { tickClock(true); }, 500);
+      tickClock();
+    }
+
+    function mmss(total) {
+      var sign = total < 0 ? '-' : '';
+      total = Math.abs(Math.round(total));
+      var m = Math.floor(total / 60), s = total % 60;
+      return sign + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    /* ── The two pacing timers ─────────────────────────────────────
+       Each counts down the budget for the thing he is in the middle of: the
+       part, and the section inside it. A section's budget is the sum of its
+       slides' targets (the meta rule in 0b), so moving a slide between
+       sections carries its seconds with it, without a second table to
+       maintain. Backup slides never reset either timer — answering a
+       question is not a new section. */
+    var segSecs = [];                 /* per SLIDE_ORDER index: its budget */
+    var bandName = '', bandSecs = 0, bandAt = 0;
+    var topicGi = -1, topicAt = 0;
+
+    /* ══ Per-slide targets (added 2026-09-23) ═══════════════════════
+       The rule is written out in 0b. slideMeta holds the parsed meta line
+       of every slide (null when it has none), slideSecs the seconds the
+       plan gives it (null outside the talk). segSecs and slideExp are both
+       sums of slideSecs, so the Section timer, the Elapsed colour and the
+       rehearsal plan all read the same numbers. */
+    var slideMeta = [];   /* per slide index: meta seconds, or null */
+    var slideSecs = [];   /* per slide index: planned seconds, or null */
+
+    /* "~40 s", "~90 s", "~1 min 30 s", "~1:30", "~5 min · live demo".
+       Only the text before a middle dot counts; the rest is commentary. */
+    function parseMetaSecs(text) {
+      if (!text) return null;
+      var t = String(text).split('·')[0].replace(/ /g, ' ').toLowerCase();
+      var m = t.match(/(\d+)\s*:\s*(\d{1,2})(?!\d)/);
+      if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+      var secs = 0, hit = false;
+      m = t.match(/(\d+(?:[.,]\d+)?)\s*(?:minutes?|mins?|m)(?![a-z])/);
+      if (m) { secs += parseFloat(m[1].replace(',', '.')) * 60; hit = true; }
+      m = t.match(/(\d+(?:[.,]\d+)?)\s*(?:seconds?|secs?|s)(?![a-z])/);
+      if (m) { secs += parseFloat(m[1].replace(',', '.')); hit = true; }
+      if (!hit) {
+        m = t.match(/(\d+(?:[.,]\d+)?)/);
+        if (m) { secs = parseFloat(m[1].replace(',', '.')); hit = true; }
+      }
+      return hit ? Math.round(secs) : null;
+    }
+
+    /* The English list's meta bullet only; the Italian twin is ignored. */
+    function metaItemOf(el) {
+      return el ? el.querySelector('aside.notes > ul > li[data-step="meta"]') : null;
+    }
+
+    function measurePlan() {
+      var i;
+      var inTalk = [], bandOf = [];
+      var metaSum = {}, freeIn = {};
+      slideMeta = []; slideSecs = [];
+      slides.forEach(function (el, idx) {
+        var li = metaItemOf(el);
+        slideMeta.push(li ? parseMetaSecs(li.textContent) : null);
+        var talk = el.getAttribute('data-part') !== 'backup' &&
+                   el.getAttribute('data-talk') !== 'no';
+        var pl = talk ? bandPlan(SLIDE_ORDER[groupOf[idx]].band) : null;
+        inTalk.push(talk);
+        bandOf.push(pl ? pl.name : null);
+        if (!pl) return;
+        if (slideMeta[idx] !== null) metaSum[pl.name] = (metaSum[pl.name] || 0) + slideMeta[idx];
+        else freeIn[pl.name] = (freeIn[pl.name] || 0) + 1;
+      });
+      /* what each unmarked slide of a band gets: the rest of the band, evenly */
+      var freeEach = {};
+      Object.keys(freeIn).forEach(function (name) {
+        var rest = partSecs(name) - (metaSum[name] || 0);
+        freeEach[name] = rest > 0 ? rest / freeIn[name] : 0;
+      });
+      segSecs = [];
+      for (i = 0; i < SLIDE_ORDER.length; i++) segSecs.push(0);
+      slides.forEach(function (el, idx) {
+        if (!inTalk[idx]) { slideSecs.push(null); return; }
+        var name = bandOf[idx];
+        var s = !name ? 0 : (slideMeta[idx] !== null ? slideMeta[idx] : (freeEach[name] || 0));
+        slideSecs.push(s);
+        segSecs[groupOf[idx]] += s;
+      });
+      measureExpected();
+    }
+
+    /* The bar echoes the current slide's planned seconds, small and muted,
+       beside the slide count. Empty (hidden) outside the talk. */
+    function paintSlideTarget(idx) {
+      if (!pres.count) return;
+      var tgt = pres.target;
+      if (!tgt) {
+        tgt = pres.target = document.createElement('span');
+        tgt.className = 'pres__target';
+        tgt.title = 'Planned time for this slide';
+        pres.count.parentNode.appendChild(tgt);
+      }
+      var s = slideSecs[idx];
+      if (s === null || s === undefined) { tgt.textContent = ''; return; }
+      s = Math.round(s);
+      tgt.textContent = '~' + (s < 60 ? s + ' s' : mmss(s).replace(/^0/, ''));
+    }
+
+    /* Read-only diagnostic for the console: window.deckPlan() lists every
+       spoken slide's meta, planned seconds and expected start, and every
+       group's budget. Nothing in the deck calls it. */
+    window.deckPlan = function () {
+      if (!segSecs.length) measurePlan();
+      var rows = [];
+      slides.forEach(function (el, idx) {
+        if (!slideExp[idx]) return;
+        rows.push({ cue: el.getAttribute('data-cue') || '', meta: slideMeta[idx],
+                    secs: slideSecs[idx], start: slideExp[idx].start });
+      });
+      var groups = SLIDE_ORDER.map(function (g, gi) {
+        return { band: g.band, topic: g.topic, secs: segSecs[gi] || 0 };
+      });
+      return { slides: rows, groups: groups };
+    };
+    /* ══ end per-slide targets ═══════════════════════════════════════ */
+
+    /* ── Where he ought to be by now ──────────────────────────
+       The two pacing timers count down the section he is in; this table
+       answers the other question — against the whole talk, is he early or
+       late? Each spoken slide's share is its own target from the plan in
+       0b (its meta line, or an even cut of what its band has left), and
+       the running sum before a slide is the elapsed time he should be at
+       when he arrives at it. Backups and the hold screen are not in the
+       talk, so they are not in the sum and standing on one leaves the
+       readout with no opinion at all. */
+    var slideExp = [];   /* per slide index: {start, share} in seconds, or null */
+
+    function measureExpected() {
+      var acc = 0;
+      slideExp = [];
+      slides.forEach(function (el, idx) {
+        var share = slideSecs[idx];
+        if (share === null || share === undefined) { slideExp.push(null); return; }
+        slideExp.push({ start: acc, share: share });
+        acc += share;
+      });
+    }
+
+    /* Inside a slide the expectation slides along with the steps, so a
+       slide he is halfway through is worth half its share. */
+    function expectedAt(d) {
+      if (!d || d.slide === undefined) return null;
+      var e = slideExp[d.slide - 1];
+      if (!e) return null;
+      var n = Math.max(d.steps || 0, 1);
+      var k = Math.min(Math.max(d.step || 0, 0), n);
+      return e.start + (k / n) * e.share;
+    }
+
+    function partSecs(name) {
+      for (var i = 0; i < BAND_PLAN.length; i++) {
+        if (BAND_PLAN[i].name === name && BAND_PLAN[i].secs) return BAND_PLAN[i].secs;
+      }
+      return 0;
+    }
+
+    /* ── The rehearsal record ──────────────────────────────────────
+       Every stretch he spends inside one section is written down as a visit,
+       so the report can add them up afterwards. Going back to a section adds
+       a second visit rather than overwriting the first, and time on a backup
+       slide belongs to whatever section he came from — a question is not a
+       new section. Kept in localStorage so the report is a separate page. */
+    var RUN_KEY = 'thesisDeckRun', RUNS_KEY = 'thesisDeckRuns';
+
+    /* One name per section, used by both the recorder and the plan. Groups
+       with no topic of their own (the opening, the demo) go by their band. */
+    function sectionName(gi) {
+      return SLIDE_ORDER[gi].topic || SLIDE_ORDER[gi].band;
+    }
+    var runVisits = [], runStartedAt = null, visit = null;
+
+    function saveRun() {
+      if (!runStartedAt) return;
+      var plan = { parts: {}, sections: {} };
+      for (var i = 0; i < BAND_PLAN.length; i++) {
+        if (BAND_PLAN[i].secs) plan.parts[BAND_PLAN[i].name] = BAND_PLAN[i].secs;
+      }
+      for (i = 0; i < SLIDE_ORDER.length; i++) {
+        if (segSecs[i]) plan.sections[sectionName(i)] = segSecs[i];
+      }
+      var open = visit ? [{ part: visit.part, section: visit.section,
+                            ms: now() - visit.at, open: true }] : [];
+      try {
+        localStorage.setItem(RUN_KEY, JSON.stringify({
+          startedAt: runStartedAt, savedAt: now(),
+          visits: runVisits.concat(open), plan: plan
+        }));
+      } catch (e) { /* private window, blocked storage: the talk still runs */ }
+    }
+
+    function closeVisit() {
+      if (!visit) return;
+      var ms = now() - visit.at;
+      if (ms > 400) runVisits.push({ part: visit.part, section: visit.section, ms: ms });
+      visit = null;
+    }
+
+    /* `r` starts a fresh run and files the previous one in the history. */
+    function resetRun() {
+      closeVisit();
+      if (runStartedAt && runVisits.length) {
+        try {
+          var hist = JSON.parse(localStorage.getItem(RUNS_KEY) || '[]');
+          hist.unshift(JSON.parse(localStorage.getItem(RUN_KEY) || 'null'));
+          localStorage.setItem(RUNS_KEY, JSON.stringify(hist.filter(Boolean).slice(0, 10)));
+        } catch (e) { /* nothing to keep */ }
+      }
+      runVisits = []; runStartedAt = Date.now(); visit = null;
+      try { localStorage.removeItem(RUN_KEY); } catch (e) {}
+    }
+
+    /* Called on every state change: notices when he has walked into a new
+       part or a new section and restarts that clock. */
+    function markSegment(idx) {
+      var el = slides[idx];
+      if (!el || el.getAttribute('data-part') === 'backup') return;
+      var gi = groupOf[idx];
+      var pl = bandPlan(SLIDE_ORDER[gi].band);
+      if (!pl) return;
+      if (pl.name !== bandName) {
+        bandName = pl.name; bandSecs = partSecs(pl.name); bandAt = now();
+      }
+      if (gi !== topicGi) { topicGi = gi; topicAt = now(); }
+
+      var sec = sectionName(gi);
+      if (!visit || visit.section !== sec || visit.part !== pl.name) {
+        closeVisit();
+        if (runStartedAt === null) runStartedAt = Date.now();
+        visit = { part: pl.name, section: sec, at: now() };
+      }
+      saveRun();
+    }
+
+    /* ── The Elapsed colour ─────────────────────────────────
+       Elapsed no longer only says how long he has been talking: it says
+       whether that is more or less than it should be. Ahead, or no more
+       than twenty seconds behind, is green; then yellow, dark orange and
+       red at a minute, two minutes and beyond, the same four colours the
+       pacing timers use so the bar keeps one language.
+
+       Each slide's share is its own target (0b), but inside a slide the
+       expectation still moves in even steps, so the raw difference wobbles
+       a little even when he is exactly on plan. The number
+       is left alone — only the colour is held back: a new level has to
+       survive six consecutive half-second ticks before it is painted, so
+       the readout settles instead of strobing. Ticks are counted only while
+       the clocks run, so a pause freezes the colour with everything else,
+       and before the talk starts there is no colour at all. */
+    var PACE_TICKS = 6;               /* 6 × 500 ms = the 3 s dead band */
+    var paceShown = '', paceCand = '', paceHeld = 0;
+    var presState = null;             /* the last deck state the panel saw */
+
+    function paceLevel(delta) {       /* delta > 0 means behind schedule */
+      if (delta <= 20)  return 'ok';
+      if (delta <= 60)  return 'warn';
+      if (delta <= 120) return 'near';
+      return 'over';
+    }
+
+    function paceElapsed(elapsed, advance) {
+      var lvl = '';
+      if (timerStart !== null) {
+        var exp = expectedAt(presState);
+        if (exp !== null) lvl = paceLevel(elapsed - exp);
+      }
+      if (lvl === '' || paceShown === '') {   /* neutral, or the first reading */
+        paceShown = paceCand = lvl; paceHeld = 0;
+      } else if (lvl !== paceCand) {          /* a different candidate: start over */
+        paceCand = lvl; paceHeld = 0;
+      } else if (lvl !== paceShown && advance && ++paceHeld >= PACE_TICKS) {
+        paceShown = lvl; paceHeld = 0;
+      }
+      var c = pres.elapsed.classList;
+      c.toggle('is-pace-ok',   paceShown === 'ok');
+      c.toggle('is-pace-warn', paceShown === 'warn');
+      c.toggle('is-pace-near', paceShown === 'near');
+      c.toggle('is-pace-over', paceShown === 'over');
+    }
+
+    function paint(node, left, running) {
+      node.textContent = running ? mmss(left) : '\u2013\u2013:\u2013\u2013';
+      node.classList.toggle('is-idle', !running);
+      node.classList.toggle('is-warn', running && left > 30 && left <= 60);
+      node.classList.toggle('is-near', running && left >= 0 && left <= 30);
+      node.classList.toggle('is-over', running && left < 0);
+    }
+
+    /* Kept the name because several call sites use it. */
+    function tickClock(fromTick) {
+      if (view !== 'presenter' || !pres.elapsed) return;
+      var el = timerStart === null ? 0 : (now() - timerStart) / 1000;
+      pres.elapsed.textContent = mmss(el);
+      paceElapsed(el, fromTick === true && pausedAt === null);
+      var left = PLAN_S - el;
+      pres.left.textContent = mmss(left);
+      pres.left.classList.toggle('is-over', left < 0);
+      pres.left.classList.toggle('is-close', left >= 0 && left < 300);
+
+      if (!pres.band) return;
+      var running = timerStart !== null && bandName !== '';
+      if (pres.bandK) pres.bandK.textContent = bandName || 'Part';
+      if (pres.topicK) {
+        pres.topicK.textContent = topicGi >= 0 ? (SLIDE_ORDER[topicGi].topic || bandName) : 'Section';
+      }
+      if (running) saveRun();
+      paint(pres.band, bandSecs - (now() - bandAt) / 1000, running);
+      paint(pres.topic, (segSecs[topicGi] || 0) - (now() - topicAt) / 1000,
+            running && topicGi >= 0);
+    }
+
+    /* ── 6b · The next-state preview ───────────────────────────────
+
+       The panel answers one question: what will the projector look like after
+       the next press, once that step's motion has settled? A static clone with
+       the fragments ticked on cannot answer it, because almost every slide is
+       driven by a GSAP timeline, so the target state is rebuilt instead:
+
+         · the target is this slide at step n+1 while fragments are left,
+           otherwise the next slide at step 0, and "end of deck" past the last;
+         · the clone is built from a pristine snapshot, never from the live
+           slide, because several builders read inline left/top/width/height as
+           their home geometry and the live slide's are mid-animation;
+         · the slide's registered builder runs on the clone, the returned
+           timeline is seeked to the target label, and the entrance hook runs
+           after it, exactly as a real entry would leave the slide;
+         · everything the two of them started is then fast-forwarded to its end
+           and killed, so the clone holds final styles and nothing keeps ticking
+           behind the panel.
+
+       The builder and the hook run inside a gsap.context scoped to the clone,
+       so the next render reverts the previous one. Nothing here may touch the
+       live stage: builders scope every selector to their element, which is why
+       the clone may keep the ids the parts' #sNN CSS depends on. */
+
+    var pristine = [];      /* untouched copy of every slide, taken at init */
+    var preview  = null;    /* the gsap.context holding the preview on screen */
+
+    function killPreview() {
+      if (!preview) return;
+      var p = preview; preview = null;
+      if (p.tl)  { try { p.tl.kill(); } catch (e) {} }
+      if (p.ctx) { try { p.ctx.revert(); } catch (e) {} }
+    }
+
+    /* Finish and kill what the preview left running: the entrance hook's
+       tweens, and anything else started outside the preview timeline. Three
+       things are deliberately left alone, because touching them would undo the
+       seek:
+         · the timeline itself, which is holding the target state;
+         · its children, which the seek already rendered where they belong —
+           finishing one would drag a future step onto the clone;
+         · anything already at its end, above all the builder's opening
+           gsap.set() calls, which would re-apply the slide's rest state. */
+    function settlePreview(ctx, tl, clone) {
+      var list = [];
+      /* Walk the parent chain rather than ask the timeline for its children:
+         a stagger wraps its tweens in a sub-timeline that getChildren does not
+         hand back, and finishing one of those would reveal the next step. */
+      function ownedByTimeline(a) {
+        for (var p = a, i = 0; p && i < 64; p = p.parent, i++) if (p === tl) return true;
+        return false;
+      }
+      function add(a) {
+        if (!a || a === tl || ownedByTimeline(a)) return;
+        try { if (!a.totalProgress || a.totalProgress() >= 1) return; } catch (e) { return; }
+        if (list.indexOf(a) < 0) list.push(a);
+      }
+      if (ctx && ctx.data) ctx.data.forEach(add);
+      var running = [];
+      try { running = window.gsap.globalTimeline.getChildren(true, true, true); } catch (e) {}
+      running.forEach(function (a) {
+        if (!a || !a.targets) return;
+        var ts;
+        try { ts = a.targets(); } catch (e) { return; }
+        for (var i = 0; i < ts.length; i++) {
+          var t = ts[i];
+          if (t && t.nodeType === 1 && clone.contains(t)) { add(a); return; }
+        }
+      });
+      /* totalProgress(1) moves the playhead, which is what makes the jump
+         stick through the next tick; rendering by hand would not. */
+      list.forEach(function (a) {
+        try { if (a.totalProgress) a.totalProgress(1); else if (a.progress) a.progress(1); } catch (e) {}
+      });
+      /* GSAP queues a fresh tween's first paint for the next tick, and killing
+         cancels a queued paint, so the clone would keep its from-state. One
+         tick flushes the queue; it advances the live stage by the frame it was
+         going to advance by anyway, and only then is it safe to kill. */
+      try { window.gsap.ticker.tick(); } catch (e) {}
+      list.forEach(function (a) { try { a.kill(); } catch (e) {} });
+      if (tl) { try { tl.kill(); } catch (e) {} }
+    }
+
+    /* Render an animation at a time whatever GSAP's lazy queue thinks. */
+    function forceRender(a, t) {
+      if (!a || !a.render || !isFinite(t)) return;
+      try { a.render(t, false, true); } catch (e) {}
+    }
+
+    function renderNext(d) {
+      if (!pres.next) return;
+      killPreview();
+
+      var host = pres.next;
+      host.innerHTML = '';
+      var frame = host.parentNode;
+      host.style.transform = 'scale(' + (frame.clientWidth / 1280) + ')';
+
+      var idx = d.slide - 1, srcIdx = -1, target = 0, cap = 'Next';
+      if (d.step < d.steps) {
+        srcIdx = idx; target = d.step + 1;
+        cap = 'Next: step ' + target + ' of ' + d.steps + ' on this slide';
+      } else if (idx + 1 < slides.length) {
+        srcIdx = idx + 1; target = 0;
+        var nt = slides[srcIdx].querySelector('.slide__title, .divider__title');
+        cap = 'Next slide ' + (srcIdx + 1) + ' — ' +
+              (nt ? nt.textContent.trim() : (slides[srcIdx].getAttribute('data-cue') || ''));
+      }
+      var capEl = document.querySelector('.pres__next .pres__cap');
+      if (capEl) capEl.textContent = cap;
+      if (srcIdx < 0) {
+        host.innerHTML = '<div class="pres__next-end">End of deck</div>';
+        host.style.transform = 'none';
+        return;
+      }
+
+      /* Every part scopes its CSS with #sNN and #sNN-thing, so the ids have to
+         survive the clone or the preview loses every rule the slide depends on
+         (fills, positions, initial opacities). The clone sits after the stage in
+         the document, so getElementById and url(#…) still resolve to the live
+         slide, and no part script selects outside its own element. */
+      var src   = pristine[srcIdx] || slides[srcIdx];
+      var clone = src.cloneNode(true);
+      var cue   = clone.getAttribute('data-cue');
+      /* The panel is not the stage and the clone inherits from it, so the
+         frame's body line-height would relayout text the stage sets loose.
+         Pin it to whatever the stage inherits. */
+      if (stage) { try { clone.style.lineHeight = getComputedStyle(stage).lineHeight; } catch (e) {} }
+      clone.dataset.preview = '1';          /* builders skip their live clocks */
+      clone.classList.remove('slide--leaving');
+      clone.classList.add('slide--active');
+      clone.querySelectorAll('.fragment').forEach(function (f, i) {
+        if (i < target) f.setAttribute('data-fragment-revealed', '');
+        else f.removeAttribute('data-fragment-revealed');
+      });
+      clone.querySelectorAll('aside.notes').forEach(function (n) { n.parentNode.removeChild(n); });
+      clone.querySelectorAll('iframe').forEach(function (n) { n.parentNode.removeChild(n); });
+      clone.querySelectorAll('.tool-card').forEach(function (c) { c.classList.remove('is-grown'); });
+      /* A video keeps its element, and with it every `… video` CSS rule the
+         parts wrote, but loses both sources: it paints its poster, asks the
+         network for nothing, and a builder's play() on it is a no-op. */
+      clone.querySelectorAll('video').forEach(function (v) {
+        v.removeAttribute('src');
+        v.removeAttribute('data-src');
+        v.removeAttribute('autoplay');
+        v.muted = true;
+      });
+      clone.querySelectorAll('img[data-src]').forEach(function (im) {
+        if (!im.getAttribute('src')) im.src = im.getAttribute('data-src');
+      });
+      /* In the document before the builder runs, so anything that measures or
+         draws an SVG length sees a laid-out element. */
+      host.appendChild(clone);
+
+      var fn    = (cue && window.Deck.builderFor) ? window.Deck.builderFor(cue) : null;
+      var hooks = (cue && window.Deck.entersFor)  ? window.Deck.entersFor(cue)  : [];
+      if (!window.gsap || (!fn && !hooks.length)) return;
+
+      var tl = null;
+      var ctx = window.gsap.context(function () {
+        if (fn) {
+          try { tl = fn(clone, window.gsap) || null; }
+          catch (err) { console.error('[deck] preview builder failed for ' + cue, err); tl = null; }
+        }
+        if (tl) {
+          try {
+            tl.pause();
+            var lbl = labelAt(tl, target);
+            if (lbl !== null) tl.seek(lbl, false);
+            else if (target > 0) tl.progress(1, false);
+            forceRender(tl, tl.totalTime());
+          } catch (err) { console.error('[deck] preview seek failed for ' + cue, err); }
+        }
+        hooks.forEach(function (h) {
+          try { h(clone, window.gsap); }
+          catch (err) { console.error('[deck] preview enter hook failed for ' + cue, err); }
+        });
+      }, clone);
+
+      settlePreview(ctx, tl, clone);
+      preview = { ctx: ctx, tl: null };
+    }
+
+    function updatePresenter(d) {
+      if (!segSecs.length) measurePlan();
+      presState = d;
+      markSegment(d && d.slide !== undefined ? d.slide - 1 : 0);
+      if (view !== 'presenter') return;
+      var el = slides[d.slide - 1];
+      /* The clock starts when the talk does, not when the deck opens: the
+         hold screen can sit on the projector for as long as he likes. */
+      if (timerStart === null && el && el.getAttribute('data-talk') !== 'no') {
+        timerStart = now();
+      }
+      var cue = el ? (el.getAttribute('data-cue') || '') : '';
+      var mine = talkNo[d.slide - 1] || 0;
+      var back = backupNo[d.slide - 1] || 0;
+      pres.count.textContent = mine
+        ? mine + ' / ' + talkCount
+        : (back ? 'A' + ('0' + back).slice(-2) : '\u2014');
+      paintSlideTarget(d.slide - 1);   /* per-slide targets, see 0b */
+      var t = el.querySelector('.slide__title, .divider__title');
+      pres.title.textContent = t ? t.textContent.trim() : (el.getAttribute('data-cue') || '');
+      var notes = el.querySelector('aside.notes');
+      pres.notes.innerHTML = notes ? notes.innerHTML
+        : '<p class="pres__notes-empty">No notes for this slide.</p>';
+      markNoteSteps(d);        /* step-synced captions, see 6c */
+      updateProgress(d);
+      renderNext(d);
+      tickClock();
+    }
+
+    /* ── 6b · Progress through the talk ────────────────────────────
+       Counted in clicker positions, not in slides: a slide with five steps
+       is five presses of the talk, not one press. Backup slides are not
+       part of the talk, so they are left out of the total; standing on one
+       holds the bar where the talk left it and says so. */
+
+    var backupNo  = [];  /* per slide index: its number among the backups */
+    var progTotal = 0;   /* clicker positions in the talk */
+    var progAt    = [];  /* per slide index: positions before it, -1 = outside */
+    var talkNo    = [];  /* per slide index: its number within the talk, 0 = outside */
+    var talkCount = 0;   /* how many slides the talk itself has */
+
+    /* Everything here counts the TALK, never the file: the hold screen sits
+       before it and the backups sit after it, so neither is in any total the
+       presenter panel shows. */
+    function measureProgress() {
+      var n = 0, k = 0, b = 0;
+      progAt = [];
+      talkNo = [];
+      backupNo = [];
+      slides.forEach(function (el) {
+        var cue = el.getAttribute('data-cue') || '';
+        var isBackup = /^b/i.test(cue) || el.getAttribute('data-part') === 'backup';
+        if (isBackup || el.getAttribute('data-talk') === 'no') {
+          progAt.push(-1);
+          talkNo.push(0);
+          backupNo.push(isBackup ? ++b : 0);
+          return;
+        }
+        backupNo.push(0);
+        progAt.push(n);
+        n += el.querySelectorAll('.fragment').length + 1;
+        talkNo.push(++k);
+      });
+      progTotal = n;
+      talkCount = k;
+    }
+
+    function updateProgress(d) {
+      if (!pres.prog) return;
+      var el = slides[d.slide - 1];
+      var base = progAt[d.slide - 1];
+      if (base === undefined || base < 0) {
+        /* Appendix membership is data-part="backup", never the cue prefix:
+           s12 sits in the appendix and keeps its cue. SLIDE-ORDER.md. */
+        var appendix = !!backupNo[d.slide - 1];
+        pres.prog.classList.add('is-appendix');
+        pres.progN.textContent = appendix ? 'appendix' : 'not started';
+        if (!appendix) {
+          pres.progFill.style.width = '0%';
+          pres.progPct.textContent = '0 %';
+        }
+        return;
+      }
+      pres.prog.classList.remove('is-appendix');
+      var at  = base + d.step + 1;
+      var pct = progTotal ? Math.round(at / progTotal * 100) : 0;
+      pres.progFill.style.width = pct + '%';
+      pres.progPct.textContent  = pct + ' %';
+      pres.progN.textContent    = at + ' / ' + progTotal;
+    }
+
+    /* ── 6c · Step-synced captions (added 2026-09-23) ──────────────
+       The notes are one bullet per build step. li[data-step="n"] is the
+       CURRENT bullet from step n until the next stepped bullet takes over:
+       the current bullet is the last li[data-step] whose data-step is at
+       most Deck.step. Stateless per state, so stepping backwards is the
+       same sum. A slide without data-step bullets renders exactly as it
+       did. The Italian twin, aside.notes > .notes-it, feeds the guest
+       band (section 7) and is dropped from the presenter panel.
+       Contract: BUILDER-REFERENCE.md, "Step-synced captions". */
+
+    function currentStepItem(items, step) {
+      var cur = -1;
+      for (var i = 0; i < items.length; i++) {
+        var n = parseInt(items[i].getAttribute('data-step'), 10);
+        if (!isNaN(n) && n <= step) cur = i;
+      }
+      return cur;
+    }
+
+    /* Several bullets may share one data-step, so a long line can be split
+       for reading: all of them are current together. */
+    function stepOf(li) { return li ? parseInt(li.getAttribute('data-step'), 10) : NaN; }
+
+    function markNoteSteps(d) {
+      if (!pres.notes) return;
+      pres.notes.querySelectorAll('.notes-it').forEach(function (n) { n.parentNode.removeChild(n); });
+      var body  = pres.notes.closest('.pres__notes-body') || pres.notes.parentNode;
+      pres.notes.querySelectorAll('li:not([data-step])').forEach(function (li) {
+        if (/^\s*if asked\b/i.test(li.textContent)) li.classList.add('is-aside');
+      });
+      /* The meta line is the slide's time target, never a caption: it takes
+         its own quiet .is-meta style and stays out of the step marking.
+         (Per-slide targets, added 2026-09-23; the rule is in 0b.) */
+      pres.notes.querySelectorAll('li[data-step="meta"]').forEach(function (li) {
+        li.classList.add('is-meta');
+      });
+      var items = pres.notes.querySelectorAll('li[data-step]:not([data-step="meta"])');
+      if (body) body.classList.toggle('has-steps', items.length > 0);
+      if (!items.length) return;
+      var cur = currentStepItem(items, (d && d.step) || 0);
+      var curN = cur >= 0 ? stepOf(items[cur]) : NaN, first = -1;
+      for (var i = 0; i < items.length; i++) {
+        var now = cur >= 0 && stepOf(items[i]) === curN;
+        if (now && first < 0) first = i;
+        items[i].classList.add(now ? 'is-now' : (i < cur ? 'is-done' : 'is-next'));
+      }
+      /* Keep the current bullet in view: scroll the notes box only, never
+         the page, and only when it is actually out of sight. */
+      if (first < 0 || !body) return;
+      var li = items[first];
+      var bRect = body.getBoundingClientRect(), lRect = li.getBoundingClientRect();
+      if (lRect.top < bRect.top + 8 || lRect.bottom > bRect.bottom - 8) {
+        body.scrollTop += (lRect.top - bRect.top) - 48;
+      }
+    }
+
+    /* ── 7 · Guest view ────────────────────────────────────────────── */
+
+    /* ── 7a · The Italian caption band (added 2026-09-23) ──────────
+       Under ?view=guest the slide is fitted into the space above a fixed
+       band (--guest-band, tail CSS) and the band shows the slide's Italian
+       title and the Italian caption for the current step. The band keeps
+       its height on every slide, captioned or not, so nothing jumps. */
+
+    var guestCap = null, guestShown = null, guestSwap = null;
+
+    function fitGuest() {
+      if (view !== 'guest' || !viewport || !stage) return;
+      var w = viewport.clientWidth, h = viewport.clientHeight;
+      if (!w || !h) return;
+      var s = Math.min(w / 1280, h / 720);
+      stage.style.position = 'absolute';
+      stage.style.left = '0px';
+      stage.style.top = '0px';
+      stage.style.transform = 'translate(' + ((w - 1280 * s) / 2) + 'px,' +
+                              ((h - 720 * s) / 2) + 'px) scale(' + s + ')';
+    }
+
+    function setupGuestCaptions() {
+      guestCap = document.createElement('div');
+      guestCap.className = 'guest-cap';
+      guestCap.setAttribute('lang', 'it');
+      guestCap.setAttribute('aria-live', 'polite');
+      guestCap.innerHTML = '<p class="guest-cap__title"></p><div class="guest-cap__text"></div>';
+      document.body.appendChild(guestCap);
+      guestCap.title_ = guestCap.querySelector('.guest-cap__title');
+      guestCap.text_  = guestCap.querySelector('.guest-cap__text');
+      /* Registered after deck.js's own resize handler, so this one wins. */
+      window.addEventListener('resize', fitGuest);
+      fitGuest();
+      setTimeout(fitGuest, 60);
+    }
+
+    function updateGuestCaption(d) {
+      if (view !== 'guest' || !guestCap) return;
+      var el = slides[d.slide - 1];
+      var it = el ? el.querySelector('aside.notes .notes-it') : null;
+      var tEl = it ? it.querySelector('.notes-it__title') : null;
+      var title = tEl ? tEl.innerHTML.trim() : '';
+      var html = '', key = '';
+      if (it) {
+        var items = it.querySelectorAll('li[data-step]');
+        var cur = currentStepItem(items, d.step || 0);
+        if (cur >= 0) {
+          /* every caption up to the current one; the current step's lines are is-now */
+          var nowStep = stepOf(items[cur]);
+          for (var k = 0; k < items.length; k++) {
+            var sk = stepOf(items[k]);
+            if (isNaN(sk) || sk > nowStep) continue;
+            var now = sk === nowStep;
+            html += '<p class="gc-line' + (now ? ' is-now' : '') + '" data-s="' + sk + '">' +
+                    items[k].innerHTML.trim() + '</p>';
+          }
+          key = (d.cue || d.slide) + '|' + nowStep;
+        }
+      }
+      if (guestCap.title_.innerHTML !== title) guestCap.title_.innerHTML = title;
+      var noBand = !html && !(it && it.querySelector('li[data-step]:not([data-step="meta"])'));
+      if (noBand !== document.body.hasAttribute('data-guest-noband')) {
+        document.body.toggleAttribute('data-guest-noband', noBand);
+        fitGuest();
+      }
+      if (key === guestShown) return;
+      /* a line is new (it slides in) only when we moved forward on the same slide */
+      var prev = guestShown ? guestShown.split('|') : null;
+      var fwd = prev && key && prev[0] === key.split('|')[0] && +key.split('|')[1] > +prev[1];
+      guestShown = key;
+      var txt = guestCap.text_;
+      txt.innerHTML = html;
+      if (fwd && !reduce) {
+        var fresh = txt.querySelectorAll('.gc-line.is-now');
+        for (var f = 0; f < fresh.length; f++) fresh[f].classList.add('is-new');
+      }
+    }
+
+    var dotEl = null, dotTimer = null;
+    function markLive() {
+      if (!dotEl) return;
+      dotEl.classList.add('is-live');
+      clearTimeout(dotTimer);
+      dotTimer = setTimeout(function () { dotEl.classList.remove('is-live'); }, 20000);
+    }
+
+    /* ── 8 · Sync ──────────────────────────────────────────────────── */
+
+    var sid = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    var seq = 0;
+    var seen = Object.create(null);
+    var bc = null;
+    var pendingMsg = null, coalesce = null, lastSent = null;
+    var booted = false;      /* the first state is the page's own, never pushed */
+    var hasMoved = false;    /* this window has navigated at least once */
+
+    function makeMsg(d) {
+      return { v: 1, deck: DECK_ID, sid: sid, cue: d.cue, slide: d.slide, step: d.step, seq: ++seq, t: Date.now() };
+    }
+
+    function send(m) {
+      lastSent = m;
+      if (bc) { try { bc.postMessage(m); } catch (e) {} }
+      if (syncRole === 'host') {
+        try {
+          fetch('https://ntfy.sh/' + TOPIC, { method: 'POST', body: JSON.stringify(m) })
+            .catch(function () { /* the deck keeps working without the relay */ });
+        } catch (e) {}
+      }
+    }
+
+    var coalesceR = null, pendingRemote = null;
+    /* A state this window applied from another window (the projector driven while the
+       presenter window is the host, or the reverse) still goes to the relay, but never
+       back onto the BroadcastChannel, or the two windows would echo each other. */
+    function relayRemote(d) {
+      pendingRemote = d;
+      if (coalesceR) return;
+      coalesceR = setTimeout(function () {
+        coalesceR = null;
+        var d2 = pendingRemote; pendingRemote = null;
+        if (!d2) return;
+        var m = makeMsg(d2); lastSent = m;
+        try {
+          fetch('https://ntfy.sh/' + TOPIC, { method: 'POST', body: JSON.stringify(m) })
+            .catch(function () {});
+        } catch (e) {}
+      }, 120);
+    }
+
+    function broadcast(d) {
+      if (d.remote) { if (syncRole === 'host') relayRemote(d); return; }
+      if (!booted) { booted = true; return; }
+      hasMoved = true;
+      pendingMsg = d;
+      if (coalesce) return;
+      coalesce = setTimeout(function () {
+        coalesce = null;
+        var d2 = pendingMsg; pendingMsg = null;
+        if (d2) send(makeMsg(d2));
+      }, 120);
+    }
+
+    function applyRemote(m) {
+      if (!m || m.deck !== DECK_ID) return;
+      if (m.sid === sid) return;
+      /* A window that has just opened asks where the talk is. Only a window
+         that is actually driving answers, so two fresh windows cannot shove
+         their own opening slide onto each other. */
+      if (m.hello) {
+        if (syncRole === 'host' || hasMoved) send(makeMsg(window.Deck.state));
+        return;
+      }
+      if (m.t && Date.now() - m.t > 120000) return;
+      var last = seen[m.sid];
+      if (last !== undefined && m.seq <= last) return;
+      seen[m.sid] = m.seq;
+      markLive();
+      if (m.cue && window.Deck.goToCue && window.Deck.goToCue(m.cue, m.step, true)) return;
+      if (m.slide) window.Deck.goToState(m.slide, m.step, true);
+    }
+
+    function setupSync() {
+      if ('BroadcastChannel' in window) {
+        bc = new BroadcastChannel(CHANNEL);
+        bc.onmessage = function (e) { applyRemote(e.data); };
+        setTimeout(function () {
+          try { bc.postMessage({ v: 1, deck: DECK_ID, sid: sid, hello: true, t: Date.now() }); } catch (e) {}
+        }, 250);
+      }
+      if (syncRole === 'host') {
+        setInterval(function () {
+          var d = window.Deck.state;
+          send(makeMsg(d));
+        }, 15000);
+      }
+      if (syncRole === 'guest') {
+        try {
+          var es = new EventSource('https://ntfy.sh/' + TOPIC + '/sse?since=2m');
+          es.onmessage = function (e) {
+            try {
+              var env = JSON.parse(e.data);
+              if (env.event && env.event !== 'message') return;
+              if (!env.message) return;
+              applyRemote(JSON.parse(env.message));
+            } catch (err) {}
+          };
+          es.onerror = function () { /* EventSource reconnects on its own */ };
+        } catch (e) {}
+      }
+    }
+
+    /* ── 9 · The state handler ─────────────────────────────────────── */
+
+    function onState(d) {
+      var idx = d.slide - 1;
+      var el  = slides[idx];
+      if (!el) return;
+      var entering = idx !== prevIdx;
+
+      if (entering) {
+        if (prevIdx >= 0 && slides[prevIdx]) {
+          var prevEl = slides[prevIdx];
+          var prevTl = timelines.get(prevEl);
+          if (prevTl) {
+            if (prevTl.__tween) { prevTl.__tween.kill(); prevTl.__tween = null; }
+            prevTl.pause();
+          }
+          pauseVideos(prevEl);
+        }
+        ensureMedia(idx);
+      }
+
+      buildTimeline(el);
+      driveTimeline(el, d.step, entering);
+
+      if (entering) {
+        runEnterHooks(el);
+        playVideos(el);
+        prevIdx = idx;
+      }
+
+      updateSecRail(el);
+      updateModMark(el);
+      updateSlideNo(el);
+      updatePresenter(d);
+      updateGuestCaption(d);   /* step-synced captions, see 7a */
+      broadcast(d);
+    }
+
+    /* ── 10 · Init ─────────────────────────────────────────────────── */
+
+    function init() {
+      slides   = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+      stage    = document.querySelector('.deck-stage');
+      viewport = document.querySelector('.deck-viewport');
+      dotEl    = document.querySelector('.guest-dot');
+      if (!stage || !slides.length) return;
+
+      measureProgress();
+      measureGroups();
+      renderSecRail();
+      watchOverview();
+      renderModMark();
+      renderSlideNo();
+      wireToolCards();
+      if (view !== 'guest') wireSlideJump();
+      if (view === 'stage') { wireNavIdle(); wireFrame(); }
+      if (view === 'guest') setupGuestCaptions();   /* step-synced captions, see 7a */
+      if (view === 'presenter') {
+        /* Taken here, after the tool cards are furnished and before the first
+           builder has run, so every preview clone starts from a virgin slide. */
+        pristine = slides.map(function (s) { return s.cloneNode(true); });
+        setupPresenter();
+      }
+      setupSync();
+
+      document.addEventListener('deck:state', function (e) { onState(e.detail); });
+
+      /* deck.js emitted its first state inside its own DOMContentLoaded
+         handler, which ran before this one, so bootstrap from Deck.state. */
+      onState(Object.assign({ remote: false }, window.Deck.state));
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+</body>
+</html>

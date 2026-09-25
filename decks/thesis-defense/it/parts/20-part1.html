@@ -1,0 +1,2210 @@
+<!-- ══════════════════════════════════════════════════════════════════════
+     PART I — S05 divider · S06 the gap matrix with real instruments ·
+     S07 requirements and the connection diagram · S08 the house ·
+     S09 the AI environment · S10 the module hierarchy.
+     Builder P1.
+     Compositions invented here:
+       · S06 prints the gap table as a warm plate; each family's real
+         photograph arrives large, holds, then flies and shrinks into a
+         photo column on the left. The fourth row never gets a picture.
+       · S07 ends on a match cut: the module names lift off the connection
+         diagram and land on the photograph of the machine, the enclosure
+         one landing on empty air beside it.
+       · S08 is a finished line-drawn house that is wrecked by two edits
+         and then rebuilt on a blueprint grid.
+       · S10 ranks the modules by dependency load, constraints running
+         down the stack and adaptation running back up.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- ░░ S05 · Divider, Part I ░░ -->
+<section class="slide slide--divider" id="s05" data-cue="s05" data-part="I">
+  <div class="divider__wash"></div>
+  <div class="divider__inner">
+    <div class="divider__num">Parte I</div>
+    <h2 class="divider__title">Contesto,<br />requisiti<br />e metodi.</h2>
+    <p class="divider__sub">Perch&eacute; esiste la macchina, cosa deve fare e come ho lavorato.</p>
+  </div>
+  <div class="divider__rule"></div>
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~5 s</li>
+      <li data-step="0">Part I: background, requirements and methods.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Parte I &middot; Contesto, requisiti e metodi.</p>
+      <ul>
+        <li data-step="0">Parte I: contesto, requisiti, metodi.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- S05b moved to the appendix 2026-09-24 (the workflow slide s02b and
+     PANPOC s04c in the opening now carry it). Its section is in
+     parts/60-backups.html; its CSS and its builder stay below. -->
+
+<!-- ░░ S06 · The gap ░░ five steps: the pipette, three families, the empty row -->
+<section class="slide" id="s06" data-cue="s06" data-dialect="sheet" data-part="I" style="--head-h:0px" data-map="none">
+  <h2 class="slide__title">Nessuno strumento copre ogni esigenza sul campo.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+
+  <div class="s06-sheet">
+    <div class="sheet__grid"></div>
+    <span class="sheet__reg sheet__reg--tl"></span><span class="sheet__reg sheet__reg--tr"></span>
+    <span class="sheet__reg sheet__reg--bl"></span><span class="sheet__reg sheet__reg--br"></span>
+
+    <div class="s06-head">
+      <span style="left:378px">preciso su<br />ogni volume</span>
+      <span style="left:518px">portatile</span>
+      <span style="left:658px">autonomo</span>
+      <span style="left:798px">ogni protocollo</span>
+      <span class="s06-h-price" style="left:930px">prezzo</span>
+    </div>
+
+    <svg class="s06-rules" viewBox="0 0 1168 452" aria-hidden="true">
+      <path class="s06-rule" d="M 24 62 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 136 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 210 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 284 H 1144"/>
+      <path class="s06-rule s06-rule--faint" d="M 24 358 H 1144"/>
+    </svg>
+
+    <!-- the lab standard first: the hand pipette he holds up while this row lands -->
+    <div class="s06-row" id="s06-r1">
+      <span class="s06-fam">pipettaggio manuale</span>
+      <span class="s06-eg">pipette manuali</span>
+      <span class="s06-price"><b>~$1k</b><i>kit, 1&ndash;1000 &micro;L</i></span>
+    </div>
+    <div class="s06-row" id="s06-r2">
+      <span class="s06-fam">sistemi da laboratorio</span>
+      <span class="s06-eg">Tecan Fluent</span>
+      <span class="s06-price"><b>$25&ndash;80k</b><i>usato</i></span>
+    </div>
+    <div class="s06-row" id="s06-r3">
+      <span class="s06-fam">piattaforme integrate</span>
+      <span class="s06-eg">Roche cobas liat</span>
+      <span class="s06-price"><b>$11k</b><i>$100 a test</i></span>
+    </div>
+    <div class="s06-row" id="s06-r4">
+      <span class="s06-fam">open source</span>
+      <span class="s06-eg">Sidekick, Keesey 2022</span>
+      <span class="s06-price"><b>$710</b><i>costo materiali</i></span>
+    </div>
+    <div class="s06-row s06-row--want" id="s06-r5">
+      <span class="s06-fam">ci&ograve; che serve sul campo</span>
+    </div>
+
+    <div class="s06-ghostchip" id="s06-ghostchip">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path class="s06-ln--dash" d="M 11 14 h 26 v 20 h -26 z"/>
+        <path class="s06-ln--dash" d="M 20 34 h 8 l -4 8 z"/>
+        <path class="s06-ln--dash" d="M 8 24 h -5 M 40 24 h 5 M 24 10 v -5"/>
+      </svg>
+    </div>
+
+    <svg class="s06-marks" viewBox="0 0 1168 452" aria-hidden="true">
+      <path class="s06-part"  data-r="1" data-c="1" d="M 436 112 L 460 86"/>
+      <path class="s06-tick"  data-r="1" data-c="2" d="M 575 99 L 584 108 L 602 88"/>
+      <g class="s06-cross" data-r="1" data-c="3"><path d="M 717 88 L 739 110"/><path d="M 739 88 L 717 110"/></g>
+      <path class="s06-tick"  data-r="1" data-c="4" d="M 855 99 L 864 108 L 882 88"/>
+
+      <path class="s06-tick"  data-r="2" data-c="1" d="M 435 173 L 444 182 L 462 162"/>
+      <g class="s06-cross" data-r="2" data-c="2"><path d="M 577 162 L 599 184"/><path d="M 599 162 L 577 184"/></g>
+      <path class="s06-tick"  data-r="2" data-c="3" d="M 715 173 L 724 182 L 742 162"/>
+      <path class="s06-tick"  data-r="2" data-c="4" d="M 855 173 L 864 182 L 882 162"/>
+
+      <g class="s06-cross" data-r="3" data-c="1"><path d="M 437 236 L 459 258"/><path d="M 459 236 L 437 258"/></g>
+      <path class="s06-tick"  data-r="3" data-c="2" d="M 575 247 L 584 256 L 602 236"/>
+      <path class="s06-tick"  data-r="3" data-c="3" d="M 715 247 L 724 256 L 742 236"/>
+      <g class="s06-cross" data-r="3" data-c="4"><path d="M 857 236 L 879 258"/><path d="M 879 236 L 857 258"/></g>
+
+      <g class="s06-cross" data-r="4" data-c="1"><path d="M 437 310 L 459 332"/><path d="M 459 310 L 437 332"/></g>
+      <path class="s06-part"  data-r="4" data-c="2" d="M 576 334 L 600 308"/>
+      <path class="s06-tick"  data-r="4" data-c="3" d="M 715 321 L 724 330 L 742 310"/>
+      <path class="s06-tick"  data-r="4" data-c="4" d="M 855 321 L 864 330 L 882 310"/>
+
+      <rect class="s06-want" x="16" y="362" width="1136" height="66" rx="10"/>
+      <circle class="s06-slot" cx="448" cy="395" r="14"/>
+      <circle class="s06-slot" cx="588" cy="395" r="14"/>
+      <circle class="s06-slot" cx="728" cy="395" r="14"/>
+      <circle class="s06-slot" cx="868" cy="395" r="14"/>
+      <circle class="s06-slot" cx="1037" cy="395" r="14"/>
+    </svg>
+
+    <!-- the field-kit photograph of appendix slide A01 (s04), shown whole -->
+    <div class="s06-big" data-big="1">
+      <img data-src="assets/stills/fig-portable-qpcr.png"
+           alt="Un kit per test sul campo: un termociclatore a induzione magnetica, un blocco magnetico, un agitatore per piastre e quattro pipette manuali." />
+    </div>
+    <div class="s06-big" data-big="2">
+      <img data-src="assets/stills/instr-tecan-fluent.jpg"
+           alt="Una stazione di automazione da laboratorio Tecan Fluent, un robot da banco chiuso, alto quanto un armadio." />
+    </div>
+    <div class="s06-big" data-big="3">
+      <img data-src="assets/stills/instr-cobas-liat-tube.png"
+           alt="Una provetta per test Roche cobas liat, una cartuccia sigillata con i reagenti per un solo test." />
+    </div>
+    <div class="s06-big" data-big="4">
+      <img data-src="assets/stills/instr-sidekick.jpg"
+           alt="Il Sidekick, un dosatore di liquidi open source: una macchina da banco a telaio aperto." />
+    </div>
+  </div>
+
+
+  <p class="s06-credit">Carlier et al. 2022 &middot; Tecan &middot; Roche &middot; Keesey et al. 2022 (CC BY)</p>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">Four properties across the top.</li>
+      <li data-step="1">The standard in every lab: the hand pipette.</li>
+      <li data-step="2">Lab systems like the Tecan Fluent: precise and open to any protocol, but even the smallest is the size of a wardrobe.</li>
+      <li data-step="3">Integrated platforms like the cobas liat: portable and unattended, but the volumes are fixed inside a cartridge, locked to one assay.</li>
+      <li data-step="4">Open-source builds like the Sidekick: open and unattended, but calibrated on water and only partly portable.</li>
+      <li data-step="5">Each family fails at least one property, and never the same one. The empty row is what the field needs &mdash; that is this machine.</li>
+      <li>If asked: the Fluent covers 0.5 to 1000 &micro;L, but at half a microlitre its imprecision is about thirty times its best, and Tecan says calibration may be needed at and below 5 &micro;L.</li>
+      <li>If asked: the cobas liat prices are not in the thesis &mdash; a resale price (Dipylon Medical) and the CADTH rapid flu review, about $100 a test, a 2015 figure.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Nessuno strumento copre ogni esigenza sul campo.</p>
+      <ul>
+        <li data-step="0">In alto, quattro proprietà.</li>
+        <li data-step="1">Lo standard: la pipetta manuale.</li>
+        <li data-step="2">Sistemi da laboratorio: precisi e versatili, ma grandi come un armadio.</li>
+        <li data-step="3">Piattaforme integrate: portatili, ma volumi fissi, un solo test.</li>
+        <li data-step="4">Open source: autonomi, ma tarati sull’acqua e poco portatili.</li>
+        <li data-step="5">Ognuno manca qualcosa. La riga vuota è questa macchina.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+<!-- Moved here from 10-opening.html so the talk runs in the right order.
+     Their rules and their builders stay behind in that file's own hoisted
+     blocks, shared with the field-laboratory slide through the .s04fam
+     class. The assembler hoists those blocks wherever they live, so the
+     split costs nothing. -->
+<!-- ░░ S04b · Where the range came from ░░ one step -->
+<section class="slide s04fam" id="s04b" data-cue="s04b" data-dialect="sheet" data-part="I"
+         data-map="none" style="--head-h:0px; --title-w:1100px">
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+
+  <h2 class="slide__title">Una sola macchina per protocolli di campo diversi.</h2>
+  <div class="slide__rule"></div>
+
+    <div class="s04-blk" id="s04-prov">
+      <div class="s04-chips">
+        <span class="s04-chip s04-chip--ref"><i>&#129516;</i>clinico e veterinario<em>il protocollo PANPOC</em></span>
+        <span class="s04-chip"><i>&#127793;</i>molecolare su piante</span>
+        <span class="s04-chip"><i>&#128167;</i>chimica delle acque</span>
+        <span class="s04-chip"><i>&#127806;</i>agricoltura</span>
+        <span class="s04-chip"><i>&#127794;</i>chimica del suolo</span>
+      </div>
+
+      <span class="s04-crule"></span>
+
+      <!-- the range, drawn: a log scale from a pinpoint to a full drop -->
+      <div class="s04-ro s04-ro--wide" style="left:56px">
+        <svg class="s04-vis" viewBox="0 0 430 92" aria-hidden="true">
+          <path class="s04-vax" id="s04-vax" d="M 14 64 H 416"/>
+          <g class="s04-vtk">
+            <path d="M 14 64 V 56"/><path d="M 148 64 V 60"/>
+            <path d="M 282 64 V 60"/><path d="M 416 64 V 56"/>
+          </g>
+          <path class="s04-vdrop" data-d="1" d="M 14 30 c 7 9 10 14 10 17 a 10 10 0 0 1 -20 0 c 0 -3 3 -8 10 -17 z"
+                transform="translate(0,14) scale(0.42)" transform-origin="14px 47px"/>
+          <path class="s04-vdrop" data-d="2" d="M 416 18 c 11 15 16 23 16 28 a 16 16 0 0 1 -32 0 c 0 -5 5 -13 16 -28 z"/>
+          <text class="s04-vlab" x="14" y="84">5 &micro;L</text>
+          <text class="s04-vlab s04-vlab--r" x="416" y="84">1000 &micro;L</text>
+        </svg>
+        <span class="s04-rov num num--grad">5 &ndash; 1000 &micro;L</span>
+        <span class="s04-rol">per liquido</span>
+      </div>
+
+      <!-- the liquid count, drawn: six vials on the carrier -->
+      <div class="s04-ro s04-ro--wide" style="left:664px">
+        <svg class="s04-vis" viewBox="0 0 320 92" aria-hidden="true">
+          <g class="s04-vialset" transform="translate(9,0)">
+            <g class="s04-vial" transform="translate(26,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
+            <g class="s04-vial" transform="translate(76,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
+            <g class="s04-vial" transform="translate(126,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
+            <g class="s04-vial" transform="translate(176,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
+            <g class="s04-vial" transform="translate(226,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
+            <g class="s04-vial" transform="translate(276,0)"><path d="M -11 16 H 11 M -9 16 V 54 a 9 9 0 0 0 18 0 V 16"/><path class="s04-vliq" d="M -9 32 V 54 a 9 9 0 0 0 18 0 V 32 Z"/></g>
+          </g>
+        </svg>
+        <span class="s04-rov num num--grad">fino a 6 liquidi</span>
+      </div>
+      <p class="s04-tail">in decine di provette da 1,5 e 2&nbsp;mL</p>
+    </div>
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">What should one machine cover? Sample preparation in general, across fields.</li>
+      <li data-step="1">Five field protocols, every volume recorded: clinical and veterinary, plant, water, agriculture and soil. The clinical one, the PANPOC protocol, is what inspired this thesis.</li>
+      <li data-step="2">They are quite consistent: volumes from 5 to 1000 &micro;L, and up to six liquids, into tens of 1.5 and 2 mL tubes.</li>
+      <li>If asked: no review collects dispensed volumes across protocol types; the five-row table with each protocol&rsquo;s range is in the appendix.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Una sola macchina per protocolli di campo diversi.</p>
+      <ul>
+        <li data-step="0">Una macchina per preparare campioni in ogni campo.</li>
+        <li data-step="1">Cinque protocolli di campo; quello clinico, PANPOC, ha ispirato la tesi.</li>
+        <li data-step="2">Da 5 a 1000 microlitri, fino a sei liquidi, in decine di provette.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+
+
+
+<!-- ░░ S07 · The design problem, and the gates ░░ three steps -->
+<section class="slide s07fam" id="s07" data-cue="s07" data-dialect="sheet" data-part="I"
+         style="--head-h:0px; --title-w:1100px" data-map="none">
+  <h2 class="slide__title">Requisiti fondamentali per un dosatore autonomo.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="s07-quote paper">
+    <p>Progettare un dosatore di liquidi portatile capace di erogare <span class="s07-k">5&ndash;1000&nbsp;µL</span> di fino a <span class="s07-k">sei reagenti</span> in <span class="s07-k">decine di provette da 1,5&nbsp;mL e 2&nbsp;mL</span>, <span class="s07-k">senza sorveglianza</span>, con una precisione <span class="s07-k">pari o superiore al pipettaggio manuale</span>, usato sul posto da <span class="s07-k">personale non specializzato</span>.</p>
+  </div>
+
+  <div class="s07-gates">
+    <span class="s07-gate" style="left:96px;  top:376px">entro ±10 % dell&rsquo;obiettivo</span>
+    <span class="s07-gate" style="left:470px; top:376px">da 5 a 1000 µL</span>
+    <span class="s07-gate" style="left:844px; top:376px">sei reagenti</span>
+    <span class="s07-gate" style="left:96px;  top:466px">decine di provette</span>
+    <span class="s07-gate" style="left:470px; top:466px">senza interventi dopo l&rsquo;avvio</span>
+    <span class="s07-gate" style="left:844px; top:466px">si impara in dieci minuti</span>
+  </div>
+
+  <div class="s07-crit">
+    <span class="s07-crit-k">poi classificate per</span>
+    <span class="s07-crit-c">prestazioni</span>
+    <span class="s07-crit-c">manutenzione</span>
+    <span class="s07-crit-c">automazione</span>
+    <span class="s07-crit-c">portabilit&agrave;</span>
+    <span class="s07-crit-c">contaminazione</span>
+    <span class="s07-crit-c">sicurezza</span>
+    <span class="s07-crit-c">fattibilit&agrave;</span>
+    <span class="s07-crit-c">sostenibilit&agrave;</span>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~35 s</li>
+      <li data-step="0">That becomes one design problem.</li>
+      <li data-step="1">Dose 5 to 1000 &micro;L of up to six reagents into tens of tubes, unattended, at least as precise as manual pipetting, run by non-specialists.</li>
+      <li data-step="2">Each of these is a gate: fail one and the concept is out before anything is weighed.</li>
+      <li data-step="3">Only the survivors are ranked, on eight criteria.</li>
+      <li>If asked: the eight criteria are unweighted at system level; each module gets its own weights once the decomposition exists.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Requisiti fondamentali per un dosatore autonomo.</p>
+      <ul>
+        <li data-step="0">Tutto diventa un solo problema di progetto.</li>
+        <li data-step="1">Da 5 a 1000 microlitri, sei reagenti, da sola, precisa come a mano, per tutti.</li>
+        <li data-step="2">Se un’idea manca uno di questi requisiti, è scartata subito.</li>
+        <li data-step="3">Le idee rimaste si confrontano su otto criteri.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<section class="slide" id="s07b" data-cue="s07b" data-dialect="sheet" data-part="I" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">La macchina &egrave; divisa in 8 moduli funzionali</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <svg class="rl-dg" viewBox="0 0 1168 420" aria-hidden="true">
+
+    <!-- ── the enclosure: specified, never built ────────────────────── -->
+    <g class="rl-encl">
+      <rect x="6" y="6" width="1156" height="408" rx="24"/>
+      <text class="rl-encl-k" x="30" y="38">Involucro</text>
+      <text class="rl-encl-v" x="30" y="62">specificato, non costruito</text>
+    </g>
+
+    <!-- ── the seven built modules ──────────────────────────────────── -->
+    <g class="rl-mod" data-m="storage" data-dx="34" data-dy="12">
+      <rect class="rl-box" x="40" y="82" width="200" height="76" rx="18"/>
+      <text class="rl-t" x="140" y="112">Stoccaggio</text>
+      <text class="rl-s" x="140" y="138">sei reagenti</text>
+    </g>
+    <g class="rl-mod" data-m="pump" data-dx="14" data-dy="14">
+      <rect class="rl-box" x="296" y="82" width="200" height="76" rx="18"/>
+      <text class="rl-t" x="396" y="112">Pompa</text>
+      <text class="rl-s" x="396" y="138">dosa contando i passi</text>
+    </g>
+    <g class="rl-mod" data-m="nozzle" data-dx="-10" data-dy="14">
+      <rect class="rl-box" x="552" y="82" width="200" height="76" rx="18"/>
+      <text class="rl-t" x="652" y="112">Ugelli</text>
+      <text class="rl-s" x="652" y="138">rilascio della goccia</text>
+    </g>
+    <g class="rl-mod" data-m="align" data-dx="-34" data-dy="12">
+      <rect class="rl-box" x="880" y="82" width="232" height="76" rx="18"/>
+      <text class="rl-t" x="996" y="112">Allineamento</text>
+      <text class="rl-s" x="996" y="138">posiziona il rack</text>
+    </g>
+    <g class="rl-mod" data-m="tube" data-dx="-30" data-dy="-4">
+      <rect class="rl-box rl-box--dash" x="880" y="258" width="232" height="76" rx="18"/>
+      <text class="rl-t" x="996" y="288">Supporto provette</text>
+      <text class="rl-s" x="996" y="314">provette da 1,5 e 2 mL</text>
+    </g>
+    <g class="rl-mod" data-m="elec" data-dx="0" data-dy="-6">
+      <rect class="rl-box" x="384" y="212" width="340" height="82" rx="18"/>
+      <text class="rl-t" x="554" y="246">Elettronica e software</text>
+      <text class="rl-s" x="554" y="274">un processore, un firmware</text>
+    </g>
+    <g class="rl-mod" data-m="ui" data-dx="0" data-dy="-22">
+      <rect class="rl-box" x="454" y="336" width="200" height="66" rx="18"/>
+      <text class="rl-t" x="554" y="362">Interfaccia utente</text>
+      <text class="rl-s" x="554" y="386">touchscreen</text>
+    </g>
+
+    <!-- tube holding was absorbed into alignment during prototyping -->
+    <text class="rl-n rl-note" x="996" y="356">assorbito nell&rsquo;allineamento</text>
+
+    <!-- ── the liquid chain: storage → pump → nozzle → tube ──────────── -->
+    <path class="rl-liq" data-l="1" d="M 240 120 H 276"/>
+    <polygon class="rl-liqh" data-l="1" points="276,113 276,127 292,120"/>
+    <path class="rl-liq" data-l="2" d="M 496 120 H 532"/>
+    <polygon class="rl-liqh" data-l="2" points="532,113 532,127 548,120"/>
+    <path class="rl-liq" data-l="3" d="M 752 120 H 860"/>
+    <polygon class="rl-liqh" data-l="3" points="860,113 860,127 876,120"/>
+    <path class="rl-liq" data-l="4" d="M 996 158 V 238"/>
+    <polygon class="rl-liqh" data-l="4" points="989,238 1003,238 996,254"/>
+
+    <!-- the travelling volume, invisible rail -->
+    <path class="rl-drip" d="M 140 120 H 996 V 296" fill="none" stroke="none"/>
+
+    <!-- ── the barrier around the electronics ───────────────────────── -->
+    <path class="rl-bar" d="M 374 190 H 734 A 20 20 0 0 1 754 210 V 296 A 20 20 0 0 1 734 316 H 374 A 20 20 0 0 1 354 296 V 210 A 20 20 0 0 1 374 190 Z"/>
+    <rect class="rl-halo" x="390" y="218" width="328" height="70" rx="14"/>
+
+    <!-- ── data and control, radiating from the centre ──────────────── -->
+    <g class="rl-ctlg" data-c="1">
+      <path class="rl-ctl" d="M 384 248 C 310 248 224 236 202 160"/>
+      <path class="rl-chev" d="M 212.1 169.6 L 202 160 L 198.6 173.5"/>
+    </g>
+    <g class="rl-ctlg" data-c="2">
+      <path class="rl-ctl" d="M 432 212 C 426 190 404 172 398 160"/>
+      <path class="rl-chev" d="M 409.6 167.6 L 398 160 L 397.1 173.9"/>
+    </g>
+    <g class="rl-ctlg" data-c="3">
+      <path class="rl-ctl" d="M 676 212 C 670 190 658 172 654 160"/>
+      <path class="rl-chev" d="M 664.4 169.2 L 654 160 L 651.2 173.6"/>
+    </g>
+    <g class="rl-ctlg" data-c="4">
+      <path class="rl-ctl" d="M 724 248 C 812 248 944 240 990 160"/>
+      <path class="rl-chev" d="M 990.1 173.9 L 990 160 L 978 166.9"/>
+    </g>
+    <g class="rl-ctlg" data-c="5">
+      <path class="rl-ctl" d="M 554 294 V 330"/>
+      <path class="rl-chev" d="M 547 318 L 554 330 L 561 318"/>
+    </g>
+
+    <!-- ── legend, built as the thing it names appears ──────────────── -->
+    <g class="rl-lgrow" data-g="1">
+      <path class="rl-liq rl-liq--key" d="M 48 236 H 92"/>
+      <polygon class="rl-liqh rl-liqh--key" points="92,230 92,242 108,236"/>
+      <text class="rl-lg" x="122" y="242">Liquido</text>
+    </g>
+    <g class="rl-lgrow" data-g="2">
+      <path class="rl-ctl" d="M 48 288 H 96"/>
+      <path class="rl-chev" d="M 84 295 L 96 288 L 84 281"/>
+      <text class="rl-lg" x="122" y="294">Dati e controllo</text>
+    </g>
+    <g class="rl-lgrow" data-g="3">
+      <rect class="rl-bar rl-bar--key" x="48" y="322" width="58" height="30" rx="10"/>
+      <text class="rl-lg" x="122" y="342">Nessun liquido attraversa</text>
+    </g>
+
+    <!-- movers, drawn last so they ride on top -->
+    <circle class="rl-drop" r="5.5" cx="0" cy="0"/>
+    <circle class="rl-pulse" data-c="1" r="3.6" cx="0" cy="0"/>
+    <circle class="rl-pulse" data-c="2" r="3.6" cx="0" cy="0"/>
+    <circle class="rl-pulse" data-c="3" r="3.6" cx="0" cy="0"/>
+    <circle class="rl-pulse" data-c="4" r="3.6" cx="0" cy="0"/>
+    <circle class="rl-pulse" data-c="5" r="3.6" cx="0" cy="0"/>
+  </svg>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Mapping the operating sequence gave eight functions, so eight modules.</li>
+      <li data-step="1">Storage, pump, nozzle, alignment, tube holding, electronics, user interface and the enclosure: one function each.</li>
+      <li data-step="2">The liquid runs one way: storage, pump, nozzle, into the tube. Tube holding was later absorbed into alignment.</li>
+      <li data-step="3">Everything else between the modules is data and control.</li>
+      <li data-step="4">Nothing wet crosses into the electronics. The enclosure stayed a specification: its shape depends on everything inside it.</li>
+      <li>If asked: reagent storage is Marius Schiller&rsquo;s work, not one of my modules.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La macchina &egrave; divisa in 8 moduli funzionali</p>
+      <ul>
+        <li data-step="0">Otto funzioni, quindi otto moduli.</li>
+        <li data-step="1">Ogni modulo fa una sola cosa.</li>
+        <li data-step="2">Il liquido va in un solo verso; il supporto provette è finito nell’Allineamento.</li>
+        <li data-step="3">Il resto sono dati e comandi.</li>
+        <li data-step="4">Niente liquido nell’elettronica. L’involucro è rimasto sulla carta.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- ░░ S10 · The module hierarchy, and the order Part II follows ░░ three steps -->
+<section class="slide" id="s10" data-cue="s10" data-dialect="cine" data-part="I" data-accent="pump" data-map="rotor"
+         style="--cine-scrim:1">
+  <h2 class="slide__title">La gerarchia dei moduli &egrave; guidata dalla pompa</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+
+
+  <svg class="s10-pyramid" viewBox="0 0 1280 720" aria-hidden="true">
+    <g class="s10-tier" data-rank="1">
+      <path class="s10-band" d="M 560.0 216 L 720.0 216 L 762.3 269 L 517.7 269 Z"/>
+    </g>
+    <g class="s10-tier" data-rank="2">
+      <path class="s10-band" d="M 513.7 274 L 766.3 274 L 808.6 327 L 471.4 327 Z"/>
+    </g>
+    <g class="s10-tier" data-rank="3">
+      <path class="s10-band" d="M 467.4 332 L 812.6 332 L 854.9 385 L 425.1 385 Z"/>
+    </g>
+    <g class="s10-tier" data-rank="4">
+      <path class="s10-band" d="M 421.1 390 L 858.9 390 L 901.1 443 L 378.9 443 Z"/>
+    </g>
+    <g class="s10-tier" data-rank="5">
+      <path class="s10-band" d="M 374.9 448 L 905.1 448 L 947.4 501 L 332.6 501 Z"/>
+    </g>
+    <g class="s10-tier" data-rank="6">
+      <path class="s10-band" d="M 328.6 506 L 951.4 506 L 993.7 559 L 286.3 559 Z"/>
+    </g>
+    <g class="s10-tier s10-band--ghost" data-rank="7">
+      <path class="s10-band" d="M 282.3 564 L 997.7 564 L 1040.0 617 L 240.0 617 Z"/>
+    </g>
+  </svg>
+  <div class="s10-labels" aria-hidden="true">
+    <span class="s10-tiername" data-rank="1" style="top:229px">Pompa</span>
+    <span class="s10-tiername" data-rank="2" style="top:287px">Allineamento</span>
+    <span class="s10-tiername" data-rank="3" style="top:345px">Ugelli</span>
+    <span class="s10-tiername" data-rank="4" style="top:403px">Stoccaggio</span>
+    <span class="s10-tiername" data-rank="5" style="top:461px">Interfaccia utente</span>
+    <span class="s10-tiername" data-rank="6" style="top:519px">Elettronica</span>
+    <span class="s10-tiername" data-rank="7" style="top:577px">Involucro</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">Ranked by how much each depends on the others, the modules give the order the work followed.</li>
+      <li data-step="1">The pump sits on top: it carries the tightest volume requirement and sets the operating principle for everything else.</li>
+      <li data-step="2">Each module below inherits constraints; when two disagreed, the lower one gave way.</li>
+      <li>If asked: the pump&rsquo;s evaluation matrix has thirty-one rows; the electronics matrix has three requirements and eleven criteria and names no voltage or driver count.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">La gerarchia dei moduli &egrave; guidata dalla pompa</p>
+      <ul>
+        <li data-step="0">Ordinati per dipendenza, i moduli danno l’ordine del lavoro.</li>
+        <li data-step="1">In cima la pompa: requisito più severo, detta il funzionamento.</li>
+        <li data-step="2">Chi sta sotto eredita vincoli e, in caso di conflitto, cede.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<section class="slide slide--divider" id="s09a" data-cue="s09a" data-part="I" data-map="none">
+  <div class="divider__wash"></div>
+
+  <div class="divider__inner">
+    <div class="divider__num">Come ho lavorato</div>
+    <h2 class="divider__title">Metodi,<br />e progettare con l&rsquo;IA.</h2>
+  </div>
+
+  <div class="s09a-mark" aria-hidden="true">
+    <svg viewBox="0 0 560 150">
+      <!-- one closed circuit: the four verbs of the title, in order -->
+      <path class="s09a-ring" id="s09a-ring"
+            d="M 96 30 H 464 A 45 45 0 0 1 464 120 H 96 A 45 45 0 0 1 96 30 Z" />
+      <g class="s09a-stops">
+        <circle class="s09a-stop" cx="96"  cy="30"  r="7" />
+        <circle class="s09a-stop" cx="464" cy="30"  r="7" />
+        <circle class="s09a-stop" cx="464" cy="120" r="7" />
+        <circle class="s09a-stop" cx="96"  cy="120" r="7" />
+      </g>
+      <circle class="s09a-run" id="s09a-run" cx="96" cy="30" r="5.5" />
+    </svg>
+  </div>
+
+  <div class="divider__rule"></div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~10 s</li>
+      <li data-step="0">Now the how: design, build, test, learn, in a loop that turns only as fast as its slowest step.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Metodi e progettare con l&rsquo;IA.</p>
+      <ul>
+        <li data-step="0">Progettare, costruire, provare, imparare: veloce quanto il passo più lento.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+<section class="slide" id="s09b" data-cue="s09b" data-dialect="cine" data-part="I" data-map="none"
+         style="--head-h:0px; --title-w:1000px">
+  <h2 class="slide__title">Dal progetto CAD ai pezzi stampati in 3D</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+
+  <!-- ── left half · the design, in Fusion 360 ─────────────────────── -->
+  <div class="pr-cad paper">
+    <div class="pr-cadimg">
+      <img data-src="../../assets/media/alignment/rack.png"
+           alt="Un rendering CAD del rack portaprovette da otto posti della macchina, numerati da uno a otto." />
+    </div>
+    <img class="pr-logo" data-src="assets/stills/fusion360-logo.png" alt="Autodesk Fusion 360" />
+  </div>
+
+  <!-- ── the handoff, design to print ──────────────────────────────── -->
+  <svg class="pr-arrow" viewBox="0 0 96 40" aria-hidden="true">
+    <path class="pr-arrow-ln" d="M 6 20 H 80"/>
+    <path class="pr-arrow-hd" d="M 68 8 L 86 20 L 68 32"/>
+  </svg>
+
+  <!-- ── right half · the part builds itself, the printer, the tolerance -->
+  <svg class="pr-build" viewBox="0 0 540 216" aria-hidden="true">
+    <path class="pr-plate-soft" d="M 40 203 H 500"/>
+    <path class="pr-plate" d="M 70 196 H 470"/>
+
+    <path id="pr-ghost" class="pr-ghost" d="M 147 196 H 210 V 178 M 288 196 H 399 V 178 M 117 178 H 423 V 142 H 117 Z M 126 142 V 133 H 414 V 142 M 147 178 V 196 M 288 178 V 196"/>
+
+    <g class="pr-layers">
+      <path class="pr-layer" d="M 150 192 H 207 M 291 192 H 396"/>
+      <path class="pr-layer" d="M 150 183 H 207 M 291 183 H 396"/>
+      <path class="pr-layer" d="M 120 174 H 420"/>
+      <path class="pr-layer" d="M 120 165 H 420"/>
+      <path class="pr-layer" d="M 120 156 H 420"/>
+      <path class="pr-layer" d="M 120 147 H 420"/>
+      <path class="pr-layer" d="M 129 138 H 411"/>
+    </g>
+
+    <g transform="translate(270,192)">
+      <g id="pr-head">
+        <g id="pr-headx">
+          <path id="pr-nozzle" class="pr-nozzle" d="M -16 -20 H 16 L 8 0 H -8 Z"/>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  <div class="pr-photo pr-photo--cut">
+    <img data-src="assets/stills/bambu-p1s.png"
+         alt="Una stampante 3D da tavolo Bambu Lab P1S: un cubo scuro e chiuso, con il frontale in vetro e un piccolo schermo di controllo." />
+  </div>
+
+  <div class="pr-tol">
+    <span class="pr-tolv num num--grad">&plusmn;0,1</span>
+    <span class="pr-tolu num">mm</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~15 s</li>
+      <li data-step="0">Custom parts were designed in CAD, in Fusion 360, and then 3D-printed.</li>
+      <li data-step="1">The printer was studied to achieve a precision better than 0.1 mm, more about this later.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Dal progetto CAD ai pezzi stampati in 3D</p>
+      <ul>
+        <li data-step="0">Pezzi progettati in CAD con Fusion 360, poi stampati in 3D.</li>
+        <li data-step="1">Stampante messa a punto: precisione sotto 0,1 millimetri.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+<!-- ░░ S08a · AI ░░ no words: the mark, and it carries to the next slide -->
+<section class="slide" id="s08a" data-cue="s08a" data-dialect="cine" data-part="I" data-map="none">
+  <div class="ai-lock">
+    <img class="ai-lock__mark" data-src="assets/stills/claude-code.png" alt="" />
+    <span class="ai-lock__txt">Progettare con l&rsquo;IA</span>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~15 s</li>
+      <li data-step="0">AI was in this project from the first week: Claude Code, working on the real project files. It wrote and computed; printing, wiring, assembling and testing stayed mine, and I checked every reference by hand.</li>
+      <li>If asked: chapter four covers this, and an appendix documents the use.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Progettare con l&rsquo;IA</p>
+      <ul>
+        <li data-step="0">L’IA, Claude Code, dalla prima settimana. Stampa, montaggio, prove e controlli: miei.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+<!-- ░░ S08 · The house ░░ four steps: built, edited, wrecked, rebuilt -->
+<section class="slide" id="s08" data-cue="s08" data-dialect="cards" data-part="I" style="--head-h:0px; --title-w:840px" data-map="none">
+  <div class="ai-lock" aria-hidden="true">
+    <img class="ai-lock__mark" data-src="assets/stills/claude-code.png" alt="" />
+    <span class="ai-lock__txt">Progettare con l&rsquo;IA</span>
+  </div>
+  <h2 class="slide__title">Affrontare i limiti dell&rsquo;IA in ingegneria&hellip;</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+  <i class="fragment step-cue" data-step="5"></i>
+
+  <div class="s08-sheet">
+    <svg class="s08-draw" viewBox="0 0 700 400" aria-hidden="true">
+      <g class="s08-blue" id="s08-blue">
+        <path d="M 60 40 V 370"/><path d="M 140 40 V 370"/><path d="M 220 40 V 370"/>
+        <path d="M 300 40 V 370"/><path d="M 380 40 V 370"/><path d="M 460 40 V 370"/>
+        <path d="M 540 40 V 370"/><path d="M 620 40 V 370"/>
+        <path d="M 40 70 H 660"/><path d="M 40 130 H 660"/><path d="M 40 190 H 660"/>
+        <path d="M 40 250 H 660"/><path d="M 40 310 H 660"/>
+      </g>
+
+      <path class="s08-ground" id="s08-ground" d="M 30 352 H 670"/>
+      <path class="s08-soft"   id="s08-path"   d="M 300 352 L 282 392 M 344 352 L 362 392 M 290 374 H 354"/>
+
+      <path class="s08-ink" id="s08-wall-l" d="M 160 352 V 170"/>
+      <path class="s08-ink" id="s08-roof-l" d="M 140 176 L 330 92"/>
+      <path class="s08-ink" id="s08-roof-r" d="M 330 92 L 520 176"/>
+      <path class="s08-ink" id="s08-eaves"  d="M 140 176 H 520"/>
+      <path class="s08-ink" id="s08-chim"   d="M 440 141 V 96 H 468 V 153 M 432 96 H 476"/>
+      <path class="s08-ink" id="s08-floor"  d="M 160 262 H 500"/>
+      <path class="s08-ink" id="s08-door"   d="M 300 352 V 282 H 344 V 282 V 352"/>
+      <circle class="s08-knob" id="s08-knob" cx="336" cy="318" r="3.4"/>
+
+      <path class="s08-ink s08-win" id="s08-win-g1" d="M 184 296 h 52 v 44 h -52 z M 210 296 v 44 M 184 318 h 52"/>
+      <path class="s08-ink s08-win" id="s08-win-u1" d="M 184 198 h 52 v 48 h -52 z M 210 198 v 48 M 184 222 h 52"/>
+      <path class="s08-ink s08-win" id="s08-win-u2" d="M 302 198 h 52 v 48 h -52 z M 328 198 v 48 M 302 222 h 52"/>
+
+      <g id="s08-right">
+        <path class="s08-ink" id="s08-wall-r" d="M 500 352 V 170"/>
+        <path class="s08-ink s08-win" id="s08-win-g2" d="M 420 296 h 52 v 44 h -52 z M 446 296 v 44 M 420 318 h 52"/>
+        <path class="s08-bad" id="s08-win-bad" d="M 476 198 h 52 v 48 h -52 z M 502 198 v 48 M 476 222 h 52"/>
+      </g>
+      <path class="s08-bad" id="s08-breach" d="M 500 194 V 250"/>
+
+      <g id="s08-floors">
+        <g class="s08-lvl" transform="translate(330,352)">
+          <rect class="s08-lvlb" x="-34" y="-9" width="68" height="18" rx="4"/>
+          <rect class="s08-lvlv" x="-11" y="-6" width="22" height="12" rx="6"/>
+          <circle class="s08-lvlbub" cx="0" cy="0" r="4.2"/>
+        </g>
+        <g class="s08-lvl" transform="translate(330,262)">
+          <rect class="s08-lvlb" x="-34" y="-9" width="68" height="18" rx="4"/>
+          <rect class="s08-lvlv" x="-11" y="-6" width="22" height="12" rx="6"/>
+          <circle class="s08-lvlbub" cx="0" cy="0" r="4.2"/>
+        </g>
+        <g class="s08-lvl" transform="translate(330,176)">
+          <rect class="s08-lvlb" x="-34" y="-9" width="68" height="18" rx="4"/>
+          <rect class="s08-lvlv" x="-11" y="-6" width="22" height="12" rx="6"/>
+          <circle class="s08-lvlbub" cx="0" cy="0" r="4.2"/>
+        </g>
+      </g>
+      <g id="s08-checks">
+        <path class="s08-check" d="M 392 352 L 401 361 L 419 341"/>
+        <path class="s08-check" d="M 392 262 L 401 271 L 419 251"/>
+        <path class="s08-check" d="M 392 176 L 401 185 L 419 165"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="s08-cards">
+    <div class="s08-card" data-card="1">
+      <span class="s08-kick">la richiesta</span>
+      <span class="s08-txt">&ldquo;Progetta una casa.&rdquo;</span>
+    </div>
+    <div class="s08-card" data-card="2">
+      <span class="s08-kick">la modifica</span>
+      <span class="s08-txt">&ldquo;Aggiungi una finestra sopra.&rdquo;</span>
+    </div>
+    <div class="s08-card" data-card="3">
+      <span class="s08-kick">la memoria</span>
+      <span class="s08-txt">Torna una vecchia istruzione.</span>
+    </div>
+    <div class="s08-card" data-card="4">
+      <span class="s08-kick">la soluzione</span>
+      <span class="s08-txt">Specificare, poi verificare.</span>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">Used without constraints, AI fails in the same structural ways every time.</li>
+      <li data-step="1">Say I ask it to design a house.</li>
+      <li data-step="2">A villa or a townhouse: both valid, neither what I meant.</li>
+      <li data-step="3">Now ask for a window upstairs: it lands half off the wall, because nothing written down said where the wall was.</li>
+      <li data-step="4">Then an instruction from three sessions ago comes back, a load-bearing wall moves, and the roof comes with it.</li>
+      <li data-step="5">As in all engineering, work with AI has to proceed in steps, each one written down and checked before the next.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Affrontare i limiti dell&rsquo;IA in ingegneria&hellip;</p>
+      <ul>
+        <li data-step="0">Senza regole, l’IA sbaglia sempre negli stessi modi.</li>
+        <li data-step="1">Le chiedo di progettare una casa.</li>
+        <li data-step="2">Villa o schiera: entrambe valide, nessuna quella voluta.</li>
+        <li data-step="3">Una finestra in più finisce fuori dal muro: nessuno aveva scritto dov’era.</li>
+        <li data-step="4">Torna un vecchio ordine: il muro portante si sposta, e il tetto con lui.</li>
+        <li data-step="5">Si procede a passi, ognuno scritto e verificato.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+<!-- ░░ S09 · The working environment and the tools ░░ four steps -->
+<section class="slide" id="s09" data-cue="s09" data-dialect="sheet" data-part="I" data-map="none" style="--head-h:0px; --title-w:1120px">
+  <h2 class="slide__title">&hellip;con sviluppo guidato da specifiche e documenti</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+
+  <div class="s09-plate">
+    <div class="s09-figs">
+      <div class="s09-fig" data-fig="1">
+        <div class="s09-crop" style="width:680px;height:412px">
+          <img data-src="assets/figs/fig-gsd-loop.png"
+               alt="Il ciclo guidato da specifiche: discutere, pianificare, eseguire, verificare, consegnare; ogni fase scrive in un file di memoria condiviso su disco." />
+        </div>
+      </div>
+      <div class="s09-fig" data-fig="2">
+        <div class="s09-crop" style="width:764px;height:353px">
+          <img data-src="assets/figs/fig-ai-working-loop.png"
+               alt="Il ciclo di progetto: progettare, costruire, provare, imparare, con la documentazione al centro e la stampa e il montaggio fatti a mano." />
+        </div>
+      </div>
+      <div class="s09-fig" data-fig="3">
+        <div class="s09-crop s09-crop--top" style="width:764px;height:347px">
+          <img data-src="assets/figs/fig-cite-search-pipeline.png"
+               alt="Il percorso di ricerca bibliografica: sette banche dati unite e ordinate, quaranta candidati riordinati, dodici riassunti, e ogni voce approvata dall&rsquo;autore." />
+        </div>
+      </div>
+      <div class="s09-fig" data-fig="4">
+        <div class="s09-site">
+          <svg class="s09-qr" id="s09-qr" viewBox="0 0 29 29" aria-label="Codice QR che porta a sirsirio.github.io/thesis-tools" role="img"></svg>
+          <div class="s09-sitetxt">
+            <span class="s09-sitekick">ogni modello dietro queste scelte</span>
+            <span class="s09-siteaddr">sirsirio.github.io/thesis-tools</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ol class="sheet__rail s09-rail">
+    <li class="sheet__panel" data-rev="1">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">le specifiche</span>
+      <span class="sheet__panel-t">Discuti, pianifica, esegui, verifica, consegna: la fase dopo parte pulita.</span>
+    </li>
+    <li class="sheet__panel" data-rev="2">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">il ciclo</span>
+      <span class="sheet__panel-t">Progetta, costruisci, prova, impara. Stampa, cablaggio e prove a mano.</span>
+    </li>
+    <li class="sheet__panel s09-btn" data-rev="3" data-fig="3"
+        role="button" tabindex="0" aria-label="Mostra il percorso di ricerca delle fonti">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">le fonti</span>
+      <span class="sheet__panel-t">Strumento di ricerca basato sull&rsquo;IA.</span>
+    </li>
+    <li class="sheet__panel s09-btn" data-rev="4" data-fig="4"
+        role="button" tabindex="0" aria-label="Mostra il sito degli strumenti della tesi">
+      <span class="sheet__panel-bar"></span>
+      <span class="sheet__panel-k">gli strumenti</span>
+      <span class="sheet__panel-t">Sito web online.</span>
+    </li>
+  </ol>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">So the AI worked inside rules.</li>
+      <li data-step="1">Every decision is locked in writing before anything is planned or built &mdash; discuss, plan, execute, verify, ship &mdash; and the memory lives on disk.</li>
+      <li data-step="2">Throughout, the AI documented the process, so that record was always its reference. Now, the modules.</li>
+      <li>If asked: the sources? Click that panel &mdash; seven databases, forty candidates reranked, twelve returned, and I approved every reference.</li>
+      <li>If asked: the models? Click the tools panel; the site is live and three of its tools open later in this talk.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">&hellip;con sviluppo guidato da specifiche e documenti</p>
+      <ul>
+        <li data-step="0">Quindi l’IA ha lavorato con regole.</li>
+        <li data-step="1">Ogni decisione è scritta prima di costruire; la memoria resta su disco.</li>
+        <li data-step="2">L’IA ha documentato tutto e ha lavorato su quello. Ora, i moduli.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+
+
+
+<style data-part="p1-part1">
+/* ══ One-line titles (2026-09-24) ════════════════════════════════════
+   The retitled Part I slides all carry one-line titles, so --head-h is 0
+   and the rule sits at 138 px, 48 px higher than before. Each body block
+   moves up by the amount that centres it between the rule and the foot of
+   the slide (138 to 690 px). A negative margin on each absolutely placed
+   block, so the builders' own transforms are untouched. Inside a full-stage
+   container (inset: 0) the margin goes on the children, so the container
+   itself never leaves the stage. */
+#s06 .s06-sheet, section#s06 p.s06-credit { margin-top: -28px; }
+#s04b #s04-prov > * { margin-top: -32px; }
+#s07 .s07-quote, #s07 .s07-gate, #s07 .s07-crit { margin-top: -10px; }
+#s07b .rl-dg { margin-top: -18px; }
+#s09 .s09-plate, #s09 .s09-rail { margin-top: -6px; }
+
+/* ══ S06 · the gap sheet ═══════════════════════════════════════════════
+   Dialect A widened to the full stage: one printed plate, a photo column
+   on the left, hand-drawn marks, and a fourth row that stays empty. */
+#s06 .s06-sheet {
+  position: absolute; left: 56px; top: 196px; width: 1168px; height: 452px;
+  border-radius: var(--r-lg);
+  background: rgba(233, 230, 226, 0.95);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.50);
+  overflow: hidden;
+}
+#s06 .s06-head { position: absolute; inset: 0; }
+#s06 .s06-head span {
+  position: absolute; top: 14px; width: 140px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700; line-height: 1.22;
+  letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
+  color: #4a5468;
+}
+#s06 .s06-rules, #s06 .s06-marks { position: absolute; inset: 0; width: 100%; height: 100%; }
+#s06 .s06-rule { fill: none; stroke: rgba(27,34,51,0.34); stroke-width: 1.4; }
+#s06 .s06-rule--faint { stroke: rgba(27,34,51,0.14); }
+
+#s06 .s06-row {
+  position: absolute; left: 152px; width: 236px; height: 74px;
+  display: flex; flex-direction: column; justify-content: center; gap: 4px;
+}
+/* five rows of 74 px under the 62 px header: the pipette, three families, the empty row */
+#s06 #s06-r1 { top: 62px; }  #s06 #s06-r2 { top: 136px; } #s06 #s06-r3 { top: 210px; }
+#s06 #s06-r4 { top: 284px; } #s06 #s06-r5 { top: 358px; }
+#s06 .s06-fam { font-size: 20px; line-height: 1.18; color: #1b2233; }
+#s06 .s06-eg  { font-family: var(--mono); font-size: 18px; line-height: 1.1; color: #6b7387; }
+#s06 .s06-row--want .s06-fam { color: #b06a3a; font-weight: 600; }
+
+/* the photo column: rows 1 to 4 are filled by the plate that flies in,
+   row 5 keeps a dashed, empty chip — the instrument nobody has built.
+   Every photograph stays whole in its chip (contain, never cover). */
+#s06 .s06-big {
+  position: absolute; left: 520px; top: 62px; width: 500px; height: 334px;
+  border-radius: 16px;
+  background: #e9e7e4;
+  border: 1px solid rgba(255,107,43,0.40);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.42);
+  overflow: hidden; opacity: 0;
+}
+#s06 .s06-big img { display: block; width: 100%; height: 100%; object-fit: contain; }
+#s06 .s06-big[data-big="2"] { left: 600px; width: 380px; }
+#s06 .s06-ghostchip {
+  position: absolute; left: 24px; top: 364px; width: 118px; height: 62px;
+  border-radius: var(--r-sm);
+  border: 1.5px dashed #b06a3a;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+}
+#s06 .s06-ghostchip svg { width: 44px; height: 44px; }
+#s06 .s06-ln--dash { fill: none; stroke: #b06a3a; stroke-width: 1.9; stroke-dasharray: 5 5; stroke-linecap: round; stroke-linejoin: round; }
+
+#s06 .s06-tick { fill: none; stroke: #1b5e43; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round; }
+#s06 .s06-cross path { fill: none; stroke: #c62f2f; stroke-width: 4.2; stroke-linecap: round; }
+/* a third verdict: partly, drawn as a slash in amber — neither the green of
+   a pass nor the red of a fail. Amber rather than the deck's #e9c341 yellow
+   because this sheet is near-white: the yellow was the faintest thing on it.
+   Same stroke weight as the tick and the cross, so the three marks read at
+   one weight. */
+#s06 .s06-part { fill: none; stroke: #b8791f; stroke-width: 4.2; stroke-linecap: round; }
+#s06 .s06-want { fill: none; stroke: #b06a3a; stroke-width: 1.6; stroke-dasharray: 8 7; }
+#s06 .s06-slot { fill: none; stroke: #b06a3a; stroke-width: 1.8; stroke-dasharray: 4 5; }
+
+/* the price column: the numbers only, as he says the rest */
+#s06 .s06-h-price { width: 214px; }
+#s06 .s06-price {
+  position: absolute; left: 778px; top: 50%; transform: translateY(-50%);
+  width: 214px; text-align: center;
+}
+#s06 .s06-price b {
+  display: block; font-family: var(--mono); font-size: 25px; font-weight: 700;
+  color: #1b2233; letter-spacing: -0.01em;
+}
+#s06 .s06-price i {
+  display: block; font-style: normal; font-family: var(--mono);
+  font-size: 18px; color: #6b7387; margin-top: 2px;
+}
+#s06 .s06-credit {
+  position: absolute; left: 56px; top: 666px; margin: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em;
+  color: var(--text-muted); opacity: 0;
+}
+
+/* ══ S07 · requirements, the connection diagram, the match cut ═════════ */
+.s07fam .slide__title, .s07fam .slide__rule { z-index: 8; }
+.s07fam .s07-photo { position: absolute; inset: 0; opacity: 0; }
+.s07fam .s07-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.s07fam .s07-photoscrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(8,8,10,0.86) 0%, rgba(8,8,10,0.34) 22%, rgba(8,8,10,0.10) 40%, rgba(8,8,10,0.55) 100%),
+    radial-gradient(130% 110% at 50% 45%, rgba(8,8,10,0) 48%, rgba(8,8,10,0.55) 100%);
+}
+.s07fam .s07-quote {
+  position: absolute; left: 96px; top: 206px; width: 1088px;
+  padding: 26px 34px; z-index: 6;
+}
+.s07fam .s07-quote p {
+  margin: 0; font-size: 24px; line-height: 1.38; color: var(--paper-ink); max-width: none;
+}
+.s07fam .s07-k { color: #b34a12; font-weight: 600; }
+.s07fam .s07-gates { position: absolute; inset: 0; z-index: 6; }
+.s07fam .s07-gate {
+  position: absolute; width: 340px; height: 76px;
+  display: flex; align-items: center; padding: 0 22px;
+  font-size: 22px; color: var(--text);
+  border-radius: var(--r-md);
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+}
+
+/* The connection diagram — 1:1 with the stage, so the coordinates in the
+   markup are the slide's own pixels. Colour contract copied from the site's
+   System Architecture Explorer: liquid solid blue, control dashed green,
+   module titles and the power rail orange. */
+
+.s07fam .s07-tiles { position: absolute; inset: 0; z-index: 7; }
+.s07fam .s07-tile {
+  position: absolute; height: 44px;
+  display: flex; align-items: center; padding: 0 20px;
+  font-size: 21px; color: var(--text); white-space: nowrap;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+  opacity: 0;
+}
+.s07fam .s07-tile--ghost { border-style: dashed; color: var(--text-soft); background: rgba(255,255,255,0.02); }
+.s07fam .s07-read { position: absolute; left: 56px; top: 636px; width: 980px; height: 44px; z-index: 8; }
+.s07fam .s07-line {
+  position: absolute; left: 0; top: 0; margin: 0; font-size: 24px; line-height: 1.3;
+  color: var(--text); opacity: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+}
+
+
+/* the criteria that rank whatever cleared the gates */
+.s07fam .s07-crit {
+  position: absolute; left: 96px; top: 560px; width: 1088px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 14px;
+  opacity: 0;
+}
+.s07fam .s07-crit-k {
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted);
+  margin-right: 6px;
+}
+.s07fam .s07-crit-c {
+  font-size: 19px; color: var(--text-soft);
+  padding: 4px 13px; border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--t-a) 26%, transparent);
+}
+
+/* ══ S08 · the house ═══════════════════════════════════════════════════ */
+#s08 .s08-sheet {
+  position: absolute; left: 56px; top: 206px; width: 700px; height: 400px;
+  border-radius: var(--r-lg);
+  background: rgba(233, 230, 226, 0.95);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.50);
+  overflow: hidden;
+}
+#s08 .s08-draw { position: absolute; inset: 0; width: 100%; height: 100%; }
+#s08 .s08-draw path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+#s08 .s08-ink    { stroke: #1b2233; stroke-width: 3; }
+#s08 .s08-win    { stroke-width: 2.2; }
+#s08 .s08-knob   { fill: #1b2233; stroke: none; }
+#s08 .s08-ground { stroke: rgba(27,34,51,0.55); stroke-width: 2.4; }
+#s08 .s08-soft   { stroke: rgba(27,34,51,0.30); stroke-width: 2; }
+#s08 .s08-bad    { stroke: #e83535; stroke-width: 4.4; opacity: 0; }
+/* a spirit level, set on the thing each check is checking */
+#s08 .s08-lvlb   { fill: rgba(43,108,176,0.16); stroke: #2b6cb0; stroke-width: 1.8; }
+#s08 .s08-lvlv   { fill: #f3f6fa; stroke: #2b6cb0; stroke-width: 1.4; }
+#s08 .s08-lvlbub { fill: #2b6cb0; stroke: none; }
+#s08 .s08-check  { stroke: #1b5e43; stroke-width: 3.6; }
+#s08 .s08-blue path { stroke: rgba(43,108,176,0.30); stroke-width: 1.1; }
+#s08 .s08-cards { position: absolute; left: 792px; top: 206px; width: 432px; }
+#s08 .s08-card {
+  position: absolute; left: 0; width: 432px; height: 84px;
+  padding: 14px 22px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.42);
+  opacity: 0;
+}
+#s08 .s08-card[data-card="1"] { top: 0; }
+#s08 .s08-card[data-card="2"] { top: 96px; }
+#s08 .s08-card[data-card="3"] { top: 192px; }
+#s08 .s08-card[data-card="4"] { top: 288px; }
+#s08 .s08-kick {
+  display: block; margin-bottom: 8px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--t-a);
+}
+#s08 .s08-txt { display: block; font-size: 23px; line-height: 1.25; color: var(--text); }
+
+/* ══ S09 · the environment, the pipeline, the site ═════════════════════ */
+#s09 .s09-plate {
+  position: absolute; left: 56px; top: 196px; width: 800px; height: 448px;
+  border-radius: var(--r-lg);
+  background: rgba(233, 230, 226, 0.95);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.50);
+  overflow: hidden;
+}
+#s09 .s09-figs { position: absolute; inset: 18px; }
+#s09 .s09-fig {
+  position: absolute; inset: -18px;
+  display: flex; align-items: center; justify-content: center;
+  background: #e9e6e2;
+  opacity: 0; visibility: hidden;
+}
+#s09 .s09-crop { position: relative; overflow: hidden; border-radius: 6px; }
+#s09 .s09-crop img { display: block; width: 100%; height: auto; }
+#s09 .s09-site { display: flex; align-items: center; gap: 34px; }
+#s09 .s09-qr { width: 208px; height: 208px; flex: none; }
+#s09 .s09-qr rect { fill: #12100e; }
+#s09 .s09-sitetxt { display: flex; flex-direction: column; gap: 10px; width: 470px; }
+#s09 .s09-sitekick {
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.20em; text-transform: uppercase; color: #b34a12;
+}
+#s09 .s09-siteaddr { font-family: var(--mono); font-size: 24px; font-weight: 600; color: #12100e; white-space: nowrap; }
+#s09 .s09-rail { left: 888px; top: 196px; width: 336px; height: 448px; }
+/* The last two rail entries are not part of the walk. They are buttons: he
+   presses one when a question calls for it, and its figure opens over
+   whatever the arrows are showing. The mark is + when closed, x when open. */
+#s09 .s09-btn {
+  position: relative;
+  cursor: pointer;
+  padding-right: 40px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 38%, transparent);
+  border-radius: var(--r-sm);
+  transition: background 160ms var(--ease), border-color 160ms var(--ease);
+}
+#s09 .s09-btn.is-open {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+}
+#s09 .s09-btn::after {
+  content: '+';
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono); font-size: 21px; line-height: 1;
+  color: var(--accent);
+}
+#s09 .s09-btn.is-open::after { content: '\00d7'; }
+#s09 .s09-btn:hover,
+#s09 .s09-btn:focus-visible { background: rgba(255, 255, 255, 0.055); outline: none; }
+#s09 .s09-btn:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 60%, transparent); }
+
+
+/* ══ S10 · the module hierarchy ════════════════════════════════════════ */
+#s10 .slide__title, #s10 .slide__rule { z-index: 5; }
+/* A pyramid, as in thesis figure 5.2: sloped sides, one trapezoidal band per
+   module. The apex inherits the fewest constraints and dictates downward; the
+   base inherits everything, which is why the enclosure sits there and is drawn
+   open. Reading it top to bottom is the order Part II walks, so no separate
+   list of that order is drawn. */
+#s10 .s10-pyramid {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; z-index: 5;
+}
+#s10 .s10-band {
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+/* The apex is the subject of the title, so it is also the strongest band, and
+   the fade down the stack carries the argument on its own: the further down a
+   module sits, the more constraint it inherits and the less it decides. */
+#s10 .s10-tier[data-rank="1"] .s10-band {
+  fill: color-mix(in srgb, var(--t-a) 34%, transparent);
+  stroke: color-mix(in srgb, var(--t-a) 88%, transparent);
+}
+#s10 .s10-tier[data-rank="2"] .s10-band {
+  fill: color-mix(in srgb, var(--t-a) 28%, transparent);
+  stroke: color-mix(in srgb, var(--t-a) 75%, transparent);
+}
+#s10 .s10-tier[data-rank="3"] .s10-band {
+  fill: color-mix(in srgb, var(--t-a) 24%, transparent);
+  stroke: color-mix(in srgb, var(--t-a) 66%, transparent);
+}
+#s10 .s10-tier[data-rank="4"] .s10-band {
+  fill: color-mix(in srgb, var(--t-a) 20%, transparent);
+  stroke: color-mix(in srgb, var(--t-a) 58%, transparent);
+}
+#s10 .s10-tier[data-rank="5"] .s10-band {
+  fill: color-mix(in srgb, var(--t-a) 17%, transparent);
+  stroke: color-mix(in srgb, var(--t-a) 50%, transparent);
+}
+#s10 .s10-tier[data-rank="6"] .s10-band {
+  fill: color-mix(in srgb, var(--t-a) 14%, transparent);
+  stroke: color-mix(in srgb, var(--t-a) 43%, transparent);
+}
+#s10 .s10-tiername[data-rank="1"] { font-weight: 600; }
+#s10 .s10-labels { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+#s10 .s10-tiername {
+  position: absolute; left: 0; right: 0;
+  text-align: center; font-size: 26px; line-height: 1;
+  color: var(--text);
+}
+#s10 .s10-band--ghost .s10-band {
+  fill: rgba(255, 255, 255, 0.02);
+  stroke: color-mix(in srgb, var(--t-a) 28%, transparent);
+  stroke-dasharray: 7 7;
+}
+#s10 .s10-tiername[data-rank="7"] { color: var(--text-soft); opacity: 0.9; }
+
+/* ---- s05b ---- */
+/* The s05b section moved to the appendix 2026-09-24 and lives in
+   parts/60-backups.html; this code stays here (SLIDE-ORDER.md §4). */
+/* Three beats of one story, left to right: what arrives, what is pulled out
+   of it, and what has to leave before the test can read anything. Abstract
+   on purpose — the bead protocol itself is a separate slide, and this one is
+   the concept. */
+#s05b .sp-stage { position: absolute; top: 228px; width: 320px; }
+#s05b .sp-stage[data-n="1"] { left: 96px; }
+#s05b .sp-stage[data-n="2"] { left: 480px; }
+#s05b .sp-stage[data-n="3"] { left: 864px; }
+#s05b .sp-art { display: block; width: 320px; height: 200px; overflow: visible; }
+#s05b .sp-cap {
+  margin: 20px 0 0; text-align: center;
+  font-size: 26px; line-height: 1.25; color: var(--text);
+  /* two lines' worth for all three, so the row sits on one baseline even
+     though only the first caption fits on a single line */
+  min-height: 65px;
+}
+#s05b .sp-cell, #s05b .sp-shard {
+  fill: none; stroke: rgba(240, 236, 232, 0.46); stroke-width: 2.4;
+  stroke-linecap: round;
+}
+#s05b .sp-target circle { fill: var(--accent); }
+/* one pointer, so nobody has to guess which dots are the thing being looked for */
+#s05b .sp-lead {
+  fill: none; stroke: var(--accent); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* filled, not a 2px chevron: an open head disappears on a projector */
+#s05b .sp-lead--hd { fill: var(--accent); stroke: none; }
+#s05b .sp-leadtx {
+  font-family: var(--mono); font-size: 20px; fill: var(--accent);
+  text-anchor: end;
+}
+/* the grey is the second protagonist — at 0.24 it did not survive a
+   projector, and “separated from everything else” needs the everything else */
+#s05b .sp-junk circle { fill: rgba(240, 236, 232, 0.42); }
+#s05b .sp-drain, #s05b .sp-basin {
+  fill: none; stroke: rgba(240, 236, 232, 0.5);
+  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+}
+/* This is the hinge of the slide — the sentence that turns a biology
+   explainer into the reason the machine exists — so it is set as a
+   conclusion, not as a fourth caption. */
+#s05b .sp-close {
+  position: absolute; left: 96px; top: 600px; margin: 0;
+  padding-left: 22px;
+  border-left: 3px solid var(--accent);
+  font-size: 32px; line-height: 1.25; color: var(--text);
+}
+
+/* ---- s07b ---- */
+/* ══ S07b · module relationships, rebuilt from thesis figure 5.3 ═══════ */
+#s07b .rl-dg {
+  position: absolute; left: 56px; top: 222px;
+  width: 1168px; height: 420px; z-index: 5;
+}
+/* Italian deck (2026-09-24): Chrome lays this diagram's <text> out at the
+   stage scale it had when the text was first laid out, so after the stage
+   is refitted the labels paint off their boxes and too small (punchlist x).
+   geometricPrecision takes the text off that scaled-font path; verified
+   twice at 1920 x 1080 in the guest view. */
+#s07b .rl-dg text { text-rendering: geometricPrecision; }
+
+/* module boxes */
+#s07b .rl-box { fill: rgba(255,255,255,0.03); stroke: rgba(255,107,43,0.35); stroke-width: 1.4; }
+#s07b .rl-box--dash { stroke-dasharray: 8 6; }
+#s07b .rl-t { font-family: var(--font); font-size: 22px; font-weight: 600; fill: #ff6b2b; text-anchor: middle; }
+#s07b .rl-s { font-family: var(--font); font-size: 18px; fill: #f0ece8; text-anchor: middle; }
+#s07b .rl-n { font-family: var(--mono); font-size: 18px; fill: #7a7068; text-anchor: middle; }
+
+/* the enclosure frame */
+#s07b .rl-encl rect { fill: none; stroke: rgba(240,236,232,0.26); stroke-width: 1.4; stroke-dasharray: 10 8; }
+#s07b .rl-encl-k { font-family: var(--font); font-size: 20px; font-weight: 600; fill: #7a7068; }
+#s07b .rl-encl-v { font-family: var(--mono); font-size: 18px; fill: #7a7068; }
+
+/* liquid: solid blue, filled heads */
+#s07b .rl-liq  { fill: none; stroke: #4a90d9; stroke-width: 3; stroke-linecap: round; }
+#s07b .rl-liqh { fill: #4a90d9; }
+
+/* data and control: dashed green, open chevrons */
+#s07b .rl-ctl  { fill: none; stroke: #3ec06b; stroke-width: 1.6; stroke-dasharray: 5 4; }
+#s07b .rl-chev { fill: none; stroke: #3ec06b; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* the liquid barrier and the ring that lights when the centre speaks */
+#s07b .rl-bar  { fill: none; stroke: #4a90d9; stroke-width: 2; }
+#s07b .rl-halo { fill: none; stroke: #3ec06b; stroke-width: 1.4; }
+
+/* the movers */
+#s07b .rl-drop  { fill: #4a90d9; }
+#s07b .rl-pulse { fill: #3ec06b; }
+
+/* legend */
+#s07b .rl-lg { font-family: var(--font); font-size: 18px; fill: #f0ece8; }
+
+/* Everything the timeline owns starts hidden. The legend's key marks reuse
+   the same classes, so they are excluded: their own row group fades them in. */
+#s07b .rl-encl,
+#s07b .rl-mod,
+#s07b .rl-note,
+#s07b .rl-liq:not(.rl-liq--key),
+#s07b .rl-liqh:not(.rl-liqh--key),
+#s07b .rl-ctlg,
+#s07b .rl-bar:not(.rl-bar--key),
+#s07b .rl-halo,
+#s07b .rl-lgrow,
+#s07b .rl-drop,
+#s07b .rl-pulse { opacity: 0; }
+
+/* ---- s09b ---- */
+/* ══ S09b · printed in the room ═══════════════════════════════════════
+   Custom composition: a build-plate motif on the left, the turnaround
+   pair beneath it, the first test prints on the right. Nothing here is
+   redefined from the head; .paper, .num and .num--grad are borrowed.
+   Traps respected: the ghost outline is dashed, so it is only ever
+   faded; nothing bordered is scaled.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Two halves under the title. Left: the design, a CAD render on a white
+   sheet with the Fusion 360 mark under it. Right: the part building itself
+   on the plate, its tolerance under it, and the printer beside it. An
+   arrow between the halves is the handoff from design to print. */
+#s09b .pr-cad {
+  position: absolute; left: 56px; top: 277px; width: 344px; height: 274px;
+  padding: 22px 22px 18px; box-sizing: border-box;
+  background: #ffffff; border-radius: var(--r-lg);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  opacity: 0;
+}
+#s09b .pr-cadimg { width: 300px; height: 162px; }
+#s09b .pr-cadimg img { width: 100%; height: 100%; object-fit: contain; display: block; }
+#s09b .pr-logo { width: 200px; height: 58px; object-fit: contain; display: block; }
+#s09b .pr-arrow {
+  position: absolute; left: 414px; top: 394px; width: 70px; height: 40px; overflow: visible;
+}
+#s09b .pr-arrow-ln, #s09b .pr-arrow-hd {
+  fill: none; stroke: var(--t-a); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+}
+#s09b .pr-build {
+  position: absolute;
+  left: 470px; top: 233px;
+  width: 450px; height: 180px;
+  overflow: visible;
+}
+#s09b .pr-plate {
+  fill: none;
+  stroke: rgba(240, 236, 232, 0.55);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+#s09b .pr-plate-soft {
+  fill: none;
+  stroke: rgba(240, 236, 232, 0.13);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+#s09b .pr-ghost {
+  fill: none;
+  stroke: color-mix(in srgb, var(--t-a) 62%, transparent);
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+  stroke-linejoin: round;
+  opacity: 0.55;
+}
+#s09b .pr-layer {
+  fill: none;
+  stroke: var(--t-a);
+  stroke-width: 6;
+  stroke-linecap: round;
+  opacity: 0;
+}
+#s09b .pr-nozzle {
+  fill: color-mix(in srgb, var(--t-a) 88%, #f0ece8);
+  stroke: none;
+  opacity: 0;
+}
+
+/* the first test prints */
+#s09b .pr-photo {
+  position: absolute;
+  left: 930px; top: 249px;
+  width: 294px; height: 330px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.52);
+  opacity: 0;
+}
+/* the printer is a transparent cut-out: no plate, no frame, no letterbox */
+#s09b .pr-photo--cut {
+  background: none; border: 0; box-shadow: none; padding: 0;
+}
+#s09b .pr-photo--cut img {
+  width: 100%; height: 100%; object-fit: contain;
+  /* a near-black machine on a near-black field disappears on a projector */
+  filter: drop-shadow(0 26px 46px rgba(0,0,0,0.6)) brightness(1.28) contrast(1.06);
+}
+/* centred under the printed part, not floating beside it */
+#s09b .pr-tol {
+  position: absolute;
+  left: 585px; top: 430px;
+  display: flex; align-items: baseline; gap: 12px;
+  opacity: 0;
+}
+#s09b .pr-tolv { font-size: 72px; font-weight: 600; line-height: 1; }
+#s09b .pr-tolu { font-size: 30px; font-weight: 500; color: var(--text-muted); }
+/* ---- s09a ---- */
+/* ══ S09A · the hinge divider ═════════════════════════════════════════
+   Family member: wash, numeral, title, sub, rule, exactly as the three
+   part dividers. Two departures, both deliberate:
+     · the numeral names the turn instead of a part number, because this
+       divider sits inside Part I rather than opening a new part;
+     · the title is 76 px with an explicit break, so the four verbs sit on
+       two balanced lines whatever the display face measures.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* The text block sits high so the mark has a clear band beneath it. */
+#s09a .divider__inner {
+  justify-content: flex-start;
+  padding-top: 148px;
+}
+#s09a .divider__num {
+  color: color-mix(in srgb, var(--t-a) 82%, #f0ece8);
+}
+#s09a .divider__title {
+  font-size: 76px;
+  max-width: 980px;
+}
+#s09a .divider__sub {
+  max-width: 820px;
+}
+
+/* A very slow drift on the wash: the breath this slide is meant to be. */
+@keyframes s09a-wash-drift {
+  from { transform: scale(1.06) translate3d(-20px, 9px, 0); }
+  to   { transform: scale(1.06) translate3d(24px, -11px, 0); }
+}
+#s09a .divider__wash {
+  transform: scale(1.06);
+  animation: s09a-wash-drift 52s var(--ease) infinite alternate;
+}
+
+/* ── the mark ──────────────────────────────────────────────────────── */
+#s09a .s09a-mark {
+  position: absolute; left: 96px; top: 408px;
+  width: 560px; height: 150px;
+}
+#s09a .s09a-mark svg { display: block; overflow: visible; width: 100%; height: 100%; }
+#s09a .s09a-ring {
+  fill: none; stroke: color-mix(in srgb, var(--t-a) 62%, transparent);
+  stroke-width: 2; stroke-linecap: round;
+}
+#s09a .s09a-stop { fill: none; stroke: var(--t-a); stroke-width: 2.4; }
+#s09a .s09a-run  { fill: var(--t-a); }
+
+@media (prefers-reduced-motion: reduce) {
+  #s09a .divider__wash { animation: none; }
+}
+
+/* ---- s08a ---- */
+/* The AI lockup. It is one object shown twice: large and centred as the
+   title card, then parked in the free corner of the house slide. Both
+   copies carry the SAME intrinsic geometry — the corner geometry — so the
+   hand-over is a single transform and the two read as one object moving. */
+.ai-lock {
+  position: absolute; right: 56px; top: 52px;
+  width: 290px; height: 56px;
+  display: flex; align-items: center; gap: 16px;
+  z-index: 7;
+}
+.ai-lock__mark {
+  flex: none; display: block; width: 88px; height: 55px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.5));
+}
+.ai-lock__txt {
+  font-family: var(--display); font-weight: 700;
+  font-size: 19px; line-height: 1.05; letter-spacing: -0.02em;
+  color: var(--text); white-space: nowrap;
+}
+
+</style>
+
+
+<script data-part="p1-part1">
+/* ══════════════════════════════════════════════════════════════════════
+   Part I timelines. Labels step0..stepN, every selector scoped to `el`.
+   Two standing traps in this deck, respected throughout:
+     · DrawSVG owns stroke-dasharray, so anything dashed is faded in.
+     · A bordered or dashed box is resized by width/height, never scaleX.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* The AI lockup is authored at its CORNER size and blown up for the title
+   card, so both slides share one geometry. Its box is 290x56 at right 56 /
+   top 52, which centres it on (1079, 80); the stage centre is (640, 360).
+   Hence the offset below. Change the CSS box and these three must follow. */
+var AI_X = -439, AI_Y = 280, AI_S = 2.6;
+
+/* ── S05 · divider ───────────────────────────────────────────────────── */
+Deck.enter('s05', function (el, gsap) {
+  gsap.fromTo(el.querySelector('.divider__wash'), { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' });
+  gsap.fromTo(el.querySelector('.divider__rule'), { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: 'power3.inOut', delay: 0.15 });
+  gsap.fromTo([el.querySelector('.divider__num'), el.querySelector('.divider__title'), el.querySelector('.divider__sub')],
+    { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.75, stagger: 0.1, ease: 'power3.out' });
+});
+
+/* ── S06 · the gap sheet ─────────────────────────────────────────────── */
+Deck.slide('s06', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var rows = [
+    el.querySelector('#s06-r1'), el.querySelector('#s06-r2'),
+    el.querySelector('#s06-r3'), el.querySelector('#s06-r4'),
+    el.querySelector('#s06-r5')
+  ];
+  var marksSvg = el.querySelector('.s06-marks');
+  var credit = el.querySelector('.s06-credit');
+  var want = el.querySelector('.s06-want');
+  var slots = el.querySelectorAll('.s06-slot');
+  var ghost = el.querySelector('#s06-ghostchip');
+  var bigs = [
+    el.querySelector('.s06-big[data-big="1"]'),
+    el.querySelector('.s06-big[data-big="2"]'),
+    el.querySelector('.s06-big[data-big="3"]'),
+    el.querySelector('.s06-big[data-big="4"]')
+  ];
+
+  /* Each mark is addressed by its own row and column, never by index into
+     marks.children, so re-ordering the markup cannot mis-assign a tick. */
+  var VERDICT = [
+    ['part', 'tick', 'cross', 'tick'],    /* manual pipetting */
+    ['tick', 'cross', 'tick', 'tick'],    /* laboratory systems */
+    ['cross', 'tick', 'tick', 'cross'],   /* integrated platforms */
+    ['cross', 'part', 'tick', 'tick']     /* open source */
+  ];
+  var rowMarks = [], rowPass = [], rowPart = [], rowFail = [];
+  for (var r = 0; r < 4; r++) {
+    rowMarks[r] = []; rowPass[r] = []; rowPart[r] = []; rowFail[r] = [];
+    for (var c = 0; c < 4; c++) {
+      var m = marksSvg.querySelector('[data-r="' + (r + 1) + '"][data-c="' + (c + 1) + '"]');
+      if (!m) continue;
+      rowMarks[r].push(m);
+      var v = VERDICT[r][c];
+      (v === 'cross' ? rowFail[r] : v === 'part' ? rowPart[r] : rowPass[r]).push(m);
+    }
+  }
+
+  var CHIP = { left: 24, width: 118, height: 62, radius: 10 };
+  function chipTop(i) { return 68 + i * 74; }
+
+  rows.forEach(function (row) {
+    gsap.set(row.children, { opacity: 0, x: -10 });
+  });
+  rowMarks.forEach(function (g) { gsap.set(g, { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' }); });
+  gsap.set(bigs, { opacity: 0 });
+  gsap.set(ghost, { opacity: 0, scale: 0.9, transformOrigin: '50% 50%' });
+  gsap.set([want].concat(Array.prototype.slice.call(slots)), { opacity: 0, scale: 0.9, transformOrigin: '50% 50%' });
+  gsap.set(credit, { opacity: 0 });
+
+  /* one reusable reveal: the photograph arrives large, holds, then flies
+     and shrinks into that row's chip in the photo column */
+  function family(i) {
+    var at = 'step' + i;
+    if (i > 0) {
+      tl.to([rows[i - 1], rowMarks[i - 1]], { opacity: 0.5, duration: 0.4 }, at + '+=0.15');
+    }
+    tl.to(rows[i].children, { opacity: 1, x: 0, duration: 0.45, stagger: 0.08, ease: 'expo.out' }, at);
+    tl.fromTo(bigs[i], { opacity: 0, scale: 0.94 },
+      { opacity: 1, scale: 1, duration: 0.55, ease: 'expo.out' }, at + '+=0.2');
+    tl.to(bigs[i], {
+      left: CHIP.left, top: chipTop(i), width: CHIP.width, height: CHIP.height,
+      borderRadius: CHIP.radius, duration: 0.95, ease: 'expo.inOut'
+    }, at + '+=1.55');
+    tl.to(rowPass[i], { opacity: 1, scale: 1, duration: 0.32, stagger: 0.09, ease: 'back.out(2.4)' }, at + '+=2.2');
+    /* only the rows that have one: GSAP warns on an empty target list */
+    if (rowPart[i].length) {
+      tl.to(rowPart[i], { opacity: 1, scale: 1, duration: 0.38, ease: 'back.out(2)' }, at + '+=2.38');
+    }
+    tl.to(rowFail[i], { opacity: 1, scale: 1.2, duration: 0.42, stagger: 0.12, ease: 'back.out(3)' }, at + '+=2.5');
+    tl.to(rowFail[i], { scale: 1, duration: 0.3, stagger: 0.12, ease: 'power2.out' }, at + '+=2.95');
+    if (i === 0) tl.to(credit, { opacity: 1, duration: 0.6 }, at + '+=2.6');
+    tl.addLabel('step' + (i + 1));
+  }
+
+  tl.addLabel('step0');
+  family(0);
+  family(1);
+  family(2);
+  family(3);
+
+  /* the row nothing fills */
+  tl.to([rows[3], rowMarks[3]], { opacity: 0.5, duration: 0.4 }, 'step4+=0.15');
+  tl.to(rows[4].children, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, 'step4+=0.25');
+  tl.to(ghost, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 'step4+=0.35');
+  tl.to(want, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' }, 'step4+=0.45');
+  tl.to(slots, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.09, ease: 'back.out(2)' }, 'step4+=0.65');
+  tl.to(slots, { scale: 1.16, duration: 0.35, stagger: 0.06, ease: 'power2.out' }, 'step4+=1.25');
+  tl.to(slots, { scale: 1, duration: 0.45, stagger: 0.06, ease: 'power2.inOut' }, 'step4+=1.65');
+  tl.addLabel('step5');
+
+  return tl;
+});
+
+/* ── S07 · statement, gates, the connection diagram, the match cut ───── */
+Deck.slide('s07', function (el, gsap) {
+  /* the design problem, the gates it must clear, then what ranks the
+     survivors. The architecture diagram that used to sit here belongs to
+     Part III and has been removed. */
+  var tl = gsap.timeline({ paused: true });
+  var quote = el.querySelector('.s07-quote');
+  var gates = el.querySelectorAll('.s07-gate');
+  var crit  = el.querySelector('.s07-crit');
+  var crits = el.querySelectorAll('.s07-crit-c');
+  var critk = el.querySelector('.s07-crit-k');
+
+  gsap.set(quote, { opacity: 0, y: 18 });
+  gsap.set(gates, { opacity: 0, y: 24 });
+  gsap.set(crit, { opacity: 1 });
+  gsap.set([critk], { opacity: 0, x: -10 });
+  gsap.set(crits, { opacity: 0, y: 12 });
+
+  tl.addLabel('step0');
+  tl.to(quote, { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, 'step0');
+  tl.addLabel('step1');
+
+  tl.to(gates, { opacity: 1, y: 0, duration: 0.55, stagger: 0.09, ease: 'back.out(1.5)' }, 'step1');
+  tl.addLabel('step2');
+
+  tl.to(quote, { opacity: 0.45, duration: 0.5 }, 'step2');
+  tl.to(critk, { opacity: 1, x: 0, duration: 0.45, ease: 'expo.out' }, 'step2+=0.1');
+  tl.to(crits, { opacity: 1, y: 0, duration: 0.4, stagger: 0.06, ease: 'expo.out' }, 'step2+=0.25');
+  tl.addLabel('step3');
+
+  return tl;
+});
+
+
+
+Deck.slide('s08', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var q = function (s) { return el.querySelector(s); };
+
+  var draw = q('.s08-draw');
+  var ground = q('#s08-ground');
+  var walk = q('#s08-path');
+  var wallL = q('#s08-wall-l');
+  var wallR = q('#s08-wall-r');
+  var roofL = q('#s08-roof-l');
+  var roofR = q('#s08-roof-r');
+  var eaves = q('#s08-eaves');
+  var chim = q('#s08-chim');
+  var floor = q('#s08-floor');
+  var door = q('#s08-door');
+  var knob = q('#s08-knob');
+  var winG1 = q('#s08-win-g1');
+  var winG2 = q('#s08-win-g2');
+  var winU1 = q('#s08-win-u1');
+  var winU2 = q('#s08-win-u2');
+  var bad = q('#s08-win-bad');
+  var breach = q('#s08-breach');
+  var right = q('#s08-right');
+  var plans = el.querySelectorAll('.s08-lvl');
+  var checks = el.querySelectorAll('.s08-check');
+  var blue = el.querySelectorAll('.s08-blue path');
+  var cards = el.querySelectorAll('.s08-card');
+
+  var INK = '#1b2233';
+  var RED = '#e83535';
+  var built = [ground, walk, wallL, wallR, roofL, roofR, eaves, chim, floor, door,
+    winG1, winG2, winU1, winU2];
+
+  gsap.set(built, { drawSVG: '0%' });
+  gsap.set([bad, breach], { drawSVG: '0%', opacity: 0 });
+  gsap.set(knob, { opacity: 0 });
+  gsap.set([checks, blue], { drawSVG: '0%' });
+  gsap.set(plans, { opacity: 0, scale: 0.7, transformOrigin: '50% 50%' });
+  gsap.set(cards, { opacity: 0, x: 22 });
+
+  function card(i, at) {
+    tl.to(cards[i], { opacity: 1, x: 0, duration: 0.55, ease: 'expo.out' }, at);
+    if (i > 0) tl.to(cards[i - 1], { opacity: 0.4, duration: 0.4 }, at);
+  }
+
+  /* The subject is announced before the slide argues it. The lockup arrives
+     from the title card still centred and large, and nothing else is on screen,
+     so there is as much time as he wants to say what this part is about. Only
+     the next press moves it aside and lets the drawing in. */
+  var lock = el.querySelector('.ai-lock');
+  var rest = [q('.slide__title'), q('.slide__rule'), q('.s08-sheet'), q('.s08-cards')]
+               .filter(Boolean);
+
+  gsap.set(lock, { x: AI_X, y: AI_Y, scale: AI_S, opacity: 1, transformOrigin: '50% 50%' });
+  gsap.set(rest, { opacity: 0 });
+
+  tl.addLabel('step0');
+  tl.to(lock, { x: 0, y: 0, scale: 1, duration: 1.05, ease: 'expo.inOut' }, 'step0+=0.15');
+  tl.to(rest, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 'step0+=0.8');
+
+  tl.addLabel('step1');
+
+  /* 1 · one complete house, drawn from the ground up */
+  tl.to(ground, { drawSVG: '100%', duration: 0.5, ease: 'power2.inOut' }, 'step1');
+  tl.to([wallL, wallR], { drawSVG: '100%', duration: 0.55, stagger: 0.08, ease: 'power2.inOut' }, 'step1+=0.3');
+  tl.to([roofL, roofR], { drawSVG: '100%', duration: 0.5, stagger: 0.1, ease: 'power2.inOut' }, 'step1+=0.75');
+  tl.to(eaves, { drawSVG: '100%', duration: 0.4, ease: 'power2.inOut' }, 'step1+=1.2');
+  tl.to(chim, { drawSVG: '100%', duration: 0.45, ease: 'power2.out' }, 'step1+=1.4');
+  tl.to(floor, { drawSVG: '100%', duration: 0.45, ease: 'power2.inOut' }, 'step1+=1.6');
+  tl.to([winU1, winU2, winG1, winG2], { drawSVG: '100%', duration: 0.35, stagger: 0.11, ease: 'power2.out' }, 'step1+=1.8');
+  tl.to(door, { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, 'step1+=2.25');
+  tl.to(knob, { opacity: 1, duration: 0.2 }, 'step1+=2.6');
+  tl.to(walk, { drawSVG: '100%', duration: 0.45, ease: 'power2.out' }, 'step1+=2.6');
+  card(0, 'step1+=0.3');
+  tl.addLabel('step2');
+
+  /* 2 · the new window lands half off the wall it was meant to sit in */
+  tl.set(bad, { opacity: 1 }, 'step2');
+  tl.to(bad, { drawSVG: '100%', duration: 0.55, ease: 'power2.out' }, 'step2');
+  tl.fromTo(bad, { y: -26 }, { y: 0, duration: 0.6, ease: 'bounce.out' }, 'step2+=0.35');
+  tl.set(breach, { opacity: 1 }, 'step2+=0.85');
+  tl.to(breach, { drawSVG: '100%', duration: 0.3, ease: 'power2.out' }, 'step2+=0.85');
+  tl.fromTo(breach, { strokeWidth: 4.4 }, { strokeWidth: 9, duration: 0.25, yoyo: true, repeat: 3, ease: 'power1.inOut' }, 'step2+=1.15');
+  card(1, 'step2+=0.2');
+  tl.addLabel('step3');
+
+  /* 3 · an old instruction comes back and the load-bearing wall walks */
+  tl.to(right, { x: 60, rotation: 2.6, svgOrigin: '500 352', duration: 1.0, ease: 'power3.inOut' }, 'step3+=0.15');
+  tl.to([wallR, winG2], { stroke: RED, strokeWidth: 4.6, duration: 0.4 }, 'step3+=0.15');
+  tl.to(roofR, { rotation: 12, svgOrigin: '330 92', stroke: RED, strokeWidth: 4.6, duration: 0.9, ease: 'power4.in' }, 'step3+=0.5');
+  tl.to(eaves, { rotation: 6, svgOrigin: '140 176', stroke: RED, strokeWidth: 4.2, duration: 0.9, ease: 'power4.in' }, 'step3+=0.5');
+  tl.to(floor, { rotation: 3, scaleX: 1.18, svgOrigin: '160 262', stroke: RED, strokeWidth: 4.2, duration: 0.9, ease: 'power3.inOut' }, 'step3+=0.4');
+  tl.fromTo(draw, { x: 0 }, { x: 5, duration: 0.06, repeat: 7, yoyo: true, ease: 'none' }, 'step3+=1.25');
+  tl.to(breach, { opacity: 0, duration: 0.3 }, 'step3+=0.3');
+  card(2, 'step3+=0.2');
+  tl.addLabel('step4');
+
+  /* 4 · the fix: clear the site, set the layout first, then raise one
+         floor at a time and check it before the next one goes up.
+         The walls run bottom to top, so a storey is a partial draw of
+         them: 0%-50% is the ground floor, 0%-100% adds the upper. */
+
+  /* the wreck is cleared off the sheet */
+  tl.to([breach, knob], { opacity: 0, duration: 0.3 }, 'step4');
+  tl.to(built.concat([bad]), { opacity: 0, duration: 0.45, stagger: 0.012, ease: 'power2.in' }, 'step4+=0.1');
+  tl.set(built, { opacity: 1, drawSVG: '0%' }, 'step4+=0.72');
+
+  /* everything back to square: ink, not red, and nothing displaced */
+  tl.set(right,  { x: 0, rotation: 0 }, 'step4+=0.75');
+  tl.set(wallR,  { stroke: INK, strokeWidth: 3 }, 'step4+=0.75');
+  tl.set(winG2,  { stroke: INK, strokeWidth: 2.2 }, 'step4+=0.75');
+  tl.set(roofR,  { rotation: 0, stroke: INK, strokeWidth: 3 }, 'step4+=0.75');
+  tl.set(eaves,  { rotation: 0, stroke: INK, strokeWidth: 3 }, 'step4+=0.75');
+  tl.set(floor,  { rotation: 0, scaleX: 1, stroke: INK, strokeWidth: 3 }, 'step4+=0.75');
+  /* the stray window returns as the third upstairs opening, in ink */
+  tl.set(bad, { x: -56, stroke: INK, strokeWidth: 2.2, opacity: 1, drawSVG: '0%' }, 'step4+=0.75');
+  tl.set(knob, { opacity: 0 }, 'step4+=0.75');
+
+  /* the layout, before anything is raised */
+  tl.to(blue, { drawSVG: '100%', duration: 0.45, stagger: 0.02, ease: 'power1.out' }, 'step4+=0.85');
+
+  /* ground floor: raise it, level it, check it */
+  tl.to(ground, { drawSVG: '100%', duration: 0.4, ease: 'power2.inOut' }, 'step4+=1.35');
+  tl.to([wallL, wallR], { drawSVG: '0% 50%', duration: 0.5, stagger: 0.06, ease: 'power2.inOut' }, 'step4+=1.55');
+  tl.to([winG1, winG2], { drawSVG: '100%', duration: 0.3, stagger: 0.08, ease: 'power2.out' }, 'step4+=1.95');
+  tl.to(door, { drawSVG: '100%', duration: 0.32, ease: 'power2.out' }, 'step4+=2.15');
+  tl.to([knob, walk], { opacity: 1, drawSVG: '100%', duration: 0.3, ease: 'power2.out' }, 'step4+=2.4');
+  tl.to(plans[0], { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step4+=2.55');
+  tl.to(checks[0], { drawSVG: '100%', duration: 0.3, ease: 'back.out(2)' }, 'step4+=2.85');
+
+  /* only now the upper floor */
+  tl.to(floor, { drawSVG: '100%', duration: 0.38, ease: 'power2.inOut' }, 'step4+=3.2');
+  tl.to([wallL, wallR], { drawSVG: '0% 100%', duration: 0.5, stagger: 0.06, ease: 'power2.inOut' }, 'step4+=3.4');
+  tl.to([winU1, winU2, bad], { drawSVG: '100%', duration: 0.3, stagger: 0.08, ease: 'power2.out' }, 'step4+=3.8');
+  tl.to(plans[1], { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step4+=4.1');
+  tl.to(checks[1], { drawSVG: '100%', duration: 0.3, ease: 'back.out(2)' }, 'step4+=4.4');
+
+  /* and only now the roof */
+  tl.to(eaves, { drawSVG: '100%', duration: 0.38, ease: 'power2.inOut' }, 'step4+=4.75');
+  tl.to([roofL, roofR], { drawSVG: '100%', duration: 0.42, stagger: 0.08, ease: 'power2.inOut' }, 'step4+=4.95');
+  tl.to(chim, { drawSVG: '100%', duration: 0.36, ease: 'power2.out' }, 'step4+=5.35');
+  tl.to(plans[2], { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 'step4+=5.55');
+  tl.to(checks[2], { drawSVG: '100%', duration: 0.3, ease: 'back.out(2)' }, 'step4+=5.85');
+
+  card(3, 'step4+=0.2');
+  tl.addLabel('step5');
+
+  return tl;
+});
+
+/* ── S09 · three figures, then the site ──────────────────────────────── */
+Deck.slide('s09', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var figs = el.querySelectorAll('.s09-fig');
+  var panels = el.querySelectorAll('.s09-rail .sheet__panel');
+
+  /* the real QR code for https://sirsirio.github.io/thesis-tools/ (version 3, 29 modules, ECC M),
+     generated 2026-09-20; one rect per dark module so the bloom animation can address them */
+  var qr = el.querySelector('#s09-qr');
+  if (qr && !qr.childNodes.length) {
+    var QR_ROWS=['11111110110010111010001111111','10000010001000001111001000001','10111010001110100100101011101','10111010111001101000101011101','10111010101000111110001011101','10000010110011000101101000001','11111110101010101010101111111','00000000101100010100000000000','10001011111000001100111111001','10110001100101011110001111111','11011111011111010100010010001','10011000111110110110101101011','00101110000110110101010100010','00101100110000110110011111111','01000110000111110010111111101','00010000100110101110010100011','11100111001011101110110100010','11010100110100111110001111011','00011111010101110010110000101','00100101101111011111101110011','11010010010111010101111111001','00000000110111111001100010001','11111110100010010111101011101','10000010000100101101100010011','10111010101101101101111111001','10111010011101011111010000001','10111010000100110101110001111','10000010011100010100100011011','11111110110000100101111010010'];
+    var N = 29, ns = 'http://www.w3.org/2000/svg';
+    for (var y = 0; y < N; y++) {
+      for (var x = 0; x < N; x++) {
+        if (QR_ROWS[y].charAt(x) !== '1') continue;
+        var rr = document.createElementNS(ns, 'rect');
+        rr.setAttribute('x', x); rr.setAttribute('y', y);
+        rr.setAttribute('width', 1); rr.setAttribute('height', 1);
+        qr.appendChild(rr);
+      }
+    }
+  }
+
+
+  gsap.set(figs, { opacity: 0, visibility: 'hidden' });
+  /* only the two the arrows walk are in the rail at the start; the other two
+     are buttons and carry their own affordance, so they sit at rest */
+  gsap.set([panels[0], panels[1]], { opacity: 0.3 });
+  gsap.set([panels[2], panels[3]], { opacity: 0.55 });
+  panels.forEach(function (p) { gsap.set(p.querySelector('.sheet__panel-bar'), { scaleY: 0 }); });
+
+  tl.addLabel('step0');
+
+  /* the walk: the specs, then the loop. Nothing else moves on an arrow. */
+  for (var i = 0; i < 2; i++) {
+    (function (i) {
+      var at = 'step' + i;
+      if (i > 0) {
+        tl.to(figs[i - 1], { opacity: 0, visibility: 'hidden', duration: 0.5, ease: 'power1.inOut' }, at);
+        tl.to(panels[i - 1], { opacity: 0.3, duration: 0.4 }, at);
+      }
+      tl.fromTo(figs[i], { opacity: 0, visibility: 'visible', scale: 0.97 },
+        { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, at + '+=0.2');
+      tl.to(panels[i], { opacity: 1, duration: 0.4 }, at + '+=0.15');
+      tl.to(panels[i].querySelector('.sheet__panel-bar'), { scaleY: 1, duration: 0.4, ease: 'expo.out' }, at + '+=0.15');
+    })(i);
+    tl.addLabel('step' + (i + 1));
+  }
+
+  /* the two buttons, wired once */
+  if (!el.dataset.s09Wired) {
+    el.dataset.s09Wired = '1';
+    var open = null;
+
+    function close() {
+      if (open === null) return;
+      var fig = figs[open], btn = panels[open];
+      btn.classList.remove('is-open');
+      gsap.to(btn, { opacity: 0.55, duration: 0.3 });
+      gsap.to(fig, { opacity: 0, duration: 0.3, onComplete: function () {
+        gsap.set(fig, { visibility: 'hidden', zIndex: 'auto' });
+      } });
+      open = null;
+    }
+
+    function openFig(n) {
+      if (open === n) { close(); return; }
+      close();
+      open = n;
+      var fig = figs[n], btn = panels[n];
+      btn.classList.add('is-open');
+      gsap.to(btn, { opacity: 1, duration: 0.3 });
+      gsap.set(fig, { visibility: 'visible', zIndex: 20 });
+      gsap.fromTo(fig, { opacity: 0, scale: 0.97 },
+        { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' });
+      if (n === 3) {
+        var mods = el.querySelectorAll('#s09-qr rect');
+        gsap.fromTo(mods, { opacity: 0, scale: 0.2, transformOrigin: '50% 50%', svgOrigin: '' },
+          { opacity: 1, scale: 1, duration: 0.5,
+            stagger: { amount: 1.1, from: 'center', grid: [29, 29] }, ease: 'power2.out' });
+      }
+    }
+
+    [2, 3].forEach(function (n) {
+      panels[n].addEventListener('click', function (e) { e.stopPropagation(); openFig(n); });
+      panels[n].addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault(); e.stopPropagation(); openFig(n);
+        }
+      });
+    });
+
+    /* any change of state puts an open popup away again — leaving the
+       slide, and also stepping within it, so an arrow never lands on a
+       figure with a popup still sitting over it */
+    document.addEventListener('deck:state', function () {
+      if (!el.classList.contains('is-active')) close();
+    });
+  }
+
+  return tl;
+});
+
+/* ── S10 · the hierarchy, and the order Part II follows ──────────────── */
+Deck.slide('s10', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var tier = function (n) {
+    return [el.querySelector('.s10-tier[data-rank="' + n + '"]'),
+            el.querySelector('.s10-tiername[data-rank="' + n + '"]')];
+  };
+  var tiers = [], apex = tier(1), below = [];
+  for (var n = 1; n <= 7; n++) { tiers = tiers.concat(tier(n)); if (n > 1) below = below.concat(tier(n)); }
+
+  /* Pinned in the builder so a seek can never catch these part-built. */
+  gsap.set(tiers, { opacity: 0, y: -12 });
+
+  tl.addLabel('step0');
+
+  /* 1 · the module that decides, alone at the top */
+  tl.to(apex, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, 'step0');
+  tl.addLabel('step1');
+
+  /* 2 · and everything that inherits from it, widening as it descends */
+  tl.to(below, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'expo.out' }, 'step1');
+  tl.addLabel('step2');
+
+  return tl;
+});
+
+
+/* ---- s05b ---- */
+/* The s05b section moved to the appendix 2026-09-24 and lives in
+   parts/60-backups.html; this code stays here (SLIDE-ORDER.md §4). */
+Deck.slide('s05b', function (el, gsap) {
+  var q  = function (s) { return el.querySelector(s); };
+  var qa = function (s) { return Array.prototype.slice.call(el.querySelectorAll(s)); };
+
+  var stages = qa('.sp-stage');
+  var caps   = qa('.sp-cap');
+  var cell   = q('#sp-cell');
+  var shards = [q('#sp-shard-l'), q('#sp-shard-r')];
+  var drain  = [q('#sp-drain'), q('#sp-drainhd')];
+  var close  = q('.sp-close');
+  var lead   = q('#sp-lead');
+  var leadhd = q('#sp-leadhd');
+  var leadtx = q('.sp-leadtx');
+  function dots(n, cls) { return qa('.sp-stage[data-n="' + n + '"] .' + cls + ' circle'); }
+
+  /* Pinned in the builder so a seek can never catch a half-drawn stage. */
+  gsap.set(stages, { opacity: 0 });
+  gsap.set(caps, { opacity: 0, y: 10 });
+  gsap.set(cell, { drawSVG: '0%' });
+  gsap.set(shards, { drawSVG: '50% 50%', x: 0 });
+  gsap.set(q('#sp-basin'), { drawSVG: '0%' });
+  gsap.set(drain, { drawSVG: '0%' });
+  gsap.set(close, { opacity: 0, y: 12 });
+  gsap.set(lead, { drawSVG: '0%' });
+  /* a filled head cannot DrawSVG, so it lands at the apex the instant the
+     leader finishes: to the room it reads as the same single gesture */
+  gsap.set(leadhd, { opacity: 0, scale: 0.4, svgOrigin: '139.2 73' });
+  gsap.set(leadtx, { opacity: 0 });
+  [1, 2, 3].forEach(function (n) {
+    gsap.set(dots(n, 'sp-target'), { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
+    gsap.set(dots(n, 'sp-junk'), { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
+  });
+
+  var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+  tl.addLabel('step0');
+
+  /* 1 \u00b7 a sample arrives, and the target is sealed inside it */
+  tl.to(stages[0], { opacity: 1, duration: 0.3 }, 'step0')
+    .to(cell, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut' }, 'step0')
+    .to(dots(1, 'sp-junk'), { opacity: 1, scale: 1, duration: 0.4, stagger: 0.06 }, 'step0+=0.35')
+    .to(dots(1, 'sp-target'), { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 }, 'step0+=0.55')
+    .to(lead, { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, 'step0+=0.85')
+    .to(leadhd, { opacity: 1, scale: 1, duration: 0.22, ease: 'back.out(2)' }, 'step0+=1.28')
+    .to(leadtx, { opacity: 1, duration: 0.4 }, 'step0+=0.95')
+    .to(caps[0], { opacity: 1, y: 0, duration: 0.45 }, 'step0+=0.9')
+    .addLabel('step1');
+
+  /* 2 \u00b7 it is broken open and the target pulled clear */
+  tl.to(stages[1], { opacity: 1, duration: 0.3 }, 'step1')
+    .to(dots(2, 'sp-junk'), { opacity: 1, scale: 1, duration: 0.4, stagger: 0.05 }, 'step1')
+    .to(shards, { drawSVG: '0% 100%', duration: 0.6, ease: 'power2.inOut' }, 'step1')
+    /* the halves swing apart, or the two arcs read as one dashed ring */
+    .to(shards[0], { x: -22, duration: 0.6, ease: 'power2.out' }, 'step1+=0.45')
+    .to(shards[1], { x: 22, duration: 0.6, ease: 'power2.out' }, 'step1+=0.45')
+    .fromTo(dots(2, 'sp-target'), { x: -96 },
+      { x: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.08 }, 'step1+=0.5')
+    .to(caps[1], { opacity: 1, y: 0, duration: 0.45 }, 'step1+=0.95')
+    .addLabel('step2');
+
+  /* 3 \u00b7 and the chemistry that freed it has to leave */
+  tl.to(stages[2], { opacity: 1, duration: 0.3 }, 'step2')
+    .to(dots(3, 'sp-target'), { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 }, 'step2+=0.1')
+    .to(drain, { drawSVG: '100%', duration: 0.55, ease: 'power2.inOut' }, 'step2+=0.4')
+    .to(q('#sp-basin'), { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, 'step2+=0.85')
+    /* the waste comes to rest in the basin and stays there: he will stand on
+       this frame and talk, so the finished picture has to carry the idea */
+    .fromTo(dots(3, 'sp-junk'), { y: -86 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.85, stagger: 0.12, ease: 'power2.in' }, 'step2+=0.55')
+    .to(caps[2], { opacity: 1, y: 0, duration: 0.45 }, 'step2+=1.0')
+    .to(close, { opacity: 1, y: 0, duration: 0.55 }, 'step2+=1.3')
+    .addLabel('step3');
+
+  return tl;
+});
+
+/* ---- s07b ---- */
+Deck.slide('s07b', function (el, gsap) {
+  var tl = gsap.timeline({ paused: true });
+  var q  = function (s) { return el.querySelector(s); };
+  var qa = function (s) { return [].slice.call(el.querySelectorAll(s)); };
+
+  var encl    = q('.rl-encl');
+  var note    = q('.rl-note');
+  var liqLn   = qa('.rl-liq:not(.rl-liq--key)');
+  var liqHd   = qa('.rl-liqh:not(.rl-liqh--key)');
+  var ctlG    = qa('.rl-ctlg');
+  var bar     = q('.rl-bar:not(.rl-bar--key)');
+  var halo    = q('.rl-halo');
+  var drip    = q('.rl-drip');
+  var drop    = q('.rl-drop');
+  var pulses  = qa('.rl-pulse');
+  var keyLiq  = q('.rl-lgrow[data-g="1"]');
+  var keyCtl  = q('.rl-lgrow[data-g="2"]');
+  var keyBar  = q('.rl-lgrow[data-g="3"]');
+
+  var order = ['storage', 'pump', 'nozzle', 'align', 'tube', 'elec', 'ui'].map(function (m) {
+    return q('.rl-mod[data-m="' + m + '"]');
+  }).filter(Boolean);
+
+  gsap.set(liqLn, { drawSVG: '0%' });
+  if (bar) { gsap.set(bar, { drawSVG: '0%' }); }
+
+  tl.addLabel('step0');
+
+  /* 1 · eight functions, eight modules — they arrive outward from the centre,
+         and the enclosure that holds them arrives last, because it was last */
+  order.forEach(function (g, i) {
+    var dx = parseFloat(g.getAttribute('data-dx')) || 0;
+    var dy = parseFloat(g.getAttribute('data-dy')) || 0;
+    tl.fromTo(g, { opacity: 0, x: dx, y: dy },
+      { opacity: 1, x: 0, y: 0, duration: 0.55, ease: 'expo.out' }, 'step0+=' + (0.09 * i).toFixed(2));
+  });
+  tl.to(encl, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 'step0+=0.92');
+  tl.addLabel('step1');
+
+  /* 2 · the fluid chain, and one dose walking the whole of it */
+  tl.to(liqLn, { opacity: 1, duration: 0.01 }, 'step1');
+  tl.to(liqLn, { drawSVG: '100%', duration: 0.42, stagger: 0.16, ease: 'power2.inOut' }, 'step1');
+  tl.to(liqHd, { opacity: 1, duration: 0.22, stagger: 0.16, ease: 'power2.out' }, 'step1+=0.40');
+  tl.to(keyLiq, { opacity: 1, duration: 0.40 }, 'step1+=0.55');
+  if (drop && drip) {
+    tl.set(drop, { opacity: 1 }, 'step1+=0.20');
+    tl.to(drop, {
+      motionPath: { path: drip, align: drip, alignOrigin: [0.5, 0.5] },
+      duration: 2.00, ease: 'none'
+    }, 'step1+=0.20');
+    tl.to(drop, { opacity: 0, duration: 0.30 }, 'step1+=2.05');
+  }
+  tl.to(note, { opacity: 1, duration: 0.45 }, 'step1+=1.85');
+  tl.addLabel('step2');
+
+  /* 3 · the centre speaks to every module, and is spoken back to */
+  tl.fromTo(halo, { opacity: 0 }, { opacity: 0.85, duration: 0.35, ease: 'power2.out' }, 'step2');
+  tl.to(halo, { opacity: 0.30, duration: 0.7 }, 'step2+=0.45');
+  tl.to(ctlG, { opacity: 1, duration: 0.40, stagger: 0.11, ease: 'power2.out' }, 'step2+=0.20');
+  tl.to(keyCtl, { opacity: 1, duration: 0.40 }, 'step2+=0.70');
+  pulses.forEach(function (p, i) {
+    var lane = q('.rl-ctlg[data-c="' + p.getAttribute('data-c') + '"] .rl-ctl');
+    if (!lane) { return; }
+    var at = 'step2+=' + (0.55 + 0.10 * i).toFixed(2);
+    tl.set(p, { opacity: 1 }, at);
+    tl.to(p, {
+      motionPath: { path: lane, align: lane, alignOrigin: [0.5, 0.5] },
+      duration: 0.85, ease: 'power1.inOut', repeat: 1, yoyo: true
+    }, at);
+    tl.to(p, { opacity: 0, duration: 0.25 }, 'step2+=' + (2.30 + 0.10 * i).toFixed(2));
+  });
+  tl.addLabel('step3');
+
+  /* 4 · the barrier closes around the electronics; the liquid stays outside */
+  if (bar) {
+    tl.set(bar, { opacity: 1 }, 'step3');
+    tl.to(bar, { drawSVG: '100%', duration: 1.05, ease: 'power2.inOut' }, 'step3');
+  }
+  tl.to(liqLn.concat(liqHd), { opacity: 0.55, duration: 0.35, ease: 'power2.inOut' }, 'step3+=0.25');
+  tl.to(liqLn.concat(liqHd), { opacity: 1, duration: 0.55, ease: 'power2.out' }, 'step3+=0.70');
+  tl.to(keyBar, { opacity: 1, duration: 0.40 }, 'step3+=0.95');
+  tl.addLabel('step4');
+
+  return tl;
+});
+
+/* ---- s09b ---- */
+/* ══ S09b · printed in the room ═══════════════════════════════════════
+   Three steps: the part prints itself on the plate, the loop shortens,
+   the first test prints arrive. Every selector scoped to `el`.
+   DrawSVG is used only on solid strokes; the dashed ghost is faded.
+   ═══════════════════════════════════════════════════════════════════ */
+Deck.slide('s09b', function (el, gsap) {
+  var q  = function (s) { return el.querySelector(s); };
+  var qa = function (s) { return Array.prototype.slice.call(el.querySelectorAll(s)); };
+
+  var layers = qa('.pr-layer');
+  var ghost  = q('#pr-ghost');
+  var head   = q('#pr-head');
+  var headx  = q('#pr-headx');
+  var nozzle = q('#pr-nozzle');
+  var photo  = q('.pr-photo');
+  var tol    = q('.pr-tol');
+  var cad    = q('.pr-cad');
+  var arrLn  = q('.pr-arrow-ln');
+  var arrHd  = q('.pr-arrow-hd');
+
+  /* Pinned in the builder, never in an enter hook: a seek must not catch
+     any of this mid-flight. */
+  gsap.set(layers, { drawSVG: 0, opacity: 1 });
+  gsap.set(headx, { x: -150 });
+  gsap.set(nozzle, { opacity: 0 });
+  gsap.set(ghost, { opacity: 0 });
+  gsap.set([photo, tol], { opacity: 0 });
+  gsap.set(cad, { opacity: 0 });
+  var plates = qa('.pr-plate, .pr-plate-soft');
+  gsap.set(plates, { opacity: 0 });
+  gsap.set([arrLn, arrHd], { drawSVG: 0 });
+
+  var tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out' } });
+
+  /* 0 · the design, in Fusion 360 */
+  tl.fromTo(cad, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0)
+    .addLabel('step0');
+
+  /* 1 · handed to the printer: the part builds itself, and how closely it holds */
+  tl.to(arrLn, { drawSVG: '0% 100%', duration: 0.45, ease: 'power2.inOut' }, 'step0')
+    .to(arrHd, { drawSVG: '0% 100%', duration: 0.25 }, 'step0+=0.35')
+    .fromTo(photo, { y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, 'step0+=0.3')
+    .to(plates, { opacity: 1, duration: 0.4 }, 'step0+=0.3')
+    .to(nozzle, { opacity: 1, duration: 0.3 }, 'step0+=0.55')
+    .to(ghost,  { opacity: 0.2, duration: 0.5 }, 'step0+=0.55')
+    .to(head,   { y: -54, duration: 1.0, ease: 'none' }, 'step0+=0.65')
+    .to(headx,  { x: 150, duration: 0.1875, repeat: 5, yoyo: true, ease: 'none' }, 'step0+=0.65')
+    .to(layers, { drawSVG: '0% 100%', duration: 0.28, stagger: 0.09, ease: 'power1.out' }, 'step0+=0.67')
+    .to(ghost,  { opacity: 0, duration: 0.45 }, 'step0+=2.0')
+    .to(nozzle, { opacity: 0, duration: 0.35 }, 'step0+=2.15')
+    .fromTo(tol, { y: 14 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 'step0+=2.2')
+    .addLabel('step1');
+
+  return tl;
+});
+
+/* ---- s09a ---- */
+/* ══ S09A · the hinge divider ═════════════════════════════════════════
+   No steps: one entrance, replayed on every entry, about five seconds
+   long and deliberately unhurried. Every selector is scoped to `el`
+   because the presenter view rebuilds this slide on a clone.
+   ══════════════════════════════════════════════════════════════════ */
+Deck.enter('s09a', function (el, gsap) {
+  var wash  = el.querySelector('.divider__wash');
+  var rule  = el.querySelector('.divider__rule');
+  /* the sub-line was cut, so only take what is actually there */
+  var head  = [
+    el.querySelector('.divider__num'),
+    el.querySelector('.divider__title'),
+    el.querySelector('.divider__sub')
+  ].filter(Boolean);
+  var ring  = el.querySelector('#s09a-ring');
+  var stops = el.querySelectorAll('.s09a-stop');
+  var run   = el.querySelector('#s09a-run');
+
+  /* a clean start, so re-entering mid-run never inherits a half-drawn mark */
+  gsap.set(ring, { drawSVG: '0%' });
+  gsap.set(stops, { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
+  gsap.set(run, { opacity: 0 });
+
+  var tl = gsap.timeline();
+
+  tl.fromTo(wash, { opacity: 0 }, { opacity: 1, duration: 1.3, ease: 'power2.out' }, 0)
+    .fromTo(head, { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1.0, stagger: 0.1, ease: 'expo.out' }, 0.1)
+    .fromTo(rule, { scaleX: 0, transformOrigin: '0% 50%' },
+      { scaleX: 1, duration: 1.15, ease: 'expo.out' }, 0.18);
+
+  /* the circuit closes, its four stops land in order, and one pass runs
+     round it: draw it, print it, test it, change it */
+  tl.to(ring, { drawSVG: '100%', duration: 1.5, ease: 'power2.inOut' }, 0.8)
+    .to(stops, { opacity: 1, scale: 1, duration: 0.45, stagger: 0.26, ease: 'back.out(2)' }, 1.0)
+    .to(run, { opacity: 1, duration: 0.3 }, 2.3)
+    .to(run, {
+      motionPath: { path: ring, align: ring, alignOrigin: [0.5, 0.5], start: 0, end: 1 },
+      duration: 3.4, ease: 'none'
+    }, 2.4)
+    .to(run, { opacity: 0, duration: 0.5 }, 5.6);
+});
+
+/* ---- s08a ---- */
+Deck.slide('s08a', function (el, gsap) {
+  /* One beat. The lockup is the whole slide: it says what the next few
+     minutes are about, then hands itself to the house slide. */
+  var tl = gsap.timeline({ paused: true });
+  var lock = el.querySelector('.ai-lock');
+  var mark = el.querySelector('.ai-lock__mark');
+  var txt  = el.querySelector('.ai-lock__txt');
+
+  gsap.set(lock, { x: AI_X, y: AI_Y, scale: AI_S, transformOrigin: '50% 50%', opacity: 1 });
+  gsap.set(mark, { opacity: 0, scale: 0.88, transformOrigin: '50% 50%' });
+  gsap.set(txt, { opacity: 0, x: -18 });
+
+  /* The entrance runs BEFORE the step0 label: the slide has no step cue, so
+     step 0 is the only state it ever reaches, and the lockup must already
+     be whole there. A seek straight to step 0 lands on the finished frame. */
+  tl.to(mark, { opacity: 1, scale: 1, duration: 0.85, ease: 'expo.out' }, 0);
+  tl.to(txt, { opacity: 1, x: 0, duration: 0.75, ease: 'expo.out' }, 0.28);
+  tl.addLabel('step0');
+
+  return tl;
+});
+
+</script>

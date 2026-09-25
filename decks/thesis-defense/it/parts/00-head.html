@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<!-- ══════════════════════════════════════════════════════════════════════
+     Thesis defense deck — infrastructure head.
+     Assembled by assemble.py; never edit index.html by hand.
+     Slide builders edit only their own parts/NN-*.html file. Everything a
+     builder needs from this file is listed in BUILD-CONTRACT.md and in the
+     API reference handed out with it.
+     ══════════════════════════════════════════════════════════════════════ -->
+<meta charset="UTF-8" />
+<!-- Italian guest deck: every relative path resolves from the English deck
+     folder, so the translated parts keep their paths unchanged. -->
+<base href="../" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Discussione della tesi · Sirio Vittorio Feltrin</title>
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../assets/site.css" />
+<script src="../../assets/site-nav.js"></script>
+<link rel="stylesheet" href="../../assets/deck.css" />
+<style>
+/* ══ 1 · Shared frame, deck variant (from decks/lab-meeting-2026-06/) ══
+   The 64 px sticky bar would push the 100vh deck viewport below the fold,
+   so the frame nav is rendered as a compact corner bar in the deck's own
+   back-link position. The Instruments panel hangs from the top of the page,
+   above the slides, only while open. */
+.site-nav--deck {
+  position: absolute;
+  top: 20px; left: 20px;
+  width: auto; height: auto;
+  padding: 0; gap: 16px;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  z-index: 300;
+}
+.site-nav--deck .deck-back-link { position: static; }
+.site-nav--deck .site-nav__links { margin-left: 0; }
+#instr-panel { top: 0; z-index: 299; }
+#instr-panel .instr__inner { top: 72px; max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px); }
+.deck-viewport, .deck-overview { line-height: normal; }
+.site-foot { display: none; }
+html, body { overflow: hidden; }
+
+/* The nav fades out while presenting and returns on mouse movement. */
+.site-nav--deck {
+  opacity: 1;
+  transition: opacity 600ms var(--ease);
+}
+body[data-nav-idle] .site-nav--deck { opacity: 0; pointer-events: none; }
+body[data-view="presenter"] .site-nav--deck,
+body[data-view="guest"] .site-nav--deck { display: none; }
+body[data-view="guest"] .deck-hud { display: none; }
+
+/* ══ 2 · Tokens ══════════════════════════════════════════════════════
+   The site's own tokens come from style.css + site.css. Added here:
+   a slower duration for stage motion, and the per-slide thread accent. */
+:root {
+  --dur-slow: 1200ms;
+  --paper:      #f6f3f0;
+  --paper-ink:  #12100e;
+  --cine-scrim: 0.82;           /* scrim strength for dialect B, per slide */
+}
+
+/* Thread accent: --t-a / --t-b on the slide, never the global --accent. */
+.slide { --t-a: var(--accent); --t-b: var(--accent-2); }
+.slide[data-accent="pump"]   { --t-a: #ff6b2b; --t-b: #e83535; }
+.slide[data-accent="align"]  { --t-a: #9b7fe0; --t-b: #5a8fd8; }
+.slide[data-accent="nozzle"] { --t-a: #4fb3c8; --t-b: #3a7bd5; }
+
+/* ══ 3 · Slide frame ═════════════════════════════════════════════════ */
+.slide { font-family: var(--font); color: var(--text); }
+.slide,
+.deck-overview-clone { background: transparent; }
+
+/* Speaker notes never render on the stage; the presenter panel copies them. */
+.notes { display: none; }
+
+/* Step markers carry no pixels: the GSAP timeline owns the visuals.
+   Builders that want the runtime's own fade instead put content inside a
+   .fragment and leave .step-cue off. */
+.step-cue { position: absolute; left: -9999px; top: 0; width: 0; height: 0; }
+
+/* One title position on every content slide. Two knobs, both set on the
+   <section> by the builder:
+     --title-w   narrows the title so it clears whatever sits beside it
+     --head-h    the extra height a two-line title needs; it pushes the rule
+                 and the dialect A blocks down and keeps their bottom edges
+                 where they are. Leave it at 0 for a one-line title. */
+.slide { --head-h: 0px; }
+.slide__title {
+  position: absolute;
+  left: 56px; top: 60px;
+  width: var(--title-w, 1168px);
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.slide__title--lg { font-size: 52px; }
+.slide__rule {
+  position: absolute;
+  left: 56px; top: calc(138px + var(--head-h)); width: 1168px; height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--t-a) 40%, transparent),
+    rgba(255,255,255,0.10) 34%,
+    rgba(255,255,255,0.05));
+}
+
+/* ══ 4 · Dividers ════════════════════════════════════════════════════ */
+.slide--divider { padding: 0; }
+.slide--divider .divider__wash {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 620px at 16% 42%, color-mix(in srgb, var(--t-a) 22%, transparent) 0%, transparent 72%),
+    radial-gradient(760px 520px at 84% 78%, color-mix(in srgb, var(--t-b) 16%, transparent) 0%, transparent 74%);
+  opacity: 0;
+}
+.slide--divider .divider__inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 96px;
+}
+.slide--divider .divider__num {
+  font-family: var(--mono);
+  font-size: 22px; font-weight: 600;
+  letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--t-a);
+  margin-bottom: 22px;
+}
+.slide--divider .divider__title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 84px; line-height: 1.0; letter-spacing: -0.03em;
+  max-width: 900px;
+  color: var(--text);
+}
+.slide--divider .divider__sub {
+  margin: 26px 0 0;
+  font-size: 24px; line-height: 1.4;
+  max-width: 760px;
+  color: var(--text-soft);
+}
+.slide--divider .divider__rule {
+  position: absolute; left: 96px; bottom: 132px;
+  width: 1088px; height: 2px;
+  background: linear-gradient(90deg, var(--t-a), var(--t-b));
+  transform: scaleX(0); transform-origin: 0 50%;
+}
+
+/* ══ 5 · Dialect A — the engineering sheet (previews/a.html) ═════════ */
+.sheet { position: absolute; inset: 0; }
+
+.sheet__main {
+  position: absolute;
+  left: 56px; top: calc(144px + var(--head-h));
+  width: 800px; height: calc(420px - var(--head-h));
+  border-radius: var(--r-lg);
+  background: rgba(233, 230, 226, 0.95);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.50);
+  overflow: hidden;
+}
+.sheet__grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(27,34,51,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,34,51,0.055) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: -1px -1px;
+}
+.sheet__reg { position: absolute; width: 18px; height: 18px; }
+.sheet__reg::before, .sheet__reg::after { content: ""; position: absolute; background: color-mix(in srgb, var(--t-a) 55%, transparent); }
+.sheet__reg::before { width: 18px; height: 1.5px; top: 0; left: 0; }
+.sheet__reg::after  { width: 1.5px; height: 18px; top: 0; left: 0; }
+.sheet__reg--tl { left: 16px; top: 16px; }
+.sheet__reg--tr { right: 16px; top: 16px; transform: scaleX(-1); }
+.sheet__reg--bl { left: 16px; bottom: 16px; transform: scaleY(-1); }
+.sheet__reg--br { right: 16px; bottom: 16px; transform: scale(-1); }
+
+.sheet__figs { position: absolute; inset: 18px; }
+.sheet__fig {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  opacity: 0; visibility: hidden;
+}
+.sheet__frame { position: relative; flex: none; }
+.sheet__frame img { display: block; width: 100%; height: 100%; border-radius: 8px; }
+
+.sheet__rail {
+  position: absolute;
+  left: 888px; top: calc(144px + var(--head-h));
+  width: 336px; height: calc(420px - var(--head-h));
+  margin: 0; padding: 0;
+  list-style: none;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.sheet__panel {
+  position: relative;
+  flex: 1 1 0;
+  padding: 11px 18px 11px 26px;
+  display: flex; flex-direction: column; justify-content: center; gap: 5px;
+  opacity: 0.3;
+}
+.sheet__panel + .sheet__panel { border-top: 1px solid rgba(255,255,255,0.07); }
+.sheet__panel-bar {
+  position: absolute; left: 0; top: 10%; width: 3px; height: 80%;
+  background: var(--t-a); border-radius: 0 3px 3px 0;
+  transform: scaleY(0); transform-origin: 50% 50%;
+}
+.sheet__panel-k {
+  font-family: var(--mono);
+  font-size: 18px; font-weight: 600; line-height: 1;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+.sheet__panel-t { font-size: 18px; line-height: 1.3; color: var(--text); }
+
+.sheet__readout { position: absolute; left: 56px; top: 578px; width: 780px; height: 100px; }
+.sheet__ro {
+  position: absolute; left: 0; top: 0;
+  display: flex; align-items: baseline; gap: 12px;
+  opacity: 0; visibility: hidden;
+}
+.sheet__num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 96px; font-weight: 700; line-height: 1;
+  letter-spacing: -0.035em;
+  background: linear-gradient(104deg, var(--t-a) 12%, var(--t-b) 96%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sheet__label {
+  font-family: var(--mono);
+  font-size: 26px; letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.sheet__timeline { position: absolute; left: 56px; top: 692px; width: 1168px; height: 10px; }
+.sheet__timeline-track { position: absolute; left: 0; top: 4px; width: 100%; height: 2px; background: rgba(255,255,255,0.10); }
+.sheet__timeline-fill  { position: absolute; left: 0; top: 4px; width: 0; height: 2px; background: linear-gradient(90deg, var(--t-a), var(--t-b)); }
+.sheet__stop {
+  position: absolute; top: 1px; width: 8px; height: 8px; margin-left: -4px;
+  border-radius: 50%; background: rgba(255,255,255,0.18);
+}
+
+/* ══ 6 · Dialect B — the cinematic cut (previews/b.html) ═════════════
+   One image at a time on a paper plate, nearly full bleed, under a scrim
+   that darkens the bottom third so a very large number can sit on the
+   image itself. Set --cine-scrim on the slide to lift or drop the scrim. */
+.cine { position: absolute; inset: 0; }
+.cine__shots { position: absolute; inset: 0; z-index: 1; }
+.cine__shot  { position: absolute; inset: 0; margin: 0; }
+/* When a shot is also a .fragment, GSAP owns its opacity, not deck.css. */
+.cine__shot.fragment { opacity: 0; transform: none; transition: none; }
+
+.cine__img {
+  position: absolute;
+  left: 50%; top: 436px;
+  height: 512px; width: auto;
+  transform: translate(-50%, -50%);
+  background: #e9e7e4;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  box-shadow: 0 34px 96px rgba(0, 0, 0, 0.62);
+  overflow: hidden;
+}
+.cine__img img, .cine__img video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.cine__img--cover img, .cine__img--cover video { object-fit: cover; }
+.cine__img--bleed {
+  left: 0; top: 0; width: 1280px; height: 720px;
+  transform: none; border-radius: 0; border: 0; background: #000;
+}
+
+/* Ken Burns: a 4 % drift that keeps running slowly while the step is shown. */
+@keyframes cine-kb {
+  from { transform: translate(-50%, -50%) scale(1); }
+  to   { transform: translate(-50%, -50%) scale(1.04) translateY(-5px); }
+}
+.cine__shot.is-live .cine__img { animation: cine-kb 22s linear both; }
+.cine__shot.is-live .cine__img--bleed { animation: none; }
+
+.cine__draw {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--t-a) 60%, transparent));
+}
+.cine__draw .stroke { fill: none; stroke: var(--t-a); stroke-linecap: round; stroke-linejoin: round; }
+
+.cine__scrim {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(to top,
+      rgba(8, 8, 10, calc(0.94 * var(--cine-scrim))) 0%,
+      rgba(8, 8, 10, calc(0.90 * var(--cine-scrim))) 12%,
+      rgba(8, 8, 10, calc(0.74 * var(--cine-scrim))) 26%,
+      rgba(8, 8, 10, calc(0.40 * var(--cine-scrim))) 38%,
+      rgba(8, 8, 10, calc(0.08 * var(--cine-scrim))) 50%,
+      rgba(8, 8, 10, 0) 58%),
+    radial-gradient(132% 112% at 52% 40%,
+      rgba(8, 8, 10, 0) 46%,
+      rgba(8, 8, 10, calc(0.45 * var(--cine-scrim))) 100%);
+}
+
+.cine .slide__title { z-index: 4; max-width: 940px; width: auto; top: 66px; font-size: 44px; text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6); }
+.cine__text { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.cine__kicker {
+  position: absolute; left: 58px; top: 440px;
+  font-family: var(--mono); font-size: 19px; font-weight: 500;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--t-a);
+}
+.cine__num {
+  position: absolute; left: 52px; bottom: 96px;
+  display: flex; align-items: baseline; gap: 14px;
+  transform-origin: 0% 100%;
+}
+.cine__num .v {
+  font-family: var(--mono); font-size: 160px; font-weight: 600;
+  line-height: 0.86; letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  text-shadow: 0 10px 44px rgba(0, 0, 0, 0.75);
+}
+.cine__num .u {
+  font-family: var(--mono); font-size: 46px; font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--t-a);
+}
+.cine__label {
+  position: absolute; left: 56px; bottom: 52px;
+  max-width: 560px;
+  font-size: 21px; line-height: 1.3;
+  color: rgba(240, 236, 232, 0.93);
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.8);
+}
+.cine__strip {
+  position: absolute; left: 660px; bottom: 56px; z-index: 4;
+  display: flex; gap: 12px;
+}
+.cine__thumb {
+  width: 96px; height: 56px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: #e9e7e4;
+  border: 1px solid color-mix(in srgb, var(--t-a) 30%, transparent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+.cine__thumb img { display: block; width: 100%; height: 100%; object-fit: contain; opacity: 0.8; }
+
+/* ══ 7 · Dialect C — the stacked cards (previews/c.html) ═════════════ */
+.pile { position: absolute; inset: 0; }
+
+.card {
+  position: absolute;
+  left: 652px; top: 428px;
+  width: 540px; height: 464px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  will-change: transform;
+}
+.card__kicker {
+  font-family: var(--mono);
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--t-a);
+  margin-bottom: 12px;
+  flex: 0 0 auto;
+}
+.card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  flex: 0 0 auto;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+.card__media img, .card__media video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.card__media--cover img, .card__media--cover video { object-fit: cover; }
+.card__media--dark { background: #0d0f12; }
+.card__foot { margin-top: auto; flex: 0 0 auto; }
+.card__num {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 96px; line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  white-space: nowrap;
+}
+.card__num .u { font-size: 0.62em; letter-spacing: 0; margin-left: 0.14em; color: var(--text-soft); }
+.card__label { margin-top: 6px; font-size: 21px; line-height: 1.3; color: var(--text-soft); }
+
+/* The warm paper frame for figures drawn for print. */
+.paper {
+  background: var(--paper);
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+.paper img, .paper video { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* ══ 8 · Shared parts ════════════════════════════════════════════════ */
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+.num--hero { font-size: 128px; font-weight: 600; line-height: 0.9; }
+.num--grad {
+  background: linear-gradient(104deg, var(--t-a) 12%, var(--t-b) 96%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.kicker {
+  font-family: var(--mono);
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--t-a);
+}
+.kicker--muted { color: var(--text-muted); }
+
+/* Leader-line callouts on a photo: an SVG overlay of strokes (drawn with
+   DrawSVG) plus chips pinned over the image. */
+.leader {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.leader .ln, .leader path, .leader line, .leader circle, .leader polyline {
+  fill: none;
+  stroke: var(--t-a);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.leader .ln--soft { stroke: color-mix(in srgb, var(--t-a) 55%, transparent); }
+.leader .dot { fill: var(--t-a); stroke: none; }
+
+.callout {
+  position: absolute;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px; font-weight: 700; line-height: 1;
+  color: var(--paper-ink);
+  background: var(--t-a);
+  padding: 6px 10px 5px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.30);
+}
+.callout--ghost {
+  color: var(--text);
+  background: rgba(10,10,12,0.78);
+  border: 1px solid color-mix(in srgb, var(--t-a) 45%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+
+/* ── Live tool card ────────────────────────────────────────────────
+   Positioned absolutely by the builder (left/top/width/height inline).
+   The infra script makes it clickable: it grows to the stage, loads the
+   iframe, hands focus to it; Escape or a click on the backdrop shrinks it. */
+.tool-card {
+  position: absolute;
+  left: 56px; top: 200px; width: 460px; height: 290px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg) center / cover no-repeat;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 6;
+  /* the name and the line sit in flow, stacked against the bottom edge, so a
+     two-line name can never land on top of a two-line caption */
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 20px;
+  transition: left var(--dur-slow) var(--ease), top var(--dur-slow) var(--ease),
+              width var(--dur-slow) var(--ease), height var(--dur-slow) var(--ease),
+              box-shadow var(--dur) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.tool-card:hover { border-color: var(--t-a); }
+.tool-card__shade {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,8,10,0.92) 0%, rgba(8,8,10,0.55) 34%, rgba(8,8,10,0.05) 72%);
+  transition: opacity var(--dur) var(--ease);
+}
+.tool-card__name {
+  position: relative; margin: 0 0 8px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 26px; line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--text);
+  transition: opacity var(--dur) var(--ease);
+}
+.tool-card__line {
+  position: relative; margin: 0;
+  font-size: 18px; line-height: 1.25; color: var(--text-soft);
+  transition: opacity var(--dur) var(--ease);
+}
+.tool-card__hint {
+  position: absolute; right: 16px; top: 16px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--paper-ink); background: var(--t-a);
+  padding: 5px 9px 4px; border-radius: var(--r-sm);
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.tool-card iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease) var(--dur-fast);
+  background: var(--bg);
+}
+.tool-card.is-grown {
+  left: 40px !important; top: 36px !important;
+  width: 1200px !important; height: 648px !important;
+  z-index: 80;
+  cursor: default;
+  border-color: var(--t-a);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.75);
+}
+.tool-card.is-grown .tool-card__shade,
+.tool-card.is-grown .tool-card__name,
+.tool-card.is-grown .tool-card__line,
+.tool-card.is-grown .tool-card__hint { opacity: 0; pointer-events: none; }
+.tool-card.is-grown iframe { opacity: 1; pointer-events: auto; }
+
+.tool-backdrop {
+  position: absolute; inset: 0;
+  z-index: 70;
+  background: rgba(6,6,8,0.74);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+.tool-backdrop.is-on { opacity: 1; }
+
+/* ── Section rail: where we are in the talk ─────────────────────────
+   Five pips, one per row of the contents slide, the live one lit and
+   named. It sits on the page number's line, bottom right, small and
+   quiet: an orientation cue, not content. */
+.secrail {
+  position: absolute;
+  right: 66px; bottom: 14px;
+  z-index: 5;
+  display: flex; flex-direction: row-reverse; align-items: center; gap: 11px;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease);
+}
+.secrail[hidden] { display: none; }
+.secrail__name {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+.secrail.is-live .secrail__name {
+  color: color-mix(in srgb, var(--sr-a, var(--accent)) 84%, #f0ece8);
+}
+.secrail__pips { display: flex; align-items: center; gap: 5px; }
+.secrail__pips i {
+  display: block; width: 17px; height: 4px; border-radius: 2px;
+  background: rgba(240,236,232,0.20);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.55);
+  transition: background var(--dur-fast) var(--ease), width var(--dur-fast) var(--ease);
+}
+.secrail__pips i.is-done { background: rgba(240,236,232,0.42); }
+.secrail__pips i.is-live { background: var(--sr-a, var(--accent)); width: 27px; }
+.secrail.is-appendix .secrail__pips i { background: rgba(240,236,232,0.16); width: 17px; }
+
+/* ── Module mark: which module this slide belongs to ────────────────
+   Top left, in the strip above the titles, so a module slide announces
+   itself without the title having to say it. Only on module slides. */
+.modmark {
+  position: absolute;
+  left: 56px; top: 12px;
+  z-index: 5;
+  display: flex; align-items: center; gap: 10px;
+  pointer-events: none;
+}
+.modmark[hidden] { display: none; }
+.modmark svg { display: block; width: 26px; height: 26px; overflow: visible; }
+.modmark .mk-node {
+  fill: none; stroke: var(--mk-a, var(--accent)); stroke-width: 2.1;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.modmark .mk-solid { fill: color-mix(in srgb, var(--mk-a, var(--accent)) 80%, transparent); stroke: none; }
+.modmark__name {
+  font-family: var(--mono); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--mk-a, var(--accent)) 80%, #f0ece8);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+/* ── Slide zero: the hold screen ────────────────────────────────────
+   Quiet on purpose. The pump figure (PumpAnim, the s13 pump without
+   labels, 2026-09-23) runs its stop-and-go loop and nothing else moves;
+   under prefers-reduced-motion it is one still frame. */
+#s00 .s00 {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 30px;
+}
+/* the pump root: the bare figure's 560 × 456 viewBox at 0.6 */
+#s00 .s00-pump { position: relative; flex: none; width: 336px; height: 274px; }
+#s00 .s00-title {
+  margin: 0; text-align: center; max-width: 980px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 34px; line-height: 1.18; letter-spacing: -0.02em;
+  color: var(--text-soft, #cfc8c2);
+}
+#s00 .s00-sub {
+  margin: 0; text-align: center;
+  font-size: 22px; line-height: 1.3; color: var(--text-muted);
+}
+#s00 .s00-who {
+  margin: 0; font-family: var(--mono);
+  font-size: 19px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Slide number: on every slide, so a question can name one ───────
+   Bottom right, outside the 56px content gutter, in the bleed margin no
+   dialect writes into. Faint, but with a shadow so it still reads when a
+   full-bleed photo sits under it. */
+.slide-no {
+  position: absolute;
+  right: 26px; bottom: 15px;
+  z-index: 6;
+  font-family: var(--mono);
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(240,236,232,0.55);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.75);
+  pointer-events: none;
+  -webkit-user-select: none; user-select: none;
+}
+.slide-no[hidden] { display: none; }
+
+/* ══ 9 · HUD ═════════════════════════════════════════════════════════
+   This deck has no HUD. deck.css parks a progress bar and a slide counter
+   bottom centre and earlier revisions moved them to the top right corner;
+   both are now gone from the projected deck, because every slide carries
+   its own number and the presenter view has its own progress bar. The
+   runtime's three lookups for these elements are all null-guarded, so the
+   markup is simply absent rather than hidden. */
+
+/* ══ 10 · Presenter view ═════════════════════════════════════════════ */
+.pres { display: none; }
+body[data-view="presenter"] { background: #08080a; }
+body[data-view="presenter"] .pres {
+  display: grid;
+  position: fixed; inset: 0;
+  grid-template-columns: minmax(0, 56fr) minmax(0, 44fr);
+  grid-template-rows: minmax(0, 30vh) minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 14px;
+  font-family: var(--font);
+  z-index: 10;
+}
+body[data-view="presenter"] .deck-viewport {
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: var(--r-md);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  background: #060608;
+}
+body[data-view="presenter"] .deck-hud { display: none; }
+body[data-view="presenter"] .bg-blobs { opacity: 0.35; }
+
+.pres__stage { grid-column: 1; grid-row: 1; aspect-ratio: 16 / 9; min-height: 0; justify-self: center; }
+.pres__next  { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; min-height: 0; align-items: center; }
+.pres__notes { grid-column: 1 / -1; grid-row: 2; min-height: 0; overflow: auto; }
+.pres__bar   { grid-column: 1 / -1; grid-row: 3; }
+
+.pres__cap {
+  font-family: var(--mono);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.pres__next-frame {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: #060608;
+  overflow: hidden;
+}
+.pres__next-inner {
+  position: absolute; left: 0; top: 0;
+  width: 1280px; height: 720px;
+  transform-origin: top left;
+}
+.pres__next-inner .deck-overview-clone,
+.pres__next-inner > section {
+  position: absolute; inset: 0;
+  opacity: 1 !important;
+  width: 1280px; height: 720px;
+}
+.pres__next-end {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 15px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.pres__notes-body {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 22px;
+  height: 100%;
+  overflow: auto;
+}
+.pres__notes-body ul { margin: 0; padding-left: 26px; }
+.pres__notes-body li { font-size: 22px; line-height: 1.4; color: var(--text); margin-bottom: 6px; }
+.pres__notes-body p  { font-size: 22px; line-height: 1.5; color: var(--text); margin: 0 0 10px; max-width: none; }
+.pres__notes-empty { font-size: 20px; color: var(--text-muted); }
+.pres__notes-title {
+  font-family: var(--display); font-weight: 700;
+  font-size: 24px; line-height: 1.15; letter-spacing: -0.02em;
+  color: var(--text-soft);
+  margin: 0 0 10px;
+}
+.pres__bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px;
+  padding: 12px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.pres__stat { display: flex; align-items: baseline; gap: 9px; flex: 0 0 auto; white-space: nowrap; }
+.pres__stat-k {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.pres__stat-v { font-size: 26px; font-weight: 600; color: var(--text); }
+.pres__stat-v.is-over { color: var(--accent-2); }
+.pres__stat-v.is-close { color: var(--accent); }
+
+/* The two pacing timers. They answer one question each — am I still inside
+   the budget for this part, and for this section of it — so they carry the
+   only colour on the bar. Green while there is room, yellow with a minute
+   left, dark orange with thirty seconds, red once the budget is spent. */
+.pres__seg { font-variant-numeric: tabular-nums; color: #5bd98a; }
+.pres__seg.is-warn { color: #e9c341; }
+.pres__seg.is-near { color: #e2761b; }
+.pres__seg.is-over { color: #ff5a4d; }
+.pres__seg.is-idle { color: var(--text-muted); }
+.pres__stat--seg .pres__stat-k {
+  max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Everything that is not a pacing timer steps back, so the eye lands on the
+   two that matter while he is speaking. */
+#presElapsed, #presLeft { color: var(--text-muted); font-weight: 500; }
+#presElapsed.is-over, #presLeft.is-over,
+#presElapsed.is-close, #presLeft.is-close { color: var(--text-soft); }
+
+/* … except Elapsed, which is also a pacing signal: green while he is ahead
+   of the plan or barely behind it, then yellow, dark orange and red as the
+   lateness grows. Same four colours as the two timers above, its own class
+   names because .pres__seg carries layout as well as colour. */
+#presElapsed.is-pace-ok   { color: #5bd98a; font-weight: 600; }
+#presElapsed.is-pace-warn { color: #e9c341; font-weight: 600; }
+#presElapsed.is-pace-near { color: #e2761b; font-weight: 600; }
+#presElapsed.is-pace-over { color: #ff5a4d; font-weight: 600; }
+.pres__bar .pres__prog { opacity: 0.5; }
+.pres__bar .pres__keys { opacity: 0.7; }
+
+/* Opens the timing report for the run just spoken. */
+.pres__report {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  font-family: var(--mono); font-size: 17px; letter-spacing: 0.04em;
+  color: var(--text-soft); text-decoration: none; white-space: nowrap;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+.pres__report:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 65%, transparent); }
+
+/* Stops every clock on the bar while he breaks off to talk to someone, and
+   starts them again where they stood. Amber rather than the deck's orange,
+   because this is a state the bar is IN, not an accent: lit while paused,
+   with the readouts it froze stepping back at the same time, so he is never
+   left wondering whether the talk clock is running. Quiet enough to sit on
+   a presenter screen for half a minute without pulling the eye. */
+.pres__pause {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--mono); font-size: 17px; letter-spacing: 0.04em;
+  color: var(--text-soft); white-space: nowrap; cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease),
+              background-color 160ms var(--ease);
+}
+.pres__pause:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, #e9c341 60%, transparent);
+}
+.pres__pause[aria-pressed="true"] {
+  background: #e9c341;
+  border-color: #e9c341;
+  color: #17140a;
+  font-weight: 700;
+}
+body[data-pres-paused] .pres__bar {
+  border-color: color-mix(in srgb, #e9c341 50%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #e9c341 12%, transparent);
+}
+body[data-pres-paused] .pres__seg,
+body[data-pres-paused] #presElapsed,
+body[data-pres-paused] #presLeft { opacity: 0.4; }
+
+.pres__spacer { margin-left: auto; }
+/* the key hints drop to their own line so the progress bar can stretch */
+.pres__keys { flex: 1 1 100%; font-size: 12px; letter-spacing: 0.1em; color: var(--text-muted); }
+
+/* Progress through the talk, counted in clicker positions rather than in
+   slides: a slide with five steps is five presses of the talk, not one.
+   The appendix is not part of the talk, so it is left out of the total and
+   holds the bar where the talk left it. */
+.pres__prog { flex: 1 1 260px; display: flex; align-items: center; gap: 14px; min-width: 0; }
+.pres__prog-track {
+  position: relative; flex: 1 1 auto;
+  height: 24px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.pres__prog-fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 220ms var(--ease);
+}
+.pres__prog-pct {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.18em;
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+}
+.pres__prog-n {
+  flex: 0 0 auto; min-width: 104px; text-align: right;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 20px; font-weight: 600; color: var(--text);
+}
+.pres__prog.is-appendix { opacity: 0.5; }
+.pres__prog.is-appendix .pres__prog-n {
+  font-size: 15px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ══ 11 · Guest view ═════════════════════════════════════════════════ */
+.guest-dot { display: none; }
+body[data-view="guest"] .guest-dot {
+  display: flex; align-items: center; gap: 9px;
+  position: fixed; right: 18px; top: 16px;
+  z-index: 400;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+.guest-dot__led {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #4a4540;
+  transition: background var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.guest-dot.is-live .guest-dot__led {
+  background: #4fc38a;
+  box-shadow: 0 0 10px rgba(79,195,138,0.7);
+}
+
+/* ══ 12 · Reduced motion ═════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .bg-blobs .blob { animation: none !important; }
+  .cine__shot.is-live .cine__img { animation: none !important; }
+  .tool-card, .tool-backdrop, .secrail, .modmark, .site-nav--deck { transition: none !important; }
+  .slide, .fragment { transition: none !important; }
+}
+</style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header class="site-nav site-nav--deck" data-root="../../">
+    <a class="deck-back-link" href="../../decks/index.html">← Presentations</a>
+    <nav class="site-nav__links" aria-label="Primary">
+      <button class="site-nav__instr" type="button" aria-expanded="false" aria-controls="instr-panel">Instruments</button>
+    </nav>
+  </header>
+  <div id="instr-panel" class="instr" hidden></div>
+
+  <div class="deck-viewport">
+    <div class="deck-stage" tabindex="0">

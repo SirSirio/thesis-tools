@@ -154,7 +154,12 @@ because it is dirty — it may be mid-edit.
     **Reagent storage is Marius Schiller's**, never one of Sirio's modules.
 20. **Titles are full assertive sentences carrying the finding.** No filler labels. He
     narrates; the slide shows. Less text wins.
-21. **Every slide edit updates that slide's Italian points in `CONTENT-IT.md`, unprompted.**
+21. **Every slide edit is carried into the Italian guest deck, unprompted.** Since 2026-09-24 the
+    Italian deck is built: `it/parts/NN-*.html` are translated copies of `parts/NN-*.html`. Apply the
+    same change there (text on screen in Italian; the `.notes-it` captions rewritten from the English
+    spoken lines, same `data-step` numbers), then run `python assemble.py it` as well as
+    `python assemble.py`. `it/parts/` is the source of truth for the Italian; `CONTENT-IT.md` and the
+    `.notes-it` blocks inside the English `parts/` are the older drafts.
 22. **New compositions per slide are expected.** Reusing a template unchanged disappoints him.
 23. **Few numbers, not no numbers.** Percentages are welcome and so are measured values —
     the failure mode is a crowded slide, not the percent sign. Sirio has cut numbers from
