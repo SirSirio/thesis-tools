@@ -57,12 +57,6 @@
       <li data-step="meta">~10 s</li>
       <li data-step="0">Part II is the four modules I designed and built: pump, alignment, nozzle, user interface.</li>
     </ul>
-    <div class="notes-it" lang="it">
-      <p class="notes-it__title">I moduli.</p>
-      <ul>
-        <li data-step="0">Parte II: i quattro moduli che ho progettato e costruito.</li>
-      </ul>
-    </div>
   </aside>
 </section>
 
@@ -265,7 +259,7 @@
        native size and is only ever scaled UP, so it never drops below 18 px. -->
   <div class="s13-n" id="s13-n1"><span class="s13-n__v">4</span><span class="s13-n__k">rulli</span></div>
   <div class="s13-n" id="s13-n2"><span class="s13-n__v">0,51 mm</span><span class="s13-n__k">diametro interno</span></div>
-  <div class="s13-n s13-n--dose" id="s13-n3"><span class="s13-n__v">5 µL</span><span class="s13-n__k">per corsa</span></div>
+  <div class="s13-n s13-n--dose" id="s13-n3"><span class="s13-n__v">5 µL</span><span class="s13-n__k">per pompata</span></div>
 
   <aside class="notes">
     <ul>
@@ -279,7 +273,7 @@
     <div class="notes-it" lang="it">
       <p class="notes-it__title">È la geometria della pompa a definire il volume.</p>
       <ul>
-        <li data-step="0">Ogni quarto di giro i rulli spingono fuori 5 microlitri: una corsa.</li>
+        <li data-step="0">Ogni quarto di giro i rulli spingono fuori 5 microlitri: una pompata.</li>
         <li data-step="1">Ho scelto la dose, 5 microlitri; da lì il tubicino da 0,51 millimetri.</li>
         <li data-step="2">Tre strumenti mi hanno guidato: ho scelto quattro rulli.</li>
         <li data-step="3">Il primo dimensiona il rotore e verifica quanti rulli sono possibili.</li>
@@ -409,7 +403,7 @@
           <text class="onbar c14-ann" id="s14-val" data-late x="284" y="130" text-anchor="middle">3,39</text>
           <path class="ln wh" id="s14-whisk" d="M 264 76.8 L 304 76.8 M 284 76.8 L 284 85.4 M 264 85.4 L 304 85.4" stroke-width="2.5" />
           <text class="dk c14-ann" id="s14-whisk-l" data-late x="344" y="87">CV 4,5 %</text>
-          <text class="dk c14-ann" id="s14-unit" x="284" y="194" text-anchor="middle">µL per corsa</text>
+          <text class="dk c14-ann" id="s14-unit" x="284" y="194" text-anchor="middle">µL per pompata</text>
         </svg>
       </div>
       <p class="c14-cap" id="s14-p4">Dava meno del previsto, ma costante e preciso.</p>
@@ -429,7 +423,7 @@
       <p class="notes-it__title">Primi fallimenti: tenuta e limiti del sensore.</p>
       <ul>
         <li data-step="0">Non chiudeva il tubicino: ci sono voluti nastro e carta.</li>
-        <li data-step="2">Il sensore oscillava troppo: una misura su sette andava all&rsquo;indietro.</li>
+        <li data-step="2">Il sensore oscillava troppo: il flusso della pompa è irregolare.</li>
         <li data-step="3">Da qui in poi, ogni volume lo peso con una bilancia.</li>
         <li data-step="4">Dava molto meno del previsto, ma sempre uguale.</li>
       </ul>
@@ -649,8 +643,8 @@
         <circle class="pt pt--b" cx="448" cy="191.5" r="9" />
         <circle class="pt pt--b" cx="596" cy="159.0" r="9" />
       </g>
-      <text class="lg lg--a" id="s16-lg-a" x="312" y="134">100 corse</text>
-      <text class="lg lg--b" id="s16-lg-b" x="166" y="40">300 corse</text>
+      <text class="lg lg--a" id="s16-lg-a" x="312" y="134">100 pompate</text>
+      <text class="lg lg--b" id="s16-lg-b" x="166" y="40">300 pompate</text>
 
       <!-- the operating point, drawn on the chart when it is chosen -->
       <path class="pick" id="s16-pick" d="M 448 292 L 448 176" />
@@ -690,7 +684,7 @@
     </div>
     <div class="ledger__cell" data-cell="2">
       <div class="ledger__v"><span id="s16-n3">4,53</span> µL</div>
-      <div class="ledger__k">per corsa a quella velocità: il 9,4&nbsp;% in meno</div>
+      <div class="ledger__k">per pompata a quella velocità: il 9,4&nbsp;% in meno</div>
     </div>
   </div>
 
@@ -707,7 +701,7 @@
       <ul>
         <li data-step="0">La linea tratteggiata è una pipetta manuale; le altre sono la pompa.</li>
         <li data-step="2">A 180 giri al minuto è precisa come la pipetta e tre volte più veloce.</li>
-        <li data-step="3">Una corsa dà 4,53 microlitri, il 9,4&nbsp;% in meno: il programma lo corregge.</li>
+        <li data-step="3">Ogni pompata dà 4,53 microlitri, il 9,4&nbsp;% in meno: il programma lo corregge.</li>
       </ul>
     </div>
   </aside>
@@ -816,9 +810,9 @@
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Allineamento: la distanza tra provette guida il moto.</p>
       <ul>
-        <li data-step="0">Muovo le provette e tengo fermi gli ugelli: i tubicini non si piegano.</li>
-        <li data-step="2">Pulibilità e fattibilità hanno escluso tre soluzioni.</li>
-        <li data-step="3">Otto provette a 22 millimetri l&rsquo;una dall&rsquo;altra: questo fissa la lunghezza.</li>
+        <li data-step="0">Molte idee sono state valutate su carta.</li>
+        <li data-step="2">Pulibilità e fattibilità hanno escluso molte soluzioni.</li>
+        <li data-step="3">La distanza tra le provette la decide il modulo apritappi, fuori da questa tesi.</li>
       </ul>
     </div>
   </aside>
@@ -884,7 +878,7 @@
       <ul>
         <li data-step="0">Versione 1: passi di 22 millimetri, precisi, con parti stampate.</li>
         <li data-step="2">Versione 2: motore sopra i campioni, al riparo dal liquido.</li>
-        <li data-step="3">Versione 2.1: zero automatico entro 0,03 millimetri.</li>
+        <li data-step="3">Versione 2.1: un microinterruttore per trovare la posizione di partenza.</li>
       </ul>
     </div>
   </aside>
@@ -1128,9 +1122,9 @@
       <p class="notes-it__title">Il foro dell&rsquo;ago decide come si forma la goccia.</p>
       <ul>
         <li data-step="0">Cinque punte, stessa vibrazione: cambia solo il foro.</li>
-        <li data-step="2">Fori stretti: esce un getto, niente goccia.</li>
+        <li data-step="2">Fori stretti: esce un getto che schizza, niente goccia.</li>
         <li data-step="3">Fori più larghi: la goccia si forma e quasi sempre si stacca.</li>
-        <li data-step="4">Meglio le punte di plastica: nove su dieci. La macchina usa aghi calibro 22.</li>
+        <li data-step="4">Meglio le punte di plastica. La macchina usa gli aghi blu.</li>
       </ul>
     </div>
   </aside>
@@ -2427,7 +2421,7 @@
       '<div class="pp__hud">' +
         '<div class="pp__q"><span class="pp__q-k">&frac14; di giro</span><span class="pp__q-v">5 µL</span></div>' +
         '<div class="pp__ct"><span class="pp__ct-v" id="' + P + 'ct-v">0 µL</span>' +
-          '<span class="pp__ct-k" id="' + P + 'ct-k">0 corse</span></div>' +
+          '<span class="pp__ct-k" id="' + P + 'ct-k">0 pompate</span></div>' +
       '</div>';
   }
 
@@ -2627,7 +2621,7 @@
       if (ctV && landed !== lastCount) {
         lastCount = landed;
         ctV.textContent = (5 * landed) + ' µL';
-        if (ctK) ctK.textContent = landed + (landed === 1 ? ' corsa' : ' corse');
+        if (ctK) ctK.textContent = landed + (landed === 1 ? ' pompata' : ' pompate');
       }
     }
 
