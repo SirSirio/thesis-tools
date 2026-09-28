@@ -1717,3 +1717,113 @@
   });
 })();
 </script>
+
+<style data-part="p4-disc-planning">
+/* ══ B29 · vertical against horizontal progression ═══════════════════
+   Added 2026-09-28. The section is an appendix slide in
+   parts/60-backups.html after S39; its CSS and builder live here
+   (SLIDE-ORDER.md §4). The tier bars echo S10's pyramid in
+   parts/20-part1.html: same modules, pump strongest, orange fading down. */
+#b29 .vh { position: absolute; inset: 0; }
+#b29 .kicker { font-size: 18px; letter-spacing: 0.16em; }
+#b29 .vh-k { position: absolute; top: 206px; }
+#b29 .vh-k--v { left: 196px; }
+#b29 .vh-k--h { left: 732px; }
+
+#b29 .vh-stack { position: absolute; top: 238px; width: 492px; height: 140px; }
+#b29 .vh-stack--v { left: 196px; }
+#b29 .vh-stack--h { left: 732px; }
+#b29 .vh-t { display: flex; align-items: center; height: 23px; }
+#b29 .vh-t span {
+  flex: 0 0 112px; font-size: 18px; line-height: 1; color: var(--text-soft);
+}
+#b29 .vh-t[data-r="1"] span { color: var(--text); font-weight: 600; }
+#b29 .vh-t b {
+  position: relative; display: block; flex: 0 0 214px; height: 13px;
+  border-radius: 7px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--t-a) 40%, transparent);
+  background: rgba(255,255,255,0.025);
+}
+#b29 .vh-t b i { position: absolute; left: 0; top: 0; bottom: 0; display: block; border-radius: 7px; }
+#b29 .vh-t[data-r="1"] b i { background: color-mix(in srgb, var(--t-a) 88%, transparent); }
+#b29 .vh-t[data-r="2"] b i { background: color-mix(in srgb, var(--t-a) 72%, transparent); }
+#b29 .vh-t[data-r="3"] b i { background: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b29 .vh-t[data-r="4"] b i { background: color-mix(in srgb, var(--t-a) 54%, transparent); }
+#b29 .vh-t[data-r="5"] b i { background: color-mix(in srgb, var(--t-a) 46%, transparent); }
+#b29 .vh-t[data-r="6"] b i { background: color-mix(in srgb, var(--t-a) 40%, transparent); }
+/* the ones still waiting their turn: dashed, like S10's enclosure */
+#b29 .vh-stack--v .vh-t:not([data-r="1"]) b { border-style: dashed; border-color: color-mix(in srgb, var(--t-a) 30%, transparent); }
+#b29 .vh-cap {
+  position: absolute; left: 346px; top: 0; width: 146px; margin: 0;
+  font-size: 18px; line-height: 1.3; color: var(--text-muted);
+}
+
+#b29 .vh-row { position: absolute; left: 56px; width: 1168px; height: 56px; }
+#b29 .vh-row::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 1px;
+  background: rgba(255,255,255,0.09);
+}
+#b29 .vh-rl {
+  position: absolute; left: 0; top: 2px; width: 130px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--t-a);
+}
+#b29 .vh-v, #b29 .vh-h {
+  position: absolute; top: 0; width: 492px; margin: 0;
+  font-size: 18px; line-height: 1.3; color: var(--text);
+}
+#b29 .vh-v { left: 140px; }
+#b29 .vh-h { left: 676px; }
+
+#b29 .vh-band {
+  position: absolute; left: 56px; top: 572px; width: 1168px; height: 114px;
+  box-sizing: border-box; padding: 14px 22px;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.88);
+  border: 1px solid color-mix(in srgb, var(--t-a) 45%, transparent);
+}
+#b29 .vh-bk { position: absolute; left: 22px; top: 14px; }
+#b29 .vh-flow {
+  position: absolute; left: 22px; top: 42px; width: 1122px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+#b29 .vh-flow p { flex: 1 1 0; margin: 0; font-size: 18px; line-height: 1.3; color: var(--text); }
+#b29 .vh-flow p:first-child { flex: 0 0 170px; }
+#b29 .vh-flow i {
+  flex: 0 0 22px; height: 2px; margin-top: 11px; display: block;
+  background: color-mix(in srgb, var(--t-a) 80%, transparent);
+}
+#b29 .vh-verdict {
+  position: absolute; left: 330px; top: 12px; width: 814px; margin: 0; text-align: right; white-space: nowrap;
+  font-size: 18px; line-height: 1.3; font-weight: 600; color: var(--t-a);
+}
+</style>
+
+<script data-part="p4-disc-planning">
+/* ══ B29 · timeline (section in parts/60-backups.html) ═══════════════
+   0 the two strategies · 1 buys · 2 costs · 3 fits · 4 this project */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+  Deck.slide('b29', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var rows = el.querySelectorAll('.vh-row');
+    var band = el.querySelector('.vh-band');
+    var bits = el.querySelectorAll('.vh-flow p, .vh-flow i, .vh-verdict');
+
+    gsap.set(rows, { autoAlpha: 0, y: 10 });
+    gsap.set(band, { autoAlpha: 0, y: 16 });
+    gsap.set(bits, { autoAlpha: 0 });
+
+    tl.addLabel('step0');
+    Array.prototype.forEach.call(rows, function (r, i) {
+      tl.to(r, { autoAlpha: 1, y: 0, duration: 0.5, ease: EASE }, 'step' + i)
+        .addLabel('step' + (i + 1));
+    });
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step3')
+      .to(bits, { autoAlpha: 1, duration: 0.4, stagger: 0.12, ease: 'none' }, 'step3+=0.2')
+      .addLabel('step4');
+    return tl;
+  });
+})();
+</script>

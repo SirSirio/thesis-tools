@@ -16,6 +16,11 @@ The deck has two different orders and they are not the same thing:
 - **Organisation** — the two-level taxonomy below, which is what the overview
   (press `o` or `Escape`) shows, so Sirio can find any slide in a second.
 
+*Added 2026-09-28.* **`b29`** (planning: vertical against horizontal
+progression, the pair to `s10`), `data-part="backup"`, `data-topic="disc"`,
+after `s39` in `SLIDE_ORDER` and in `parts/60-backups.html`; CSS and builder
+in `parts/50-discussion.html` (§4).
+
 *Added 2026-09-28.* **`b27`** (coupling the dispenser with a reader: the
 regulatory answer) and **`b28`** (thesis Table 5.2, verbatim, one page per
 press), both `data-part="backup"`, `data-topic="outlook"`, after `b25` in

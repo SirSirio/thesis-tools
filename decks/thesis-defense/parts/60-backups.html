@@ -345,6 +345,104 @@
   </aside>
 </section>
 
+<!-- B29 · planning: vertical against horizontal progression ─────────
+     Built 2026-09-28 for the committee question Sirio expects on the
+     plan. S10 presented the plan (the module hierarchy led by the pump,
+     "the order the work followed"); this is what became of it. The tier
+     bars echo S10's pyramid: the same six modules, the pump strongest,
+     the orange fading down the stack. On the left the pump is full and
+     the rest wait; on the right every tier is half full. S38 is depth
+     against breadth inside one module; this is the order across modules,
+     so the two do not overlap. Project claims: ch. 13 lines 88 and 119,
+     App. Q lines 47-57. Pros and cons are general knowledge (CONTENT.md).
+     Its CSS and builder live in parts/50-discussion.html. ─────────────── -->
+<section class="slide" id="b29" data-cue="b29" data-dialect="ledger" data-part="backup"
+         data-topic="disc" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The plan was vertical, pump first; late parts made it horizontal, and the modules arrived less mature.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="vh">
+    <span class="kicker vh-k vh-k--v">Vertical &middot; the plan</span>
+    <span class="kicker vh-k vh-k--h">Horizontal &middot; what we did</span>
+
+    <div class="vh-stack vh-stack--v">
+      <div class="vh-t" data-r="1"><span>Pump</span><b><i style="width:100%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Alignment</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Nozzle</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Storage</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interface</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Electronics</span><b><i style="width:0%"></i></b></div>
+      <p class="vh-cap">One module to maturity, then the next.</p>
+    </div>
+    <div class="vh-stack vh-stack--h">
+      <div class="vh-t" data-r="1"><span>Pump</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Alignment</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Nozzle</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Storage</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interface</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Electronics</span><b><i style="width:52%"></i></b></div>
+      <p class="vh-cap">Every module at once, each part of the way.</p>
+    </div>
+
+    <div class="vh-row" data-row="0" style="top:390px">
+      <span class="vh-rl">Buys</span>
+      <p class="vh-v">Each module is proven before the next one depends on it, so its interfaces are settled.</p>
+      <p class="vh-h">Nobody waits: work goes on while a part is late, and it saves project time.</p>
+    </div>
+    <div class="vh-row" data-row="1" style="top:450px">
+      <span class="vh-rl">Costs</span>
+      <p class="vh-v">It is serial: one late part stalls everything behind it.</p>
+      <p class="vh-h">Each module matures less, and integration piles up at the end.</p>
+    </div>
+    <div class="vh-row" data-row="2" style="top:510px">
+      <span class="vh-rl">Fits</span>
+      <p class="vh-v">When one module sets the others, as the pump does here.</p>
+      <p class="vh-h">A team with a deadline; normal in a company with more people and time.</p>
+    </div>
+
+    <div class="vh-band">
+      <span class="kicker vh-bk">In this project</span>
+      <div class="vh-flow">
+        <p>The plan put the pump first.</p>
+        <i></i>
+        <p>Its tubing came six weeks late, so we built the rest in parallel.</p>
+        <i></i>
+        <p>Integration moved to the end, and the modules arrived less mature.</p>
+      </div>
+      <p class="vh-verdict">Right for the circumstances, not for this machine. Next time, module by module.</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The plan was vertical: take one module to maturity, starting with the pump, then the next. What we did was horizontal: every module at once.</li>
+      <li data-step="1">Vertical proves each module before the next one depends on it. Horizontal means nobody waits, and it saves time.</li>
+      <li data-step="2">The price of vertical is that it is serial: one late part stalls everything. The price of horizontal is that each module matures less, and integration piles up at the end.</li>
+      <li data-step="3">In a team with a deadline, parallel work makes sense, and in a company with more people and time it is normal. Vertical fits when one module sets the others, as the pump does.</li>
+      <li data-step="4">Here the pump tubing arrived six weeks late, so we built the rest in parallel. It kept us moving, but the modules arrived less mature, and that cost the final machine. It was right for the circumstances, but not the best choice for this machine.</li>
+      <li>If asked for an example: developing the storage apart from the pump left a feed-line restriction, a leading suspect for the 10&nbsp;% delivery loss on the assembled machine.</li>
+      <li>If asked: the plan from March named task delays and late integration as the main risks, and both happened.</li>
+      <li>If asked how this differs from depth and breadth: that was how many concepts to build inside one module; this is the order of work across modules.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il piano era verticale, prima la pompa; i ritardi l&rsquo;hanno reso orizzontale, e i moduli sono arrivati meno maturi</p>
+      <ul>
+        <li data-step="0">Il piano era verticale: portare un modulo a maturazione, a partire dalla pompa, poi il successivo. Abbiamo fatto il contrario: tutti i moduli insieme.</li>
+        <li data-step="1">In verticale ogni modulo è provato prima che il successivo ne dipenda. In orizzontale nessuno aspetta, e si risparmia tempo.</li>
+        <li data-step="2">Il prezzo del verticale: si procede in fila, e un ritardo blocca tutto. Il prezzo dell&rsquo;orizzontale: ogni modulo matura meno, e l&rsquo;integrazione si accumula alla fine.</li>
+        <li data-step="3">In un gruppo con una scadenza lavorare in parallelo ha senso, e in un&rsquo;azienda con più persone e più tempo è normale. Il verticale serve quando un modulo decide gli altri, come la pompa.</li>
+        <li data-step="4">Qui il tubo della pompa è arrivato sei settimane in ritardo, e abbiamo costruito il resto in parallelo. Giusto per le circostanze, ma non la scelta migliore per questa macchina.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
 <!-- B25 ·  the reader's hardware ledger ─────────────────────────────
      Backs S41 (pair the dispenser with a reader). Dialect "ledger":
      every readout is billed against the same five slots — light in,

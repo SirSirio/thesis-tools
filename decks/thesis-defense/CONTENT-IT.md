@@ -653,6 +653,15 @@ dove si è fermata.*
   integrato e questa profondità di validazione sperimentale nei tempi di una
   tesi magistrale non sarebbe stato possibile.»**
 
+### `b29` — il piano era verticale, prima la pompa; i ritardi l'hanno reso orizzontale, e i moduli sono arrivati meno maturi
+*(discussione e riflessione, capitolo 13; nuova il 28-09-2026, accanto a `s39`. È la risposta alla domanda sulla pianificazione, e fa coppia con la piramide dei moduli di `s10`.)*
+- Il piano era verticale: portare un modulo a maturazione, a partire dalla pompa, poi il successivo. Abbiamo fatto il contrario: tutti i moduli insieme.
+- In verticale ogni modulo è provato prima che il successivo ne dipenda. In orizzontale nessuno aspetta, e si risparmia tempo.
+- Il prezzo del verticale: si procede in fila, e un ritardo blocca tutto. Il prezzo dell'orizzontale: ogni modulo matura meno, e l'integrazione si accumula alla fine.
+- In un gruppo con una scadenza lavorare in parallelo ha senso, e in un'azienda con più persone e più tempo è normale. Il verticale serve quando un modulo decide gli altri, come la pompa.
+- Qui il tubo della pompa è arrivato sei settimane in ritardo, e abbiamo costruito il resto in parallelo. Giusto per le circostanze, ma non la scelta migliore per questa macchina.
+- *Se chiesto:* sviluppare lo stoccaggio separato dalla pompa ha lasciato una strozzatura nella linea di alimentazione, principale sospettata del 10 % di liquido in meno.
+
 ### `b25` — sei modi di leggere il risultato, e ognuno è un conto diverso di hardware
 *(conclusione e prospettive, capitolo 14; nuova il 22-09-2026. È la slide di
 riserva dietro il lettore modulare di `s41`: se qualcuno chiede «e il lettore
