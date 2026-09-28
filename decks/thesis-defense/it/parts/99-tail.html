@@ -609,7 +609,9 @@
     var params    = new URLSearchParams(location.search);
     var view      = params.get('view') || 'guest';   /* Italian deck: guest by default */
     if (view !== 'presenter' && view !== 'guest') view = 'stage';
-    var syncRole  = params.get('sync');           /* 'host' | 'guest' | null */
+    /* Italian deck: always a guest that follows the relay (?sync=off to stop it). */
+    var syncRole  = params.get('sync') || 'guest';
+    if (syncRole === 'off') syncRole = null;
     var reduce    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.body.setAttribute('data-view', view);
@@ -2172,7 +2174,8 @@
         if (syncRole === 'host' || hasMoved) send(makeMsg(window.Deck.state));
         return;
       }
-      if (m.t && Date.now() - m.t > 120000) return;
+      /* No age check: the two laptops' clocks may disagree. The sid/seq
+         check below still drops repeats and out-of-order messages. */
       var last = seen[m.sid];
       if (last !== undefined && m.seq <= last) return;
       seen[m.sid] = m.seq;

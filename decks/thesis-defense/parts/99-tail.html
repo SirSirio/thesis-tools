@@ -588,7 +588,9 @@
     var params    = new URLSearchParams(location.search);
     var view      = params.get('view') || 'stage';
     if (view !== 'presenter' && view !== 'guest') view = 'stage';
-    var syncRole  = params.get('sync');           /* 'host' | 'guest' | null */
+    /* The presenter window drives the relay by default (?sync=off to stop it). */
+    var syncRole  = params.get('sync') || (view === 'presenter' ? 'host' : null);
+    if (syncRole === 'off') syncRole = null;
     var reduce    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.body.setAttribute('data-view', view);
