@@ -3553,12 +3553,14 @@ body[data-view="guest"] .guest-dot {
   font-size: 18px; color: var(--text); text-align: center; white-space: nowrap;
 }
 
-/* ── B28 · Table 5.2, one page per press ─────────────────────────── */
+/* ── B28 · Table 5.2, abridged, one page per press ───────────────
+   2026-09-28, Sirio: the "what it requires" column is dropped, so three
+   columns remain and the twelve rows fit two pages. */
 /* Sirio's title sets 1202 px at 44 px; 42 px (1147 px) holds it on one line. */
 #b28 .slide__title { font-size: 42px; white-space: nowrap; }
 #b28 .rt { position: absolute; left: 56px; top: 164px; width: 1168px; height: 524px; }
 #b28 .rt-hd, #b28 .rt-row {
-  display: grid; grid-template-columns: 206px 470px 226px 234px; column-gap: 10px;
+  display: grid; grid-template-columns: 390px 340px 408px; column-gap: 15px;
 }
 #b28 .rt-hd {
   padding: 0 0 10px; border-bottom: 1px solid var(--glass-border);
@@ -3570,30 +3572,27 @@ body[data-view="guest"] .guest-dot {
 #b28 .rt-hd .rt-c4 { color: var(--text); }
 /* each page is centred in the band between the header and the foot line */
 #b28 .rt-pg {
-  position: absolute; left: 0; top: 62px; width: 1168px; height: 418px;
+  position: absolute; left: 0; top: 40px; width: 1168px; height: 440px;
   display: flex; flex-direction: column; justify-content: center;
 }
 #b28 .rt-grp {
-  margin: 0 0 12px; font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--text);
+  margin: 0 0 6px; font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--text);
 }
-#b28 .rt-cap { margin: -4px 0 12px; font-size: 18px; line-height: 1.3; color: var(--text-muted); font-style: italic; }
+#b28 .rt-grp--2 { margin-top: 18px; }
+#b28 .rt-cap { margin: 10px 0 4px; font-size: 18px; line-height: 1.3; color: var(--text-muted); font-style: italic; }
 #b28 .rt-row {
-  padding: 17px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-size: 18px; line-height: 1.3; color: var(--text-soft);
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 20px; line-height: 1.25; color: var(--text-soft);
   align-items: start;
 }
-/* pages with fewer rows breathe more, so each page fills its band */
-#b28 .rt-pg[data-pg="0"] .rt-row { padding: 30px 0; }
-#b28 .rt-pg[data-pg="2"] .rt-row { padding: 26px 0; }
-#b28 .rt-pg[data-pg="3"] .rt-row { padding: 24px 0; }
-#b28 .rt-pg[data-pg="0"] .rt-grp, #b28 .rt-pg[data-pg="2"] .rt-grp { margin-bottom: 16px; }
+#b28 .rt-pg[data-pg="1"] .rt-row { padding: 16px 0; }
 #b28 .rt-row .rt-c1 { color: var(--text); }
 #b28 .rt-row .rt-c3, #b28 .rt-row .rt-c4 { color: var(--text-muted); }
 /* where the two paths differ, the accessory cell is the one that is lit */
 #b28 .rt-row--diff .rt-c3 { color: var(--text); }
 #b28 .rt-row--diff .rt-c4 { color: var(--t-a); }
 #b28 .rt-foot {
-  position: absolute; left: 0; top: 436px; margin: 0;
+  position: absolute; left: 0; top: 460px; margin: 0;
   font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em; color: var(--text-muted);
 }
 </style>
@@ -10053,14 +10052,18 @@ body[data-view="guest"] .guest-dot {
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~45 s</li>
-      <li data-step="0">Today the dispenser is general laboratory equipment, like a pipette. It examines nothing, so the IVDR does not apply to it.</li>
-      <li data-step="1">Add a reader, and the reader is a diagnostic device. It examines a human sample and returns a result, so the IVDR applies to the reader.</li>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">&mdash;</li>
+      <li data-step="1">&mdash;</li>
       <li data-step="2">The dispenser&rsquo;s status then depends on what is claimed. If the operator pairs them, it stays general equipment. Sold with the reader for named tests, it becomes a Class A accessory, which the maker certifies itself. And if a diagnostic company bundles it, it enters their file.</li>
       <li data-step="3">Either way the hardware stays the same. What grows is the file: registration, a quality system, a performance evaluation, and the two IVD supplements to the safety standards.</li>
-      <li>If asked about animal or water samples: none of this applies. The IVDR covers human specimens only.</li>
-      <li>If asked about the tests themselves: they carry their own class, often higher, and that is the burden of whoever claims them. This is general knowledge, not in the thesis.</li>
-      <li>If asked for article numbers: do not quote them. The thesis sources give the shape of the regulation, not checked clause numbers.</li>
+      <li><strong>IVDR:</strong> the EU regulation for in vitro diagnostic devices, tests that examine samples taken from the human body.</li>
+      <li><strong>EUDAMED registration:</strong> the EU device database, where the device is registered under a unique device identifier.</li>
+      <li><strong>Dossier and quality system:</strong> the technical file that proves the device meets the rules, and a quality management system that keeps it that way, usually built to ISO&nbsp;13485.</li>
+      <li><strong>IEC 61010-2-101:</strong> the IVD supplement to IEC 61010-1, the safety standard for electrical laboratory equipment.</li>
+      <li><strong>IEC 61326-2-6:</strong> the IVD supplement to the electromagnetic compatibility standard: the device neither disturbs nearby electronics nor malfunctions because of them.</li>
+      <li><strong>Class A accessory:</strong> the lowest of the four IVDR risk classes; when non-sterile, the maker declares conformity itself, with no notified body.</li>
+      <li>If asked: animal or water samples are outside the IVDR; the tests themselves carry their own class, often higher (general knowledge).</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Classificazione normativa con un lettore integrato</p>
@@ -10089,13 +10092,10 @@ body[data-view="guest"] .guest-dot {
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
-  <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
 
   <div class="rt">
     <div class="rt-hd">
       <span class="rt-c1">Thesis Table 5.2</span>
-      <span class="rt-c2">What it requires</span>
       <span class="rt-c3">General laboratory equipment</span>
       <span class="rt-c4">Class A diagnostic accessory</span>
     </div>
@@ -10104,113 +10104,92 @@ body[data-view="guest"] .guest-dot {
       <p class="rt-grp">What decides the classification</p>
       <div class="rt-row">
         <span class="rt-c1">Physical hardware</span>
-        <span class="rt-c2">Unchanged either way</span>
         <span class="rt-c3">Identical</span>
         <span class="rt-c4">Identical</span>
       </div>
       <div class="rt-row">
         <span class="rt-c1">Examines a specimen, or returns a result</span>
-        <span class="rt-c2">The test for an IVD, IVDR Art.&nbsp;2(2); human specimens only</span>
         <span class="rt-c3">No</span>
         <span class="rt-c4">No</span>
       </div>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">Documentation claims</span>
-        <span class="rt-c2">The declared intended purpose</span>
         <span class="rt-c3">Volumetric range and precision</span>
         <span class="rt-c4">Validated for a named assay</span>
       </div>
-      <p class="rt-foot">1 of 4 &middot; verbatim from the thesis, citations omitted</p>
-    </div>
-
-    <div class="rt-pg" data-pg="1">
-      <p class="rt-grp">Resulting compliance obligations</p>
+      <p class="rt-grp rt-grp--2">Resulting compliance obligations</p>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">CE marking declaration</span>
-        <span class="rt-c2">The manufacturer&rsquo;s own statement that the product meets all applicable EU law</span>
         <span class="rt-c3">Under machinery law</span>
         <span class="rt-c4">Under machinery law and IVDR</span>
       </div>
       <div class="rt-row">
         <span class="rt-c1">Notified body audit</span>
-        <span class="rt-c2">Independent assessment before market entry, required above Class&nbsp;A and for sterile Class&nbsp;A devices</span>
         <span class="rt-c3">Not required</span>
         <span class="rt-c4">Not required for a non-sterile Class&nbsp;A device</span>
       </div>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">EUDAMED registration</span>
-        <span class="rt-c2">Entry in the EU device database under a unique device identifier</span>
         <span class="rt-c3">Not required</span>
         <span class="rt-c4">Required</span>
       </div>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">Technical documentation</span>
-        <span class="rt-c2">The evidence file held by the manufacturer and produced on demand</span>
         <span class="rt-c3">Risk assessment and instructions for use</span>
         <span class="rt-c4">Plus the IVDR dossier and a quality management system</span>
       </div>
-      <p class="rt-foot">2 of 4 &middot; verbatim from the thesis, citations omitted</p>
+      <p class="rt-foot">1 of 2 &middot; abridged from thesis Table 5.2: the &ldquo;what it requires&rdquo; column and the citations omitted</p>
     </div>
 
-    <div class="rt-pg" data-pg="2">
+    <div class="rt-pg" data-pg="1">
       <p class="rt-grp">Resulting compliance obligations, continued</p>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">Performance evaluation and surveillance</span>
-        <span class="rt-c2">Evidence that the device achieves its stated purpose, and monitoring of it in service after release</span>
         <span class="rt-c3">Not required</span>
         <span class="rt-c4">Required, with a documented plan</span>
       </div>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">Electrical safety</span>
-        <span class="rt-c2">Insulation, creepage and clearance, protective earthing and temperature rise</span>
         <span class="rt-c3">IEC 61010-1</span>
         <span class="rt-c4">Plus IEC 61010-2-101, the IVD supplement</span>
       </div>
       <div class="rt-row rt-row--diff">
         <span class="rt-c1">Electromagnetic compatibility</span>
-        <span class="rt-c2">Neither disturbing nearby equipment nor malfunctioning because of it</span>
         <span class="rt-c3">IEC 61326-1</span>
         <span class="rt-c4">IEC 61326-2-6, the IVD supplement</span>
       </div>
-      <p class="rt-foot">3 of 4 &middot; verbatim from the thesis, citations omitted</p>
-    </div>
-
-    <div class="rt-pg" data-pg="3">
-      <p class="rt-grp">Resulting compliance obligations, continued</p>
       <p class="rt-cap">From the caption: &ldquo;Below the two particular standards the final two columns are identical.&rdquo;</p>
       <div class="rt-row">
         <span class="rt-c1">Machinery law</span>
-        <span class="rt-c2">Risk assessment for moving parts; safe filling, draining and recovery of fluids; internal parts cleanable without entry. No leaching into reagents is adopted voluntarily, from food and pharmaceutical machinery. Directive 2006/42/EC until January 2027, then Regulation (EU) 2023/1230</span>
         <span class="rt-c3">Applies</span>
         <span class="rt-c4">Applies</span>
       </div>
       <div class="rt-row">
         <span class="rt-c1">Battery, materials and firmware</span>
-        <span class="rt-c2">A user-replaceable battery; restricted substances and end-of-life handling; secure-by-default firmware with a declared support period</span>
         <span class="rt-c3">Applies unchanged</span>
         <span class="rt-c4">Applies unchanged</span>
       </div>
-      <p class="rt-foot">4 of 4 &middot; verbatim from the thesis, citations omitted</p>
+      <p class="rt-foot">2 of 2 &middot; abridged from thesis Table 5.2: the &ldquo;what it requires&rdquo; column and the citations omitted</p>
     </div>
-
   </div>
 
   <aside class="notes">
     <ul>
-      <li data-step="meta">~40 s</li>
-      <li data-step="0">This is Table 5.2 from chapter 5. What decides the class is not the hardware, which is identical, but what the documentation claims: a volume range and a precision, or validation for a named assay.</li>
-      <li data-step="1">On the accessory path the CE marking also falls under the IVDR. There is no notified body for a non-sterile Class A device, but there is EUDAMED registration, the IVDR dossier and a quality management system.</li>
-      <li data-step="2">Performance evaluation and surveillance come only with the accessory path, and so do the IVD supplements to the electrical safety and EMC standards.</li>
-      <li data-step="3">From machinery law down, the two columns are identical: the same risk assessment, the same battery, materials and firmware rules.</li>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">This is Table 5.2 from chapter 5, abridged. What decides the class is not the hardware, which is identical, but what the documentation claims. The accessory path adds the IVDR to the CE marking, EUDAMED registration, and the IVDR dossier with a quality system, but no notified body for a non-sterile Class A device.</li>
+      <li data-step="1">Performance evaluation and the two IVD supplements come only with the accessory path. From machinery law down, the two columns are identical.</li>
+      <li><strong>EUDAMED:</strong> the EU device database, where the device is registered under a unique device identifier.</li>
+      <li><strong>IEC 61010-1:</strong> the general safety standard for electrical measurement, control and laboratory equipment.</li>
+      <li><strong>IEC 61010-2-101:</strong> its add-on with the extra safety requirements for IVD equipment.</li>
+      <li><strong>IEC 61326-1:</strong> the general electromagnetic compatibility standard for measurement, control and laboratory equipment.</li>
+      <li><strong>IEC 61326-2-6:</strong> its add-on with the extra EMC requirements for IVD equipment.</li>
       <li>If asked: Class A is the lowest of the four diagnostic risk classes, and the only one a manufacturer may certify without an external audit.</li>
     </ul>
     <div class="notes-it" lang="it">
       <p class="notes-it__title">Le norme cambiano la documentazione, non la macchina</p>
       <ul>
-        <li data-step="0">È la tabella 5.2 del capitolo 5. A decidere la classe non è la macchina, identica, ma ciò che la documentazione dichiara: un intervallo di volumi, o un test preciso.</li>
-        <li data-step="1">Sulla strada dell&rsquo;accessorio la marcatura CE passa anche dal regolamento diagnostico: niente ente esterno per la classe A, ma registrazione europea, fascicolo e sistema qualità.</li>
-        <li data-step="2">Solo per l&rsquo;accessorio servono la valutazione delle prestazioni, la sorveglianza dopo la vendita e due norme di sicurezza specifiche per la diagnostica.</li>
-        <li data-step="3">Dalle norme sulle macchine in giù le due colonne sono identiche: stessa analisi dei rischi, stesse regole per batteria, materiali e software.</li>
+        <li data-step="0">È la tabella 5.2 del capitolo 5, ridotta. A decidere la classe non è la macchina, identica, ma ciò che dichiara la documentazione; l&rsquo;accessorio aggiunge registrazione europea, fascicolo e sistema qualità.</li>
+        <li data-step="1">Solo l&rsquo;accessorio richiede la valutazione delle prestazioni e due norme di sicurezza specifiche; dalle norme sulle macchine in giù le due colonne sono identiche.</li>
       </ul>
     </div>
   </aside>

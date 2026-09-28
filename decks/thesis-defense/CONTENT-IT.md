@@ -717,11 +717,9 @@ all'altra e sotto cambia il commento.*
 - *Se chiesto:* per campioni di animali o d'acqua niente di tutto questo si applica: il regolamento riguarda solo campioni umani.
 
 ### `b28` — le norme cambiano la documentazione, non la macchina
-*(conclusione e prospettive, capitolo 14; nuova il 28-09-2026, subito dopo `b27`. La tabella 5.2 della tesi, parola per parola, divisa in quattro pagine, una per clic.)*
-- È la tabella 5.2 del capitolo 5. A decidere la classe non è la macchina, identica, ma ciò che la documentazione dichiara: un intervallo di volumi, o un test preciso.
-- Sulla strada dell'accessorio la marcatura CE passa anche dal regolamento diagnostico: niente ente esterno per la classe A, ma registrazione europea, fascicolo e sistema qualità.
-- Solo per l'accessorio servono la valutazione delle prestazioni, la sorveglianza dopo la vendita e due norme di sicurezza specifiche per la diagnostica.
-- Dalle norme sulle macchine in giù le due colonne sono identiche: stessa analisi dei rischi, stesse regole per batteria, materiali e software.
+*(conclusione e prospettive, capitolo 14; nuova il 28-09-2026, subito dopo `b27`. La tabella 5.2 della tesi, ridotta: senza la colonna «che cosa richiede», in due pagine, una per clic.)*
+- È la tabella 5.2 del capitolo 5, ridotta. A decidere la classe non è la macchina, identica, ma ciò che dichiara la documentazione; l'accessorio aggiunge registrazione europea, fascicolo e sistema qualità.
+- Solo l'accessorio richiede la valutazione delle prestazioni e due norme di sicurezza specifiche; dalle norme sulle macchine in giù le due colonne sono identiche.
 - *Se chiesto:* la classe A è la più bassa delle quattro classi di rischio, e l'unica che il fabbricante può certificare da solo, senza un controllo esterno.
 
 ### `b26` — il modello dà un punto di partenza ragionato; è la prototipazione sistematica a rendere affidabile il risultato
