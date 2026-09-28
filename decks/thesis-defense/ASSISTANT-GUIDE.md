@@ -152,8 +152,10 @@ because it is dirty — it may be mid-edit.
 19. **The modules are Pump, Alignment, Nozzle, User Interface** — the thesis chapter names.
     Never "stage" for alignment, "needle" for nozzle, "screen" or "display" for the interface.
     **Reagent storage is Marius Schiller's**, never one of Sirio's modules.
-20. **Titles are full assertive sentences carrying the finding.** No filler labels. He
-    narrates; the slide shows. Less text wins.
+20. **Titles are short and informative, about 4–8 words, stating what the slide shows — e.g.
+    'Three failure modes observed during testing.', 'Regulatory compliance changes paperwork,
+    not hardware.' No semicolons or two-clause findings (Sirio, 2026-09-28).** No filler labels.
+    He narrates; the slide shows. Less text wins.
 21. **Every slide edit is carried into the Italian guest deck, unprompted.** Since 2026-09-24 the
     Italian deck is built: `it/parts/NN-*.html` are translated copies of `parts/NN-*.html`. Apply the
     same change there (text on screen in Italian; the `.notes-it` captions rewritten from the English
