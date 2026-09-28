@@ -3586,6 +3586,86 @@ body[data-view="guest"] .guest-dot {
   font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em; color: var(--text-muted);
 }
 </style>
+<style data-part="p4-disc-planning">
+/* ══ B29 · vertical against horizontal progression ═══════════════════
+   Added 2026-09-28. The section is an appendix slide in
+   parts/60-backups.html after S39; its CSS and builder live here
+   (SLIDE-ORDER.md §4). The tier bars echo S10's pyramid in
+   parts/20-part1.html: same modules, pump strongest, orange fading down. */
+#b29 .vh { position: absolute; inset: 0; }
+#b29 .kicker { font-size: 18px; letter-spacing: 0.16em; }
+#b29 .vh-k { position: absolute; top: 206px; }
+#b29 .vh-k--v { left: 196px; }
+#b29 .vh-k--h { left: 732px; }
+
+#b29 .vh-stack { position: absolute; top: 238px; width: 492px; height: 140px; }
+#b29 .vh-stack--v { left: 196px; }
+#b29 .vh-stack--h { left: 732px; }
+#b29 .vh-t { display: flex; align-items: center; height: 23px; }
+#b29 .vh-t span {
+  flex: 0 0 112px; font-size: 18px; line-height: 1; color: var(--text-soft);
+}
+#b29 .vh-t[data-r="1"] span { color: var(--text); font-weight: 600; }
+#b29 .vh-t b {
+  position: relative; display: block; flex: 0 0 214px; height: 13px;
+  border-radius: 7px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--t-a) 40%, transparent);
+  background: rgba(255,255,255,0.025);
+}
+#b29 .vh-t b i { position: absolute; left: 0; top: 0; bottom: 0; display: block; border-radius: 7px; }
+#b29 .vh-t[data-r="1"] b i { background: color-mix(in srgb, var(--t-a) 88%, transparent); }
+#b29 .vh-t[data-r="2"] b i { background: color-mix(in srgb, var(--t-a) 72%, transparent); }
+#b29 .vh-t[data-r="3"] b i { background: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b29 .vh-t[data-r="4"] b i { background: color-mix(in srgb, var(--t-a) 54%, transparent); }
+#b29 .vh-t[data-r="5"] b i { background: color-mix(in srgb, var(--t-a) 46%, transparent); }
+#b29 .vh-t[data-r="6"] b i { background: color-mix(in srgb, var(--t-a) 40%, transparent); }
+/* the ones still waiting their turn: dashed, like S10's enclosure */
+#b29 .vh-stack--v .vh-t:not([data-r="1"]) b { border-style: dashed; border-color: color-mix(in srgb, var(--t-a) 30%, transparent); }
+#b29 .vh-cap {
+  position: absolute; left: 346px; top: 0; width: 146px; margin: 0;
+  font-size: 18px; line-height: 1.3; color: var(--text-muted);
+}
+
+#b29 .vh-row { position: absolute; left: 56px; width: 1168px; height: 56px; }
+#b29 .vh-row::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 1px;
+  background: rgba(255,255,255,0.09);
+}
+#b29 .vh-rl {
+  position: absolute; left: 0; top: 2px; width: 130px;
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--t-a);
+}
+#b29 .vh-v, #b29 .vh-h {
+  position: absolute; top: 0; width: 492px; margin: 0;
+  font-size: 18px; line-height: 1.3; color: var(--text);
+}
+#b29 .vh-v { left: 140px; }
+#b29 .vh-h { left: 676px; }
+
+#b29 .vh-band {
+  position: absolute; left: 56px; top: 572px; width: 1168px; height: 114px;
+  box-sizing: border-box; padding: 14px 22px;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.88);
+  border: 1px solid color-mix(in srgb, var(--t-a) 45%, transparent);
+}
+#b29 .vh-bk { position: absolute; left: 22px; top: 14px; }
+#b29 .vh-flow {
+  position: absolute; left: 22px; top: 42px; width: 1122px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+#b29 .vh-flow p { flex: 1 1 0; margin: 0; font-size: 18px; line-height: 1.3; color: var(--text); }
+#b29 .vh-flow p:first-child { flex: 0 0 170px; }
+#b29 .vh-flow i {
+  flex: 0 0 22px; height: 2px; margin-top: 11px; display: block;
+  background: color-mix(in srgb, var(--t-a) 80%, transparent);
+}
+#b29 .vh-verdict {
+  position: absolute; left: 330px; top: 12px; width: 814px; margin: 0; text-align: right; white-space: nowrap;
+  font-size: 18px; line-height: 1.3; font-weight: 600; color: var(--t-a);
+}
+</style>
 <style data-part="p4-backups">
 /* ══ Part 60 · backups ═══════════════════════════════════════════════
    One layout for twenty-three slides: a kicker top right, facts on the
@@ -4478,10 +4558,12 @@ body[data-view="guest"] .guest-dot {
     text-transform: uppercase; color: var(--text-muted);
   }
   .ovtopic__ch::before { content: "·"; margin-right: 7px; }
+  /* Thumbs at about 1.75x their first size (2026-09-24): four across at
+     1920 px, three at 1280 px, so a title and the main visual read. */
   .ovtopic__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(206px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 18px;
   }
 
   /* The badge has to hold "A01" now, so it is a pill rather than a disc. */
@@ -4507,15 +4589,35 @@ body[data-view="guest"] .guest-dot {
     background: var(--appendix); color: #0f1319;
   }
 
-  /* The clones render imperfectly today (a separate, later job), so every
-     thumb also carries its own title. That is what makes a slide findable. */
+  /* ── The pictures (2026-09-24) ─────────────────────────────────────
+     Each thumb is a 16:9 picture with a caption strip under it. The picture
+     is assets/thumbs/<cue>.jpg, rendered by make-thumbs.py at the slide's
+     LAST step with every animation finished; it sits over deck.js's clone
+     in the same node, so the click handler is untouched. The ::before box
+     holds the 16:9 height whether the picture or the clone fills it, and a
+     missing picture simply leaves the clone showing. */
+  .deck-overview-thumb { aspect-ratio: auto; }
+  .deck-overview-thumb::before { content: ""; display: block; aspect-ratio: 16 / 9; }
+  .ovpic {
+    position: absolute; top: 0; left: 0; z-index: 1;
+    display: block; width: 100%; height: auto; aspect-ratio: 16 / 9;
+    object-fit: contain;                 /* never crop */
+    background: #0a0a0c;
+    pointer-events: none;
+  }
+  .deck-overview-thumb.has-pic .deck-overview-clone { display: none; }
+  .deck-overview-thumb.is-appendix .ovpic { opacity: 0.72; filter: saturate(0.55); }
+  .deck-overview-badge { bottom: 21px; right: 12px; }
+
+  /* Every thumb carries its cue and its own title under the picture. */
   .ovcap {
-    position: absolute; left: 0; right: 0; bottom: 0; z-index: 9;
-    padding: 22px 50px 8px 10px;
-    font-family: var(--font); font-size: 11.5px; line-height: 1.25;
+    position: relative; z-index: 2;
+    box-sizing: border-box; min-height: 70px;
+    padding: 9px 66px 10px 12px;
+    font-family: var(--font); font-size: 13px; line-height: 1.3;
     color: rgba(240,236,232,0.92);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-    background: linear-gradient(to top, rgba(8,8,10,0.94) 42%, rgba(8,8,10,0));
+    background: rgba(8,8,10,0.72);
+    border-top: 1px solid rgba(240,236,232,0.07);
     pointer-events: none;
     overflow: hidden;
   }
@@ -4525,9 +4627,9 @@ body[data-view="guest"] .guest-dot {
   }
   .ovcap__cue {
     display: block;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--text-muted);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
   .deck-overview-thumb.is-appendix .ovcap__cue {
     color: color-mix(in srgb, var(--appendix) 86%, #f0ece8);
@@ -9613,6 +9715,104 @@ body[data-view="guest"] .guest-dot {
   </aside>
 </section>
 
+<!-- B29 · planning: vertical against horizontal progression ─────────
+     Built 2026-09-28 for the committee question Sirio expects on the
+     plan. S10 presented the plan (the module hierarchy led by the pump,
+     "the order the work followed"); this is what became of it. The tier
+     bars echo S10's pyramid: the same six modules, the pump strongest,
+     the orange fading down the stack. On the left the pump is full and
+     the rest wait; on the right every tier is half full. S38 is depth
+     against breadth inside one module; this is the order across modules,
+     so the two do not overlap. Project claims: ch. 13 lines 88 and 119,
+     App. Q lines 47-57. Pros and cons are general knowledge (CONTENT.md).
+     Its CSS and builder live in parts/50-discussion.html. ─────────────── -->
+<section class="slide" id="b29" data-cue="b29" data-dialect="ledger" data-part="backup"
+         data-topic="disc" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The plan was vertical, pump first; late parts made it horizontal, and the modules arrived less mature.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="vh">
+    <span class="kicker vh-k vh-k--v">Vertical &middot; the plan</span>
+    <span class="kicker vh-k vh-k--h">Horizontal &middot; what we did</span>
+
+    <div class="vh-stack vh-stack--v">
+      <div class="vh-t" data-r="1"><span>Pump</span><b><i style="width:100%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Alignment</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Nozzle</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Storage</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interface</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Electronics</span><b><i style="width:0%"></i></b></div>
+      <p class="vh-cap">One module to maturity, then the next.</p>
+    </div>
+    <div class="vh-stack vh-stack--h">
+      <div class="vh-t" data-r="1"><span>Pump</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Alignment</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Nozzle</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Storage</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interface</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Electronics</span><b><i style="width:52%"></i></b></div>
+      <p class="vh-cap">Every module at once, each part of the way.</p>
+    </div>
+
+    <div class="vh-row" data-row="0" style="top:390px">
+      <span class="vh-rl">Buys</span>
+      <p class="vh-v">Each module is proven before the next one depends on it, so its interfaces are settled.</p>
+      <p class="vh-h">Nobody waits: work goes on while a part is late, and it saves project time.</p>
+    </div>
+    <div class="vh-row" data-row="1" style="top:450px">
+      <span class="vh-rl">Costs</span>
+      <p class="vh-v">It is serial: one late part stalls everything behind it.</p>
+      <p class="vh-h">Each module matures less, and integration piles up at the end.</p>
+    </div>
+    <div class="vh-row" data-row="2" style="top:510px">
+      <span class="vh-rl">Fits</span>
+      <p class="vh-v">When one module sets the others, as the pump does here.</p>
+      <p class="vh-h">A team with a deadline; normal in a company with more people and time.</p>
+    </div>
+
+    <div class="vh-band">
+      <span class="kicker vh-bk">In this project</span>
+      <div class="vh-flow">
+        <p>The plan put the pump first.</p>
+        <i></i>
+        <p>Its tubing came six weeks late, so we built the rest in parallel.</p>
+        <i></i>
+        <p>Integration moved to the end, and the modules arrived less mature.</p>
+      </div>
+      <p class="vh-verdict">Right for the circumstances, not for this machine. Next time, module by module.</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The plan was vertical: take one module to maturity, starting with the pump, then the next. What we did was horizontal: every module at once.</li>
+      <li data-step="1">Vertical proves each module before the next one depends on it. Horizontal means nobody waits, and it saves time.</li>
+      <li data-step="2">The price of vertical is that it is serial: one late part stalls everything. The price of horizontal is that each module matures less, and integration piles up at the end.</li>
+      <li data-step="3">In a team with a deadline, parallel work makes sense, and in a company with more people and time it is normal. Vertical fits when one module sets the others, as the pump does.</li>
+      <li data-step="4">Here the pump tubing arrived six weeks late, so we built the rest in parallel. It kept us moving, but the modules arrived less mature, and that cost the final machine. It was right for the circumstances, but not the best choice for this machine.</li>
+      <li>If asked for an example: developing the storage apart from the pump left a feed-line restriction, a leading suspect for the 10&nbsp;% delivery loss on the assembled machine.</li>
+      <li>If asked: the plan from March named task delays and late integration as the main risks, and both happened.</li>
+      <li>If asked how this differs from depth and breadth: that was how many concepts to build inside one module; this is the order of work across modules.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Il piano era verticale, prima la pompa; i ritardi l&rsquo;hanno reso orizzontale, e i moduli sono arrivati meno maturi</p>
+      <ul>
+        <li data-step="0">Il piano era verticale: portare un modulo a maturazione, a partire dalla pompa, poi il successivo. Abbiamo fatto il contrario: tutti i moduli insieme.</li>
+        <li data-step="1">In verticale ogni modulo è provato prima che il successivo ne dipenda. In orizzontale nessuno aspetta, e si risparmia tempo.</li>
+        <li data-step="2">Il prezzo del verticale: si procede in fila, e un ritardo blocca tutto. Il prezzo dell&rsquo;orizzontale: ogni modulo matura meno, e l&rsquo;integrazione si accumula alla fine.</li>
+        <li data-step="3">In un gruppo con una scadenza lavorare in parallelo ha senso, e in un&rsquo;azienda con più persone e più tempo è normale. Il verticale serve quando un modulo decide gli altri, come la pompa.</li>
+        <li data-step="4">Qui il tubo della pompa è arrivato sei settimane in ritardo, e abbiamo costruito il resto in parallelo. Giusto per le circostanze, ma non la scelta migliore per questa macchina.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
 <!-- B25 ·  the reader's hardware ledger ─────────────────────────────
      Backs S41 (pair the dispenser with a reader). Dialect "ledger":
      every readout is billed against the same five slots — light in,
@@ -11093,6 +11293,10 @@ body[data-view="guest"] .guest-dot {
     </div>
   </footer>
 
+  <!-- Overview thumbnails: window.DECK_THUMBS, written by make-thumbs.py.
+       Read by section 4d of the tail script; see SLIDE-ORDER.md section 7. -->
+  <script src="assets/thumbs/manifest.js"></script>
+
 
   <script src="../../assets/deck.js"></script>
   <script src="../../assets/gsap/gsap.min.js"></script>
@@ -11241,10 +11445,10 @@ body[data-view="guest"] .guest-dot {
 
       { band: 'Discussion and close',
         key: 'disc',      topic: 'Discussion and reflection',       thesis: 'chapter 13',
-        cues: ['s37a', 's37', 's38', 's39'] },
+        cues: ['s37a', 's37', 's38', 's39', 'b29'] },
       { band: 'Discussion and close',
         key: 'outlook',   topic: 'Conclusion and outlook',          thesis: 'chapter 14',
-        cues: ['s40', 's41', 'b25'] },
+        cues: ['s40', 's41', 'b25', 'b27', 'b28'] },
       { band: 'Discussion and close',
         key: 'closing',   topic: 'Closing',                         thesis: '',
         cues: ['s42', 's43'] },
@@ -11693,8 +11897,9 @@ body[data-view="guest"] .guest-dot {
          labelOverview    pins each thumb's slide index on the node (after
                           regrouping, DOM position no longer implies it),
                           rewrites the badge to the talk number or A01...,
-                          marks appendix thumbs, and adds a title caption
-                          because the clones render imperfectly today;
+                          marks appendix thumbs, adds a title caption, and
+                          lays the rendered final-state picture over the
+                          clone (addThumbPic, make-thumbs.py);
          regroupOverview  MOVES those same nodes -- never rebuilds them, so
                           every click closure survives -- into
                           band > topic > grid containers.
@@ -11732,7 +11937,32 @@ body[data-view="guest"] .guest-dot {
           cap.appendChild(ttlEl);
           th.appendChild(cap);
         }
+        if (el) addThumbPic(th, el.getAttribute('data-cue'));
       }
+    }
+
+    /* The picture over the clone: assets/thumbs/<cue>.jpg, rendered at the
+       slide's last step by make-thumbs.py, which also writes the manifest
+       (window.DECK_THUMBS, loaded by a plain script tag above the tail CSS)
+       with a content hash per cue for the cache-bust. A cue the manifest
+       does not list keeps its clone; a picture that fails to load removes
+       itself and the clone shows again. */
+    function addThumbPic(th, cue) {
+      var man = window.DECK_THUMBS;
+      if (!cue || !man || !man.v || !man.v[cue] || th.querySelector('.ovpic')) return;
+      var pic = document.createElement('img');
+      pic.className = 'ovpic';
+      pic.alt = '';
+      pic.decoding = 'async';
+      pic.loading = 'lazy';
+      pic.onerror = function () {
+        th.classList.remove('has-pic');
+        if (pic.parentNode) pic.parentNode.removeChild(pic);
+      };
+      pic.src = 'assets/thumbs/' + cue + '.' + (man.ext || 'jpg') + '?v=' + man.v[cue];
+      var clone = th.querySelector('.deck-overview-clone');
+      th.insertBefore(pic, clone ? clone.nextSibling : th.firstChild);
+      th.classList.add('has-pic');
     }
 
     function regroupOverview(root) {
@@ -14117,10 +14347,12 @@ Deck.slide('s08a', function (el, gsap) {
   gsap.set(mark, { opacity: 0, scale: 0.88, transformOrigin: '50% 50%' });
   gsap.set(txt, { opacity: 0, x: -18 });
 
+  /* The entrance runs BEFORE the step0 label: the slide has no step cue, so
+     step 0 is the only state it ever reaches, and the lockup must already
+     be whole there. A seek straight to step 0 lands on the finished frame. */
+  tl.to(mark, { opacity: 1, scale: 1, duration: 0.85, ease: 'expo.out' }, 0);
+  tl.to(txt, { opacity: 1, x: 0, duration: 0.75, ease: 'expo.out' }, 0.28);
   tl.addLabel('step0');
-  tl.to(mark, { opacity: 1, scale: 1, duration: 0.85, ease: 'expo.out' }, 'step0');
-  tl.to(txt, { opacity: 1, x: 0, duration: 0.75, ease: 'expo.out' }, 'step0+=0.28');
-  tl.addLabel('step1');
 
   return tl;
 });
@@ -17217,6 +17449,34 @@ Deck.slide('s08a', function (el, gsap) {
           .addLabel('step' + i);
       })(i);
     }
+    return tl;
+  });
+})();
+</script>
+<script data-part="p4-disc-planning">
+/* ══ B29 · timeline (section in parts/60-backups.html) ═══════════════
+   0 the two strategies · 1 buys · 2 costs · 3 fits · 4 this project */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+  Deck.slide('b29', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var rows = el.querySelectorAll('.vh-row');
+    var band = el.querySelector('.vh-band');
+    var bits = el.querySelectorAll('.vh-flow p, .vh-flow i, .vh-verdict');
+
+    gsap.set(rows, { autoAlpha: 0, y: 10 });
+    gsap.set(band, { autoAlpha: 0, y: 16 });
+    gsap.set(bits, { autoAlpha: 0 });
+
+    tl.addLabel('step0');
+    Array.prototype.forEach.call(rows, function (r, i) {
+      tl.to(r, { autoAlpha: 1, y: 0, duration: 0.5, ease: EASE }, 'step' + i)
+        .addLabel('step' + (i + 1));
+    });
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step3')
+      .to(bits, { autoAlpha: 1, duration: 0.4, stagger: 0.12, ease: 'none' }, 'step3+=0.2')
+      .addLabel('step4');
     return tl;
   });
 })();

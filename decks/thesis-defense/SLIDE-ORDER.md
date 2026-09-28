@@ -16,6 +16,13 @@ The deck has two different orders and they are not the same thing:
 - **Organisation** — the two-level taxonomy below, which is what the overview
   (press `o` or `Escape`) shows, so Sirio can find any slide in a second.
 
+*Added 2026-09-28.* **`b27`** (coupling the dispenser with a reader: the
+regulatory answer) and **`b28`** (thesis Table 5.2, verbatim, one page per
+press), both `data-part="backup"`, `data-topic="outlook"`, after `b25` in
+`SLIDE_ORDER`. Sections in `parts/60-backups.html` after `b25`; their CSS and
+builders in `parts/50-discussion.html` (§4). Research behind them:
+`research/qa-regulatory-reader-coupling.md`.
+
 *Added 2026-09-24.* **`s04r`**, the PANPOC reagents: an appendix twin of
 `s04c` with the reagent the thesis names for each stage. `data-part="backup"`,
 `data-topic="open"`, section, CSS and builder all in `parts/60-backups.html`
@@ -79,8 +86,8 @@ thesis chapter inside that band and is the lighter sub-heading.
 | | Integration | ch. 11 | `s28` `s29` `s30` `s30b` |
 | | System-level validation | ch. 12 | `s31` `s32` `s33` `s34` `s35` |
 | Live demo | — | — | `s36` |
-| Discussion and close | Discussion and reflection | ch. 13 | `s37a` `s37` `s38` · appendix: `s39` |
-| | Conclusion and outlook | ch. 14 | `s40` `s41` · appendix: `b25` |
+| Discussion and close | Discussion and reflection | ch. 13 | `s37a` `s37` `s38` · appendix: `s39` `b29` |
+| | Conclusion and outlook | ch. 14 | `s40` `s41` · appendix: `b25` `b27` `b28` |
 | | Closing | — | `s42` `s43` |
 | Appendix — not yet sorted | — | — | `b01` … `b24` |
 
@@ -143,8 +150,8 @@ safety net, not the design.
   used on the corner counter, on the overview badge and border of an appendix
   thumb, and on the "Appendix — not yet sorted" band heading.
 - In the **overview**, an appendix thumb keeps the slate badge, gets a dashed
-  slate border and its clone is dimmed — visible, findable, obviously off the
-  script.
+  slate border and its picture is dimmed — visible, findable, obviously off
+  the script.
 - In the **presenter view**, the slide counter reads `A01` and the progress
   bar says "appendix" and holds where the talk left it. Both test
   `data-part="backup"` through `backupNo[]`, never the cue prefix.
@@ -230,14 +237,37 @@ has read a backup slide and says where it belongs:
 
 ---
 
-## 7 · Known gap
+## 7 · The thumbnails (gap closed 2026-09-24)
 
-**The overview thumbnails render imperfectly.** The clones `deck.js` builds are
-static copies, so anything a GSAP timeline draws is missing or mid-flight, and
-a few dialects lay out wrongly at thumbnail scale. This is known, it is
-Sirio's explicit "last thing we fix", and it is **out of scope for the sorting
-work**. Until then, every thumb carries a caption with its cue and its title,
-which is what actually makes a slide findable.
+**The gap was:** the clones `deck.js` builds are static copies, so anything a
+GSAP timeline draws was missing or mid-flight, and a few dialects laid out
+wrongly at thumbnail scale.
+
+**How it is closed:** every thumb now shows a **picture of the slide at its
+last clicker step**, rendered ahead of time.
+
+- `make-thumbs.py` (deck folder) opens the deck in headless Chrome over CDP,
+  enters each slide at its last step (the same seek the deck does on a
+  backward entry), fast-forwards every running GSAP animation, lets lazy
+  media load, shows a video's poster, and saves the stage at 960 × 540 to
+  `assets/thumbs/<cue>.jpg`. It also writes `assets/thumbs/manifest.js`
+  (`window.DECK_THUMBS`: a content hash per cue) and prints any slide that
+  failed. `python make-thumbs.py` renders all slides (about two minutes);
+  `python make-thumbs.py s12 s07b` renders just those and keeps the rest of
+  the manifest. Needs `serve.bat` running and `websocket-client`.
+- `parts/99-tail.html` loads the manifest with a plain `<script>` tag (works
+  from `file://` too), and `addThumbPic` in section 4d lays an `<img>` over
+  deck.js's clone **inside the same thumb node**, so the click handler is
+  untouched. `object-fit: contain`, never cropped; `?v=<hash>` busts the
+  cache per picture; a cue missing from the manifest, or a picture that fails
+  to load, falls back to the clone.
+- The thumbs are about 1.75× their first width (`minmax(350px, 1fr)`: four
+  across at 1920 px, three at 1280 px), with the cue and title in a strip
+  under the picture. Appendix thumbs keep the slate badge and dashed border;
+  their picture is dimmed.
+- **After changing a slide, re-run the script for its cue**, or the overview
+  shows the old picture. Nothing else goes stale: grouping, numbering and
+  captions are still computed live.
 
 The runtime that builds the flat grid, `assets/deck.js` and `assets/deck.css`,
 is **shared with `decks/lab-meeting-2026-06/` and must not be edited.** All the

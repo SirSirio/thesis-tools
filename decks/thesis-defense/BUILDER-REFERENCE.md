@@ -7,6 +7,9 @@ The API and classes a slide builder uses. Authoritative for `parts/*.html`. Comp
 2. `python assemble.py` from `decks/thesis-defense/` (prints the slide count and every `data-cue` found, warns on duplicates or missing cues).
 3. Open `http://localhost:7331/decks/thesis-defense/index.html#/<n>/<step>`. Hard reload after anyone touches a shared file; a stale `deck.js` silently kills `window.Deck`.
 
+## Thumbnails
+The overview shows a pre-rendered picture of every slide at its last step (`assets/thumbs/<cue>.jpg`). After changing a slide, run `python make-thumbs.py` (optionally with cues as arguments, to render just those: `python make-thumbs.py s12 s07b`). It needs `serve.bat` running, and it prints any slide that failed. Details in `SLIDE-ORDER.md` section 7.
+
 ## Part file shape
 Slides first, then at most one `<style data-part="yourname">` and one `<script data-part="yourname">`. The assembler lifts them into the head and to just before `</body>` in part order. Never write `<head>`, `<body>`, or a bare `<script>` or `<style>` without `data-part`.
 

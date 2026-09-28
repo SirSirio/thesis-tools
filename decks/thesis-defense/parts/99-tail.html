@@ -52,6 +52,10 @@
     </div>
   </footer>
 
+  <!-- Overview thumbnails: window.DECK_THUMBS, written by make-thumbs.py.
+       Read by section 4d of the tail script; see SLIDE-ORDER.md section 7. -->
+  <script src="assets/thumbs/manifest.js"></script>
+
   <style data-part="tail">
   /* ══════════════════════════════════════════════════════════════════════
      Tail CSS — the appendix hue and the grouped overview.
@@ -127,10 +131,12 @@
     text-transform: uppercase; color: var(--text-muted);
   }
   .ovtopic__ch::before { content: "·"; margin-right: 7px; }
+  /* Thumbs at about 1.75x their first size (2026-09-24): four across at
+     1920 px, three at 1280 px, so a title and the main visual read. */
   .ovtopic__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(206px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 18px;
   }
 
   /* The badge has to hold "A01" now, so it is a pill rather than a disc. */
@@ -156,15 +162,35 @@
     background: var(--appendix); color: #0f1319;
   }
 
-  /* The clones render imperfectly today (a separate, later job), so every
-     thumb also carries its own title. That is what makes a slide findable. */
+  /* ── The pictures (2026-09-24) ─────────────────────────────────────
+     Each thumb is a 16:9 picture with a caption strip under it. The picture
+     is assets/thumbs/<cue>.jpg, rendered by make-thumbs.py at the slide's
+     LAST step with every animation finished; it sits over deck.js's clone
+     in the same node, so the click handler is untouched. The ::before box
+     holds the 16:9 height whether the picture or the clone fills it, and a
+     missing picture simply leaves the clone showing. */
+  .deck-overview-thumb { aspect-ratio: auto; }
+  .deck-overview-thumb::before { content: ""; display: block; aspect-ratio: 16 / 9; }
+  .ovpic {
+    position: absolute; top: 0; left: 0; z-index: 1;
+    display: block; width: 100%; height: auto; aspect-ratio: 16 / 9;
+    object-fit: contain;                 /* never crop */
+    background: #0a0a0c;
+    pointer-events: none;
+  }
+  .deck-overview-thumb.has-pic .deck-overview-clone { display: none; }
+  .deck-overview-thumb.is-appendix .ovpic { opacity: 0.72; filter: saturate(0.55); }
+  .deck-overview-badge { bottom: 21px; right: 12px; }
+
+  /* Every thumb carries its cue and its own title under the picture. */
   .ovcap {
-    position: absolute; left: 0; right: 0; bottom: 0; z-index: 9;
-    padding: 22px 50px 8px 10px;
-    font-family: var(--font); font-size: 11.5px; line-height: 1.25;
+    position: relative; z-index: 2;
+    box-sizing: border-box; min-height: 70px;
+    padding: 9px 66px 10px 12px;
+    font-family: var(--font); font-size: 13px; line-height: 1.3;
     color: rgba(240,236,232,0.92);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-    background: linear-gradient(to top, rgba(8,8,10,0.94) 42%, rgba(8,8,10,0));
+    background: rgba(8,8,10,0.72);
+    border-top: 1px solid rgba(240,236,232,0.07);
     pointer-events: none;
     overflow: hidden;
   }
@@ -174,9 +200,9 @@
   }
   .ovcap__cue {
     display: block;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--text-muted);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
   .deck-overview-thumb.is-appendix .ovcap__cue {
     color: color-mix(in srgb, var(--appendix) 86%, #f0ece8);
@@ -503,10 +529,10 @@
 
       { band: 'Discussion and close',
         key: 'disc',      topic: 'Discussion and reflection',       thesis: 'chapter 13',
-        cues: ['s37a', 's37', 's38', 's39'] },
+        cues: ['s37a', 's37', 's38', 's39', 'b29'] },
       { band: 'Discussion and close',
         key: 'outlook',   topic: 'Conclusion and outlook',          thesis: 'chapter 14',
-        cues: ['s40', 's41', 'b25'] },
+        cues: ['s40', 's41', 'b25', 'b27', 'b28'] },
       { band: 'Discussion and close',
         key: 'closing',   topic: 'Closing',                         thesis: '',
         cues: ['s42', 's43'] },
@@ -955,8 +981,9 @@
          labelOverview    pins each thumb's slide index on the node (after
                           regrouping, DOM position no longer implies it),
                           rewrites the badge to the talk number or A01...,
-                          marks appendix thumbs, and adds a title caption
-                          because the clones render imperfectly today;
+                          marks appendix thumbs, adds a title caption, and
+                          lays the rendered final-state picture over the
+                          clone (addThumbPic, make-thumbs.py);
          regroupOverview  MOVES those same nodes -- never rebuilds them, so
                           every click closure survives -- into
                           band > topic > grid containers.
@@ -994,7 +1021,32 @@
           cap.appendChild(ttlEl);
           th.appendChild(cap);
         }
+        if (el) addThumbPic(th, el.getAttribute('data-cue'));
       }
+    }
+
+    /* The picture over the clone: assets/thumbs/<cue>.jpg, rendered at the
+       slide's last step by make-thumbs.py, which also writes the manifest
+       (window.DECK_THUMBS, loaded by a plain script tag above the tail CSS)
+       with a content hash per cue for the cache-bust. A cue the manifest
+       does not list keeps its clone; a picture that fails to load removes
+       itself and the clone shows again. */
+    function addThumbPic(th, cue) {
+      var man = window.DECK_THUMBS;
+      if (!cue || !man || !man.v || !man.v[cue] || th.querySelector('.ovpic')) return;
+      var pic = document.createElement('img');
+      pic.className = 'ovpic';
+      pic.alt = '';
+      pic.decoding = 'async';
+      pic.loading = 'lazy';
+      pic.onerror = function () {
+        th.classList.remove('has-pic');
+        if (pic.parentNode) pic.parentNode.removeChild(pic);
+      };
+      pic.src = 'assets/thumbs/' + cue + '.' + (man.ext || 'jpg') + '?v=' + man.v[cue];
+      var clone = th.querySelector('.deck-overview-clone');
+      th.insertBefore(pic, clone ? clone.nextSibling : th.firstChild);
+      th.classList.add('has-pic');
     }
 
     function regroupOverview(root) {

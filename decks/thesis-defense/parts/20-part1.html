@@ -2191,10 +2191,12 @@ Deck.slide('s08a', function (el, gsap) {
   gsap.set(mark, { opacity: 0, scale: 0.88, transformOrigin: '50% 50%' });
   gsap.set(txt, { opacity: 0, x: -18 });
 
+  /* The entrance runs BEFORE the step0 label: the slide has no step cue, so
+     step 0 is the only state it ever reaches, and the lockup must already
+     be whole there. A seek straight to step 0 lands on the finished frame. */
+  tl.to(mark, { opacity: 1, scale: 1, duration: 0.85, ease: 'expo.out' }, 0);
+  tl.to(txt, { opacity: 1, x: 0, duration: 0.75, ease: 'expo.out' }, 0.28);
   tl.addLabel('step0');
-  tl.to(mark, { opacity: 1, scale: 1, duration: 0.85, ease: 'expo.out' }, 'step0');
-  tl.to(txt, { opacity: 1, x: 0, duration: 0.75, ease: 'expo.out' }, 'step0+=0.28');
-  tl.addLabel('step1');
 
   return tl;
 });
