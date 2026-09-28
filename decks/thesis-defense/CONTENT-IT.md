@@ -631,6 +631,7 @@ liquid.»*
   consumabile: si butta.
 
 ### `s39` — l'intelligenza artificiale è stata la base del lavoro digitale; il lavoro fisico è rimasto nelle mie mani
+**RIMOSSA il 28-09-2026** (Sirio: «Slide A05: remove.»). Non è più nel deck; il testo qui sotto è storia.
 *(discussione e riflessione, capitolo 13; tolta dal discorso il 22-09-2026 e
 alleggerita — mantiene la sigla `s39`. Sirio: «solo l'AI, più semplice, e in
 appendice». **La linea del tempo è sparita del tutto**, e con lei la nota su

@@ -586,33 +586,9 @@
 
 /* The 18 px floor applies to every label on these slides, so the shared
    .kicker (14 px in the head) is scaled up inside this part only. */
-#s37 .kicker, #s38 .kicker, #s39 .kicker, #s40 .kicker, #s41 .kicker, #s43 .kicker {
+#s37 .kicker, #s38 .kicker, #s40 .kicker, #s41 .kicker, #s43 .kicker {
   font-size: 18px; letter-spacing: 0.18em;
 }
-
-/* A quotation that takes the whole stage as the last step.  S38 had one
-   too until 2026-09-22 (Sirio: "Remove the 'A concept built once is also
-   not a concept tested.'"); these rules are S39's alone now. */
-#s39 .q-over {
-  position: absolute; inset: 0; z-index: 9;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(8,8,10,0.90);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  opacity: 0; visibility: hidden;
-}
-#s39 .q-over__in { max-width: 1000px; text-align: center; }
-#s39 .q-over__rule {
-  width: 104px; height: 2px; margin: 0 auto 30px;
-  background: linear-gradient(90deg, var(--t-a), var(--t-b));
-  transform: scaleX(0); transform-origin: 50% 50%;
-}
-#s39 .q-over__t {
-  margin: 0;
-  font-family: var(--display); font-weight: 700;
-  font-size: 42px; line-height: 1.18; letter-spacing: -0.02em;
-  color: var(--text);
-}
-#s39 .q-over__t--sm { font-size: 31px; line-height: 1.32; }
 
 /* ── S37 · the ledger over the dimmed machine ─────────────────────── */
 #s37 .d37 { position: absolute; inset: 0; }
@@ -781,41 +757,6 @@
 #s38 .d38__mnote {
   position: absolute;
   font-size: 20px; line-height: 1.3; color: var(--text-muted);
-}
-
-/* ── S39 · the working loop and the boundary ───────────────────
-   The <section> lives in parts/60-backups.html — S39 moved into the
-   appendix on 2026-09-22 — but its CSS stays here, because assemble.py
-   hoists every <style data-part> into the one document head, so #s39
-   matches wherever the section sits (SLIDE-ORDER.md §4).  The timeline
-   of the writing phase was cut on the same day; the slide is now the AI
-   contrast alone, and the figure is centred on the taller band it left. */
-#s39 .d39 { position: absolute; inset: 0; }
-#s39 .d39__paper {
-  position: absolute; left: 56px; top: 245px; width: 704px; height: 326px;
-  box-shadow: 0 22px 56px rgba(0,0,0,0.5);
-}
-#s39 .d39__paper > img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s39 .d39__mark { position: absolute; inset: 0; width: 100%; height: 100%; }
-#s39 .d39__mark rect { fill: none; stroke: var(--t-a); stroke-width: 9; }
-#s39 .d39__tag { left: 570px; top: 98px; }
-#s39 .d39__rail { position: absolute; inset: 0; }
-#s39 .d39__rail .kicker { position: absolute; }
-#s39 .d39__chip {
-  position: absolute; width: 424px; height: 36px;
-  display: flex; align-items: center; padding: 0 16px;
-  border-radius: var(--r-pill);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--glass-border);
-  font-family: var(--mono); font-size: 19px; color: var(--text);
-}
-#s39 .d39__chip--off {
-  border-color: rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.02);
-  color: var(--text-muted);
-}
-#s39 .d39__bnote {
-  position: absolute; font-size: 19px; line-height: 1.3; color: var(--text-muted); width: 424px;
 }
 
 /* ── S40 · the six-stage chain ────────────────────────────────────── */
@@ -1208,60 +1149,6 @@
     draw(tl, gsap, link, 'step4+=0.60', 0.4, 'none');
     tl.to(strike, { scaleX: 1, duration: 0.5, ease: 'power3.inOut' }, 'step4+=0.80')
       .addLabel('step5');
-
-    return tl;
-  });
-
-  /* ── S39 ──────────────────────────────────────────
-     The <section> lives in parts/60-backups.html since 2026-09-22, when
-     S39 moved into the appendix; Deck.slide registers by cue, not by
-     file, and this builder closes over this IIFE's draw() and EASE, so
-     it stays here (SLIDE-ORDER.md §4).  Three steps now: the timeline of
-     the writing phase was cut with the move.                          */
-  Deck.slide('s39', function (el, gsap) {
-    var tl    = gsap.timeline({ paused: true });
-    var chips = el.querySelectorAll('.d39__chip:not(.d39__chip--off)');
-    var offs  = el.querySelectorAll('.d39__chip--off');
-    var k1    = el.querySelector('.d39__rail .kicker');
-    var k2    = el.querySelector('.d39__bk');
-    var bnote = el.querySelector('.d39__bnote');
-    var box   = el.querySelector('#d39-box');
-    var hand  = el.querySelector('#d39-hand');
-    var tag   = el.querySelector('#d39-tag');
-    var quote = el.querySelector('#d39-quote');
-
-    gsap.set([k1, k2, bnote], { opacity: 0 });
-    gsap.set(chips, { opacity: 0, x: 26 });
-    gsap.set(offs, { opacity: 0, y: 12 });
-    gsap.set(tag, { opacity: 0, scale: 0.86, transformOrigin: '0 50%' });
-    gsap.set(quote, { autoAlpha: 0 });
-    gsap.set(el.querySelector('#d39-quote .q-over__rule'), { scaleX: 0 });
-    gsap.set(el.querySelector('#d39-quote .q-over__t'), { opacity: 0, y: 18 });
-    if (window.DrawSVGPlugin) gsap.set([box, hand], { drawSVG: '0%' });
-    else gsap.set([box, hand], { opacity: 0 });
-
-    tl.addLabel('step0');
-
-    /* 1 · what the assistant carried */
-    tl.to(k1, { opacity: 1, duration: 0.3 }, 'step0')
-      .to(chips, { opacity: 1, x: 0, duration: 0.46, stagger: 0.09, ease: EASE }, 'step0+=0.08')
-      .addLabel('step1');
-
-    /* 2 · the boundary, outlined on the figure itself */
-    draw(tl, gsap, box, 'step1', 0.75, 'power2.inOut');
-    draw(tl, gsap, hand, 'step1+=0.50', 0.55, 'none');
-    tl.to(tag, { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(2)' }, 'step1+=0.86')
-      .to(chips, { opacity: 0.4, duration: 0.4, ease: 'none' }, 'step1+=0.10')
-      .to(k2, { opacity: 1, duration: 0.3 }, 'step1+=0.24')
-      .to(offs, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: EASE }, 'step1+=0.30')
-      .to(bnote, { opacity: 1, duration: 0.4 }, 'step1+=0.70')
-      .addLabel('step2');
-
-    /* 3 · the quotation */
-    tl.to(quote, { autoAlpha: 1, duration: 0.5, ease: 'none' }, 'step2')
-      .to(el.querySelector('#d39-quote .q-over__rule'), { scaleX: 1, duration: 0.55, ease: 'power3.inOut' }, 'step2+=0.16')
-      .to(el.querySelector('#d39-quote .q-over__t'), { opacity: 1, y: 0, duration: 0.7, ease: EASE }, 'step2+=0.26')
-      .addLabel('step3');
 
     return tl;
   });

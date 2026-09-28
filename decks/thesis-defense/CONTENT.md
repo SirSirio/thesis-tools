@@ -505,7 +505,7 @@ number and **no entry below states one**: a slide's address is its `data-cue`
 
 ### Sorted — Discussion and reflection (chapter 13)
 
-**S39. The AI was the foundation of the digital work; the physical work stayed in my hands.** *(moved out of the talk 2026-09-22 and cut down; keeps its `s39` cue, its section now sits in `parts/60-backups.html`, its CSS and `Deck.slide` builder stay in `parts/50-discussion.html`)*
+**S39. The AI was the foundation of the digital work; the physical work stayed in my hands.** **REMOVED 2026-09-28** (Sirio: "Slide A05: remove."). The slide is no longer in the deck; the entry below is history. *(moved out of the talk 2026-09-22 and cut down; keeps its `s39` cue, its section now sits in `parts/60-backups.html`, its CSS and `Deck.slide` builder stay in `parts/50-discussion.html`)*
 - Sirio: “only focus on AI, and make it more simple, and put it on the appendix. NO bullshit about timeline.” **The whole timeline is gone** — the axis, the months, the *one decision I would reverse* kicker and the market-search note with it. Nothing on any slide now says when the market search landed. **Steps 4 → 3.**
 - What survives is the contrast alone: the working-loop figure with the build stage outlined and its dashed *by hand* tag, the **Decisive for** column against **The boundary**, and the closing quotation.
 - Visual: `assets/figs/fig-ai-working-loop.png` on a paper plate; five chips under **Decisive for** — Literature research, Experimental protocols, Measurement analysis, Firmware, Technical specifications; four dimmed chips under **The boundary** — Printing, Assembly, Wiring, Lab testing — with *and the CAD assembly it could not build* beneath them.

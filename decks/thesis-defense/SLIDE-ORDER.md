@@ -16,9 +16,11 @@ The deck has two different orders and they are not the same thing:
 - **Organisation** — the two-level taxonomy below, which is what the overview
   (press `o` or `Escape`) shows, so Sirio can find any slide in a second.
 
+*Removed 2026-09-28.* **`s39`** (the AI slide, appendix A05) is deleted at Sirio's request ("Slide A05: remove."): its section left `parts/60-backups.html`, its CSS and builder left `parts/50-discussion.html`, and its cue left `SLIDE_ORDER`. `b29` is now A05. The notes below that mention `s39` are history.
+
 *Added 2026-09-28.* **`b29`** (planning: vertical against horizontal
 progression, the pair to `s10`), `data-part="backup"`, `data-topic="disc"`,
-after `s39` in `SLIDE_ORDER` and in `parts/60-backups.html`; CSS and builder
+after `s38`'s group in `SLIDE_ORDER` and in `parts/60-backups.html`; CSS and builder
 in `parts/50-discussion.html` (§4).
 
 *Added 2026-09-28.* **`b27`** (coupling the dispenser with a reader: the
@@ -91,7 +93,7 @@ thesis chapter inside that band and is the lighter sub-heading.
 | | Integration | ch. 11 | `s28` `s29` `s30` `s30b` |
 | | System-level validation | ch. 12 | `s31` `s32` `s33` `s34` `s35` |
 | Live demo | — | — | `s36` |
-| Discussion and close | Discussion and reflection | ch. 13 | `s37a` `s37` `s38` · appendix: `s39` `b29` |
+| Discussion and close | Discussion and reflection | ch. 13 | `s37a` `s37` `s38` · appendix: `b29` |
 | | Conclusion and outlook | ch. 14 | `s40` `s41` · appendix: `b25` `b27` `b28` |
 | | Closing | — | `s42` `s43` |
 | Appendix — not yet sorted | — | — | `b01` … `b24` |
