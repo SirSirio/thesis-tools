@@ -1519,3 +1519,201 @@
   });
 })();
 </script>
+
+<style data-part="p4-disc-regulatory">
+/* ══ B27, B28 · the regulatory answer and thesis Table 5.2 ═══════════
+   Added 2026-09-28. The two <section>s are appendix slides and live in
+   parts/60-backups.html after B25; their CSS and builders live here, in
+   the Part III-B chat's file, per SLIDE-ORDER.md §4. Nothing below 18 px. */
+#b27 .kicker, #b28 .kicker { font-size: 18px; letter-spacing: 0.16em; }
+
+/* ── B27 · three cards and the band ─────────────────────────────── */
+#b27 .rg { position: absolute; inset: 0; }
+#b27 .rg-card {
+  position: absolute; top: 212px; height: 300px;
+  padding: 18px 22px;
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+#b27 .rg-card--a { left: 56px;  width: 344px; }
+#b27 .rg-card--b { left: 440px; width: 344px; }
+#b27 .rg-card--c { left: 824px; width: 400px; gap: 10px; }
+/* top.jpg is 2000 x 1125: a 16:9 box, contain, nothing cropped */
+#b27 .rg-shot {
+  flex: 0 0 auto; width: 208px; height: 117px; align-self: center;
+  border-radius: var(--r-sm); overflow: hidden; background: #0d0f12;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+#b27 .rg-shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* the reader, drawn dashed like S41's: a proposal, not a build */
+#b27 .rg-rd {
+  position: relative; flex: 0 0 auto; width: 208px; height: 117px; align-self: center;
+  box-sizing: border-box;
+  border-radius: var(--r-sm);
+  border: 1.5px dashed color-mix(in srgb, var(--t-a) 60%, transparent);
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.012));
+}
+#b27 .rg-bay {
+  position: absolute; left: 16px; top: 18px; width: 78px; height: 78px;
+  box-sizing: border-box;
+  border: 1.5px dashed color-mix(in srgb, var(--t-a) 62%, transparent);
+  border-radius: 10px; background: rgba(0,0,0,0.42);
+}
+#b27 .rg-bay i {
+  position: absolute; left: 10px; top: 10px; right: 10px; bottom: 10px;
+  border-radius: 7px; background: var(--glass-bg);
+  border: 1px solid color-mix(in srgb, var(--t-a) 62%, transparent);
+}
+#b27 .rg-bars {
+  position: absolute; left: 110px; top: 30px; width: 80px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+#b27 .rg-bars i { display: block; height: 10px; border-radius: 5px; background: rgba(255,255,255,0.16); }
+#b27 .rg-bars i:first-child { background: color-mix(in srgb, var(--t-a) 55%, transparent); }
+#b27 .rg-st { font-size: 22px; line-height: 1.2; color: var(--text); margin-top: 2px; }
+#b27 .rg-sub { font-size: 18px; line-height: 1.32; color: var(--text-soft); }
+
+#b27 .rg-case {
+  flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.025);
+}
+#b27 .rg-who { font-size: 19px; line-height: 1.25; color: var(--text); }
+#b27 .rg-out { font-size: 18px; line-height: 1.25; color: var(--text-muted); }
+#b27 .rg-out::before { content: "\2192\00a0"; }
+#b27 .rg-case--hot { border-color: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b27 .rg-case--hot .rg-out { color: var(--t-a); }
+
+#b27 .rg-ar { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#b27 .rg-ar path {
+  fill: none; stroke: color-mix(in srgb, var(--t-a) 80%, transparent);
+  stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+}
+
+#b27 .rg-band {
+  position: absolute; left: 56px; top: 532px; width: 1168px; height: 148px;
+  box-sizing: border-box;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.86);
+  border: 1px solid var(--glass-border);
+}
+#b27 .rg-say {
+  position: absolute; left: 26px; top: 22px; width: 330px; margin: 0;
+  font-family: var(--display); font-weight: 700;
+  font-size: 28px; line-height: 1.18; letter-spacing: -0.01em; color: var(--text);
+}
+#b27 .rg-same {
+  position: absolute; left: 26px; top: 102px; width: 360px;
+  font-size: 18px; line-height: 1.25; color: var(--text-muted);
+}
+#b27 .rg-chips {
+  position: absolute; left: 404px; top: 22px; width: 740px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+#b27 .rg-chips span {
+  display: flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--t-a) 50%, transparent);
+  background: rgba(255,255,255,0.04);
+  font-size: 18px; color: var(--text); text-align: center; white-space: nowrap;
+}
+
+/* ── B28 · Table 5.2, one page per press ─────────────────────────── */
+#b28 .rt { position: absolute; left: 56px; top: 206px; width: 1168px; height: 480px; }
+#b28 .rt-hd, #b28 .rt-row {
+  display: grid; grid-template-columns: 206px 470px 226px 234px; column-gap: 10px;
+}
+#b28 .rt-hd {
+  padding: 0 0 10px; border-bottom: 1px solid var(--glass-border);
+  font-family: var(--mono); font-size: 18px; font-weight: 700; line-height: 1.2;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+  align-items: end;
+}
+#b28 .rt-hd .rt-c1 { color: var(--t-a); }
+#b28 .rt-hd .rt-c4 { color: var(--text); }
+#b28 .rt-pg { position: absolute; left: 0; top: 64px; width: 1168px; }
+#b28 .rt-grp {
+  margin: 0 0 8px; font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--text);
+}
+#b28 .rt-cap { margin: -2px 0 10px; font-size: 18px; line-height: 1.3; color: var(--text-muted); font-style: italic; }
+#b28 .rt-row {
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 18px; line-height: 1.3; color: var(--text-soft);
+  align-items: start;
+}
+#b28 .rt-row .rt-c1 { color: var(--text); }
+#b28 .rt-row .rt-c3, #b28 .rt-row .rt-c4 { color: var(--text-muted); }
+/* where the two paths differ, the accessory cell is the one that is lit */
+#b28 .rt-row--diff .rt-c3 { color: var(--text); }
+#b28 .rt-row--diff .rt-c4 { color: var(--t-a); }
+#b28 .rt-foot {
+  position: absolute; left: 0; top: 388px; margin: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em; color: var(--text-muted);
+}
+</style>
+
+<script data-part="p4-disc-regulatory">
+/* ══ B27, B28 · timelines (sections in parts/60-backups.html) ═════════ */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+
+  /* B27: 0 the dispenser alone · 1 a reader joins · 2 the claim decides
+     · 3 what changes: the file, not the machine */
+  Deck.slide('b27', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var a  = el.querySelector('.rg-card--a');
+    var b  = el.querySelector('.rg-card--b');
+    var c  = el.querySelector('.rg-card--c');
+    var ar1 = el.querySelector('.rg-ar1');
+    var ar2 = el.querySelector('.rg-ar2');
+    var cases = el.querySelectorAll('.rg-case');
+    var band  = el.querySelector('.rg-band');
+    var chips = el.querySelectorAll('.rg-chips span');
+
+    gsap.set(a, { opacity: 1 });
+    gsap.set([b, c, band], { autoAlpha: 0, y: 18 });
+    gsap.set([ar1, ar2], { autoAlpha: 0 });
+    gsap.set(cases, { autoAlpha: 0, x: 14 });
+    gsap.set(chips, { autoAlpha: 0, y: 8 });
+
+    tl.addLabel('step0');
+    tl.to(ar1, { autoAlpha: 1, duration: 0.3, ease: 'none' }, 'step0')
+      .to(b, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }, 'step0+=0.1')
+      .addLabel('step1');
+    tl.to(ar2, { autoAlpha: 1, duration: 0.3, ease: 'none' }, 'step1')
+      .to(c, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step1+=0.1')
+      .to(cases, { autoAlpha: 1, x: 0, duration: 0.45, stagger: 0.12, ease: EASE }, 'step1+=0.3')
+      .addLabel('step2');
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }, 'step2')
+      .to(chips, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.06, ease: EASE }, 'step2+=0.25')
+      .addLabel('step3');
+    return tl;
+  });
+
+  /* B28: the header stays; the body turns one page per press */
+  Deck.slide('b28', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var pgs = el.querySelectorAll('.rt-pg');
+
+    gsap.set(pgs, { autoAlpha: 0 });
+    gsap.set(pgs[0], { autoAlpha: 1 });
+    tl.addLabel('step0');
+    for (var i = 1; i < pgs.length; i++) {
+      (function (i) {
+        tl.to(pgs[i - 1], { autoAlpha: 0, duration: 0.25, ease: 'none' }, 'step' + (i - 1))
+          .fromTo(pgs[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: EASE, immediateRender: false }, 'step' + (i - 1) + '+=0.2')
+          .addLabel('step' + i);
+      })(i);
+    }
+    return tl;
+  });
+})();
+</script>

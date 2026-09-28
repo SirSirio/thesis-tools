@@ -699,6 +699,22 @@ all'altra e sotto cambia il commento.*
   calcolatore, ma non dà controllo dell'esposizione, né filtri, né calore. Copre
   la striscia e il colorimetrico, e niente sotto.
 
+### `b27` — con un lettore, è il lettore il dispositivo diagnostico; il dosatore lo segue solo se venduto per test precisi
+*(conclusione e prospettive, capitolo 14; nuova il 28-09-2026. È la risposta alla domanda «e se accoppiasse il dosatore a un lettore generico, che cosa succederebbe dal punto di vista normativo?»)*
+- Oggi il dosatore è un'attrezzatura generica da laboratorio, come una pipetta: non analizza niente, quindi il regolamento europeo sulla diagnostica non si applica.
+- Con un lettore, il lettore è un dispositivo diagnostico: analizza un campione umano e dà un risultato, quindi il regolamento si applica al lettore.
+- Per il dosatore decide ciò che si dichiara: abbinato dall'operatore resta generico; venduto col lettore per test precisi diventa un accessorio di classe A, autocertificato.
+- In ogni caso la macchina resta la stessa. Cresce la documentazione: registrazione, sistema qualità, valutazione delle prestazioni e due norme di sicurezza in più.
+- *Se chiesto:* per campioni di animali o d'acqua niente di tutto questo si applica: il regolamento riguarda solo campioni umani.
+
+### `b28` — tabella 5.2 della tesi: stessa macchina su entrambe le strade, cambia la documentazione
+*(conclusione e prospettive, capitolo 14; nuova il 28-09-2026, subito dopo `b27`. La tabella 5.2 della tesi, parola per parola, divisa in quattro pagine, una per clic.)*
+- È la tabella 5.2 del capitolo 5. A decidere la classe non è la macchina, identica, ma ciò che la documentazione dichiara: un intervallo di volumi, o un test preciso.
+- Sulla strada dell'accessorio la marcatura CE passa anche dal regolamento diagnostico: niente ente esterno per la classe A, ma registrazione europea, fascicolo e sistema qualità.
+- Solo per l'accessorio servono la valutazione delle prestazioni, la sorveglianza dopo la vendita e due norme di sicurezza specifiche per la diagnostica.
+- Dalle norme sulle macchine in giù le due colonne sono identiche: stessa analisi dei rischi, stesse regole per batteria, materiali e software.
+- *Se chiesto:* la classe A è la più bassa delle quattro classi di rischio, e l'unica che il fabbricante può certificare da solo, senza un controllo esterno.
+
 ### `b26` — il modello dà un punto di partenza ragionato; è la prototipazione sistematica a rendere affidabile il risultato
 *(modulo pompa — sta nell'argomento della pompa, ma il testo viene dal capitolo 13 della tesi; nuova il 22-09-2026. È l'altra metà del discorso di
 `s38`: lì si parla di **profondità contro ampiezza**, qui di **partire dal

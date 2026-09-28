@@ -494,6 +494,245 @@
   </aside>
 </section>
 
+<!-- B27 · coupling the dispenser with a reader: the regulatory answer ─────
+     Built 2026-09-28 for the committee question Sirio expects on S41:
+     "what would actually happen from the regulatory point of view?"
+     Every claim is traced in research/qa-regulatory-reader-coupling.md.
+     Three cards left to right — the dispenser alone, the reader that
+     joins it, the three ways the dispenser's own status can go — and a
+     band at the foot for what changes: the file, not the machine.
+     Its CSS and its Deck.slide builder live in parts/50-discussion.html
+     (the Part III-B chat's file), SLIDE-ORDER.md §4. ──────────────────── -->
+<section class="slide" id="b27" data-cue="b27" data-dialect="flow" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">The reader would be the diagnostic device; the dispenser follows only if it is sold for named tests.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="rg">
+    <article class="rg-card rg-card--a">
+      <span class="kicker">The dispenser alone</span>
+      <div class="rg-shot">
+        <img data-src="../../assets/media/device/top.jpg"
+             alt="The assembled dispenser from above: the reagent vials behind the lane, the input rack, the touchscreen and the output rack." />
+      </div>
+      <span class="rg-st">General laboratory equipment</span>
+      <span class="rg-sub">Like a pipette: it examines nothing, so the IVDR does not apply.</span>
+    </article>
+
+    <svg class="rg-ar" viewBox="0 0 1280 720" aria-hidden="true">
+      <path class="rg-ar1" d="M 404 362 L 432 362 M 424 354 L 432 362 L 424 370" />
+      <path class="rg-ar2" d="M 788 362 L 816 362 M 808 354 L 816 362 L 808 370" />
+    </svg>
+
+    <article class="rg-card rg-card--b">
+      <span class="kicker">Add a reader</span>
+      <div class="rg-rd">
+        <span class="rg-bay"><i></i></span>
+        <span class="rg-bars"><i style="width:78%"></i><i style="width:52%"></i><i style="width:64%"></i></span>
+      </div>
+      <span class="rg-st">A diagnostic device</span>
+      <span class="rg-sub">It examines a human sample and returns a result: the IVDR applies.</span>
+    </article>
+
+    <article class="rg-card rg-card--c">
+      <span class="kicker">Then the claim decides</span>
+      <div class="rg-case">
+        <span class="rg-who">The operator pairs them</span>
+        <span class="rg-out">stays general laboratory equipment</span>
+      </div>
+      <div class="rg-case rg-case--hot">
+        <span class="rg-who">Sold with the reader for named tests</span>
+        <span class="rg-out">Class A accessory, self-certified</span>
+      </div>
+      <div class="rg-case">
+        <span class="rg-who">A diagnostic maker bundles it</span>
+        <span class="rg-out">it enters their technical file</span>
+      </div>
+    </article>
+
+    <div class="rg-band">
+      <p class="rg-say">What changes is the file, not the machine.</p>
+      <span class="rg-same">Physical hardware: identical on both paths</span>
+      <div class="rg-chips">
+        <span>CE under the IVDR too</span>
+        <span>EUDAMED registration</span>
+        <span>Dossier and quality system</span>
+        <span>Performance evaluation</span>
+        <span>IEC 61010-2-101</span>
+        <span>IEC 61326-2-6</span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~45 s</li>
+      <li data-step="0">Today the dispenser is general laboratory equipment, like a pipette. It examines nothing, so the IVDR does not apply to it.</li>
+      <li data-step="1">Add a reader, and the reader is a diagnostic device. It examines a human sample and returns a result, so the IVDR applies to the reader.</li>
+      <li data-step="2">The dispenser&rsquo;s status then depends on what is claimed. If the operator pairs them, it stays general equipment. Sold with the reader for named tests, it becomes a Class A accessory, which the maker certifies itself. And if a diagnostic company bundles it, it enters their file.</li>
+      <li data-step="3">Either way the hardware stays the same. What grows is the file: registration, a quality system, a performance evaluation, and the two IVD supplements to the safety standards.</li>
+      <li>If asked about animal or water samples: none of this applies. The IVDR covers human specimens only.</li>
+      <li>If asked about the tests themselves: they carry their own class, often higher, and that is the burden of whoever claims them. This is general knowledge, not in the thesis.</li>
+      <li>If asked for article numbers: do not quote them. The thesis sources give the shape of the regulation, not checked clause numbers.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Con un lettore, è il lettore il dispositivo diagnostico; il dosatore lo segue solo se venduto per test precisi</p>
+      <ul>
+        <li data-step="0">Oggi il dosatore è un&rsquo;attrezzatura generica da laboratorio, come una pipetta: non analizza niente, quindi il regolamento europeo sulla diagnostica non si applica.</li>
+        <li data-step="1">Con un lettore, il lettore è un dispositivo diagnostico: analizza un campione umano e dà un risultato, quindi il regolamento si applica al lettore.</li>
+        <li data-step="2">Per il dosatore decide ciò che si dichiara: abbinato dall&rsquo;operatore resta generico; venduto col lettore per test precisi diventa un accessorio di classe A, autocertificato.</li>
+        <li data-step="3">In ogni caso la macchina resta la stessa. Cresce la documentazione: registrazione, sistema qualità, valutazione delle prestazioni e due norme di sicurezza in più.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
+<!-- B28 · thesis Table 5.2, verbatim ─────────────────────────────────
+     Built 2026-09-28 beside B27. The table is tab:regulatory-paths in
+     05_Requirements-and-Decomposition.tex (lines 282-348), word for word
+     with the citations dropped. Twelve rows do not fit one page at 18 px,
+     so the header stays and the body turns four pages, one per press:
+     what decides the classification, then the obligations in three
+     groups. Where the two right-hand columns differ, the accessory cell
+     is lit; where they agree, both are quiet. Its CSS and builder live in
+     parts/50-discussion.html. ─────────────────────────────────────────── -->
+<section class="slide" id="b28" data-cue="b28" data-dialect="sheet" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:48px">
+  <h2 class="slide__title">Both regulatory paths demand the same hardware; the accessory path adds the diagnostic file.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="rt">
+    <div class="rt-hd">
+      <span class="rt-c1">Thesis Table 5.2</span>
+      <span class="rt-c2">What it requires</span>
+      <span class="rt-c3">General laboratory equipment</span>
+      <span class="rt-c4">Class A diagnostic accessory</span>
+    </div>
+
+    <div class="rt-pg" data-pg="0">
+      <p class="rt-grp">What decides the classification</p>
+      <div class="rt-row">
+        <span class="rt-c1">Physical hardware</span>
+        <span class="rt-c2">Unchanged either way</span>
+        <span class="rt-c3">Identical</span>
+        <span class="rt-c4">Identical</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Examines a specimen, or returns a result</span>
+        <span class="rt-c2">The test for an IVD, IVDR Art.&nbsp;2(2); human specimens only</span>
+        <span class="rt-c3">No</span>
+        <span class="rt-c4">No</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Documentation claims</span>
+        <span class="rt-c2">The declared intended purpose</span>
+        <span class="rt-c3">Volumetric range and precision</span>
+        <span class="rt-c4">Validated for a named assay</span>
+      </div>
+      <p class="rt-foot">1 of 4 &middot; verbatim from the thesis, citations omitted</p>
+    </div>
+
+    <div class="rt-pg" data-pg="1">
+      <p class="rt-grp">Resulting compliance obligations</p>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">CE marking declaration</span>
+        <span class="rt-c2">The manufacturer&rsquo;s own statement that the product meets all applicable EU law</span>
+        <span class="rt-c3">Under machinery law</span>
+        <span class="rt-c4">Under machinery law and IVDR</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Notified body audit</span>
+        <span class="rt-c2">Independent assessment before market entry, required above Class&nbsp;A and for sterile Class&nbsp;A devices</span>
+        <span class="rt-c3">Not required</span>
+        <span class="rt-c4">Not required for a non-sterile Class&nbsp;A device</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">EUDAMED registration</span>
+        <span class="rt-c2">Entry in the EU device database under a unique device identifier</span>
+        <span class="rt-c3">Not required</span>
+        <span class="rt-c4">Required</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Technical documentation</span>
+        <span class="rt-c2">The evidence file held by the manufacturer and produced on demand</span>
+        <span class="rt-c3">Risk assessment and instructions for use</span>
+        <span class="rt-c4">Plus the IVDR dossier and a quality management system</span>
+      </div>
+      <p class="rt-foot">2 of 4 &middot; verbatim from the thesis, citations omitted</p>
+    </div>
+
+    <div class="rt-pg" data-pg="2">
+      <p class="rt-grp">Resulting compliance obligations, continued</p>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Performance evaluation and surveillance</span>
+        <span class="rt-c2">Evidence that the device achieves its stated purpose, and monitoring of it in service after release</span>
+        <span class="rt-c3">Not required</span>
+        <span class="rt-c4">Required, with a documented plan</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Electrical safety</span>
+        <span class="rt-c2">Insulation, creepage and clearance, protective earthing and temperature rise</span>
+        <span class="rt-c3">IEC 61010-1</span>
+        <span class="rt-c4">Plus IEC 61010-2-101, the IVD supplement</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Electromagnetic compatibility</span>
+        <span class="rt-c2">Neither disturbing nearby equipment nor malfunctioning because of it</span>
+        <span class="rt-c3">IEC 61326-1</span>
+        <span class="rt-c4">IEC 61326-2-6, the IVD supplement</span>
+      </div>
+      <p class="rt-foot">3 of 4 &middot; verbatim from the thesis, citations omitted</p>
+    </div>
+
+    <div class="rt-pg" data-pg="3">
+      <p class="rt-grp">Resulting compliance obligations, continued</p>
+      <p class="rt-cap">From the caption: &ldquo;Below the two particular standards the final two columns are identical.&rdquo;</p>
+      <div class="rt-row">
+        <span class="rt-c1">Machinery law</span>
+        <span class="rt-c2">Risk assessment for moving parts; safe filling, draining and recovery of fluids; internal parts cleanable without entry. No leaching into reagents is adopted voluntarily, from food and pharmaceutical machinery. Directive 2006/42/EC until January 2027, then Regulation (EU) 2023/1230</span>
+        <span class="rt-c3">Applies</span>
+        <span class="rt-c4">Applies</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Battery, materials and firmware</span>
+        <span class="rt-c2">A user-replaceable battery; restricted substances and end-of-life handling; secure-by-default firmware with a declared support period</span>
+        <span class="rt-c3">Applies unchanged</span>
+        <span class="rt-c4">Applies unchanged</span>
+      </div>
+      <p class="rt-foot">4 of 4 &middot; verbatim from the thesis, citations omitted</p>
+    </div>
+
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~40 s</li>
+      <li data-step="0">This is Table 5.2 from chapter 5. What decides the class is not the hardware, which is identical, but what the documentation claims: a volume range and a precision, or validation for a named assay.</li>
+      <li data-step="1">On the accessory path the CE marking also falls under the IVDR. There is no notified body for a non-sterile Class A device, but there is EUDAMED registration, the IVDR dossier and a quality management system.</li>
+      <li data-step="2">Performance evaluation and surveillance come only with the accessory path, and so do the IVD supplements to the electrical safety and EMC standards.</li>
+      <li data-step="3">From machinery law down, the two columns are identical: the same risk assessment, the same battery, materials and firmware rules.</li>
+      <li>If asked: Class A is the lowest of the four diagnostic risk classes, and the only one a manufacturer may certify without an external audit.</li>
+    </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Tabella 5.2 della tesi: stessa macchina su entrambe le strade, cambia la documentazione</p>
+      <ul>
+        <li data-step="0">È la tabella 5.2 del capitolo 5. A decidere la classe non è la macchina, identica, ma ciò che la documentazione dichiara: un intervallo di volumi, o un test preciso.</li>
+        <li data-step="1">Sulla strada dell&rsquo;accessorio la marcatura CE passa anche dal regolamento diagnostico: niente ente esterno per la classe A, ma registrazione europea, fascicolo e sistema qualità.</li>
+        <li data-step="2">Solo per l&rsquo;accessorio servono la valutazione delle prestazioni, la sorveglianza dopo la vendita e due norme di sicurezza specifiche per la diagnostica.</li>
+        <li data-step="3">Dalle norme sulle macchine in giù le due colonne sono identiche: stessa analisi dei rischi, stesse regole per batteria, materiali e software.</li>
+      </ul>
+    </div>
+  </aside>
+</section>
+
 <!-- B26 · model first or prototypes first ─────────────────────
      Built 2026-09-22 (Sirio: "Slide 45 mentions the modelling of
      prototyping [...] make a slide about modelling on this topic:
