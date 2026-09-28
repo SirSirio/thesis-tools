@@ -580,33 +580,9 @@
 
 /* The 18 px floor applies to every label on these slides, so the shared
    .kicker (14 px in the head) is scaled up inside this part only. */
-#s37 .kicker, #s38 .kicker, #s39 .kicker, #s40 .kicker, #s41 .kicker, #s43 .kicker {
+#s37 .kicker, #s38 .kicker, #s40 .kicker, #s41 .kicker, #s43 .kicker {
   font-size: 18px; letter-spacing: 0.18em;
 }
-
-/* A quotation that takes the whole stage as the last step.  S38 had one
-   too until 2026-09-22 (Sirio: "Remove the 'A concept built once is also
-   not a concept tested.'"); these rules are S39's alone now. */
-#s39 .q-over {
-  position: absolute; inset: 0; z-index: 9;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(8,8,10,0.90);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  opacity: 0; visibility: hidden;
-}
-#s39 .q-over__in { max-width: 1000px; text-align: center; }
-#s39 .q-over__rule {
-  width: 104px; height: 2px; margin: 0 auto 30px;
-  background: linear-gradient(90deg, var(--t-a), var(--t-b));
-  transform: scaleX(0); transform-origin: 50% 50%;
-}
-#s39 .q-over__t {
-  margin: 0;
-  font-family: var(--display); font-weight: 700;
-  font-size: 42px; line-height: 1.18; letter-spacing: -0.02em;
-  color: var(--text);
-}
-#s39 .q-over__t--sm { font-size: 31px; line-height: 1.32; }
 
 /* ── S37 · the ledger over the dimmed machine ─────────────────────── */
 #s37 .d37 { position: absolute; inset: 0; }
@@ -775,41 +751,6 @@
 #s38 .d38__mnote {
   position: absolute;
   font-size: 20px; line-height: 1.3; color: var(--text-muted);
-}
-
-/* ── S39 · the working loop and the boundary ───────────────────
-   The <section> lives in parts/60-backups.html — S39 moved into the
-   appendix on 2026-09-22 — but its CSS stays here, because assemble.py
-   hoists every <style data-part> into the one document head, so #s39
-   matches wherever the section sits (SLIDE-ORDER.md §4).  The timeline
-   of the writing phase was cut on the same day; the slide is now the AI
-   contrast alone, and the figure is centred on the taller band it left. */
-#s39 .d39 { position: absolute; inset: 0; }
-#s39 .d39__paper {
-  position: absolute; left: 56px; top: 245px; width: 704px; height: 326px;
-  box-shadow: 0 22px 56px rgba(0,0,0,0.5);
-}
-#s39 .d39__paper > img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s39 .d39__mark { position: absolute; inset: 0; width: 100%; height: 100%; }
-#s39 .d39__mark rect { fill: none; stroke: var(--t-a); stroke-width: 9; }
-#s39 .d39__tag { left: 570px; top: 98px; }
-#s39 .d39__rail { position: absolute; inset: 0; }
-#s39 .d39__rail .kicker { position: absolute; }
-#s39 .d39__chip {
-  position: absolute; width: 424px; height: 36px;
-  display: flex; align-items: center; padding: 0 16px;
-  border-radius: var(--r-pill);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--glass-border);
-  font-family: var(--mono); font-size: 19px; color: var(--text);
-}
-#s39 .d39__chip--off {
-  border-color: rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.02);
-  color: var(--text-muted);
-}
-#s39 .d39__bnote {
-  position: absolute; font-size: 19px; line-height: 1.3; color: var(--text-muted); width: 424px;
 }
 
 /* ── S40 · the six-stage chain ────────────────────────────────────── */
@@ -1208,60 +1149,6 @@
     return tl;
   });
 
-  /* ── S39 ──────────────────────────────────────────
-     The <section> lives in parts/60-backups.html since 2026-09-22, when
-     S39 moved into the appendix; Deck.slide registers by cue, not by
-     file, and this builder closes over this IIFE's draw() and EASE, so
-     it stays here (SLIDE-ORDER.md §4).  Three steps now: the timeline of
-     the writing phase was cut with the move.                          */
-  Deck.slide('s39', function (el, gsap) {
-    var tl    = gsap.timeline({ paused: true });
-    var chips = el.querySelectorAll('.d39__chip:not(.d39__chip--off)');
-    var offs  = el.querySelectorAll('.d39__chip--off');
-    var k1    = el.querySelector('.d39__rail .kicker');
-    var k2    = el.querySelector('.d39__bk');
-    var bnote = el.querySelector('.d39__bnote');
-    var box   = el.querySelector('#d39-box');
-    var hand  = el.querySelector('#d39-hand');
-    var tag   = el.querySelector('#d39-tag');
-    var quote = el.querySelector('#d39-quote');
-
-    gsap.set([k1, k2, bnote], { opacity: 0 });
-    gsap.set(chips, { opacity: 0, x: 26 });
-    gsap.set(offs, { opacity: 0, y: 12 });
-    gsap.set(tag, { opacity: 0, scale: 0.86, transformOrigin: '0 50%' });
-    gsap.set(quote, { autoAlpha: 0 });
-    gsap.set(el.querySelector('#d39-quote .q-over__rule'), { scaleX: 0 });
-    gsap.set(el.querySelector('#d39-quote .q-over__t'), { opacity: 0, y: 18 });
-    if (window.DrawSVGPlugin) gsap.set([box, hand], { drawSVG: '0%' });
-    else gsap.set([box, hand], { opacity: 0 });
-
-    tl.addLabel('step0');
-
-    /* 1 · what the assistant carried */
-    tl.to(k1, { opacity: 1, duration: 0.3 }, 'step0')
-      .to(chips, { opacity: 1, x: 0, duration: 0.46, stagger: 0.09, ease: EASE }, 'step0+=0.08')
-      .addLabel('step1');
-
-    /* 2 · the boundary, outlined on the figure itself */
-    draw(tl, gsap, box, 'step1', 0.75, 'power2.inOut');
-    draw(tl, gsap, hand, 'step1+=0.50', 0.55, 'none');
-    tl.to(tag, { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(2)' }, 'step1+=0.86')
-      .to(chips, { opacity: 0.4, duration: 0.4, ease: 'none' }, 'step1+=0.10')
-      .to(k2, { opacity: 1, duration: 0.3 }, 'step1+=0.24')
-      .to(offs, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: EASE }, 'step1+=0.30')
-      .to(bnote, { opacity: 1, duration: 0.4 }, 'step1+=0.70')
-      .addLabel('step2');
-
-    /* 3 · the quotation */
-    tl.to(quote, { autoAlpha: 1, duration: 0.5, ease: 'none' }, 'step2')
-      .to(el.querySelector('#d39-quote .q-over__rule'), { scaleX: 1, duration: 0.55, ease: 'power3.inOut' }, 'step2+=0.16')
-      .to(el.querySelector('#d39-quote .q-over__t'), { opacity: 1, y: 0, duration: 0.7, ease: EASE }, 'step2+=0.26')
-      .addLabel('step3');
-
-    return tl;
-  });
-
   /* ── S40 ───────────────────────────────────────────────────────── */
   Deck.slide('s40', function (el, gsap) {
     var tl    = gsap.timeline({ paused: true });
@@ -1512,6 +1399,323 @@
        still frame in the presenter preview and under reduced motion.  The
        same 0.8 speed as s00; it fades in with the invitation. */
     if (window.PumpAnim) window.PumpAnim.run(el, el.querySelector('.d43__pump'), { speed: 0.8, delay: 1.05 });
+  });
+})();
+</script>
+
+<style data-part="p4-disc-regulatory">
+/* ══ B27, B28 · the regulatory answer and thesis Table 5.2 ═══════════
+   Added 2026-09-28. The two <section>s are appendix slides and live in
+   parts/60-backups.html after B25; their CSS and builders live here, in
+   the Part III-B chat's file, per SLIDE-ORDER.md §4. Nothing below 18 px. */
+#b27 .kicker, #b28 .kicker { font-size: 18px; letter-spacing: 0.16em; }
+
+/* ── B27 · three cards and the band ─────────────────────────────── */
+#b27 .rg { position: absolute; inset: 0; }
+#b27 .rg-card {
+  position: absolute; top: 166px; height: 320px;
+  padding: 20px 22px;
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+#b27 .rg-card--a { left: 56px;  width: 344px; }
+#b27 .rg-card--b { left: 440px; width: 344px; }
+#b27 .rg-card--c { left: 824px; width: 400px; gap: 10px; }
+/* top.jpg is 2000 x 1125: a 16:9 box, contain, nothing cropped */
+#b27 .rg-shot {
+  flex: 0 0 auto; width: 208px; height: 117px; align-self: center;
+  border-radius: var(--r-sm); overflow: hidden; background: #0d0f12;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+#b27 .rg-shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* the reader, drawn dashed like S41's: a proposal, not a build */
+#b27 .rg-rd {
+  position: relative; flex: 0 0 auto; width: 208px; height: 117px; align-self: center;
+  box-sizing: border-box;
+  border-radius: var(--r-sm);
+  border: 1.5px dashed color-mix(in srgb, var(--t-a) 60%, transparent);
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.012));
+}
+#b27 .rg-bay {
+  position: absolute; left: 16px; top: 18px; width: 78px; height: 78px;
+  box-sizing: border-box;
+  border: 1.5px dashed color-mix(in srgb, var(--t-a) 62%, transparent);
+  border-radius: 10px; background: rgba(0,0,0,0.42);
+}
+#b27 .rg-bay i {
+  position: absolute; left: 10px; top: 10px; right: 10px; bottom: 10px;
+  border-radius: 7px; background: var(--glass-bg);
+  border: 1px solid color-mix(in srgb, var(--t-a) 62%, transparent);
+}
+#b27 .rg-bars {
+  position: absolute; left: 110px; top: 30px; width: 80px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+#b27 .rg-bars i { display: block; height: 10px; border-radius: 5px; background: rgba(255,255,255,0.16); }
+#b27 .rg-bars i:first-child { background: color-mix(in srgb, var(--t-a) 55%, transparent); }
+#b27 .rg-st { font-size: 22px; line-height: 1.2; color: var(--text); margin-top: 2px; }
+#b27 .rg-sub { font-size: 18px; line-height: 1.32; color: var(--text-soft); }
+
+#b27 .rg-case {
+  flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.025);
+}
+#b27 .rg-who { font-size: 19px; line-height: 1.25; color: var(--text); }
+#b27 .rg-out { font-size: 18px; line-height: 1.25; color: var(--text-muted); }
+#b27 .rg-out::before { content: "\2192\00a0"; }
+#b27 .rg-case--hot { border-color: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b27 .rg-case--hot .rg-out { color: var(--t-a); }
+
+#b27 .rg-ar { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#b27 .rg-ar path {
+  fill: none; stroke: color-mix(in srgb, var(--t-a) 80%, transparent);
+  stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+}
+
+#b27 .rg-band {
+  position: absolute; left: 56px; top: 508px; width: 1168px; height: 164px;
+  box-sizing: border-box;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.86);
+  border: 1px solid var(--glass-border);
+}
+#b27 .rg-say {
+  position: absolute; left: 26px; top: 28px; width: 330px; margin: 0;
+  font-family: var(--display); font-weight: 700;
+  font-size: 28px; line-height: 1.18; letter-spacing: -0.01em; color: var(--text);
+}
+#b27 .rg-same {
+  position: absolute; left: 26px; top: 112px; width: 360px;
+  font-size: 18px; line-height: 1.25; color: var(--text-muted);
+}
+#b27 .rg-chips {
+  position: absolute; left: 404px; top: 30px; width: 740px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+#b27 .rg-chips span {
+  display: flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--t-a) 50%, transparent);
+  background: rgba(255,255,255,0.04);
+  font-size: 18px; color: var(--text); text-align: center; white-space: nowrap;
+}
+
+/* ── B28 · Table 5.2, abridged, one page per press ───────────────
+   2026-09-28, Sirio: the "what it requires" column is dropped, so three
+   columns remain and the twelve rows fit two pages. */
+/* Sirio's title sets 1202 px at 44 px; 42 px (1147 px) holds it on one line. */
+#b28 .slide__title { font-size: 42px; white-space: nowrap; }
+#b28 .rt { position: absolute; left: 56px; top: 164px; width: 1168px; height: 524px; }
+#b28 .rt-hd, #b28 .rt-row {
+  display: grid; grid-template-columns: 390px 340px 408px; column-gap: 15px;
+}
+#b28 .rt-hd {
+  padding: 0 0 10px; border-bottom: 1px solid var(--glass-border);
+  font-family: var(--mono); font-size: 18px; font-weight: 700; line-height: 1.2;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+  align-items: end;
+}
+#b28 .rt-hd .rt-c1 { color: var(--t-a); }
+#b28 .rt-hd .rt-c4 { color: var(--text); }
+/* each page is centred in the band between the header and the foot line */
+#b28 .rt-pg {
+  position: absolute; left: 0; top: 40px; width: 1168px; height: 440px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+#b28 .rt-grp {
+  margin: 0 0 6px; font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--text);
+}
+#b28 .rt-grp--2 { margin-top: 18px; }
+#b28 .rt-cap { margin: 10px 0 4px; font-size: 18px; line-height: 1.3; color: var(--text-muted); font-style: italic; }
+#b28 .rt-row {
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 20px; line-height: 1.25; color: var(--text-soft);
+  align-items: start;
+}
+#b28 .rt-pg[data-pg="1"] .rt-row { padding: 16px 0; }
+#b28 .rt-row .rt-c1 { color: var(--text); }
+#b28 .rt-row .rt-c3, #b28 .rt-row .rt-c4 { color: var(--text-muted); }
+/* where the two paths differ, the accessory cell is the one that is lit */
+#b28 .rt-row--diff .rt-c3 { color: var(--text); }
+#b28 .rt-row--diff .rt-c4 { color: var(--t-a); }
+#b28 .rt-foot {
+  position: absolute; left: 0; top: 460px; margin: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em; color: var(--text-muted);
+}
+</style>
+
+<script data-part="p4-disc-regulatory">
+/* ══ B27, B28 · timelines (sections in parts/60-backups.html) ═════════ */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+
+  /* B27: 0 the dispenser alone · 1 a reader joins · 2 the claim decides
+     · 3 what changes: the file, not the machine */
+  Deck.slide('b27', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var a  = el.querySelector('.rg-card--a');
+    var b  = el.querySelector('.rg-card--b');
+    var c  = el.querySelector('.rg-card--c');
+    var ar1 = el.querySelector('.rg-ar1');
+    var ar2 = el.querySelector('.rg-ar2');
+    var cases = el.querySelectorAll('.rg-case');
+    var band  = el.querySelector('.rg-band');
+    var chips = el.querySelectorAll('.rg-chips span');
+
+    gsap.set(a, { opacity: 1 });
+    gsap.set([b, c, band], { autoAlpha: 0, y: 18 });
+    gsap.set([ar1, ar2], { autoAlpha: 0 });
+    gsap.set(cases, { autoAlpha: 0, x: 14 });
+    gsap.set(chips, { autoAlpha: 0, y: 8 });
+
+    tl.addLabel('step0');
+    tl.to(ar1, { autoAlpha: 1, duration: 0.3, ease: 'none' }, 'step0')
+      .to(b, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }, 'step0+=0.1')
+      .addLabel('step1');
+    tl.to(ar2, { autoAlpha: 1, duration: 0.3, ease: 'none' }, 'step1')
+      .to(c, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step1+=0.1')
+      .to(cases, { autoAlpha: 1, x: 0, duration: 0.45, stagger: 0.12, ease: EASE }, 'step1+=0.3')
+      .addLabel('step2');
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }, 'step2')
+      .to(chips, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.06, ease: EASE }, 'step2+=0.25')
+      .addLabel('step3');
+    return tl;
+  });
+
+  /* B28: the header stays; the body turns one page per press */
+  Deck.slide('b28', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var pgs = el.querySelectorAll('.rt-pg');
+
+    gsap.set(pgs, { autoAlpha: 0 });
+    gsap.set(pgs[0], { autoAlpha: 1 });
+    tl.addLabel('step0');
+    for (var i = 1; i < pgs.length; i++) {
+      (function (i) {
+        tl.to(pgs[i - 1], { autoAlpha: 0, duration: 0.25, ease: 'none' }, 'step' + (i - 1))
+          .fromTo(pgs[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: EASE, immediateRender: false }, 'step' + (i - 1) + '+=0.2')
+          .addLabel('step' + i);
+      })(i);
+    }
+    return tl;
+  });
+})();
+</script>
+
+<style data-part="p4-disc-planning">
+/* ══ B29 · vertical against horizontal progression ═══════════════════
+   Added 2026-09-28, cut to a few words per cell the same day (Sirio: at
+   least half the text; the spoken detail lives in the notes). The section
+   is an appendix slide in parts/60-backups.html after S39; its CSS and
+   builder live here (SLIDE-ORDER.md §4). The tier bars echo S10's pyramid
+   in parts/20-part1.html: same modules, pump strongest, orange fading down. */
+#b29 .vh { position: absolute; inset: 0; }
+#b29 .kicker { font-size: 20px; letter-spacing: 0.16em; }
+#b29 .vh-k { position: absolute; top: 164px; }
+#b29 .vh-k--v { left: 256px; }
+#b29 .vh-k--h { left: 756px; }
+
+#b29 .vh-stack { position: absolute; top: 200px; width: 468px; height: 214px; }
+#b29 .vh-stack--v { left: 256px; }
+#b29 .vh-stack--h { left: 756px; }
+#b29 .vh-t { display: flex; align-items: center; height: 30px; }
+#b29 .vh-t span {
+  flex: 0 0 138px; font-size: 21px; line-height: 1; color: var(--text-soft);
+}
+#b29 .vh-t[data-r="1"] span { color: var(--text); font-weight: 600; }
+#b29 .vh-t b {
+  position: relative; display: block; flex: 0 0 300px; height: 18px;
+  border-radius: 9px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--t-a) 40%, transparent);
+  background: rgba(255,255,255,0.025);
+}
+#b29 .vh-t b i { position: absolute; left: 0; top: 0; bottom: 0; display: block; border-radius: 9px; }
+#b29 .vh-t[data-r="1"] b i { background: color-mix(in srgb, var(--t-a) 88%, transparent); }
+#b29 .vh-t[data-r="2"] b i { background: color-mix(in srgb, var(--t-a) 72%, transparent); }
+#b29 .vh-t[data-r="3"] b i { background: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b29 .vh-t[data-r="4"] b i { background: color-mix(in srgb, var(--t-a) 54%, transparent); }
+#b29 .vh-t[data-r="5"] b i { background: color-mix(in srgb, var(--t-a) 46%, transparent); }
+#b29 .vh-t[data-r="6"] b i { background: color-mix(in srgb, var(--t-a) 40%, transparent); }
+/* the ones still waiting their turn: dashed, like S10's enclosure */
+#b29 .vh-stack--v .vh-t:not([data-r="1"]) b { border-style: dashed; border-color: color-mix(in srgb, var(--t-a) 30%, transparent); }
+#b29 .vh-cap {
+  margin: 10px 0 0 138px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 26px; line-height: 1.1; color: var(--text);
+}
+
+#b29 .vh-row { position: absolute; left: 56px; width: 1168px; height: 46px; }
+#b29 .vh-row::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 1px;
+  background: rgba(255,255,255,0.09);
+}
+#b29 .vh-rl {
+  position: absolute; left: 0; top: 4px; width: 180px;
+  font-family: var(--mono); font-size: 20px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--t-a);
+}
+#b29 .vh-v, #b29 .vh-h {
+  position: absolute; top: 0; width: 468px; margin: 0;
+  font-size: 27px; line-height: 1.2; color: var(--text); white-space: nowrap;
+}
+#b29 .vh-v { left: 200px; }
+#b29 .vh-h { left: 700px; }
+
+#b29 .vh-band {
+  position: absolute; left: 56px; top: 602px; width: 1168px; height: 86px;
+  box-sizing: border-box;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.88);
+  border: 1px solid color-mix(in srgb, var(--t-a) 45%, transparent);
+}
+#b29 .vh-bk { position: absolute; left: 24px; top: 14px; }
+#b29 .vh-verdict {
+  position: absolute; right: 24px; top: 12px; margin: 0; white-space: nowrap;
+  font-size: 20px; line-height: 1.2; font-weight: 600; color: var(--t-a);
+}
+#b29 .vh-flow {
+  position: absolute; left: 24px; top: 42px; width: 1120px;
+  display: flex; align-items: center; gap: 16px; white-space: nowrap;
+}
+#b29 .vh-flow p { margin: 0; font-size: 24px; line-height: 1.2; color: var(--text); }
+#b29 .vh-flow i { display: block; font-style: normal; font-size: 24px; line-height: 1.2; color: var(--t-a); }
+#b29 .vh-flow i::before { content: "\2192"; }
+</style>
+
+<script data-part="p4-disc-planning">
+/* ══ B29 · timeline (section in parts/60-backups.html) ═══════════════
+   0 the two strategies · 1 buys · 2 costs · 3 fits · 4 this project */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+  Deck.slide('b29', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var rows = el.querySelectorAll('.vh-row');
+    var band = el.querySelector('.vh-band');
+    var bits = el.querySelectorAll('.vh-flow p, .vh-flow i, .vh-verdict');
+
+    gsap.set(rows, { autoAlpha: 0, y: 10 });
+    gsap.set(band, { autoAlpha: 0, y: 16 });
+    gsap.set(bits, { autoAlpha: 0 });
+
+    tl.addLabel('step0');
+    Array.prototype.forEach.call(rows, function (r, i) {
+      tl.to(r, { autoAlpha: 1, y: 0, duration: 0.5, ease: EASE }, 'step' + i)
+        .addLabel('step' + (i + 1));
+    });
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step3')
+      .to(bits, { autoAlpha: 1, duration: 0.4, stagger: 0.12, ease: 'none' }, 'step3+=0.2')
+      .addLabel('step4');
+    return tl;
   });
 })();
 </script>

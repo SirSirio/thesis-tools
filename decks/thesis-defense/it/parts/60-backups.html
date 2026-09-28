@@ -260,6 +260,85 @@
   </aside>
 </section>
 
+<section class="slide" id="b29" data-cue="b29" data-dialect="ledger" data-part="backup"
+         data-topic="disc" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Pianificazione: verticale contro orizzontale.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="vh">
+    <span class="kicker vh-k vh-k--v">Verticale &middot; il piano</span>
+    <span class="kicker vh-k vh-k--h">Orizzontale &middot; come è andata</span>
+
+    <div class="vh-stack vh-stack--v">
+      <div class="vh-t" data-r="1"><span>Pompa</span><b><i style="width:100%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Allineamento</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Ugelli</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Stoccaggio</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interfaccia</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Elettronica</span><b><i style="width:0%"></i></b></div>
+      <p class="vh-cap">Uno alla volta</p>
+    </div>
+    <div class="vh-stack vh-stack--h">
+      <div class="vh-t" data-r="1"><span>Pompa</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Allineamento</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Ugelli</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Stoccaggio</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interfaccia</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Elettronica</span><b><i style="width:52%"></i></b></div>
+      <p class="vh-cap">Tutti insieme</p>
+    </div>
+
+    <div class="vh-row" data-row="0" style="top:446px">
+      <span class="vh-rl">Dà</span>
+      <p class="vh-v">Interfacce collaudate</p>
+      <p class="vh-h">Nessuna attesa</p>
+    </div>
+    <div class="vh-row" data-row="1" style="top:498px">
+      <span class="vh-rl">Costa</span>
+      <p class="vh-v">Un ritardo blocca tutto</p>
+      <p class="vh-h">Moduli meno maturi</p>
+    </div>
+    <div class="vh-row" data-row="2" style="top:550px">
+      <span class="vh-rl">Adatto a</span>
+      <p class="vh-v">Un modulo guida</p>
+      <p class="vh-h">Squadra, scadenza stretta</p>
+    </div>
+
+    <div class="vh-band">
+      <span class="kicker vh-bk">In questo progetto</span>
+      <p class="vh-verdict">Giusto per il momento, non per la macchina</p>
+      <div class="vh-flow">
+        <p>Prima la pompa</p>
+        <i></i>
+        <p>Tubicini: sei settimane di ritardo</p>
+        <i></i>
+        <p>Costruiti in parallelo</p>
+        <i></i>
+        <p>Integrati meno maturi</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The plan was vertical: take one module to maturity, starting with the pump, then the next. What we did was horizontal: every module at once.</li>
+      <li data-step="1">Vertical proves each module before the next one depends on it. Horizontal means nobody waits, and it saves time.</li>
+      <li data-step="2">The price of vertical is that it is serial: one late part stalls everything. The price of horizontal is that each module matures less, and integration piles up at the end.</li>
+      <li data-step="3">In a team with a deadline, parallel work makes sense, and in a company with more people and time it is normal. Vertical fits when one module sets the others, as the pump does.</li>
+      <li data-step="4">Here the pump tubing arrived six weeks late, so we built the rest in parallel. It kept us moving, but the modules arrived less mature, and that cost the final machine. It was right for the circumstances, but not the best choice for this machine.</li>
+      <li>If asked for an example: developing the storage apart from the pump left a feed-line restriction, a leading suspect for the 10&nbsp;% delivery loss on the assembled machine.</li>
+      <li>If asked: the plan from March named task delays and late integration as the main risks, and both happened.</li>
+      <li>If asked how this differs from depth and breadth: that was how many concepts to build inside one module; this is the order of work across modules.</li>
+    </ul>
+  </aside>
+</section>
+
 <!-- s39 ────────────────────────────────────
      Moved out of the talk 2026-09-22 (Sirio: "only focus on AI, and make
      it more simple, and put it on the appendix. NO bullshit about
@@ -270,58 +349,6 @@
      It keeps id/data-cue "s39": appendix membership is data-part="backup",
      never the cue prefix.  Its hoisted CSS block and its timeline builder
      stay in parts/50-discussion.html — see SLIDE-ORDER.md §4. ────── -->
-<section class="slide" id="s39" data-cue="s39" data-dialect="loop"
-         data-part="backup" data-topic="disc" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">L’IA è stata la base del lavoro digitale; il lavoro fisico è rimasto nelle mie mani.</h2>
-  <div class="slide__rule"></div>
-
-  <i class="fragment step-cue" data-step="1"></i>
-  <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
-
-  <div class="d39">
-    <div class="paper d39__paper">
-      <img data-src="assets/figs/fig-ai-working-loop.png"
-           alt="Il ciclo progetta, costruisci, prova e impara con la documentazione al centro; una nota tratteggiata accanto a Build dice stampa e montaggio a mano." />
-      <svg class="d39__mark" viewBox="0 0 2000 925" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <rect id="d39-box"  x="1092" y="68"  width="482" height="240" rx="18" />
-        <rect id="d39-hand" x="1592" y="108" width="364" height="152" rx="14" stroke-dasharray="14 12" />
-      </svg>
-      <span class="callout callout--ghost d39__tag" id="d39-tag">a mano</span>
-    </div>
-
-    <div class="d39__rail">
-      <span class="kicker" style="left:800px; top:196px">Decisiva per</span>
-      <span class="d39__chip" style="left:800px; top:224px">Ricerca bibliografica</span>
-      <span class="d39__chip" style="left:800px; top:268px">Protocolli sperimentali</span>
-      <span class="d39__chip" style="left:800px; top:312px">Analisi delle misure</span>
-      <span class="d39__chip" style="left:800px; top:356px">Firmware</span>
-      <span class="d39__chip" style="left:800px; top:400px">Specifiche tecniche</span>
-
-      <span class="kicker kicker--muted d39__bk" style="left:800px; top:470px">Il confine</span>
-      <span class="d39__chip d39__chip--off" style="left:800px;  top:498px; width:200px">Stampa</span>
-      <span class="d39__chip d39__chip--off" style="left:1016px; top:498px; width:200px">Montaggio</span>
-      <span class="d39__chip d39__chip--off" style="left:800px;  top:542px; width:200px">Cablaggio</span>
-      <span class="d39__chip d39__chip--off" style="left:1016px; top:542px; width:200px">Prove in lab</span>
-      <span class="d39__bnote" style="left:800px; top:598px">e l’assieme CAD che non ha saputo costruire</span>
-    </div>
-
-    <div class="q-over" id="d39-quote">
-      <div class="q-over__in">
-        <div class="q-over__rule"></div>
-        <p class="q-over__t q-over__t--sm">“Senza l’IA integrata in tutto il processo di ingegneria, completare un prototipo integrato e una verifica sperimentale così approfondita nei tempi di una tesi magistrale non sarebbe stato possibile.”</p>
-      </div>
-    </div>
-  </div>
-
-  <aside class="notes">
-    <ul>
-      <li>Decisive for literature, protocols, data analysis, firmware and specifications — a foundation, not an accessory.</li>
-      <li>The boundary was purely physical: printing, assembly, wiring, laboratory testing — and the CAD assembly it could not build.</li>
-      <li>Which is the whole claim: without it, an integrated prototype validated to this depth would not have fitted inside a master’s thesis.</li>
-    </ul>
-  </aside>
-</section>
 
 <!-- B25 ·  the reader's hardware ledger ─────────────────────────────
      Backs S41 (pair the dispenser with a reader). Dialect "ledger":
@@ -333,8 +360,8 @@
      band at the foot at 23 px, one readout per click, so the column
      that matters most is the only text set large. ───────────────── -->
 <section class="slide" id="b25" data-cue="b25" data-dialect="ledger" data-part="backup"
-         data-topic="outlook" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">Sei metodi di lettura possono stare in un lettore portatile, e ognuno chiede hardware diverso.</h2>
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Requisiti hardware per sei modi di lettura.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -358,7 +385,7 @@
 
     <span class="ro-hl" id="b25-hl"></span>
 
-    <div class="ro-row" style="top:240px">
+    <div class="ro-row" style="top:200px">
       <span class="ro-nm">Fluorescenza</span>
       <span class="ro-c" style="left:216px">LED blu</span>
       <span class="ro-c" style="left:406px">due filtri</span>
@@ -367,7 +394,7 @@
       <span class="ro-c" style="left:976px">camera oscura</span>
     </div>
 
-    <div class="ro-row" style="top:284px">
+    <div class="ro-row" style="top:244px">
       <span class="ro-nm">Colorimetria</span>
       <span class="ro-c" style="left:216px">LED</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -376,7 +403,7 @@
       <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
     </div>
 
-    <div class="ro-row" style="top:328px">
+    <div class="ro-row" style="top:288px">
       <span class="ro-nm">Turbidimetria</span>
       <span class="ro-c" style="left:216px">LED 650 nm</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -385,7 +412,7 @@
       <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
     </div>
 
-    <div class="ro-row" style="top:372px">
+    <div class="ro-row" style="top:332px">
       <span class="ro-nm">Flusso laterale</span>
       <span class="ro-c" style="left:216px">LED bianco</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -394,7 +421,7 @@
       <span class="ro-c" style="left:976px">porta-striscia</span>
     </div>
 
-    <div class="ro-row" style="top:416px">
+    <div class="ro-row" style="top:376px">
       <span class="ro-nm">Elettrochimica</span>
       <span class="ro-c ro-c--off" style="left:216px">&mdash;</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -406,7 +433,7 @@
     <span class="ro-gatelab">Al limite &middot; più ingombro di quanto abbia un modulo portatile</span>
     <span class="ro-gateline"></span>
 
-    <div class="ro-row ro-row--edge" style="top:486px">
+    <div class="ro-row ro-row--edge" style="top:446px">
       <span class="ro-nm">Chemiluminescenza</span>
       <span class="ro-c" style="left:216px">il marcatore</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -468,6 +495,191 @@
       <li><strong>6 &middot; chemiluminescence and ECL</strong> &mdash; the label emits its own light, so there is no lamp; ECL switches it on electrically, which is how Roche&rsquo;s Elecsys platform works. But a photomultiplier or SiPM and a genuinely light-tight chamber are more box than a portable module has, so it sits on the edge rather than inside the set.</li>
       <li>If asked <em>why not just use a phone</em>: a phone gives a camera and compute for free, but no control of exposure geometry, no filters and no heater. It covers lateral flow and colorimetry, nothing below them.</li>
       <li>If asked <em>what the dispenser buys the reader</em>: every one of these assumes the reaction mix was assembled correctly. The reader is the cheap half; preparation is the hard half. That is this thesis&rsquo;s argument restated from the detection side.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="b27" data-cue="b27" data-dialect="flow" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Classificazione normativa con un lettore integrato.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="rg">
+    <article class="rg-card rg-card--a">
+      <span class="kicker">Il dosatore da solo</span>
+      <div class="rg-shot">
+        <img data-src="../../assets/media/device/top.jpg"
+             alt="Il dosatore montato visto dall’alto: le fiale dei reagenti dietro la corsia, il rack d’ingresso, il touchscreen e il rack d’uscita." />
+      </div>
+      <span class="rg-st">Apparecchiatura generica da laboratorio</span>
+      <span class="rg-sub">Come una pipetta: non esamina nulla, quindi l’IVDR non si applica.</span>
+    </article>
+
+    <svg class="rg-ar" viewBox="0 0 1280 720" aria-hidden="true">
+      <path class="rg-ar1" d="M 404 326 L 432 326 M 424 318 L 432 326 L 424 334" />
+      <path class="rg-ar2" d="M 788 326 L 816 326 M 808 318 L 816 326 L 808 334" />
+    </svg>
+
+    <article class="rg-card rg-card--b">
+      <span class="kicker">Con un lettore</span>
+      <div class="rg-rd">
+        <span class="rg-bay"><i></i></span>
+        <span class="rg-bars"><i style="width:78%"></i><i style="width:52%"></i><i style="width:64%"></i></span>
+      </div>
+      <span class="rg-st">Un dispositivo diagnostico</span>
+      <span class="rg-sub">Esamina un campione umano e dà un risultato: l’IVDR si applica.</span>
+    </article>
+
+    <article class="rg-card rg-card--c">
+      <span class="kicker">Poi decide l’uso dichiarato</span>
+      <div class="rg-case">
+        <span class="rg-who">L’operatore li abbina</span>
+        <span class="rg-out">resta apparecchiatura da laboratorio</span>
+      </div>
+      <div class="rg-case rg-case--hot">
+        <span class="rg-who">Venduto col lettore per test specifici</span>
+        <span class="rg-out">accessorio di Classe A, autocertificato</span>
+      </div>
+      <div class="rg-case">
+        <span class="rg-who">Un produttore di diagnostici lo include</span>
+        <span class="rg-out">entra nel suo fascicolo tecnico</span>
+      </div>
+    </article>
+
+    <div class="rg-band">
+      <p class="rg-say">Cambia il fascicolo, non la macchina.</p>
+      <span class="rg-same">Hardware: identico nei due casi</span>
+      <div class="rg-chips">
+        <span>CE anche secondo l’IVDR</span>
+        <span>Registrazione EUDAMED</span>
+        <span>Fascicolo e sistema qualità</span>
+        <span>Valutazione delle prestazioni</span>
+        <span>IEC 61010-2-101</span>
+        <span>IEC 61326-2-6</span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">&mdash;</li>
+      <li data-step="1">&mdash;</li>
+      <li data-step="2">The dispenser&rsquo;s status then depends on what is claimed. If the operator pairs them, it stays general equipment. Sold with the reader for named tests, it becomes a Class A accessory, which the maker certifies itself. And if a diagnostic company bundles it, it enters their file.</li>
+      <li data-step="3">Either way the hardware stays the same. What grows is the file: registration, a quality system, a performance evaluation, and the two IVD supplements to the safety standards.</li>
+      <li><strong>IVDR:</strong> the EU regulation for in vitro diagnostic devices, tests that examine samples taken from the human body.</li>
+      <li><strong>EUDAMED registration:</strong> the EU device database, where the device is registered under a unique device identifier.</li>
+      <li><strong>Dossier and quality system:</strong> the technical file that proves the device meets the rules, and a quality management system that keeps it that way, usually built to ISO&nbsp;13485.</li>
+      <li><strong>IEC 61010-2-101:</strong> the IVD supplement to IEC 61010-1, the safety standard for electrical laboratory equipment.</li>
+      <li><strong>IEC 61326-2-6:</strong> the IVD supplement to the electromagnetic compatibility standard: the device neither disturbs nearby electronics nor malfunctions because of them.</li>
+      <li><strong>Class A accessory:</strong> the lowest of the four IVDR risk classes; when non-sterile, the maker declares conformity itself, with no notified body.</li>
+      <li>If asked: animal or water samples are outside the IVDR; the tests themselves carry their own class, often higher (general knowledge).</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="b28" data-cue="b28" data-dialect="sheet" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">La conformità normativa cambia le carte, non l’hardware.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+
+  <div class="rt">
+    <div class="rt-hd">
+      <span class="rt-c1">Tesi, tabella 5.2</span>
+      <span class="rt-c3">Strumento da laboratorio</span>
+      <span class="rt-c4">Accessorio diagnostico, Classe A</span>
+    </div>
+
+    <div class="rt-pg" data-pg="0">
+      <p class="rt-grp">Cosa decide la classificazione</p>
+      <div class="rt-row">
+        <span class="rt-c1">Hardware</span>
+        <span class="rt-c3">Identico</span>
+        <span class="rt-c4">Identico</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Esamina un campione o dà un risultato</span>
+        <span class="rt-c3">No</span>
+        <span class="rt-c4">No</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Uso dichiarato nei documenti</span>
+        <span class="rt-c3">Intervallo di volumi e precisione</span>
+        <span class="rt-c4">Validato per un test specifico</span>
+      </div>
+      <p class="rt-grp rt-grp--2">Obblighi di conformità che ne derivano</p>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Dichiarazione di marcatura CE</span>
+        <span class="rt-c3">Secondo la direttiva macchine</span>
+        <span class="rt-c4">Secondo la direttiva macchine e l’IVDR</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Verifica di un organismo notificato</span>
+        <span class="rt-c3">Non richiesta</span>
+        <span class="rt-c4">Non richiesta per un dispositivo di Classe&nbsp;A non sterile</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Registrazione EUDAMED</span>
+        <span class="rt-c3">Non richiesta</span>
+        <span class="rt-c4">Richiesta</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Documentazione tecnica</span>
+        <span class="rt-c3">Analisi dei rischi e istruzioni per l’uso</span>
+        <span class="rt-c4">In più il fascicolo IVDR e un sistema di gestione della qualità</span>
+      </div>
+      <p class="rt-foot">1 di 2 &middot; ridotta dalla tabella 5.2 della tesi: omesse la colonna &ldquo;cosa richiede&rdquo; e le citazioni</p>
+    </div>
+
+    <div class="rt-pg" data-pg="1">
+      <p class="rt-grp">Obblighi di conformità, seguito</p>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Valutazione delle prestazioni e sorveglianza</span>
+        <span class="rt-c3">Non richiesta</span>
+        <span class="rt-c4">Richiesta, con un piano documentato</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Sicurezza elettrica</span>
+        <span class="rt-c3">IEC 61010-1</span>
+        <span class="rt-c4">Più la IEC 61010-2-101, supplemento IVD</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Compatibilità elettromagnetica</span>
+        <span class="rt-c3">IEC 61326-1</span>
+        <span class="rt-c4">IEC 61326-2-6, supplemento IVD</span>
+      </div>
+      <p class="rt-cap">Dalla didascalia: &ldquo;Sotto le due norme specifiche le ultime due colonne sono identiche.&rdquo;</p>
+      <div class="rt-row">
+        <span class="rt-c1">Direttiva macchine</span>
+        <span class="rt-c3">Si applica</span>
+        <span class="rt-c4">Si applica</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Batteria, materiali e firmware</span>
+        <span class="rt-c3">Si applica invariata</span>
+        <span class="rt-c4">Si applica invariata</span>
+      </div>
+      <p class="rt-foot">2 di 2 &middot; ridotta dalla tabella 5.2 della tesi: omesse la colonna &ldquo;cosa richiede&rdquo; e le citazioni</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">This is Table 5.2 from chapter 5, abridged. What decides the class is not the hardware, which is identical, but what the documentation claims. The accessory path adds the IVDR to the CE marking, EUDAMED registration, and the IVDR dossier with a quality system, but no notified body for a non-sterile Class A device.</li>
+      <li data-step="1">Performance evaluation and the two IVD supplements come only with the accessory path. From machinery law down, the two columns are identical.</li>
+      <li><strong>EUDAMED:</strong> the EU device database, where the device is registered under a unique device identifier.</li>
+      <li><strong>IEC 61010-1:</strong> the general safety standard for electrical measurement, control and laboratory equipment.</li>
+      <li><strong>IEC 61010-2-101:</strong> its add-on with the extra safety requirements for IVD equipment.</li>
+      <li><strong>IEC 61326-1:</strong> the general electromagnetic compatibility standard for measurement, control and laboratory equipment.</li>
+      <li><strong>IEC 61326-2-6:</strong> its add-on with the extra EMC requirements for IVD equipment.</li>
+      <li>If asked: Class A is the lowest of the four diagnostic risk classes, and the only one a manufacturer may certify without an external audit.</li>
     </ul>
   </aside>
 </section>
@@ -2230,7 +2442,7 @@
 #b25 .ro-wrap { position: absolute; inset: 0; }
 
 /* column headers */
-#b25 .ro-hd { position: absolute; left: 56px; top: 202px; width: 1168px; height: 24px; }
+#b25 .ro-hd { position: absolute; left: 56px; top: 162px; width: 1168px; height: 24px; }
 #b25 .ro-hd span {
   position: absolute; top: 0;
   font-family: var(--mono); font-size: 18px; font-weight: 700;
@@ -2238,14 +2450,14 @@
   white-space: nowrap; color: var(--text-muted);
 }
 #b25 .ro-hrule {
-  position: absolute; left: 56px; top: 232px; width: 1168px; height: 1px;
+  position: absolute; left: 56px; top: 192px; width: 1168px; height: 1px;
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--t-a) 48%, transparent), rgba(255,255,255,0.08));
 }
 
 /* the lit rule that travels to the row being talked about */
 #b25 .ro-hl {
-  position: absolute; left: 44px; top: 240px; width: 1192px; height: 44px;
+  position: absolute; left: 44px; top: 200px; width: 1192px; height: 44px;
   border-radius: 10px;
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--t-a) 17%, transparent), transparent 64%);
@@ -2279,13 +2491,13 @@
 
 /* the borderline gate, and the one row that sits past it */
 #b25 .ro-gatelab {
-  position: absolute; left: 56px; top: 461px;
+  position: absolute; left: 56px; top: 421px;
   font-family: var(--mono); font-size: 18px; font-weight: 700;
   letter-spacing: 0.06em; white-space: nowrap;
   color: #e0a34f;
 }
 #b25 .ro-gateline {
-  position: absolute; left: 596px; top: 471px; width: 628px; height: 0;
+  position: absolute; left: 596px; top: 431px; width: 628px; height: 0;
   border-top: 1px dashed rgba(224,163,79,0.42);
 }
 #b25 .ro-row--edge { border-top: 0; }
@@ -2300,7 +2512,7 @@
 }
 
 /* the foot band · the column that matters, set large */
-#b25 .ro-band { position: absolute; left: 56px; top: 560px; width: 1168px; height: 102px; }
+#b25 .ro-band { position: absolute; left: 56px; top: 528px; width: 1168px; height: 140px; }
 #b25 .ro-band::before {
   content: ""; position: absolute; left: 0; top: -18px; width: 1168px; height: 1px;
   background: linear-gradient(90deg,

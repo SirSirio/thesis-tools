@@ -3024,33 +3024,9 @@ body[data-view="guest"] .guest-dot {
 
 /* The 18 px floor applies to every label on these slides, so the shared
    .kicker (14 px in the head) is scaled up inside this part only. */
-#s37 .kicker, #s38 .kicker, #s39 .kicker, #s40 .kicker, #s41 .kicker, #s43 .kicker {
+#s37 .kicker, #s38 .kicker, #s40 .kicker, #s41 .kicker, #s43 .kicker {
   font-size: 18px; letter-spacing: 0.18em;
 }
-
-/* A quotation that takes the whole stage as the last step.  S38 had one
-   too until 2026-09-22 (Sirio: "Remove the 'A concept built once is also
-   not a concept tested.'"); these rules are S39's alone now. */
-#s39 .q-over {
-  position: absolute; inset: 0; z-index: 9;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(8,8,10,0.90);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  opacity: 0; visibility: hidden;
-}
-#s39 .q-over__in { max-width: 1000px; text-align: center; }
-#s39 .q-over__rule {
-  width: 104px; height: 2px; margin: 0 auto 30px;
-  background: linear-gradient(90deg, var(--t-a), var(--t-b));
-  transform: scaleX(0); transform-origin: 50% 50%;
-}
-#s39 .q-over__t {
-  margin: 0;
-  font-family: var(--display); font-weight: 700;
-  font-size: 42px; line-height: 1.18; letter-spacing: -0.02em;
-  color: var(--text);
-}
-#s39 .q-over__t--sm { font-size: 31px; line-height: 1.32; }
 
 /* ── S37 · the ledger over the dimmed machine ─────────────────────── */
 #s37 .d37 { position: absolute; inset: 0; }
@@ -3219,41 +3195,6 @@ body[data-view="guest"] .guest-dot {
 #s38 .d38__mnote {
   position: absolute;
   font-size: 20px; line-height: 1.3; color: var(--text-muted);
-}
-
-/* ── S39 · the working loop and the boundary ───────────────────
-   The <section> lives in parts/60-backups.html — S39 moved into the
-   appendix on 2026-09-22 — but its CSS stays here, because assemble.py
-   hoists every <style data-part> into the one document head, so #s39
-   matches wherever the section sits (SLIDE-ORDER.md §4).  The timeline
-   of the writing phase was cut on the same day; the slide is now the AI
-   contrast alone, and the figure is centred on the taller band it left. */
-#s39 .d39 { position: absolute; inset: 0; }
-#s39 .d39__paper {
-  position: absolute; left: 56px; top: 245px; width: 704px; height: 326px;
-  box-shadow: 0 22px 56px rgba(0,0,0,0.5);
-}
-#s39 .d39__paper > img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#s39 .d39__mark { position: absolute; inset: 0; width: 100%; height: 100%; }
-#s39 .d39__mark rect { fill: none; stroke: var(--t-a); stroke-width: 9; }
-#s39 .d39__tag { left: 570px; top: 98px; }
-#s39 .d39__rail { position: absolute; inset: 0; }
-#s39 .d39__rail .kicker { position: absolute; }
-#s39 .d39__chip {
-  position: absolute; width: 424px; height: 36px;
-  display: flex; align-items: center; padding: 0 16px;
-  border-radius: var(--r-pill);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--glass-border);
-  font-family: var(--mono); font-size: 19px; color: var(--text);
-}
-#s39 .d39__chip--off {
-  border-color: rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.02);
-  color: var(--text-muted);
-}
-#s39 .d39__bnote {
-  position: absolute; font-size: 19px; line-height: 1.3; color: var(--text-muted); width: 424px;
 }
 
 /* ── S40 · the six-stage chain ────────────────────────────────────── */
@@ -3490,6 +3431,233 @@ body[data-view="guest"] .guest-dot {
 }
 /* it: one-line tile names on S40 (Italian runs longer) */
 #s40 .d40__nm { font-size: 20px; }
+</style>
+<style data-part="p4-disc-regulatory">
+/* ══ B27, B28 · the regulatory answer and thesis Table 5.2 ═══════════
+   Added 2026-09-28. The two <section>s are appendix slides and live in
+   parts/60-backups.html after B25; their CSS and builders live here, in
+   the Part III-B chat's file, per SLIDE-ORDER.md §4. Nothing below 18 px. */
+#b27 .kicker, #b28 .kicker { font-size: 18px; letter-spacing: 0.16em; }
+
+/* ── B27 · three cards and the band ─────────────────────────────── */
+#b27 .rg { position: absolute; inset: 0; }
+#b27 .rg-card {
+  position: absolute; top: 166px; height: 320px;
+  padding: 20px 22px;
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.5);
+}
+#b27 .rg-card--a { left: 56px;  width: 344px; }
+#b27 .rg-card--b { left: 440px; width: 344px; }
+#b27 .rg-card--c { left: 824px; width: 400px; gap: 10px; }
+/* top.jpg is 2000 x 1125: a 16:9 box, contain, nothing cropped */
+#b27 .rg-shot {
+  flex: 0 0 auto; width: 208px; height: 117px; align-self: center;
+  border-radius: var(--r-sm); overflow: hidden; background: #0d0f12;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+#b27 .rg-shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* the reader, drawn dashed like S41's: a proposal, not a build */
+#b27 .rg-rd {
+  position: relative; flex: 0 0 auto; width: 208px; height: 117px; align-self: center;
+  box-sizing: border-box;
+  border-radius: var(--r-sm);
+  border: 1.5px dashed color-mix(in srgb, var(--t-a) 60%, transparent);
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.012));
+}
+#b27 .rg-bay {
+  position: absolute; left: 16px; top: 18px; width: 78px; height: 78px;
+  box-sizing: border-box;
+  border: 1.5px dashed color-mix(in srgb, var(--t-a) 62%, transparent);
+  border-radius: 10px; background: rgba(0,0,0,0.42);
+}
+#b27 .rg-bay i {
+  position: absolute; left: 10px; top: 10px; right: 10px; bottom: 10px;
+  border-radius: 7px; background: var(--glass-bg);
+  border: 1px solid color-mix(in srgb, var(--t-a) 62%, transparent);
+}
+#b27 .rg-bars {
+  position: absolute; left: 110px; top: 30px; width: 80px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+#b27 .rg-bars i { display: block; height: 10px; border-radius: 5px; background: rgba(255,255,255,0.16); }
+#b27 .rg-bars i:first-child { background: color-mix(in srgb, var(--t-a) 55%, transparent); }
+#b27 .rg-st { font-size: 22px; line-height: 1.2; color: var(--text); margin-top: 2px; }
+#b27 .rg-sub { font-size: 18px; line-height: 1.32; color: var(--text-soft); }
+
+#b27 .rg-case {
+  flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.025);
+}
+#b27 .rg-who { font-size: 19px; line-height: 1.25; color: var(--text); }
+#b27 .rg-out { font-size: 18px; line-height: 1.25; color: var(--text-muted); }
+#b27 .rg-out::before { content: "\2192\00a0"; }
+#b27 .rg-case--hot { border-color: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b27 .rg-case--hot .rg-out { color: var(--t-a); }
+
+#b27 .rg-ar { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#b27 .rg-ar path {
+  fill: none; stroke: color-mix(in srgb, var(--t-a) 80%, transparent);
+  stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+}
+
+#b27 .rg-band {
+  position: absolute; left: 56px; top: 508px; width: 1168px; height: 164px;
+  box-sizing: border-box;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.86);
+  border: 1px solid var(--glass-border);
+}
+#b27 .rg-say {
+  position: absolute; left: 26px; top: 28px; width: 330px; margin: 0;
+  font-family: var(--display); font-weight: 700;
+  font-size: 28px; line-height: 1.18; letter-spacing: -0.01em; color: var(--text);
+}
+#b27 .rg-same {
+  position: absolute; left: 26px; top: 112px; width: 360px;
+  font-size: 18px; line-height: 1.25; color: var(--text-muted);
+}
+#b27 .rg-chips {
+  position: absolute; left: 404px; top: 30px; width: 740px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+#b27 .rg-chips span {
+  display: flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--t-a) 50%, transparent);
+  background: rgba(255,255,255,0.04);
+  font-size: 18px; color: var(--text); text-align: center; white-space: nowrap;
+}
+
+/* ── B28 · Table 5.2, abridged, one page per press ───────────────
+   2026-09-28, Sirio: the "what it requires" column is dropped, so three
+   columns remain and the twelve rows fit two pages. */
+/* Sirio's title sets 1202 px at 44 px; 42 px (1147 px) holds it on one line. */
+#b28 .slide__title { font-size: 42px; white-space: nowrap; }
+#b28 .rt { position: absolute; left: 56px; top: 164px; width: 1168px; height: 524px; }
+#b28 .rt-hd, #b28 .rt-row {
+  display: grid; grid-template-columns: 390px 340px 408px; column-gap: 15px;
+}
+#b28 .rt-hd {
+  padding: 0 0 10px; border-bottom: 1px solid var(--glass-border);
+  font-family: var(--mono); font-size: 18px; font-weight: 700; line-height: 1.2;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+  align-items: end;
+}
+#b28 .rt-hd .rt-c1 { color: var(--t-a); }
+#b28 .rt-hd .rt-c4 { color: var(--text); }
+/* each page is centred in the band between the header and the foot line */
+#b28 .rt-pg {
+  position: absolute; left: 0; top: 40px; width: 1168px; height: 440px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+#b28 .rt-grp {
+  margin: 0 0 6px; font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--text);
+}
+#b28 .rt-grp--2 { margin-top: 18px; }
+#b28 .rt-cap { margin: 10px 0 4px; font-size: 18px; line-height: 1.3; color: var(--text-muted); font-style: italic; }
+#b28 .rt-row {
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 20px; line-height: 1.25; color: var(--text-soft);
+  align-items: start;
+}
+#b28 .rt-pg[data-pg="1"] .rt-row { padding: 16px 0; }
+#b28 .rt-row .rt-c1 { color: var(--text); }
+#b28 .rt-row .rt-c3, #b28 .rt-row .rt-c4 { color: var(--text-muted); }
+/* where the two paths differ, the accessory cell is the one that is lit */
+#b28 .rt-row--diff .rt-c3 { color: var(--text); }
+#b28 .rt-row--diff .rt-c4 { color: var(--t-a); }
+#b28 .rt-foot {
+  position: absolute; left: 0; top: 460px; margin: 0;
+  font-family: var(--mono); font-size: 18px; letter-spacing: 0.02em; color: var(--text-muted);
+}
+</style>
+<style data-part="p4-disc-planning">
+/* ══ B29 · vertical against horizontal progression ═══════════════════
+   Added 2026-09-28, cut to a few words per cell the same day (Sirio: at
+   least half the text; the spoken detail lives in the notes). The section
+   is an appendix slide in parts/60-backups.html after S39; its CSS and
+   builder live here (SLIDE-ORDER.md §4). The tier bars echo S10's pyramid
+   in parts/20-part1.html: same modules, pump strongest, orange fading down. */
+#b29 .vh { position: absolute; inset: 0; }
+#b29 .kicker { font-size: 20px; letter-spacing: 0.16em; }
+#b29 .vh-k { position: absolute; top: 164px; }
+#b29 .vh-k--v { left: 256px; }
+#b29 .vh-k--h { left: 756px; }
+
+#b29 .vh-stack { position: absolute; top: 200px; width: 468px; height: 214px; }
+#b29 .vh-stack--v { left: 256px; }
+#b29 .vh-stack--h { left: 756px; }
+#b29 .vh-t { display: flex; align-items: center; height: 30px; }
+#b29 .vh-t span {
+  flex: 0 0 138px; font-size: 21px; line-height: 1; color: var(--text-soft);
+}
+#b29 .vh-t[data-r="1"] span { color: var(--text); font-weight: 600; }
+#b29 .vh-t b {
+  position: relative; display: block; flex: 0 0 300px; height: 18px;
+  border-radius: 9px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--t-a) 40%, transparent);
+  background: rgba(255,255,255,0.025);
+}
+#b29 .vh-t b i { position: absolute; left: 0; top: 0; bottom: 0; display: block; border-radius: 9px; }
+#b29 .vh-t[data-r="1"] b i { background: color-mix(in srgb, var(--t-a) 88%, transparent); }
+#b29 .vh-t[data-r="2"] b i { background: color-mix(in srgb, var(--t-a) 72%, transparent); }
+#b29 .vh-t[data-r="3"] b i { background: color-mix(in srgb, var(--t-a) 62%, transparent); }
+#b29 .vh-t[data-r="4"] b i { background: color-mix(in srgb, var(--t-a) 54%, transparent); }
+#b29 .vh-t[data-r="5"] b i { background: color-mix(in srgb, var(--t-a) 46%, transparent); }
+#b29 .vh-t[data-r="6"] b i { background: color-mix(in srgb, var(--t-a) 40%, transparent); }
+/* the ones still waiting their turn: dashed, like S10's enclosure */
+#b29 .vh-stack--v .vh-t:not([data-r="1"]) b { border-style: dashed; border-color: color-mix(in srgb, var(--t-a) 30%, transparent); }
+#b29 .vh-cap {
+  margin: 10px 0 0 138px;
+  font-family: var(--display); font-weight: 700;
+  font-size: 26px; line-height: 1.1; color: var(--text);
+}
+
+#b29 .vh-row { position: absolute; left: 56px; width: 1168px; height: 46px; }
+#b29 .vh-row::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 1px;
+  background: rgba(255,255,255,0.09);
+}
+#b29 .vh-rl {
+  position: absolute; left: 0; top: 4px; width: 180px;
+  font-family: var(--mono); font-size: 20px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--t-a);
+}
+#b29 .vh-v, #b29 .vh-h {
+  position: absolute; top: 0; width: 468px; margin: 0;
+  font-size: 27px; line-height: 1.2; color: var(--text); white-space: nowrap;
+}
+#b29 .vh-v { left: 200px; }
+#b29 .vh-h { left: 700px; }
+
+#b29 .vh-band {
+  position: absolute; left: 56px; top: 602px; width: 1168px; height: 86px;
+  box-sizing: border-box;
+  border-radius: var(--r-md);
+  background: rgba(14,14,18,0.88);
+  border: 1px solid color-mix(in srgb, var(--t-a) 45%, transparent);
+}
+#b29 .vh-bk { position: absolute; left: 24px; top: 14px; }
+#b29 .vh-verdict {
+  position: absolute; right: 24px; top: 12px; margin: 0; white-space: nowrap;
+  font-size: 20px; line-height: 1.2; font-weight: 600; color: var(--t-a);
+}
+#b29 .vh-flow {
+  position: absolute; left: 24px; top: 42px; width: 1120px;
+  display: flex; align-items: center; gap: 16px; white-space: nowrap;
+}
+#b29 .vh-flow p { margin: 0; font-size: 24px; line-height: 1.2; color: var(--text); }
+#b29 .vh-flow i { display: block; font-style: normal; font-size: 24px; line-height: 1.2; color: var(--t-a); }
+#b29 .vh-flow i::before { content: "\2192"; }
 </style>
 <style data-part="p4-backups">
 /* ══ Part 60 · backups ═══════════════════════════════════════════════
@@ -4210,7 +4378,7 @@ body[data-view="guest"] .guest-dot {
 #b25 .ro-wrap { position: absolute; inset: 0; }
 
 /* column headers */
-#b25 .ro-hd { position: absolute; left: 56px; top: 202px; width: 1168px; height: 24px; }
+#b25 .ro-hd { position: absolute; left: 56px; top: 162px; width: 1168px; height: 24px; }
 #b25 .ro-hd span {
   position: absolute; top: 0;
   font-family: var(--mono); font-size: 18px; font-weight: 700;
@@ -4218,14 +4386,14 @@ body[data-view="guest"] .guest-dot {
   white-space: nowrap; color: var(--text-muted);
 }
 #b25 .ro-hrule {
-  position: absolute; left: 56px; top: 232px; width: 1168px; height: 1px;
+  position: absolute; left: 56px; top: 192px; width: 1168px; height: 1px;
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--t-a) 48%, transparent), rgba(255,255,255,0.08));
 }
 
 /* the lit rule that travels to the row being talked about */
 #b25 .ro-hl {
-  position: absolute; left: 44px; top: 240px; width: 1192px; height: 44px;
+  position: absolute; left: 44px; top: 200px; width: 1192px; height: 44px;
   border-radius: 10px;
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--t-a) 17%, transparent), transparent 64%);
@@ -4259,13 +4427,13 @@ body[data-view="guest"] .guest-dot {
 
 /* the borderline gate, and the one row that sits past it */
 #b25 .ro-gatelab {
-  position: absolute; left: 56px; top: 461px;
+  position: absolute; left: 56px; top: 421px;
   font-family: var(--mono); font-size: 18px; font-weight: 700;
   letter-spacing: 0.06em; white-space: nowrap;
   color: #e0a34f;
 }
 #b25 .ro-gateline {
-  position: absolute; left: 596px; top: 471px; width: 628px; height: 0;
+  position: absolute; left: 596px; top: 431px; width: 628px; height: 0;
   border-top: 1px dashed rgba(224,163,79,0.42);
 }
 #b25 .ro-row--edge { border-top: 0; }
@@ -4280,7 +4448,7 @@ body[data-view="guest"] .guest-dot {
 }
 
 /* the foot band · the column that matters, set large */
-#b25 .ro-band { position: absolute; left: 56px; top: 560px; width: 1168px; height: 102px; }
+#b25 .ro-band { position: absolute; left: 56px; top: 528px; width: 1168px; height: 140px; }
 #b25 .ro-band::before {
   content: ""; position: absolute; left: 0; top: -18px; width: 1168px; height: 1px;
   background: linear-gradient(90deg,
@@ -4383,10 +4551,12 @@ body[data-view="guest"] .guest-dot {
     text-transform: uppercase; color: var(--text-muted);
   }
   .ovtopic__ch::before { content: "·"; margin-right: 7px; }
+  /* Thumbs at about 1.75x their first size (2026-09-24): four across at
+     1920 px, three at 1280 px, so a title and the main visual read. */
   .ovtopic__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(206px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 18px;
   }
 
   /* The badge has to hold "A01" now, so it is a pill rather than a disc. */
@@ -4412,15 +4582,35 @@ body[data-view="guest"] .guest-dot {
     background: var(--appendix); color: #0f1319;
   }
 
-  /* The clones render imperfectly today (a separate, later job), so every
-     thumb also carries its own title. That is what makes a slide findable. */
+  /* ── The pictures (2026-09-24) ─────────────────────────────────────
+     Each thumb is a 16:9 picture with a caption strip under it. The picture
+     is assets/thumbs/<cue>.jpg, rendered by make-thumbs.py at the slide's
+     LAST step with every animation finished; it sits over deck.js's clone
+     in the same node, so the click handler is untouched. The ::before box
+     holds the 16:9 height whether the picture or the clone fills it, and a
+     missing picture simply leaves the clone showing. */
+  .deck-overview-thumb { aspect-ratio: auto; }
+  .deck-overview-thumb::before { content: ""; display: block; aspect-ratio: 16 / 9; }
+  .ovpic {
+    position: absolute; top: 0; left: 0; z-index: 1;
+    display: block; width: 100%; height: auto; aspect-ratio: 16 / 9;
+    object-fit: contain;                 /* never crop */
+    background: #0a0a0c;
+    pointer-events: none;
+  }
+  .deck-overview-thumb.has-pic .deck-overview-clone { display: none; }
+  .deck-overview-thumb.is-appendix .ovpic { opacity: 0.72; filter: saturate(0.55); }
+  .deck-overview-badge { bottom: 21px; right: 12px; }
+
+  /* Every thumb carries its cue and its own title under the picture. */
   .ovcap {
-    position: absolute; left: 0; right: 0; bottom: 0; z-index: 9;
-    padding: 22px 50px 8px 10px;
-    font-family: var(--font); font-size: 11.5px; line-height: 1.25;
+    position: relative; z-index: 2;
+    box-sizing: border-box; min-height: 70px;
+    padding: 9px 66px 10px 12px;
+    font-family: var(--font); font-size: 13px; line-height: 1.3;
     color: rgba(240,236,232,0.92);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-    background: linear-gradient(to top, rgba(8,8,10,0.94) 42%, rgba(8,8,10,0));
+    background: rgba(8,8,10,0.72);
+    border-top: 1px solid rgba(240,236,232,0.07);
     pointer-events: none;
     overflow: hidden;
   }
@@ -4430,9 +4620,9 @@ body[data-view="guest"] .guest-dot {
   }
   .ovcap__cue {
     display: block;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--text-muted);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
   .deck-overview-thumb.is-appendix .ovcap__cue {
     color: color-mix(in srgb, var(--appendix) 86%, #f0ece8);
@@ -9404,6 +9594,85 @@ body[data-view="guest"] .guest-dot {
   </aside>
 </section>
 
+<section class="slide" id="b29" data-cue="b29" data-dialect="ledger" data-part="backup"
+         data-topic="disc" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Pianificazione: verticale contro orizzontale.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+  <i class="fragment step-cue" data-step="4"></i>
+
+  <div class="vh">
+    <span class="kicker vh-k vh-k--v">Verticale &middot; il piano</span>
+    <span class="kicker vh-k vh-k--h">Orizzontale &middot; come è andata</span>
+
+    <div class="vh-stack vh-stack--v">
+      <div class="vh-t" data-r="1"><span>Pompa</span><b><i style="width:100%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Allineamento</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Ugelli</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Stoccaggio</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interfaccia</span><b><i style="width:0%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Elettronica</span><b><i style="width:0%"></i></b></div>
+      <p class="vh-cap">Uno alla volta</p>
+    </div>
+    <div class="vh-stack vh-stack--h">
+      <div class="vh-t" data-r="1"><span>Pompa</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="2"><span>Allineamento</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="3"><span>Ugelli</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="4"><span>Stoccaggio</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="5"><span>Interfaccia</span><b><i style="width:52%"></i></b></div>
+      <div class="vh-t" data-r="6"><span>Elettronica</span><b><i style="width:52%"></i></b></div>
+      <p class="vh-cap">Tutti insieme</p>
+    </div>
+
+    <div class="vh-row" data-row="0" style="top:446px">
+      <span class="vh-rl">Dà</span>
+      <p class="vh-v">Interfacce collaudate</p>
+      <p class="vh-h">Nessuna attesa</p>
+    </div>
+    <div class="vh-row" data-row="1" style="top:498px">
+      <span class="vh-rl">Costa</span>
+      <p class="vh-v">Un ritardo blocca tutto</p>
+      <p class="vh-h">Moduli meno maturi</p>
+    </div>
+    <div class="vh-row" data-row="2" style="top:550px">
+      <span class="vh-rl">Adatto a</span>
+      <p class="vh-v">Un modulo guida</p>
+      <p class="vh-h">Squadra, scadenza stretta</p>
+    </div>
+
+    <div class="vh-band">
+      <span class="kicker vh-bk">In questo progetto</span>
+      <p class="vh-verdict">Giusto per il momento, non per la macchina</p>
+      <div class="vh-flow">
+        <p>Prima la pompa</p>
+        <i></i>
+        <p>Tubicini: sei settimane di ritardo</p>
+        <i></i>
+        <p>Costruiti in parallelo</p>
+        <i></i>
+        <p>Integrati meno maturi</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~50 s</li>
+      <li data-step="0">The plan was vertical: take one module to maturity, starting with the pump, then the next. What we did was horizontal: every module at once.</li>
+      <li data-step="1">Vertical proves each module before the next one depends on it. Horizontal means nobody waits, and it saves time.</li>
+      <li data-step="2">The price of vertical is that it is serial: one late part stalls everything. The price of horizontal is that each module matures less, and integration piles up at the end.</li>
+      <li data-step="3">In a team with a deadline, parallel work makes sense, and in a company with more people and time it is normal. Vertical fits when one module sets the others, as the pump does.</li>
+      <li data-step="4">Here the pump tubing arrived six weeks late, so we built the rest in parallel. It kept us moving, but the modules arrived less mature, and that cost the final machine. It was right for the circumstances, but not the best choice for this machine.</li>
+      <li>If asked for an example: developing the storage apart from the pump left a feed-line restriction, a leading suspect for the 10&nbsp;% delivery loss on the assembled machine.</li>
+      <li>If asked: the plan from March named task delays and late integration as the main risks, and both happened.</li>
+      <li>If asked how this differs from depth and breadth: that was how many concepts to build inside one module; this is the order of work across modules.</li>
+    </ul>
+  </aside>
+</section>
+
 <!-- s39 ────────────────────────────────────
      Moved out of the talk 2026-09-22 (Sirio: "only focus on AI, and make
      it more simple, and put it on the appendix. NO bullshit about
@@ -9414,58 +9683,6 @@ body[data-view="guest"] .guest-dot {
      It keeps id/data-cue "s39": appendix membership is data-part="backup",
      never the cue prefix.  Its hoisted CSS block and its timeline builder
      stay in parts/50-discussion.html — see SLIDE-ORDER.md §4. ────── -->
-<section class="slide" id="s39" data-cue="s39" data-dialect="loop"
-         data-part="backup" data-topic="disc" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">L’IA è stata la base del lavoro digitale; il lavoro fisico è rimasto nelle mie mani.</h2>
-  <div class="slide__rule"></div>
-
-  <i class="fragment step-cue" data-step="1"></i>
-  <i class="fragment step-cue" data-step="2"></i>
-  <i class="fragment step-cue" data-step="3"></i>
-
-  <div class="d39">
-    <div class="paper d39__paper">
-      <img data-src="assets/figs/fig-ai-working-loop.png"
-           alt="Il ciclo progetta, costruisci, prova e impara con la documentazione al centro; una nota tratteggiata accanto a Build dice stampa e montaggio a mano." />
-      <svg class="d39__mark" viewBox="0 0 2000 925" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <rect id="d39-box"  x="1092" y="68"  width="482" height="240" rx="18" />
-        <rect id="d39-hand" x="1592" y="108" width="364" height="152" rx="14" stroke-dasharray="14 12" />
-      </svg>
-      <span class="callout callout--ghost d39__tag" id="d39-tag">a mano</span>
-    </div>
-
-    <div class="d39__rail">
-      <span class="kicker" style="left:800px; top:196px">Decisiva per</span>
-      <span class="d39__chip" style="left:800px; top:224px">Ricerca bibliografica</span>
-      <span class="d39__chip" style="left:800px; top:268px">Protocolli sperimentali</span>
-      <span class="d39__chip" style="left:800px; top:312px">Analisi delle misure</span>
-      <span class="d39__chip" style="left:800px; top:356px">Firmware</span>
-      <span class="d39__chip" style="left:800px; top:400px">Specifiche tecniche</span>
-
-      <span class="kicker kicker--muted d39__bk" style="left:800px; top:470px">Il confine</span>
-      <span class="d39__chip d39__chip--off" style="left:800px;  top:498px; width:200px">Stampa</span>
-      <span class="d39__chip d39__chip--off" style="left:1016px; top:498px; width:200px">Montaggio</span>
-      <span class="d39__chip d39__chip--off" style="left:800px;  top:542px; width:200px">Cablaggio</span>
-      <span class="d39__chip d39__chip--off" style="left:1016px; top:542px; width:200px">Prove in lab</span>
-      <span class="d39__bnote" style="left:800px; top:598px">e l’assieme CAD che non ha saputo costruire</span>
-    </div>
-
-    <div class="q-over" id="d39-quote">
-      <div class="q-over__in">
-        <div class="q-over__rule"></div>
-        <p class="q-over__t q-over__t--sm">“Senza l’IA integrata in tutto il processo di ingegneria, completare un prototipo integrato e una verifica sperimentale così approfondita nei tempi di una tesi magistrale non sarebbe stato possibile.”</p>
-      </div>
-    </div>
-  </div>
-
-  <aside class="notes">
-    <ul>
-      <li>Decisive for literature, protocols, data analysis, firmware and specifications — a foundation, not an accessory.</li>
-      <li>The boundary was purely physical: printing, assembly, wiring, laboratory testing — and the CAD assembly it could not build.</li>
-      <li>Which is the whole claim: without it, an integrated prototype validated to this depth would not have fitted inside a master’s thesis.</li>
-    </ul>
-  </aside>
-</section>
 
 <!-- B25 ·  the reader's hardware ledger ─────────────────────────────
      Backs S41 (pair the dispenser with a reader). Dialect "ledger":
@@ -9477,8 +9694,8 @@ body[data-view="guest"] .guest-dot {
      band at the foot at 23 px, one readout per click, so the column
      that matters most is the only text set large. ───────────────── -->
 <section class="slide" id="b25" data-cue="b25" data-dialect="ledger" data-part="backup"
-         data-topic="outlook" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">Sei metodi di lettura possono stare in un lettore portatile, e ognuno chiede hardware diverso.</h2>
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Requisiti hardware per sei modi di lettura.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -9502,7 +9719,7 @@ body[data-view="guest"] .guest-dot {
 
     <span class="ro-hl" id="b25-hl"></span>
 
-    <div class="ro-row" style="top:240px">
+    <div class="ro-row" style="top:200px">
       <span class="ro-nm">Fluorescenza</span>
       <span class="ro-c" style="left:216px">LED blu</span>
       <span class="ro-c" style="left:406px">due filtri</span>
@@ -9511,7 +9728,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c" style="left:976px">camera oscura</span>
     </div>
 
-    <div class="ro-row" style="top:284px">
+    <div class="ro-row" style="top:244px">
       <span class="ro-nm">Colorimetria</span>
       <span class="ro-c" style="left:216px">LED</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9520,7 +9737,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
     </div>
 
-    <div class="ro-row" style="top:328px">
+    <div class="ro-row" style="top:288px">
       <span class="ro-nm">Turbidimetria</span>
       <span class="ro-c" style="left:216px">LED 650 nm</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9529,7 +9746,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
     </div>
 
-    <div class="ro-row" style="top:372px">
+    <div class="ro-row" style="top:332px">
       <span class="ro-nm">Flusso laterale</span>
       <span class="ro-c" style="left:216px">LED bianco</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9538,7 +9755,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c" style="left:976px">porta-striscia</span>
     </div>
 
-    <div class="ro-row" style="top:416px">
+    <div class="ro-row" style="top:376px">
       <span class="ro-nm">Elettrochimica</span>
       <span class="ro-c ro-c--off" style="left:216px">&mdash;</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9550,7 +9767,7 @@ body[data-view="guest"] .guest-dot {
     <span class="ro-gatelab">Al limite &middot; più ingombro di quanto abbia un modulo portatile</span>
     <span class="ro-gateline"></span>
 
-    <div class="ro-row ro-row--edge" style="top:486px">
+    <div class="ro-row ro-row--edge" style="top:446px">
       <span class="ro-nm">Chemiluminescenza</span>
       <span class="ro-c" style="left:216px">il marcatore</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9612,6 +9829,191 @@ body[data-view="guest"] .guest-dot {
       <li><strong>6 &middot; chemiluminescence and ECL</strong> &mdash; the label emits its own light, so there is no lamp; ECL switches it on electrically, which is how Roche&rsquo;s Elecsys platform works. But a photomultiplier or SiPM and a genuinely light-tight chamber are more box than a portable module has, so it sits on the edge rather than inside the set.</li>
       <li>If asked <em>why not just use a phone</em>: a phone gives a camera and compute for free, but no control of exposure geometry, no filters and no heater. It covers lateral flow and colorimetry, nothing below them.</li>
       <li>If asked <em>what the dispenser buys the reader</em>: every one of these assumes the reaction mix was assembled correctly. The reader is the cheap half; preparation is the hard half. That is this thesis&rsquo;s argument restated from the detection side.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="b27" data-cue="b27" data-dialect="flow" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Classificazione normativa con un lettore integrato.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+  <i class="fragment step-cue" data-step="2"></i>
+  <i class="fragment step-cue" data-step="3"></i>
+
+  <div class="rg">
+    <article class="rg-card rg-card--a">
+      <span class="kicker">Il dosatore da solo</span>
+      <div class="rg-shot">
+        <img data-src="../../assets/media/device/top.jpg"
+             alt="Il dosatore montato visto dall’alto: le fiale dei reagenti dietro la corsia, il rack d’ingresso, il touchscreen e il rack d’uscita." />
+      </div>
+      <span class="rg-st">Apparecchiatura generica da laboratorio</span>
+      <span class="rg-sub">Come una pipetta: non esamina nulla, quindi l’IVDR non si applica.</span>
+    </article>
+
+    <svg class="rg-ar" viewBox="0 0 1280 720" aria-hidden="true">
+      <path class="rg-ar1" d="M 404 326 L 432 326 M 424 318 L 432 326 L 424 334" />
+      <path class="rg-ar2" d="M 788 326 L 816 326 M 808 318 L 816 326 L 808 334" />
+    </svg>
+
+    <article class="rg-card rg-card--b">
+      <span class="kicker">Con un lettore</span>
+      <div class="rg-rd">
+        <span class="rg-bay"><i></i></span>
+        <span class="rg-bars"><i style="width:78%"></i><i style="width:52%"></i><i style="width:64%"></i></span>
+      </div>
+      <span class="rg-st">Un dispositivo diagnostico</span>
+      <span class="rg-sub">Esamina un campione umano e dà un risultato: l’IVDR si applica.</span>
+    </article>
+
+    <article class="rg-card rg-card--c">
+      <span class="kicker">Poi decide l’uso dichiarato</span>
+      <div class="rg-case">
+        <span class="rg-who">L’operatore li abbina</span>
+        <span class="rg-out">resta apparecchiatura da laboratorio</span>
+      </div>
+      <div class="rg-case rg-case--hot">
+        <span class="rg-who">Venduto col lettore per test specifici</span>
+        <span class="rg-out">accessorio di Classe A, autocertificato</span>
+      </div>
+      <div class="rg-case">
+        <span class="rg-who">Un produttore di diagnostici lo include</span>
+        <span class="rg-out">entra nel suo fascicolo tecnico</span>
+      </div>
+    </article>
+
+    <div class="rg-band">
+      <p class="rg-say">Cambia il fascicolo, non la macchina.</p>
+      <span class="rg-same">Hardware: identico nei due casi</span>
+      <div class="rg-chips">
+        <span>CE anche secondo l’IVDR</span>
+        <span>Registrazione EUDAMED</span>
+        <span>Fascicolo e sistema qualità</span>
+        <span>Valutazione delle prestazioni</span>
+        <span>IEC 61010-2-101</span>
+        <span>IEC 61326-2-6</span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~25 s</li>
+      <li data-step="0">&mdash;</li>
+      <li data-step="1">&mdash;</li>
+      <li data-step="2">The dispenser&rsquo;s status then depends on what is claimed. If the operator pairs them, it stays general equipment. Sold with the reader for named tests, it becomes a Class A accessory, which the maker certifies itself. And if a diagnostic company bundles it, it enters their file.</li>
+      <li data-step="3">Either way the hardware stays the same. What grows is the file: registration, a quality system, a performance evaluation, and the two IVD supplements to the safety standards.</li>
+      <li><strong>IVDR:</strong> the EU regulation for in vitro diagnostic devices, tests that examine samples taken from the human body.</li>
+      <li><strong>EUDAMED registration:</strong> the EU device database, where the device is registered under a unique device identifier.</li>
+      <li><strong>Dossier and quality system:</strong> the technical file that proves the device meets the rules, and a quality management system that keeps it that way, usually built to ISO&nbsp;13485.</li>
+      <li><strong>IEC 61010-2-101:</strong> the IVD supplement to IEC 61010-1, the safety standard for electrical laboratory equipment.</li>
+      <li><strong>IEC 61326-2-6:</strong> the IVD supplement to the electromagnetic compatibility standard: the device neither disturbs nearby electronics nor malfunctions because of them.</li>
+      <li><strong>Class A accessory:</strong> the lowest of the four IVDR risk classes; when non-sterile, the maker declares conformity itself, with no notified body.</li>
+      <li>If asked: animal or water samples are outside the IVDR; the tests themselves carry their own class, often higher (general knowledge).</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" id="b28" data-cue="b28" data-dialect="sheet" data-part="backup"
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">La conformità normativa cambia le carte, non l’hardware.</h2>
+  <div class="slide__rule"></div>
+
+  <i class="fragment step-cue" data-step="1"></i>
+
+  <div class="rt">
+    <div class="rt-hd">
+      <span class="rt-c1">Tesi, tabella 5.2</span>
+      <span class="rt-c3">Strumento da laboratorio</span>
+      <span class="rt-c4">Accessorio diagnostico, Classe A</span>
+    </div>
+
+    <div class="rt-pg" data-pg="0">
+      <p class="rt-grp">Cosa decide la classificazione</p>
+      <div class="rt-row">
+        <span class="rt-c1">Hardware</span>
+        <span class="rt-c3">Identico</span>
+        <span class="rt-c4">Identico</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Esamina un campione o dà un risultato</span>
+        <span class="rt-c3">No</span>
+        <span class="rt-c4">No</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Uso dichiarato nei documenti</span>
+        <span class="rt-c3">Intervallo di volumi e precisione</span>
+        <span class="rt-c4">Validato per un test specifico</span>
+      </div>
+      <p class="rt-grp rt-grp--2">Obblighi di conformità che ne derivano</p>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Dichiarazione di marcatura CE</span>
+        <span class="rt-c3">Secondo la direttiva macchine</span>
+        <span class="rt-c4">Secondo la direttiva macchine e l’IVDR</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Verifica di un organismo notificato</span>
+        <span class="rt-c3">Non richiesta</span>
+        <span class="rt-c4">Non richiesta per un dispositivo di Classe&nbsp;A non sterile</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Registrazione EUDAMED</span>
+        <span class="rt-c3">Non richiesta</span>
+        <span class="rt-c4">Richiesta</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Documentazione tecnica</span>
+        <span class="rt-c3">Analisi dei rischi e istruzioni per l’uso</span>
+        <span class="rt-c4">In più il fascicolo IVDR e un sistema di gestione della qualità</span>
+      </div>
+      <p class="rt-foot">1 di 2 &middot; ridotta dalla tabella 5.2 della tesi: omesse la colonna &ldquo;cosa richiede&rdquo; e le citazioni</p>
+    </div>
+
+    <div class="rt-pg" data-pg="1">
+      <p class="rt-grp">Obblighi di conformità, seguito</p>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Valutazione delle prestazioni e sorveglianza</span>
+        <span class="rt-c3">Non richiesta</span>
+        <span class="rt-c4">Richiesta, con un piano documentato</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Sicurezza elettrica</span>
+        <span class="rt-c3">IEC 61010-1</span>
+        <span class="rt-c4">Più la IEC 61010-2-101, supplemento IVD</span>
+      </div>
+      <div class="rt-row rt-row--diff">
+        <span class="rt-c1">Compatibilità elettromagnetica</span>
+        <span class="rt-c3">IEC 61326-1</span>
+        <span class="rt-c4">IEC 61326-2-6, supplemento IVD</span>
+      </div>
+      <p class="rt-cap">Dalla didascalia: &ldquo;Sotto le due norme specifiche le ultime due colonne sono identiche.&rdquo;</p>
+      <div class="rt-row">
+        <span class="rt-c1">Direttiva macchine</span>
+        <span class="rt-c3">Si applica</span>
+        <span class="rt-c4">Si applica</span>
+      </div>
+      <div class="rt-row">
+        <span class="rt-c1">Batteria, materiali e firmware</span>
+        <span class="rt-c3">Si applica invariata</span>
+        <span class="rt-c4">Si applica invariata</span>
+      </div>
+      <p class="rt-foot">2 di 2 &middot; ridotta dalla tabella 5.2 della tesi: omesse la colonna &ldquo;cosa richiede&rdquo; e le citazioni</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <ul>
+      <li data-step="meta">~30 s</li>
+      <li data-step="0">This is Table 5.2 from chapter 5, abridged. What decides the class is not the hardware, which is identical, but what the documentation claims. The accessory path adds the IVDR to the CE marking, EUDAMED registration, and the IVDR dossier with a quality system, but no notified body for a non-sterile Class A device.</li>
+      <li data-step="1">Performance evaluation and the two IVD supplements come only with the accessory path. From machinery law down, the two columns are identical.</li>
+      <li><strong>EUDAMED:</strong> the EU device database, where the device is registered under a unique device identifier.</li>
+      <li><strong>IEC 61010-1:</strong> the general safety standard for electrical measurement, control and laboratory equipment.</li>
+      <li><strong>IEC 61010-2-101:</strong> its add-on with the extra safety requirements for IVD equipment.</li>
+      <li><strong>IEC 61326-1:</strong> the general electromagnetic compatibility standard for measurement, control and laboratory equipment.</li>
+      <li><strong>IEC 61326-2-6:</strong> its add-on with the extra EMC requirements for IVD equipment.</li>
+      <li>If asked: Class A is the lowest of the four diagnostic risk classes, and the only one a manufacturer may certify without an external audit.</li>
     </ul>
   </aside>
 </section>
@@ -10708,6 +11110,10 @@ body[data-view="guest"] .guest-dot {
     </div>
   </footer>
 
+  <!-- Overview thumbnails: window.DECK_THUMBS, written by make-thumbs.py.
+       Read by section 4d of the tail script; see SLIDE-ORDER.md section 7. -->
+  <script src="assets/thumbs/manifest.js"></script>
+
 
   <script src="../../assets/deck.js"></script>
   <script src="../../assets/gsap/gsap.min.js"></script>
@@ -10856,10 +11262,10 @@ body[data-view="guest"] .guest-dot {
 
       { band: 'Discussion and close',
         key: 'disc',      topic: 'Discussion and reflection',       thesis: 'chapter 13',
-        cues: ['s37a', 's37', 's38', 's39'] },
+        cues: ['s37a', 's37', 's38', 'b29'] },
       { band: 'Discussion and close',
         key: 'outlook',   topic: 'Conclusion and outlook',          thesis: 'chapter 14',
-        cues: ['s40', 's41', 'b25'] },
+        cues: ['s40', 's41', 'b25', 'b27', 'b28'] },
       { band: 'Discussion and close',
         key: 'closing',   topic: 'Closing',                         thesis: '',
         cues: ['s42', 's43'] },
@@ -11308,8 +11714,9 @@ body[data-view="guest"] .guest-dot {
          labelOverview    pins each thumb's slide index on the node (after
                           regrouping, DOM position no longer implies it),
                           rewrites the badge to the talk number or A01...,
-                          marks appendix thumbs, and adds a title caption
-                          because the clones render imperfectly today;
+                          marks appendix thumbs, adds a title caption, and
+                          lays the rendered final-state picture over the
+                          clone (addThumbPic, make-thumbs.py);
          regroupOverview  MOVES those same nodes -- never rebuilds them, so
                           every click closure survives -- into
                           band > topic > grid containers.
@@ -11347,7 +11754,32 @@ body[data-view="guest"] .guest-dot {
           cap.appendChild(ttlEl);
           th.appendChild(cap);
         }
+        if (el) addThumbPic(th, el.getAttribute('data-cue'));
       }
+    }
+
+    /* The picture over the clone: assets/thumbs/<cue>.jpg, rendered at the
+       slide's last step by make-thumbs.py, which also writes the manifest
+       (window.DECK_THUMBS, loaded by a plain script tag above the tail CSS)
+       with a content hash per cue for the cache-bust. A cue the manifest
+       does not list keeps its clone; a picture that fails to load removes
+       itself and the clone shows again. */
+    function addThumbPic(th, cue) {
+      var man = window.DECK_THUMBS;
+      if (!cue || !man || !man.v || !man.v[cue] || th.querySelector('.ovpic')) return;
+      var pic = document.createElement('img');
+      pic.className = 'ovpic';
+      pic.alt = '';
+      pic.decoding = 'async';
+      pic.loading = 'lazy';
+      pic.onerror = function () {
+        th.classList.remove('has-pic');
+        if (pic.parentNode) pic.parentNode.removeChild(pic);
+      };
+      pic.src = 'assets/thumbs/' + cue + '.' + (man.ext || 'jpg') + '?v=' + man.v[cue];
+      var clone = th.querySelector('.deck-overview-clone');
+      th.insertBefore(pic, clone ? clone.nextSibling : th.firstChild);
+      th.classList.add('has-pic');
     }
 
     function regroupOverview(root) {
@@ -16484,60 +16916,6 @@ Deck.slide('s08a', function (el, gsap) {
     return tl;
   });
 
-  /* ── S39 ──────────────────────────────────────────
-     The <section> lives in parts/60-backups.html since 2026-09-22, when
-     S39 moved into the appendix; Deck.slide registers by cue, not by
-     file, and this builder closes over this IIFE's draw() and EASE, so
-     it stays here (SLIDE-ORDER.md §4).  Three steps now: the timeline of
-     the writing phase was cut with the move.                          */
-  Deck.slide('s39', function (el, gsap) {
-    var tl    = gsap.timeline({ paused: true });
-    var chips = el.querySelectorAll('.d39__chip:not(.d39__chip--off)');
-    var offs  = el.querySelectorAll('.d39__chip--off');
-    var k1    = el.querySelector('.d39__rail .kicker');
-    var k2    = el.querySelector('.d39__bk');
-    var bnote = el.querySelector('.d39__bnote');
-    var box   = el.querySelector('#d39-box');
-    var hand  = el.querySelector('#d39-hand');
-    var tag   = el.querySelector('#d39-tag');
-    var quote = el.querySelector('#d39-quote');
-
-    gsap.set([k1, k2, bnote], { opacity: 0 });
-    gsap.set(chips, { opacity: 0, x: 26 });
-    gsap.set(offs, { opacity: 0, y: 12 });
-    gsap.set(tag, { opacity: 0, scale: 0.86, transformOrigin: '0 50%' });
-    gsap.set(quote, { autoAlpha: 0 });
-    gsap.set(el.querySelector('#d39-quote .q-over__rule'), { scaleX: 0 });
-    gsap.set(el.querySelector('#d39-quote .q-over__t'), { opacity: 0, y: 18 });
-    if (window.DrawSVGPlugin) gsap.set([box, hand], { drawSVG: '0%' });
-    else gsap.set([box, hand], { opacity: 0 });
-
-    tl.addLabel('step0');
-
-    /* 1 · what the assistant carried */
-    tl.to(k1, { opacity: 1, duration: 0.3 }, 'step0')
-      .to(chips, { opacity: 1, x: 0, duration: 0.46, stagger: 0.09, ease: EASE }, 'step0+=0.08')
-      .addLabel('step1');
-
-    /* 2 · the boundary, outlined on the figure itself */
-    draw(tl, gsap, box, 'step1', 0.75, 'power2.inOut');
-    draw(tl, gsap, hand, 'step1+=0.50', 0.55, 'none');
-    tl.to(tag, { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(2)' }, 'step1+=0.86')
-      .to(chips, { opacity: 0.4, duration: 0.4, ease: 'none' }, 'step1+=0.10')
-      .to(k2, { opacity: 1, duration: 0.3 }, 'step1+=0.24')
-      .to(offs, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: EASE }, 'step1+=0.30')
-      .to(bnote, { opacity: 1, duration: 0.4 }, 'step1+=0.70')
-      .addLabel('step2');
-
-    /* 3 · the quotation */
-    tl.to(quote, { autoAlpha: 1, duration: 0.5, ease: 'none' }, 'step2')
-      .to(el.querySelector('#d39-quote .q-over__rule'), { scaleX: 1, duration: 0.55, ease: 'power3.inOut' }, 'step2+=0.16')
-      .to(el.querySelector('#d39-quote .q-over__t'), { opacity: 1, y: 0, duration: 0.7, ease: EASE }, 'step2+=0.26')
-      .addLabel('step3');
-
-    return tl;
-  });
-
   /* ── S40 ───────────────────────────────────────────────────────── */
   Deck.slide('s40', function (el, gsap) {
     var tl    = gsap.timeline({ paused: true });
@@ -16788,6 +17166,92 @@ Deck.slide('s08a', function (el, gsap) {
        still frame in the presenter preview and under reduced motion.  The
        same 0.8 speed as s00; it fades in with the invitation. */
     if (window.PumpAnim) window.PumpAnim.run(el, el.querySelector('.d43__pump'), { speed: 0.8, delay: 1.05 });
+  });
+})();
+</script>
+<script data-part="p4-disc-regulatory">
+/* ══ B27, B28 · timelines (sections in parts/60-backups.html) ═════════ */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+
+  /* B27: 0 the dispenser alone · 1 a reader joins · 2 the claim decides
+     · 3 what changes: the file, not the machine */
+  Deck.slide('b27', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var a  = el.querySelector('.rg-card--a');
+    var b  = el.querySelector('.rg-card--b');
+    var c  = el.querySelector('.rg-card--c');
+    var ar1 = el.querySelector('.rg-ar1');
+    var ar2 = el.querySelector('.rg-ar2');
+    var cases = el.querySelectorAll('.rg-case');
+    var band  = el.querySelector('.rg-band');
+    var chips = el.querySelectorAll('.rg-chips span');
+
+    gsap.set(a, { opacity: 1 });
+    gsap.set([b, c, band], { autoAlpha: 0, y: 18 });
+    gsap.set([ar1, ar2], { autoAlpha: 0 });
+    gsap.set(cases, { autoAlpha: 0, x: 14 });
+    gsap.set(chips, { autoAlpha: 0, y: 8 });
+
+    tl.addLabel('step0');
+    tl.to(ar1, { autoAlpha: 1, duration: 0.3, ease: 'none' }, 'step0')
+      .to(b, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }, 'step0+=0.1')
+      .addLabel('step1');
+    tl.to(ar2, { autoAlpha: 1, duration: 0.3, ease: 'none' }, 'step1')
+      .to(c, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step1+=0.1')
+      .to(cases, { autoAlpha: 1, x: 0, duration: 0.45, stagger: 0.12, ease: EASE }, 'step1+=0.3')
+      .addLabel('step2');
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }, 'step2')
+      .to(chips, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.06, ease: EASE }, 'step2+=0.25')
+      .addLabel('step3');
+    return tl;
+  });
+
+  /* B28: the header stays; the body turns one page per press */
+  Deck.slide('b28', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var pgs = el.querySelectorAll('.rt-pg');
+
+    gsap.set(pgs, { autoAlpha: 0 });
+    gsap.set(pgs[0], { autoAlpha: 1 });
+    tl.addLabel('step0');
+    for (var i = 1; i < pgs.length; i++) {
+      (function (i) {
+        tl.to(pgs[i - 1], { autoAlpha: 0, duration: 0.25, ease: 'none' }, 'step' + (i - 1))
+          .fromTo(pgs[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: EASE, immediateRender: false }, 'step' + (i - 1) + '+=0.2')
+          .addLabel('step' + i);
+      })(i);
+    }
+    return tl;
+  });
+})();
+</script>
+<script data-part="p4-disc-planning">
+/* ══ B29 · timeline (section in parts/60-backups.html) ═══════════════
+   0 the two strategies · 1 buys · 2 costs · 3 fits · 4 this project */
+(function () {
+  'use strict';
+  var EASE = 'expo.out';
+  Deck.slide('b29', function (el, gsap) {
+    var tl = gsap.timeline({ paused: true });
+    var rows = el.querySelectorAll('.vh-row');
+    var band = el.querySelector('.vh-band');
+    var bits = el.querySelectorAll('.vh-flow p, .vh-flow i, .vh-verdict');
+
+    gsap.set(rows, { autoAlpha: 0, y: 10 });
+    gsap.set(band, { autoAlpha: 0, y: 16 });
+    gsap.set(bits, { autoAlpha: 0 });
+
+    tl.addLabel('step0');
+    Array.prototype.forEach.call(rows, function (r, i) {
+      tl.to(r, { autoAlpha: 1, y: 0, duration: 0.5, ease: EASE }, 'step' + i)
+        .addLabel('step' + (i + 1));
+    });
+    tl.to(band, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE }, 'step3')
+      .to(bits, { autoAlpha: 1, duration: 0.4, stagger: 0.12, ease: 'none' }, 'step3+=0.2')
+      .addLabel('step4');
+    return tl;
   });
 })();
 </script>
