@@ -3458,8 +3458,8 @@ body[data-view="guest"] .guest-dot {
 /* ── B27 · three cards and the band ─────────────────────────────── */
 #b27 .rg { position: absolute; inset: 0; }
 #b27 .rg-card {
-  position: absolute; top: 212px; height: 300px;
-  padding: 18px 22px;
+  position: absolute; top: 166px; height: 320px;
+  padding: 20px 22px;
   box-sizing: border-box;
   display: flex; flex-direction: column; gap: 10px;
   border-radius: var(--r-md);
@@ -3526,23 +3526,23 @@ body[data-view="guest"] .guest-dot {
 }
 
 #b27 .rg-band {
-  position: absolute; left: 56px; top: 532px; width: 1168px; height: 148px;
+  position: absolute; left: 56px; top: 508px; width: 1168px; height: 164px;
   box-sizing: border-box;
   border-radius: var(--r-md);
   background: rgba(14,14,18,0.86);
   border: 1px solid var(--glass-border);
 }
 #b27 .rg-say {
-  position: absolute; left: 26px; top: 22px; width: 330px; margin: 0;
+  position: absolute; left: 26px; top: 28px; width: 330px; margin: 0;
   font-family: var(--display); font-weight: 700;
   font-size: 28px; line-height: 1.18; letter-spacing: -0.01em; color: var(--text);
 }
 #b27 .rg-same {
-  position: absolute; left: 26px; top: 102px; width: 360px;
+  position: absolute; left: 26px; top: 112px; width: 360px;
   font-size: 18px; line-height: 1.25; color: var(--text-muted);
 }
 #b27 .rg-chips {
-  position: absolute; left: 404px; top: 22px; width: 740px;
+  position: absolute; left: 404px; top: 30px; width: 740px;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
 }
 #b27 .rg-chips span {
@@ -3594,11 +3594,11 @@ body[data-view="guest"] .guest-dot {
    parts/20-part1.html: same modules, pump strongest, orange fading down. */
 #b29 .vh { position: absolute; inset: 0; }
 #b29 .kicker { font-size: 18px; letter-spacing: 0.16em; }
-#b29 .vh-k { position: absolute; top: 206px; }
+#b29 .vh-k { position: absolute; top: 166px; }
 #b29 .vh-k--v { left: 196px; }
 #b29 .vh-k--h { left: 732px; }
 
-#b29 .vh-stack { position: absolute; top: 238px; width: 492px; height: 140px; }
+#b29 .vh-stack { position: absolute; top: 200px; width: 492px; height: 140px; }
 #b29 .vh-stack--v { left: 196px; }
 #b29 .vh-stack--h { left: 732px; }
 #b29 .vh-t { display: flex; align-items: center; height: 23px; }
@@ -3644,7 +3644,7 @@ body[data-view="guest"] .guest-dot {
 #b29 .vh-h { left: 676px; }
 
 #b29 .vh-band {
-  position: absolute; left: 56px; top: 572px; width: 1168px; height: 114px;
+  position: absolute; left: 56px; top: 560px; width: 1168px; height: 124px;
   box-sizing: border-box; padding: 14px 22px;
   border-radius: var(--r-md);
   background: rgba(14,14,18,0.88);
@@ -4385,7 +4385,7 @@ body[data-view="guest"] .guest-dot {
 #b25 .ro-wrap { position: absolute; inset: 0; }
 
 /* column headers */
-#b25 .ro-hd { position: absolute; left: 56px; top: 202px; width: 1168px; height: 24px; }
+#b25 .ro-hd { position: absolute; left: 56px; top: 162px; width: 1168px; height: 24px; }
 #b25 .ro-hd span {
   position: absolute; top: 0;
   font-family: var(--mono); font-size: 18px; font-weight: 700;
@@ -4393,14 +4393,14 @@ body[data-view="guest"] .guest-dot {
   white-space: nowrap; color: var(--text-muted);
 }
 #b25 .ro-hrule {
-  position: absolute; left: 56px; top: 232px; width: 1168px; height: 1px;
+  position: absolute; left: 56px; top: 192px; width: 1168px; height: 1px;
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--t-a) 48%, transparent), rgba(255,255,255,0.08));
 }
 
 /* the lit rule that travels to the row being talked about */
 #b25 .ro-hl {
-  position: absolute; left: 44px; top: 240px; width: 1192px; height: 44px;
+  position: absolute; left: 44px; top: 200px; width: 1192px; height: 44px;
   border-radius: 10px;
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--t-a) 17%, transparent), transparent 64%);
@@ -4434,13 +4434,13 @@ body[data-view="guest"] .guest-dot {
 
 /* the borderline gate, and the one row that sits past it */
 #b25 .ro-gatelab {
-  position: absolute; left: 56px; top: 461px;
+  position: absolute; left: 56px; top: 421px;
   font-family: var(--mono); font-size: 18px; font-weight: 700;
   letter-spacing: 0.06em; white-space: nowrap;
   color: #e0a34f;
 }
 #b25 .ro-gateline {
-  position: absolute; left: 596px; top: 471px; width: 628px; height: 0;
+  position: absolute; left: 596px; top: 431px; width: 628px; height: 0;
   border-top: 1px dashed rgba(224,163,79,0.42);
 }
 #b25 .ro-row--edge { border-top: 0; }
@@ -4455,7 +4455,7 @@ body[data-view="guest"] .guest-dot {
 }
 
 /* the foot band · the column that matters, set large */
-#b25 .ro-band { position: absolute; left: 56px; top: 560px; width: 1168px; height: 102px; }
+#b25 .ro-band { position: absolute; left: 56px; top: 528px; width: 1168px; height: 140px; }
 #b25 .ro-band::before {
   content: ""; position: absolute; left: 0; top: -18px; width: 1168px; height: 1px;
   background: linear-gradient(90deg,
@@ -9727,8 +9727,8 @@ body[data-view="guest"] .guest-dot {
      App. Q lines 47-57. Pros and cons are general knowledge (CONTENT.md).
      Its CSS and builder live in parts/50-discussion.html. ─────────────── -->
 <section class="slide" id="b29" data-cue="b29" data-dialect="ledger" data-part="backup"
-         data-topic="disc" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The plan was vertical, pump first; late parts made it horizontal, and the modules arrived less mature.</h2>
+         data-topic="disc" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Planning: vertical versus horizontal progression.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -9759,17 +9759,17 @@ body[data-view="guest"] .guest-dot {
       <p class="vh-cap">Every module at once, each part of the way.</p>
     </div>
 
-    <div class="vh-row" data-row="0" style="top:390px">
+    <div class="vh-row" data-row="0" style="top:354px">
       <span class="vh-rl">Buys</span>
       <p class="vh-v">Each module is proven before the next one depends on it, so its interfaces are settled.</p>
       <p class="vh-h">Nobody waits: work goes on while a part is late, and it saves project time.</p>
     </div>
-    <div class="vh-row" data-row="1" style="top:450px">
+    <div class="vh-row" data-row="1" style="top:422px">
       <span class="vh-rl">Costs</span>
       <p class="vh-v">It is serial: one late part stalls everything behind it.</p>
       <p class="vh-h">Each module matures less, and integration piles up at the end.</p>
     </div>
-    <div class="vh-row" data-row="2" style="top:510px">
+    <div class="vh-row" data-row="2" style="top:490px">
       <span class="vh-rl">Fits</span>
       <p class="vh-v">When one module sets the others, as the pump does here.</p>
       <p class="vh-h">A team with a deadline; normal in a company with more people and time.</p>
@@ -9801,7 +9801,7 @@ body[data-view="guest"] .guest-dot {
       <li>If asked how this differs from depth and breadth: that was how many concepts to build inside one module; this is the order of work across modules.</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Il piano era verticale, prima la pompa; i ritardi l&rsquo;hanno reso orizzontale, e i moduli sono arrivati meno maturi</p>
+      <p class="notes-it__title">Pianificazione: sviluppo verticale o orizzontale</p>
       <ul>
         <li data-step="0">Il piano era verticale: portare un modulo a maturazione, a partire dalla pompa, poi il successivo. Abbiamo fatto il contrario: tutti i moduli insieme.</li>
         <li data-step="1">In verticale ogni modulo è provato prima che il successivo ne dipenda. In orizzontale nessuno aspetta, e si risparmia tempo.</li>
@@ -9823,8 +9823,8 @@ body[data-view="guest"] .guest-dot {
      band at the foot at 23 px, one readout per click, so the column
      that matters most is the only text set large. ───────────────── -->
 <section class="slide" id="b25" data-cue="b25" data-dialect="ledger" data-part="backup"
-         data-topic="outlook" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">Six readouts could fit a portable reader, and each one is a different bill of hardware.</h2>
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Hardware requirements for six reader modalities.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -9848,7 +9848,7 @@ body[data-view="guest"] .guest-dot {
 
     <span class="ro-hl" id="b25-hl"></span>
 
-    <div class="ro-row" style="top:240px">
+    <div class="ro-row" style="top:200px">
       <span class="ro-nm">Fluorescence</span>
       <span class="ro-c" style="left:216px">blue LED</span>
       <span class="ro-c" style="left:406px">two filters</span>
@@ -9857,7 +9857,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c" style="left:976px">dark box</span>
     </div>
 
-    <div class="ro-row" style="top:284px">
+    <div class="ro-row" style="top:244px">
       <span class="ro-nm">Colorimetric</span>
       <span class="ro-c" style="left:216px">LEDs</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9866,7 +9866,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
     </div>
 
-    <div class="ro-row" style="top:328px">
+    <div class="ro-row" style="top:288px">
       <span class="ro-nm">Turbidimetry</span>
       <span class="ro-c" style="left:216px">650 nm LED</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9875,7 +9875,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c ro-c--off" style="left:976px">&mdash;</span>
     </div>
 
-    <div class="ro-row" style="top:372px">
+    <div class="ro-row" style="top:332px">
       <span class="ro-nm">Lateral flow</span>
       <span class="ro-c" style="left:216px">white LED</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9884,7 +9884,7 @@ body[data-view="guest"] .guest-dot {
       <span class="ro-c" style="left:976px">strip holder</span>
     </div>
 
-    <div class="ro-row" style="top:416px">
+    <div class="ro-row" style="top:376px">
       <span class="ro-nm">Electrochemical</span>
       <span class="ro-c ro-c--off" style="left:216px">&mdash;</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9896,7 +9896,7 @@ body[data-view="guest"] .guest-dot {
     <span class="ro-gatelab">Borderline &middot; more box than a portable module has</span>
     <span class="ro-gateline"></span>
 
-    <div class="ro-row ro-row--edge" style="top:486px">
+    <div class="ro-row ro-row--edge" style="top:446px">
       <span class="ro-nm">Chemiluminescence</span>
       <span class="ro-c" style="left:216px">the label</span>
       <span class="ro-c ro-c--off" style="left:406px">&mdash;</span>
@@ -9959,6 +9959,9 @@ body[data-view="guest"] .guest-dot {
       <li>If asked <em>why not just use a phone</em>: a phone gives a camera and compute for free, but no control of exposure geometry, no filters and no heater. It covers lateral flow and colorimetry, nothing below them.</li>
       <li>If asked <em>what the dispenser buys the reader</em>: every one of these assumes the reaction mix was assembled correctly. The reader is the cheap half; preparation is the hard half. That is this thesis&rsquo;s argument restated from the detection side.</li>
     </ul>
+    <div class="notes-it" lang="it">
+      <p class="notes-it__title">Requisiti hardware per sei modi di lettura</p>
+    </div>
   </aside>
 </section>
 
@@ -9972,8 +9975,8 @@ body[data-view="guest"] .guest-dot {
      Its CSS and its Deck.slide builder live in parts/50-discussion.html
      (the Part III-B chat's file), SLIDE-ORDER.md §4. ──────────────────── -->
 <section class="slide" id="b27" data-cue="b27" data-dialect="flow" data-part="backup"
-         data-topic="outlook" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">The reader would be the diagnostic device; the dispenser follows only if it is sold for named tests.</h2>
+         data-topic="outlook" data-map="none" style="--head-h:0px">
+  <h2 class="slide__title">Regulatory classification with an integrated reader.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -9992,8 +9995,8 @@ body[data-view="guest"] .guest-dot {
     </article>
 
     <svg class="rg-ar" viewBox="0 0 1280 720" aria-hidden="true">
-      <path class="rg-ar1" d="M 404 362 L 432 362 M 424 354 L 432 362 L 424 370" />
-      <path class="rg-ar2" d="M 788 362 L 816 362 M 808 354 L 816 362 L 808 370" />
+      <path class="rg-ar1" d="M 404 326 L 432 326 M 424 318 L 432 326 L 424 334" />
+      <path class="rg-ar2" d="M 788 326 L 816 326 M 808 318 L 816 326 L 808 334" />
     </svg>
 
     <article class="rg-card rg-card--b">
@@ -10048,7 +10051,7 @@ body[data-view="guest"] .guest-dot {
       <li>If asked for article numbers: do not quote them. The thesis sources give the shape of the regulation, not checked clause numbers.</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Con un lettore, è il lettore il dispositivo diagnostico; il dosatore lo segue solo se venduto per test precisi</p>
+      <p class="notes-it__title">Classificazione normativa con un lettore integrato</p>
       <ul>
         <li data-step="0">Oggi il dosatore è un&rsquo;attrezzatura generica da laboratorio, come una pipetta: non analizza niente, quindi il regolamento europeo sulla diagnostica non si applica.</li>
         <li data-step="1">Con un lettore, il lettore è un dispositivo diagnostico: analizza un campione umano e dà un risultato, quindi il regolamento si applica al lettore.</li>
@@ -10070,7 +10073,7 @@ body[data-view="guest"] .guest-dot {
      parts/50-discussion.html. ─────────────────────────────────────────── -->
 <section class="slide" id="b28" data-cue="b28" data-dialect="sheet" data-part="backup"
          data-topic="outlook" data-map="none" style="--head-h:48px">
-  <h2 class="slide__title">Both regulatory paths demand the same hardware; the accessory path adds the diagnostic file.</h2>
+  <h2 class="slide__title">Regulatory compliance changes paperwork, not hardware.</h2>
   <div class="slide__rule"></div>
 
   <i class="fragment step-cue" data-step="1"></i>
@@ -10190,7 +10193,7 @@ body[data-view="guest"] .guest-dot {
       <li>If asked: Class A is the lowest of the four diagnostic risk classes, and the only one a manufacturer may certify without an external audit.</li>
     </ul>
     <div class="notes-it" lang="it">
-      <p class="notes-it__title">Tabella 5.2 della tesi: stessa macchina su entrambe le strade, cambia la documentazione</p>
+      <p class="notes-it__title">Le norme cambiano la documentazione, non la macchina</p>
       <ul>
         <li data-step="0">È la tabella 5.2 del capitolo 5. A decidere la classe non è la macchina, identica, ma ciò che la documentazione dichiara: un intervallo di volumi, o un test preciso.</li>
         <li data-step="1">Sulla strada dell&rsquo;accessorio la marcatura CE passa anche dal regolamento diagnostico: niente ente esterno per la classe A, ma registrazione europea, fascicolo e sistema qualità.</li>

@@ -653,7 +653,7 @@ dove si è fermata.*
   integrato e questa profondità di validazione sperimentale nei tempi di una
   tesi magistrale non sarebbe stato possibile.»**
 
-### `b29` — il piano era verticale, prima la pompa; i ritardi l'hanno reso orizzontale, e i moduli sono arrivati meno maturi
+### `b29` — pianificazione: sviluppo verticale o orizzontale
 *(discussione e riflessione, capitolo 13; nuova il 28-09-2026, accanto a `s39`. È la risposta alla domanda sulla pianificazione, e fa coppia con la piramide dei moduli di `s10`.)*
 - Il piano era verticale: portare un modulo a maturazione, a partire dalla pompa, poi il successivo. Abbiamo fatto il contrario: tutti i moduli insieme.
 - In verticale ogni modulo è provato prima che il successivo ne dipenda. In orizzontale nessuno aspetta, e si risparmia tempo.
@@ -662,7 +662,7 @@ dove si è fermata.*
 - Qui il tubo della pompa è arrivato sei settimane in ritardo, e abbiamo costruito il resto in parallelo. Giusto per le circostanze, ma non la scelta migliore per questa macchina.
 - *Se chiesto:* sviluppare lo stoccaggio separato dalla pompa ha lasciato una strozzatura nella linea di alimentazione, principale sospettata del 10 % di liquido in meno.
 
-### `b25` — sei modi di leggere il risultato, e ognuno è un conto diverso di hardware
+### `b25` — requisiti hardware per sei modi di lettura
 *(conclusione e prospettive, capitolo 14; nuova il 22-09-2026. È la slide di
 riserva dietro il lettore modulare di `s41`: se qualcuno chiede «e il lettore
 che cosa farebbe, di preciso?», la risposta è qui.)*
@@ -708,7 +708,7 @@ all'altra e sotto cambia il commento.*
   calcolatore, ma non dà controllo dell'esposizione, né filtri, né calore. Copre
   la striscia e il colorimetrico, e niente sotto.
 
-### `b27` — con un lettore, è il lettore il dispositivo diagnostico; il dosatore lo segue solo se venduto per test precisi
+### `b27` — classificazione normativa con un lettore integrato
 *(conclusione e prospettive, capitolo 14; nuova il 28-09-2026. È la risposta alla domanda «e se accoppiasse il dosatore a un lettore generico, che cosa succederebbe dal punto di vista normativo?»)*
 - Oggi il dosatore è un'attrezzatura generica da laboratorio, come una pipetta: non analizza niente, quindi il regolamento europeo sulla diagnostica non si applica.
 - Con un lettore, il lettore è un dispositivo diagnostico: analizza un campione umano e dà un risultato, quindi il regolamento si applica al lettore.
@@ -716,7 +716,7 @@ all'altra e sotto cambia il commento.*
 - In ogni caso la macchina resta la stessa. Cresce la documentazione: registrazione, sistema qualità, valutazione delle prestazioni e due norme di sicurezza in più.
 - *Se chiesto:* per campioni di animali o d'acqua niente di tutto questo si applica: il regolamento riguarda solo campioni umani.
 
-### `b28` — tabella 5.2 della tesi: stessa macchina su entrambe le strade, cambia la documentazione
+### `b28` — le norme cambiano la documentazione, non la macchina
 *(conclusione e prospettive, capitolo 14; nuova il 28-09-2026, subito dopo `b27`. La tabella 5.2 della tesi, parola per parola, divisa in quattro pagine, una per clic.)*
 - È la tabella 5.2 del capitolo 5. A decidere la classe non è la macchina, identica, ma ciò che la documentazione dichiara: un intervallo di volumi, o un test preciso.
 - Sulla strada dell'accessorio la marcatura CE passa anche dal regolamento diagnostico: niente ente esterno per la classe A, ma registrazione europea, fascicolo e sistema qualità.
