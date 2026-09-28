@@ -659,7 +659,7 @@ dove si è fermata.*
 - In verticale ogni modulo è provato prima che il successivo ne dipenda. In orizzontale nessuno aspetta, e si risparmia tempo.
 - Il prezzo del verticale: si procede in fila, e un ritardo blocca tutto. Il prezzo dell'orizzontale: ogni modulo matura meno, e l'integrazione si accumula alla fine.
 - In un gruppo con una scadenza lavorare in parallelo ha senso, e in un'azienda con più persone e più tempo è normale. Il verticale serve quando un modulo decide gli altri, come la pompa.
-- Qui il tubo della pompa è arrivato sei settimane in ritardo, e abbiamo costruito il resto in parallelo. Giusto per le circostanze, ma non la scelta migliore per questa macchina.
+- Qui: prima la pompa, poi il tubo arrivato sei settimane in ritardo, il resto costruito in parallelo e integrato meno maturo. Giusto per il momento, non per la macchina.
 - *Se chiesto:* sviluppare lo stoccaggio separato dalla pompa ha lasciato una strozzatura nella linea di alimentazione, principale sospettata del 10 % di liquido in meno.
 
 ### `b25` — requisiti hardware per sei modi di lettura

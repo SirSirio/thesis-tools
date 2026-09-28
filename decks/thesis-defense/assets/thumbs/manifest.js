@@ -31,7 +31,7 @@ window.DECK_THUMBS = {
   "b26": "6bdc5173fc",
   "b27": "8c557e3c7e",
   "b28": "b9cddde1c2",
-  "b29": "cea73d7878",
+  "b29": "27a60b36f5",
   "s00": "eade8046eb",
   "s01": "c35ec04987",
   "s02": "eb5582b534",
